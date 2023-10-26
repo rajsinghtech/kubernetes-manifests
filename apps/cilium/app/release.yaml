@@ -42,6 +42,17 @@ spec:
       mode: kubernetes
     gatewayAPI:
       enabled: true
+    ingressController:
+        enabled: true
+        loadbalancerMode: shared
+        enforceHttps: true
+        secretsNamespace:
+          create: true
+          name: cilium-system
+          sync: true
+        service:
+          name: cilium-ingress
+          type: LoadBalancer
     kubeProxyReplacementHealthzBindAddr: 0.0.0.0:10256
     kubeProxyReplacement: strict
     operator:
