@@ -3,7 +3,7 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: GitRepository
 metadata:
-  name: kubernetes-manifests
+  name: flux-system
   namespace: flux-system
 spec:
   interval: 1m0s
@@ -16,7 +16,7 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: clusters
+  name: flux-system
   namespace: flux-system
 spec:
   interval: 10m0s
@@ -24,33 +24,4 @@ spec:
   prune: true
   sourceRef:
     kind: GitRepository
-    name: kubernetes-manifests
----
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: apps
-  namespace: flux-system
-spec:
-  path: ./apps
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: kubernetes-manifests
-  wait: true
-  interval: 30m
-  retryInterval: 1m
-  timeout: 5m
----
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: flux
-  namespace: flux-system
-spec:
-  interval: 10m0s
-  path: ./flux
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: kubernetes-manifests
+    name: flux-system
