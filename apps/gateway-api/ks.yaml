@@ -2,10 +2,10 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: apps-cert-manager-app
-  namespace: cert-manager
+  name: apps-gateway-api-app
+  namespace: gateway-system
 spec:
-  path: ./kubernetes/apps/cert-manager/app
+  path: ./kubernetes/apps/gateway-api/app
   prune: true
   sourceRef:
     kind: GitRepository
@@ -18,12 +18,12 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: apps-cert-manager-config
-  namespace: cert-manager
+  name: apps-gateway-api-config
+  namespace: gateway-system
 spec:
   dependsOn:
-    - name: apps-cert-manager-app
-  path: ./kubernetes/apps/cert-manager/config
+    - name: apps-gateway-api-app
+  path: ./kubernetes/apps/gateway-api/config
   prune: true
   sourceRef:
     kind: GitRepository
