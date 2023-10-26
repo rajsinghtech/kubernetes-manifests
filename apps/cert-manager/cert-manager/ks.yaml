@@ -5,6 +5,8 @@ metadata:
   name: cluster-apps-cert-manager
   namespace: flux-system
 spec:
+  dependsOn:
+    - name: flux
   path: ./apps/cert-manager/cert-manager/app
   prune: true
   sourceRef:
