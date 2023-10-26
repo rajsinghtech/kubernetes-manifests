@@ -26,11 +26,29 @@ spec:
   uninstall:
     keepHistory: false
   values:
-    l2announcements.enabled: true
+    l2announcements:
+      enabled: true
     kubeProxyReplacement: true
     k8sServiceHost: 127.0.0.1
     k8sServicePort: 6443
-    hubble.relay.enabled: true
-    hubble.ui.enabled: true
-    gatewayAPI.enabled: true
-    operator.replicas: 1
+    hubble:
+      enabled: true
+        serviceMonitor:
+          enabled: true
+      relay:
+        enabled: true
+        rollOutPods: true
+      ui:
+        enabled: true
+        rollOutPods: true
+    ipam:
+      mode: kubernetes
+    gatewayAPI:
+      enabled: true
+    kubeProxyReplacement: strict
+    kubeProxyReplacementHealthzBindAddr: 0.0.0.0:10256
+    operator:
+      replicas: 1
+      rollOutPods: true
+    rollOutCiliumPods: true
+    
