@@ -28,7 +28,7 @@ spec:
   values:
     l2announcements:
       enabled: true
-    k8sServiceHost: 127.0.0.1
+    k8sServiceHost: 10.69.11.201
     k8sServicePort: 6443
     hubble:
       enabled: true
