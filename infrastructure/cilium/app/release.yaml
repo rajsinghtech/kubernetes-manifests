@@ -42,7 +42,7 @@ spec:
         clusterPoolIPv4PodCIDRList: 10.42.0.0/16
     k8sServiceHost: 10.69.11.201
     k8sServicePort: 6443
-    kubeProxyReplacement: strict
+    kubeProxyReplacement: true
     l2announcements:
       enabled: true
       leaseDuration: 3s
