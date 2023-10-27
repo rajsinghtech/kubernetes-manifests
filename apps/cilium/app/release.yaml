@@ -58,5 +58,4 @@ spec:
     operator:
       replicas: 1
       rollOutPods: true
-    rollOutCiliumPods: true
     
