@@ -6,7 +6,7 @@ metadata:
   namespace: flux-system
 spec:
   dependsOn:
-    - name: apps-cilium-config
+    - name: infrastructure
   path: ./apps/cert-manager/app
   prune: true
   sourceRef:
