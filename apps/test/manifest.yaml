@@ -56,4 +56,4 @@ spec:
       - "/bin/sh"
     args:
       - "-c"
-      - "apt-get update && apt-get install -y net-tools dnsutils curl && tail -f /dev/null"
+      - "apt-get update && apt-get install -y net-tools dnsutils curl"
