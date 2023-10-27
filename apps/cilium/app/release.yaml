@@ -26,10 +26,13 @@ spec:
   uninstall:
     keepHistory: false
   values:
-    l2announcements:
+    devices:
+    - eth0
+    - net0
+    externalIPs:
       enabled: true
-    k8sServiceHost: 10.69.11.201
-    k8sServicePort: 6443
+    gatewayAPI:
+      enabled: true
     hubble:
       enabled: true
       relay:
@@ -38,26 +41,30 @@ spec:
       ui:
         enabled: true
         rollOutPods: true
+    ingressController:
+      enabled: true
+      enforceHttps: true
+      loadbalancerMode: shared
+      secretsNamespace:
+        create: true
+        name: cilium-system
+        sync: true
+      service:
+        name: cilium-ingress
+        type: LoadBalancer
     ipam:
       mode: kubernetes
-    gatewayAPI:
-      enabled: true
-    ingressController:
-        enabled: true
-        loadbalancerMode: shared
-        enforceHttps: true
-        secretsNamespace:
-          create: true
-          name: cilium-system
-          sync: true
-        service:
-          name: cilium-ingress
-          type: LoadBalancer
-    kubeProxyReplacementHealthzBindAddr: 0.0.0.0:10256
+    k8sServiceHost: clab-garp-demo-control-plane
+    k8sServicePort: 6443
     kubeProxyReplacement: strict
+    kubeProxyReplacementHealthzBindAddr: 0.0.0.0:10256
+    l2announcements:
+      enabled: true
+      leaseDuration: 3s
+      leaseRenewDeadline: 1s
+      leaseRetryPeriod: 500ms
     operator:
       replicas: 1
       rollOutPods: true
-    externalIPs:
-      enabled: true
-    
+
+        
