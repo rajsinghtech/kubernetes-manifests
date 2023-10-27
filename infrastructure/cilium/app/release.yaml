@@ -31,7 +31,7 @@ spec:
     externalIPs:
       enabled: true
     gatewayAPI:
-      enabled: false
+      enabled: true
     hubble:
       relay:
         enabled: true
