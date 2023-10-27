@@ -58,4 +58,6 @@ spec:
     operator:
       replicas: 1
       rollOutPods: true
+    externalIPs:
+      enabled: true
     
