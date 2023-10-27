@@ -11,4 +11,4 @@ spec:
     name: web-gw
     allowedRoutes:
       namespaces:
-        from: AllUpdate 
+        from: All
