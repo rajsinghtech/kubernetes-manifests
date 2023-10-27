@@ -28,7 +28,6 @@ spec:
   values:
     devices:
     - eth0
-    - net0
     externalIPs:
       enabled: true
     gatewayAPI:
