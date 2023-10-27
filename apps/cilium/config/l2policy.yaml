@@ -5,7 +5,7 @@ metadata:
 spec:
   serviceSelector:
     matchLabels:
-      external: true
+      expose: yes
   nodeSelector:
     matchExpressions:
       - key: node-role.kubernetes.io/nothing
