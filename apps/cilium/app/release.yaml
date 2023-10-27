@@ -54,7 +54,7 @@ spec:
         type: LoadBalancer
     ipam:
       mode: kubernetes
-    k8sServiceHost: clab-garp-demo-control-plane
+    k8sServiceHost: 10.69.11.201
     k8sServicePort: 6443
     kubeProxyReplacement: strict
     kubeProxyReplacementHealthzBindAddr: 0.0.0.0:10256
