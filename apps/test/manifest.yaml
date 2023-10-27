@@ -4,16 +4,16 @@ metadata:
   name: web-app
   namespace: test
   labels:
-    app.kubernetes.io/name: web-app
+    app: web-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: web-app
+      app: web-app
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: web-app
+        app: web-app
     spec:
       containers:
       - image: nginx
@@ -56,4 +56,4 @@ spec:
       - "/bin/sh"
     args:
       - "-c"
-      - "apt-get update && apt-get install -y net-tools curl && tail -f /dev/null"
+      - "apt-get update && apt-get install -y net-tools dnsutils curl && tail -f /dev/null"
