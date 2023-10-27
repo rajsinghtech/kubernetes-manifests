@@ -63,7 +63,7 @@ spec:
           command:
             - "/bin/bash"
             - "-c"
-            - "apt-get update && apt-get install -y dnsutils curl && /bin/bash"
+            - "apt update && apt install -y dnsutils curl && /bin/bash"
           stdin: true
           tty: true
 
