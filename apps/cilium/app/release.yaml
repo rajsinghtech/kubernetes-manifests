@@ -33,30 +33,16 @@ spec:
     gatewayAPI:
       enabled: true
     hubble:
-      enabled: true
       relay:
         enabled: true
-        rollOutPods: true
       ui:
         enabled: true
-        rollOutPods: true
-    ingressController:
-      enabled: true
-      enforceHttps: true
-      loadbalancerMode: shared
-      secretsNamespace:
-        create: true
-        name: cilium-system
-        sync: true
-      service:
-        name: cilium-ingress
-        type: LoadBalancer
     ipam:
-      mode: kubernetes
+      operator:
+        clusterPoolIPv4PodCIDRList: 10.42.0.0/16
     k8sServiceHost: 10.69.11.201
     k8sServicePort: 6443
     kubeProxyReplacement: strict
-    kubeProxyReplacementHealthzBindAddr: 0.0.0.0:10256
     l2announcements:
       enabled: true
       leaseDuration: 3s
@@ -64,6 +50,10 @@ spec:
       leaseRetryPeriod: 500ms
     operator:
       replicas: 1
-      rollOutPods: true
-
-        
+    routingMode: tunnel
+    serviceAccounts:
+      cilium:
+        name: cilium
+      operator:
+        name: cilium-operator
+    tunnelProtocol: vxlan
