@@ -1,15 +1,15 @@
 apiVersion: "cilium.io/v2alpha1"
 kind: CiliumL2AnnouncementPolicy
 metadata:
-  name: L2AnnouncementPolicy
+  name: l2-policy
 spec:
   serviceSelector:
     matchLabels:
-      color: blue
+      external: true
   nodeSelector:
     matchExpressions:
-    - key: node-role.kubernetes.io/nothing
-      operator: DoesNotExist
+      - key: node-role.kubernetes.io/nothing
+        operator: DoesNotExist
   interfaces:
   - ^eth[0-9]+
   externalIPs: true
