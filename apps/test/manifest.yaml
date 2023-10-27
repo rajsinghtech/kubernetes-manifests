@@ -43,17 +43,27 @@ spec:
     protocol: TCP
     targetPort: 80
 --- 
-apiVersion: v1
-kind: Pod
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: debian
-  namespace: test
 spec:
-  containers:
-  - name: terminal
-    image: debian
-    command:
-      - "/bin/sh"
-    args:
-      - "-c"
-      - "apt-get update && apt-get install -y net-tools dnsutils curl"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: debian
+  template:
+    metadata:
+      labels:
+        app: debian
+    spec:
+      containers:
+        - name: test-container
+          image: debian:latest
+          command:
+            - "/bin/bash"
+            - "-c"
+            - "apt-get update && apt-get install -y dnsutils curl && /bin/bash"
+          stdin: true
+          tty: true
+
