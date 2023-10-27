@@ -53,6 +53,10 @@ spec:
         service:
           name: cilium-ingress
           type: LoadBalancer
+    bgp:
+      announce:
+        loadbalancerIP: true
+      enabled: true
     kubeProxyReplacementHealthzBindAddr: 0.0.0.0:10256
     kubeProxyReplacement: strict
     operator:
