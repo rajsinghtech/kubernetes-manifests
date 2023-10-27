@@ -2,7 +2,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: apps-cilium-app
+  name: infrastructure-cilium-app
   namespace: flux-system
 spec:
   path: ./infrastructure/cilium/app
@@ -18,11 +18,11 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: apps-cilium-config
+  name: infrastructure-cilium-config
   namespace: flux-system
 spec:
   dependsOn:
-    - name: apps-cilium-app
+    - name: infrastructure-cilium-app
   path: ./infrastructure/cilium/config
   prune: true
   sourceRef:

@@ -2,7 +2,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: apps-gateway-api-app
+  name: infrastructure-gateway-api-app
   namespace: flux-system
 spec:
   path: ./infrastructure/gateway-api/app
@@ -18,11 +18,11 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: apps-gateway-api-config
+  name: infrastructure-gateway-api-config
   namespace: flux-system
 spec:
   dependsOn:
-    - name: apps-gateway-api-app
+    - name: infrastructure-gateway-api-app
   path: ./infrastructure/gateway-api/config
   prune: true
   sourceRef:
