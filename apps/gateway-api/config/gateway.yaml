@@ -1,4 +1,3 @@
----
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: Gateway
 metadata:
@@ -6,9 +5,21 @@ metadata:
 spec:
   gatewayClassName: cilium
   listeners:
-  - protocol: HTTP
-    port: 80
     name: web-gw
     allowedRoutes:
       namespaces:
         from: All
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cilium-gateway-hubble-rajsingh-info
+  namespace: kube-system
+spec:
+  loadBalancerIP: 10.69.12.69
+  ports:
+    - name: port-80
+      protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer
