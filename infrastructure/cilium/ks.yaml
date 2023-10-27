@@ -2,10 +2,10 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: apps-gateway-api-app
+  name: apps-cilium-app
   namespace: flux-system
 spec:
-  path: ./apps/gateway-api/app
+  path: ./infrastructure/cilium/app
   prune: true
   sourceRef:
     kind: GitRepository
@@ -18,12 +18,12 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: apps-gateway-api-config
+  name: apps-cilium-config
   namespace: flux-system
 spec:
   dependsOn:
-    - name: apps-gateway-api-app
-  path: ./apps/gateway-api/config
+    - name: apps-cilium-app
+  path: ./infrastructure/cilium/config
   prune: true
   sourceRef:
     kind: GitRepository

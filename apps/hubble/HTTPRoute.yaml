@@ -4,7 +4,7 @@ metadata:
   name: hubble
 spec:
   parentRefs:
-  - name: gateway-hubble-rajsingh-info
+  - name: gateway-hubble
     namespace: kube-system
   rules:
   - matches:
