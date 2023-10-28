@@ -15,3 +15,6 @@ spec:
       certificateRefs:
       - kind: Secret
         name: wildcard-rajsingh-info-tls
+    allowedRoutes:
+      namespaces:
+        from: All
