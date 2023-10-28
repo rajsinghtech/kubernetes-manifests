@@ -2,12 +2,12 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: apps-cert-manager-app
+  name: infrastructure-cert-manager-app
   namespace: flux-system
 spec:
   dependsOn:
-    - name: infrastructure
-  path: ./apps/cert-manager/app
+    - name: infrastructure-cilium-app
+  path: ./infrastructure/cert-manager/app
   prune: true
   sourceRef:
     kind: GitRepository
@@ -20,12 +20,12 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: apps-cert-manager-config
+  name: infrastructure-cert-manager-config
   namespace: flux-system
 spec:
   dependsOn:
-    - name: apps-cert-manager-app
-  path: ./apps/cert-manager/config
+    - name: infrastructure-cert-manager-app
+  path: ./infrastructure/cert-manager/config
   prune: true
   sourceRef:
     kind: GitRepository
