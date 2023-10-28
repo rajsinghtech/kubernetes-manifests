@@ -1,14 +1,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: cilium-gateway-hubble
+  name: cilium-gateway-rajsingh-info
   namespace: gateway-system
   labels:
     expose: yes
 spec:
+  loadBalancerIP: 10.69.12.69
   ports:
-    - name: port-80
+    - name: port-443
       protocol: TCP
-      port: 80
-      targetPort: 80
+      port: 443
+      targetPort: 443
   type: LoadBalancer

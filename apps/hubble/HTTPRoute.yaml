@@ -6,6 +6,8 @@ spec:
   parentRefs:
   - name: hubble
     namespace: gateway-system
+  hostnames:
+  - "hubble.rajsingh.info"
   rules:
   - matches:
     - path:
