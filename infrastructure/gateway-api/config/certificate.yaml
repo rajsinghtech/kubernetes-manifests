@@ -1,0 +1,12 @@
+--- 
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: certificate
+spec:
+  dnsNames:
+    - "*.rajsingh.info"
+  secretName: wildcard-rajsingh-info-tls
+  issuerRef:
+    name: rajsingh-info-global-issuer
+    kind: ClusterIssuer
