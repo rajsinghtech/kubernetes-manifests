@@ -14,7 +14,6 @@ spec:
   - name: https-rajsingh-info
     protocol: HTTPS
     port: 443
-    hostname: "*.rajsingh.info"
     tls:
       certificateRefs:
       - name: wildcard-rajsingh-info-tls
