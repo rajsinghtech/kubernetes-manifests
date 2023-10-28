@@ -5,7 +5,7 @@ metadata:
 spec:
   parentRefs:
   - name: hubble
-    namespace: kube-system
+    namespace: gateway-system
   rules:
   - matches:
     - path:
