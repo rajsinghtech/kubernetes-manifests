@@ -10,7 +10,7 @@ spec:
     name: http-rajsingh-info
     allowedRoutes:
       namespaces:
-        from: Same
+        from: All
   - name: https-rajsingh-info
     protocol: HTTPS
     port: 443
