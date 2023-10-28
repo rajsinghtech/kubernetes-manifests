@@ -5,7 +5,13 @@ metadata:
 spec:
   gatewayClassName: cilium
   listeners:
-  - name: wildcard-rajsingh-info
+  - protocol: HTTP
+    port: 80
+    name: http-rajsingh-info
+    allowedRoutes:
+      namespaces:
+        from: Same
+  - name: https-rajsingh-info
     protocol: HTTPS
     port: 443
     hostname: "*.rajsingh.info"
