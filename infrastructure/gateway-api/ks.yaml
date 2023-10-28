@@ -23,6 +23,7 @@ metadata:
 spec:
   dependsOn:
     - name: infrastructure-gateway-api-app
+    - name: infrastructure-cert-manager-app
   path: ./infrastructure/gateway-api/config
   prune: true
   sourceRef:
