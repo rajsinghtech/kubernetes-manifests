@@ -13,8 +13,7 @@ spec:
     hostname: "*.rajsingh.info"
     tls:
       certificateRefs:
-      - kind: Secret
-        name: wildcard-rajsingh-info-tls
+      - name: wildcard-rajsingh-info-tls
     allowedRoutes:
       namespaces:
         from: All
