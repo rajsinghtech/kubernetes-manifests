@@ -16,3 +16,21 @@ spec:
   interval: 30m
   retryInterval: 1m
   timeout: 5m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: apps-hubble
+  namespace: flux-system
+spec:
+  dependsOn:
+    - name: infrastructure
+  path: ./apps/hubble
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  wait: true
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m
