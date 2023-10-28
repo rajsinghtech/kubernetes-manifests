@@ -56,5 +56,4 @@ spec:
         name: cilium
       operator:
         name: cilium-operator
-    enableIPv4Masquerade: false
     tunnelProtocol: vxlan
