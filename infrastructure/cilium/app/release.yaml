@@ -26,10 +26,19 @@ spec:
   uninstall:
     keepHistory: false
   values:
+    bgp:
+      enabled: false
+    bpf:
+      masquerade: true
     devices:
     - eth0
+    enableIPv6Masquerade: false
+    endpointRoutes:
+      enabled: true
     externalIPs:
       enabled: true
+    extraConfig:
+      enable-ipv6-ndp: "false"
     gatewayAPI:
       enabled: true
     hubble:
@@ -42,6 +51,15 @@ spec:
       operator:
         clusterPoolIPv4MaskSize: 16
         clusterPoolIPv4PodCIDRList: 10.42.0.0/16
+    ipv4:
+      enabled: true
+    ipv6:
+      enabled: false
+    k8s-require-ipv4-pod-cidr: true
+    k8s-require-ipv6-pod-cidr: false
+    k8sClientRateLimit:
+      burst: 25
+      qps: 10
     k8sServiceHost: 10.69.11.201
     k8sServicePort: 6443
     kubeProxyReplacement: strict
@@ -50,9 +68,6 @@ spec:
       leaseDuration: 300s
       leaseRenewDeadline: 60s
       leaseRetryPeriod: 10s
-    k8sClientRateLimit:
-      qps: 10
-      burst: 25
     loadBalancer:
       algorithm: maglev
       mode: dsr
@@ -60,27 +75,12 @@ spec:
     operator:
       replicas: 1
     routingMode: tunnel
+    securityContext:
+      privileged: true
     serviceAccounts:
       cilium:
         name: cilium
       operator:
         name: cilium-operator
-    tunnelProtocol: vxlan
-    securityContext:
-      privileged: true
     tunnel: disabled
-    ipv6:
-      enabled: false
-    k8s-require-ipv6-pod-cidr: false
-    enableIPv6Masquerade: false
-    extraConfig:
-      enable-ipv6-ndp: "false"
-    bpf:
-      masquerade: true
-    bgp:
-      enabled: false
-    endpointRoutes:
-      enabled: true
-    ipv4:
-      enabled: true
-    k8s-require-ipv4-pod-cidr: true
+    tunnelProtocol: vxlan
