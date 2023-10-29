@@ -83,3 +83,4 @@ spec:
       operator:
         name: cilium-operator
     tunnel: disabled
+    ipv4NativeRoutingCIDR: 10.42.0.0/16
