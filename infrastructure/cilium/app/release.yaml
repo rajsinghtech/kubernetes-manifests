@@ -38,16 +38,25 @@ spec:
       ui:
         enabled: true
     ipam:
+      mode: kubernetes
       operator:
+        clusterPoolIPv4MaskSize: 16
         clusterPoolIPv4PodCIDRList: 10.42.0.0/16
     k8sServiceHost: 10.69.11.201
     k8sServicePort: 6443
-    kubeProxyReplacement: true
+    kubeProxyReplacement: strict
     l2announcements:
       enabled: true
-      leaseDuration: 3s
-      leaseRenewDeadline: 1s
-      leaseRetryPeriod: 500ms
+      leaseDuration: 300s
+      leaseRenewDeadline: 60s
+      leaseRetryPeriod: 10s
+    k8sClientRateLimit:
+      qps: 10
+      burst: 25
+    loadBalancer:
+      algorithm: maglev
+      mode: dsr
+    localRedirectPolicy: true
     operator:
       replicas: 1
     routingMode: tunnel
@@ -57,3 +66,21 @@ spec:
       operator:
         name: cilium-operator
     tunnelProtocol: vxlan
+    securityContext:
+      privileged: true
+    tunnel: disabled
+    ipv6:
+      enabled: false
+    k8s-require-ipv6-pod-cidr: false
+    enableIPv6Masquerade: false
+    extraConfig:
+      enable-ipv6-ndp: "false"
+    bpf:
+      masquerade: true
+    bgp:
+      enabled: false
+    endpointRoutes:
+      enabled: true
+    ipv4:
+      enabled: true
+    k8s-require-ipv4-pod-cidr: true
