@@ -14,5 +14,6 @@ spec:
         type: PathPrefix
         value: /
     backendRefs:
-    - name: router-svc
+    - name: router
+      kind: Endpoint
       port: 80

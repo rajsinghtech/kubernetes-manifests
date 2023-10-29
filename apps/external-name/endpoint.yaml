@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Endpoint
+metadata:
+  name: router
+spec:
+  endpoints:
+  - addresses:
+    - "10.69.0.1"
+  ports:
+  - name: http
+    port: 80

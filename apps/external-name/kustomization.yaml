@@ -5,4 +5,4 @@ namespace: external-name
 resources:
   - ./namespace.yaml
   - ./HTTPRoute.yaml
-  - ./services.yaml
+  - ./endpoint.yaml
