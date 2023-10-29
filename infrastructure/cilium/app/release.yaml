@@ -83,4 +83,3 @@ spec:
       operator:
         name: cilium-operator
     tunnel: disabled
-    tunnelProtocol: vxlan
