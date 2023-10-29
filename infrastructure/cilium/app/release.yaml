@@ -53,6 +53,7 @@ spec:
         clusterPoolIPv4PodCIDRList: 10.42.0.0/16
     ipv4:
       enabled: true
+    ipv4NativeRoutingCIDR: 10.42.0.0/16
     ipv6:
       enabled: false
     k8s-require-ipv4-pod-cidr: true
@@ -68,9 +69,6 @@ spec:
       leaseDuration: 300s
       leaseRenewDeadline: 60s
       leaseRetryPeriod: 10s
-    loadBalancer:
-      algorithm: maglev
-      mode: dsr
     localRedirectPolicy: true
     operator:
       replicas: 1
@@ -83,4 +81,3 @@ spec:
       operator:
         name: cilium-operator
     tunnel: disabled
-    ipv4NativeRoutingCIDR: 10.42.0.0/16
