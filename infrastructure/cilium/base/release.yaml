@@ -6,8 +6,8 @@ metadata:
   namespace: kube-system
 spec:
   interval: 2m
-  driftDetection:
-    mode: enabled
+  # driftDetection:
+  #   mode: enabled
   chart:
     spec:
       chart: cilium
