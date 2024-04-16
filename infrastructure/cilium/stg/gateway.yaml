@@ -6,13 +6,20 @@ metadata:
     cert-manager.io/cluster-issuer: rajsingh-info-global-issuer
 spec:
   gatewayClassName: cilium
-  # address:
-  #   value: 10.96.11.1
+  addresses:
+    - value: "10.96.11.1"
   listeners:
     - name: http
       hostname: ${INGRESS_SUFFIX}
       port: 443
       protocol: HTTPS
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: http
+      hostname: ${INGRESS_SUFFIX}
+      port: 80
+      protocol: HTTP
       allowedRoutes:
         namespaces:
           from: All
