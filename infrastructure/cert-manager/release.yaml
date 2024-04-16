@@ -1,0 +1,34 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: cert-manager
+  namespace: cert-manager
+spec:
+  interval: 2m
+  driftDetection:
+    mode: enabled
+  chart:
+    spec:
+      chart: cert-manager
+      version: v1.14.4
+      sourceRef:
+        kind: HelmRepository
+        name: jetstack
+  maxHistory: 2
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    installCRDs: false
+    extraArgs:
+      - --dns01-recursive-nameservers=1.1.1.1:53,8.8.8.8:53
+      - --dns01-recursive-nameservers-only
+      - --feature-gates=ExperimentalGatewayAPISupport=true

@@ -3,6 +3,7 @@ kind: Kustomization
 namePrefix: infrastructure-
 resources:
 - cilium.yaml
+- cert-manager.yaml
 patches:
   - path: base.yaml
     target:
