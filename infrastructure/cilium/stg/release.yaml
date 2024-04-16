@@ -24,7 +24,7 @@ spec:
     ipv6:
       enabled: false
     k8s-require-ipv4-pod-cidr: true
-    kubeProxyReplacement: strict
+    kubeProxyReplacement: true
     ipam:
       mode: kubernetes
     tunnel: vxlan
