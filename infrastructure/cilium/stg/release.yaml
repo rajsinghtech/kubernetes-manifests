@@ -21,6 +21,7 @@ spec:
         ingress:
           annotations: 
             cert-manager.io/cluster-issuer: rajsingh-info-global-issuer
+            ingress.cilium.io/loadbalancer-mode: shared
             kubernetes.io/tls-acme: "true"
           className: "cilium"
           enabled: true

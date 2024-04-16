@@ -33,7 +33,7 @@ spec:
       passwordKey: password
     dnsmasq:
       customDnsEntries:
-        - address=/-stg.rajsingh.info/10.69.11.1
+        - address=/.stg.rajsingh.info/10.69.11.1
         - address=/-tooling.rajsingh.info/10.96.96.1
         - address=/.rajsingh.info/10.96.10.1
     persistentVolumeClaim:
@@ -59,6 +59,7 @@ spec:
       annotations: 
         cert-manager.io/cluster-issuer: rajsingh-info-global-issuer
         kubernetes.io/tls-acme: "true"
+        ingress.cilium.io/loadbalancer-mode: shared
       enabled: true
       hosts:
       - pihole${INGRESS_SUFFIX}
