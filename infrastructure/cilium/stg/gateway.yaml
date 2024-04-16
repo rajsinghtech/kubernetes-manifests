@@ -9,7 +9,7 @@ spec:
   addresses:
     - value: "10.96.11.1"
   listeners:
-    - name: http
+    - name: https
       hostname: ${INGRESS_SUFFIX}
       port: 443
       protocol: HTTPS
