@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: infrastructure-config
+  namespace: flux-system
+data:
+  CLUSTER_ENV: "stg"
+  INGRESS_SUFFIX: "-stg.rajsingh.info"
+  NFS_PATHPATTERN: "${.PVC.namespace}/${.PVC.name}"

@@ -1,0 +1,7 @@
+apiVersion: "cilium.io/v2alpha1"
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: "k8s-pool"
+spec:
+  cidrs:
+  - cidr: "10.96.11.0/24"
