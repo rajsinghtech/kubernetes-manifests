@@ -9,17 +9,17 @@ spec:
   addresses:
     - value: "10.96.11.1"
   listeners:
-    - name: https
-      hostname: ${INGRESS_SUFFIX}
-      port: 443
-      protocol: HTTPS
-      allowedRoutes:
-        namespaces:
-          from: All
     - name: http
       hostname: ${INGRESS_SUFFIX}
       port: 80
       protocol: HTTP
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: https
+      hostname: ${INGRESS_SUFFIX}
+      port: 443
+      protocol: HTTPS
       allowedRoutes:
         namespaces:
           from: All
