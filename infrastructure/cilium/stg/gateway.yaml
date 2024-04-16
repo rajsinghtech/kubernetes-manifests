@@ -1,0 +1,13 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: main
+spec:
+  gatewayClassName: cilium
+  listeners:
+  - protocol: HTTPS
+    port: 443
+    name: https
+    allowedRoutes:
+      namespaces:
+        from: All
