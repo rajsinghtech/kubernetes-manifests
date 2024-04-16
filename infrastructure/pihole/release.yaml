@@ -55,16 +55,16 @@ spec:
       nodePort: ""
       port: 53
       type: LoadBalancer
-    ingress:
-      annotations: 
-        cert-manager.io/cluster-issuer: rajsingh-info-global-issuer
-        kubernetes.io/tls-acme: "true"
-        ingress.cilium.io/loadbalancer-mode: shared
-      enabled: true
-      hosts:
-      - pihole${INGRESS_SUFFIX}
-      path: /
-      tls:
-      - secretName: pihole-rajsingh-info-tls
-        hosts:
-          - pihole${INGRESS_SUFFIX}
+    # ingress:
+    #   annotations: 
+    #     cert-manager.io/cluster-issuer: rajsingh-info-global-issuer
+    #     kubernetes.io/tls-acme: "true"
+    #     ingress.cilium.io/loadbalancer-mode: shared
+    #   enabled: true
+    #   hosts:
+    #   - pihole${INGRESS_SUFFIX}
+    #   path: /
+    #   tls:
+    #   - secretName: pihole-rajsingh-info-tls
+    #     hosts:
+    #       - pihole${INGRESS_SUFFIX}

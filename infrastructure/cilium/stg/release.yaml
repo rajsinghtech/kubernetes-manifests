@@ -18,20 +18,6 @@ spec:
         enabled: true
       ui:
         enabled: true
-        ingress:
-          annotations: 
-            cert-manager.io/cluster-issuer: rajsingh-info-global-issuer
-            ingress.cilium.io/loadbalancer-mode: shared
-            kubernetes.io/tls-acme: "true"
-          className: "cilium"
-          enabled: true
-          hosts:
-          - hubble${INGRESS_SUFFIX}
-          labels: {}
-          tls:
-            - secretName: hubble-rajsingh-info-tls
-              hosts:
-                - hubble${INGRESS_SUFFIX}
     ipv4:
       enabled: true
     ipv4NativeRoutingCIDR: 10.42.0.0/16
@@ -61,8 +47,3 @@ spec:
       enabled: true
     bpf:
       masquerade: true
-    ingressController:
-      enabled: true
-      loadbalancerMode: shared
-      default: true
-      enforceHttps: false
