@@ -3,6 +3,8 @@ kind: Kustomization
 namePrefix: infrastructure-
 resources:
 - cilium.yaml
+- pihole.yaml
+- cloudflared.yaml
 - cert-manager.yaml
 patches:
   - path: base.yaml
