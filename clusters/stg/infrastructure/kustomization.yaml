@@ -6,6 +6,7 @@ resources:
 - pihole.yaml
 - cloudflared.yaml
 - cert-manager.yaml
+- nfs-subdir-external-provisioner.yaml
 patches:
   - path: base.yaml
     target:
