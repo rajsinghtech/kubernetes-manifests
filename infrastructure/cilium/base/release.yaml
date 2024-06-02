@@ -30,7 +30,7 @@ spec:
     cluster:
       id: ${CLUSTER_ID}
       name: ${CLUSTER_ENV}
-    k8sServiceHost: k8s-stg1.lan
+    k8sServiceHost: ${CLUSTER_API}
     k8sServicePort: 6443
     bgpControlPlane:
       enabled: true
