@@ -6,4 +6,4 @@ resources:
   - ./release.yaml
   - ./namespace.yaml
   - ./helm-repository.yaml
-  - ./external-dns.yaml
+  # - ./external-dns.yaml
