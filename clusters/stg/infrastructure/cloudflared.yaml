@@ -13,4 +13,4 @@ spec:
   wait: true
   timeout: 5m
   dependsOn:
-    - name: infrastructure-cilium
+    - name: cilium-config
