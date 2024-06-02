@@ -30,5 +30,5 @@ spec:
       defaultClass: true
       pathPattern: "${NFS_PATHPATTERN}"
     nfs:
-      server: truenas.lan
-      path: /mnt/tank/k8s/${CLUSTER_ENV}
+      server: proxmox.lan
+      path: /tank/k8s/${CLUSTER_ENV}
