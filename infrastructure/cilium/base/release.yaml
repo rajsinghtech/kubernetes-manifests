@@ -27,3 +27,44 @@ spec:
   uninstall:
     keepHistory: false
   values:
+    cluster:
+      id: ${CLUSTER_ID}
+      name: ${CLUSTER_ENV}
+    k8sServiceHost: k8s-stg1.lan
+    k8sServicePort: 6443
+    bgpControlPlane:
+      enabled: true
+    hubble:
+      relay:
+        enabled: true
+      ui:
+        enabled: true
+    ipv4:
+      enabled: true
+    ipv4NativeRoutingCIDR: 10.42.0.0/16
+    ipv6:
+      enabled: false
+    k8s-require-ipv4-pod-cidr: true
+    kubeProxyReplacement: true
+    ipam:
+      mode: kubernetes
+    tunnel: vxlan
+    externalIPs:
+      enabled: true
+    hostPort:
+      enabled: true
+    hostServices:
+      enabled: false
+    envoy:
+      enabled: true
+    envoyConfig:
+      enabled: true
+    loadBalancer:
+      l7:
+        backend: envoy
+    gatewayAPI:
+      enabled: true
+    egressGateway:
+      enabled: true
+    bpf:
+      masquerade: true

@@ -8,3 +8,4 @@ data:
   INGRESS_SUFFIX: "stg.rajsingh.info"
   NFS_PATHPATTERN: "${.PVC.namespace}/${.PVC.name}"
   CLUSTER_SUBNET: "10.96.11."
+  CLUSTER_ID: "2"
