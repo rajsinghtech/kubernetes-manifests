@@ -68,3 +68,5 @@ spec:
       enabled: true
     bpf:
       masquerade: true
+    operator:
+      replicas: 1
