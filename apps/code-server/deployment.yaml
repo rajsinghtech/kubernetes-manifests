@@ -49,7 +49,7 @@ spec:
           #     path: /healthz
           #     port: 8443
           #   periodSeconds: 10
-          command: ["/bin/sh", "-c", "chmod +x /scripts/startup.sh &&/scripts/startup.sh && code-server"]
+          command: ["/bin/sh", "-c", "/scripts/startup.sh && code-server"]
           volumeMounts:
             - name: startup-script
               mountPath: /scripts
@@ -57,4 +57,5 @@ spec:
         - name: startup-script
           configMap:
             name: startup-script
+            defaultMode: 0755  # Set the permissions for the files in the ConfigMap
       restartPolicy: Always  # Restart policy for the pod
