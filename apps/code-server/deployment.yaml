@@ -49,9 +49,13 @@ spec:
           #     path: /healthz
           #     port: 8443
           #   periodSeconds: 10
-          command: ["/bin/sh", "-c", "echo hi && sleep infinity"]
+          command: ["/bin/sh", "-c", "./startup.sh && code-server"]
+          volumeMounts:
+            - name: startup-script
+              mountPath: /config/startup.sh
+              subPath: startup.sh
+      volumes:
+        - name: startup-script
+          configMap:
+            name: startup-script
       restartPolicy: Always  # Restart policy for the pod
-  # volumes:
-  #   - name: config-volume
-  #     hostPath:
-  #       path: /path/to/appdata/config  # Adjust the host path to your appdata config path
