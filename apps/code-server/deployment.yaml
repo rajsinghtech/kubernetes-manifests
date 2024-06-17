@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: code-server
+spec:
+  replicas: 1  # Adjust the number of replicas as needed
+  selector:
+    matchLabels:
+      app: code-server
+  template:
+    metadata:
+      labels:
+        app: code-server
+    spec:
+      containers:
+        - name: code-server
+          image: lscr.io/linuxserver/code-server:latest  # Docker image for code-server
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "Etc/UTC"
+            - name: PASSWORD
+              value: "password"  # Optional: Specify your desired password
+            - name: HASHED_PASSWORD
+              value: ""  # Optional: Leave empty if not using hashed password
+            - name: SUDO_PASSWORD
+              value: "password"  # Optional: Specify sudo password if needed
+            - name: SUDO_PASSWORD_HASH
+              value: ""  # Optional: Leave empty if not using hashed sudo password
+            # - name: PROXY_DOMAIN
+            #   value: "code-server.my.domain"  # Optional: Specify your domain
+            # - name: DEFAULT_WORKSPACE
+            #   value: "/config/workspace"  # Optional: Specify default workspace path
+          # volumeMounts:
+          #   - name: config-volume
+          #     mountPath: /config
+      # volumes:
+        # - name: config-volume
+        #   hostPath:
+        #     path: /path/to/appdata/config  # Adjust the host path to your appdata config path
+  ports:
+    - containerPort: 8443  # Port inside the container (code-server default is 8443)
+  restartPolicy: Always  # Restart policy for the pod
