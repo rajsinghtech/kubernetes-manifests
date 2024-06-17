@@ -14,12 +14,13 @@ spec:
     spec:
       containers:
         - name: code-server
+          hostname: code-server
           image: lscr.io/linuxserver/code-server:latest  # Docker image for code-server
           env:
             - name: PUID
-              value: "1000"
+              value: "0"
             - name: PGID
-              value: "1000"
+              value: "0"
             - name: TZ
               value: "Etc/UTC"
             - name: PASSWORD
