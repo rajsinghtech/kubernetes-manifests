@@ -10,7 +10,11 @@ echo '  \/_/ /_/   \/_/\/_/ \/_____/      \/_____/   \/_/   \/_/ \/_/   \/_____/
 echo '------'
 echo 'Installing Kubectl'
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 echo '------'
 echo 'Installing Fluxcd'
-curl -s https://fluxcd.io/install.sh | sudo FLUX_VERSION=2.0.0 bash
+curl -s https://fluxcd.io/install.sh | FLUX_VERSION=2.0.0 bash
+echo '------'
+echo 'Installing Tailscale'
+curl -fsSL https://tailscale.com/install.sh | sh
+tailscale up --authkey tskey-abcdef1432341818
