@@ -39,18 +39,16 @@ spec:
           #     mountPath: /config
           ports:
             - containerPort: 8443  # Port inside the container (code-server default is 8443)
-          livenessProbe:
-            httpGet:
-              path: /healthz
-              port: 8443
-            initialDelaySeconds: 30
-            periodSeconds: 10
-          readinessProbe:
-            httpGet:
-              path: /readyz
-              port: 8443
-            initialDelaySeconds: 30
-            periodSeconds: 10
+          # livenessProbe:
+          #   httpGet:
+          #     path: /healthz
+          #     port: 8443
+          #   periodSeconds: 10
+          # readinessProbe:
+          #   httpGet:
+          #     path: /healthz
+          #     port: 8443
+          #   periodSeconds: 10
           command: ["/bin/sh", "-c", "echo hi && sleep infinity"]
       restartPolicy: Always  # Restart policy for the pod
   # volumes:
