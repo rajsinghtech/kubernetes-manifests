@@ -37,10 +37,23 @@ spec:
           # volumeMounts:
           #   - name: config-volume
           #     mountPath: /config
-      # volumes:
-        # - name: config-volume
-        #   hostPath:
-        #     path: /path/to/appdata/config  # Adjust the host path to your appdata config path
-  ports:
-    - containerPort: 8443  # Port inside the container (code-server default is 8443)
-  restartPolicy: Always  # Restart policy for the pod
+          ports:
+            - containerPort: 8443  # Port inside the container (code-server default is 8443)
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8443
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8443
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          command: ["/bin/sh", "-c", "echo hi"]
+      restartPolicy: Always  # Restart policy for the pod
+  # volumes:
+  #   - name: config-volume
+  #     hostPath:
+  #       path: /path/to/appdata/config  # Adjust the host path to your appdata config path
