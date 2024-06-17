@@ -5,3 +5,7 @@ resources:
 - deployment.yaml
 - namespace.yaml
 - service.yaml
+configMapGenerator:
+  - name: startup-script
+    files:
+      - startup.sh
