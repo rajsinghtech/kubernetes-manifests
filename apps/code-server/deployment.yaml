@@ -49,11 +49,10 @@ spec:
           #     path: /healthz
           #     port: 8443
           #   periodSeconds: 10
-          command: ["/bin/sh", "-c", "./startup.sh && code-server"]
+          command: ["/bin/sh", "-c", "chmod +x /scripts/startup.sh &&/scripts/startup.sh && code-server"]
           volumeMounts:
             - name: startup-script
-              mountPath: /config/startup.sh
-              subPath: startup.sh
+              mountPath: /scripts
       volumes:
         - name: startup-script
           configMap:
