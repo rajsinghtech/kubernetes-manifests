@@ -4,3 +4,4 @@ namespace: personal
 resources:
 - deployment.yaml
 - namespace.yaml
+- service.yaml
