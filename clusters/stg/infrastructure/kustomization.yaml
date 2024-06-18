@@ -6,6 +6,7 @@ resources:
 - cloudflared.yaml
 - cert-manager.yaml
 - nfs-subdir-external-provisioner.yaml
+- vault.yaml
 patches:
   - path: base.yaml
     target:
