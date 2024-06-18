@@ -17,4 +17,5 @@ curl -s https://fluxcd.io/install.sh | FLUX_VERSION=2.0.0 bash
 echo '------'
 echo 'Installing Tailscale'
 curl -fsSL https://tailscale.com/install.sh | sh
-tailscale up --authkey tskey-abcdef1432341818
+
+tailscale up --authkey $TAILSCALE_KEY
