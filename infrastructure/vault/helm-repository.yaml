@@ -2,15 +2,7 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: HelmRepository
 metadata:
-  name: pihole
+  name: hashicorp
 spec:
   interval: 1h
-  url: https://mojo2600.github.io/pihole-kubernetes/
----
-apiVersion: source.toolkit.fluxcd.io/v1beta2
-kind: HelmRepository
-metadata:
-  name: external-dns
-spec:
-  interval: 1h
-  url: https://kubernetes-sigs.github.io/external-dns/
+  url: https://helm.releases.hashicorp.com

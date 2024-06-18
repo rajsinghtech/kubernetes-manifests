@@ -2,18 +2,18 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: vault
+  name: pihole
 spec:
   interval: 2m
   driftDetection:
     mode: enabled
   chart:
     spec:
-      chart: vault
+      chart: pihole
       version: x
       sourceRef:
         kind: HelmRepository
-        name: hashicorp
+        name: pihole
   maxHistory: 2
   install:
     createNamespace: true
@@ -26,15 +26,45 @@ spec:
   uninstall:
     keepHistory: false
   values:
-    ui:
+    DNS1: 10.69.0.1
+    DNS2: 10.69.0.1
+    admin:
+      existingSecret: "pihole-password"
+      passwordKey: password
+    dnsmasq:
+      customDnsEntries:
+        - address=/.stg.rajsingh.info/10.69.11.1
+        - address=/-tooling.rajsingh.info/10.96.96.1
+        - address=/.rajsingh.info/10.96.10.1
+    persistentVolumeClaim:
       enabled: true
-      serviceType: "LoadBalancer"
-      serviceNodePort: null
-      externalPort: 8200
-      loadBalancerIP: ${CLUSTER_SUBNET}2
-  ha:
-    enabled: true
-    replicas: 3
-  server:
-    dataStorage:
-      storageClass: nfs-client
+      storageClass: "nfs-client"
+    serviceWeb:
+      type: ClusterIP
+    podDnsConfig:
+      enabled: true
+      policy: "None"
+      nameservers:
+      - 10.69.0.1
+    #   - 8.8.8.8
+    hostname: "rajsingh-${CLUSTER_ENV}"
+    serviceDns:
+      externalTrafficPolicy: Cluster
+      loadBalancerIP: "${CLUSTER_SUBNET}96"
+      mixedService: true
+      nodePort: ""
+      port: 53
+      type: LoadBalancer
+    ingress:
+      annotations: 
+        cert-manager.io/cluster-issuer: rajsingh-info-global-issuer
+        kubernetes.io/tls-acme: "true"
+        ingress.cilium.io/loadbalancer-mode: shared
+      enabled: true
+      hosts:
+      - pihole${INGRESS_SUFFIX}
+      path: /
+      tls:
+      - secretName: pihole-rajsingh-info-tls
+        hosts:
+          - pihole${INGRESS_SUFFIX}
