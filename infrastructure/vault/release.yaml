@@ -32,9 +32,9 @@ spec:
       serviceNodePort: null
       externalPort: 8200
       loadBalancerIP: ${CLUSTER_SUBNET}2
-  ha:
-    enabled: true
-    replicas: 3
-  server:
-    dataStorage:
-      storageClass: nfs-client
+    ha:
+      enabled: true
+      replicas: 3
+    server:
+      dataStorage:
+        storageClass: nfs-client
