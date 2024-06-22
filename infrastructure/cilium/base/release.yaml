@@ -73,5 +73,5 @@ spec:
     l2announcements:
       enabled: true
     k8sClientRateLimit:
-      qps: {QPS}
-      burst: {BURST}
+      qps: ${QPS}
+      burst: ${BURST}
