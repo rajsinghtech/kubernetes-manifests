@@ -5,10 +5,9 @@ metadata:
   namespace: flux-system
 data:
   CLUSTER_ENV: "stg"
-  INGRESS_SUFFIX: "stg.rajsingh.info"
+  INGRESS_SUFFIX: ".lukehouge.com"
+  NFS_PATH: /tank/k8s
+  NFS_SERVER: 192.168.50.69
   NFS_PATHPATTERN: "${.PVC.namespace}/${.PVC.name}"
-  CLUSTER_SUBNET: "10.96.11."
+  CLUSTER_SUBNET: "192.168.50."
   CLUSTER_ID: "2"
-  CLUSTER_API: 10.69.6.1
-  NFS_PATH: /tank/k8s/stg
-  NFS_SERVER: proxmox.lan
