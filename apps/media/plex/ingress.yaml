@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: plex-rajsingh-info-tls
+  namespace: media
+  annotations:
+    cert-manager.io/cluster-issuer: rajsingh-info-global-issuer
+    kubernetes.io/tls-acme: 'true'
+spec:
+  ingressClassName: haproxy
+  rules:
+  - host: plex.rajsingh.info
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: plex
+            port:
+              number: 7878
+  tls:
+  - secretName: plex-rajsingh-info-tls
+    hosts:
+    - plex.rajsingh.info

@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plex
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: plex
+  template:
+    metadata:
+      labels:
+        app: plex
+    spec:
+      containers:
+      - name: plex
+        image: lscr.io/linuxserver/plex:latest
+        ports:
+        - name: http
+          containerPort: 32400
+          protocol: TCP
+        volumeMounts:
+        - name: movies-volume
+          mountPath: /movies
+        - name: tv-volume
+          mountPath: /tv
+        - name: config-volume
+          mountPath: /config
+        env:
+        - name: PUID
+          value: "0"
+        - name: GUID
+          value: "0"
+        - name: TZ
+          value: America/Chicago
+        # - name: PLEX_CLAIM
+        #   value: 
+      volumes:
+      - name: movies-volume
+        persistentVolumeClaim:
+          claimName: radarr-movies
+      - name: tv-volume
+        persistentVolumeClaim:
+          claimName: sonarr-tv
+      - name: config-volume
+        persistentVolumeClaim:
+          claimName: plex-config
