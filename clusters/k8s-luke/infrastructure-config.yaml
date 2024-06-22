@@ -12,3 +12,5 @@ data:
   CLUSTER_SUBNET: "192.168.50."
   CLUSTER_ID: "2"
   CLUSTER_API: 127.0.0.1
+  QPS: "5"
+  BURST: "10"
