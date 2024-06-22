@@ -8,8 +8,8 @@ spec:
       l2: expose
   nodeSelector:
     matchExpressions:
-      - key: node-role.kubernetes.io/control-plane
-        operator: DoesNotExist
+      - key: kubernetes.io/os
+        operator: Exist
   interfaces:
   - ^eth[0-9]+
   externalIPs: true
