@@ -62,8 +62,8 @@ spec:
     loadBalancer:
       l7:
         backend: envoy
-    # gatewayAPI:
-    #   enabled: true
+    gatewayAPI:
+      enabled: true
     egressGateway:
       enabled: true
     bpf:
@@ -75,8 +75,6 @@ spec:
       leaseDuration: 3s
       leaseRenewDeadline: 1s
       leaseRetryPeriod: 500ms
-      
-
     k8sClientRateLimit:
       qps: ${QPS}
       burst: ${BURST}
