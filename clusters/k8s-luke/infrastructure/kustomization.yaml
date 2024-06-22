@@ -5,6 +5,7 @@ resources:
 - cert-manager.yaml
 - nfs-subdir-external-provisioner.yaml
 - flux-support.yaml
+- headlamp.yaml
 patches:
   - path: base.yaml
     target:
