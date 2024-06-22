@@ -9,7 +9,7 @@ spec:
   nodeSelector:
     matchExpressions:
       - key: kubernetes.io/os
-        operator: Exist
+        operator: Exists
   interfaces:
   - ^eth[0-9]+
   externalIPs: true
