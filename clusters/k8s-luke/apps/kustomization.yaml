@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
 - media.yaml
 - code-server.yaml
+- immich.yaml
 patches:
   - path: base.yaml
     target:
