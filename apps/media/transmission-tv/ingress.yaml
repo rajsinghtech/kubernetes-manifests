@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: transmission-tv-rajsingh-info-tls
+  namespace: media
+  annotations:
+    cert-manager.io/cluster-issuer: rajsingh-info-global-issuer
+    kubernetes.io/tls-acme: 'true'
+    item.homer.rajsingh.info/Logo: https://transmissionbt.com/assets/images/Transmission_icon.png
+    item.homer.rajsingh.info/Name: "Transmission TV"
+spec:
+  ingressClassName: haproxy
+  rules:
+  - host: transmission-tv.rajsingh.info
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: transmission-tv
+            port:
+              number: 9091
+  tls:
+  - secretName: transmission-tv-rajsingh-info-tls
+    hosts:
+    - transmission-tv.rajsingh.info

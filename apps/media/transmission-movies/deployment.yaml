@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transmission-movies
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: transmission-movies
+  template:
+    metadata:
+      labels:
+        app: transmission-movies
+    spec:
+      containers:
+      - name: transmission-movies
+        image: haugene/transmission-openvpn
+        ports:
+        - name: http
+          containerPort: 9091
+          protocol: TCP
+        securityContext:
+          capabilities:
+            add:
+            - NET_ADMIN
+        volumeMounts:
+        - name: data-volume
+          mountPath: /data
+        - name: config-volume
+          mountPath: /config
+        env:
+        - name: OPENVPN_PROVIDER
+          value: IPVANISH
+        - name: OPENVPN_CONFIG
+          value: ipvanish-US-Chicago-chi-b51
+        - name: OPENVPN_USERNAME
+          value: snokyguy@gmail.com
+        - name: OPENVPN_PASSWORD
+          value: Kangaroo500
+        - name: LOCAL_NETWORK
+          value: 10.42.0.0/16
+      volumes:
+      - name: data-volume
+        persistentVolumeClaim:
+          claimName: transmission-movies-data
+      - name: config-volume
+        persistentVolumeClaim:
+          claimName: transmission-movies-config
