@@ -4,6 +4,7 @@ resources:
 - cilium.yaml
 - cert-manager.yaml
 - nfs-subdir-external-provisioner.yaml
+- flux-support.yaml
 patches:
   - path: base.yaml
     target:
