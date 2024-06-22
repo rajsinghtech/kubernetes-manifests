@@ -8,7 +8,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./apps/media
+  path: ./apps/media/luke
   prune: true
   wait: true
   timeout: 5m
