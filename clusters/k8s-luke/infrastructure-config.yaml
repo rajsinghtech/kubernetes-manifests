@@ -11,3 +11,4 @@ data:
   NFS_PATHPATTERN: "${.PVC.namespace}/${.PVC.name}"
   CLUSTER_SUBNET: "192.168.50."
   CLUSTER_ID: "2"
+  CLUSTER_API: 127.0.0.1
