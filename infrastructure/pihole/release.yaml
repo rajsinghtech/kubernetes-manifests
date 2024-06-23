@@ -57,7 +57,7 @@ spec:
       type: LoadBalancer
     ingress:
       annotations: 
-        cert-manager.io/cluster-issuer: rajsingh-info-global-issuer
+        cert-manager.io/cluster-issuer: global-issuer
         kubernetes.io/tls-acme: "true"
         ingress.cilium.io/loadbalancer-mode: shared
       enabled: true
@@ -65,6 +65,6 @@ spec:
       - pihole${INGRESS_SUFFIX}
       path: /
       tls:
-      - secretName: pihole-rajsingh-info-tls
+      - secretName: pihole-tls
         hosts:
           - pihole${INGRESS_SUFFIX}

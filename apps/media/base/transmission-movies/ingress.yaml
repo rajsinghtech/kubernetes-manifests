@@ -1,17 +1,15 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: transmission-movies-rajsingh-info-tls
+  name: transmission-movies-tls
   namespace: media
   annotations:
-    cert-manager.io/cluster-issuer: rajsingh-info-global-issuer
+    cert-manager.io/cluster-issuer: global-issuer
     kubernetes.io/tls-acme: 'true'
-    item.homer.rajsingh.info/Logo: https://transmissionbt.com/assets/images/Transmission_icon.png
-    item.homer.rajsingh.info/Name: "Transmission Movies"
 spec:
   ingressClassName: haproxy
   rules:
-  - host: transmission-movies.rajsingh.info
+  - host: transmission-movies${INGRESS_SUFFIX}
     http:
       paths:
       - path: /
@@ -22,6 +20,6 @@ spec:
             port:
               number: 9091
   tls:
-  - secretName: transmission-movies-rajsingh-info-tls
+  - secretName: transmission-movies-tls
     hosts:
-    - transmission-movies.rajsingh.info
+    - transmission-movies${INGRESS_SUFFIX}
