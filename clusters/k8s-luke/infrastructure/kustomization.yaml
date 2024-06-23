@@ -6,6 +6,7 @@ resources:
 - nfs-subdir-external-provisioner.yaml
 - flux-support.yaml
 - headlamp.yaml
+- 1password.yaml
 patches:
   - path: base.yaml
     target:
