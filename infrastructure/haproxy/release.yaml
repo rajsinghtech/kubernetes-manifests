@@ -12,7 +12,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: haproxy
-        namespace: flux-system
+        # namespace: flux-system
   maxHistory: 2
   install:
     createNamespace: true
