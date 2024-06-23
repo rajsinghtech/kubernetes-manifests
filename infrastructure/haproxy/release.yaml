@@ -31,3 +31,5 @@ spec:
       service:
         type: LoadBalancer
         loadBalancerIP: ${INGRESS_IP}
+        labels:
+          l2: expose
