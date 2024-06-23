@@ -1,15 +1,15 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: jellyfin-rajsingh-info-tls
+  name: jellyfin-tls
   namespace: media
   annotations:
-    cert-manager.io/cluster-issuer: rajsingh-info-global-issuer
+    cert-manager.io/cluster-issuer: global-issuer
     kubernetes.io/tls-acme: 'true'
 spec:
   ingressClassName: haproxy
   rules:
-  - host: jellyfin.rajsingh.info
+  - host: jellyfin${INGRESS_SUFFIX}
     http:
       paths:
       - path: /
@@ -20,6 +20,6 @@ spec:
             port:
               number: 8096
   tls:
-  - secretName: jellyfin-rajsingh-info-tls
+  - secretName: jellyfin-tls
     hosts:
-    - jellyfin.rajsingh.info
+    - jellyfin${INGRESS_SUFFIX}

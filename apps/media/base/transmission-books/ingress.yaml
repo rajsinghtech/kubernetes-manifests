@@ -1,17 +1,15 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: transmission-books-rajsingh-info-tls
+  name: transmission-books-tls
   namespace: media
   annotations:
-    cert-manager.io/cluster-issuer: rajsingh-info-global-issuer
+    cert-manager.io/cluster-issuer: global-issuer
     kubernetes.io/tls-acme: 'true'
-    item.homer.rajsingh.info/Logo: https://transmissionbt.com/assets/images/Transmission_icon.png
-    item.homer.rajsingh.info/Name: "Transmission books"
 spec:
   ingressClassName: haproxy
   rules:
-  - host: transmission-books.rajsingh.info
+  - host: transmission-books${INGRESS_SUFFIX}
     http:
       paths:
       - path: /
@@ -22,6 +20,6 @@ spec:
             port:
               number: 9091
   tls:
-  - secretName: transmission-books-rajsingh-info-tls
+  - secretName: transmission-books-tls
     hosts:
-    - transmission-books.rajsingh.info
+    - transmission-books${INGRESS_SUFFIX}

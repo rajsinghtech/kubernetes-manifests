@@ -1,20 +1,15 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: radarr-rajsingh-info-tls
+  name: radarr-tls
   namespace: media
   annotations:
-    cert-manager.io/cluster-issuer: rajsingh-info-global-issuer
+    cert-manager.io/cluster-issuer: global-issuer
     kubernetes.io/tls-acme: 'true'
-    item.homer.rajsingh.info/Logo: https://radarr.rajsingh.info/Content/Images/logo.svg
-    item.homer.rajsingh.info/Name: "Radarr"
-    item.homer.rajsingh.info/Type: Radarr
-    item.homer.rajsingh.info/Apikey: 703cbde349084707927039158e24029b
-    item.homer.rajsingh.info/Target: _blank
 spec:
   ingressClassName: haproxy
   rules:
-  - host: radarr.rajsingh.info
+  - host: radarr${INGRESS_SUFFIX}
     http:
       paths:
       - path: /
@@ -25,6 +20,6 @@ spec:
             port:
               number: 7878
   tls:
-  - secretName: radarr-rajsingh-info-tls
+  - secretName: radarr-tls
     hosts:
-    - radarr.rajsingh.info
+    - radarr${INGRESS_SUFFIX}

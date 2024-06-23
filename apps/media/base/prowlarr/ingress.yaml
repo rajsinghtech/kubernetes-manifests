@@ -1,20 +1,15 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: prowlarr-rajsingh-info-tls
+  name: prowlarr-tls
   namespace: media
   annotations:
-    item.homer.rajsingh.info/Logo: https://prowlarr.com/logo/128.png
-    item.homer.rajsingh.info/Name: "Prowlarr"
-    item.homer.rajsingh.info/Type: Prowlarr
-    item.homer.rajsingh.info/Apikey: b077c69d2a6c476da8f8e77fa9970a80
-    item.homer.rajsingh.info/Target: _blank
-    cert-manager.io/cluster-issuer: rajsingh-info-global-issuer
+    cert-manager.io/cluster-issuer: global-issuer
     kubernetes.io/tls-acme: 'true'
 spec:
   ingressClassName: haproxy
   rules:
-  - host: prowlarr.rajsingh.info
+  - host: prowlarr${INGRESS_SUFFIX}
     http:
       paths:
       - path: /
@@ -25,6 +20,6 @@ spec:
             port:
               number: 9696
   tls:
-  - secretName: prowlarr-rajsingh-info-tls
+  - secretName: prowlarr-tls
     hosts:
-    - prowlarr.rajsingh.info
+    - prowlarr${INGRESS_SUFFIX}

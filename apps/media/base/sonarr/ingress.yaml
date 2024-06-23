@@ -1,20 +1,15 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: sonarr-rajsingh-info-tls
+  name: sonarr-tls
   namespace: media
   annotations:
-    cert-manager.io/cluster-issuer: rajsingh-info-global-issuer
+    cert-manager.io/cluster-issuer: global-issuer
     kubernetes.io/tls-acme: 'true'
-    item.homer.rajsingh.info/Logo: https://sonarr.rajsingh.info/Content/Images/logo.svg
-    item.homer.rajsingh.info/Name: "Sonarr"
-    item.homer.rajsingh.info/Type: Sonarr
-    item.homer.rajsingh.info/Apikey: 98672a68a572443bbb3b3ae9d5222e3d
-    item.homer.rajsingh.info/Target: _blank
 spec:
   ingressClassName: haproxy
   rules:
-  - host: sonarr.rajsingh.info
+  - host: sonarr${INGRESS_SUFFIX}
     http:
       paths:
       - path: /
@@ -25,6 +20,6 @@ spec:
             port:
               number: 8989
   tls:
-  - secretName: sonarr-rajsingh-info-tls
+  - secretName: sonarr-tls
     hosts:
-    - sonarr.rajsingh.info
+    - sonarr${INGRESS_SUFFIX}
