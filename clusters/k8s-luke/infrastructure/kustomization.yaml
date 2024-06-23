@@ -7,6 +7,7 @@ resources:
 - flux-support.yaml
 - headlamp.yaml
 - 1password.yaml
+- haproxy.yaml
 patches:
   - path: base.yaml
     target:
