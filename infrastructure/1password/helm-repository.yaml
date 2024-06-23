@@ -5,4 +5,4 @@ metadata:
   name: 1password
 spec:
   interval: 1h
-  url: 1password/secrets-injector
+  url: https://1password.github.io/connect-helm-charts/charts/secrets-injector
