@@ -62,8 +62,6 @@ spec:
     loadBalancer:
       l7:
         backend: envoy
-    gatewayAPI:
-      enabled: true
     egressGateway:
       enabled: true
     bpf:

@@ -6,6 +6,7 @@ metadata:
 data:
   CLUSTER_ENV: "stg"
   INGRESS_SUFFIX: "stg.rajsingh.info"
+  INGRESS_IP: 10.96.11.1
   NFS_PATHPATTERN: "${.PVC.namespace}/${.PVC.name}"
   CLUSTER_SUBNET: "10.96.11."
   CLUSTER_ID: "2"
