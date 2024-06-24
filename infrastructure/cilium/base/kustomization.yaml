@@ -5,3 +5,4 @@ namespace: kube-system
 resources:
   - ./release.yaml
   - ./helm-repository.yaml
+  - https://raw.githubusercontent.com/k8snetworkplumbingwg/multus-cni/master/deployments/multus-daemonset-thick.yml

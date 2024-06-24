@@ -27,6 +27,8 @@ spec:
   uninstall:
     keepHistory: false
   values:
+    cni:
+      exclusive: false
     cluster:
       id: ${CLUSTER_ID}
       name: ${CLUSTER_ENV}
