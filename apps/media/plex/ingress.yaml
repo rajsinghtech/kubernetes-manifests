@@ -18,7 +18,7 @@ spec:
           service:
             name: plex
             port:
-              number: 7878
+              number: 32400
   tls:
   - secretName: plex-tls
     hosts:
