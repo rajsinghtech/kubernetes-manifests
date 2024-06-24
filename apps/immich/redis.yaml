@@ -2,7 +2,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: immich
+  name: immich-redis
 spec:
   interval: 2m
   driftDetection:
@@ -14,6 +14,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: bitnami
+  
   maxHistory: 2
   install:
     createNamespace: true
