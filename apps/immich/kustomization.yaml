@@ -8,4 +8,5 @@ resources:
   - ./helm-repository.yaml
   - ./pvc.yaml
   - ./ingress.yaml
-  - postgresCluster.yaml
+  - ./postgres.yaml
+  - ./redis.yaml
