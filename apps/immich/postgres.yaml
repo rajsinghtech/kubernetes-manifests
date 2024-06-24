@@ -17,6 +17,9 @@ spec:
     customQueriesConfigMap:
       - key: create-extensions.sql
         name: immich-postgresql-init-scripts
+  postgresql:
+    parameters:
+      max_connections: "200"
 ---
 apiVersion: v1
 kind: ConfigMap
