@@ -26,3 +26,29 @@ spec:
   sourceRef:
     kind: OCIRepository
     name: capacitor
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: capacitor-tls
+  namespace: flux-system
+  annotations:
+    cert-manager.io/cluster-issuer: global-issuer
+    kubernetes.io/tls-acme: 'true'
+spec:
+  ingressClassName: haproxy
+  rules:
+  - host: capacitor${INGRESS_SUFFIX}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: capacitor
+            port:
+              number: 9000
+  tls:
+  - secretName: capacitor-tls
+    hosts:
+    - capacitor${INGRESS_SUFFIX}
