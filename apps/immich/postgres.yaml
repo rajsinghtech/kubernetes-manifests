@@ -11,6 +11,8 @@ spec:
       localeCollate: C
       owner: immich
   instances: 3
+  storage:
+    size: 10Gi
   monitoring:
     customQueriesConfigMap:
       - key: create-extensions.sql
