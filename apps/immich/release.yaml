@@ -34,9 +34,9 @@ spec:
         library:
           existingClaim: immich
     
-    # Dependencies
-    postgresql:
-      enabled: true
+    # # Dependencies
+    # postgresql:
+    #   enabled: true
 
-    redis:
-      enabled: true
+    # redis:
+    #   enabled: true
