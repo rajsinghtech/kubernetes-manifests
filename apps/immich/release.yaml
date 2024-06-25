@@ -60,3 +60,19 @@ spec:
 
     # redis:
     #   enabled: true
+    server:
+      ingress:
+        main:
+          enabled: true
+          ingressClassName: haproxy
+          annotations:
+            cert-manager.io/cluster-issuer: global-issuer
+          hosts:
+            - host: "immich${INGRESS_SUFFIX}"
+              paths:
+                - path: /
+                  pathType: Prefix
+          tls:
+            - secretName: immich-tls
+              hosts:
+              - immich${INGRESS_SUFFIX}
