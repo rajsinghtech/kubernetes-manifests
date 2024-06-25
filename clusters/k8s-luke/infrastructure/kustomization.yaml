@@ -9,6 +9,7 @@ resources:
 - 1password.yaml
 - haproxy.yaml
 - https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/release-1.23/releases/cnpg-1.23.2.yaml
+- networkattachment.yaml
 patches:
   - path: base.yaml
     target:
