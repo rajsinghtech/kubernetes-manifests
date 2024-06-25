@@ -7,6 +7,6 @@ resources:
   - ./namespace.yaml
   - ./helm-repository.yaml
   - ./pvc.yaml
-  - ./ingress.yaml
+  # - ./ingress.yaml
   # - ./postgres.yaml
   - ./redis.yaml
