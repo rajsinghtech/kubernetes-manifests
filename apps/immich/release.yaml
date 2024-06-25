@@ -26,7 +26,7 @@ spec:
   uninstall:
     keepHistory: false
   values:
-    env:
+    # env:
     # - name: DB_DATABASE_NAME
     #   value: immich
     # - name: DB_HOSTNAME
