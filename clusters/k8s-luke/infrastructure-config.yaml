@@ -7,8 +7,8 @@ data:
   CLUSTER_ENV: "stg"
   INGRESS_SUFFIX: ".lukehouge.com"
   INGRESS_IP: 192.168.50.70
-  NFS_PATH: /tank/k8s
-  NFS_SERVER: 192.168.50.69
+  NFS_PATH: /mnt/tank/k8s
+  NFS_SERVER: 192.168.50.59
   NFS_PATHPATTERN: "${.PVC.namespace}/${.PVC.name}"
   CLUSTER_SUBNET: "192.168.50."
   CLUSTER_ID: "2"
