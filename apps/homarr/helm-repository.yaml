@@ -5,6 +5,5 @@ metadata:
   name: homarr
   namespace: homarr
 spec:
-  type: oci
   interval: 1h
-  url: oci://ghcr.io/oben01/charts/homarr
+  url: https://oben01.github.io/charts/
