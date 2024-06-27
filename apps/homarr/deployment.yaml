@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: homarr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: homarr
+  template:
+    metadata:
+      labels:
+        app: homarr
+    spec:
+      volumes:
+        - name: config-volume
+          configMap:
+            name: homarr
+            defaultMode: 420
+      containers:
+        - name: homarr
+          image: b4bz/homer
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          volumeMounts:
+            - name: config-volume
+              mountPath: /www/assets
+      restartPolicy: Always
