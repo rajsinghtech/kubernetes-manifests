@@ -1,0 +1,36 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: harbor
+spec:
+  interval: 2m
+  driftDetection:
+    mode: enabled
+  chart:
+    spec:
+      chart: harbor
+      version: x
+      sourceRef:
+        kind: HelmRepository
+        name: harbor
+  maxHistory: 2
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    expose:
+      ingress:
+        annotations:
+          kubernetes.io/tls-acme: 'true'
+          kubernetes.io/ingress.class: haproxy
+        hosts:
+          core: harbor${INGRESS_SUFFIX}
+          notary: harbor-notary${INGRESS_SUFFIX}
