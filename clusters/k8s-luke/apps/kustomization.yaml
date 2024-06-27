@@ -4,6 +4,7 @@ resources:
 - media.yaml
 # - code-server.yaml
 - immich.yaml
+- homarr.yaml
 patches:
   - path: base.yaml
     target:
