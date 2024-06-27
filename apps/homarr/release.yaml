@@ -40,4 +40,4 @@ spec:
         - hosts:
             - "homarr${INGRESS_SUFFIX}"
             - "www.homarr${INGRESS_SUFFIX}"
-          secretName: homelab-tls
+          secretName: homarr-tls
