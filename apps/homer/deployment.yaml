@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: homarr
+  name: homer
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: homarr
+      app: homer
   template:
     metadata:
       labels:
-        app: homarr
+        app: homer
     spec:
       volumes:
         - name: config-volume
           configMap:
-            name: homarr
+            name: homer
             defaultMode: 420
       containers:
-        - name: homarr
+        - name: homer
           image: b4bz/homer
           ports:
             - containerPort: 8080
