@@ -11,7 +11,7 @@ spec:
   path: ./infrastructure/cilium/luke
   prune: true
   wait: true
-  timeout: 5m
+  
   dependsOn:
   - name: cilium-install
 ---
@@ -28,4 +28,4 @@ spec:
   path: ./infrastructure/cilium/base
   prune: true
   wait: true
-  timeout: 5m
+  

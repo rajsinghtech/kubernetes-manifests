@@ -11,4 +11,4 @@ spec:
   path: ./apps/homarr
   prune: true
   wait: true
-  timeout: 5m
+  

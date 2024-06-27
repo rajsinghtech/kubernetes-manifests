@@ -11,4 +11,4 @@ spec:
   path: ./apps/immich
   prune: true
   wait: true
-  timeout: 5m
+  

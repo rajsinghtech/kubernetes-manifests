@@ -11,4 +11,4 @@ spec:
   path: ./apps/harbor
   prune: true
   wait: true
-  timeout: 5m
+  
