@@ -1,14 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: homarr
+  name: homer
   labels:
-    app: homarr
+    app: homer
 spec:
   ports:
     - protocol: TCP
       port: 80
       targetPort: 8080
   selector:
-    app: homarr
+    app: homer
   type: ClusterIP
