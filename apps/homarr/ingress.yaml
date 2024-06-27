@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: homarr-tls
+  namespace: homarr
+  annotations:
+    cert-manager.io/cluster-issuer: global-issuer
+    kubernetes.io/tls-acme: 'true'
+spec:
+  ingressClassName: haproxy
+  rules:
+  - host: homarr${INGRESS_SUFFIX}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: homarr
+            port:
+              number: 80
+  tls:
+  - secretName: homarr-tls
+    hosts:
+    - homarr${INGRESS_SUFFIX}
