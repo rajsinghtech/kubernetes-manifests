@@ -26,6 +26,25 @@ spec:
   uninstall:
     keepHistory: false
   values:
+    persistence:
+      - accessMode: ReadWriteOnce
+        enabled: true
+        mountPath: /app/data/configs
+        name: homarr-config
+        size: 50Mi
+        storageClassName: nfs-client
+      - accessMode: ReadWriteOnce
+        enabled: true
+        mountPath: /app/database
+        name: homarr-database
+        size: 50Mi
+        storageClassName: nfs-client
+      - accessMode: ReadWriteOnce
+        enabled: true
+        mountPath: /app/public/icons
+        name: homarr-icons
+        size: 50Mi
+        storageClassName: nfs-client
     ingress:
       enabled: true
       className: "haproxy"
