@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: code-server-tls
+  namespace: external-name
+  annotations:
+    cert-manager.io/cluster-issuer: global-issuer
+    kubernetes.io/tls-acme: 'true'
+spec:
+  ingressClassName: haproxy
+  rules:
+  - host: code-server${INGRESS_SUFFIX}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: code-server-svc
+            port:
+              number: 80
+  tls:
+  - secretName: code-server-tls
+    hosts:
+    - code-server${INGRESS_SUFFIX}
