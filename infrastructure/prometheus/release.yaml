@@ -93,7 +93,7 @@ spec:
               - path: /
                 pathType: Prefix
         tls:
-          - secretName: immich-tls
+          - secretName: grafana-tls
             hosts:
             - grafana${INGRESS_SUFFIX}
       admin:
