@@ -27,22 +27,22 @@ spec:
     keepHistory: false
   values:
     prometheus:
-      ingress:
-        enabled: true
-        ingressClassName: haproxy
-        annotations: 
-          cert-manager.io/cluster-issuer: global-issuer
+      # ingress:
+      #   enabled: true
+      #   ingressClassName: haproxy
+      #   annotations: 
+      #     cert-manager.io/cluster-issuer: global-issuer
 
-        hosts:
-          - host: "prometheus${INGRESS_SUFFIX}"
-            paths:
-              - path: /
-                pathType: Prefix
-        paths: []
-        tls: 
-          - secretName: prometheus-tls
-            hosts:
-              - prometheus${INGRESS_SUFFIX}
+      #   hosts:
+      #     - host: "prometheus${INGRESS_SUFFIX}"
+      #       paths:
+      #         - path: /
+      #           pathType: Prefix
+      #   paths: []
+      #   tls: 
+      #     - secretName: prometheus-tls
+      #       hosts:
+      #         - prometheus${INGRESS_SUFFIX}
       prometheusSpec:
         serviceMonitorSelectorNilUsesHelmValues: false
         # externalUrl: https://prometheus$${INGRESS_SUFFIX}
