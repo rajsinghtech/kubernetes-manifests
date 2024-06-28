@@ -16,6 +16,7 @@ spec:
     spec:
       containers:
       - name: plex
+        hostname: plex-k8s
         image: lscr.io/linuxserver/plex:latest
         ports:
         - containerPort: 32400
