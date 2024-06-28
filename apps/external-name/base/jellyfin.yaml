@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: external-name
+  name: jellyfin-svc
+spec:
+  externalName: jellyfin${LOCAL_FDQN}
+  ports:
+  - name: http
+    port: 8096
+    protocol: TCP
+    targetPort: 8096
+  sessionAffinity: None
+  type: ExternalName

@@ -1,0 +1,208 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: homeassistant-rajsingh-info-tls
+  namespace: external-name
+  annotations:
+    item.homer.rajsingh.info/Logo: https://upload.wikimedia.org/wikipedia/en/thumb/4/49/Home_Assistant_logo_%282023%29.svg/240px-Home_Assistant_logo_%282023%29.svg.png
+    item.homer.rajsingh.info/Name: "Home Assistant"
+    cert-manager.io/cluster-issuer: rajsingh-info-global-issuer
+    kubernetes.io/tls-acme: 'true'
+spec:
+  ingressClassName: haproxy
+  rules:
+  - host: homeassistant.rajsingh.info
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: homeassistant-svc
+            port:
+              number: 80
+  tls:
+  - secretName: homeassistant-rajsingh-info-tls
+    hosts:
+    - homeassistant.rajsingh.info
+--- 
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: truenas-rajsingh-info-tls
+  namespace: external-name
+  annotations:
+    item.homer.rajsingh.info/Logo: https://www.ixsystems.com/wp-content/uploads/2021/02/truenas_scale-logo-full-color-rgb.png
+    item.homer.rajsingh.info/Name: "TrueNAS Scale"
+    cert-manager.io/cluster-issuer: rajsingh-info-global-issuer
+    kubernetes.io/tls-acme: 'true'
+spec:
+  ingressClassName: haproxy
+  rules:
+  - host: truenas.rajsingh.info
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: truenas-svc
+            port:
+              number: 80
+  tls:
+  - secretName: truenas-rajsingh-info-tls
+    hosts:
+    - truenas.rajsingh.info
+--- 
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kvm-rajsingh-info-tls
+  namespace: external-name
+  annotations:
+    cert-manager.io/cluster-issuer: rajsingh-info-global-issuer
+    haproxy.org/server-ssl: "true"
+    haproxy.org/ssl-redirect: "true"  
+    kubernetes.io/tls-acme: 'true'
+    item.homer.rajsingh.info/Logo: https://tuchacloud.com/wp-content/uploads/2016/03/KVM-tucha.png
+    item.homer.rajsingh.info/Name: "PIKVM"
+spec:
+  ingressClassName: haproxy
+  rules:
+  - host: kvm.rajsingh.info
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: kvm-svc
+            port:
+              number: 443
+  tls:
+  - secretName: kvm-rajsingh-info-tls
+    hosts:
+    - kvm.rajsingh.info
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: proxmox-rajsingh-info-tls
+  namespace: external-name
+  annotations:
+    cert-manager.io/cluster-issuer: rajsingh-info-global-issuer
+    haproxy.org/server-ssl: "true"
+    haproxy.org/ssl-redirect: "true"  
+    kubernetes.io/tls-acme: 'true'
+    item.homer.rajsingh.info/Logo: https://camo.githubusercontent.com/cb6c50486cf76c4a9a9a4c7811f8bf97f59f7512d11119a386021086997cae0e/68747470733a2f2f7777772e70726f786d6f782e636f6d2f696d616765732f70726f786d6f782f50726f786d6f785f73796d626f6c5f7374616e646172645f6865782e706e67
+    item.homer.rajsingh.info/Name: "Proxmox"
+    item.homer.rajsingh.info/Type: Proxmox
+    item.homer.rajsingh.info/Node: proxmox
+    item.homer.rajsingh.info/Warningvalue: 70
+    item.homer.rajsingh.info/Dangervalue: 90
+    item.homer.rajsingh.info/Apikey: PVEAPIToken=root@pam!homer=21e12277-c2f0-4c57-9322-b637426431da
+spec:
+  ingressClassName: haproxy
+  rules:
+  - host: proxmox.rajsingh.info
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: proxmox-svc
+            port:
+              number: 8006
+  tls:
+  - secretName: proxmox-rajsingh-info-tls
+    hosts:
+    - proxmox.rajsingh.info
+--- 
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: router-rajsingh-info-tls
+  namespace: external-name
+  annotations:
+    item.homer.rajsingh.info/Logo: https://openwrt.org/_media/logo.png
+    item.homer.rajsingh.info/Name: "Router"
+    cert-manager.io/cluster-issuer: rajsingh-info-global-issuer
+    kubernetes.io/tls-acme: 'true'
+spec:
+  ingressClassName: haproxy
+  rules:
+  - host: router.rajsingh.info
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: router-svc
+            port:
+              number: 80
+  tls:
+  - secretName: router-rajsingh-info-tls
+    hosts:
+    - router.rajsingh.info
+--- 
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jellyfin-rajsingh-info-tls
+  namespace: external-name
+  annotations:
+    cert-manager.io/cluster-issuer: rajsingh-info-global-issuer
+    kubernetes.io/tls-acme: 'true'
+    item.homer.rajsingh.info/Logo: https://jellyfin.rajsingh.info/web/assets/img/icon-transparent.png
+    item.homer.rajsingh.info/Name: "Jellyfin"
+    item.homer.rajsingh.info/Type: Emby
+    item.homer.rajsingh.info/Apikey: 5ab8d20cb79245429b25fe11fdf500a2
+    item.homer.rajsingh.info/Librarytype: series
+spec:
+  ingressClassName: haproxy
+  rules:
+  - host: jellyfin.rajsingh.info
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: jellyfin-svc
+            port:
+              number: 8096
+  tls:
+  - secretName: jellyfin-rajsingh-info-tls
+    hosts:
+    - jellyfin.rajsingh.info
+--- 
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: uptime-rajsingh-info-tls
+  namespace: external-name
+  annotations:
+    item.homer.rajsingh.info/Logo: https://uptime.kuma.pet/img/icon.svg
+    item.homer.rajsingh.info/Name: "UptimeKuma"
+    item.homer.rajsingh.info/Type: UptimeKuma
+    cert-manager.io/cluster-issuer: rajsingh-info-global-issuer
+    kubernetes.io/tls-acme: 'true'
+spec:
+  ingressClassName: haproxy
+  rules:
+  - host: uptime.rajsingh.info
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: uptime-svc
+            port:
+              number: 3001
+  tls:
+  - secretName: uptime-rajsingh-info-tls
+    hosts:
+    - uptime.rajsingh.info

@@ -5,6 +5,7 @@ resources:
 # - code-server.yaml
 - immich.yaml
 - homarr.yaml
+- external-name.yaml
 patches:
   - path: base.yaml
     target:

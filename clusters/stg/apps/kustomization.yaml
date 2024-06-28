@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
 - code-server.yaml
 - harbor.yaml
+- external-name.yaml
 patches:
   - path: base.yaml
     target:
