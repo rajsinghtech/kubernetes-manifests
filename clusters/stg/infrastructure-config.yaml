@@ -12,4 +12,5 @@ data:
   CLUSTER_ID: "2"
   CLUSTER_API: 10.69.6.1
   NFS_PATH: /tank/k8s/stg
-  NFS_SERVER: proxmox.lan
+  NFS_SERVER: proxmox${LOCAL_FDQN}
+  LOCAL_FDQN: ".lan"
