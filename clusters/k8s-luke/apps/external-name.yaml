@@ -8,7 +8,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./apps/external-name
+  path: ./apps/external-name/luke
   prune: true
   wait: true
   
