@@ -10,5 +10,4 @@ resources:
   - ./router.yaml
   - ./truenas.yaml
   - ./jellyfin.yaml
-  - ./docker.yaml
   - ./uptime.yaml
