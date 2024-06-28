@@ -29,7 +29,7 @@ spec:
     prometheus:
       prometheusSpec:
         serviceMonitorSelectorNilUsesHelmValues: false
-        externalUrl: https://prometheus$${INGRESS_SUFFIX}
+        # externalUrl: https://prometheus$${INGRESS_SUFFIX}
         retention: 7d
         storageSpec:
           volumeClaimTemplate:
@@ -44,7 +44,7 @@ spec:
       alertmanagerSpec:
         useExistingSecret: true
         configSecret: alertmanager
-        externalUrl: https://alertmanager${INGRESS_SUFFIX}
+        # externalUrl: https://alertmanager${INGRESS_SUFFIX}
         retention: 120h
         storage:
           volumeClaimTemplate:
