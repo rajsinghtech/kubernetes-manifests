@@ -27,6 +27,19 @@ spec:
     keepHistory: false
   values:
     prometheus:
+      ingress:
+        enabled: true
+        annotations:
+          cert-manager.io/cluster-issuer: global-issuer
+        hosts:
+          - host: "prometheus${INGRESS_SUFFIX}"
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - secretName: prometheus-tls
+            hosts:
+            - prometheus${INGRESS_SUFFIX}
       prometheusSpec:
         serviceMonitorSelectorNilUsesHelmValues: false
         # externalUrl: https://prometheus$${INGRESS_SUFFIX}
@@ -41,6 +54,20 @@ spec:
                   storage: 20Gi
 
     alertmanager:
+      ingress:
+        enabled: true
+        annotations:
+          cert-manager.io/cluster-issuer: global-issuer
+        hosts:
+          - host: "alertmanager${INGRESS_SUFFIX}"
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - secretName: alertmanager-tls
+            hosts:
+            - alertmanager${INGRESS_SUFFIX}
+
       alertmanagerSpec:
         useExistingSecret: true
         configSecret: alertmanager
@@ -56,6 +83,19 @@ spec:
                   storage: 5Gi
 
     grafana:
+      ingress:
+        enabled: true
+        annotations:
+          cert-manager.io/cluster-issuer: global-issuer
+        hosts:
+          - host: "grafana${INGRESS_SUFFIX}"
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - secretName: immich-tls
+            hosts:
+            - grafana${INGRESS_SUFFIX}
       admin:
         existingSecret: "grafana"
         userKey: user
