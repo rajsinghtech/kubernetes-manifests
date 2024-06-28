@@ -27,6 +27,20 @@ spec:
     keepHistory: false
   values:
     serviceAccount:
-      create: false
+      create: true
     clusterRoleBinding:
-      create: false
+      create: true
+    ingress:
+      annotations: 
+        cert-manager.io/cluster-issuer: global-issuer
+      enabled: true
+      hosts: 
+        - host: "headlamp${INGRESS_SUFFIX}"
+          paths:
+            - path: /
+              pathType: Prefix
+      ingressClassName: "haproxy"
+      tls: 
+        - secretName: headlamp-tls
+          hosts:
+          - headlamp${INGRESS_SUFFIX}

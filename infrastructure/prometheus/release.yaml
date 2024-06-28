@@ -29,17 +29,14 @@ spec:
     prometheus:
       ingress:
         enabled: true
-        annotations:
-          cert-manager.io/cluster-issuer: global-issuer
-        hosts:
-          - host: "prometheus${INGRESS_SUFFIX}"
-            paths:
-              - path: /
-                pathType: Prefix
-        tls:
-          - secretName: prometheus-tls
-            hosts:
-            - prometheus${INGRESS_SUFFIX}
+        ingressClassName: haproxy
+        annotations: 
+          kubernetes.io/tls-acme: 'true'
+          kubernetes.io/ingress.class: haproxy
+        labels: {}
+        hosts: []
+        paths: []
+        tls: []
       prometheusSpec:
         serviceMonitorSelectorNilUsesHelmValues: false
         # externalUrl: https://prometheus$${INGRESS_SUFFIX}
@@ -54,20 +51,6 @@ spec:
                   storage: 20Gi
 
     alertmanager:
-      ingress:
-        enabled: true
-        annotations:
-          cert-manager.io/cluster-issuer: global-issuer
-        hosts:
-          - host: "alertmanager${INGRESS_SUFFIX}"
-            paths:
-              - path: /
-                pathType: Prefix
-        tls:
-          - secretName: alertmanager-tls
-            hosts:
-            - alertmanager${INGRESS_SUFFIX}
-
       alertmanagerSpec:
         useExistingSecret: true
         configSecret: alertmanager
@@ -83,19 +66,6 @@ spec:
                   storage: 5Gi
 
     grafana:
-      ingress:
-        enabled: true
-        annotations:
-          cert-manager.io/cluster-issuer: global-issuer
-        hosts:
-          - host: "grafana${INGRESS_SUFFIX}"
-            paths:
-              - path: /
-                pathType: Prefix
-        tls:
-          - secretName: grafana-tls
-            hosts:
-            - grafana${INGRESS_SUFFIX}
       admin:
         existingSecret: "grafana"
         userKey: user
