@@ -5,6 +5,7 @@ resources:
 - deployment.yaml
 - namespace.yaml
 - service.yaml
+- ingress.yaml
 configMapGenerator:
   - name: startup-script
     files:
