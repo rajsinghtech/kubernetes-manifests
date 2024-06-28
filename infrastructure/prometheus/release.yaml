@@ -31,12 +31,18 @@ spec:
         enabled: true
         ingressClassName: haproxy
         annotations: 
-          kubernetes.io/tls-acme: 'true'
-          kubernetes.io/ingress.class: haproxy
-        labels: {}
-        hosts: []
+          cert-manager.io/cluster-issuer: global-issuer
+
+        hosts:
+          - host: "prometheus${INGRESS_SUFFIX}"
+            paths:
+              - path: /
+                pathType: Prefix
         paths: []
-        tls: []
+        tls: 
+          - secretName: prometheus-tls
+            hosts:
+              - prometheus${INGRESS_SUFFIX}
       prometheusSpec:
         serviceMonitorSelectorNilUsesHelmValues: false
         # externalUrl: https://prometheus$${INGRESS_SUFFIX}
