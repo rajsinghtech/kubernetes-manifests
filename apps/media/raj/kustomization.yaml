@@ -3,4 +3,4 @@ kind: Kustomization
 namespace: media
 resources:
   - nameespace.yaml
-  - ../base
+  - .base

@@ -8,7 +8,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./infrastructure/vault
+  path: infrastructure/vault
   prune: true
   wait: true
   
