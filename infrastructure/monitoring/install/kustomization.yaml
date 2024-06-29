@@ -6,3 +6,4 @@ resources:
   - release.yaml
   - helm-repository.yaml
   - namespace.yaml
+  - grafanasecret.yaml

@@ -48,6 +48,7 @@ spec:
                   storage: 50Gi
     grafana:
       admin:
+        existingSecret: "grafana"
         passwordKey: admin
         userKey: admin
       ingress:
