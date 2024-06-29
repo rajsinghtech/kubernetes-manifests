@@ -14,8 +14,8 @@ install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 echo '------'
 echo 'Installing Fluxcd'
 curl -s https://fluxcd.io/install.sh | FLUX_VERSION=2.0.0 bash
-echo '------'
-echo 'Installing Tailscale'
-curl -fsSL https://tailscale.com/install.sh | sh
+# echo '------'
+# echo 'Installing Tailscale'
+# curl -fsSL https://tailscale.com/install.sh | sh
 
-tailscale up --authkey $TAILSCALE_KEY
+# tailscale up --authkey $TAILSCALE_KEY
