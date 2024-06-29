@@ -8,7 +8,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./infrastructure/prometheus
+  path: ./infrastructure/monitoring
   prune: true
   wait: true
   
