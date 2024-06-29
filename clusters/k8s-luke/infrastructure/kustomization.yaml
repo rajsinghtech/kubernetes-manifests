@@ -9,7 +9,6 @@ resources:
 - 1password.yaml
 - monitoring.yaml
 - haproxy.yaml
-- networkattachment.yaml
 patches:
   - path: base.yaml
     target:
