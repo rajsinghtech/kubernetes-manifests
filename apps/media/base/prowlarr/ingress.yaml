@@ -9,7 +9,7 @@ metadata:
 spec:
   ingressClassName: haproxy
   rules:
-  - host: prowlarr${INGRESS_SUFFIX}
+  - host: prowlarr.${INGRESS_DOMAIN}
     http:
       paths:
       - path: /
@@ -22,4 +22,4 @@ spec:
   tls:
   - secretName: prowlarr-tls
     hosts:
-    - prowlarr${INGRESS_SUFFIX}
+    - prowlarr.${INGRESS_DOMAIN}

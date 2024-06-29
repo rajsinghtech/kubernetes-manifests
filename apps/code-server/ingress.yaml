@@ -9,7 +9,7 @@ metadata:
 spec:
   ingressClassName: haproxy
   rules:
-  - host: code-server${INGRESS_SUFFIX}
+  - host: code-server.${INGRESS_DOMAIN}
     http:
       paths:
       - path: /
@@ -22,4 +22,4 @@ spec:
   tls:
   - secretName: code-server-tls
     hosts:
-    - code-server${INGRESS_SUFFIX}
+    - code-server.${INGRESS_DOMAIN}

@@ -9,7 +9,7 @@ metadata:
 spec:
   ingressClassName: haproxy
   rules:
-  - host: readarr${INGRESS_SUFFIX}
+  - host: readarr.${INGRESS_DOMAIN}
     http:
       paths:
       - path: /
@@ -22,4 +22,4 @@ spec:
   tls:
   - secretName: readarr-tls
     hosts:
-    - readarr${INGRESS_SUFFIX}
+    - readarr.${INGRESS_DOMAIN}

@@ -33,10 +33,10 @@ spec:
           kubernetes.io/tls-acme: 'true'
         enabled: true
         hosts:
-          - alertmanager${INGRESS_SUFFIX}
+          - alertmanager.${INGRESS_DOMAIN}
         tls:
           - hosts:
-              - alertmanager${INGRESS_SUFFIX}
+              - alertmanager.${INGRESS_DOMAIN}
       alertmanagerSpec:
         storage:
           volumeClaimTemplate:
@@ -56,10 +56,10 @@ spec:
           kubernetes.io/tls-acme: 'true'
         enabled: true
         hosts:
-          - grafana${INGRESS_SUFFIX}
+          - grafana.${INGRESS_DOMAIN}
         tls:
           - hosts:
-              - grafana${INGRESS_SUFFIX}
+              - grafana.${INGRESS_DOMAIN}
       persistence:
         enabled: true
         type: sts
@@ -74,10 +74,10 @@ spec:
           kubernetes.io/tls-acme: 'true'
         enabled: true
         hosts:
-          - prometheus${INGRESS_SUFFIX}
+          - prometheus.${INGRESS_DOMAIN}
         tls:
           - hosts:
-              - prometheus${INGRESS_SUFFIX}
+              - prometheus.${INGRESS_DOMAIN}
       prometheusSpec:
         storageSpec:
           volumeClaimTemplate:

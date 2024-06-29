@@ -9,7 +9,7 @@ metadata:
 spec:
   ingressClassName: haproxy
   rules:
-  - host: transmission-books${INGRESS_SUFFIX}
+  - host: transmission-books.${INGRESS_DOMAIN}
     http:
       paths:
       - path: /
@@ -22,4 +22,4 @@ spec:
   tls:
   - secretName: transmission-books-tls
     hosts:
-    - transmission-books${INGRESS_SUFFIX}
+    - transmission-books.${INGRESS_DOMAIN}

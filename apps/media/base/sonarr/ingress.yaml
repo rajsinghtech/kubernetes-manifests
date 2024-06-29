@@ -9,7 +9,7 @@ metadata:
 spec:
   ingressClassName: haproxy
   rules:
-  - host: sonarr${INGRESS_SUFFIX}
+  - host: sonarr.${INGRESS_DOMAIN}
     http:
       paths:
       - path: /
@@ -22,4 +22,4 @@ spec:
   tls:
   - secretName: sonarr-tls
     hosts:
-    - sonarr${INGRESS_SUFFIX}
+    - sonarr.${INGRESS_DOMAIN}

@@ -32,5 +32,5 @@ spec:
           kubernetes.io/tls-acme: 'true'
           kubernetes.io/ingress.class: haproxy
         hosts:
-          core: harbor${INGRESS_SUFFIX}
-          notary: harbor-notary${INGRESS_SUFFIX}
+          core: harbor.${INGRESS_DOMAIN}
+          notary: harbor-notary.${INGRESS_DOMAIN}
