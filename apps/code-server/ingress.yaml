@@ -19,7 +19,7 @@ spec:
           service:
             name: code-server-svc
             port:
-              number: 80
+              number: 8443
   tls:
   - secretName: code-server-tls
     hosts:
