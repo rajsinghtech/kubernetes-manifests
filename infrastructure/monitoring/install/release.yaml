@@ -27,6 +27,16 @@ spec:
     keepHistory: false
   values:
     alertmanager:
+      ingress:
+        annotations: 
+          cert-manager.io/cluster-issuer: global-issuer
+          kubernetes.io/tls-acme: 'true'
+        enabled: true
+        hosts:
+          - alertmanager${INGRESS_SUFFIX}
+        tls:
+          - hosts:
+              - alertmanager${INGRESS_SUFFIX}
       alertmanagerSpec:
         storage:
           volumeClaimTemplate:
