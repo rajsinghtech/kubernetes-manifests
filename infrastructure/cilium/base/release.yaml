@@ -27,6 +27,11 @@ spec:
   uninstall:
     keepHistory: false
   values:
+    prometheus:
+      enabled: true
+    operator:
+      prometheus:
+        enabled: true
     cni:
       exclusive: false
     cluster:
@@ -41,6 +46,9 @@ spec:
         enabled: true
       ui:
         enabled: true
+      metrics:
+        enableOpenMetrics: true
+        enabled: "{dns,drop,tcp,flow,port-distribution,icmp,httpV2:exemplars=true;labelsContext=source_ip\,source_namespace\,source_workload\,destination_ip\,destination_namespace\,destination_workload\,traffic_direction}"
     ipv4:
       enabled: true
     ipv4NativeRoutingCIDR: 10.42.0.0/16

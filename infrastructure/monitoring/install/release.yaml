@@ -67,6 +67,56 @@ spec:
         accessModes:
           - ReadWriteOnce
         size: 20Gi
+      dashboards:
+        default:
+          node-exporter:
+            gnetId: 11074
+            revision: 9
+            datasource: Prometheus
+          node-exporter-full:
+            gnetId: 1860
+            revision: 29
+            datasource: Prometheus
+          traefik:
+            gnetId: 11462
+            revision: 1
+            datasource: Prometheus
+          go-processes:
+            gnetId: 6671
+            revision: 2
+            datasource: Prometheus
+          go-metrics:
+            gnetId: 10826
+            revision: 1
+            datasource: Prometheus
+          pihole:
+            gnetId: 10176
+            revision: 2
+            datasource: Prometheus
+          flux-cluster:
+            gnetId: 16202
+            revision: 1
+            datasource: Prometheus
+          flux-control-plane:
+            gnetId: 16203
+            revision: 1
+            datasource: Prometheus
+          cilium-agent:
+            gnetId: 15513
+            revision: 1
+            datasource: Prometheus
+          cilium-operator:
+            gnetId: 15514
+            revision: 1
+            datasource: Prometheus
+          hubble:
+            gnetId: 15515
+            revision: 1
+            datasource: Prometheus
+          cert-manager:
+            gnetId: 11001
+            revision: 1
+            datasource: Prometheus
     prometheus:
       ingress:
         annotations: 
