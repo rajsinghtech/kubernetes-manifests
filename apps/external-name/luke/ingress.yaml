@@ -9,7 +9,7 @@ metadata:
 spec:
   ingressClassName: haproxy
   rules:
-  - host: homeassistant${INGRESS_SUFFIX}
+  - host: homeassistant.${INGRESS_DOMAIN}
     http:
       paths:
       - path: /
@@ -22,7 +22,7 @@ spec:
   tls:
   - secretName: homeassistant-tls
     hosts:
-    - homeassistant${INGRESS_SUFFIX}
+    - homeassistant.${INGRESS_DOMAIN}
 --- 
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -35,7 +35,7 @@ metadata:
 spec:
   ingressClassName: haproxy
   rules:
-  - host: truenas${INGRESS_SUFFIX}
+  - host: truenas.${INGRESS_DOMAIN}
     http:
       paths:
       - path: /
@@ -48,7 +48,7 @@ spec:
   tls:
   - secretName: truenas-tls
     hosts:
-    - truenas${INGRESS_SUFFIX}
+    - truenas.${INGRESS_DOMAIN}
 --- 
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -63,7 +63,7 @@ metadata:
 spec:
   ingressClassName: haproxy
   rules:
-  - host: kvm${INGRESS_SUFFIX}
+  - host: kvm.${INGRESS_DOMAIN}
     http:
       paths:
       - path: /
@@ -76,7 +76,7 @@ spec:
   tls:
   - secretName: kvm-tls
     hosts:
-    - kvm${INGRESS_SUFFIX}
+    - kvm.${INGRESS_DOMAIN}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -91,7 +91,7 @@ metadata:
 spec:
   ingressClassName: haproxy
   rules:
-  - host: proxmox${INGRESS_SUFFIX}
+  - host: proxmox.${INGRESS_DOMAIN}
     http:
       paths:
       - path: /
@@ -104,7 +104,7 @@ spec:
   tls:
   - secretName: proxmox-tls
     hosts:
-    - proxmox${INGRESS_SUFFIX}
+    - proxmox.${INGRESS_DOMAIN}
 --- 
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -117,7 +117,7 @@ metadata:
 spec:
   ingressClassName: haproxy
   rules:
-  - host: router${INGRESS_SUFFIX}
+  - host: router.${INGRESS_DOMAIN}
     http:
       paths:
       - path: /
@@ -130,7 +130,7 @@ spec:
   tls:
   - secretName: router-tls
     hosts:
-    - router${INGRESS_SUFFIX}
+    - router.${INGRESS_DOMAIN}
 --- 
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -143,7 +143,7 @@ metadata:
 spec:
   ingressClassName: haproxy
   rules:
-  - host: jellyfin${INGRESS_SUFFIX}
+  - host: jellyfin.${INGRESS_DOMAIN}
     http:
       paths:
       - path: /
@@ -156,7 +156,7 @@ spec:
   tls:
   - secretName: jellyfin-tls
     hosts:
-    - jellyfin${INGRESS_SUFFIX}
+    - jellyfin.${INGRESS_DOMAIN}
 --- 
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -169,7 +169,7 @@ metadata:
 spec:
   ingressClassName: haproxy
   rules:
-  - host: uptime${INGRESS_SUFFIX}
+  - host: uptime.${INGRESS_DOMAIN}
     http:
       paths:
       - path: /
@@ -182,4 +182,4 @@ spec:
   tls:
   - secretName: uptime-tls
     hosts:
-    - uptime${INGRESS_SUFFIX}
+    - uptime.${INGRESS_DOMAIN}

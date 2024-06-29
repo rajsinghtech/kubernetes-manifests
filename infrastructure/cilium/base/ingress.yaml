@@ -9,7 +9,7 @@ metadata:
 spec:
   ingressClassName: haproxy
   rules:
-  - host: hubble${INGRESS_SUFFIX}
+  - host: hubble.${INGRESS_DOMAIN}
     http:
       paths:
       - path: /
@@ -22,4 +22,4 @@ spec:
   tls:
   - secretName: hubble-tls
     hosts:
-    - hubble${INGRESS_SUFFIX}
+    - hubble.${INGRESS_DOMAIN}

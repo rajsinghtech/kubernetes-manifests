@@ -9,7 +9,7 @@ metadata:
 spec:
   ingressClassName: haproxy
   rules:
-  - host: jellyfin${INGRESS_SUFFIX}
+  - host: jellyfin.${INGRESS_DOMAIN}
     http:
       paths:
       - path: /
@@ -22,4 +22,4 @@ spec:
   tls:
   - secretName: jellyfin-tls
     hosts:
-    - jellyfin${INGRESS_SUFFIX}
+    - jellyfin.${INGRESS_DOMAIN}

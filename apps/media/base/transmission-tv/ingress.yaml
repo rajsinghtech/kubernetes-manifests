@@ -9,7 +9,7 @@ metadata:
 spec:
   ingressClassName: haproxy
   rules:
-  - host: transmission-tv${INGRESS_SUFFIX}
+  - host: transmission-tv.${INGRESS_DOMAIN}
     http:
       paths:
       - path: /
@@ -22,4 +22,4 @@ spec:
   tls:
   - secretName: transmission-tv-tls
     hosts:
-    - transmission-tv${INGRESS_SUFFIX}
+    - transmission-tv.${INGRESS_DOMAIN}

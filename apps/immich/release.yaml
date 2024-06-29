@@ -68,11 +68,11 @@ spec:
           annotations:
             cert-manager.io/cluster-issuer: global-issuer
           hosts:
-            - host: "immich${INGRESS_SUFFIX}"
+            - host: "immich.${INGRESS_DOMAIN}"
               paths:
                 - path: /
                   pathType: Prefix
           tls:
             - secretName: immich-tls
               hosts:
-              - immich${INGRESS_SUFFIX}
+              - immich.${INGRESS_DOMAIN}

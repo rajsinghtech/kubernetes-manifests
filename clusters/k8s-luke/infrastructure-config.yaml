@@ -5,7 +5,7 @@ metadata:
   namespace: flux-system
 data:
   CLUSTER_ENV: "stg"
-  INGRESS_SUFFIX: ".lukehouge.com"
+  INGRESS_DOMAIN: "lukehouge.com"
   INGRESS_IP: 192.168.50.70
   NFS_PATH: /mnt/tank/k8s
   NFS_SERVER: 192.168.50.59

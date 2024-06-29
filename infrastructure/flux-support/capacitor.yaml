@@ -38,7 +38,7 @@ metadata:
 spec:
   ingressClassName: haproxy
   rules:
-  - host: capacitor${INGRESS_SUFFIX}
+  - host: capacitor.${INGRESS_DOMAIN}
     http:
       paths:
       - path: /
@@ -51,7 +51,7 @@ spec:
   tls:
   - secretName: capacitor-tls
     hosts:
-    - capacitor${INGRESS_SUFFIX}
+    - capacitor.${INGRESS_DOMAIN}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy

@@ -9,7 +9,7 @@ metadata:
 spec:
   ingressClassName: haproxy
   rules:
-  - host: immich${INGRESS_SUFFIX}
+  - host: immich.${INGRESS_DOMAIN}
     http:
       paths:
       - path: /
@@ -22,4 +22,4 @@ spec:
   tls:
   - secretName: immich-tls
     hosts:
-    - immich${INGRESS_SUFFIX}
+    - immich.${INGRESS_DOMAIN}

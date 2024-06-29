@@ -9,7 +9,7 @@ metadata:
 spec:
   ingressClassName: haproxy
   rules:
-  - host: homer${INGRESS_SUFFIX}
+  - host: homer.${INGRESS_DOMAIN}
     http:
       paths:
       - path: /
@@ -22,4 +22,4 @@ spec:
   tls:
   - secretName: homer-tls
     hosts:
-    - homer${INGRESS_SUFFIX}
+    - homer.${INGRESS_DOMAIN}

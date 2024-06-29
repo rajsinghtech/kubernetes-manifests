@@ -9,7 +9,7 @@ metadata:
 spec:
   ingressClassName: haproxy
   rules:
-  - host: radarr${INGRESS_SUFFIX}
+  - host: radarr.${INGRESS_DOMAIN}
     http:
       paths:
       - path: /
@@ -22,4 +22,4 @@ spec:
   tls:
   - secretName: radarr-tls
     hosts:
-    - radarr${INGRESS_SUFFIX}
+    - radarr.${INGRESS_DOMAIN}

@@ -9,7 +9,7 @@ metadata:
 spec:
   ingressClassName: haproxy
   rules:
-  - host: plex${INGRESS_SUFFIX}
+  - host: plex.${INGRESS_DOMAIN}
     http:
       paths:
       - path: /
@@ -22,4 +22,4 @@ spec:
   tls:
   - secretName: plex-tls
     hosts:
-    - plex${INGRESS_SUFFIX}
+    - plex.${INGRESS_DOMAIN}

@@ -10,7 +10,7 @@ metadata:
 spec:
   ingressClassName: haproxy
   rules:
-  - host: prometheus${INGRESS_SUFFIX}
+  - host: prometheus.${INGRESS_DOMAIN}
     http:
       paths:
       - path: /
@@ -23,4 +23,4 @@ spec:
   tls:
   - secretName: prometheus-tls
     hosts:
-    - prometheus${INGRESS_SUFFIX}
+    - prometheus.${INGRESS_DOMAIN}

@@ -34,7 +34,7 @@ spec:
         - name: TZ
           value: America/Chicago
         - name: JELLYFIN_PublishedServerUrl
-          value: jellyfin${INGRESS_SUFFIX}
+          value: jellyfin.${INGRESS_DOMAIN}
       volumes:
       - name: tv-volume
         persistentVolumeClaim:

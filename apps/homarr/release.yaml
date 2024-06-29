@@ -51,12 +51,12 @@ spec:
       annotations:
       # Add any additional annotations as needed
       hosts:
-        - host: homarr${INGRESS_SUFFIX}
+        - host: homarr.${INGRESS_DOMAIN}
           paths:
             - path: /
               pathType: ImplementationSpecific
       tls:
         - hosts:
-            - "homarr${INGRESS_SUFFIX}"
-            - "www.homarr${INGRESS_SUFFIX}"
+            - "homarr.${INGRESS_DOMAIN}"
+            - "www.homarr.${INGRESS_DOMAIN}"
           secretName: homarr-tls

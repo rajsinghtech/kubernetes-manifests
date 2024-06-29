@@ -62,9 +62,9 @@ spec:
         ingress.cilium.io/loadbalancer-mode: shared
       enabled: true
       hosts:
-      - pihole${INGRESS_SUFFIX}
+      - pihole.${INGRESS_DOMAIN}
       path: /
       tls:
       - secretName: pihole-tls
         hosts:
-          - pihole${INGRESS_SUFFIX}
+          - pihole.${INGRESS_DOMAIN}
