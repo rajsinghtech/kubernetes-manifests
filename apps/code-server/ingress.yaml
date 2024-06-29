@@ -6,6 +6,7 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: global-issuer
     kubernetes.io/tls-acme: 'true'
+    haproxy.org/rewrite-target: /
 spec:
   ingressClassName: haproxy
   rules:
