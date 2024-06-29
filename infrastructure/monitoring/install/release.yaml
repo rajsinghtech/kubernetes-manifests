@@ -47,6 +47,16 @@ spec:
                 requests:
                   storage: 50Gi
     grafana:
+      ingress:
+        annotations: 
+          cert-manager.io/cluster-issuer: global-issuer
+          kubernetes.io/tls-acme: 'true'
+        enabled: true
+        hosts:
+          - grafana${INGRESS_SUFFIX}
+        tls:
+          - hosts:
+              - grafana${INGRESS_SUFFIX}
       persistence:
         enabled: true
         type: sts
@@ -55,6 +65,16 @@ spec:
           - ReadWriteOnce
         size: 20Gi
     prometheus:
+      ingress:
+        annotations: 
+          cert-manager.io/cluster-issuer: global-issuer
+          kubernetes.io/tls-acme: 'true'
+        enabled: true
+        hosts:
+          - prometheus${INGRESS_SUFFIX}
+        tls:
+          - hosts:
+              - prometheus${INGRESS_SUFFIX}
       prometheusSpec:
         storageSpec:
           volumeClaimTemplate:
