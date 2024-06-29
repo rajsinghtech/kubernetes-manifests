@@ -30,6 +30,7 @@ spec:
     prometheus:
       enabled: true
     operator:
+      replicas: 1
       prometheus:
         enabled: true
     cni:
@@ -76,8 +77,6 @@ spec:
       enabled: true
     bpf:
       masquerade: true
-    operator:
-      replicas: 1
     l2announcements:
       enabled: true
       leaseDuration: 3s
