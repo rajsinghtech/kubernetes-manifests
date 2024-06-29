@@ -2003,9 +2003,9 @@ spec:
                 description: |-
                   ContentConfigChecksum is a checksum of all the configurations related to
                   the content of the source artifact:
-                   - .spec.ignore
-                   - .spec.recurseSubmodules
-                   - .spec.included and the checksum of the included artifacts
+                   - ../spec.ignore
+                   - ../spec.recurseSubmodules
+                   - ../spec.included and the checksum of the included artifacts
                   observed in .status.observedGeneration version of the object. This can
                   be used to determine if the content of the included repository has
                   changed.
@@ -4427,8 +4427,8 @@ spec:
                 description: |-
                   ContentConfigChecksum is a checksum of all the configurations related to
                   the content of the source artifact:
-                   - .spec.ignore
-                   - .spec.layerSelector
+                   - ../spec.ignore
+                   - ../spec.layerSelector
                   observed in .status.observedGeneration version of the object. This can
                   be used to determine if the content configuration has changed and the
                   artifact needs to be rebuilt.

@@ -3,9 +3,9 @@ kind: Kustomization
 namespace: media
 resources:
   - namespace.yaml
-  - .base/plex
-  - .base/prowlarr
-  - .base/radarr
-  - .base/sonarr
-  - .base/transmission-movies
-  - .base/transmission-tv
+  - ../base/plex
+  - ../base/prowlarr
+  - ../base/radarr
+  - ../base/sonarr
+  - ../base/transmission-movies
+  - ../base/transmission-tv
