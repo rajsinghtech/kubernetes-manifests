@@ -47,6 +47,9 @@ spec:
                 requests:
                   storage: 50Gi
     grafana:
+      admin:
+        passwordKey: admin
+        userKey: admin
       ingress:
         annotations: 
           cert-manager.io/cluster-issuer: global-issuer
