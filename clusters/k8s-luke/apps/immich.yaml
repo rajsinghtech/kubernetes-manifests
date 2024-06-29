@@ -8,7 +8,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./apps/immich
+  path: apps/immich
   prune: true
   wait: true
   

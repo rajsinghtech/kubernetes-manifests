@@ -8,7 +8,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./apps/homarr
+  path: apps/homarr
   prune: true
   wait: true
   

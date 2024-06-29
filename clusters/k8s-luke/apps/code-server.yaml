@@ -8,7 +8,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./apps/code-server
+  path: apps/code-server
   prune: true
   wait: true
   

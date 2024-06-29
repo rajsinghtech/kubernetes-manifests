@@ -8,7 +8,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./infrastructure/haproxy
+  path: infrastructure/haproxy
   prune: true
   wait: true
   

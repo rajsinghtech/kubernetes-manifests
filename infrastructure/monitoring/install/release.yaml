@@ -1,0 +1,69 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: monitoring
+spec:
+  interval: 2m
+  driftDetection:
+    mode: enabled
+  chart:
+    spec:
+      chart: kube-prometheus-stack
+      version: x
+      sourceRef:
+        kind: HelmRepository
+        name: prometheus-community
+  maxHistory: 2
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    alertmanager:
+      alertmanagerSpec:
+        storage:
+          volumeClaimTemplate:
+            spec:
+              storageClassName: nfs-client
+              accessModes: ["ReadWriteOnce"]
+              resources:
+                requests:
+                  storage: 50Gi
+              selector: {}
+    grafana:
+      persistence:
+        enabled: true
+        type: sts
+        storageClassName: "nfs-client"
+        accessModes:
+          - ReadWriteOnce
+        size: 20Gi
+    prometheus:
+      prometheusSpec:
+        storageSpec:
+          volumeClaimTemplate:
+            spec:
+              storageClassName: nfs-client
+              accessModes: ["ReadWriteOnce"]
+              resources:
+                requests:
+                  storage: 50Gi
+            selector: {}
+    thanosRuler:
+      thanosRulerSpec:
+        storage:
+          volumeClaimTemplate:
+            spec:
+              storageClassName: nfs-client
+              accessModes: ["ReadWriteOnce"]
+              resources:
+                requests:
+                  storage: 50Gi
+            selector: {}
