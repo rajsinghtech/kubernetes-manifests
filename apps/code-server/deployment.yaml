@@ -55,6 +55,8 @@ spec:
               mountPath: /custom-cont-init.d
             - name: nfs-volume
               mountPath: ${NFS_PATH}
+            - name: config-volume
+              mountPath: /config
       volumes:
         - name: startup-script
           configMap:
@@ -64,4 +66,7 @@ spec:
           nfs:
             path: ${NFS_PATH}
             server: ${NFS_SERVER}
+        - name: config-volume
+          persistentVolumeClaim:
+            claimName: code-server-config
       restartPolicy: Always  # Restart policy for the pod

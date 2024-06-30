@@ -6,6 +6,7 @@ resources:
 - namespace.yaml
 - service.yaml
 - ingress.yaml
+- pvc.yaml
 configMapGenerator:
   - name: startup-script
     files:
