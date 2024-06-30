@@ -11,6 +11,5 @@ spec:
   path: infrastructure/nfs-subdir-external-provisioner
   prune: true
   wait: true
-  
   dependsOn:
     - name: cilium-config

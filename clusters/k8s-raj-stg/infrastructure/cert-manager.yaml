@@ -11,6 +11,5 @@ spec:
   path: infrastructure/cert-manager
   prune: true
   wait: true
-  
   dependsOn:
     - name: cilium-config
