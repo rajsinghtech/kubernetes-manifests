@@ -20,6 +20,6 @@ spec:
             port:
               number: 8989
   tls:
-  - secretName: sonarr-tls
+  - secretName: sonarr-tls-kst92
     hosts:
     - sonarr.${INGRESS_DOMAIN}
