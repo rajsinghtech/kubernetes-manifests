@@ -28,28 +28,9 @@ spec:
   values:
     ui:
       enabled: true
-      serviceType: "LoadBalancer"
-      serviceNodePort: null
-      externalPort: 8200
-      loadBalancerIP: ${CLUSTER_SUBNET}2
     ha:
       enabled: true
       replicas: 3
-      raft: 
-         enabled: true
-         setNodeId: true
-         config: |
-            cluster_name = "vault-homelab"
-            storage "raft" {
-               path    = "/vault/data/"
-            }
-
-            listener "tcp" {
-               address = "[::]:8200"
-               cluster_address = "[::]:8201"
-               tls_disable = "true"
-            }
-            service_registration "kubernetes" {}
     server:
       dataStorage:
         storageClass: nfs-client
