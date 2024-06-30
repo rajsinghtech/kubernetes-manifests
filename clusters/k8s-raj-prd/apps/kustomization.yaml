@@ -4,6 +4,7 @@ resources:
 - code-server.yaml
 - harbor.yaml
 - external-name.yaml
+- media.yaml
 patches:
   - path: base.yaml
     target:
