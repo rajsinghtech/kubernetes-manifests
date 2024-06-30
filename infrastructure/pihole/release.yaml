@@ -47,7 +47,7 @@ spec:
       policy: "None"
       nameservers:
       - ${ROUTER_IP}
-    hostname: "rajsingh-${CLUSTER_ENV}"
+    hostname: "rajsingh-${CLUSTER_NAME}"
     serviceDns:
       externalTrafficPolicy: Cluster
       loadBalancerIP: "${CLUSTER_SUBNET}96"

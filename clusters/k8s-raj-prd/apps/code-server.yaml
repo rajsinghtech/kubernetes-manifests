@@ -1,0 +1,14 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: code-server
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: apps/code-server
+  prune: true
+  wait: true
+  

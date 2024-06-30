@@ -4,14 +4,14 @@ metadata:
   name: infrastructure-config
   namespace: flux-system
 data:
-  CLUSTER_NAME: "k8s-raj-stg"
-  INGRESS_DOMAIN: "stg.rajsingh.info"
-  INGRESS_IP: 10.96.11.1
+  CLUSTER_NAME: "k8s-raj-prd"
+  INGRESS_DOMAIN: "rajsingh.info"
+  INGRESS_IP: 10.96.10.1
   NFS_PATHPATTERN: "${.PVC.namespace}/${.PVC.name}"
-  CLUSTER_SUBNET: "10.96.11."
+  CLUSTER_SUBNET: "10.96.10."
   CLUSTER_ID: "2"
-  CLUSTER_API: 10.69.6.1
-  NFS_PATH: /tank/k8s/stg
+  CLUSTER_API: 127.0.0.1
+  NFS_PATH: /tank/k8s/prod
   NFS_SERVER: proxmox.lan
   LOCAL_FDQN: ".lan"
   ROUTER_IP: 10.69.0.1
