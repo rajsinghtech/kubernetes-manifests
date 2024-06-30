@@ -8,7 +8,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: infrastructure/cilium/luke
+  path: infrastructure/cilium/k8s-luke
   prune: true
   wait: true
   dependsOn:
