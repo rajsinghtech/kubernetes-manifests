@@ -14,3 +14,4 @@ data:
   NFS_PATH: /tank/k8s/stg
   NFS_SERVER: proxmox.lan
   LOCAL_FDQN: ".lan"
+  ROUTER_IP: 10.69.0.1

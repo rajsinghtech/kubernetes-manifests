@@ -36,6 +36,7 @@ spec:
         - address=/.stg.rajsingh.info/10.69.11.1
         - address=/-tooling.rajsingh.info/10.96.96.1
         - address=/.rajsingh.info/10.96.10.1
+        - address=/.lukehouge.com/192.168.50.70
     persistentVolumeClaim:
       enabled: true
       storageClass: "nfs-client"
@@ -45,8 +46,7 @@ spec:
       enabled: true
       policy: "None"
       nameservers:
-      - 10.69.0.1
-    #   - 8.8.8.8
+      - ${ROUTER_IP}
     hostname: "rajsingh-${CLUSTER_ENV}"
     serviceDns:
       externalTrafficPolicy: Cluster
