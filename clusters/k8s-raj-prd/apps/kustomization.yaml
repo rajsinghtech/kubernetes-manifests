@@ -5,6 +5,7 @@ resources:
 - harbor.yaml
 - external-name.yaml
 - media.yaml
+- immich.yaml
 patches:
   - path: base.yaml
     target:
