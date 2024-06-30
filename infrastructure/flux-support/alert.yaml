@@ -8,4 +8,4 @@ spec:
     name: github-status
   eventSources:
     - kind: Kustomization
-      name: flux-system
+      name: '*'
