@@ -4,7 +4,7 @@ metadata:
   name: infrastructure-config
   namespace: flux-system
 data:
-  CLUSTER_ENV: "stg"
+  CLUSTER_NAME: "k8s-luke"
   INGRESS_DOMAIN: "lukehouge.com"
   INGRESS_IP: 192.168.50.70
   NFS_PATH: /mnt/tank/k8s
