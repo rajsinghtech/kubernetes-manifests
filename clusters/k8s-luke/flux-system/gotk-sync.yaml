@@ -8,7 +8,7 @@ metadata:
 spec:
   interval: 1m0s
   ref:
-    branch: test
+    branch: stg
   secretRef:
     name: flux-system
   url: https://github.com/rajsinghtech/kubernetes-manifests.git

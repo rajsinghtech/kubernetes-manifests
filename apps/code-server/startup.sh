@@ -14,7 +14,8 @@ install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 echo '------'
 echo 'Installing Fluxcd'
 curl -s https://fluxcd.io/install.sh | FLUX_VERSION=2.0.0 bash
-# echo '------'
+echo '------'
+apt install dnsutils iputils-ping -y
 # echo 'Installing Tailscale'
 # curl -fsSL https://tailscale.com/install.sh | sh
 

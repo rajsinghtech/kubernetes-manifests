@@ -11,8 +11,9 @@ data:
   NFS_SERVER: 192.168.50.59
   NFS_PATHPATTERN: "${.PVC.namespace}/${.PVC.name}"
   CLUSTER_SUBNET: "192.168.50."
-  CLUSTER_ID: "2"
+  CLUSTER_ID: "3"
   CLUSTER_API: 127.0.0.1
   QPS: "10"
   BURST: "50"
   LOCAL_FDQN: ".local"
+  ROUTER_IP: 192.168.50.1
