@@ -11,6 +11,5 @@ spec:
   path: infrastructure/cloudflared
   prune: true
   wait: true
-  
   dependsOn:
     - name: cilium-config

@@ -8,6 +8,7 @@ resources:
 - nfs-subdir-external-provisioner.yaml
 - vault.yaml
 - haproxy.yaml
+- flux-support.yaml
 patches:
   - path: base.yaml
     target:
