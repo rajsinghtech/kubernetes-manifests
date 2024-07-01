@@ -5,7 +5,7 @@ resources:
 - cert-manager.yaml
 - nfs-subdir-external-provisioner.yaml
 - flux-support.yaml
-- headlamp.yaml
+# - headlamp.yaml
 - 1password.yaml
 - monitoring.yaml
 - haproxy.yaml
