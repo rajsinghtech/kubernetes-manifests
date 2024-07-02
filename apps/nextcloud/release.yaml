@@ -1,0 +1,89 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: nextcloud
+spec:
+  interval: 2m
+  driftDetection:
+    mode: enabled
+  chart:
+    spec:
+      chart: nextcloud
+      version: x
+      sourceRef:
+        kind: HelmRepository
+        name: nextcloud
+  maxHistory: 2
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    ingress:
+      enabled: true
+      annotations: 
+        cert-manager.io/cluster-issuer: global-issuer
+        kubernetes.io/tls-acme: 'true'
+      tls:
+        - secretName: nextcloud-tls
+          hosts:
+            - nextcloud.${INGRESS_DOMAIN}
+      labels: {}
+      path: /
+      pathType: Prefix
+    nextcloud:
+      host: nextcloud.${INGRESS_DOMAIN}
+    persistence:
+      # Nextcloud Data (/var/www/html)
+      enabled: true
+      annotations: {}
+      storageClass: "nfs-client"
+      nextcloudData:
+        enabled: true
+        subPath:
+        annotations: {}
+        storageClass: "nfs-client"
+        # existingClaim:
+        accessMode: ReadWriteOnce
+        size: 8Gi
+    hpa:
+      enabled: true
+      cputhreshold: 60
+      minPods: 1
+      maxPods: 10
+    redis:
+      enabled: true
+      auth:
+        enabled: true
+    postgresql:
+      enabled: true
+      global:
+        postgresql:
+          # global.postgresql.auth overrides postgresql.auth
+          auth:
+            username: nextcloud
+            password: changeme
+            database: nextcloud
+            # Name of existing secret to use for PostgreSQL credentials.
+            # auth.postgresPassword, auth.password, and auth.replicationPassword will be ignored and picked up from this secret.
+            # secret might also contains the key ldap-password if LDAP is enabled.
+            # ldap.bind_password will be ignored and picked from this secret in this case.
+            existingSecret: ""
+            # Names of keys in existing secret to use for PostgreSQL credentials
+            secretKeys:
+              adminPasswordKey: ""
+              userPasswordKey: ""
+              replicationPasswordKey: ""
+      primary:
+        persistence:
+          enabled: true
+          # Use an existing Persistent Volume Claim (must be created ahead of time)
+          # existingClaim: ""
+          storageClass: "nfs-client"
