@@ -40,6 +40,15 @@ spec:
       pathType: Prefix
     nextcloud:
       host: nextcloud.${INGRESS_DOMAIN}
+      configs:
+        logging.config.php: |-
+          <?php
+          $CONFIG = array (
+            'log_type' => 'file',
+            'logfile' => 'nextcloud.log',
+            'loglevel' => 0,
+            'logdateformat' => 'F d, Y H:i:s'
+            );
     persistence:
       # Nextcloud Data (/var/www/html)
       enabled: true
