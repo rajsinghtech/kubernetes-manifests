@@ -51,17 +51,9 @@ spec:
             );
     persistence:
       # Nextcloud Data (/var/www/html)
-      enabled: true
+      enabled: false
       annotations: {}
       storageClass: "nfs-client"
-      nextcloudData:
-        enabled: true
-        subPath:
-        annotations: {}
-        storageClass: "nfs-client"
-        # existingClaim:
-        accessMode: ReadWriteOnce
-        size: 8Gi
     hpa:
       enabled: true
       cputhreshold: 60
@@ -92,7 +84,7 @@ spec:
               replicationPasswordKey: ""
       primary:
         persistence:
-          enabled: true
+          enabled: false
           # Use an existing Persistent Volume Claim (must be created ahead of time)
           # existingClaim: ""
           storageClass: "nfs-client"
