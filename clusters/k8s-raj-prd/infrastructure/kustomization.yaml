@@ -5,6 +5,7 @@ resources:
 - pihole.yaml
 - cloudflared.yaml
 - cert-manager.yaml
+- monitoring.yaml
 - nfs-subdir-external-provisioner.yaml
 # - vault.yaml
 - haproxy.yaml
