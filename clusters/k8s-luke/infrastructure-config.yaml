@@ -6,7 +6,7 @@ metadata:
 data:
   CLUSTER_NAME: "k8s-luke"
   INGRESS_DOMAIN: "lukehouge.com"
-  INGRESS_IP: 192.168.50.70
+  INGRESS_IP: 192.168.50.7
   NFS_PATH: /mnt/tank/k8s
   NFS_SERVER: 192.168.50.59
   NFS_PATHPATTERN: "${.PVC.namespace}/${.PVC.name}"
