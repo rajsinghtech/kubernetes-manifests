@@ -4,3 +4,4 @@ curl -sfL https://get.k3s.io | INSTALL_K3S_CHANNEL=latest INSTALL_K3S_EXEC='--fl
 
 cilium install --helm-set operator.replicas=1 --helm-set k8sServiceHost=127.0.0.1 --helm-set k8sServicePort=6443 --helm-set bgpControlPlane.enabled=true
 ```
+

@@ -19,6 +19,15 @@ echo '------'
 echo 'Installing Fluxcd'
 curl -s https://fluxcd.io/install.sh | FLUX_VERSION=2.0.0 bash
 echo '------'
+echo 'Installing virtctl'
+VERSION=$(kubectl get kubevirt.kubevirt.io/kubevirt -n kubevirt -o=jsonpath="{.status.observedKubeVirtVersion}")
+ARCH=$(uname -s | tr A-Z a-z)-$(uname -m | sed 's/x86_64/amd64/') || windows-amd64.exe
+echo ${ARCH}
+curl -L -o virtctl https://github.com/kubevirt/kubevirt/releases/download/${VERSION}/virtctl-${VERSION}-${ARCH}
+chmod +x virtctl
+sudo install virtctl /usr/local/bin
+echo '------'
+
 apt update
 apt install dnsutils iputils-ping -y
 # echo 'Installing Tailscale'
