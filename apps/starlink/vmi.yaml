@@ -1,0 +1,26 @@
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  name: openwrt-vm
+spec:
+  running: true
+  template:
+    metadata:
+      labels:
+        kubevirt.io/domain: openwrt-vm
+    spec:
+      domain:
+        devices:
+          disks:
+            - name: openwrt-install
+              disk:
+                bus: virtio
+        machine:
+          type: ""
+        resources:
+          requests:
+            memory: 256Mi
+      volumes:
+        - name: openwrt-install
+          persistentVolumeClaim:
+            claimName: openwrt-install
