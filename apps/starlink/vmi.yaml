@@ -12,7 +12,7 @@ spec:
       domain:
         devices:
           disks:
-            - name: openwrt-install
+            - name: openwrt-install-disk
               disk:
                 bus: virtio
         machine:
@@ -21,6 +21,6 @@ spec:
           requests:
             memory: 256Mi
       volumes:
-        - name: openwrt-install
+        - name: openwrt-install-disk
           persistentVolumeClaim:
-            claimName: openwrt-install
+            claimName: openwrt-install-disk
