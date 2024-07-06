@@ -4,3 +4,5 @@ kind: Kustomization
 resources:
   - https://github.com/kubevirt/kubevirt/releases/download/v1.2.2/kubevirt-operator.yaml
   - https://github.com/kubevirt/kubevirt/releases/download/v1.2.2/kubevirt-cr.yaml
+  - https://github.com/kubevirt/containerized-data-importer/releases/download/v1.59.0/cdi-operator.yaml
+  - https://github.com/kubevirt/containerized-data-importer/releases/download/v1.59.0/cdi-cr.yaml
