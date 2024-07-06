@@ -5,6 +5,7 @@ resources:
 # - harbor.yaml
 # - external-name.yaml
 # - nextcloud.yaml
+- starlink.yaml
 patches:
   - path: base.yaml
     target:
