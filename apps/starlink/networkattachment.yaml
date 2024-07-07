@@ -1,6 +1,35 @@
 apiVersion: "k8s.cni.cncf.io/v1"
 kind: NetworkAttachmentDefinition
 metadata:
+  name: bridge-router
+spec:
+  config: '{
+      "cniVersion": "0.3.1",
+      "name": "bridge-test",
+      "type": "bridge",
+      "bridge": "br1",
+      "ipam": {
+        "type": "static",
+        "addresses": [
+          {
+            "address": "192.168.1.1/24",
+            "gateway": "192.168.1.1"
+          }
+        ],
+        "routes": [
+          { "dst": "0.0.0.0/0" }
+        ],
+        "dns": {
+          "nameservers" : ["8.8.8.8"],
+          "domain": "example.com",
+          "search": [ "example.com" ]
+        }
+      }
+    }'
+---
+apiVersion: "k8s.cni.cncf.io/v1"
+kind: NetworkAttachmentDefinition
+metadata:
   name: bridge-test
 spec:
   config: '{
@@ -9,7 +38,20 @@ spec:
       "type": "bridge",
       "bridge": "br1",
       "ipam": {
-        "type": "host-local",
-        "subnet": "10.250.250.0/24"
+        "type": "static",
+        "addresses": [
+          {
+            "address": "192.168.1.2/24",
+            "gateway": "192.168.1.254"
+          }
+        ],
+        "routes": [
+          { "dst": "0.0.0.0/0" }
+        ],
+        "dns": {
+          "nameservers" : ["8.8.8.8"],
+          "domain": "example.com",
+          "search": [ "example.com" ]
+        }
       }
     }'

@@ -3,20 +3,20 @@ kind: VirtualMachineInstanceReplicaSet
 metadata:
   name: openwrt-vm
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
-      kubevirt.io/domain: openwrt-vm  
+      vm: openwrt
   template:
     metadata:
       labels:
-        kubevirt.io/domain: openwrt-vm
+        vm: openwrt
     spec:
       domain:
         devices:
           interfaces:
-            - masquerade: {}
-              name: defaultnetwork
+            - name: default
+              masquerade: {}
             - name: test1
               bridge: {}
           disks:
@@ -29,12 +29,12 @@ spec:
           requests:
             memory: 256Mi
       networks:
-        - name: defaultnetwork
+        - name: default
           pod: {}
         - name: test1
           multus: # Multus network as default
             # default: true
-            networkName: bridge-test
+            networkName: bridge-router
       volumes:
         - name: openwrt-install
           persistentVolumeClaim:

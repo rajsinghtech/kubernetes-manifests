@@ -7,3 +7,6 @@ resources:
   - namespace.yaml
   - pvc.yaml
   - networkattachment.yaml
+  - test.yaml
+  - ingress.yaml
+  - service.yaml

@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: openwrt-tls
+  namespace: media
+  annotations:
+    cert-manager.io/cluster-issuer: global-issuer
+    kubernetes.io/tls-acme: 'true'
+spec:
+  ingressClassName: haproxy
+  rules:
+  - host: openwrt.${INGRESS_DOMAIN}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: openwrt
+            port:
+              number: 80
+  tls:
+  - secretName: openwrt-tls
+    hosts:
+    - openwrt.${INGRESS_DOMAIN}
