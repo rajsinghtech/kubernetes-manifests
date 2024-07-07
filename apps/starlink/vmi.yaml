@@ -1,9 +1,12 @@
 apiVersion: kubevirt.io/v1
-kind: VirtualMachine
+kind: VirtualMachineInstanceReplicaSet
 metadata:
   name: openwrt-vm
 spec:
-  running: true
+  replicas: 3
+  selector:
+    matchLabels:
+      kubevirt.io/domain: openwrt-vm  
   template:
     metadata:
       labels:
@@ -11,6 +14,11 @@ spec:
     spec:
       domain:
         devices:
+          interfaces:
+            - masquerade: {}
+              name: defaultnetwork
+            - name: test1
+              bridge: {}
           disks:
             - name: openwrt-install
               disk:
@@ -20,10 +28,18 @@ spec:
         resources:
           requests:
             memory: 256Mi
+      networks:
+        - name: defaultnetwork
+          pod: {}
+        - name: test1
+          multus: # Multus network as default
+            # default: true
+            networkName: bridge-test
       volumes:
         - name: openwrt-install
           persistentVolumeClaim:
             claimName: openwrt-install
+
   # dataVolumeTemplates: # Automatically a PVC of size 2Gi is created
   #   - metadata:
   #       name: openwrt-install-disk

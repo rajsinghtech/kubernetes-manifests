@@ -6,3 +6,4 @@ resources:
   - vmi.yaml
   - namespace.yaml
   - pvc.yaml
+  - networkattachment.yaml
