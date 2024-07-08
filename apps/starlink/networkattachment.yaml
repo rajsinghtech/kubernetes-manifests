@@ -38,20 +38,6 @@ spec:
       "type": "bridge",
       "bridge": "br1",
       "ipam": {
-        "type": "static",
-        "addresses": [
-          {
-            "address": "192.168.1.2/24",
-            "gateway": "192.168.1.254"
-          }
-        ],
-        "routes": [
-          { "dst": "0.0.0.0/0" }
-        ],
-        "dns": {
-          "nameservers" : ["8.8.8.8"],
-          "domain": "example.com",
-          "search": [ "example.com" ]
-        }
+        "type": "dhcp"
       }
     }'

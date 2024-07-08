@@ -8,5 +8,5 @@ resources:
   - pvc.yaml
   - networkattachment.yaml
   - test.yaml
-  - ingress.yaml
+  # - ingress.yaml
   - service.yaml
