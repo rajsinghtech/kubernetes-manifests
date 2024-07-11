@@ -31,6 +31,7 @@ spec:
         annotations:
           kubernetes.io/tls-acme: 'true'
           kubernetes.io/ingress.class: haproxy
+          cert-manager.io/cluster-issuer: global-issuer
         hosts:
           core: harbor.${INGRESS_DOMAIN}
           notary: harbor-notary.${INGRESS_DOMAIN}
