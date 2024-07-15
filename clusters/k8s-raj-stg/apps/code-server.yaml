@@ -11,4 +11,6 @@ spec:
   path: apps/code-server
   prune: true
   wait: true
+  dependsOn:
+  - nfs-subdir-external-provisioner  
   
