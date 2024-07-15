@@ -4,6 +4,7 @@ resources:
 - media.yaml
 - code-server.yaml
 - immich.yaml
+- frigate.yaml
 - homarr.yaml
 - external-name.yaml
 patches:
