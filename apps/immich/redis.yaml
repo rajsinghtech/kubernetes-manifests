@@ -32,10 +32,10 @@ spec:
       sentinel: false
     master:
       persistence: 
-        enabled: false
+        enabled: true
     replica:
       persistence: 
-        enabled: false
+        enabled: true
     sentinel:
       enabled: false
       persistence: 
