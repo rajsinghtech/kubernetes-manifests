@@ -1,0 +1,42 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: frigate
+spec:
+  interval: 2m
+  driftDetection:
+    mode: enabled
+  chart:
+    spec:
+      chart: frigate
+      version: x
+      sourceRef:
+        kind: HelmRepository
+        name: frigate
+  maxHistory: 2
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    config: |
+      mqtt:
+        host: "mqtt.${INGRESS_DOMAIN}"
+        port: 1883
+        user: admin
+        password: "admin"
+# cameras:
+#   # Define at least one camera
+#   back:
+#     ffmpeg:
+#       inputs:
+#         - path: rtsp://viewer:{FRIGATE_RTSP_PASSWORD}@10.0.10.10:554/cam/realmonitor?channel=1&subtype=2
+#           roles:
+#             - detect
