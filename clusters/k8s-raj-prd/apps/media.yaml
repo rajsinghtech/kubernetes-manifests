@@ -11,4 +11,6 @@ spec:
   path: apps/media/raj
   prune: true
   wait: true
+  dependsOn:
+  - nfs-subdir-external-provisioner
   

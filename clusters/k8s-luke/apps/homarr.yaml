@@ -11,4 +11,6 @@ spec:
   path: apps/homarr
   prune: true
   wait: true
+  dependsOn:
+  - nfs-subdir-external-provisioner
   

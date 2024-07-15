@@ -11,4 +11,5 @@ spec:
   path: apps/external-name
   prune: true
   wait: true
-  
+  dependsOn:
+  - haproxy
