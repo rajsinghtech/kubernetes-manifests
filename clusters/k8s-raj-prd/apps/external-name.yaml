@@ -12,5 +12,5 @@ spec:
   prune: true
   wait: true
   dependsOn:
-  - haproxy
+    - name: haproxy
   
