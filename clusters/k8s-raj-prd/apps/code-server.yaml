@@ -12,5 +12,5 @@ spec:
   prune: true
   wait: true
   dependsOn:
-  - nfs-subdir-external-provisioner  
+    - name: nfs-subdir-external-provisioner  
   
