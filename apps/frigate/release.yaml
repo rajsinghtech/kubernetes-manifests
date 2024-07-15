@@ -26,17 +26,15 @@ spec:
   uninstall:
     keepHistory: false
   values:
-    config: |
-      mqtt:
-        host: "mqtt.${INGRESS_DOMAIN}"
-        port: 1883
-        user: admin
-        password: "admin"
-# cameras:
-#   # Define at least one camera
-#   back:
-#     ffmpeg:
-#       inputs:
-#         - path: rtsp://viewer:{FRIGATE_RTSP_PASSWORD}@10.0.10.10:554/cam/realmonitor?channel=1&subtype=2
-#           roles:
-#             - detect
+    config:
+      cameras:
+        alley_back:
+          detect:
+            width: 2688
+            height: 1520
+            fps: 5
+          ffmpeg:
+            inputs:
+              - path: rtsp://192.168.50.247:554/rtsp
+                roles:
+                  - detect
