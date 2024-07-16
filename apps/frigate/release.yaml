@@ -40,6 +40,10 @@ spec:
                 roles:
                   - detect
                   - record
+          record:
+            enabled: true
+            retain:
+              days: 15
         alley_back:
           ffmpeg:
             inputs:
@@ -47,6 +51,10 @@ spec:
                 roles:
                   - detect
                   - record
+          record:
+            enabled: true
+            retain:
+              days: 15
 
 # cameras:
 #   back:
