@@ -49,32 +49,15 @@ spec:
 
       cameras:
         alley_back:
-          detect:
-            width: 2688
-            height: 1520
-            fps: 5
-          # ffmpeg:
-          #   inputs:
-          #     - path: rtsp://frigate:Applegeek1@192.168.50.247:554/Streaming/Channels/2
-          #       roles:
-          #         - record
-          onvif:
-            host: 192.168.50.247
-            port: 8000
-            user: lhouge
-            password: Applegeek1
-            autotracking:
-              enabled: False
-              calibrate_on_startup: False
-              zooming: disabled
-              zoom_factor: 0.3
-              track:
-                - person
-              required_zones:
-                - zone_name
-              return_preset: home
-              timeout: 10
-              movement_weights: []
+          # detect:
+          #   width: 2688
+          #   height: 1520
+          #   fps: 5
+          ffmpeg:
+            inputs:
+              - path: rtsp://frigate:Applegeek1@192.168.50.247:554/Streaming/Channels/2
+                roles:
+                  - detect
 
 # cameras:
 #   back:
