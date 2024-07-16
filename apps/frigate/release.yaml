@@ -34,10 +34,6 @@ spec:
         password: "admin"
       cameras:
         alley_back:
-          # detect:
-          #   width: 2688
-          #   height: 1520
-          #   fps: 5
           ffmpeg:
             inputs:
               - path: rtsp://frigate:Applegeek1@192.168.50.247:554/Streaming/Channels/2
