@@ -33,10 +33,16 @@ spec:
         user: admin
         password: "admin"
       cameras:
-        alley_back:
+        alley_front:
           ffmpeg:
             inputs:
               - path: rtsp://frigate:Applegeek1@192.168.50.247:554/Streaming/Channels/2
+                roles:
+                  - detect
+        alley_back:
+          ffmpeg:
+            inputs:
+              - path: rtsp://frigate:Applegeek1@192.168.50.246:554/Streaming/Channels/2
                 roles:
                   - detect
 
