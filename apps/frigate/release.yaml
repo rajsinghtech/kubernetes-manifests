@@ -36,7 +36,7 @@ spec:
         alley_front:
           ffmpeg:
             inputs:
-              - path: rtsp://frigate:Applegeek1@192.168.50.247:554/Streaming/Channels/2
+              - path: rtsp://frigate:Applegeek1@192.168.50.247:554/Streaming/Channels/1
                 roles:
                   - detect
                   - record
@@ -47,7 +47,7 @@ spec:
         alley_back:
           ffmpeg:
             inputs:
-              - path: rtsp://frigate:Applegeek1@192.168.50.246:554/Streaming/Channels/2
+              - path: rtsp://frigate:Applegeek1@192.168.50.246:554/Streaming/Channels/1
                 roles:
                   - detect
                   - record
