@@ -49,12 +49,93 @@ spec:
 
       cameras:
         alley_back:
-              detect:
-                width: 2688
-                height: 1520
-                fps: 5
-              ffmpeg:
-                inputs:
-                  - path: rtsp://frigate:Applegeek1@192.168.50.247:554/Streaming/Channels/2
-                    roles:
-                      - record
+          detect:
+            width: 2688
+            height: 1520
+            fps: 5
+          # ffmpeg:
+          #   inputs:
+          #     - path: rtsp://frigate:Applegeek1@192.168.50.247:554/Streaming/Channels/2
+          #       roles:
+          #         - record
+          onvif:
+            host: 192.168.50.247
+            port: 8000
+            user: lhouge
+            password: Applegeek1
+            autotracking:
+              enabled: False
+              calibrate_on_startup: False
+              zooming: disabled
+              zoom_factor: 0.3
+              track:
+                - person
+              required_zones:
+                - zone_name
+              return_preset: home
+              timeout: 10
+              movement_weights: []
+
+# cameras:
+#   back:
+#     enabled: True
+#     ffmpeg:
+#       inputs:
+#         - path: rtsp://viewer:{FRIGATE_RTSP_PASSWORD}@10.0.10.10:554/cam/realmonitor?channel=1&subtype=2
+#           roles:
+#             - audio
+#             - detect
+#             - record
+#             - rtmp
+#     best_image_timeout: 60
+#     webui_url: ""
+#     zones:
+#       front_steps:
+#         coordinates: 545,1077,747,939,788,805
+#         inertia: 3
+#         objects:
+#           - person
+#         filters:
+#           person:
+#             min_area: 5000
+#             max_area: 100000
+#             threshold: 0.7
+#     onvif:
+#       host: 0.0.0.0
+#       port: 8000
+#       user: admin
+#       password: admin
+#       autotracking:
+#         enabled: False
+#         calibrate_on_startup: False
+#         zooming: disabled
+#         zoom_factor: 0.3
+#         track:
+#           - person
+#         required_zones:
+#           - zone_name
+#         return_preset: home
+#         timeout: 10
+#         movement_weights: []
+#     birdseye:
+#       order: 0
+# ui:
+#   live_mode: mse
+#   use_experimental: False
+#   time_format: browser
+#   date_style: short
+#   time_style: medium
+#   strftime_fmt: "%Y/%m/%d %H:%M"
+# telemetry:
+#   network_interfaces:
+#     - eth
+#     - enp
+#     - eno
+#     - ens
+#     - wl
+#     - lo
+#   stats:
+#     amd_gpu_stats: True
+#     intel_gpu_stats: True
+#     network_bandwidth: False
+#   version_check: True
