@@ -48,8 +48,8 @@ spec:
     #   name: ${CLUSTER_NAME}
     # k8sServiceHost: ${CLUSTER_API}
     # k8sServicePort: 6443
-    # bgpControlPlane:
-    #   enabled: true
+    bgpControlPlane:
+      enabled: true
     # hubble:
     #   relay:
     #     enabled: true
