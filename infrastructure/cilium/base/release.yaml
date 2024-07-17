@@ -85,3 +85,5 @@ spec:
     k8sClientRateLimit:
       qps: ${QPS}
       burst: ${BURST}
+    routingMode: tunnel
+    tunnelProtocol: vxlan
