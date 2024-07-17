@@ -27,8 +27,8 @@ spec:
   uninstall:
     keepHistory: false
   values:
-    cluster:
-      name: kind-kind
+    # cluster:
+    #   name: kind-kind
     ipam:
       mode: kubernetes
     operator:
@@ -37,14 +37,12 @@ spec:
     tunnelProtocol: vxlan
     # prometheus:
     #   enabled: true
-    # operator:
-    #   replicas: 1
     #   prometheus:
     #     enabled: true
     # cni:
     #   exclusive: false
-    # cluster:
-    #   id: ${CLUSTER_ID}
+    cluster:
+      id: ${CLUSTER_ID}
     #   name: ${CLUSTER_NAME}
     # k8sServiceHost: ${CLUSTER_API}
     # k8sServicePort: 6443
