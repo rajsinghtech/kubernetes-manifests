@@ -14,7 +14,7 @@ spec:
       version: x
       sourceRef:
         kind: HelmRepository
-        name: cilium
+        name: isovalent
   maxHistory: 2
   install:
     createNamespace: true
