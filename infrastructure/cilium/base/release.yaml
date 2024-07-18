@@ -27,27 +27,19 @@ spec:
   uninstall:
     keepHistory: false
   values:
-    cluster:
-      name: kind-kind
-    ipam:
-      mode: kubernetes
+    prometheus:
+      enabled: true
     operator:
       replicas: 1
-    routingMode: tunnel
-    tunnelProtocol: vxlan
-    # prometheus:
-    #   enabled: true
-    # operator:
-    #   replicas: 1
-    #   prometheus:
-    #     enabled: true
-    # cni:
-    #   exclusive: false
-    # cluster:
-    #   id: ${CLUSTER_ID}
-    #   name: ${CLUSTER_NAME}
-    k8sServiceHost: "${CLUSTER_API}"
-    k8sServicePort: "6443"
+      prometheus:
+        enabled: true
+    cni:
+      exclusive: false
+    cluster:
+      id: ${CLUSTER_ID}
+      name: ${CLUSTER_NAME}
+    # k8sServiceHost: ${CLUSTER_API}
+    # k8sServicePort: 6443
     bgpControlPlane:
       enabled: true
     # hubble:
@@ -57,41 +49,41 @@ spec:
     #     enabled: true
     #   metrics:
     #     enableOpenMetrics: true
-    #     # enabled: '{dns,drop,tcp,flow,port-distribution,icmp,httpV2:exemplars=true;labelsContext=source_ip\,source_namespace\,source_workload\,destination_ip\,destination_namespace\,destination_workload\,traffic_direction}'
-    # ipv4:
-    #   enabled: true
-    # ipv4NativeRoutingCIDR: 10.42.0.0/16
-    # ipv6:
-    #   enabled: false
-    # k8s-require-ipv4-pod-cidr: true
-    # kubeProxyReplacement: true
-    # ipam:
-    #   mode: kubernetes
-    # tunnel: vxlan
-    # externalIPs:
-    #   enabled: true
-    # hostPort:
-    #   enabled: true
-    # hostServices:
-    #   enabled: false
-    # envoy:
-    #   enabled: true
-    # envoyConfig:
-    #   enabled: true
-    # loadBalancer:
-    #   l7:
-    #     backend: envoy
-    # egressGateway:
-    #   enabled: true
-    # bpf:
-    #   masquerade: true
-    # l2announcements:
-    #   enabled: true
-    #   leaseDuration: 3s
-    #   leaseRenewDeadline: 1s
-    #   leaseRetryPeriod: 500ms
-    # k8sClientRateLimit:
-    #   qps: ${QPS}
-    #   burst: ${BURST}
-    # routingMode: tunnel
-    # tunnelProtocol: vxlan
+        # enabled: '{dns,drop,tcp,flow,port-distribution,icmp,httpV2:exemplars=true;labelsContext=source_ip\,source_namespace\,source_workload\,destination_ip\,destination_namespace\,destination_workload\,traffic_direction}'
+    ipv4:
+      enabled: true
+    ipv4NativeRoutingCIDR: 10.42.0.0/16
+    ipv6:
+      enabled: false
+    k8s-require-ipv4-pod-cidr: true
+    kubeProxyReplacement: true
+    ipam:
+      mode: kubernetes
+    tunnel: vxlan
+    externalIPs:
+      enabled: true
+    hostPort:
+      enabled: true
+    hostServices:
+      enabled: false
+    envoy:
+      enabled: true
+    envoyConfig:
+      enabled: true
+    loadBalancer:
+      l7:
+        backend: envoy
+    egressGateway:
+      enabled: true
+    bpf:
+      masquerade: true
+    l2announcements:
+      enabled: true
+      leaseDuration: 3s
+      leaseRenewDeadline: 1s
+      leaseRetryPeriod: 500ms
+    k8sClientRateLimit:
+      qps: ${QPS}
+      burst: ${BURST}
+    routingMode: tunnel
+    tunnelProtocol: vxlan
