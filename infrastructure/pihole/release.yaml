@@ -14,9 +14,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: pihole
-  maxHistory: 2
   install:
-    createNamespace: true
     remediation:
       retries: 3
   upgrade:
@@ -46,7 +44,7 @@ spec:
       enabled: true
       policy: "None"
       nameservers:
-      - ${ROUTER_IP}
+        - ${ROUTER_IP}
     hostname: "rajsingh-${CLUSTER_NAME}"
     serviceDns:
       externalTrafficPolicy: Cluster
@@ -56,15 +54,15 @@ spec:
       port: 53
       type: LoadBalancer
     ingress:
-      annotations: 
+      annotations:
         cert-manager.io/cluster-issuer: global-issuer
         kubernetes.io/tls-acme: "true"
         ingress.cilium.io/loadbalancer-mode: shared
       enabled: true
       hosts:
-      - pihole.${INGRESS_DOMAIN}
+        - pihole.${INGRESS_DOMAIN}
       path: /
       tls:
-      - secretName: pihole-tls
-        hosts:
-          - pihole.${INGRESS_DOMAIN}
+        - secretName: pihole-tls
+          hosts:
+            - pihole.${INGRESS_DOMAIN}

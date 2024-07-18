@@ -6,18 +6,14 @@ metadata:
   namespace: kube-system
 spec:
   interval: 2m
-  # driftDetection:
-  #   mode: enabled
   chart:
     spec:
       chart: cilium
       version: x
       sourceRef:
         kind: HelmRepository
-        name: cilium
-  maxHistory: 2
+        name: isovalent
   install:
-    createNamespace: true
     remediation:
       retries: 3
   upgrade:
@@ -38,18 +34,8 @@ spec:
     cluster:
       id: ${CLUSTER_ID}
       name: ${CLUSTER_NAME}
-    k8sServiceHost: ${CLUSTER_API}
-    k8sServicePort: 6443
     bgpControlPlane:
       enabled: true
-    hubble:
-      relay:
-        enabled: true
-      ui:
-        enabled: true
-      metrics:
-        enableOpenMetrics: true
-        # enabled: '{dns,drop,tcp,flow,port-distribution,icmp,httpV2:exemplars=true;labelsContext=source_ip\,source_namespace\,source_workload\,destination_ip\,destination_namespace\,destination_workload\,traffic_direction}'
     ipv4:
       enabled: true
     ipv4NativeRoutingCIDR: 10.42.0.0/16
@@ -85,3 +71,102 @@ spec:
     k8sClientRateLimit:
       qps: ${QPS}
       burst: ${BURST}
+    routingMode: tunnel
+    tunnelProtocol: vxlan
+    extraConfig:
+      export-file-path: ""
+    hostFirewall:
+      enabled: true
+    hubble:
+      enabled: true
+      relay:
+        enabled: true
+      tls:
+        enabled: true
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: hubble-ui
+  namespace: kube-system
+spec:
+  interval: 2m
+  chart:
+    spec:
+      chart: hubble-ui
+      version: x
+      sourceRef:
+        kind: HelmRepository
+        name: isovalent
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    serviceAccount:
+      create: true
+      name: hubble-ui
+      annotations: {}
+    rollOutPods: true
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: hubble-enterprise
+  namespace: kube-system
+spec:
+  interval: 2m
+  chart:
+    spec:
+      chart: hubble-enterprise
+      version: x
+      sourceRef:
+        kind: HelmRepository
+        name: isovalent
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    # export:
+    #   mode: ""
+    # rbac:
+    #   enabled: false
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: tetragon
+  namespace: kube-system
+spec:
+  interval: 2m
+  chart:
+    spec:
+      chart: tetragon
+      version: x
+      sourceRef:
+        kind: HelmRepository
+        name: isovalent
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    tetragon:
+      btf: /sys/kernel/btf/vmlinux
+      enabled: true
