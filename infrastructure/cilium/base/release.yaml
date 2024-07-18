@@ -73,6 +73,16 @@ spec:
       burst: ${BURST}
     routingMode: tunnel
     tunnelProtocol: vxlan
+    extraConfig:
+      export-file-path: ""
+    hostFirewall:
+      enabled: true
+    hubble:
+      enabled: true
+      relay:
+        enabled: true
+      tls:
+        enabled: true
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
