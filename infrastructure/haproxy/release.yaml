@@ -13,9 +13,7 @@ spec:
         kind: HelmRepository
         name: haproxy
         # namespace: flux-system
-  maxHistory: 2
   install:
-    createNamespace: true
     remediation:
       retries: 3
   upgrade:
@@ -25,7 +23,7 @@ spec:
   uninstall:
     keepHistory: false
   values:
-    controller: 
+    controller:
       ingressClassResource:
         default: true
       service:

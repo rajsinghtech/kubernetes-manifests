@@ -14,10 +14,8 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: bitnami
-  
-  maxHistory: 2
+
   install:
-    createNamespace: true
     remediation:
       retries: 3
   upgrade:
@@ -31,12 +29,12 @@ spec:
       enabled: false
       sentinel: false
     master:
-      persistence: 
+      persistence:
         enabled: true
     replica:
-      persistence: 
+      persistence:
         enabled: true
     sentinel:
       enabled: false
-      persistence: 
+      persistence:
         enabled: false
