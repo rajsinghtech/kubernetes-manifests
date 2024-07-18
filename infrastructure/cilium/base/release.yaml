@@ -138,10 +138,10 @@ spec:
   uninstall:
     keepHistory: false
   values:
-    export:
-      mode: ""
-    rbac:
-      enabled: false
+    # export:
+    #   mode: ""
+    # rbac:
+    #   enabled: false
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
