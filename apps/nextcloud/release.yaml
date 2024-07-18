@@ -14,9 +14,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: nextcloud
-  maxHistory: 2
   install:
-    createNamespace: true
     remediation:
       retries: 3
   upgrade:
@@ -28,9 +26,9 @@ spec:
   values:
     ingress:
       enabled: true
-      annotations: 
+      annotations:
         cert-manager.io/cluster-issuer: global-issuer
-        kubernetes.io/tls-acme: 'true'
+        kubernetes.io/tls-acme: "true"
       tls:
         - secretName: nextcloud-tls
           hosts:

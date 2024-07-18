@@ -14,9 +14,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: immich
-  maxHistory: 2
   install:
-    createNamespace: true
     remediation:
       retries: 3
   upgrade:
@@ -53,7 +51,7 @@ spec:
       persistence:
         library:
           existingClaim: immich
-    
+
     # # Dependencies
     postgresql:
       enabled: true
@@ -75,4 +73,4 @@ spec:
           tls:
             - secretName: immich-tls
               hosts:
-              - immich.${INGRESS_DOMAIN}
+                - immich.${INGRESS_DOMAIN}
