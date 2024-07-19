@@ -14,9 +14,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: harbor
-  maxHistory: 2
   install:
-    createNamespace: true
     remediation:
       retries: 3
   upgrade:
@@ -29,7 +27,7 @@ spec:
     expose:
       ingress:
         annotations:
-          kubernetes.io/tls-acme: 'true'
+          kubernetes.io/tls-acme: "true"
           kubernetes.io/ingress.class: haproxy
           cert-manager.io/cluster-issuer: global-issuer
         hosts:

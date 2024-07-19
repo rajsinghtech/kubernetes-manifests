@@ -6,7 +6,7 @@ resources:
 - cloudflared.yaml
 - cert-manager.yaml
 - nfs-subdir-external-provisioner.yaml
-# - vault.yaml
+- monitoring.yaml
 - haproxy.yaml
 - flux-support.yaml
 patches:
