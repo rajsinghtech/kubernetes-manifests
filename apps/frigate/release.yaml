@@ -53,10 +53,10 @@ spec:
             enabled: true
             retain:
               days: 15
-        house_back:
+        backyard:
           ffmpeg:
             inputs:
-              - path: rtsp://lhouge:Applegeek1@192.168.50.249:554/Streaming/Channels/1
+              - path: rtsp://lhouge:Applegeek1@192.168.50.249:554/videoMain
                 roles:
                   - detect
                   - record
