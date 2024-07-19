@@ -6,6 +6,7 @@ resources:
 - cloudflared.yaml
 - cert-manager.yaml
 - monitoring.yaml
+- 1password.yaml
 - nfs-subdir-external-provisioner.yaml
 # - vault.yaml
 - haproxy.yaml
