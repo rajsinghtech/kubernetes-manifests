@@ -5,14 +5,14 @@ metadata:
   name: global-issuer
 spec:
   acme:
-    email: rajsinghcpre@gmail.com
+    email: ${EMAIL}
     server: https://acme-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
       name: letsencrypt-key
     solvers:
     - dns01:
         cloudflare:
-          email: rajsinghcpre@gmail.com
+          email: ${EMAIL}
           apiTokenSecretRef:
             name: cloudflare-api-token-secret
             key: api-token
