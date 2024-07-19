@@ -49,6 +49,10 @@ spec:
                 roles:
                   - detect
                   - record
+          record:
+            enabled: true
+            retain:
+              days: 15
         house_back:
           ffmpeg:
             inputs:
@@ -56,6 +60,10 @@ spec:
                 roles:
                   - detect
                   - record
+          record:
+            enabled: true
+            retain:
+              days: 15
         house_side:
           ffmpeg:
             inputs:
@@ -63,6 +71,10 @@ spec:
                 roles:
                   - detect
                   - record
+          record:
+            enabled: true
+            retain:
+              days: 15
         shop_1:
           ffmpeg:
             inputs:
@@ -70,6 +82,10 @@ spec:
                 roles:
                   - detect
                   - record
+          record:
+            enabled: true
+            retain:
+              days: 15
         shop_2:
           ffmpeg:
             inputs:
