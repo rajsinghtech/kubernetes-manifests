@@ -24,11 +24,17 @@ spec:
             - name: TZ
               value: "Etc/UTC"
             - name: PASSWORD
-              value: "password"  # Optional: Specify your desired password
+              valueFrom:
+                secretKeyRef:
+                  name: code-server-secret
+                  key: password
             - name: HASHED_PASSWORD
               value: ""  # Optional: Leave empty if not using hashed password
             - name: SUDO_PASSWORD
               value: "password"  # Optional: Specify sudo password if needed
+              secretKeyRef:
+                  name: code-server-secret
+                  key: admin-password
             - name: SUDO_PASSWORD_HASH
               value: ""  # Optional: Leave empty if not using hashed sudo password
             - name: PROXY_DOMAIN
