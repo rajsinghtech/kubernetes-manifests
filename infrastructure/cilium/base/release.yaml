@@ -115,6 +115,8 @@ spec:
       name: hubble-ui
       annotations: {}
     rollOutPods: true
+    timescape:
+      enabled: true
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
