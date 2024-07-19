@@ -26,3 +26,6 @@ spec:
   values:
     connect:
       credentials: /1password-credentials.json
+    operator:
+      create: true
+      token: OP_CONNECT_TOKEN
