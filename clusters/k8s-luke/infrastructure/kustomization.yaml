@@ -9,6 +9,7 @@ resources:
   - 1password.yaml
   - monitoring.yaml
   - haproxy.yaml
+  - cloudflared.yaml
 patches:
   - path: base.yaml
     target:
