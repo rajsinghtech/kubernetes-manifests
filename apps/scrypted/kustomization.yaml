@@ -8,3 +8,4 @@ resources:
   - pvc.yaml
   - ingress.yaml
   - namespace.yaml
+  - networkattachment.yaml
