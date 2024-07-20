@@ -30,15 +30,30 @@ spec:
           mountPath: /config
         env:
         - name: OPENVPN_PROVIDER
-          value: IPVANISH
+          valueFrom:
+            secretKeyRef:
+              name: ipvanish-secret
+              key: OPENVPN_PROVIDER
         - name: OPENVPN_CONFIG
-          value: ipvanish-US-Chicago-chi-b51
+          valueFrom:
+            secretKeyRef:
+              name: ipvanish-secret
+              key: OPENVPN_CONFIG
         - name: OPENVPN_USERNAME
-          value: snokyguy@gmail.com
+          valueFrom:
+            secretKeyRef:
+              name: ipvanish-secret
+              key: OPENVPN_USERNAME
         - name: OPENVPN_PASSWORD
-          value: Kangaroo500
+          valueFrom:
+            secretKeyRef:
+              name: ipvanish-secret
+              key: OPENVPN_PASSWORD
         - name: LOCAL_NETWORK
-          value: 10.42.0.0/16
+          valueFrom:
+            secretKeyRef:
+              name: ipvanish-secret
+              key: LOCAL_NETWORK
       volumes:
       - name: data-volume
         persistenbooksolumeClaim:
