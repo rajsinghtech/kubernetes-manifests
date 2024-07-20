@@ -28,6 +28,9 @@ spec:
           - name: http
             containerPort: 8080
             protocol: TCP
+          - name: https
+            containerPort: 10443
+            protocol: TCP
         volumeMounts:
           - name: nvr-volume
             mountPath: /nvr
