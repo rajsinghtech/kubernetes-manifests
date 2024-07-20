@@ -20,7 +20,7 @@ metadata:
   name: discord-status
   namespace: flux-system
 spec:
-  # summary: "HOLY SHIT"
+  summary: "Cluster Status"
   eventMetadata:
     app.kubernetes.io/cluster: ${CLUSTER_NAME}
   providerRef:
@@ -28,4 +28,4 @@ spec:
   eventSources:
     - kind: Kustomization
       name: '*'
-  eventSeverity: error
+  # eventSeverity: error
