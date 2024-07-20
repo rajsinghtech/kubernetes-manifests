@@ -6,3 +6,4 @@ resources:
   - capacitor.yaml
   - alert.yaml
   - provider.yaml
+  - secret.yaml

@@ -9,3 +9,4 @@ resources:
   - ../base/sonarr
   - ../base/transmission-movies
   - ../base/transmission-tv
+  - secret.yaml

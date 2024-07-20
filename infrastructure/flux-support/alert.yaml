@@ -4,11 +4,9 @@ metadata:
   name: github-status
   namespace: flux-system
 spec:
-  summary: "Cluster addons impacted in us-east-2"
+  # summary: "Cluster addons impacted in us-east-2"
   eventMetadata:
-    app.kubernetes.io/env: "production"
-    app.kubernetes.io/cluster: "my-cluster"
-    app.kubernetes.io/region: "us-east-1"
+    app.kubernetes.io/cluster: ${CLUSTER_NAME}
   providerRef:
     name: github-status
   eventSources:
@@ -22,13 +20,12 @@ metadata:
   name: discord-status
   namespace: flux-system
 spec:
-  summary: "HOLY SHIT"
+  # summary: "HOLY SHIT"
   eventMetadata:
-    app.kubernetes.io/env: "production"
     app.kubernetes.io/cluster: ${CLUSTER_NAME}
-    # app.kubernetes.io/region: "us-east-1"
   providerRef:
     name: discord
   eventSources:
     - kind: Kustomization
       name: '*'
+  eventSeverity: error
