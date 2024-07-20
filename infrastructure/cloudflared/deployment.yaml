@@ -47,4 +47,3 @@ spec:
           requests:
             cpu: "0.2"  
             memory: "128Mi"  
-      dnsPolicy: "None"
