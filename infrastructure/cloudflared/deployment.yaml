@@ -31,8 +31,8 @@ spec:
         - name: token
           valueFrom:
             secretKeyRef:
-              name: cloudflared
-              key: TunnelSecret
+              name: cloudflare-secret
+              key: cloudflared-k8s-tunnel-token
         livenessProbe:
           httpGet:
             path: /ready
