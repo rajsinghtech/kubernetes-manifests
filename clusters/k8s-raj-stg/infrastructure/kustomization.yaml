@@ -3,7 +3,7 @@ kind: Kustomization
 resources:
 - cilium.yaml
 - pihole.yaml
-- cloudflared.yaml
+# - cloudflared.yaml
 - cert-manager.yaml
 - nfs-subdir-external-provisioner.yaml
 - monitoring.yaml
