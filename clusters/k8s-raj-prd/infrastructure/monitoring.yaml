@@ -10,7 +10,8 @@ spec:
     name: flux-system
   path: infrastructure/monitoring/install
   prune: true
-  wait: true
+  # wait: true
+  timeout: 1m
   dependsOn:
     - name: nfs-subdir-external-provisioner
 ---
@@ -26,6 +27,7 @@ spec:
     name: flux-system
   path: infrastructure/monitoring/config
   prune: true
-  wait: true
+  # wait: true
+  timeout: 1m
   dependsOn:
     - name: monitoring-install

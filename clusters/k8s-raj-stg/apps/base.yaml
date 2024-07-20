@@ -9,9 +9,10 @@ spec:
     kind: GitRepository
     name: flux-system
   prune: true
-  wait: true
+  # wait: true
+  timeout: 1m
   force: true
   postBuild:
     substituteFrom:
-    - kind: ConfigMap
-      name: infrastructure-config
+      - kind: ConfigMap
+        name: infrastructure-config

@@ -10,7 +10,7 @@ spec:
     name: flux-system
   path: apps/code-server
   prune: true
-  wait: true
+  # wait: true
+  timeout: 1m
   dependsOn:
-    - name: nfs-subdir-external-provisioner  
-  
+    - name: nfs-subdir-external-provisioner

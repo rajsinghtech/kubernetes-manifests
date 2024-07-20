@@ -10,7 +10,7 @@ spec:
     name: flux-system
   path: apps/external-name
   prune: true
-  wait: true
+  # wait: true
+  timeout: 1m
   dependsOn:
     - name: haproxy
-  
