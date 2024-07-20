@@ -48,7 +48,3 @@ spec:
             cpu: "0.2"  
             memory: "128Mi"  
       dnsPolicy: "None"
-      dnsConfig:
-        nameservers:
-        - 10.96.10.96
-        - 10.96.96.10
