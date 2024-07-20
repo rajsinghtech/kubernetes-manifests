@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: scrypted-tls
+  namespace: scrypted
+  annotations:
+    cert-manager.io/cluster-issuer: global-issuer
+    kubernetes.io/tls-acme: 'true'
+spec:
+  ingressClassName: haproxy
+  rules:
+  - host: scrypted.${INGRESS_DOMAIN}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: scrypted
+            port:
+              number: 10444
+  tls:
+  - secretName: scrypted-tls
+    hosts:
+    - scrypted.${INGRESS_DOMAIN}
