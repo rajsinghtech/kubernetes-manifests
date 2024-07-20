@@ -9,6 +9,7 @@ resources:
 - monitoring.yaml
 - haproxy.yaml
 - flux-support.yaml
+- 1password.yaml
 patches:
   - path: base.yaml
     target:
