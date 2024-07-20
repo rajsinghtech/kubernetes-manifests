@@ -32,7 +32,7 @@ spec:
             protocol: TCP
         volumeMounts:
           - name: nvr-volume
-            mountPath: /nvr
+            mountPath: /nvr 
           - name: server-volume
             mountPath: /server/volume
       volumes:
@@ -42,3 +42,7 @@ spec:
       - name: nvr-volume
         persistenbooksolumeClaim:
           claimName: scrypted-nvr
+      dnsPolicy: "None"
+      dnsConfig:
+        nameservers:
+          - 192.168.50.1
