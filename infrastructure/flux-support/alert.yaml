@@ -15,3 +15,20 @@ spec:
     - kind: Kustomization
       name: '*'
   # eventSeverity: error
+---
+apiVersion: notification.toolkit.fluxcd.io/v1beta3
+kind: Alert
+metadata:
+  name: discord-status
+  namespace: flux-system
+spec:
+  summary: "HOLY SHIT"
+  eventMetadata:
+    app.kubernetes.io/env: "production"
+    app.kubernetes.io/cluster: ${CLUSTER_NAME}
+    # app.kubernetes.io/region: "us-east-1"
+  providerRef:
+    name: discord
+  eventSources:
+    - kind: Kustomization
+      name: '*'

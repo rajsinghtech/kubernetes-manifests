@@ -8,3 +8,13 @@ spec:
   address: https://github.com/rajsinghtech/kubernetes-manifests
   secretRef:
     name: flux-system
+---
+apiVersion: notification.toolkit.fluxcd.io/v1beta3
+kind: Provider
+metadata:
+  name: discord
+  namespace: flux-system
+spec:
+  type: discord
+  secretRef:
+    name: discord-secret
