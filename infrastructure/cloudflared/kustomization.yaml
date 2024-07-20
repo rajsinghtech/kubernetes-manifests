@@ -5,3 +5,4 @@ namespace: cloudflared
 resources:
   - deployment.yaml
   - namespace.yaml
+  - secret.yaml
