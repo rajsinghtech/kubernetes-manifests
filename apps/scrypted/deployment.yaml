@@ -33,7 +33,9 @@ spec:
         volumeMounts:
           - name: nvr-volume
             mountPath: /nvr
+          - name: server-volume
+            mountPath: /server/volume
       volumes:
-      - name: nvr-volume
+      - name: server-volume
         persistenbooksolumeClaim:
-          claimName: scrypted-nvr
+          claimName: scrypted-server
