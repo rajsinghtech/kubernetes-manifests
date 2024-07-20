@@ -10,9 +10,10 @@ spec:
     name: flux-system
   path: infrastructure/cilium/k8s-raj-stg
   prune: true
-  wait: true
+  # wait: true
+  timeout: 1m
   dependsOn:
-  - name: cilium-install
+    - name: cilium-install
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
@@ -26,5 +27,5 @@ spec:
     name: flux-system
   path: infrastructure/cilium/base
   prune: true
-  wait: true
-  
+  # wait: true
+  timeout: 1m

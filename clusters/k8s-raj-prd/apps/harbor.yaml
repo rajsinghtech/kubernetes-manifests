@@ -10,5 +10,5 @@ spec:
     name: flux-system
   path: apps/harbor
   prune: true
-  wait: true
-  
+  # wait: true
+  timeout: 1m
