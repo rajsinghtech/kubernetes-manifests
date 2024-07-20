@@ -39,3 +39,6 @@ spec:
       - name: server-volume
         persistenbooksolumeClaim:
           claimName: scrypted-server
+      - name: nvr-volume
+        persistenbooksolumeClaim:
+          claimName: scrypted-nvr
