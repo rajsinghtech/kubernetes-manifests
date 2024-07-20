@@ -7,7 +7,7 @@ spec:
     app: scrypted
   ports:
   - name: http
-    port: 10444
+    port: 8080
     protocol: TCP
     targetPort: 8080
   type: ClusterIP
