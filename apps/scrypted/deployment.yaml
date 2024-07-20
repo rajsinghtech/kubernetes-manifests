@@ -24,6 +24,10 @@ spec:
           value: "Bearer SET_THIS_TO_SOME_RANDOM_TEXT"
         - name: SCRYPTED_WEBHOOK_UPDATE
           value: "http://localhost"
+        ports:
+          - name: http
+            containerPort: 8080
+            protocol: TCP
         volumeMounts:
           - name: nvr-volume
             mountPath: /nvr
