@@ -6,8 +6,8 @@ spec:
   selector:
     app: scrypted
   ports:
-  - name: http
-    port: 8080
+  - name: https
+    port: 10443
     protocol: TCP
-    targetPort: 8080
+    targetPort: 10443
   type: ClusterIP

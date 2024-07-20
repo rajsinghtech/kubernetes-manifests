@@ -13,6 +13,8 @@ spec:
       app: scrypted
   template:
     metadata:
+      annotations:
+        k8s.v1.cni.cncf.io/networks: macvlan-conf
       labels:
         app: scrypted
     spec:
@@ -25,9 +27,6 @@ spec:
         - name: SCRYPTED_WEBHOOK_UPDATE
           value: "http://localhost"
         ports:
-          - name: http
-            containerPort: 8080
-            protocol: TCP
           - name: https
             containerPort: 10443
             protocol: TCP
