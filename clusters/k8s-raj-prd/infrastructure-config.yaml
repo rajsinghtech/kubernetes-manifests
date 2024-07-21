@@ -17,3 +17,4 @@ data:
   ROUTER_IP: 10.69.0.1
   CLUSTER_OWNER: "Raj"
   EMAIL: "rajsinghcpre@gmail.com"
+  CLUSTER_DNS: 10.96.10.96
