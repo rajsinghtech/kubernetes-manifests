@@ -4,4 +4,4 @@ metadata:
   name: "k8s-pool"
 spec:
   cidrs:
-  - cidr: "10.96.11.0/24"
+  - cidr: "10.96.96.0/24"
