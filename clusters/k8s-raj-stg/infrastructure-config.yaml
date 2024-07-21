@@ -6,7 +6,7 @@ metadata:
 data:
   CLUSTER_NAME: "k8s-raj-stg"
   INGRESS_DOMAIN: "stg.rajsingh.info"
-  INGRESS_IP: 10.96.11.1
+  INGRESS_IP: 10.96.96.1
   NFS_PATHPATTERN: "${.PVC.namespace}/${.PVC.name}"
   CLUSTER_SUBNET: "10.96.96."
   CLUSTER_ID: "2"
