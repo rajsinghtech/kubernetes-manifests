@@ -37,10 +37,10 @@ spec:
             mountPath: /server/volume
       volumes:
       - name: server-volume
-        persistenbooksolumeClaim:
+        persistentVolumeClaim:
           claimName: scrypted-server
       - name: nvr-volume
-        persistenbooksolumeClaim:
+        persistentVolumeClaim:
           claimName: scrypted-nvr
       dnsPolicy: "None"
       dnsConfig:
