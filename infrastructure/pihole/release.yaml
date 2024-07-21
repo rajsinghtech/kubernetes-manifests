@@ -31,8 +31,7 @@ spec:
       passwordKey: password
     dnsmasq:
       customDnsEntries:
-        - address=/.stg.rajsingh.info/10.69.11.1
-        - address=/-tooling.rajsingh.info/10.96.96.1
+        - address=/.stg.rajsingh.info/10.96.96.1
         - address=/.rajsingh.info/10.96.10.1
         - address=/.lukehouge.com/192.168.50.7
     persistentVolumeClaim:
@@ -48,7 +47,7 @@ spec:
     hostname: "rajsingh-${CLUSTER_NAME}"
     serviceDns:
       externalTrafficPolicy: Cluster
-      loadBalancerIP: "${CLUSTER_SUBNET}96"
+      loadBalancerIP: "${CLUSTER_DNS}"
       mixedService: true
       nodePort: ""
       port: 53
