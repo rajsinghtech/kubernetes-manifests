@@ -29,3 +29,5 @@ spec:
     - kind: Kustomization
       name: '*'
   # eventSeverity: error
+  exclusionList:
+    - ".*Dependencies do not meet ready condition.*"
