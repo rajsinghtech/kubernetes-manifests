@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mosquitto-config
+data:
+  mosquitto.conf: |
+
+    persistence true
+    persistence_location /mosquitto/data/
+    log_dest stdout
+    
+    # MQTTS listener
+    listener 8883
+    protocol mqtt
+
+    cafile /etc/ssl/certs/ca-certificates.crt
+    keyfile /mosquitto/certs/tls.key
+    certfile /mosquitto/certs/tls.crt
+
+    # WS Listener
+    listener 9001
+    protocol websockets
