@@ -76,6 +76,7 @@ spec:
     routingMode: tunnel
     tunnelProtocol: vxlan
     extraConfig:
+      external-dns-proxy: "true"
       export-file-path: ""
     hostFirewall:
       enabled: true
