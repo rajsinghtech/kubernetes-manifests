@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mosquitto
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mosquitto
+  template:
+    metadata:
+      labels:
+        app: mosquitto
+    spec:
+      containers:
+      - name: mosquitto
+        image: eclipse-mosquitto
+        ports:
+        - containerPort: 8883
+        - containerPort: 9001
+        volumeMounts:
+        - mountPath: /etc/mosquitto/
+          name: config
+        - mountPath: /mosquitto/certs/
+          name: certs
+        - mountPath: /mosquitto/data/
+          name: data
+      volumes:
+      - name: config
+        configMap:
+          name: mosquitto-config
+      - name: certs
+        secret:
+          secretName: mosquitto-certs
+      - name: data
+        persistentVolumeClaim:
+          claimName: mosquitto-data
