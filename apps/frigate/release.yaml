@@ -26,7 +26,7 @@ spec:
   values:
     config: |
       mqtt:
-        host: "mqtt.example.com"
+        host: "https://mosquitto.lukehouge.com"
         port: 1883
         user: admin
         password: "admin"
