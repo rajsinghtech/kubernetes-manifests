@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: cilium
-      version: "1.14.12"
+      version: x
       sourceRef:
         kind: HelmRepository
         name: isovalent
