@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: cilium
-      version: "1.14.12"
+      version: x
       sourceRef:
         kind: HelmRepository
         name: isovalent
@@ -76,6 +76,7 @@ spec:
     routingMode: tunnel
     tunnelProtocol: vxlan
     extraConfig:
+      external-dns-proxy: "true"
       export-file-path: ""
     hostFirewall:
       enabled: true
@@ -174,3 +175,28 @@ spec:
     tetragon:
       btf: /sys/kernel/btf/vmlinux
       enabled: true
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: cilium-dnsproxy
+  namespace: kube-system
+spec:
+  interval: 2m
+  chart:
+    spec:
+      chart: cilium-dnsproxy
+      version: x
+      sourceRef:
+        kind: HelmRepository
+        name: isovalent
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
