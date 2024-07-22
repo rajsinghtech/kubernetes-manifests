@@ -43,8 +43,6 @@ spec:
               protocol: "TCP"
             - port: "9200"
               protocol: "TCP"
-            - port: "443"
-              protocol: "TCP"
           rules:
             http:
               - {}
@@ -62,8 +60,6 @@ spec:
             - port: "50051"
               protocol: "TCP"
             - port: "9200"
-              protocol: "TCP"
-            - port: "443"
               protocol: "TCP"
           rules:
             http:
