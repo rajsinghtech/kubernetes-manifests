@@ -47,3 +47,23 @@ spec:
           rules:
             http:
               - {}
+  egress:
+    - fromEntities:
+        - all
+    - toPorts:
+        - ports:
+            - port: "80"
+              protocol: "TCP"
+            - port: "8080"
+              protocol: "TCP"
+            - port: "9080"
+              protocol: "TCP"
+            - port: "50051"
+              protocol: "TCP"
+            - port: "9200"
+              protocol: "TCP"
+            - port: "443"
+              protocol: "TCP"
+          rules:
+            http:
+              - {}
