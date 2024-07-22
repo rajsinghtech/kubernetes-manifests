@@ -10,9 +10,9 @@ spec:
   tls:
   - secretName: mosquitto-tls
     hosts:
-    - mqtt.${INGRESS_DOMAIN}
+    - mosquitto.${INGRESS_DOMAIN}
   rules:
-  - host: mqtt.${INGRESS_DOMAIN}
+  - host: mosquitto.${INGRESS_DOMAIN}
     http:
       paths:
       - path: /
