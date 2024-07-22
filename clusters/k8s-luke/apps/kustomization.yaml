@@ -8,6 +8,7 @@ resources:
 - homarr.yaml
 - external-name.yaml
 - scrypted.yaml
+- mosquitto.yaml
 patches:
   - path: base.yaml
     target:
