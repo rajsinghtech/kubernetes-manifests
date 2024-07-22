@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: cilium
-      version: x
+      version: 1.15.6
       sourceRef:
         kind: HelmRepository
         name: isovalent
@@ -186,7 +186,7 @@ spec:
   chart:
     spec:
       chart: cilium-dnsproxy
-      version: x
+      version: 1.15.6
       sourceRef:
         kind: HelmRepository
         name: isovalent
