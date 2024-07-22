@@ -9,6 +9,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
+    namespace: flux-system
   path: infrastructure/cilium/config
   prune: true
   # wait: true
