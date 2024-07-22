@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: media
 resources:
   - namespace.yaml
+  - secret.yaml
   - ../base/prowlarr
   - ../base/radarr
   - ../base/sonarr
