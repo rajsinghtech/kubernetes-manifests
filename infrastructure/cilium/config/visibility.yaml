@@ -68,7 +68,4 @@ spec:
             protocol: UDP
           rules:
             dns:
-              - matchPattern: "*.rajsingh.info"
-              - matchPattern: "*.github.com"
-              - matchPattern: "*.rajsingh.info"
               - matchPattern: "*"
