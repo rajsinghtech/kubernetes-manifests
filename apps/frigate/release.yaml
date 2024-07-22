@@ -94,6 +94,50 @@ spec:
             enabled: true
             retain:
               days: 15
+        driveway:
+          ffmpeg:
+            inputs:
+              - path: rtsp://frigate:Applegeek1@192.168.50.8:554/Streaming/Channels/1
+                roles:
+                  - detect
+                  - record
+          record:
+            enabled: true
+            retain:
+              days: 15
+        backyard_front:
+          ffmpeg:
+            inputs:
+              - path: rtsp://frigate:Applegeek1@192.168.50.88:554/Streaming/Channels/1
+                roles:
+                  - detect
+                  - record
+          record:
+            enabled: true
+            retain:
+              days: 15
+        garage:
+          ffmpeg:
+            inputs:
+              - path: rtsp://frigate:Applegeek1@192.168.50.237:554/Streaming/Channels/1
+                roles:
+                  - detect
+                  - record
+          record:
+            enabled: true
+            retain:
+              days: 15
+        backyard_back:
+          ffmpeg:
+            inputs:
+              - path: rtsp://frigate:Applegeek1@192.168.50.60:554/Streaming/Channels/1
+                roles:
+                  - detect
+                  - record
+          record:
+            enabled: true
+            retain:
+              days: 15
     persistence:
       config: 
         enabled: true
