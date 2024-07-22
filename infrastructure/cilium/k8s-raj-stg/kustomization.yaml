@@ -4,3 +4,4 @@ namespace: kube-system
 resources:
   - ippool.yaml
   - bgp.yaml
+  - visibility.yaml
