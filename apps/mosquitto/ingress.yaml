@@ -8,9 +8,9 @@ metadata:
     kubernetes.io/tls-acme: 'true'
 spec:
   tls:
-  - hosts:
+  - secretName: mosquitto-certs
+    hosts:
     - mqtt.${INGRESS_DOMAIN}
-    secretName: mosquitto-certs
   rules:
   - host: mqtt.${INGRESS_DOMAIN}
     http:
