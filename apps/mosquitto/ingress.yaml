@@ -1,14 +1,14 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: mosquitto
+  name: mosquitto-tls
   annotations:
     kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: global-issuer
     kubernetes.io/tls-acme: 'true'
 spec:
   tls:
-  - secretName: mosquitto-certs
+  - secretName: mosquitto-tls
     hosts:
     - mqtt.${INGRESS_DOMAIN}
   rules:

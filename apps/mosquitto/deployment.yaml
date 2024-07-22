@@ -31,7 +31,7 @@ spec:
           name: mosquitto-config
       - name: certs
         secret:
-          secretName: mosquitto-certs
+          secretName: mosquitto-tls
       - name: data
         persistentVolumeClaim:
           claimName: mosquitto-data
