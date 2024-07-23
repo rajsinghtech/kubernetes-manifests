@@ -19,6 +19,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: mosquitto-ws
+            name: mosquitto
             port: 
-              number: 8883
+              number: 1883
