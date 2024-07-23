@@ -143,44 +143,10 @@ spec:
   uninstall:
     keepHistory: false
   values:
-    rbac:
-      enabled: true
-      observerProxy:
-        authMode: oidc
-        jwtScopeField: hubble-rbac
-        # Specify your IDP's issuer URL and client ID
-        # Example oidcURL: https://auth.example.org/.well-known/openid-configuration
-        oidcURL: https://691852852346-lni109040difgdfm15fistni61tldjk1.apps.googleusercontent.com
-        # example oidcClientID: 0oahhdf7tapLPHNAs1d7
-        oidcClientID: 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
-      policy:
-        mode: configMap
-        configMap:
-          roles:
-            - name: admin-role
-              rules:
-                - kind: "*"
-                  actions:
-                    - "*"
-                  allowAllContexts: true
-            - name: security-role
-              rules:
-                - kind: flows
-                  actions:
-                    - get
-                  contexts:
-                    - field: namespace
-                      values:
-                        - kube-system
-          bindings:
-          - type: oidc
-            field: hubble-rbac
-            value: admin
-            role: admin-role
-          - type: oidc
-            field: hubble-rbac
-            value: security
-            role: security-role
+    # export:
+    #   mode: ""
+    # rbac:
+    #   enabled: false
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
