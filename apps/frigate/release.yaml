@@ -29,7 +29,7 @@ spec:
         host: "https://192.168.50.95"
         port: 1883
         user: lhouge
-        password: "applegeek"
+        password: applegeek
       cameras:
         alley_front:
           ffmpeg:
