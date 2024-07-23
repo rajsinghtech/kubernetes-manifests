@@ -143,6 +143,18 @@ spec:
               days: 15
       birdseye:
         restream: true
+      # Optional: Object configuration
+      # NOTE: Can be overridden at the camera level
+      objects:
+        # Optional: list of objects to track from labelmap.txt (default: shown below)
+        track:
+          - person
+          - bicycle
+          - car
+          - bus
+          - cat
+          - dog
+          - suitecase
     persistence:
       config: 
         enabled: true
