@@ -148,4 +148,6 @@ spec:
       media:
         enabled: true
         size: "200Gi"
+    birdseye:
+      restream: true
 
