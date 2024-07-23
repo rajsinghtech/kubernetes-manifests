@@ -42,6 +42,8 @@ spec:
             enabled: true
             retain:
               days: 15
+          ui:
+            order: 8
         alley_back:
           ffmpeg:
             inputs:
@@ -53,6 +55,8 @@ spec:
             enabled: true
             retain:
               days: 15
+          ui:
+            order: 9
         backyard:
           ffmpeg:
             inputs:
@@ -64,6 +68,8 @@ spec:
             enabled: true
             retain:
               days: 15
+          ui:
+            order: 4
         house_side:
           ffmpeg:
             inputs:
@@ -75,6 +81,8 @@ spec:
             enabled: true
             retain:
               days: 15
+          ui:
+            order: 1
         shop_1:
           ffmpeg:
             inputs:
@@ -87,6 +95,8 @@ spec:
               days: 15
           objects:
             track: []
+          ui:
+            order: 6
         shop_2:
           ffmpeg:
             inputs:
@@ -99,6 +109,8 @@ spec:
               days: 15
           objects:
             track: []
+          ui:
+            order: 7
         driveway:
           ffmpeg:
             inputs:
@@ -110,6 +122,8 @@ spec:
             enabled: true
             retain:
               days: 15
+          ui:
+            order: 0
         backyard_front:
           ffmpeg:
             inputs:
@@ -121,6 +135,8 @@ spec:
             enabled: true
             retain:
               days: 15
+          ui:
+            order: 3
         garage:
           ffmpeg:
             inputs:
@@ -132,6 +148,8 @@ spec:
             enabled: true
             retain:
               days: 15
+          ui:
+            order: 2
         backyard_back:
           ffmpeg:
             inputs:
@@ -143,6 +161,8 @@ spec:
             enabled: true
             retain:
               days: 15
+          ui:
+            order: 5
       birdseye:
         restream: true
       # Optional: Object configuration
