@@ -150,7 +150,7 @@ spec:
         jwtScopeField: hubble-rbac
         # Specify your IDP's issuer URL and client ID
         # Example oidcURL: https://auth.example.org/.well-known/openid-configuration
-        oidcURL: 691852852346-lni109040difgdfm15fistni61tldjk1.apps.googleusercontent.com
+        oidcURL: https://691852852346-lni109040difgdfm15fistni61tldjk1.apps.googleusercontent.com
         # example oidcClientID: 0oahhdf7tapLPHNAs1d7
         oidcClientID: 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
       policy:
