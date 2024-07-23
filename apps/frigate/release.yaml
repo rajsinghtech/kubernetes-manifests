@@ -85,6 +85,8 @@ spec:
             enabled: true
             retain:
               days: 15
+          objects:
+            track: []
         shop_2:
           ffmpeg:
             inputs:
@@ -95,6 +97,8 @@ spec:
             enabled: true
             retain:
               days: 15
+          objects:
+            track: []
         driveway:
           ffmpeg:
             inputs:
