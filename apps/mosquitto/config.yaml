@@ -9,14 +9,10 @@ data:
     persistence_location /mosquitto/data/
     log_dest stdout
     
-    # MQTTS listener
-    listener 8883
-    protocol mqtt
+    port 1883
 
     cafile /etc/ssl/certs/ca-certificates.crt
     keyfile /mosquitto/certs/tls.key
     certfile /mosquitto/certs/tls.crt
 
-    # WS Listener
-    listener 9001
-    protocol websockets
+    allow_anonymous true
