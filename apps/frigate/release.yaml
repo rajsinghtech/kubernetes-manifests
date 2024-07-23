@@ -141,6 +141,8 @@ spec:
             enabled: true
             retain:
               days: 15
+      birdseye:
+        restream: true
     persistence:
       config: 
         enabled: true
@@ -148,6 +150,4 @@ spec:
       media:
         enabled: true
         size: "200Gi"
-    birdseye:
-      restream: true
 
