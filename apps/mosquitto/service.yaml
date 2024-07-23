@@ -7,16 +7,5 @@ spec:
   selector:
     app: mosquitto
   ports:
-  - port: 8883
-    nodePort: 30883
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: mosquitto-ws
-spec:
-  type: ClusterIP
-  selector:
-    app: mosquitto
-  ports:
-  - port: 9001
+  - port: 1883
+    targetPort: 1883
