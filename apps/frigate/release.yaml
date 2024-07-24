@@ -130,6 +130,10 @@ spec:
               days: 15
           ui:
             order: 0
+          objects:
+            filters:
+              car:
+                mask: 1838,1350,2688,1365
         backyard_front:
           ffmpeg:
             inputs:
@@ -162,6 +166,12 @@ spec:
               days: 15
           ui:
             order: 2
+          objects:
+            track:
+              - person
+              - cat
+              - dog
+              - suitecase
         backyard_back:
           ffmpeg:
             inputs:
