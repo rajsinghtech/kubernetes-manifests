@@ -116,6 +116,10 @@ spec:
             gnetId: 11001
             revision: 1
             datasource: Prometheus
+          flux2:
+            gnetId: 16714
+            revision: 1
+            datasource: Prometheus
     prometheus:
       ingress:
         annotations:
@@ -128,6 +132,11 @@ spec:
           - hosts:
               - prometheus.${INGRESS_DOMAIN}
       prometheusSpec:
+        # retention: 24h
+        podMonitorNamespaceSelector: { }
+        podMonitorSelector:
+          matchLabels:
+            app.kubernetes.io/component: monitoring
         storageSpec:
           volumeClaimTemplate:
             spec:
