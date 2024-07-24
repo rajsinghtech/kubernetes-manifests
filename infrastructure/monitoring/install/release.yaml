@@ -35,6 +35,7 @@ spec:
         tls:
           - hosts:
               - alertmanager.${INGRESS_DOMAIN}
+            secretName: alertmanager-tls
       alertmanagerSpec:
         storage:
           volumeClaimTemplate:
@@ -59,6 +60,7 @@ spec:
         tls:
           - hosts:
               - grafana.${INGRESS_DOMAIN}
+            secretName: grafana-tls
       persistence:
         enabled: true
         type: sts
@@ -131,6 +133,7 @@ spec:
         tls:
           - hosts:
               - prometheus.${INGRESS_DOMAIN}
+            secretName: prometheus-tls
       prometheusSpec:
         # retention: 24h
         podMonitorNamespaceSelector: { }
