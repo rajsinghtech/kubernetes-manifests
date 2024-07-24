@@ -83,6 +83,12 @@ spec:
               days: 15
           ui:
             order: 1
+          objects:
+            track:
+              - person
+              - cat
+              - dog
+              - suitecase
         shop_1:
           ffmpeg:
             inputs:
@@ -137,6 +143,12 @@ spec:
               days: 15
           ui:
             order: 3
+          objects:
+            track:
+              - person
+              - cat
+              - dog
+              - suitecase
         garage:
           ffmpeg:
             inputs:
