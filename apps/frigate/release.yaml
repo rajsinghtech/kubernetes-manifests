@@ -194,7 +194,7 @@ spec:
         track:
           - person
           - bicycle
-          - car
+          # - car
           - bus
           - cat
           - dog
