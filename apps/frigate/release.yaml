@@ -70,6 +70,10 @@ spec:
               days: 15
           ui:
             order: 4
+          objects:
+            filters:
+              person:
+                mask: 661,213,0,215
         house_side:
           ffmpeg:
             inputs:
@@ -153,6 +157,9 @@ spec:
               - cat
               - dog
               - suitecase
+            filters:
+              person:
+                mask: 1816,273,2159,285
         garage:
           ffmpeg:
             inputs:
@@ -185,6 +192,10 @@ spec:
               days: 15
           ui:
             order: 5
+          objects:
+            filters:
+              person:
+                mask: 0,0,1524,0
       birdseye:
         restream: true
       # Optional: Object configuration
