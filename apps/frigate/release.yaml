@@ -209,6 +209,19 @@ spec:
               days: 15
           ui:
             order: 2
+          zones:
+            street:
+              coordinates: 1790,146,2122,299,2352,427,2592,565,2867,742,2944,585,2944,0,2558,0,1435,0
+              objects:
+                - car
+                - bicycle
+            house:
+              coordinates: 2944,804,2944,1260,0,1278,0,0,1400,22,2178,346
+              objects:
+                - person
+                - cat
+                - dog
+                - suitecase
       birdseye:
         restream: true
       # Optional: Object configuration
@@ -217,7 +230,7 @@ spec:
         # Optional: list of objects to track from labelmap.txt (default: shown below)
         track:
           - person
-          - bicycle
+          # - bicycle
           # - car
           - bus
           - cat
