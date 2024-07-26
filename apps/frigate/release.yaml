@@ -205,18 +205,14 @@ spec:
                   - record
           record:
             enabled: true
-              retain:
-                days: 15
-            events:
-              required_zones:
-                - street
-                - house
+            retain:
+              days: 15
+          ui:
+            order: 2
           objects:
             filters:
               person:
-                mask: 2944,804,2944,1260,0,1278,0,0,1400,22,2178,346
-          ui:
-            order: 2
+                mask: 0,0,1524,0
       birdseye:
         restream: true
       # Optional: Object configuration
@@ -269,4 +265,3 @@ spec:
       media:
         enabled: true
         size: "200Gi"
-
