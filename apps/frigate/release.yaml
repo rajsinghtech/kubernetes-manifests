@@ -213,7 +213,7 @@ spec:
             filters:
               person:
                 mask: 2944,0,2944,612,2889,753,2421,441,2029,239,1715,100,1431,0
-        birdseye:
+      birdseye:
         restream: true
       # Optional: Object configuration
       # NOTE: Can be overridden at the camera level
