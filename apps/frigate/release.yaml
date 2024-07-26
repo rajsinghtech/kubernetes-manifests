@@ -43,7 +43,7 @@ spec:
             retain:
               days: 15
           ui:
-            order: 8
+            order: 9
         alley_back:
           ffmpeg:
             inputs:
@@ -56,7 +56,7 @@ spec:
             retain:
               days: 15
           ui:
-            order: 9
+            order: 10
         backyard:
           ffmpeg:
             inputs:
@@ -69,7 +69,7 @@ spec:
             retain:
               days: 15
           ui:
-            order: 4
+            order: 5
           objects:
             filters:
               person:
@@ -106,7 +106,7 @@ spec:
           objects:
             track: []
           ui:
-            order: 6
+            order: 8
         shop_2:
           ffmpeg:
             inputs:
@@ -150,7 +150,7 @@ spec:
             retain:
               days: 15
           ui:
-            order: 3
+            order: 4
           objects:
             track:
               - person
@@ -172,7 +172,7 @@ spec:
             retain:
               days: 15
           ui:
-            order: 2
+            order: 3
           objects:
             track:
               - person
@@ -191,11 +191,24 @@ spec:
             retain:
               days: 15
           ui:
-            order: 5
+            order: 6
           objects:
             filters:
               person:
                 mask: 0,0,1524,0
+        front_door:
+          ffmpeg:
+            inputs:
+              - path: rtsp://frigate:Applegeek1@192.168.50.42:554/Streaming/Channels/1
+                roles:
+                  - detect
+                  - record
+          record:
+            enabled: true
+            retain:
+              days: 15
+          ui:
+            order: 2
       birdseye:
         restream: true
       # Optional: Object configuration
