@@ -205,8 +205,12 @@ spec:
                   - record
           record:
             enabled: true
-            retain:
-              days: 15
+              retain:
+                days: 15
+            events:
+              required_zones:
+                - street
+                - house            
           ui:
             order: 2
           zones:
