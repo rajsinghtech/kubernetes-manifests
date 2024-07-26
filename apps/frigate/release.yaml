@@ -230,7 +230,7 @@ spec:
         # Optional: Set a timezone to use in the UI (default: use browser local time)
         # timezone: None
         # Optional: Use an experimental recordings / camera view UI (default: shown below)
-        # experimental_ui: True
+        use_experimental: true
         # Optional: Set the time format used.
         # Options are browser, 12hour, or 24hour (default: shown below)
         time_format: 12hour
