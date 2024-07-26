@@ -213,8 +213,11 @@ spec:
             street:
               coordinates: 1790,146,2122,299,2352,427,2592,565,2867,742,2944,585,2944,0,2558,0,1435,0
               objects:
-                - car
-                - bicycle
+                # - car
+                # - bicycle
+                # - bus
+                - cat
+                - dog
             house:
               coordinates: 2944,804,2944,1260,0,1278,0,0,1400,22,2178,346
               objects:
