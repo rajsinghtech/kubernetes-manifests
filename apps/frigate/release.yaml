@@ -227,6 +227,10 @@ spec:
               days: 15
           ui:
             order: 2
+          objects:
+            filters:
+              person:
+                mask: 2944,0,2944,612,2889,753,2421,441,2029,239,1715,100,1431,0
       birdseye:
         restream: true
       # Optional: Object configuration
@@ -235,7 +239,7 @@ spec:
         # Optional: list of objects to track from labelmap.txt (default: shown below)
         track:
           - person
-          - bicycle
+          # - bicycle
           # - car
           - bus
           - cat
@@ -305,4 +309,3 @@ spec:
       media:
         enabled: true
         size: "200Gi"
-
