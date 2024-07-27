@@ -24,36 +24,23 @@ spec:
   uninstall:
     keepHistory: false
   values:
-    mqttUser:
-      secretKeyRef:
-        name: mqtt-secret
-        key: username
-    mqttPassword:
-      secretKeyRef:
-        name: mqtt-secret
-        key: credential
-    cameraUsername:
-      secretKeyRef:
-        name: ip-camera-secrets
-        key: username
-    cameraPassword:
-      secretKeyRef:
-        name: ip-camera-secrets
-        key: password
+    envFromSecrets:
+      - mqtt-secret
+      - ip-camera-secrets
     config: |
       mqtt:
         host: 192.168.50.95
         port: 1883
-        user: {{ .Values.mqttUser }}
-        password: {{ .Values.mqttPassword }}
+        user: {FRIGATE_MQTT_USER}
+        password: {FRIGATE_MQTT_PASSWORD}
       cameras:
         alley_front:
           ffmpeg:
             inputs:
-              - path: rtsp://{{ .Values.cameraUsername }}:{{ .Values.cameraPassword }}@192.168.50.247:554/Streaming/Channels/1
+              - path: rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@192.168.50.247:554/Streaming/Channels/1
                 roles:
                   - record
-              - path: rtsp://{{ .Values.cameraUsername }}:{{ .Values.cameraPassword }}@192.168.50.247:554/Streaming/Channels/2
+              - path: rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@192.168.50.247:554/Streaming/Channels/2
                 roles:
                   - detect
           record:
@@ -65,10 +52,10 @@ spec:
         alley_back:
           ffmpeg:
             inputs:
-              - path: rtsp://{{ .Values.cameraUsername }}:{{ .Values.cameraPassword }}@192.168.50.246:554/Streaming/Channels/1
+              - path: rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@192.168.50.246:554/Streaming/Channels/1
                 roles:
                   - record
-              - path: rtsp://{{ .Values.cameraUsername }}:{{ .Values.cameraPassword }}@192.168.50.246:554/Streaming/Channels/2
+              - path: rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@192.168.50.246:554/Streaming/Channels/2
                 roles:
                   - detect
           record:
@@ -80,10 +67,10 @@ spec:
         backyard:
           ffmpeg:
             inputs:
-              - path: rtsp://{{ .Values.cameraUsername }}:{{ .Values.cameraPassword }}@192.168.50.249:554/Streaming/Channels/1
+              - path: rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@192.168.50.249:554/Streaming/Channels/1
                 roles:
                   - record
-              - path: rtsp://{{ .Values.cameraUsername }}:{{ .Values.cameraPassword }}@192.168.50.249:554/Streaming/Channels/2
+              - path: rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@192.168.50.249:554/Streaming/Channels/2
                 roles:
                   - detect
           record:
@@ -99,10 +86,10 @@ spec:
         house_side:
           ffmpeg:
             inputs:
-              - path: rtsp://{{ .Values.cameraUsername }}:{{ .Values.cameraPassword }}@192.168.50.252:554/Streaming/Channels/1
+              - path: rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@192.168.50.252:554/Streaming/Channels/1
                 roles:
                   - record
-              - path: rtsp://{{ .Values.cameraUsername }}:{{ .Values.cameraPassword }}@192.168.50.252:554/Streaming/Channels/2
+              - path: rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@192.168.50.252:554/Streaming/Channels/2
                 roles:
                   - detect
           record:
@@ -120,7 +107,7 @@ spec:
         shop_1:
           ffmpeg:
             inputs:
-              - path: rtsp://{{ .Values.cameraUsername }}:{{ .Values.cameraPassword }}@192.168.50.250:554/Streaming/Channels/1
+              - path: rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@192.168.50.250:554/Streaming/Channels/1
                 roles:
                   - record
           record:
@@ -134,7 +121,7 @@ spec:
         shop_2:
           ffmpeg:
             inputs:
-              - path: rtsp://{{ .Values.cameraUsername }}:{{ .Values.cameraPassword }}@192.168.50.251:554/Streaming/Channels/1
+              - path: rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@192.168.50.251:554/Streaming/Channels/1
                 roles:
                   - record
           record:
@@ -148,10 +135,10 @@ spec:
         driveway:
           ffmpeg:
             inputs:
-              - path: rtsp://{{ .Values.cameraUsername }}:{{ .Values.cameraPassword }}@192.168.50.8:554/Streaming/Channels/1
+              - path: rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@192.168.50.8:554/Streaming/Channels/1
                 roles:
                   - record
-              - path: rtsp://{{ .Values.cameraUsername }}:{{ .Values.cameraPassword }}@192.168.50.8:554/Streaming/Channels/2
+              - path: rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@192.168.50.8:554/Streaming/Channels/2
                 roles:
                   - detect
           record:
@@ -167,10 +154,10 @@ spec:
         backyard_front:
           ffmpeg:
             inputs:
-              - path: rtsp://{{ .Values.cameraUsername }}:{{ .Values.cameraPassword }}@192.168.50.88:554/Streaming/Channels/1
+              - path: rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@192.168.50.88:554/Streaming/Channels/1
                 roles:
                   - record
-              - path: rtsp://{{ .Values.cameraUsername }}:{{ .Values.cameraPassword }}@192.168.50.88:554/Streaming/Channels/2
+              - path: rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@192.168.50.88:554/Streaming/Channels/2
                 roles:
                   - detect
           record:
@@ -191,10 +178,10 @@ spec:
         garage:
           ffmpeg:
             inputs:
-              - path: rtsp://{{ .Values.cameraUsername }}:{{ .Values.cameraPassword }}@192.168.50.237:554/Streaming/Channels/1
+              - path: rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@192.168.50.237:554/Streaming/Channels/1
                 roles:
                   - record
-              - path: rtsp://{{ .Values.cameraUsername }}:{{ .Values.cameraPassword }}@192.168.50.237:554/Streaming/Channels/2
+              - path: rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@192.168.50.237:554/Streaming/Channels/2
                 roles:
                   - detect
           record:
@@ -212,10 +199,10 @@ spec:
         backyard_back:
           ffmpeg:
             inputs:
-              - path: rtsp://{{ .Values.cameraUsername }}:{{ .Values.cameraPassword }}@192.168.50.60:554/Streaming/Channels/1
+              - path: rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@192.168.50.60:554/Streaming/Channels/1
                 roles:
                   - record
-              - path: rtsp://{{ .Values.cameraUsername }}:{{ .Values.cameraPassword }}@192.168.50.60:554/Streaming/Channels/2
+              - path: rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@192.168.50.60:554/Streaming/Channels/2
                 roles:
                   - detect
           record:
@@ -231,10 +218,10 @@ spec:
         front_door:
           ffmpeg:
             inputs:
-              - path: rtsp://{{ .Values.cameraUsername }}:{{ .Values.cameraPassword }}@192.168.50.42:554/Streaming/Channels/1
+              - path: rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@192.168.50.42:554/Streaming/Channels/1
                 roles:
                   - record
-              - path: rtsp://{{ .Values.cameraUsername }}:{{ .Values.cameraPassword }}@192.168.50.42:554/Streaming/Channels/2
+              - path: rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@192.168.50.42:554/Streaming/Channels/2
                 roles:
                   - detect
           record:
