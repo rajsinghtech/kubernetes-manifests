@@ -24,11 +24,11 @@ spec:
   uninstall:
     keepHistory: false
   values:
-    mqttUser: 
+    mqttUser:
       secretKeyRef:
         name: mqtt-secret
         key: username
-    mqttPassword: 
+    mqttPassword:
       secretKeyRef:
         name: mqtt-secret
         key: credential
@@ -212,7 +212,7 @@ spec:
         backyard_back:
           ffmpeg:
             inputs:
-             - path: rtsp://{{ .Values.cameraUsername }}:{{ .Values.cameraPassword }}@192.168.50.60:554/Streaming/Channels/1
+              - path: rtsp://{{ .Values.cameraUsername }}:{{ .Values.cameraPassword }}@192.168.50.60:554/Streaming/Channels/1
                 roles:
                   - record
               - path: rtsp://{{ .Values.cameraUsername }}:{{ .Values.cameraPassword }}@192.168.50.60:554/Streaming/Channels/2
