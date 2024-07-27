@@ -36,8 +36,10 @@ spec:
             inputs:
               - path: rtsp://frigate:Applegeek1@192.168.50.247:554/Streaming/Channels/1
                 roles:
-                  - detect
                   - record
+              - path: rtsp://frigate:Applegeek1@192.168.50.247:554/Streaming/Channels/2
+                roles:
+                  - detect
           record:
             enabled: true
             retain:
@@ -49,8 +51,10 @@ spec:
             inputs:
               - path: rtsp://frigate:Applegeek1@192.168.50.246:554/Streaming/Channels/1
                 roles:
-                  - detect
                   - record
+              - path: rtsp://frigate:Applegeek1@192.168.50.246:554/Streaming/Channels/2
+                roles:
+                  - detect
           record:
             enabled: true
             retain:
@@ -60,10 +64,12 @@ spec:
         backyard:
           ffmpeg:
             inputs:
-              - path: rtsp://lhouge:Applegeek1@192.168.50.249:554/videoMain
+              - path: rtsp://frigate:Applegeek1@192.168.50.249:554/Streaming/Channels/1
+                roles:
+                  - record
+              - path: rtsp://frigate:Applegeek1@192.168.50.249:554/Streaming/Channels/2
                 roles:
                   - detect
-                  - record
           record:
             enabled: true
             retain:
@@ -79,8 +85,10 @@ spec:
             inputs:
               - path: rtsp://frigate:Applegeek1@192.168.50.252:554/Streaming/Channels/1
                 roles:
-                  - detect
                   - record
+              - path: rtsp://frigate:Applegeek1@192.168.50.252:554/Streaming/Channels/2
+                roles:
+                  - detect
           record:
             enabled: true
             retain:
@@ -126,8 +134,10 @@ spec:
             inputs:
               - path: rtsp://frigate:Applegeek1@192.168.50.8:554/Streaming/Channels/1
                 roles:
-                  - detect
                   - record
+              - path: rtsp://frigate:Applegeek1@192.168.50.8:554/Streaming/Channels/2
+                roles:
+                  - detect
           record:
             enabled: true
             retain:
@@ -143,8 +153,10 @@ spec:
             inputs:
               - path: rtsp://frigate:Applegeek1@192.168.50.88:554/Streaming/Channels/1
                 roles:
-                  - detect
                   - record
+              - path: rtsp://frigate:Applegeek1@192.168.50.88:554/Streaming/Channels/2
+                roles:
+                  - detect
           record:
             enabled: true
             retain:
@@ -165,8 +177,10 @@ spec:
             inputs:
               - path: rtsp://frigate:Applegeek1@192.168.50.237:554/Streaming/Channels/1
                 roles:
-                  - detect
                   - record
+              - path: rtsp://frigate:Applegeek1@192.168.50.237:554/Streaming/Channels/2
+                roles:
+                  - detect
           record:
             enabled: true
             retain:
@@ -182,10 +196,12 @@ spec:
         backyard_back:
           ffmpeg:
             inputs:
-              - path: rtsp://frigate:Applegeek1@192.168.50.60:554/Streaming/Channels/1
+             - path: rtsp://frigate:Applegeek1@192.168.50.60:554/Streaming/Channels/1
+                roles:
+                  - record
+              - path: rtsp://frigate:Applegeek1@192.168.50.60:554/Streaming/Channels/2
                 roles:
                   - detect
-                  - record
           record:
             enabled: true
             retain:
@@ -201,8 +217,10 @@ spec:
             inputs:
               - path: rtsp://frigate:Applegeek1@192.168.50.42:554/Streaming/Channels/1
                 roles:
-                  - detect
                   - record
+              - path: rtsp://frigate:Applegeek1@192.168.50.42:554/Streaming/Channels/2
+                roles:
+                  - detect
           record:
             enabled: true
             retain:
@@ -254,6 +272,32 @@ spec:
         # https://www.gnu.org/software/libc/manual/html_node/Formatting-Calendar-Time.html
         # possible values are shown above (default: not set)
         # strftime_fmt: "%Y/%m/%d %H:%M"
+      # Optional: Configuration for the jpg snapshots written to the clips directory for each event
+      # NOTE: Can be overridden at the camera level
+      snapshots:
+        # Optional: Enable writing jpg snapshot to /media/frigate/clips (default: shown below)
+        enabled: True
+        # Optional: save a clean PNG copy of the snapshot image (default: shown below)
+        clean_copy: True
+        # Optional: print a timestamp on the snapshots (default: shown below)
+        timestamp: True
+        # Optional: draw bounding box on the snapshots (default: shown below)
+        bounding_box: True
+        # Optional: crop the snapshot (default: shown below)
+        crop: False
+        # Optional: height to resize the snapshot to (default: original size)
+        # height: 175
+        # Optional: Restrict snapshots to objects that entered any of the listed zones (default: no required zones)
+        # required_zones: []
+        # Optional: Camera override for retention settings (default: global values)
+        retain:
+          # Required: Default retention days (default: shown below)
+          default: 10
+          # Optional: Per object retention days
+          objects:
+            person: 15
+        # Optional: quality of the encoded jpeg, 0-100 (default: shown below)
+        quality: 70
     persistence:
       config: 
         enabled: true
