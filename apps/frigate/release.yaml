@@ -82,7 +82,7 @@ spec:
           objects:
             filters:
               person:
-                mask: 661,213,0,215
+                mask: 301,102,366,0,0,0,0,298
         house_side:
           ffmpeg:
             inputs:
