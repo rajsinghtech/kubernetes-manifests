@@ -233,7 +233,7 @@ spec:
           objects:
             filters:
               person:
-                mask: 2944,0,2944,612,2889,753,2421,441,2029,239,1715,100,1431,0
+                mask: 1280,0,1280,119,1280,257,1248,326,1067,199,824,78,632,0
       birdseye:
         restream: true
       # Optional: Object configuration
