@@ -14,15 +14,12 @@ spec:
         name: 1password
   values:
     connect:
-      credentials_base64:
-        secretRef:
-          name: 1password-secret
-          key: connect_credentials
+      credentialsName: op-credentials
+      credentialsKey: 1password-credentials.json
     operator:
       create: true
       pollingInterval: 60
       token:
         value:
-          secretRef:
-            name: 1password-secret
-            key: operator_token
+          name: onepassword-token
+          key: token
