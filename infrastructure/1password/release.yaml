@@ -14,4 +14,5 @@ spec:
         name: 1password
   values:
     operator:
+      create: true
       pollingInterval: 60
