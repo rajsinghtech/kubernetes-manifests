@@ -13,13 +13,13 @@ spec:
         kind: HelmRepository
         name: 1password
   values:
-    connect:
-      credentialsName: op-credentials
-      credentialsKey: 1password-credentials.json
+    # connect:
+    #   credentialsName: op-credentials
+    #   credentialsKey: 1password-credentials.json
     operator:
-      create: true
+      # create: true
       pollingInterval: 60
-      token:
-        value:
-          name: onepassword-token
-          key: token
+      # token:
+      #   value:
+      #     name: onepassword-token
+      #     key: token
