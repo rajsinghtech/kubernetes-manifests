@@ -20,7 +20,7 @@ spec:
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: cilium-ee-dashboards 
+  name: cilium-ee-dashboards
 spec:
   interval: 2m
   driftDetection:
@@ -33,13 +33,4 @@ spec:
         kind: HelmRepository
         name: isovalent
         namespace: kube-system
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      retries: 3
-  uninstall:
-    keepHistory: false
   values:

@@ -10,7 +10,6 @@ spec:
     name: flux-system
   prune: true
   # wait: true
-  timeout: 1m
   force: true
   postBuild:
     substituteFrom:

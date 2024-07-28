@@ -11,4 +11,3 @@ spec:
   path: infrastructure/vault
   prune: true
   # wait: true
-  timeout: 1m

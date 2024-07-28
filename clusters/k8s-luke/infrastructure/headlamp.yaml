@@ -11,4 +11,3 @@ spec:
   path: infrastructure/headlamp
   prune: true
   # wait: true
-  timeout: 1m

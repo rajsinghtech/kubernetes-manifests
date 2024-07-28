@@ -14,15 +14,6 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: harbor
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      retries: 3
-  uninstall:
-    keepHistory: false
   values:
     expose:
       ingress:

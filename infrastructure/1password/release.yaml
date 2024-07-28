@@ -14,15 +14,6 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: 1password
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      retries: 3
-  uninstall:
-    keepHistory: false
   values:
     connect:
       credentials_base64:
@@ -32,7 +23,7 @@ spec:
     operator:
       create: true
       pollingInterval: 60
-      token: 
+      token:
         value:
           secretRef:
             name: 1password-secret
