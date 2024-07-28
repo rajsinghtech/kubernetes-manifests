@@ -29,7 +29,7 @@ spec:
       enabled: true
     ipv4:
       enabled: true
-    ipv4NativeRoutingCIDR: 10.42.0.0/16
+    ipv4NativeRoutingCIDR: "10.42.0.0/16"
     ipv6:
       enabled: false
     k8s-require-ipv4-pod-cidr: true
