@@ -14,15 +14,6 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: immich
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      retries: 3
-  uninstall:
-    keepHistory: false
   values:
     # env:
     # - name: DB_DATABASE_NAME

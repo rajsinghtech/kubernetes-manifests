@@ -13,15 +13,6 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: isovalent
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      retries: 3
-  uninstall:
-    keepHistory: false
   values:
     prometheus:
       enabled: true
@@ -101,15 +92,6 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: isovalent
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      retries: 3
-  uninstall:
-    keepHistory: false
   values:
     serviceAccount:
       create: true
@@ -133,15 +115,6 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: isovalent
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      retries: 3
-  uninstall:
-    keepHistory: false
   values:
     # export:
     #   mode: ""
@@ -162,15 +135,6 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: isovalent
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      retries: 3
-  uninstall:
-    keepHistory: false
   values:
     tetragon:
       btf: /sys/kernel/btf/vmlinux
@@ -190,13 +154,4 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: isovalent
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      retries: 3
-  uninstall:
-    keepHistory: false
   values:

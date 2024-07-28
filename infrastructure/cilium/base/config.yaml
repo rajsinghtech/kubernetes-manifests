@@ -13,4 +13,3 @@ spec:
   path: infrastructure/cilium/config
   prune: true
   # wait: true
-  timeout: 1m
