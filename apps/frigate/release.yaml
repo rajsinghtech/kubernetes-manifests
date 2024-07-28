@@ -5,8 +5,6 @@ metadata:
   name: frigate
 spec:
   interval: 2m
-  driftDetection:
-    mode: enabled
   chart:
     spec:
       chart: frigate
