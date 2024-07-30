@@ -250,7 +250,7 @@ spec:
           - suitecase
         filters:
           person:
-            threshold: 0.75
+            threshold: 0.65
       # Optional
       ui:
         # Optional: Set the default live mode for cameras in the UI (default: shown below)
