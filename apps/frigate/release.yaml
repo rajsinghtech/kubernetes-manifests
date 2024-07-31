@@ -49,6 +49,14 @@ spec:
               days: 1
           ui:
             order: 9
+          objects:
+            filters:
+              person:
+                threshold: 0.75
+              dog:
+                threshold: 0.75
+              cat:
+                threshold: 0.75
         alley_back:
           ffmpeg:
             inputs:
@@ -64,6 +72,14 @@ spec:
               days: 1
           ui:
             order: 10
+          objects:
+            filters:
+              person:
+                threshold: 0.75
+              dog:
+                threshold: 0.75
+              cat:
+                threshold: 0.75
         backyard:
           ffmpeg:
             inputs:
@@ -164,6 +180,9 @@ spec:
             enabled: true
             retain:
               days: 1
+            events:
+              required_zones:
+                - entire_yard
           ui:
             order: 4
           objects:
@@ -172,9 +191,9 @@ spec:
               - cat
               - dog
               - suitecase
-            filters:
-              person:
-                mask: 1816,273,2159,285
+          zones:
+            entire_yard:
+              coordinates: 526,118,530,160,711,143,977,134,1280,167,1280,720,0,720,0,318,0,219
         garage:
           ffmpeg:
             inputs:
