@@ -14,6 +14,17 @@ spec:
         kind: HelmRepository
         name: isovalent
   values:
+    routingMode: "native"
+    bpf:
+      datapathMode: "netkit"
+      masquerade: "true"
+    ipv6:
+      enabled: "true"
+    enableIPv6BIGTCP: "true"
+    ipv4:
+      enabled: "true"
+    enableIPv4BIGTCP: "true"
+    kubeProxyReplacement: "true"
     prometheus:
       enabled: true
     operator:
@@ -27,13 +38,8 @@ spec:
       name: ${CLUSTER_NAME}
     bgpControlPlane:
       enabled: true
-    ipv4:
-      enabled: true
     ipv4NativeRoutingCIDR: "10.42.0.0/16"
-    ipv6:
-      enabled: false
     k8s-require-ipv4-pod-cidr: true
-    kubeProxyReplacement: true
     ipam:
       mode: kubernetes
     tunnel: vxlan
@@ -52,8 +58,6 @@ spec:
         backend: envoy
     egressGateway:
       enabled: true
-    bpf:
-      masquerade: true
     l2announcements:
       enabled: true
       leaseDuration: 3s
@@ -64,7 +68,6 @@ spec:
     k8sClientRateLimit:
       qps: ${QPS}
       burst: ${BURST}
-    routingMode: tunnel
     tunnelProtocol: vxlan
     extraConfig:
       external-dns-proxy: "true"
