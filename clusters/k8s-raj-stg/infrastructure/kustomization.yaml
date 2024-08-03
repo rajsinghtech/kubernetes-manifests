@@ -10,6 +10,7 @@ resources:
 - haproxy.yaml
 - flux-support.yaml
 - 1password.yaml
+- hubble-timescape.yaml
 patches:
   - path: base.yaml
     target:
