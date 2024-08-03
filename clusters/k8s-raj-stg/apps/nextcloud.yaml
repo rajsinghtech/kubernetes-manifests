@@ -11,4 +11,3 @@ spec:
   path: apps/nextcloud
   prune: true
   # wait: true
-  timeout: 1m

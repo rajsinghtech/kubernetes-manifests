@@ -11,6 +11,5 @@ spec:
   path: infrastructure/pihole
   prune: true
   # wait: true
-  timeout: 1m
   dependsOn:
     - name: cilium-config

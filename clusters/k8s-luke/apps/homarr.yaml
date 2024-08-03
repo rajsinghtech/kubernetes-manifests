@@ -11,6 +11,5 @@ spec:
   path: apps/homarr
   prune: true
   # wait: true
-  timeout: 1m
   dependsOn:
     - name: nfs-subdir-external-provisioner

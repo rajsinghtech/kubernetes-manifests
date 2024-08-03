@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: infrastructure-config
+  namespace: flux-system
+data:
+  CLUSTER_NAME: "k8s-raj-testing"
+  INGRESS_DOMAIN: "testing.rajsingh.info"
+  INGRESS_IP: 10.96.97.1
+  NFS_PATHPATTERN: "${.PVC.namespace}/${.PVC.name}"
+  CLUSTER_SUBNET: "10.96.98."
+  CLUSTER_ID: "3"
+  CLUSTER_API: 127.0.0.1
+  NFS_PATH: /tank/k8s/testing
+  NFS_SERVER: proxmox.lan
+  LOCAL_FDQN: ".lan"
+  ROUTER_IP: 10.69.0.1
+  CLUSTER_OWNER: "Raj"
+  CLUSTER_DNS: 10.96.97.10
+  EMAIL: "rajsinghcpre@gmail.com"
+  BGP_ASN: "64517"
