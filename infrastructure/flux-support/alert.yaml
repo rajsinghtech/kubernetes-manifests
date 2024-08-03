@@ -28,6 +28,8 @@ spec:
   eventSources:
     - kind: Kustomization
       name: '*'
+    - kind: HelmRelease
+      name: '*'
   # eventSeverity: error
   exclusionList:
     - ".*Dependencies do not meet ready condition.*"
