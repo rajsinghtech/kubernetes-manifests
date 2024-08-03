@@ -72,7 +72,7 @@ spec:
     extraConfig:
       external-dns-proxy: "true"
       export-file-path: ""
-    # hostFirewall:
+    # hostFirewall:x
     #   enabled: true
     hubble:
       enabled: true
