@@ -1,0 +1,29 @@
+lite:
+  enabled: true
+clickhouse:
+  cluster:
+    enabled: false
+  tls:
+    enabled: false
+    auto:
+      enabled: false
+
+ingester:
+  # Disable bucket based ingestion for Timescape Lite, we're using the push API
+  bucket:
+    uri: ~
+    prefixPattern: ~
+
+  server:
+    basicAuth:
+      enabled: true
+    tls:
+      enabled: false
+      auto:
+        enabled: true
+        # method: certmanager
+        # certmanager:
+        #   issuerRef:
+        #     group: cert-manager.io
+        #     kind: ClusterIssuer
+        #     name: cluster-ca-issuer
