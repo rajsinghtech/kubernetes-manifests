@@ -71,7 +71,7 @@ spec:
     tunnelProtocol: vxlan
     extraConfig:
       external-dns-proxy: "true"
-      export-file-path: ""
+      export-file-path: "/var/run/cilium/hubble/hubble.log"
     # hostFirewall:x
     #   enabled: true
     hubble:
