@@ -19,8 +19,8 @@ spec:
       datapathMode: netkit
       masquerade: true
     ipv6:
-      enabled: true
-    enableIPv6BIGTCP: true
+      enabled: false
+    enableIPv6BIGTCP: false
     ipv4:
       enabled: true
     enableIPv4BIGTCP: true
