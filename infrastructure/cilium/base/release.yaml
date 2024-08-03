@@ -119,6 +119,7 @@ spec:
         kind: HelmRepository
         name: isovalent
   values:
+    mode: fluentd
     # export:
     #   mode: ""
     # rbac:
