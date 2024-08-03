@@ -9,6 +9,7 @@ resources:
 - 1password.yaml
 - nfs-subdir-external-provisioner.yaml
 # - vault.yaml
+- hubble-timescape.yaml
 - haproxy.yaml
 - flux-support.yaml
 patches:
