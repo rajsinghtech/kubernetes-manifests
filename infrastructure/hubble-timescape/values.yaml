@@ -16,7 +16,7 @@ ingester:
 
   server:
     basicAuth:
-      enabled: true
+      enabled: false
     tls:
       enabled: false
       auto:
