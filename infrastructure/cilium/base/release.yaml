@@ -99,10 +99,10 @@ spec:
     timescape:
       enabled: true
       address: "hubble-timescape.hubble-timescape"
-    grafana:
-      enabled: true
-      enabledNodesGraph: true
-      namespace: "monitoring"
+    # grafana:
+    #   enabled: true
+    #   enabledNodesGraph: true
+    #   namespace: "monitoring"
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
