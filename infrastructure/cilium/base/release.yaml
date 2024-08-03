@@ -23,7 +23,7 @@ spec:
     enableIPv6BIGTCP: false
     ipv4:
       enabled: true
-    enableIPv4BIGTCP: true
+    enableIPv4BIGTCP: false
     kubeProxyReplacement: true
     prometheus:
       enabled: true
