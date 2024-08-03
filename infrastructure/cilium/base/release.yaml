@@ -119,11 +119,27 @@ spec:
         kind: HelmRepository
         name: isovalent
   values:
-    mode: fluentd
-    # export:
-    #   mode: ""
-    # rbac:
-    #   enabled: false
+    enabled: true
+    dnsPolicy: ClusterFirstWithHostNet
+
+    enterprise:
+      enabled: false
+
+    export:
+      filenames:
+      - tetragon-flows.log
+      mode: fluentd
+      fluentd:
+        output: |-
+          @type http
+          endpoint http://hubble-timescape-ingester.hubble-timescape.svc.cluster.local:4260/push
+          http_method post
+          <format>
+            @type json
+          </format>
+          <buffer>
+            flush_interval 1s
+          </buffer>
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
