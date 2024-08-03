@@ -19,10 +19,10 @@ spec:
       datapathMode: netkit
       masquerade: true
     ipv6:
-      enabled: true
+      enabled: "true"
     enableIPv6BIGTCP: true
     ipv4:
-      enabled: true
+      enabled: "true"
     enableIPv4BIGTCP: true
     kubeProxyReplacement: true
     prometheus:
