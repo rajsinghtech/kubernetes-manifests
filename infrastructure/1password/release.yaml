@@ -5,8 +5,6 @@ metadata:
   name: 1password
 spec:
   interval: 2m
-  driftDetection:
-    mode: enabled
   chart:
     spec:
       chart: connect
@@ -14,26 +12,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: 1password
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      retries: 3
-  uninstall:
-    keepHistory: false
   values:
-    connect:
-      credentials_base64:
-        secretRef:
-          name: 1password-secret
-          key: connect_credentials
     operator:
       create: true
       pollingInterval: 60
-      token: 
-        value:
-          secretRef:
-            name: 1password-secret
-            key: operator_token

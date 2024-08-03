@@ -5,8 +5,6 @@ metadata:
   name: nextcloud
 spec:
   interval: 2m
-  driftDetection:
-    mode: enabled
   chart:
     spec:
       chart: nextcloud
@@ -14,15 +12,6 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: nextcloud
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      retries: 3
-  uninstall:
-    keepHistory: false
   values:
     ingress:
       enabled: true

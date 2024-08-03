@@ -21,7 +21,6 @@ spec:
   retryInterval: 2m
 
   # wait: true
-  timeout: 1m
   prune: true
   path: ""
   sourceRef:

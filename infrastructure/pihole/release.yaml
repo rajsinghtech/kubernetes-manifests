@@ -5,8 +5,6 @@ metadata:
   name: pihole
 spec:
   interval: 2m
-  driftDetection:
-    mode: enabled
   chart:
     spec:
       chart: pihole
@@ -14,15 +12,6 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: pihole
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      retries: 3
-  uninstall:
-    keepHistory: false
   values:
     DNS1: 10.69.0.1
     DNS2: 10.69.0.1

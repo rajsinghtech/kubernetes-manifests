@@ -6,8 +6,6 @@ metadata:
   namespace: cert-manager
 spec:
   interval: 2m
-  driftDetection:
-    mode: enabled
   chart:
     spec:
       chart: cert-manager
@@ -15,15 +13,6 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: jetstack
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      retries: 3
-  uninstall:
-    keepHistory: false
   values:
     installCRDs: false
     extraArgs:
