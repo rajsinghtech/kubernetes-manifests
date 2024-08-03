@@ -20,10 +20,10 @@ spec:
       masquerade: true
     ipv6:
       enabled: false
-    enableIPv6BIGTCP: false
+    # enableIPv6BIGTCP: true
     ipv4:
       enabled: true
-    enableIPv4BIGTCP: false
+    # enableIPv4BIGTCP: true
     kubeProxyReplacement: true
     prometheus:
       enabled: true
