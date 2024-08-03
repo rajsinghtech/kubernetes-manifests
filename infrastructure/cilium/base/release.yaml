@@ -96,13 +96,13 @@ spec:
         kind: HelmRepository
         name: isovalent
   values:
-    serviceAccount:
-      create: true
-      name: hubble-ui
-      annotations: {}
-    rollOutPods: true
     timescape:
       enabled: true
+      address: "hubble-timescape.hubble-timescape"
+    grafana:
+      enabled: true
+      enabledNodesGraph: true
+      namespace: "monitoring"
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
