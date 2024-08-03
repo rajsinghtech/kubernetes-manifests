@@ -14,17 +14,17 @@ spec:
         kind: HelmRepository
         name: isovalent
   values:
-    routingMode: "native"
+    routingMode: native
     bpf:
-      datapathMode: "netkit"
-      masquerade: "true"
+      datapathMode: netkit
+      masquerade: true
     ipv6:
-      enabled: "true"
-    enableIPv6BIGTCP: "true"
+      enabled: true
+    enableIPv6BIGTCP: true
     ipv4:
-      enabled: "true"
-    enableIPv4BIGTCP: "true"
-    kubeProxyReplacement: "true"
+      enabled: true
+    enableIPv4BIGTCP: true
+    kubeProxyReplacement: true
     prometheus:
       enabled: true
     operator:
@@ -63,14 +63,14 @@ spec:
       leaseDuration: 3s
       leaseRenewDeadline: 1s
       leaseRetryPeriod: 500ms
-    k8sServiceHost: "127.0.0.1"
-    k8sServicePort: "6443"
+    k8sServiceHost: 127.0.0.1
+    k8sServicePort: 6443
     k8sClientRateLimit:
       qps: ${QPS}
       burst: ${BURST}
     tunnelProtocol: vxlan
     extraConfig:
-      external-dns-proxy: "true"
+      external-dns-proxy: true
       export-file-path: ""
     hostFirewall:
       enabled: true
