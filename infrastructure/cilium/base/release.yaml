@@ -128,6 +128,7 @@ spec:
     export:
       filenames:
       - tetragon-flows.log
+      - hubble.log
       mode: fluentd
       fluentd:
         output: |-
@@ -159,6 +160,39 @@ spec:
     tetragon:
       btf: /sys/kernel/btf/vmlinux
       enabled: true
+      exportAllowList: ""
+      exportDenyList: |-
+        {"ip_cidr":["127.0.0.1","::1"]}
+      redactionFilters: |-
+        {"redact": ["\\b(MY_SECRET_VALUE)\\b"]}
+      enableProcessCred: true
+      enableProcessNs: true
+      extraArgs:
+        verbose: "3"
+        release-pinned-bpf: true
+        detach-old-bpf: true
+        rb-size: "98304"
+      flowExportFilename: tetragon-flows.log
+      prometheus:
+        serviceMonitor:
+          enabled: true
+    tetragonOperator:
+      prometheus:
+        serviceMonitor:
+          enabled: true
+    tracingPolicies:
+      default:
+        fim:
+          enabled: true
+        network:
+          enabled: false # Custom policies are installed separately via tracing-policies app
+        mount:
+          enabled: true
+        osi:
+          enabled: true
+        privileges:
+          enabled: true
+    exportDirectory: "/var/run/cilium/hubble"
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
