@@ -43,9 +43,9 @@ spec:
               person:
                 threshold: 0.75
               dog:
-                threshold: 0.75
+                threshold: 0.80
               cat:
-                threshold: 0.75
+                threshold: 0.80
         alley_back:
           ffmpeg:
             inputs:
@@ -66,9 +66,9 @@ spec:
               person:
                 threshold: 0.75
               dog:
-                threshold: 0.75
+                threshold: 0.80
               cat:
-                threshold: 0.75
+                threshold: 0.80
         backyard:
           ffmpeg:
             inputs:
@@ -258,7 +258,7 @@ spec:
           - suitecase
         filters:
           person:
-            threshold: 0.65
+            threshold: 0.70
       # Optional
       ui:
         # Optional: Set the default live mode for cameras in the UI (default: shown below)
