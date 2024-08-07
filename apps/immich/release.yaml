@@ -12,6 +12,31 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: immich
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              version: v1
+              kind: Deployment
+              name: immich-server
+            patch: |-
+              apiVersion: apps/v1
+              kind: Deployment
+              metadata:
+                name: immich-server
+                namespace: immich
+              spec:
+                template:
+                  spec:
+                    volumes:
+                      - name: hack
+                        persistentVolumeClaim:
+                          claimName: immich-hack-pics
+                    containers:
+                      - name: immich-server
+                        volumeMounts:
+                          - name: hack
+                            mountPath: /hack/pics
   values:
     # env:
     # - name: DB_DATABASE_NAME
