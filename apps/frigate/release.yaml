@@ -46,7 +46,7 @@ spec:
           record:
             enabled: true
             retain:
-              days: 1
+              days: 3
           ui:
             order: 9
           objects:
@@ -69,7 +69,7 @@ spec:
           record:
             enabled: true
             retain:
-              days: 1
+              days: 3
           ui:
             order: 10
           objects:
@@ -92,7 +92,7 @@ spec:
           record:
             enabled: true
             retain:
-              days: 1
+              days: 3
           ui:
             order: 5
           objects:
@@ -111,7 +111,7 @@ spec:
           record:
             enabled: true
             retain:
-              days: 1
+              days: 3
           ui:
             order: 1
           objects:
@@ -129,7 +129,7 @@ spec:
           record:
             enabled: true
             retain:
-              days: 1
+              days: 3
           objects:
             track: []
           ui:
@@ -143,7 +143,7 @@ spec:
           record:
             enabled: true
             retain:
-              days: 1
+              days: 3
           objects:
             track: []
           ui:
@@ -160,7 +160,7 @@ spec:
           record:
             enabled: true
             retain:
-              days: 1
+              days: 3
           ui:
             order: 0
           objects:
@@ -179,7 +179,7 @@ spec:
           record:
             enabled: true
             retain:
-              days: 1
+              days: 3
             events:
               required_zones:
                 - entire_yard
@@ -206,7 +206,7 @@ spec:
           record:
             enabled: true
             retain:
-              days: 1
+              days: 3
           ui:
             order: 3
           objects:
@@ -227,7 +227,7 @@ spec:
           record:
             enabled: true
             retain:
-              days: 1
+              days: 3
           ui:
             order: 6
           objects:
@@ -246,7 +246,7 @@ spec:
           record:
             enabled: true
             retain:
-              days: 1
+              days: 3
           ui:
             order: 2
           objects:
