@@ -27,16 +27,16 @@ spec:
               - CiliumIdentity
             clusters:
               - "*"
-        oidc.config: |
-          name: Okta
-          issuer: https://auth.isovalent.com
-          clientID: $argocd-oidc-secret:oidc.clientID
-          cliClientID: $argocd-oidc-secret:oidc.cliClientID
-          clientSecret: $argocd-oidc-secret:oidc.clientSecret
-          requestedScopes: ["openid", "profile", "email", "groups"]
-          skipAudienceCheckWhenTokenHasNoAudience: true
-          requestedIDTokenClaims: {"groups": {"essential": true}}
-        accounts.dogfooding-gha: apiKey
+        # oidc.config: |
+        #   name: Okta
+        #   issuer: https://auth.isovalent.com
+        #   clientID: $argocd-oidc-secret:oidc.clientID
+        #   cliClientID: $argocd-oidc-secret:oidc.cliClientID
+        #   clientSecret: $argocd-oidc-secret:oidc.clientSecret
+        #   requestedScopes: ["openid", "profile", "email", "groups"]
+        #   skipAudienceCheckWhenTokenHasNoAudience: true
+        #   requestedIDTokenClaims: {"groups": {"essential": true}}
+        # accounts.dogfooding-gha: apiKey
       params:
         # Repo server RPC call timeout seconds. (default 60)
         controller.repo.server.timeout.seconds: "300"
@@ -108,50 +108,50 @@ spec:
         enabled: true
         serviceMonitor:
           enabled: true
-      initContainers:
-        # Setup an init-container to login to private docker registries with 'helm registry login'.
-        # This is needed because currently,  the upstream methods of configuring
-        # authentication to private helm repositories does not work with
-        # kustomize's helmCharts feature and OCI chart repositories.
-        - name: registry-auth
-          # copied from https://github.com/argoproj/argo-helm/blob/main/charts/argo-cd/templates/argocd-repo-server/deployment.yaml
-          image: '{{ default .Values.global.image.repository .Values.repoServer.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.repoServer.image.tag }}'
-          env:
-            - name: HELM_CONFIG_HOME
-              value: /helm-auth
-            # Configure where helm looks for OCI registry credentials.
-            - name: HELM_REGISTRY_CONFIG
-              value: /helm-auth/config.json
-            - name: QUAY_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: argocd-quay-helm-credentials
-                  key: username
-            - name: QUAY_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: argocd-quay-helm-credentials
-                  key: password
-          volumeMounts:
-            # mount the directory that helm will use in the main container
-            - mountPath: /helm-auth
-              name: registry-auth-dir
-          command:
-            - /bin/bash
-            - -exc
-            - 'helm registry login quay.io --username $QUAY_USERNAME --password $QUAY_PASSWORD'
-      env:
-        - name: HELM_REGISTRY_CONFIG
-          value: /helm-auth/config.json
-        - name: ARGOCD_GRPC_KEEP_ALIVE_MIN
-          value: "30s"
-      volumes:
-        - name: registry-auth-dir
-          emptyDir: {}
-      volumeMounts:
-        # contains config.json with OCI registry credentials
-        - mountPath: /helm-auth
-          name: registry-auth-dir
+      # initContainers:
+      #   # Setup an init-container to login to private docker registries with 'helm registry login'.
+      #   # This is needed because currently,  the upstream methods of configuring
+      #   # authentication to private helm repositories does not work with
+      #   # kustomize's helmCharts feature and OCI chart repositories.
+      #   - name: registry-auth
+      #     # copied from https://github.com/argoproj/argo-helm/blob/main/charts/argo-cd/templates/argocd-repo-server/deployment.yaml
+      #     image: '{{ default .Values.global.image.repository .Values.repoServer.image.repository }}:{{ default (include "argo-cd.defaultTag" .) .Values.repoServer.image.tag }}'
+      #     env:
+      #       - name: HELM_CONFIG_HOME
+      #         value: /helm-auth
+      #       # Configure where helm looks for OCI registry credentials.
+      #       - name: HELM_REGISTRY_CONFIG
+      #         value: /helm-auth/config.json
+      #       - name: QUAY_USERNAME
+      #         valueFrom:
+      #           secretKeyRef:
+      #             name: argocd-quay-helm-credentials
+      #             key: username
+      #       - name: QUAY_PASSWORD
+      #         valueFrom:
+      #           secretKeyRef:
+      #             name: argocd-quay-helm-credentials
+      #             key: password
+      #     volumeMounts:
+      #       # mount the directory that helm will use in the main container
+      #       - mountPath: /helm-auth
+      #         name: registry-auth-dir
+      #     command:
+      #       - /bin/bash
+      #       - -exc
+      #       - 'helm registry login quay.io --username $QUAY_USERNAME --password $QUAY_PASSWORD'
+      # env:
+      #   - name: HELM_REGISTRY_CONFIG
+      #     value: /helm-auth/config.json
+      #   - name: ARGOCD_GRPC_KEEP_ALIVE_MIN
+      #     value: "30s"
+      # volumes:
+      #   - name: registry-auth-dir
+      #     emptyDir: {}
+      # volumeMounts:
+      #   # contains config.json with OCI registry credentials
+      #   - mountPath: /helm-auth
+      #     name: registry-auth-dir
       containerSecurityContext:
         # required for helm to untar the OCI charts
         readOnlyRootFilesystem: true
