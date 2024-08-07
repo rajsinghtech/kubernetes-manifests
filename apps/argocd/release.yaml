@@ -152,9 +152,9 @@ spec:
       #   # contains config.json with OCI registry credentials
       #   - mountPath: /helm-auth
       #     name: registry-auth-dir
-      containerSecurityContext:
-        # required for helm to untar the OCI charts
-        readOnlyRootFilesystem: true
+      # containerSecurityContext:
+      #   # required for helm to untar the OCI charts
+      #   readOnlyRootFilesystem: true
       resources:
         requests:
           cpu: 1
