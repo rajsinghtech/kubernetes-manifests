@@ -1,17 +1,17 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-- cilium.yaml
-# - pihole.yaml
-# - cloudflared.yaml
-# - cert-manager.yaml
-# - monitoring.yaml
-- 1password.yaml
-# - nfs-subdir-external-provisioner.yaml
-# - vault.yaml
-# - hubble-timescape.yaml
-# - haproxy.yaml
-- flux-support.yaml
+  - cilium.yaml
+  # - pihole.yaml
+  # - cloudflared.yaml
+  # - cert-manager.yaml
+  # - monitoring.yaml
+  - 1password.yaml
+  # - nfs-subdir-external-provisioner.yaml
+  # - vault.yaml
+  # # - hubble-timescape.yaml
+  # - haproxy.yaml
+  - flux-support.yaml
 patches:
   - path: base.yaml
     target:
