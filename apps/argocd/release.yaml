@@ -74,11 +74,11 @@ spec:
         annotations:
           # https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#ssl-passthrough-with-cert-manager-and-lets-encrypt
           cert-manager.io/cluster-issuer: global-issuer
-          nginx.ingress.kubernetes.io/ssl-passthrough: "true"
-          nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-          nginx.ingress.kubernetes.io/proxy-connect-timeout: "600"
-          nginx.ingress.kubernetes.io/proxy-read-timeout: "96000"
-          nginx.ingress.kubernetes.io/proxy-send-timeout: "96000"
+          # nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+          # nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+          # nginx.ingress.kubernetes.io/proxy-connect-timeout: "600"
+          # nginx.ingress.kubernetes.io/proxy-read-timeout: "96000"
+          # nginx.ingress.kubernetes.io/proxy-send-timeout: "96000"
 
     controller:
       metrics:
