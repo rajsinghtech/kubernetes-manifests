@@ -2,23 +2,15 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: argocd
+  name: argo-cd
 spec:
   interval: 2m
   chart:
     spec:
-      chart: argocd
+      chart: argo-cd
       version: x
       sourceRef:
         kind: HelmRepository
         name: argocd
-  values:
-    expose:
-      ingress:
-        annotations:
-          kubernetes.io/tls-acme: "true"
-          kubernetes.io/ingress.class: haproxy
-          cert-manager.io/cluster-issuer: global-issuer
-        hosts:
-          core: argocd.${INGRESS_DOMAIN}
-          notary: argocd-notary.${INGRESS_DOMAIN}
+      valuesFiles:
+        - values.yaml
