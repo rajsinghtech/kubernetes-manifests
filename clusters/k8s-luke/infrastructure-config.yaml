@@ -19,3 +19,5 @@ data:
   ROUTER_IP: 192.168.50.1
   CLUSTER_OWNER: "Luke"
   EMAIL: "lukehouge@gmail.com"
+  NFS_PATH_HACK: /mnt/vault/media
+  NFS_SERVER_HACK: 192.168.50.185
