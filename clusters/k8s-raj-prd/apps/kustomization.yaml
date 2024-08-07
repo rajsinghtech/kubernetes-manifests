@@ -6,6 +6,7 @@ resources:
 - external-name.yaml
 - media.yaml
 - immich.yaml
+- argocd.yaml
 patches:
   - path: base.yaml
     target:
