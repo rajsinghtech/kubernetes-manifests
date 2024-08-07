@@ -59,6 +59,7 @@ spec:
           value: "30s"
       extraArgs:
         - --request-timeout=300s
+        - --insecure
         - --repo-server-timeout-seconds=300
       resources:
         requests:
