@@ -85,12 +85,12 @@ spec:
         enabled: true
         serviceMonitor:
           enabled: true
-      resources:
-        requests:
-          cpu: 2.5
-          memory: 2Gi
-        limits:
-          memory: 2Gi
+      # resources:
+      #   requests:
+      #     cpu: 2.5
+      #     memory: 2Gi
+      #   limits:
+      #     memory: 2Gi
 
     applicationSet:
       metrics:
