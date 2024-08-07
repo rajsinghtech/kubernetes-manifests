@@ -11,6 +11,7 @@ resources:
   - haproxy.yaml
   - cloudflared.yaml
   - hubble-timescape.yaml
+  - nfs-hack.yaml
 patches:
   - path: base.yaml
     target:
