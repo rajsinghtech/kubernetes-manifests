@@ -12,6 +12,17 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: frigate
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              version: v1
+              kind: PersistentVolumeClaim
+              # name: frigate-media
+            patch: |
+              - op: add
+                path: /spec/storageClassName
+                value: nfs-client-hack 
   values:
     envFromSecrets:
       - mqtt-secret
