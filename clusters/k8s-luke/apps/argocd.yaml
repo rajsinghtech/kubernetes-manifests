@@ -11,5 +11,3 @@ spec:
   path: apps/argocd
   prune: true
   # wait: true
-  dependsOn:
-    - name: nfs-subdir-external-provisioner
