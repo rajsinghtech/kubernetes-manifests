@@ -6,4 +6,4 @@ metadata:
   namespace: argocd
 spec:
   interval: 1h
-  url: https://helm.goargocd.io
+  url: https://argoproj.github.io/argo-hel
