@@ -5,6 +5,17 @@ metadata:
   name: nfs-subdir-external-provisioner
 spec:
   interval: 2m
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              version: v1
+              kind: PersistentVolumeClaim
+              # name: frigate-media
+            patch: |
+              - op: add
+                path: /spec/storageClassName
+                value: nfs-client-hack  
   chart:
     spec:
       chart: nfs-subdir-external-provisioner
