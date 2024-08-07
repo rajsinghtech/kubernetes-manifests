@@ -18,5 +18,5 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 2TB
+      storage: 2Ti
   storageClassName: nfs-client-hack
