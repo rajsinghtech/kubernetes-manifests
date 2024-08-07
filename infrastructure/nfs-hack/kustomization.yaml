@@ -5,5 +5,4 @@ namespace: nfs-subdir-external-provisioner
 nameSuffix: -hack
 resources:
   - release.yaml
-  - namespace.yaml
   - helm-repository.yaml
