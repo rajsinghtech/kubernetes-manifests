@@ -8,3 +8,15 @@ spec:
   resources:
     requests:
       storage: 1Ti
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: immich-hack-pics
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 2TB
+  storageClassName: nfs-client-hack
