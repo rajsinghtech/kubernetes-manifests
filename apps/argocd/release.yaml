@@ -27,15 +27,15 @@ spec:
               - CiliumIdentity
             clusters:
               - "*"
-        # oidc.config: |
-        #   name: Okta
-        #   issuer: https://auth.isovalent.com
-        #   clientID: $argocd-oidc-secret:oidc.clientID
-        #   cliClientID: $argocd-oidc-secret:oidc.cliClientID
-        #   clientSecret: $argocd-oidc-secret:oidc.clientSecret
-        #   requestedScopes: ["openid", "profile", "email", "groups"]
-        #   skipAudienceCheckWhenTokenHasNoAudience: true
-        #   requestedIDTokenClaims: {"groups": {"essential": true}}
+        oidc.config: |
+          name: Okta
+          issuer: https://dev-32284334.okta.com/oauth2/ausit8azz8ZERL66L5d7
+          clientID: $argocd-oidc-secret:oidc.clientID
+          # cliClientID: $argocd-oidc-secret:oidc.cliClientID
+          clientSecret: $argocd-oidc-secret:oidc.clientSecret
+          requestedScopes: ["openid", "profile", "email", "groups"]
+          skipAudienceCheckWhenTokenHasNoAudience: true
+          requestedIDTokenClaims: {"groups": {"essential": true}}
         # accounts.dogfooding-gha: apiKey
       params:
         # Repo server RPC call timeout seconds. (default 60)
