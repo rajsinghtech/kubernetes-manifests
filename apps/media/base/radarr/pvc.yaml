@@ -8,6 +8,7 @@ spec:
   resources:
     requests:
       storage: 1Ti
+  storageClassName: nfs-client-hack
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
