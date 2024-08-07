@@ -47,10 +47,10 @@ spec:
           type: helm
           name: argo-cd
           url: https://argoproj.github.io/argo-helm
-      rbac:
-        policy.default: role:admin
-        policy.csv: ""
-        scopes: '[groups]'
+      # rbac:
+      #   policy.default: role:admin
+      #   policy.csv: ""
+      #   scopes: '[groups]'
     dex:
       enabled: false
     server:
