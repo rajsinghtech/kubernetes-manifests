@@ -7,4 +7,3 @@ resources:
   - release.yaml
   - namespace.yaml
   - helm-repository.yaml
-  - storageclass.yaml
