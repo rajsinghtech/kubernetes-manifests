@@ -30,9 +30,9 @@ spec:
         oidc.config: |
           name: Okta
           issuer: https://dev-32284334.okta.com/oauth2/ausit8azz8ZERL66L5d7
-          clientID: $argocd-oidc-secret:oidc.clientID
-          # cliClientID: $argocd-oidc-secret:oidc.cliClientID
-          clientSecret: $argocd-oidc-secret:oidc.clientSecret
+          clientID: $argocd-secret:oidc.clientID
+          # cliClientID: $argocd-secret:oidc.cliClientID
+          clientSecret: $argocd-secret:oidc.clientSecret
           requestedScopes: ["openid", "profile", "email", "groups"]
           skipAudienceCheckWhenTokenHasNoAudience: true
           requestedIDTokenClaims: {"groups": {"essential": true}}
