@@ -18,3 +18,4 @@ data:
   CLUSTER_OWNER: "Raj"
   EMAIL: "rajsinghcpre@gmail.com"
   CLUSTER_DNS: 10.96.10.96
+  CLUSTER_CIDR: 10.42.0.0/16
