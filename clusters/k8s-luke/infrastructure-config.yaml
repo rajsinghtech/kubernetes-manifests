@@ -21,3 +21,4 @@ data:
   EMAIL: "lukehouge@gmail.com"
   NFS_PATH_HACK: /mnt/vault/k8s
   NFS_SERVER_HACK: 192.168.50.185
+  CLUSTER_CIDR: 127.32.0.0/16
