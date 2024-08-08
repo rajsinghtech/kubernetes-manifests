@@ -14,7 +14,7 @@ spec:
         kind: HelmRepository
         name: isovalent
   values:
-    routingMode: native
+    routingMode: tunnel
     bpf:
       datapathMode: netkit
       masquerade: true
