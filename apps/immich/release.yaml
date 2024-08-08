@@ -106,3 +106,4 @@ spec:
             - secretName: immich-tls
               hosts:
                 - immich.${INGRESS_DOMAIN}
+                

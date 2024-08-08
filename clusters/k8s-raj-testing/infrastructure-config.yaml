@@ -19,3 +19,4 @@ data:
   CLUSTER_DNS: 10.96.97.10
   EMAIL: "rajsinghcpre@gmail.com"
   BGP_ASN: "64517"
+  CLUSTER_CIDR: 10.42.0.0/16
