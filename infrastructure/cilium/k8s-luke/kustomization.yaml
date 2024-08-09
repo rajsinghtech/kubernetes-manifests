@@ -4,4 +4,4 @@ namespace: kube-system
 resources:
   - ippool.yaml
   - l2.yaml
-  - networkattachment.yaml
+  # - networkattachment.yaml
