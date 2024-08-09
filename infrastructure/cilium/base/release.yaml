@@ -26,6 +26,8 @@ spec:
     endpointRoutes:
       enabled: true
     extraConfig:
+      external-dns-proxy: "true"
+      export-file-path: "/var/run/cilium/hubble/hubble.log"
       # Disable local node route to avoid conflicts with endpoint routes
       enable-local-node-route: "false"
     bpf:
@@ -94,9 +96,6 @@ spec:
       qps: ${QPS}
       burst: ${BURST}
     tunnelProtocol: vxlan
-    extraConfig:
-      external-dns-proxy: "true"
-      export-file-path: "/var/run/cilium/hubble/hubble.log"
     # hostFirewall:x
     #   enabled: true
     hubble:
