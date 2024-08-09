@@ -41,7 +41,14 @@ spec:
     ipv4NativeRoutingCIDR: "${CLUSTER_CIDR}"
     k8s-require-ipv4-pod-cidr: true
     ipam:
-      mode: kubernetes
+      mode: cluster-pool
+      ciliumNodeUpdateRate: 15s
+      # mode: kubernetes
+      operator:
+        autoCreateCiliumPodIPPools: {}
+        clusterPoolIPv4MaskSize: 24
+        clusterPoolIPv4PodCIDRList:
+        - "${CLUSTER_CIDR}"
     tunnel: vxlan
     externalIPs:
       enabled: true
