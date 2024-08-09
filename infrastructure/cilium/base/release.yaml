@@ -53,19 +53,19 @@ spec:
       name: ${CLUSTER_NAME}
     bgpControlPlane:
       enabled: true
-    ipv4NativeRoutingCIDR: "10.0.0.0/8"
+    ipv4NativeRoutingCIDR: "10.43.0.0/16"
     devices: ["eth+"]
     k8s-require-ipv4-pod-cidr: true
-    ipam:
-      # Multi-network requires multi-pool IPAM
-      mode: multi-pool
-      # Configuration of the "default" IP pool used for the "default" pod network
-      operator:
-        autoCreateCiliumPodIPPools:
-          default:
-            ipv4:
-              cidrs: ["10.43.0.0/16"]
-              maskSize: 24
+    # ipam:
+    #   # Multi-network requires multi-pool IPAM
+    #   mode: multi-pool
+    #   # Configuration of the "default" IP pool used for the "default" pod network
+    #   operator:
+    #     autoCreateCiliumPodIPPools:
+    #       default:
+    #         ipv4:
+    #           cidrs: ["10.43.0.0/16"]
+    #           maskSize: 24
     tunnel: vxlan
     externalIPs:
       enabled: true
@@ -96,7 +96,7 @@ spec:
       qps: ${QPS}
       burst: ${BURST}
     tunnelProtocol: vxlan
-    # hostFirewall:x
+    # hostFirewall:
     #   enabled: true
     hubble:
       enabled: true
