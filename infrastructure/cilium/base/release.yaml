@@ -31,8 +31,8 @@ spec:
       replicas: 1
       prometheus:
         enabled: true
-    cni:
-      exclusive: false
+    # cni:
+    #   exclusive: false
     cluster:
       id: ${CLUSTER_ID}
       name: ${CLUSTER_NAME}
