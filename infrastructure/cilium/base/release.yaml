@@ -41,7 +41,7 @@ spec:
     ipv4NativeRoutingCIDR: "${CLUSTER_CIDR}"
     k8s-require-ipv4-pod-cidr: true
     ipam:
-      # mode: cluster-pool
+      mode: cluster-pool
       ciliumNodeUpdateRate: 15s
       # mode: kubernetes
       operator:
