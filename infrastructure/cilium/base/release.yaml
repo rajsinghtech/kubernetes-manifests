@@ -53,7 +53,7 @@ spec:
       name: ${CLUSTER_NAME}
     bgpControlPlane:
       enabled: true
-    ipv4NativeRoutingCIDR: "10.43.0.0/16"
+    ipv4NativeRoutingCIDR: "10.0.0.0/8"
     devices: ["eth+"]
     k8s-require-ipv4-pod-cidr: true
     ipam:
@@ -64,7 +64,7 @@ spec:
         autoCreateCiliumPodIPPools:
           default:
             ipv4:
-              cidrs: ["10.43.10.0/16"]
+              cidrs: ["10.43.0.0/16"]
               maskSize: 24
     tunnel: vxlan
     externalIPs:
