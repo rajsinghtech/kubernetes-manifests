@@ -47,8 +47,7 @@ spec:
       operator:
         autoCreateCiliumPodIPPools: {}
         clusterPoolIPv4MaskSize: 24
-        clusterPoolIPv4PodCIDRList:
-        - "${CLUSTER_CIDR}"
+        clusterPoolIPv4PodCIDRList: "${CLUSTER_CIDR}"
     tunnel: vxlan
     externalIPs:
       enabled: true
