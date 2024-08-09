@@ -87,9 +87,9 @@ spec:
       leaseDuration: 3s
       leaseRenewDeadline: 1s
       leaseRetryPeriod: 500ms
-    # l2podAnnouncements:
-    #   enabled: true
-    #   interface: eth1
+    l2podAnnouncements:
+      enabled: true
+      interface: eth1
     k8sServiceHost: 127.0.0.1
     k8sServicePort: 6443
     k8sClientRateLimit:
