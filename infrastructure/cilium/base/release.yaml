@@ -23,13 +23,13 @@ spec:
     #     # Enable support for multi-network aware auto-direct-node-routes (default: true)
     #     autoDirectNodeRoutes: true
     routingMode: tunnel
-    endpointRoutes:
-      enabled: true
+    # endpointRoutes:
+    #   enabled: true
     extraConfig:
       external-dns-proxy: "true"
       export-file-path: "/var/run/cilium/hubble/hubble.log"
       # Disable local node route to avoid conflicts with endpoint routes
-      enable-local-node-route: "false"
+      # enable-local-node-route: "false"
     bpf:
       datapathMode: netkit
       masquerade: true
@@ -87,9 +87,9 @@ spec:
       leaseDuration: 3s
       leaseRenewDeadline: 1s
       leaseRetryPeriod: 500ms
-    l2podAnnouncements:
-      enabled: true
-      interface: eth1
+    # l2podAnnouncements:
+    #   enabled: true
+    #   interface: eth1
     k8sServiceHost: 127.0.0.1
     k8sServicePort: 6443
     k8sClientRateLimit:
