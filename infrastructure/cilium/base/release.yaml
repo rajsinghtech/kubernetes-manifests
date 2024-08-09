@@ -14,14 +14,14 @@ spec:
         kind: HelmRepository
         name: isovalent
   values:
-    enterprise:
-      multiNetwork:
-        # Enables native multi-network support in Cilium (default: false)
-        enabled: true
-        # Enable auto-creation of the default pod network (default: true)
-        autoCreateDefaultPodNetwork: true
-        # Enable support for multi-network aware auto-direct-node-routes (default: true)
-        autoDirectNodeRoutes: true
+    # enterprise:
+    #   multiNetwork:
+    #     # Enables native multi-network support in Cilium (default: false)
+    #     enabled: true
+    #     # Enable auto-creation of the default pod network (default: true)
+    #     autoCreateDefaultPodNetwork: true
+    #     # Enable support for multi-network aware auto-direct-node-routes (default: true)
+    #     autoDirectNodeRoutes: true
     routingMode: native
     endpointRoutes:
       enabled: true
