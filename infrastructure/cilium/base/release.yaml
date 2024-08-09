@@ -22,7 +22,7 @@ spec:
     #     autoCreateDefaultPodNetwork: true
     #     # Enable support for multi-network aware auto-direct-node-routes (default: true)
     #     autoDirectNodeRoutes: true
-    routingMode: native
+    routingMode: tunnel
     endpointRoutes:
       enabled: true
     extraConfig:
