@@ -36,7 +36,8 @@ spec:
       enabled: true
       className: "haproxy"
       annotations:
-      # Add any additional annotations as needed
+        cert-manager.io/cluster-issuer: global-issuer
+        kubernetes.io/tls-acme: 'true'
       hosts:
         - host: homarr.${INGRESS_DOMAIN}
           paths:
