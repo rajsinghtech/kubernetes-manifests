@@ -14,22 +14,7 @@ spec:
         kind: HelmRepository
         name: isovalent
   values:
-    # enterprise:
-    #   multiNetwork:
-    #     # Enables native multi-network support in Cilium (default: false)
-    #     enabled: true
-    #     # Enable auto-creation of the default pod network (default: true)
-    #     autoCreateDefaultPodNetwork: true
-    #     # Enable support for multi-network aware auto-direct-node-routes (default: true)
-    #     autoDirectNodeRoutes: true
     routingMode: tunnel
-    # endpointRoutes:
-    #   enabled: true
-    extraConfig:
-      external-dns-proxy: "true"
-      export-file-path: "/var/run/cilium/hubble/hubble.log"
-      # Disable local node route to avoid conflicts with endpoint routes
-      # enable-local-node-route: "false"
     bpf:
       datapathMode: netkit
       masquerade: true
@@ -53,19 +38,10 @@ spec:
       name: ${CLUSTER_NAME}
     bgpControlPlane:
       enabled: true
-    ipv4NativeRoutingCIDR: "10.43.0.0/16"
-    devices: ["eth+"]
+    ipv4NativeRoutingCIDR: "10.42.0.0/16"
     k8s-require-ipv4-pod-cidr: true
-    # ipam:
-    #   # Multi-network requires multi-pool IPAM
-    #   mode: multi-pool
-    #   # Configuration of the "default" IP pool used for the "default" pod network
-    #   operator:
-    #     autoCreateCiliumPodIPPools:
-    #       default:
-    #         ipv4:
-    #           cidrs: ["10.43.0.0/16"]
-    #           maskSize: 24
+    ipam:
+      mode: kubernetes
     tunnel: vxlan
     externalIPs:
       enabled: true
@@ -87,16 +63,16 @@ spec:
       leaseDuration: 3s
       leaseRenewDeadline: 1s
       leaseRetryPeriod: 500ms
-    l2podAnnouncements:
-      enabled: true
-      interface: eth1
     k8sServiceHost: 127.0.0.1
     k8sServicePort: 6443
     k8sClientRateLimit:
       qps: ${QPS}
       burst: ${BURST}
     tunnelProtocol: vxlan
-    # hostFirewall:
+    extraConfig:
+      external-dns-proxy: "true"
+      export-file-path: "/var/run/cilium/hubble/hubble.log"
+    # hostFirewall:x
     #   enabled: true
     hubble:
       enabled: true
@@ -182,8 +158,6 @@ spec:
         kind: HelmRepository
         name: isovalent
   values:
-    ipMasqAgent:
-      enabled: true
     tetragon:
       btf: /sys/kernel/btf/vmlinux
       enabled: true
