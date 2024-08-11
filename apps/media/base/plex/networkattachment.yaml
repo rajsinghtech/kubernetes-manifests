@@ -5,7 +5,7 @@ metadata:
   namespace: media
 spec:
   config: '{
-    "cniVersion": "0.3.1",
+    "cniVersion": "0.3.0",
     "name": "vlan1-internal-static",
     "plugins": [
       {
