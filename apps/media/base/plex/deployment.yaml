@@ -14,10 +14,6 @@ spec:
       annotations:
         k8s.v1.cni.cncf.io/networks: macvlan-conf
     spec:
-      dnsPolicy: "None"
-      dnsConfig:
-        nameservers:
-          - 192.168.50.1
       containers:
         - name: plex
           hostname: plex-k8s
