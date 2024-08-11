@@ -12,7 +12,7 @@ spec:
       labels:
         app: plex
       annotations:
-        k8s.v1.cni.cncf.io/networks: macvlan-conf
+        k8s.v1.cni.cncf.io/networks: vlan1-internal-static
     spec:
       containers:
         - name: plex
