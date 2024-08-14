@@ -1,14 +1,24 @@
 apiVersion: "k8s.cni.cncf.io/v1"
 kind: NetworkAttachmentDefinition
 metadata:
-  name: macvlan-conf
+  name: macvlan-static
 spec:
   config: '{
-      "cniVersion": "0.3.0",
-      "type": "macvlan",
-      "master": "eth0",
-      "mode": "bridge",
-      "ipam": {
-        "type": "dhcp"
+    "cniVersion": "0.3.0",
+    "name": "vlan1-internal-static",
+    "plugins": [
+      {
+        "type": "macvlan",
+        "master": "eth0",
+        "ipam": {
+          "type": "static",
+          "addresses": [
+            { "address": "192.168.50.30/24", "gateway": "192.168.50.1" }
+          ]
+        }
+      },
+      {
+        "type": "sbr"
       }
-    }'
+    ]
+  }'
