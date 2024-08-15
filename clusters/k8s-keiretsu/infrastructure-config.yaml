@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: infrastructure-config
-  namespace: flux-system
+  namespace: default
 data:
   CLUSTER_NAME: "k8s-raj-prd"
   INGRESS_DOMAIN: "keiretsu.rajsingh.info"
