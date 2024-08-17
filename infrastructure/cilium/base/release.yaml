@@ -90,12 +90,12 @@ spec:
       #       name: hubble-issuer
       relay:
         enabled: true
-        resources:
-          requests:
-            cpu: 500m
-            memory: 50Mi
-          limits:
-            memory: 100Mi
+        # resources:
+        #   requests:
+        #     cpu: 500m
+        #     memory: 50Mi
+        #   limits:
+        #     memory: 100Mi
         # tls:
         #   server:
         #     enabled: true
