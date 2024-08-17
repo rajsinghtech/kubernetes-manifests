@@ -10,3 +10,20 @@ resources:
   - ../base/transmission-movies
   - ../base/transmission-tv
   - secret.yaml
+patches:
+  - path: pvc.yaml
+    target:
+      kind: PersistentVolumeClaim
+      name: radarr-movies
+  - path: pvc.yaml
+    target:
+      kind: PersistentVolumeClaim
+      name: sonarr-tv
+  - path: pvc.yaml
+    target:
+      kind: PersistentVolumeClaim
+      name: transmission-movies-data
+  - path: pvc.yaml
+    target:
+      kind: PersistentVolumeClaim
+      name: transmission-tv-data
