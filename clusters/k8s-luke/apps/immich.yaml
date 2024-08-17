@@ -13,8 +13,3 @@ spec:
   # wait: true
   dependsOn:
     - name: nfs-subdir-external-provisioner
-  patches:
-    - target:
-        kind: HelmRelease
-        name: immich
-        namespace: immich
