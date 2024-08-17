@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: immich
+resources:
+  - ../base
+patches:
+  - path: release.yaml
+    target:
+      kind: HelmRelease
+      name: immich
