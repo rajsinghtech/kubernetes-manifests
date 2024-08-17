@@ -1,5 +1,5 @@
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: frigate
@@ -22,7 +22,7 @@ spec:
             patch: |
               - op: add
                 path: /spec/storageClassName
-                value: nfs-client-hack 
+                value: nfs-client-hack
   values:
     envFromSecrets:
       - mqtt-secret
