@@ -72,13 +72,13 @@ spec:
     extraConfig:
       external-dns-proxy: "true"
       export-file-path: "/var/run/cilium/hubble/hubble.log"
-    # hostFirewall:x
+    # hostFirewall:
     #   enabled: true
     hubble:
       eventBufferCapacity: "65535"
       listenAddress: ""
-      # tls:
-      #   enabled: true
+      tls:
+        enabled: true
       #   auto:
       #     enabled: true
       #     method: certmanager
@@ -96,9 +96,9 @@ spec:
         #     memory: 50Mi
         #   limits:
         #     memory: 100Mi
-        # tls:
-        #   server:
-        #     enabled: true
+        tls:
+          server:
+            enabled: true
         dialTimeout: 30s
       metrics:
         dashboards:
