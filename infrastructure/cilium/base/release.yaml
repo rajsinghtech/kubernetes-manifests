@@ -87,10 +87,12 @@ spec:
         - 'httpV2:exemplars=true;labelsContext=source_ip,source_namespace,source_workload,destination_ip,destination_namespace,destination_workload,traffic_direction;sourceContext=workload-name|reserved-identity;destinationContext=workload-name|reserved-identity'
         # Enterprise only, refer to Monitor Flow Export docs
         - flow_export
-        relay:
+      relay:
+        enabled: true
+        prometheus:
           enabled: true
-        tls:
-          enabled: true
+      tls:
+        enabled: true
     # hubble:
     #   eventBufferCapacity: "65535"
     #   listenAddress: ""
