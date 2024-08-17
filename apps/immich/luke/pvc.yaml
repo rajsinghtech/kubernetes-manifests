@@ -1,10 +1,12 @@
+---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: immich
+  name: immich-hack-pics
 spec:
   accessModes:
     - ReadWriteMany
   resources:
     requests:
-      storage: 1Ti
+      storage: 2Ti
+  storageClassName: nfs-client-hack
