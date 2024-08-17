@@ -1,5 +1,5 @@
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: cilium
@@ -78,15 +78,15 @@ spec:
       enabled: true
       metrics:
         enabled:
-        - dns:query;ignoreAAAA
-        - drop:sourceContext=identity;destinationContext=identity
-        - tcp
-        - flow
-        - icmp
-        # Enable additional labels for L7 flows
-        - 'httpV2:exemplars=true;labelsContext=source_ip,source_namespace,source_workload,destination_ip,destination_namespace,destination_workload,traffic_direction;sourceContext=workload-name|reserved-identity;destinationContext=workload-name|reserved-identity'
-        # Enterprise only, refer to Monitor Flow Export docs
-        - flow_export
+          - dns:query;ignoreAAAA
+          - drop:sourceContext=identity;destinationContext=identity
+          - tcp
+          - flow
+          - icmp
+          # Enable additional labels for L7 flows
+          - "httpV2:exemplars=true;labelsContext=source_ip,source_namespace,source_workload,destination_ip,destination_namespace,destination_workload,traffic_direction;sourceContext=workload-name|reserved-identity;destinationContext=workload-name|reserved-identity"
+          # Enterprise only, refer to Monitor Flow Export docs
+          - flow_export
       relay:
         enabled: true
         prometheus:
@@ -141,7 +141,7 @@ spec:
     #     serviceMonitor:
     #       enabled: true
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: hubble-ui
@@ -164,7 +164,7 @@ spec:
     #   enabledNodesGraph: true
     #   namespace: "monitoring"
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: hubble-enterprise
@@ -187,9 +187,9 @@ spec:
 
     export:
       filenames:
-      - tetragon-flows.log
-      - tetragon.log
-      - hubble.log
+        - tetragon-flows.log
+        - tetragon.log
+        - hubble.log
       mode: fluentd
       fluentd:
         output: |-
@@ -203,7 +203,7 @@ spec:
             flush_interval 1s
           </buffer>
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: tetragon
@@ -255,7 +255,7 @@ spec:
           enabled: true
     exportDirectory: "/var/run/cilium/hubble"
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: cilium-dnsproxy

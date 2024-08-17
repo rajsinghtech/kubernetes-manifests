@@ -1,5 +1,5 @@
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: homarr
@@ -37,7 +37,7 @@ spec:
       className: "haproxy"
       annotations:
         cert-manager.io/cluster-issuer: global-issuer
-        kubernetes.io/tls-acme: 'true'
+        kubernetes.io/tls-acme: "true"
       hosts:
         - host: homarr.${INGRESS_DOMAIN}
           paths:

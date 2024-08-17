@@ -1,5 +1,5 @@
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: immich
@@ -12,32 +12,6 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: immich
-  # postRenderers:
-  #   - kustomize:
-  #       patches:
-  #         - target:
-  #             version: v1
-  #             kind: Deployment
-  #             name: immich-server
-  #           patch: |-
-  #             apiVersion: apps/v1
-  #             kind: Deployment
-  #             metadata:
-  #               name: immich-server
-  #               namespace: immich
-  #             spec:
-  #               template:
-  #                 spec:
-  #                   volumes:
-  #                     - name: hack
-  #                       nfs:
-  #                         path: /mnt/vault/pics
-  #                         server: 192.168.50.185
-  #                   containers:
-  #                     - name: immich-server
-  #                       volumeMounts:
-  #                         - name: hack
-  #                           mountPath: /hack/pics
   values:
     image:
       tag: v1.111.0
@@ -75,15 +49,15 @@ spec:
 
     # redis:
     #   enabled: true
-      
+
     microservices:
       persistence:
         external:
           external:
             enabled: true
             existingClaim: immich-hack-pics
-            readOnly: true    
-    
+            readOnly: true
+
     server:
       persistence:
         external:
@@ -106,4 +80,3 @@ spec:
             - secretName: immich-tls
               hosts:
                 - immich.${INGRESS_DOMAIN}
-                
