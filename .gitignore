@@ -1,0 +1,8 @@
+.terraform*
+.vscode/
+terraform.tfstate*
+terraform.tfvars
+tf/**/alpo-*.yaml
+tf/**/kubeconfig_*
+tfplan
+charts
