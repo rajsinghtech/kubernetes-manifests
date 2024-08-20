@@ -14,7 +14,7 @@ helmCharts:
 
 resources:
   - ./templates/cluster.yaml
-  - ./templates/storageclass.yaml
-  - ./templates/filesystem.yaml
-  - ./templates/test.yaml
-  - ./templates/nfs.yaml
+  # - ./templates/storageclass.yaml
+  # - ./templates/filesystem.yaml
+  # - ./templates/test.yaml
+  # - ./templates/nfs.yaml
