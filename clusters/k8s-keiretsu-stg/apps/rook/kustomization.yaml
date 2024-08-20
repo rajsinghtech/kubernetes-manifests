@@ -17,3 +17,4 @@ resources:
   - ./templates/storageclass.yaml
   - ./templates/filesystem.yaml
   - ./templates/test.yaml
+  - ./templates/nfs.yaml
