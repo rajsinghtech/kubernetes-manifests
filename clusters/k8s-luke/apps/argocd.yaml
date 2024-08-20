@@ -22,7 +22,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: apps/argocd/keiretsu-stg
+  path: apps/argocd/apps/keiretsu-stg
   prune: true
   # wait: true
   dependsOn:
