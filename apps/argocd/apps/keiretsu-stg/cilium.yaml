@@ -8,7 +8,7 @@ spec:
     server: https://kubernetes.k8s.stg.local:6443
   project: default
   source:
-    path: clusters/k8s-keiretsu-stg/cilium
+    path: clusters/k8s-keiretsu-stg/apps/cilium
     repoURL: https://github.com/rajsinghtech/kubernetes-manifests
     targetRevision: stg
   syncPolicy:
