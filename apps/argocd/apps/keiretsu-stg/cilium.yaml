@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cilium
+spec:
+  destination:
+    server: https://kubernetes.k8s.stg.local:6443
+  project: default
+  source:
+    path: clusters/k8s-keiretsu-stg/cilium
+    repoURL: https://github.com/rajsinghtech/kubernetes-manifests
+    targetRevision: stg
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    # syncOptions:
+    #   - CreateNamespace=true
