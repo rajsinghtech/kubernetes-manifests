@@ -20,7 +20,7 @@ metadata:
     k8s-app: kube-registry
     kubernetes.io/cluster-service: "true"
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       k8s-app: kube-registry
