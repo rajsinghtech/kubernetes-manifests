@@ -14,7 +14,6 @@ spec:
   template:
     metadata:
       annotations:
-        k8s.v1.cni.cncf.io/networks: macvlan-static
         k8s.v1.cni.cncf.io/networks: '[
           {
             "name": "macvlan-static",
