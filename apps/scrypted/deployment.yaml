@@ -15,6 +15,12 @@ spec:
     metadata:
       annotations:
         k8s.v1.cni.cncf.io/networks: macvlan-static
+        k8s.v1.cni.cncf.io/networks: '[
+          {
+            "name": "macvlan-static",
+            "mac": "2e:2b:a1:40:ad:af"
+          }
+        ]'
       labels:
         app: scrypted
     spec:
