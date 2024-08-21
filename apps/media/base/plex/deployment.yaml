@@ -12,7 +12,12 @@ spec:
       labels:
         app: plex
       annotations:
-        k8s.v1.cni.cncf.io/networks: vlan1-internal-static
+        k8s.v1.cni.cncf.io/networks: '[
+          {
+            "name": "vlan1-internal-static",
+            "mac": "b6:c0:cb:01:4f:7a"
+          }
+        ]'
     spec:
       containers:
         - name: plex
