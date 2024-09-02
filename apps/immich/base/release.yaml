@@ -14,7 +14,7 @@ spec:
         name: immich
   values:
     image:
-      tag: v1.112.1
+      tag: v1.113.0
     # env:
     # - name: DB_DATABASE_NAME
     #   value: immich
