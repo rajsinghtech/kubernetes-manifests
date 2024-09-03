@@ -1,20 +1,20 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: rook
-  namespace: argocd
-spec:
-  destination:
-    server: https://kubernetes.k8s.stg.local:6443    
-    namespace: rook-ceph
-  project: default
-  source:
-    path: clusters/k8s-keiretsu-stg/apps/rook
-    repoURL: https://github.com/rajsinghtech/kubernetes-manifests
-    targetRevision: stg
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: rook
+#   namespace: argocd
+# spec:
+#   destination:
+#     server: https://kubernetes.k8s.stg.local:6443    
+#     namespace: rook-ceph
+#   project: default
+#   source:
+#     path: clusters/k8s-keiretsu-stg/apps/rook
+#     repoURL: https://github.com/rajsinghtech/kubernetes-manifests
+#     targetRevision: stg
+#   syncPolicy:
+#     automated:
+#       prune: true
+#       selfHeal: true
+#     syncOptions:
+#       - CreateNamespace=true
