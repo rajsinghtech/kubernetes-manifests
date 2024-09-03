@@ -134,6 +134,8 @@ spec:
             track: []
           ui:
             order: 8
+          motion:
+            enabled: False
         shop_2:
           ffmpeg:
             inputs:
@@ -148,6 +150,8 @@ spec:
             track: []
           ui:
             order: 7
+          motion:
+            enabled: False
         driveway:
           ffmpeg:
             inputs:
