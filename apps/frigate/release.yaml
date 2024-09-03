@@ -126,6 +126,9 @@ spec:
               - path: rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@192.168.50.250:554/Streaming/Channels/1
                 roles:
                   - record
+            hwaccel_args:
+              - -c:v:1
+              - h264_v4l2m2m
           record:
             enabled: true
             retain:
@@ -134,14 +137,15 @@ spec:
             track: []
           ui:
             order: 8
-          motion:
-            enabled: False
         shop_2:
           ffmpeg:
             inputs:
               - path: rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@192.168.50.251:554/Streaming/Channels/1
                 roles:
                   - record
+            hwaccel_args:
+              - -c:v:1
+              - h264_v4l2m2m
           record:
             enabled: true
             retain:
@@ -150,8 +154,6 @@ spec:
             track: []
           ui:
             order: 7
-          motion:
-            enabled: False
         driveway:
           ffmpeg:
             inputs:
