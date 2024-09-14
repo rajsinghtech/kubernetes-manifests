@@ -3,9 +3,9 @@ kind: Kustomization
 namespace: immich
 resources:
   - ../base
-  - pvc.yaml
-patches:
-  - path: release.yaml
-    target:
-      kind: HelmRelease
-      name: immich
+  #- pvc.yaml
+#patches:
+ # - path: release.yaml
+    #target:
+      #kind: HelmRelease
+      #name: immich
