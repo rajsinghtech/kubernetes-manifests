@@ -23,15 +23,16 @@ spec:
         - 0.0.0.0:2000
         - run
         args:
-        - --token $(token)
+        - --token 
+        - $(token)
         image: cloudflare/cloudflared:latest
         name: cloudflared
         env:
         - name: token
           valueFrom:
             secretKeyRef:
-              name: cloudflare
-              key: cloudflared-k8s-tunnel-token-rajsingh-info
+              name: cloudflare-secret
+              key: "cloudflared-k8s-tunnel-token-rajsingh-info"
         livenessProbe:
           httpGet:
             path: /ready
