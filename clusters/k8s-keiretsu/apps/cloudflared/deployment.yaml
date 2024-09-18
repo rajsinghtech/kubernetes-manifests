@@ -23,8 +23,7 @@ spec:
         - 0.0.0.0:2000
         - run
         args:
-        - --token 
-        - $(token)
+        - --token $(token)
         image: cloudflare/cloudflared:latest
         name: cloudflared
         env:
