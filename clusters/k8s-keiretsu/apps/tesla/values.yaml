@@ -2,7 +2,7 @@ service:
   # annotations:
   type: ClusterIP 
 tlsSecret:
-  name: tesla
+  name: tesla-rajsingh-tls
 config:
   data: |
     {

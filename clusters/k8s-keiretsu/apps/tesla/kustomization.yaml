@@ -5,6 +5,7 @@ namespace: tesla
 resources:
   - public-key-webserver.yaml
   - secret.yaml
+  - certificate.yaml
 helmCharts:
   - name: fleet-telemetry
     repo: https://teslamotors.github.io/helm-charts/
