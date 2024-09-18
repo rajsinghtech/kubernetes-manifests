@@ -4,7 +4,7 @@ service:
   # annotations:
   type: NodePort 
 tlsSecret:
-  name: tesla-rajsingh-tls
+  name: fleet-telemetry-tesla-rajsingh-tls
 config:
   data: |
     {

@@ -1,15 +1,15 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: tesla-tls
+  name: fleet-telemetry-tesla-tls
 spec:
   dnsNames:
-    - tesla.rajsingh.info
+    - fleet-telemetry.tesla.rajsingh.info
   issuerRef:
     group: cert-manager.io
     kind: ClusterIssuer
     name: raj-issuer
-  secretName: tesla-rajsingh-tls
+  secretName: fleet-telemetry-tesla-rajsingh-tls
   usages:
     - digital signature
     - key encipherment
