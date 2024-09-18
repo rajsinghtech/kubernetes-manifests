@@ -3,10 +3,6 @@ service:
   type: ClusterIP 
 tlsSecret:
   name: tesla
-  # tlsCrt: |
-  #   value of the cert PEM
-  # tlsKey: |
-    # value the private key
 config:
   data: |
     {
