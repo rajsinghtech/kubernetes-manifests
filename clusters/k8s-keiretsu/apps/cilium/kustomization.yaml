@@ -4,7 +4,7 @@ kind: Kustomization
 helmCharts:
   - name: cilium
     repo: https://helm.isovalent.com
-    version: 1.15.7
+    version: 1.15.8
     namespace: kube-system
     releaseName: cilium
     includeCRDs: true
