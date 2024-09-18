@@ -13,7 +13,7 @@ config:
       "status_port": 8080,
       "log_level": "info",
       "json_log_enable": true,
-      "namespace": "tesla"
+      "namespace": "tesla",
       "monitoring": {
         "prometheus_metrics_port": 9273,
         "profiler_port": 4269,
