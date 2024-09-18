@@ -2,7 +2,7 @@ image:
   tag: v0.3.1
 service:
   # annotations:
-  type: ClusterIP 
+  type: NodePort 
 tlsSecret:
   name: tesla-rajsingh-tls
 config:
