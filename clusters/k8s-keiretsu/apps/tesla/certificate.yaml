@@ -9,7 +9,7 @@ spec:
     group: cert-manager.io
     kind: ClusterIssuer
     name: raj-issuer
-  secretName: telsa-rajsingh-tls
+  secretName: tesla-rajsingh-tls
   usages:
     - digital signature
     - key encipherment
