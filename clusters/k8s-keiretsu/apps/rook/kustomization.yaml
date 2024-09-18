@@ -12,8 +12,8 @@ helmCharts:
     # apiVersions:
     #   - monitoring.coreos.com/v1
 
-# resources:
-  # - ./templates/cluster.yaml
+resources:
+  - ./templates/cluster.yaml
   # - ./templates/storageclass.yaml
   # - ./templates/filesystem.yaml
   # - ./templates/test.yaml
