@@ -1,0 +1,18 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: 1password
+spec:
+  interval: 2m
+  chart:
+    spec:
+      chart: connect
+      version: x
+      sourceRef:
+        kind: HelmRepository
+        name: 1password
+  values:
+    operator:
+      create: true
+      pollingInterval: 60
