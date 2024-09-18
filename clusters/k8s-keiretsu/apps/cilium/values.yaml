@@ -1,8 +1,6 @@
-routingMode: tunnel
 kubeProxyReplacement: true
 operator:
   replicas: 1
-tunnel: vxlan
 k8sServiceHost: 127.0.0.1
 k8sServicePort: 6443
 hubble:
@@ -10,3 +8,5 @@ hubble:
 ipam:
   operator:
     clusterPoolIPv4PodCIDRList: "10.42.0.0/16"
+routingMode: tunnel
+tunnelProtocol: vxlan
