@@ -8,7 +8,7 @@ spec:
   issuerRef:
     group: cert-manager.io
     kind: ClusterIssuer
-    name: global-issuer
+    name: raj-issuer
   secretName: telsa-rajsingh-tls
   usages:
     - digital signature
