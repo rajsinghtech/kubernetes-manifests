@@ -2,8 +2,6 @@ controller:
   replicaCount: 2
   service:
     type: ClusterIP
-  extraArgs:
-    enable-ssl-passthrough: "true"
   config:
     enable-access-log-for-default-backend: "true"
   # metrics:
