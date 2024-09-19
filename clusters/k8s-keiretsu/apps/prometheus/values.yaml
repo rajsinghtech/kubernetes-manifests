@@ -1,0 +1,243 @@
+grafana:
+  image:
+    tag: 10.1.5
+
+  resources:
+    requests:
+      cpu: 500m
+      memory: 300Mi
+    limits:
+      memory: 800Mi
+
+  plugins:
+    - isovalent-hubble-datasource
+    - isovalent-hubbleprocessancestry-panel
+
+  grafana.ini:
+    feature_toggles:
+      enable: 'tempoApmTable'
+    dataproxy:
+      timeout: 300
+
+  persistence:
+    enabled: false 
+
+  # needed since we're using a PVC and can't mount it to more than one pod at once
+  deploymentStrategy:
+    type: Recreate
+
+  # admin:
+  #   existingSecret: "grafana-credentials"
+  #   userKey: admin-user
+  #   passwordKey: admin-password
+
+  serviceMonitor:
+    enabled: true
+
+  sidecar:
+    dashboards:
+      enabled: true
+      label: grafana_dashboard
+      folderAnnotation: grafana_folder
+      provider:
+        foldersFromFilesStructure: true
+
+    datasources:
+      exemplarTraceIdDestinations:
+        datasourceUid: tempo
+        traceIdLabelName: traceID
+
+  additionalDataSources:
+    - name: Loki
+      type: loki
+      uid: loki
+      url: http://loki-gateway.logging:80/
+      access: proxy
+      jsonData:
+        maxLines: 1000
+        derivedFields:
+          - datasourceName: Tempo
+            matcherRegex: '(?:)[tT]race_?[iI][dD]"?[:=][ ]?"?(\w+)'
+            name: TraceID
+            url: "$${__value.raw}"
+            datasourceUid: tempo
+    - name: Tempo
+      type: tempo
+      uid: tempo
+      url: http://tempo-gateway.tempo:80
+      access: proxy
+      jsonData:
+        httpMethod: GET
+        tracesToLogs:
+          datasourceUid: 'loki'
+          tags: ['job', 'instance', 'pod', 'namespace']
+          mappedTags: [{ key: 'service.name', value: 'service' }]
+          mapTagNamesEnabled: false
+          spanStartTimeShift: '1h'
+          spanEndTimeShift: '1h'
+          filterByTraceID: false
+          filterBySpanID: false
+        tracesToMetrics:
+          datasourceUid: 'prometheus'
+          tags: [{ key: 'service.name', value: 'service' }, { key: 'job' }]
+          queries:
+            - name: 'Sample query'
+              query: 'sum(rate(tempo_spanmetrics_latency_bucket{$__tags}[5m]))'
+        serviceMap:
+          datasourceUid: 'prometheus'
+        search:
+          hide: false
+        nodeGraph:
+          enabled: true
+        lokiSearch:
+          datasourceUid: 'loki'
+    - name: Hubble
+      type: isovalent-hubble-datasource
+      uid: hubble
+      jsonData:
+        timescapeURL: hubble-timescape.hubble-timescape.svc.cluster.local:80
+        prometheusDatasourceUid: 'prometheus'
+        tempoDatasourceUid: 'tempo'
+    - name: Alertmanager
+      type: alertmanager
+      uid: alertmanager
+      url: http://prometheus-kube-prometheus-alertmanager.monitoring.svc.cluster.local:9093
+      jsonData:
+        implementation: prometheus
+        handleGrafanaManagedAlerts: false
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+        - name: 'default'
+          orgId: 1
+          folder: ''
+          type: file
+          disableDeletion: false
+          editable: true
+          options:
+            path: /var/lib/grafana/dashboards/default
+        - name: 'argocd'
+          orgId: 1
+          folder: 'ArgoCD'
+          type: file
+          disableDeletion: false
+          editable: true
+          options:
+            path: /var/lib/grafana/dashboards/argocd
+        - name: 'ingress-nginx'
+          orgId: 1
+          folder: 'ingress-nginx'
+          type: file
+          disableDeletion: false
+          editable: true
+          options:
+            path: /var/lib/grafana/dashboards/ingress-nginx
+  dashboards:
+    default:
+      # https://grafana.com/grafana/dashboards/14765-grpc-go/
+      grpc-go:
+        gnetId: 14765
+        revision: 3
+        datasource: prometheus
+      # https://grafana.com/grafana/dashboards/14192-clickhouse/
+      clickhouse:
+        gnetId: 14192
+        revision: 4
+        datasource: prometheus
+      # https://grafana.com/grafana/dashboards/13500-clickhouse-internal-exporter/
+      clickhouse-internal-exporter:
+        gnetId: 13500
+        revision: 1
+        datasource: prometheus
+    argocd:
+      # https://grafana.com/grafana/dashboards/19993-argocd-operational-overview/
+      argocd-operational-overview:
+        gnetId: 19993
+        revision: 2
+        datasource: prometheus
+      # https://grafana.com/grafana/dashboards/19975-argocd-notifications-overview/
+      argocd-notifications-overview:
+        gnetId: 19975
+        revision: 2
+        datasource: prometheus
+      # https://grafana.com/grafana/dashboards/19974-argocd-application-overview/
+      argocd-application-overview:
+        gnetId: 19974
+        revision: 2
+        datasource: prometheus
+    ingress-nginx:
+      # https://grafana.com/grafana/dashboards/16677-ingress-nginx-overview/
+      ingress-nginx-overview:
+        gnetId: 16677
+        revision: 2
+        datasource: prometheus
+      # https://grafana.com/grafana/dashboards/20510-ingress-nginx-request-handling-performance/
+      ingress-nginx-request-handling-performance:
+        gnetId: 20510
+        revision: 1
+        datasource: prometheus
+
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false
+    probeSelectorNilUsesHelmValues: false
+    ruleSelectorNilUsesHelmValues: false
+
+    enableRemoteWriteReceiver: true
+    enableFeatures:
+      - exemplar-storage
+
+    retention: 1d
+
+    resources:
+      requests:
+        cpu: 2
+        memory: 4Gi
+      limits:
+        memory: 4Gi
+
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: rook-cephfs
+          resources:
+            requests:
+              storage: 10Gi
+prometheusOperator:
+  resources:
+    limits:
+      memory: 50Mi
+    requests:
+      cpu: 150m
+      memory: 50Mi
+
+prometheus-node-exporter:
+  resources:
+    limits:
+      memory: 50Mi
+    requests:
+      cpu: 100m
+      memory: 50Mi
+
+kube-state-metrics:
+  metricLabelsAllowlist:
+    - nodes=[topology.kubernetes.io/zone]
+  resources:
+    limits:
+      memory: 50Mi
+    requests:
+      cpu: 100m
+      memory: 50Mi
+
+# Disable kubeProxy scraping since we disable kube-proxy to use cilium KPR
+kubeProxy:
+  enabled: false
+
+# EKS does not expose controller-manager, or scheduler metrics
+kubeControllerManager:
+  enabled: false
+
+kubeScheduler:
+  enabled: false
