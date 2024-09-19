@@ -6,7 +6,7 @@ metadata:
 spec:
   destination:
     server: https://10.0.100.12:6443    
-    namespace: prometheus
+    namespace: monitoring
   project: default
   source:
     path: clusters/k8s-keiretsu/apps/prometheus
