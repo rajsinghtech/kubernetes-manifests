@@ -24,6 +24,10 @@ config:
         "message_interval_time": 30,
         "message_limit": 1000
       },
+      "kafka": { // librdkafka kafka config, seen here: https://raw.githubusercontent.com/confluentinc/librdkafka/master/CONFIGURATION.md
+        "bootstrap.servers": "tesla-kafka-brokers.kafka.svc.cluster.local:9092",
+        "queue.buffering.max.messages": 1000000
+      },
       "records": {
         "alerts": [
           "logger"
