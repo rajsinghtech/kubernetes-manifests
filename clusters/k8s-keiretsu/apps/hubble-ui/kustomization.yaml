@@ -9,4 +9,6 @@ helmCharts:
     releaseName: hubble-ui
     includeCRDs: true
     valuesFile: values.yaml
-
+    apiVersions:
+      - monitoring.coreos.com/v1
+      - networking.k8s.io/v1
