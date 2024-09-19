@@ -13,7 +13,7 @@ config:
       "status_port": 8080,
       "log_level": "debug",
       "json_log_enable": true,
-      "namespace": "kafka",
+      "namespace": "tesla",
       "reliable_ack": true,
       "monitoring": {
         "prometheus_metrics_port": 9273,
@@ -26,7 +26,7 @@ config:
         "message_limit": 1000
       },
       "kafka": {
-        "bootstrap.servers": "tesla-kafka-brokers:9092",
+        "bootstrap.servers": "tesla-kafka-brokers.kafka.svc.cluster.local:9092",
         "queue.buffering.max.messages": 1000000
       },
       "records": {
@@ -37,7 +37,8 @@ config:
           "logger"
         ],
         "V": [
-          "logger"
+          "logger",
+          "kafka"
         ]
       },
       "tls": {
