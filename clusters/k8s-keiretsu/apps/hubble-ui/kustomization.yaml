@@ -4,7 +4,7 @@ kind: Kustomization
 helmCharts:
   - name: hubble-ui
     repo: https://helm.isovalent.com
-    version: 1.1.0
+    version: 1.1.2
     namespace: kube-system
     releaseName: hubble-ui
     includeCRDs: true
