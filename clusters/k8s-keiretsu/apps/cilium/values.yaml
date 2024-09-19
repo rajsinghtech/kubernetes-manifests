@@ -1,11 +1,44 @@
 kubeProxyReplacement: true
 operator:
   rollOutPods: true
+  resources:
+    requests:
+      cpu: 100m
+      memory: 100Mi
+  prometheus:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+prometheus:
+  enabled: true
+  serviceMonitor:
+    enabled: true
 k8sServiceHost: 127.0.0.1
 k8sServicePort: 6443
 hubble:
   relay:
     enabled: true
+  metrics:
+    dashboards:
+      enabled: true
+      namespace: monitoring
+      annotations:
+        grafana_folder: "Hubble"
+    enableOpenMetrics: true
+    enabled:
+      - "dns:query;ignoreAAAA;labelsContext=source_namespace,source_workload,destination_namespace,destination_workload;sourceContext=workload-name|pod-name|dns|reserved-identity;destinationContext=workload-name|pod-name|dns|reserved-identity"
+      - "drop:labelsContext=source_namespace,source_workload,destination_namespace,destination_workload;sourceContext=workload-name|pod-name|dns|reserved-identity;destinationContext=workload-name|pod-name|dns|reserved-identity"
+      - "flow:labelsContext=source_namespace,source_workload,destination_namespace,destination_workload;sourceContext=workload-name|pod-name|dns|reserved-identity;destinationContext=workload-name|pod-name|dns|reserved-identity"
+      - "flows-to-world:labelsContext=source_namespace,source_workload;sourceContext=workload-name|pod-name|dns|reserved-identity"
+      - "httpV2:exemplars=true;labelsContext=source_namespace,source_workload,source_app,destination_namespace,destination_workload,destination_app,traffic_direction;sourceContext=workload-name|pod-name|dns|reserved-identity;destinationContext=workload-name|pod-name|dns|reserved-identity"
+      - "icmp:labelsContext=source_namespace,source_workload,destination_namespace,destination_workload;sourceContext=workload-name|pod-name|dns|reserved-identity;destinationContext=workload-name|pod-name|dns|reserved-identity"
+      - "kafka:labelsContext=source_namespace,source_workload,source_app,destination_namespace,destination_workload,destination_app,traffic_direction;sourceContext=workload-name|pod-name|dns|reserved-identity;destinationContext=workload-name|pod-name|dns|reserved-identity"
+      - "policy:labelsContext=source_namespace,source_workload,destination_namespace,destination_workload;sourceContext=workload-name|pod-name|dns|reserved-identity;destinationContext=workload-name|pod-name|dns|reserved-identity"
+      - "tcp:labelsContext=source_namespace,source_workload,destination_namespace,destination_workload;sourceContext=workload-name|pod-name|dns|reserved-identity;destinationContext=workload-name|pod-name|dns|reserved-identity"
+      # enterprise only metrics
+      - "flow_export:labelsContext=source_namespace,source_workload,destination_namespace,destination_workload"
+    serviceMonitor:
+      enabled: true
 ipam:
   operator:
     clusterPoolIPv4PodCIDRList: "10.42.0.0/16"
