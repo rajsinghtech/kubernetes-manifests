@@ -1,7 +1,7 @@
 controller:
   replicaCount: 2
-  # service:
-  #   type: LoadBalancer
+  service:
+    type: ClusterIP
   extraArgs:
     enable-ssl-passthrough: "true"
   config:
