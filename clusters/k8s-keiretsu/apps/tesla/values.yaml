@@ -11,9 +11,10 @@ config:
       "host": "0.0.0.0",
       "port": 8443,
       "status_port": 8080,
-      "log_level": "info",
+      "log_level": "debug",
       "json_log_enable": true,
       "namespace": "tesla",
+      "reliable_ack": true,
       "monitoring": {
         "prometheus_metrics_port": 9273,
         "profiler_port": 4269,
