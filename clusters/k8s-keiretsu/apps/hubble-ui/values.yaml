@@ -1,8 +1,8 @@
-grafana:
-  enabled: true
-  enabledNodesGraph: true
-  namespace: "monitoring"
-backend:
-  extraEnv:
-    - name: ENABLE_TIMESCAPE_K8S_POLICY_EVENTS
-      value: "true"
+# grafana:
+#   enabled: true
+#   enabledNodesGraph: true
+#   namespace: "monitoring"
+# backend:
+#   extraEnv:
+#     - name: ENABLE_TIMESCAPE_K8S_POLICY_EVENTS
+#       value: "true"
