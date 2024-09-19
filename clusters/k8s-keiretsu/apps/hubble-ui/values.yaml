@@ -1,3 +1,4 @@
 ingress:
   enabled: true
   host: hubble-keiretsu.rajsingh.info
+  v1: true
