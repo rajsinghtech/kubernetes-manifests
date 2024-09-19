@@ -4,3 +4,4 @@ kind: Kustomization
 namespace: kafka 
 resources:
   - https://strimzi.io/install/latest?namespace=kafka
+  - kafka.yaml
