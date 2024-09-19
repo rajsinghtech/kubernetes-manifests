@@ -6,6 +6,7 @@ resources:
   - public-key-webserver.yaml
   - secret.yaml
   - certificate.yaml
+  - kafka.yaml
 helmCharts:
   - name: fleet-telemetry
     repo: https://teslamotors.github.io/helm-charts/

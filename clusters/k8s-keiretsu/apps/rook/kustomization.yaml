@@ -9,12 +9,10 @@ helmCharts:
     releaseName: rook-ceph
     includeCRDs: true
     valuesFile: values.yaml
-    # apiVersions:
-    #   - monitoring.coreos.com/v1
 
 resources:
   - ./templates/cluster.yaml
-  # - ./templates/storageclass.yaml
-  # - ./templates/filesystem.yaml
+  - ./templates/storageclass.yaml
+  - ./templates/filesystem.yaml
   # - ./templates/test.yaml
   # - ./templates/nfs.yaml
