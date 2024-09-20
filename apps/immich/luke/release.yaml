@@ -22,8 +22,8 @@ spec:
                     volumes:
                       - name: hack
                         nfs:
-                          path: /mnt/vault/pics
-                          server: 192.168.50.185
+                          path: /vault/pics
+                          server: 192.168.50.253
                     containers:
                       - name: immich-server
                         volumeMounts:
