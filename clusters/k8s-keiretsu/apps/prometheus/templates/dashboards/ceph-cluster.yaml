@@ -9,7 +9,7 @@ metadata:
     grafana_folder: Ceph
 
 data:
-  ceph-pools-dashboard.json: |
+  ceph-cluster-dashboard.json: |
     {
       "__inputs": [],
       "__requires": [
