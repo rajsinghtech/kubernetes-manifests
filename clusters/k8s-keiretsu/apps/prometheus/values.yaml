@@ -189,7 +189,7 @@ prometheus:
     enableFeatures:
       - exemplar-storage
 
-    retention: 1d
+    retention: 7d
 
     resources:
       requests:
