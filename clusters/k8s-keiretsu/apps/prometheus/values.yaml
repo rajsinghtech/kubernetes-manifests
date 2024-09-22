@@ -18,7 +18,11 @@ grafana:
       enable: 'tempoApmTable'
     dataproxy:
       timeout: 300
-
+    security:
+      allow_embedding: true
+    server:
+      domain: "prometheus-grafana-keiretsu.rajsingh.info"
+      root_url: "https://%(domain)s"
   persistence:
     enabled: false 
 
