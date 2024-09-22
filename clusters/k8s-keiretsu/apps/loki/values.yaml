@@ -18,9 +18,10 @@ loki:
       cache_location: /var/loki/cache
       cache_ttl: 168h
     aws:
-      s3: s3:/rook-ceph-rgw-my-store.rook-ceph.svc
+      s3: s3:/rook-ceph-rgw-my-store.rook-ceph.svc:80
       region: us-east-2
       s3forcepathstyle: true
+      bucketnames: ceph-bkt-loki-401bd842-9f4a-42f3-ab05-1a07d0f0c955
 
   structuredConfig:
     server:
