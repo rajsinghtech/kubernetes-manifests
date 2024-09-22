@@ -11,9 +11,23 @@ config:
           brokers:
           - tesla-kafka-brokers.kafka:9092
           topics:
-          - grafana
+          - tesla_V
           labels:
             job: kafka
+            raj: test
+        relabel_configs:
+          - action: replace
+            source_labels:
+              - __meta_kafka_topic
+            target_label: topic
+          - action: replace
+            source_labels:
+              - __meta_kafka_partition
+            target_label: partition
+          - action: replace
+            source_labels:
+              - __meta_kafka_group_id
+            target_label: group_id
 resources:
   requests:
     cpu: 100m
