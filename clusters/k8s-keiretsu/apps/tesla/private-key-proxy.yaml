@@ -44,8 +44,10 @@ spec:
           command: ["sh", "-c", "sleep infinity"]
           volumeMounts:
             - name: fleet-telemetry-tls
-              mountPath: /secret/fleet-telemetry-tesla-rajsingh-tls
+              mountPath: /secret/ca
               readOnly: true
+            - name: config-volume
+              mountPath: /config
       initContainers:
         - name: init-cert-generator
           image: alpine:3.18
