@@ -1,7 +1,4 @@
 grafana:
-  image:
-    tag: 10.1.5
-
   resources:
     requests:
       cpu: 500m
@@ -14,16 +11,9 @@ grafana:
     - isovalent-hubbleprocessancestry-panel
 
   grafana.ini:
-    feature_toggles:
-      enable: 'tempoApmTable'
     dataproxy:
       timeout: 300
-    security:
-      allow_embedding: true
-    server:
-      domain: "prometheus-grafana-keiretsu.rajsingh.info"
-      root_url: "https://%(domain)s"
-      serve_from_sub_path: true
+
   persistence:
     enabled: false 
 
