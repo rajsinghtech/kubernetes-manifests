@@ -29,7 +29,7 @@ spec:
       volumes:
       - name: public-key-volume
         secret:
-          secretName: tesla
+          secretName: tesla-fleet-api
           items:
           - key: public-key.pem
             path: public-key.pem

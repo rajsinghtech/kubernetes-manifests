@@ -35,9 +35,16 @@ spec:
           volumeMounts:
             - name: config-volume
               mountPath: /config
-            - name: fleet-key-volume
+            - name: fleet-key-secret
               subPath: private-key.pem
               mountPath: /secret/fleet-key.pem
+              readOnly: true
+        - name: curl-container
+          image: curlimages/curl:7.85.0
+          command: ["sh", "-c", "sleep infinity"]
+          volumeMounts:
+            - name: fleet-telemetry-tls
+              mountPath: /secret/fleet-telemetry-tesla-rajsingh-tls
               readOnly: true
       initContainers:
         - name: init-cert-generator
@@ -62,9 +69,9 @@ spec:
       volumes:
         - name: config-volume
           emptyDir: {}
-        - name: fleet-key-volume
+        - name: fleet-key-secret
           secret:
             secretName: tesla-fleet-api
-            items:
-              - key: private-key.pem
-                path: private-key.pem
+        - name: fleet-telemetry-tls
+          secret:
+            secretName: fleet-telemetry-tesla-rajsingh-tls
