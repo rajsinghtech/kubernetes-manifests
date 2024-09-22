@@ -9,6 +9,12 @@ helmCharts:
     releaseName: loki
     includeCRDs: true
     valuesFile: values.yaml
-
+  - name: promtail
+    repo: https://grafana.github.io/helm-charts
+    version: 6.0.0
+    namespace: logging
+    releaseName: promtail
+    includeCRDs: true
+    valuesFile: promtail-values.yaml
 resources:
   - ./templates/bucket.yaml
