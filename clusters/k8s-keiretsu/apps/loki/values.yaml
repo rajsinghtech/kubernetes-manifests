@@ -70,7 +70,7 @@ ingester:
     claims:
       - name: data
         size: 10Gi
-        storageClass: gp2
+        storageClass: rook-cephfs
   extraEnv: *extraEnv
   resources:
     requests:
@@ -84,7 +84,7 @@ querier:
   maxUnavailable: 1
   persistence:
     enabled: true
-    storageClass: gp2
+    storageClass: rook-cephfs
   extraEnv: *extraEnv
   resources:
     requests:
@@ -106,7 +106,7 @@ compactor:
   enabled: true
   persistence:
     enabled: true
-    storageClass: gp2
+    storageClass: rook-cephfs
   extraEnv: *extraEnv
   resources:
     requests:
