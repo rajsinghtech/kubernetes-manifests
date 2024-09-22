@@ -14,5 +14,5 @@ resources:
   - ./templates/cluster.yaml
   - ./templates/storageclass.yaml
   - ./templates/filesystem.yaml
-  # - ./templates/test.yaml
+  - ./templates/objectstore.yaml
   # - ./templates/nfs.yaml
