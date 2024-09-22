@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: fleet-telemetry-metrics
+  namespace: tesla
+spec:
+  selector:
+    matchLabels:
+      service: fleet-telemetry  
+  endpoints:
+  - port: prometheus-metrics 
+    interval: 15s  
+    targetPort: 9273  
+  namespaceSelector:
+    matchNames:
+    - tesla 
+  labels:
+    release: prometheus

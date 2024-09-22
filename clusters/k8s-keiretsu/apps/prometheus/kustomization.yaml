@@ -24,6 +24,7 @@ resources:
   - ./templates/dashboards/ceph-pools.yaml
   - ./templates/dashboards/ceph-osds.yaml
   - ./templates/dashboards/ceph-cluster.yaml
+  - ./templates/dashboards/tesla-fleet-telemetry.yaml
 patches:
   # This is required because some CRD annotations are too long.
   - target:
