@@ -27,3 +27,10 @@ tetragon:
 tetragonOperator:
   podInfo:
     enabled: true
+dashboards:
+  enabled: true
+  namespace: monitoring
+  annotations:
+    grafana_folder: "Hubble"
+  health:
+    enabled: true
