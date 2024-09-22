@@ -49,7 +49,7 @@ grafana:
       providers:
         - name: 'default'
           orgId: 1
-          folder: ''
+          folder: 'Default'
           type: file
           disableDeletion: false
           editable: true
