@@ -1,0 +1,26 @@
+serviceMonitor:
+  enabled: true
+
+config:
+  clients:
+    - url: http://loki.logging:3100
+  snippets:
+    extraScrapeConfigs: |
+      - job_name: kafka
+        kafka:
+          brokers:
+          - tesla-kafka-brokers.kafka:9092
+          topics:
+          - grafana
+          labels:
+            job: kafka
+resources:
+  requests:
+    cpu: 100m
+    memory: 512Mi
+  limits:
+    memory: 512Mi
+
+extraArgs:
+  - -client.external-labels=cluster=keiretsu
+  - -config.expand-env=true
