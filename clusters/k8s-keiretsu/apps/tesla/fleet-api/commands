@@ -1,0 +1,35 @@
+curl -H "Authorization: Bearer $TESLA_AUTH_TOKEN" \                                                                                                                                                             
+     -H 'Content-Type: application/json' \
+     --data '' \
+      -X POST \
+      -i https://localhost:4443/api/1/vehicles/fleet_telemetry_config --cacert config/tls-cert.pem
+
+
+awk '{printf "%s\\n", $0}' /secret/ca/tls.crt
+
+
+
+
+curl -H "Authorization: Bearer $TESLA_AUTH_TOKEN" \
+     -H 'Content-Type: application/json' \
+     --data "$(jq -n --arg ca "$(awk '{printf "%s\\n", $0}' /secret/ca/tls.crt)" '{
+        "config": {
+            "port": 32484,
+            "exp": 1758097765,
+            "alert_types": [
+                "service"
+            ],
+            "fields": {
+                "ChargeState": {
+                    "interval_seconds": 10
+                }
+            },
+            "ca": $ca,
+            "hostname": "fleet-telemetry.tesla.rajsingh.info"
+        },
+        "vins": [
+            "7SAYGDEEXRA288618"
+        ]
+    }')" \
+     -X POST \
+     -i https://localhost:4443/api/1/vehicles/fleet_telemetry_config --cacert config/tls-cert.pem
