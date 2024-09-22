@@ -32,6 +32,7 @@ spec:
       type: persistent-claim
       class: rook-cephfs
       size: 20Gi
+      deleteClaim: false
   zookeeper:
     replicas: 3
     storage:
