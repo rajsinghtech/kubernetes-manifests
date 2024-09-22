@@ -42,25 +42,12 @@ grafana:
       provider:
         foldersFromFilesStructure: true
 
-    datasources:
-      exemplarTraceIdDestinations:
-        datasourceUid: tempo
-        traceIdLabelName: traceID
-
   additionalDataSources:
     - name: Loki
       type: loki
       uid: loki
-      url: http://loki-gateway.logging:80/
-      access: proxy
-      jsonData:
-        maxLines: 1000
-        derivedFields:
-          - datasourceName: Tempo
-            matcherRegex: '(?:)[tT]race_?[iI][dD]"?[:=][ ]?"?(\w+)'
-            name: TraceID
-            url: "$${__value.raw}"
-            datasourceUid: tempo
+      url: http://loki.logging:3100
+
   dashboardProviders:
     dashboardproviders.yaml:
       apiVersion: 1
