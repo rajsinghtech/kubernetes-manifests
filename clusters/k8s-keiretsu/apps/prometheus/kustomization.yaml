@@ -4,19 +4,11 @@ kind: Kustomization
 helmCharts:
   - name: kube-prometheus-stack
     repo: https://prometheus-community.github.io/helm-charts
-    version: 60.0.1
+    version: 62.7.0
     namespace: monitoring
     releaseName: prometheus
     includeCRDs: true
     valuesFile: values.yaml
-  - name: prometheus-adapter
-    repo: https://prometheus-community.github.io/helm-charts
-    version: 4.2.0
-    namespace: monitoring
-    releaseName: prometheus-adapter
-    valuesFile: prometheus-adapter-values.yaml
-    apiVersions:
-      - apiregistration.k8s.io/v1
 
 resources:
   - ./templates/configmap.yaml
