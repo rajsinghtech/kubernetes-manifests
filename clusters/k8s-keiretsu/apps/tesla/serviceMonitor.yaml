@@ -6,13 +6,11 @@ metadata:
 spec:
   selector:
     matchLabels:
-      service: fleet-telemetry  
+      service: fleet-telemetry  # Label selector to match the service exposing the pod
   endpoints:
-  - port: prometheus-metrics 
-    interval: 15s  
-    targetPort: 9273  
+  - port: metrics  # Name of the port defined in the service
+    interval: 15s  # Scrape every 15 seconds
+    targetPort: 9273  # Target port for the pod's Prometheus metrics
   namespaceSelector:
     matchNames:
-    - tesla 
-  labels:
-    release: prometheus
+    - tesla  # Namespace where the service is located
