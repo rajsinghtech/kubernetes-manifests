@@ -31,6 +31,6 @@ dashboards:
   enabled: true
   namespace: monitoring
   annotations:
-    grafana_folder: "Hubble"
+    grafana_folder: "Tetragon"
   health:
     enabled: true
