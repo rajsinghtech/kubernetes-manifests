@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tesla-http-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tesla-http-proxy
+  template:
+    metadata:
+      labels:
+        app: tesla-http-proxy
+    spec:
+      containers:
+        - name: tesla-http-proxy
+          image: tesla/vehicle-command:latest
+          ports:
+            - containerPort: 4443
+          env:
+            - name: TESLA_HTTP_PROXY_TLS_CERT
+              value: /config/tls-cert.pem
+            - name: TESLA_HTTP_PROXY_TLS_KEY
+              value: /config/tls-key.pem
+            - name: TESLA_HTTP_PROXY_HOST
+              value: "0.0.0.0"
+            - name: TESLA_HTTP_PROXY_PORT
+              value: "4443"
+            - name: TESLA_HTTP_PROXY_TIMEOUT
+              value: "10s"
+            - name: TESLA_KEY_FILE
+              value: /secret/fleet-key.pem
+            - name: TESLA_VERBOSE
+              value: "true"
+          volumeMounts:
+            - name: config-volume
+              mountPath: /config
+            - name: fleet-key-volume
+              subPath: private-key.pem
+              mountPath: /secret/fleet-key.pem
+              readOnly: true
+      initContainers:
+        - name: init-cert-generator
+          image: alpine:3.18
+          command:
+            - /bin/sh
+            - -c
+            - |
+              apk add openssl && \
+              openssl req -x509 -nodes -newkey ec \
+                -pkeyopt ec_paramgen_curve:secp521r1 \
+                -pkeyopt ec_param_enc:named_curve  \
+                -subj '/CN=localhost' \
+                -keyout /config/tls-key.pem \
+                -out /config/tls-cert.pem \
+                -sha256 -days 3650 \
+                -addext "extendedKeyUsage = serverAuth" \
+                -addext "keyUsage = digitalSignature, keyCertSign, keyAgreement"
+          volumeMounts:
+            - name: config-volume
+              mountPath: /config
+      volumes:
+        - name: config-volume
+          emptyDir: {}
+        - name: fleet-key-volume
+          secret:
+            secretName: tesla-fleet-api
+            items:
+              - key: private-key.pem
+                path: private-key.pem

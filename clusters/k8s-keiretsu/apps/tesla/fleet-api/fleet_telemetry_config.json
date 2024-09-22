@@ -1,0 +1,19 @@
+{
+    "config": {
+        "port": 32484,
+        "exp": 1758097765,
+        "alert_types": [
+            "service"
+        ],
+        "fields": {
+            "ChargeState": {
+                "interval_seconds": 10
+            }
+        },
+        "ca": "",
+        "hostname": "fleet-telemetry.tesla.rajsingh.info"
+    },
+    "vins": [
+        "7SAYGDEEXRA288618"
+    ]
+}
