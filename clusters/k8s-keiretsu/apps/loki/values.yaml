@@ -72,12 +72,12 @@ ingester:
         size: 10Gi
         storageClass: rook-cephfs
   extraEnv: *extraEnv
-  resources:
-    requests:
-      cpu: 1
-      memory: 6Gi
-    limits:
-      memory: 6Gi
+  # resources:
+  #   requests:
+  #     cpu: 1
+  #     memory: 6Gi
+  #   limits:
+  #     memory: 6Gi
 
 querier:
   replicas: 2
@@ -86,12 +86,12 @@ querier:
     enabled: true
     storageClass: rook-cephfs
   extraEnv: *extraEnv
-  resources:
-    requests:
-      cpu: 1
-      memory: 12Gi
-    limits:
-      memory: 12Gi
+  # resources:
+  #   requests:
+  #     cpu: 1
+  #     memory: 12Gi
+  #   limits:
+  #     memory: 12Gi
 
 queryFrontend:
   extraEnv: *extraEnv
@@ -102,48 +102,48 @@ queryFrontend:
     limits:
       memory: 512Mi
 
-compactor:
-  enabled: true
-  persistence:
-    enabled: true
-    storageClass: rook-cephfs
-  extraEnv: *extraEnv
-  resources:
-    requests:
-      cpu: 200m
-      memory: 128Mi
-    limits:
-      memory: 128Mi
+# compactor:
+#   enabled: true
+#   persistence:
+#     enabled: true
+#     storageClass: rook-cephfs
+#   extraEnv: *extraEnv
+#   resources:
+#     requests:
+#       cpu: 200m
+#       memory: 128Mi
+#     limits:
+#       memory: 128Mi
 
 serviceMonitor:
   enabled: true
 
-memcachedExporter:
-  enabled: true
+# memcachedExporter:
+#   enabled: true
 
-memcachedFrontend:
-  enabled: true
-  replicas: 1
-  extraArgs:
-    - -m 2048
-    - -I 32m
-  resources:
-    requests:
-      cpu: 500m
-      memory: 3Gi
-    limits:
-      memory: 3Gi
+# memcachedFrontend:
+#   enabled: true
+#   replicas: 1
+#   extraArgs:
+#     - -m 2048
+#     - -I 32m
+  # resources:
+  #   requests:
+  #     cpu: 500m
+  #     memory: 3Gi
+  #   limits:
+  #     memory: 3Gi
 
-memcachedChunks:
-  enabled: true
-  replicas: 2
-  maxUnavailable: 1
-  extraArgs:
-    - -m 2048
-    - -I 32m
-  resources:
-    requests:
-      cpu: 500m
-      memory: 3Gi
-    limits:
-      memory: 3Gi
+# memcachedChunks:
+#   enabled: true
+#   replicas: 2
+#   maxUnavailable: 1
+#   extraArgs:
+#     - -m 2048
+#     - -I 32m
+  # resources:
+  #   requests:
+  #     cpu: 500m
+  #     memory: 3Gi
+  #   limits:
+  #     memory: 3Gi
