@@ -23,6 +23,7 @@ grafana:
     server:
       domain: "prometheus-grafana-keiretsu.rajsingh.info"
       root_url: "https://%(domain)s"
+      serve_from_sub_path: true
   persistence:
     enabled: false 
 
