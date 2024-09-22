@@ -10,5 +10,5 @@ helmCharts:
     includeCRDs: true
     valuesFile: values.yaml
 
-resources:
-  - ./templates/dns-visibility.yaml
+# resources:
+#   - ./templates/dns-visibility.yaml
