@@ -1,0 +1,15 @@
+loki:
+  storage:
+    type: s3
+    s3:
+      s3: ceph-bkt-loki
+      endpoint: rook-ceph-rgw-my-store.rook-ceph.svc:80
+      region: ''
+      secretAccessKey: AA2PZCC37OUWSUJP8BN2
+      accessKeyId: 1t6sKc0GiEIVLJtaSP3ypxjn3jTciFIBv6UXQM8B
+      signatureVersion: 2
+      s3ForcePathStyle: true
+      insecure: true
+      http_config: {}
+      backoff_config: {}
+      disable_dualstack: false
