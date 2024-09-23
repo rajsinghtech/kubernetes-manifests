@@ -1,0 +1,6 @@
+nfs:
+  path: /mnt/tank/k8s
+  server: 192.168.50.59
+storageClass:
+  defaultClass: false
+  pathPattern: ${.PVC.namespace}/${.PVC.name}
