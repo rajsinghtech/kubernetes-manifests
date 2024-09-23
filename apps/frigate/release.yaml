@@ -49,14 +49,6 @@ spec:
               days: 3
           ui:
             order: 9
-          objects:
-            filters:
-              person:
-                threshold: 0.75
-              dog:
-                threshold: 0.80
-              cat:
-                threshold: 0.80
         alley_back:
           ffmpeg:
             inputs:
@@ -72,14 +64,6 @@ spec:
               days: 3
           ui:
             order: 10
-          objects:
-            filters:
-              person:
-                threshold: 0.75
-              dog:
-                threshold: 0.80
-              cat:
-                threshold: 0.80
         backyard:
           ffmpeg:
             inputs:
@@ -95,10 +79,6 @@ spec:
               days: 3
           ui:
             order: 5
-          objects:
-            filters:
-              person:
-                mask: 301,102,366,0,0,0,0,298
         house_side:
           ffmpeg:
             inputs:
@@ -114,12 +94,6 @@ spec:
               days: 3
           ui:
             order: 1
-          objects:
-            track:
-              - person
-              - cat
-              - dog
-              - suitecase
         #shop_1:
           #ffmpeg:
             #inputs:
@@ -163,10 +137,6 @@ spec:
               days: 3
           ui:
             order: 0
-          objects:
-            filters:
-              car:
-                mask: 1838,1350,2688,1365
         backyard_front:
           ffmpeg:
             inputs:
@@ -182,15 +152,6 @@ spec:
               days: 3
           ui:
             order: 4
-          objects:
-            track:
-              - person
-              - cat
-              - dog
-              - suitecase
-          zones:
-            entire_yard:
-              coordinates: 526,118,530,160,711,143,977,134,1280,167,1280,720,0,720,0,318,0,219
         garage:
           ffmpeg:
             inputs:
@@ -206,12 +167,6 @@ spec:
               days: 3
           ui:
             order: 3
-          objects:
-            track:
-              - person
-              - cat
-              - dog
-              - suitecase
         backyard_back:
           ffmpeg:
             inputs:
@@ -227,10 +182,6 @@ spec:
               days: 3
           ui:
             order: 6
-          objects:
-            filters:
-              person:
-                mask: 0,0,1524,0
         front_door:
           ffmpeg:
             inputs:
@@ -246,10 +197,13 @@ spec:
               days: 3
           ui:
             order: 2
-          objects:
-            filters:
-              person:
-                mask: 1,0,1,0.165,1,0.398,0.968,0.471,0.827,0.339,0.464,0.094,0.469,0
+          review:
+            alerts:
+              required_zones:
+                - front_yard
+          zones:
+            front_yard:
+              coordinates: 0,0,0,1,1,1,1,0.495,0.763,0.29,0.471,0.099,0.474,0
       birdseye:
         restream: true
       # Optional: Object configuration
