@@ -3,5 +3,6 @@ kind: ObjectBucketClaim
 metadata:
   name: ceph-bucket-loki
 spec:
+  bucketName: ceph-bkt-loki
   generateBucketName: ceph-bkt-loki
   storageClassName: rook-ceph-bucket
