@@ -1,23 +1,22 @@
-promtail:
-  enabled: false
-fluent-bit:
-  enabled: false
-grafana:
-  enabled: false
-prometheus:
-  enabled: false
-filebeat:
-  enabled: false
-logstash:
-  enabled: false
-
 loki:
-  storageConfig:
-    boltdb_shipper:
-      shared_store: s3
-      active_index_directory: /var/loki/index
-      cache_location: /var/loki/cache
-      cache_ttl: 168h
-    aws:
+  storage:
+    # Loki requires a bucket for chunks and the ruler. GEL requires a third bucket for the admin API.
+    # Please provide these values if you are using object storage.
+    # bucketNames:
+    #   chunks: FIXME
+    #   ruler: FIXME
+    #   admin: FIXME
+    type: s3
+    s3:
       s3: s3://rook-ceph-rgw-my-store.rook-ceph/ceph-bkt-loki
-      s3forcepathstyle: true
+      # endpoint: null
+      # region: null
+      secretAccessKey: ceph-bucket-loki
+      accessKeyId: ceph-bucket-loki
+      # signatureVersion: null
+      s3ForcePathStyle: false
+      insecure: true
+      http_config: {}
+      # -- Check https://grafana.com/docs/loki/latest/configure/#s3_storage_config for more info on how to provide a backoff_config
+      backoff_config: {}
+      disable_dualstack: false
