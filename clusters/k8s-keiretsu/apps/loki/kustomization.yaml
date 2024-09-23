@@ -4,11 +4,11 @@ kind: Kustomization
 helmCharts:
   - name: loki-stack
     repo: https://grafana.github.io/helm-charts
-    version: 2.10.2
+    version: 6.12.0
     namespace: logging
     releaseName: loki
     includeCRDs: true
-    valuesFile: values.yaml
+    valuesFile: loki-values.yaml
   - name: promtail
     repo: https://grafana.github.io/helm-charts
     version: 6.0.0
