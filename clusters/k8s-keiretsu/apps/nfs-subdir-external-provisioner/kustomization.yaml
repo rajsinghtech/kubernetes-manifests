@@ -16,7 +16,7 @@ helmCharts:
     version: 4.0.18
     namespace: nfs-subdir-external-provisioner
     includeCRDs: true
-    valuesFile: proxmox-nfs-values.yaml
+    valuesFile: proxmox-hack-nfs-values.yaml
     name: nfs-subdir-external-provisioner
 
 resources:
