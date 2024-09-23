@@ -10,3 +10,14 @@ filebeat:
   enabled: false
 logstash:
   enabled: false
+
+loki:
+  storageConfig:
+    boltdb_shipper:
+      shared_store: s3
+      active_index_directory: /var/loki/index
+      cache_location: /var/loki/cache
+      cache_ttl: 168h
+    aws:
+      s3: s3:///rook-ceph-rgw-my-store.rook-ceph/ceph-bkt-loki
+      s3forcepathstyle: true
