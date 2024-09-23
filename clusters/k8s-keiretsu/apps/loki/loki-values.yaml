@@ -13,3 +13,7 @@ loki:
       http_config: {}
       backoff_config: {}
       disable_dualstack: false
+    bucketNames:
+      chunks: ceph-bkt-loki
+      ruler: ceph-bkt-loki
+      admin: ceph-bkt-loki
