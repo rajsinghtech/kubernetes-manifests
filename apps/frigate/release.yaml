@@ -249,7 +249,7 @@ spec:
           objects:
             filters:
               person:
-                mask: 1280,0,1280,119,1280,257,1248,326,1067,199,824,78,632,0
+                mask: 1,0,1,0.165,1,0.398,0.968,0.471,0.827,0.339,0.464,0.094,0.469,0
       birdseye:
         restream: true
       # Optional: Object configuration
