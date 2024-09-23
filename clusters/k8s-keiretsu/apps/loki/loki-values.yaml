@@ -58,5 +58,6 @@ backend:
   - secretRef:
       name: ceph-bucket-loki
 chunksCache:
+  enabled: false
   persistence:
     storageClass: rook-cephfs
