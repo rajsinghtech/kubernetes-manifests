@@ -3,5 +3,5 @@ nfs:
   server: 192.168.50.253
 storageClass:
   defaultClass: false
-  name: nfs-client-hack
+  name: nfs-proxmox-hack
   pathPattern: ${.PVC.namespace}/${.PVC.name}
