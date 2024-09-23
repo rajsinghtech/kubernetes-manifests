@@ -19,10 +19,16 @@ loki:
       admin: ceph-bkt-loki
   schemaConfig:
     configs:
-      - from: "2020-10-24"
+      - from: 2022-09-03
         store: boltdb-shipper
         object_store: s3
         schema: v11
         index:
           prefix: loki_index_
-          period: 168h  
+          period: 24h
+  storageConfig:
+    boltdb_shipper:
+      shared_store: s3
+      active_index_directory: /var/loki/index
+      cache_location: /var/loki/cache
+      cache_ttl: 168h
