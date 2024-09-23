@@ -1,39 +1,59 @@
 loki:
   storage:
     type: s3
-    s3:
-      bucket: ceph-bkt-loki
-      endpoint: rook-ceph-rgw-my-store.rook-ceph.svc:80
-      region: ''
-      secretAccessKey: AA2PZCC37OUWSUJP8BN2
-      accessKeyId: 1t6sKc0GiEIVLJtaSP3ypxjn3jTciFIBv6UXQM8B
-      signatureVersion: 4  # Changed from 2 to 4
-      s3ForcePathStyle: true
-      insecure: true
-      http_config: {}
-      backoff_config: {}
-      disable_dualstack: false
     bucketNames:
       chunks: ceph-bkt-loki
       ruler: ceph-bkt-loki
       admin: ceph-bkt-loki
-
+    s3:
+      endpoint: rook-ceph-rgw-my-store.rook-ceph
+      accessKeyId: null
+      secretAccessKey: null
+      insecure: true
+      s3ForcePathStyle: true
+  memcached:
+    chunk_cache:
+      enabled: false
+    results_cache:
+      enabled: false
   schemaConfig:
     configs:
-      - from: 2022-09-03
-        store: boltdb-shipper
-        object_store: s3
-        schema: v11  # Still using v11 until you upgrade
-        index:
-          prefix: loki_index_
-          period: 24h
-
-  storageConfig:
-    boltdb_shipper:
-      shared_store: s3
-      active_index_directory: /var/loki/index
-      cache_location: /var/loki/cache
-      cache_ttl: 168h
-
-  limits_config:
-    allow_structured_metadata: false  # Added this to disable structured metadata for now
+    - from: 2024-04-01
+      store: tsdb
+      object_store: s3
+      schema: v13
+      index:
+        prefix: index_
+        period: 24h
+  auth_enabled: false
+  commonConfig:
+    replication_factor: 1
+  tracing:
+    enabled: false
+test:
+  enabled: false
+networkPolicy:
+  enabled: false
+gateway:
+  enabled: true
+ingress:
+  enabled: false
+write:
+  replicas: 1
+  extraEnvFrom:
+  - secretRef:
+      name: ceph-bucket-loki
+  persistence:
+    volumeClaimsEnabled: false
+read:
+  replicas: 1
+  extraEnvFrom:
+  - secretRef:
+      name: ceph-bucket-loki
+backend:
+  replicas: 1
+  persistence:
+    volumeClaimsEnabled: false
+  extraEnvFrom:
+  - secretRef:
+      name: ceph-bucket-loki
