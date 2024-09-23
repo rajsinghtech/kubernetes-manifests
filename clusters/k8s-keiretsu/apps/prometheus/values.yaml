@@ -41,7 +41,7 @@ grafana:
     - name: Loki
       type: loki
       uid: loki
-      url: http://loki.logging:3100
+      url: http://loki-write.logging:3100
 
   dashboardProviders:
     dashboardproviders.yaml:
