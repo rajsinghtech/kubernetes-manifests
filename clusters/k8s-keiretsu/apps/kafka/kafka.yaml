@@ -38,26 +38,11 @@ spec:
       min.insync.replicas: 2
       inter.broker.protocol.version: "3.8"
     storage:
-      type: jbod
-      volumes:
-      - id: 0
-        type: persistent-claim
-        size: 20Gi
-        class: rook-cephfs 
-        deleteClaim: false
+      type: ephemeral
   zookeeper:
     replicas: 3
-    metricsConfig:
-      type: jmxPrometheusExporter
-      valueFrom:
-        configMapKeyRef:
-          name: kafka-metrics
-          key: zookeeper-metrics-config.yml
     storage:
-      type: persistent-claim
-      class: rook-cephfs
-      size: 20Gi
-      deleteClaim: false
+      type: ephemeral
   entityOperator:
     topicOperator: {}
     userOperator: {}
