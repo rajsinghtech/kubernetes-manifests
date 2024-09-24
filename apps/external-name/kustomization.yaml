@@ -11,4 +11,5 @@ resources:
   - truenas.yaml
   - jellyfin.yaml
   - uptime.yaml
+  - frigate.yaml
   - ingress.yaml
