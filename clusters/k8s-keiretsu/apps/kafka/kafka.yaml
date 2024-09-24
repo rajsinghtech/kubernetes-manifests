@@ -17,13 +17,13 @@ spec:
         tls: true
       - name: external
         port: 9094
-        type: internal
         tls: false
+        type: nodeport
         configuration:
           brokers:
-          - broker: 0
-            advertisedHost: localhost
-            advertisedPort: 9094
+            - broker: 0
+              advertisedHost: localhost
+              advertisedPort: 31769
     metricsConfig:
       type: jmxPrometheusExporter
       valueFrom:
