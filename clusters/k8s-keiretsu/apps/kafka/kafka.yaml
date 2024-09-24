@@ -15,6 +15,15 @@ spec:
         port: 9093
         type: internal
         tls: true
+      - name: external
+        port: 9094
+        type: external
+        tls: false
+        configuration:
+          brokers:
+          - broker: 0
+            advertisedHost: localhost
+            advertisedPort: 9094
     metricsConfig:
       type: jmxPrometheusExporter
       valueFrom:
