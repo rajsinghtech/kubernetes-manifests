@@ -22,7 +22,7 @@ spec:
         configuration:
           brokers:
             - broker: 0
-              advertisedHost: localhost
+              advertisedHost: 10.0.100.12
               advertisedPort: 31769
     metricsConfig:
       type: jmxPrometheusExporter
