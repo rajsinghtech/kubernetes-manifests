@@ -4,10 +4,10 @@ controller:
     type: ClusterIP
   config:
     enable-access-log-for-default-backend: "true"
-  # metrics:
-  #   enabled: true
-    # serviceMonitor:
-    #   enabled: true
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
   resources:
     requests:
       cpu: 50m
