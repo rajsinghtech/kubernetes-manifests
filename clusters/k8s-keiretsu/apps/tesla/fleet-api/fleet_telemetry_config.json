@@ -10,16 +10,16 @@
                 "interval_seconds": 10
             },
             "BatteryLevel": {
-               "interval_seconds": 10 
+               "interval_seconds": 120 
             },
             "Odometer": {
-                "interval_seconds": 60
+                "interval_seconds": 120
             },
             "VehicleSpeed": {
                 "interval_seconds": 10
             },
-            "GpsHeading": {
-                "interval_seconds": 10
+            "Gear": {
+                "interval_seconds": 120
             },
             "LateralAcceleration": {
                 "interval_seconds": 10
@@ -34,7 +34,7 @@
                 "interval_seconds": 10
             },
             "LifetimeEnergyGainedRegen": {
-                "interval_seconds": 10
+                "interval_seconds": 120
             }
         },
         "ca": "$CA_CERT",
