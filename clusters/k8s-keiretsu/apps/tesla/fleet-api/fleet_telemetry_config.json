@@ -7,7 +7,7 @@
         ],
         "fields": {
             "Location": {
-                "interval_seconds": 10
+                "interval_seconds": 120
             },
             "BatteryLevel": {
                "interval_seconds": 120 
@@ -16,7 +16,7 @@
                 "interval_seconds": 120
             },
             "VehicleSpeed": {
-                "interval_seconds": 10
+                "interval_seconds": 120
             },
             "Gear": {
                 "interval_seconds": 120
