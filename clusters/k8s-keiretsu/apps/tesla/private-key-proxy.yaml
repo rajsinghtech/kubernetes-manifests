@@ -82,3 +82,4 @@ spec:
         - name: fleet-api
           configMap:
             name: fleet-api
+            defaultMode: 0755  # Set the permissions for the files in the ConfigMap
