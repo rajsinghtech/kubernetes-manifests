@@ -10,7 +10,7 @@
                 "interval_seconds": 10
             }
         },
-        "ca": "#CA_CERT",
+        "ca": "$CA_CERT",
         "hostname": "fleet-telemetry.tesla.rajsingh.info"
     },
     "vins": [
