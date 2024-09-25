@@ -40,7 +40,7 @@ spec:
               mountPath: /secret/fleet-key.pem
               readOnly: true
         - name: curl-container
-          image: curlimages/curl:7.85.0
+          image: nicolaka/netshoot 
           command: ["sh", "-c", "sleep infinity"]
           volumeMounts:
             - name: fleet-telemetry-tls
