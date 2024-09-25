@@ -20,4 +20,4 @@ curl -H "Authorization: Bearer $TESLA_AUTH_TOKEN" \
      -H 'Content-Type: application/json' \
      --data "$JSON_DATA" \
      -X POST -i https://localhost:4443/api/1/vehicles/fleet_telemetry_config \
-     --cacert /secret/ca/tls.crt
+     --cacert /config/tls-cert.pem
