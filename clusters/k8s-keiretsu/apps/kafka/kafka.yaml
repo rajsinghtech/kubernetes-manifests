@@ -2,6 +2,7 @@ apiVersion: kafka.strimzi.io/v1beta2
 kind: Kafka
 metadata:
   name: tesla
+  namespace: kafka
 spec:
   kafka:
     version: 3.8.0
