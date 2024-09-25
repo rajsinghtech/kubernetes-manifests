@@ -7,7 +7,7 @@ resources:
 
 helmCharts:
   - name: strimzi-kafka-operator
-    repo: https://kubernetes.github.io/ingress-nginx
+    repo: https://strimzi.io/charts/
     version: 0.43.0
     namespace: strimzi
     releaseName: strimzi-kafka-operator
