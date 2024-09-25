@@ -22,13 +22,6 @@ spec:
         configuration:
           brokers:
             - broker: 0
-      - name: external
-        port: 9094
-        tls: false
-        type: nodeport
-        configuration:
-          brokers:
-            - broker: 0
               advertisedHost: 10.0.100.12
               advertisedPort: 31769
     # metricsConfig:
