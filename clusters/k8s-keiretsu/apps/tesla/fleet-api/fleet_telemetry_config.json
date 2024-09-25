@@ -21,17 +21,17 @@
             "Gear": {
                 "interval_seconds": 120
             },
-            "LateralAcceleration": {
-                "interval_seconds": 10
+            "OutsideTemp": {
+                "interval_seconds": 120
             },
-            "LongitudinalAcceleration": {
-                "interval_seconds": 10
+            "InsideTemp": {
+                "interval_seconds": 120
             },
-            "BrakePedalPos": {
-                "interval_seconds": 10
+            "DestinationLocation": {
+                "interval_seconds": 120
             },
-            "PedalPosition": {
-                "interval_seconds": 10
+            "TimeToFullCharge": {
+                "interval_seconds": 120
             },
             "LifetimeEnergyGainedRegen": {
                 "interval_seconds": 120
