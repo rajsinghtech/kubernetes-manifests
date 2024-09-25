@@ -8,6 +8,15 @@
         "fields": {
             "ChargeState": {
                 "interval_seconds": 10
+            }, 
+            "Location": {
+                "interval_seconds": 10
+            },
+            "BatteryLevel": {
+               "interval_seconds": 10 
+            },
+            "Odometer": {
+                "interval_seconds": 60
             }
         },
         "ca": "$CA_CERT",
