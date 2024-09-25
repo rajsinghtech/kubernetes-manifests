@@ -62,6 +62,13 @@ spec:
   entityOperator:
     topicOperator: {}
     userOperator: {}
+  resources:
+      requests:
+        memory: 1Gi
+        # cpu: "8"
+      limits:
+        memory: 1Gi
+        # cpu: "12"
 # ---
 # kind: ConfigMap
 # apiVersion: v1
