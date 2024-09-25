@@ -11,10 +11,6 @@ TESLA_AUTH_TOKEN="$1"
 # Use jq to read the certificate file into the JSON
 JSON_DATA=$(jq --rawfile ca_cert /secret/ca/tls.crt '.config.ca = $ca_cert' /api/fleet_telemetry_config.json)
 
-# Output JSON_DATA for debugging
-echo "JSON_DATA:"
-echo "$JSON_DATA"
-
 # Execute the curl command with the correct certificate path
 curl -H "Authorization: Bearer $TESLA_AUTH_TOKEN" \
      -H 'Content-Type: application/json' \
