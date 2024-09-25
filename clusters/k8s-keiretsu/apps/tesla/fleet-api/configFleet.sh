@@ -10,13 +10,15 @@ TESLA_AUTH_TOKEN="$1"
 
 # Read and process the CA_CERT
 CA_CERT=$(awk '{printf "%s\\n", $0}' /secret/ca/tls.crt)
+echo "CA_CERT: $CA_CERT"
 
 # Substitute the CA_CERT into the JSON template using jq
 JSON_DATA=$(jq --arg ca_cert "$CA_CERT" '.ca_cert = $ca_cert' /api/fleet_telemetry_config.json)
+echo "JSON_DATA: $JSON_DATA"
 
 # Execute the curl command with the correct certificate path
 curl -H "Authorization: Bearer $TESLA_AUTH_TOKEN" \
      -H 'Content-Type: application/json' \
      --data "$JSON_DATA" \
      -X POST -i https://localhost:4443/api/1/vehicles/fleet_telemetry_config \
-     --cacert config/tls-cert.pem
+     --cacert /config/tls-cert.pem
