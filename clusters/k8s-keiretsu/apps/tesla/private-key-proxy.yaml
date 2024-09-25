@@ -13,6 +13,17 @@ spec:
         app: tesla-http-proxy
     spec:
       containers:
+        - name: curl-container
+          image: nicolaka/netshoot 
+          command: ["sh", "-c", "sleep infinity"]
+          volumeMounts:
+            - name: fleet-telemetry-tls
+              mountPath: /secret/ca
+              readOnly: true
+            - name: config-volume
+              mountPath: /config
+            - name: fleet-api
+              mountPath: /api
         - name: tesla-http-proxy
           image: tesla/vehicle-command:latest
           ports:
@@ -39,17 +50,6 @@ spec:
               subPath: private-key.pem
               mountPath: /secret/fleet-key.pem
               readOnly: true
-        - name: curl-container
-          image: nicolaka/netshoot 
-          command: ["sh", "-c", "sleep infinity"]
-          volumeMounts:
-            - name: fleet-telemetry-tls
-              mountPath: /secret/ca
-              readOnly: true
-            - name: config-volume
-              mountPath: /config
-            - name: fleet-api
-              mountPath: /api
       initContainers:
         - name: init-cert-generator
           image: alpine:3.18
