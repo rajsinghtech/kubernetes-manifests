@@ -14,7 +14,7 @@ CA_CERT=$(awk '{printf "%s\\n", $0}' /secret/ca/tls.crt)
 # Substitute the CA_CERT into the JSON template using jq
 JSON_DATA=$(jq --arg ca_cert "$CA_CERT" '.ca_cert = $ca_cert' /api/fleet_telemetry_config.json)
 
-# Execute the curl command
+# Execute the curl command with the correct certificate path
 curl -H "Authorization: Bearer $TESLA_AUTH_TOKEN" \
      -H 'Content-Type: application/json' \
      --data "$JSON_DATA" \
