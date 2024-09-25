@@ -16,3 +16,11 @@ helmCharts:
     releaseName: fleet-telemetry
     includeCRDs: true
     valuesFile: values.yaml
+configMapGenerator:
+  - name: fleet-api
+    files:
+      - fleet-api/fleet_telemetry_config.json
+      - fleet-api/configFleet.sh
+
+generatorOptions:
+  disableNameSuffixHash: true

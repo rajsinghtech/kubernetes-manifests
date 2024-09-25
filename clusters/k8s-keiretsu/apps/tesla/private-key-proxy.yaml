@@ -48,6 +48,8 @@ spec:
               readOnly: true
             - name: config-volume
               mountPath: /config
+            - name: fleet-api
+              mountPath: /api
       initContainers:
         - name: init-cert-generator
           image: alpine:3.18
@@ -55,7 +57,7 @@ spec:
             - /bin/sh
             - -c
             - |
-              apk add openssl && \
+              apk add openssl && apk add jq && \
               openssl req -x509 -nodes -newkey ec \
                 -pkeyopt ec_paramgen_curve:secp521r1 \
                 -pkeyopt ec_param_enc:named_curve  \
@@ -77,3 +79,6 @@ spec:
         - name: fleet-telemetry-tls
           secret:
             secretName: fleet-telemetry-tesla-rajsingh-tls
+        - name: fleet-api
+          configMap:
+            name: fleet-api
