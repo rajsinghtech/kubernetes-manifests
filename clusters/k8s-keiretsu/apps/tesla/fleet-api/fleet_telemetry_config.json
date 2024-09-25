@@ -18,7 +18,82 @@
             "Odometer": {
                 "interval_seconds": 60
             },
-            "Speed": {
+            "VehicleSpeed": {
+                "interval_seconds": 10
+            },
+            "Gear": {
+                "interval_seconds": 10
+            },
+            "PedalPosition": {
+                "interval_seconds": 10
+            },
+            "BrakePedal": {
+                "interval_seconds": 10
+            },
+            "GpsHeading": {
+                "interval_seconds": 10
+            },
+            "EstBatteryRange": {
+                "interval_seconds": 10
+            },
+            "FastChargerPresent": {
+                "interval_seconds": 10
+            },
+            "IdealBatteryRange": {
+                "interval_seconds": 10
+            },
+            "TimeToFullCharge": {
+                "interval_seconds": 10
+            },
+            "Locked": {
+                "interval_seconds": 10
+            },
+            "TpmsPressureFl": {
+                "interval_seconds": 10
+            },
+            "TpmsPressureFr": {
+                "interval_seconds": 10
+            },
+            "TpmsPressureRl": {
+                "interval_seconds": 10
+            },
+            "TpmsPressureRr": {
+                "interval_seconds": 10
+            },
+            "InsideTemp": {
+                "interval_seconds": 10
+            },
+            "OutsideTemp": {
+                "interval_seconds": 10
+            },
+            "LateralAcceleration": {
+                "interval_seconds": 10
+            },
+            "LongitudinalAcceleration": {
+                "interval_seconds": 10
+            },
+            "CruiseState": {
+                "interval_seconds": 10
+            },
+            "BrakePedalPos": {
+                "interval_seconds": 10
+            },
+            "MilesToArrival": {
+                "interval_seconds": 10
+            },
+            "MinutesToArrival": {
+                "interval_seconds": 10
+            },
+            "OriginLocation": {
+                "interval_seconds": 10
+            },
+            "DestinationLocation": {
+                "interval_seconds": 10
+            },
+            "ForwardCollisionWarning": {
+                "interval_seconds": 10
+            },
+            "RouteLastUpdated": {
                 "interval_seconds": 10
             }
         },
