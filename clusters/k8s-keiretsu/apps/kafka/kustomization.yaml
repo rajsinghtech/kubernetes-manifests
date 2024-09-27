@@ -4,6 +4,7 @@ kind: Kustomization
 
 resources:
   - kafka.yaml
+  - kafkaconnect.yaml
   - bucket.yaml
 
 helmCharts:
