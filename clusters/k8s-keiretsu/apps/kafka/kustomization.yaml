@@ -15,10 +15,10 @@ helmCharts:
     releaseName: strimzi-kafka-operator
     includeCRDs: true
     valuesFile: values.yaml
-  - name: confluent-for-kubernetes
-    repo: https://packages.confluent.io/helm
-    version: 2.9.3
+  - name: schema-registry
+    repo: https://charts.bitnami.com/bitnami
+    version: 21.0.2
     namespace: kafka
-    releaseName: confluent-operator
+    releaseName: schema-registry
     includeCRDs: true
-    valuesFile: confluent-operator-values.yaml
+    valuesFile: schema-registry-values.yaml
