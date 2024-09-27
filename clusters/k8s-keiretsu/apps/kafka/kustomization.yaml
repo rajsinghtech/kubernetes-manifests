@@ -13,3 +13,10 @@ helmCharts:
     releaseName: strimzi-kafka-operator
     includeCRDs: true
     valuesFile: values.yaml
+  - name: schema-registry
+    repo: https://charts.bitnami.com/bitnami
+    version: 21.0.2
+    namespace: kafka
+    releaseName: schema-registry
+    includeCRDs: true
+    valuesFile: schema-registry-values.yaml
