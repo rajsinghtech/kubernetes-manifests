@@ -4,7 +4,7 @@ metadata:
   name: tesla-to-s3-connector
   namespace: kafka
   labels:
-    strimzi.io/cluster: tesla-connect-cluster
+    strimzi.io/cluster: tesla-kafka-connect
 spec:
   class: io.confluent.connect.s3.S3SinkConnector
   tasksMax: 1
