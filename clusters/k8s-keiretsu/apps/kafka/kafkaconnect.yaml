@@ -5,6 +5,8 @@ metadata:
   namespace: kafka
   labels:
     strimzi.io/cluster: tesla-kafka-connect
+  annotations:
+    strimzi.io/use-connector-resources: "true"
 spec:
   version: 3.8.0
   replicas: 1
