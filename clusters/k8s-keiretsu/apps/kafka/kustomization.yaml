@@ -16,7 +16,7 @@ helmCharts:
     valuesFile: values.yaml
   - name: confluent-for-kubernetes
     repo: https://packages.confluent.io/helm
-    version: 0.1033.33
+    version: 2.9.3
     namespace: kafka
     releaseName: confluent-operator
     includeCRDs: true
