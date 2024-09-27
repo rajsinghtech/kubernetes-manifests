@@ -3,6 +3,8 @@ kind: KafkaConnector
 metadata:
   name: tesla-to-s3-connector
   namespace: kafka
+  annotations:
+    strimzi.io/use-connector-resources: "true"
   labels:
     strimzi.io/cluster: tesla-kafka-connect
 spec:
