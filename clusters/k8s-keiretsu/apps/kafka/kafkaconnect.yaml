@@ -8,22 +8,25 @@ spec:
   replicas: 3
   bootstrapServers: tesla-kafka-bootstrap:9092
   config:
-    group.id: "tesla-kafka-connect"
-    offset.storage.topic: "connect-offsets"
+    group.id: "tesla-kafka-connect-group"
+    key.converter: "org.apache.kafka.connect.storage.StringConverter"
+    value.converter: "org.apache.kafka.connect.converters.ByteArrayConverter" # No transformation applied to data
     config.storage.topic: "connect-configs"
-    status.storage.topic: "connect-status"
-  connectors:
-    - class: "io.confluent.connect.s3.S3SinkConnector"
-      name: "tesla-s3-sink-connector"
-      tasksMax: 3
-      config:
-        topics: "tesla_V"
-        s3.bucket.name: "ceph-bkt-tesla"
-        s3.region: "us-west-2"
-        s3.part.size: 5242880
-        store.url: "https://rook-ceph-rgw-my-store.rook-ceph"
-        format.class: "io.confluent.connect.s3.format.json.JsonFormat"
-        value.converter: "org.apache.kafka.connect.protobuf.ProtobufConverter"
-        value.converter.schema.registry.url: "http://schema-registry.kafka.svc.cluster.local:8081"
-        flush.size: 100
-        storage.class: "io.confluent.connect.s3.storage.S3Storage"
+    offset.storage.topic: "connect-offsets"
+    status.storage.topic: "connect-statuses"
+  externalConfiguration:
+    volumes:
+      - name: ceph-bucket-tesla
+        secret:
+          secretName: ceph-bucket-tesla # Kubernetes secret containing AWS credentials
+  template:
+    pod:
+      volumes:
+        - name: ceph-bucket-tesla
+          secret:
+            secretName: ceph-bucket-tesla
+      containers:
+        - name: kafka-connect
+          volumeMounts:
+            - name: ceph-bucket-tesla
+              mountPath: /opt/kafka/connect/secrets/aws-credentials # Path for AWS credentials
