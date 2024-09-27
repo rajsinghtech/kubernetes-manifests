@@ -12,9 +12,6 @@ spec:
     offset.storage.topic: "connect-offsets"
     config.storage.topic: "connect-configs"
     status.storage.topic: "connect-status"
-    key.converter: "org.apache.kafka.connect.protobuf.ProtobufConverter"
-    value.converter: "org.apache.kafka.connect.protobuf.ProtobufConverter"
-    value.converter.schema.registry.url: "http://schema-registry.kafka.svc.cluster.local:8081"
   connectors:
     - class: "io.confluent.connect.s3.S3SinkConnector"
       name: "tesla-s3-sink-connector"
