@@ -5,6 +5,30 @@ metadata:
   namespace: kafka
 spec:
   kafka:
+    resources:
+      resources:
+        requests:
+          memory: 1Gi
+          cpu: "500m"
+        limits:
+          memory: 1Gi
+          cpu: "1"
+    template:
+      pod:
+        affinity:
+          podAntiAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              - labelSelector:
+                  matchExpressions:
+                    - key: strimzi.io/cluster
+                      operator: In
+                      values:
+                        - tesla
+                    - key: strimzi.io/name
+                      operator: In
+                      values:
+                        - tesla-kafka
+                topologyKey: kubernetes.io/hostname
     version: 3.8.0
     replicas: 3
     listeners:
@@ -62,30 +86,6 @@ spec:
   entityOperator:
     topicOperator: {}
     userOperator: {}
-  resources:
-    resources:
-      requests:
-        memory: 1Gi
-        cpu: "500m"
-      limits:
-        memory: 1Gi
-        cpu: "1"
-    template:
-      pod:
-        affinity:
-          podAntiAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-              - labelSelector:
-                  matchExpressions:
-                    - key: strimzi.io/cluster
-                      operator: In
-                      values:
-                        - my-cluster
-                    - key: strimzi.io/name
-                      operator: In
-                      values:
-                        - tesla-kafka
-                topologyKey: kubernetes.io/hostname
 # ---
 # kind: ConfigMap
 # apiVersion: v1
