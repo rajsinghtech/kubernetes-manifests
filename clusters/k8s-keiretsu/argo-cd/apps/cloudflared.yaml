@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cloudflared-prd
+  namespace: argocd
+spec:
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cloudflared
+  project: default
+  source:
+    path: clusters/k8s-keiretsu/apps/cloudflared
+    repoURL: https://github.com/rajsinghtech/kubernetes-manifests
+    targetRevision: stg
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
