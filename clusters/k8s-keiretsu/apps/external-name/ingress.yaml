@@ -1,0 +1,211 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: homeassistant-tls
+  namespace: external-name
+  annotations:
+    cert-manager.io/cluster-issuer: global-issuer
+    kubernetes.io/tls-acme: "true"
+spec:
+  ingressClassName: haproxy
+  rules:
+    - host: homeassistant-kieretsu.rajsingh.ingo
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: homeassistant-svc
+                port:
+                  number: 80
+  tls:
+    - secretName: homeassistant-tls
+      hosts:
+        - homeassistant-kieretsu.rajsingh.ingo
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: truenas-tls
+  namespace: external-name
+  annotations:
+    cert-manager.io/cluster-issuer: global-issuer
+    kubernetes.io/tls-acme: "true"
+spec:
+  ingressClassName: haproxy
+  rules:
+    - host: truenas-kieretsu.rajsingh.ingo
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: truenas-svc
+                port:
+                  number: 80
+  tls:
+    - secretName: truenas-tls
+      hosts:
+        - truenas-kieretsu.rajsingh.ingo
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kvm-tls
+  namespace: external-name
+  annotations:
+    cert-manager.io/cluster-issuer: global-issuer
+    haproxy.org/server-ssl: "true"
+    haproxy.org/ssl-redirect: "true"
+    kubernetes.io/tls-acme: "true"
+spec:
+  ingressClassName: haproxy
+  rules:
+    - host: kvm-kieretsu.rajsingh.ingo
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: kvm-svc
+                port:
+                  number: 443
+  tls:
+    - secretName: kvm-tls
+      hosts:
+        - kvm-kieretsu.rajsingh.ingo
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: proxmox-tls
+  namespace: external-name
+  annotations:
+    cert-manager.io/cluster-issuer: global-issuer
+    haproxy.org/server-ssl: "true"
+    haproxy.org/ssl-redirect: "true"
+    kubernetes.io/tls-acme: "true"
+spec:
+  ingressClassName: haproxy
+  rules:
+    - host: proxmox-kieretsu.rajsingh.ingo
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: proxmox-svc
+                port:
+                  number: 8006
+  tls:
+    - secretName: proxmox-tls
+      hosts:
+        - proxmox-kieretsu.rajsingh.ingo
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: router-tls
+  namespace: external-name
+  annotations:
+    cert-manager.io/cluster-issuer: global-issuer
+    kubernetes.io/tls-acme: "true"
+spec:
+  ingressClassName: haproxy
+  rules:
+    - host: router-kieretsu.rajsingh.ingo
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: router-svc
+                port:
+                  number: 80
+  tls:
+    - secretName: router-tls
+      hosts:
+        - router-kieretsu.rajsingh.ingo
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jellyfin-tls
+  namespace: external-name
+  annotations:
+    cert-manager.io/cluster-issuer: global-issuer
+    kubernetes.io/tls-acme: "true"
+spec:
+  ingressClassName: haproxy
+  rules:
+    - host: jellyfin-kieretsu.rajsingh.ingo
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: jellyfin-svc
+                port:
+                  number: 8096
+  tls:
+    - secretName: jellyfin-tls
+      hosts:
+        - jellyfin-kieretsu.rajsingh.ingo
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: uptime-tls
+  namespace: external-name
+  annotations:
+    cert-manager.io/cluster-issuer: global-issuer
+    kubernetes.io/tls-acme: "true"
+spec:
+  ingressClassName: haproxy
+  rules:
+    - host: uptime-kieretsu.rajsingh.ingo
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: uptime-svc
+                port:
+                  number: 3001
+  tls:
+    - secretName: uptime-tls
+      hosts:
+        - uptime-kieretsu.rajsingh.ingo
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: frigate-tls
+  namespace: external-name
+  annotations:
+    cert-manager.io/cluster-issuer: global-issuer
+    kubernetes.io/tls-acme: "true"
+spec:
+  ingressClassName: haproxy
+  rules:
+    - host: frigate-kieretsu.rajsingh.ingo
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frigate-svc
+                port:
+                  number: 5000
+  tls:
+    - secretName: frigate-tls
+      hosts:
+        - frigate-kieretsu.rajsingh.ingo
