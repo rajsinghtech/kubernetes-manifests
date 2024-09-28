@@ -38,9 +38,9 @@ spec:
             - name: SUDO_PASSWORD_HASH
               value: ""  # Optional: Leave empty if not using hashed sudo password
             - name: PROXY_DOMAIN
-              value: "${INGRESS_DOMAIN}"  # Optional: Specify your domain
+              value: "rajsingh.info"  # Optional: Specify your domain
             - name: DEFAULT_WORKSPACE
-              value: ${NFS_PATH}  # Optional: Specify default workspace path
+              value: /mnt/tank/k8s  # Optional: Specify default workspace path
           # volumeMounts:
           #   - name: config-volume
           #     mountPath: /config
@@ -60,7 +60,7 @@ spec:
             - name: startup-script
               mountPath: /custom-cont-init.d
             - name: nfs-volume
-              mountPath: ${NFS_PATH}
+              mountPath: /mnt/tank/k8s
             - name: config-volume
               mountPath: /config
       volumes:
@@ -70,8 +70,8 @@ spec:
             defaultMode: 0755  # Set the permissions for the files in the ConfigMap
         - name: nfs-volume
           nfs:
-            path: ${NFS_PATH}
-            server: ${NFS_SERVER}
+            path: /mnt/tank/k8s
+            server: 192.168.50.59
         - name: config-volume
           persistentVolumeClaim:
             claimName: code-server-config
