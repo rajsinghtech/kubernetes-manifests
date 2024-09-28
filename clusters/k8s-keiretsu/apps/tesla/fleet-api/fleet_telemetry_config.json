@@ -13,12 +13,12 @@
                "interval_seconds": 120 
             },
             "Odometer": {
-                "interval_seconds": 120
+                "interval_seconds": 600
             },
             "VehicleSpeed": {
                 "interval_seconds": 120
             },
-            "Gear": {
+            "PackVoltage": {
                 "interval_seconds": 120
             },
             "OutsideTemp": {
@@ -30,10 +30,10 @@
             "DestinationLocation": {
                 "interval_seconds": 120
             },
-            "TimeToFullCharge": {
+            "EstBatteryRange": {
                 "interval_seconds": 120
             },
-            "LifetimeEnergyGainedRegen": {
+            "PackCurrent": {
                 "interval_seconds": 120
             }
         },
