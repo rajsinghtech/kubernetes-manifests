@@ -10,7 +10,7 @@ metadata:
 spec:
   ingressClassName: haproxy
   rules:
-  - host: code-server.${INGRESS_DOMAIN}
+  - host: code-server-kieretsu.rajsingh.info
     http:
       paths:
       - path: /
@@ -21,6 +21,6 @@ spec:
             port:
               number: 8443
   tls:
-  - secretName: code-server-tls
+  - secretName: code-server-rajsingh-tls
     hosts:
-    - code-server.${INGRESS_DOMAIN}
+    - code-server-kieretsu.rajsingh.info
