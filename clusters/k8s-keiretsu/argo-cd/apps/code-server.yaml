@@ -6,7 +6,7 @@ metadata:
 spec:
   destination:
     server: https://kubernetes.default.svc
-    namespace: code-server
+    namespace: personal
   project: default
   source:
     path: clusters/k8s-keiretsu/apps/code-server
