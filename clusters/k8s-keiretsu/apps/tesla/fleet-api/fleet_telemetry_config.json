@@ -6,36 +6,36 @@
             "service"
         ],
         "fields": {
-            "Location": {
-                "interval_seconds": 120
-            },
-            "BatteryLevel": {
-               "interval_seconds": 120 
-            },
-            "Odometer": {
+            "Location": { 
+                "interval_seconds": 15
+            },                        
+            "BatteryLevel": {         
+               "interval_seconds": 30 
+            },                        
+            "Odometer": {              
                 "interval_seconds": 600
-            },
-            "VehicleSpeed": {
+            },                         
+            "VehicleSpeed": {          
+                "interval_seconds": 15 
+            },                         
+            "PackVoltage": {           
+                "interval_seconds": 30 
+            },                         
+            "OutsideTemp": {           
                 "interval_seconds": 120
-            },
-            "PackVoltage": {
+            },                         
+            "InsideTemp": {            
                 "interval_seconds": 120
-            },
-            "OutsideTemp": {
+            },                         
+            "DestinationLocation": {   
                 "interval_seconds": 120
-            },
-            "InsideTemp": {
-                "interval_seconds": 120
-            },
-            "DestinationLocation": {
-                "interval_seconds": 120
-            },
-            "EstBatteryRange": {
-                "interval_seconds": 120
-            },
-            "PackCurrent": {
-                "interval_seconds": 120
-            }
+            },                         
+            "EstBatteryRange": {       
+                "interval_seconds": 30 
+            },                         
+            "PackCurrent": {           
+                "interval_seconds": 30 
+            }  
         },
         "ca": "$CA_CERT",
         "hostname": "fleet-telemetry.tesla.rajsingh.info"
