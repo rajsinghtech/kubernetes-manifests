@@ -7,7 +7,7 @@ resources:
 #- frigate.yaml
 - homarr.yaml
 - external-name.yaml
-- scrypted.yaml
+#- scrypted.yaml
 - mosquitto.yaml
 - argocd.yaml
 patches:
