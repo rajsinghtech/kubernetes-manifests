@@ -12,5 +12,3 @@ helmCharts:
     apiVersions:
       - monitoring.coreos.com/v1
 
-resources:
-  - ./templates/dns-visibility.yaml
