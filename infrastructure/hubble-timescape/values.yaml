@@ -1,6 +1,0 @@
-lite:
-  enabled: true
-  clickhouse:
-    volumes:
-      data:
-        size: 100Gi

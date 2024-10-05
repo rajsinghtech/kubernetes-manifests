@@ -1,9 +1,0 @@
----
-apiVersion: source.toolkit.fluxcd.io/v1beta2
-kind: HelmRepository
-metadata:
-  name: frigate
-  namespace: frigate
-spec:
-  interval: 1h
-  url: https://blakeblackshear.github.io/blakeshome-charts/
