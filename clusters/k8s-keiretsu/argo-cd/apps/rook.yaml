@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: rook-prd
+  name: rook
   namespace: argocd
 spec:
   destination:
