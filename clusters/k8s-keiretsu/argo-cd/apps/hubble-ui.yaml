@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: hubble-ui-prd
+  name: hubble-ui
   namespace: argocd
 spec:
   destination:
