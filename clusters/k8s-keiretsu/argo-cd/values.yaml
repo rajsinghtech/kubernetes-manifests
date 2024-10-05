@@ -56,45 +56,45 @@
         enabled: true
         serviceMonitor:
           enabled: true
-      resources:
-        requests:
-          cpu: 25m
-          memory: 128Mi
-        limits:
-          memory: 128Mi
+      # resources:
+      #   requests:
+      #     cpu: 25m
+      #     memory: 128Mi
+      #   limits:
+      #     memory: 128Mi
 
     repoServer:
       metrics:
         enabled: true
         serviceMonitor:
           enabled: true
-      resources:
-        requests:
-          cpu: 1
-          memory: 1Gi
-        limits:
-          memory: 1Gi
+      # resources:
+      #   requests:
+      #     cpu: 1
+      #     memory: 1Gi
+      #   limits:
+      #     memory: 1Gi
 
     notifications:
       metrics:
         enabled: true
         serviceMonitor:
           enabled: true
-      resources:
-        requests:
-          cpu: 25m
-          memory: 128Mi
-        limits:
-          memory: 128Mi
+      # resources:
+      #   requests:
+      #     cpu: 25m
+      #     memory: 128Mi
+      #   limits:
+      #     memory: 128Mi
 
     redis:
       metrics:
         enabled: true
         serviceMonitor:
           enabled: true
-      resources:
-        requests:
-          cpu: 25m
-          memory: 512Mi
-        limits:
-          memory: 512Mi
+      # resources:
+      #   requests:
+      #     cpu: 25m
+      #     memory: 512Mi
+      #   limits:
+      #     memory: 512Mi

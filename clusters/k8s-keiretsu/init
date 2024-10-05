@@ -1,1 +1,4 @@
+kubectl create ns monitoring
+kustomize build clusters/k8s-keiretsu/apps/prometheus --enable-helm | kubectl apply -f - || true
+kustomize build clusters/k8s-keiretsu/apps/cilium --enable-helm | kubectl apply -f - 
 kustomize build clusters/k8s-keiretsu/argo-cd --enable-helm | kubectl apply -f - 

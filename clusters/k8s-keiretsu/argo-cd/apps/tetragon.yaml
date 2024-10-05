@@ -11,7 +11,7 @@
 #   source:
 #     path: clusters/k8s-keiretsu/apps/tetragon
 #     repoURL: https://github.com/rajsinghtech/kubernetes-manifests
-#     targetRevision: stg
+#     targetRevision: keiretsu
 #   syncPolicy:
 #     automated:
 #       prune: true
