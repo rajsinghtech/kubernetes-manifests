@@ -13,7 +13,7 @@ spec:
   source:
     path: clusters/k8s-keiretsu/argo-cd
     repoURL: https://github.com/rajsinghtech/kubernetes-manifests
-    targetRevision: stg
+    targetRevision: keiretsu
   syncPolicy:
     automated:
       prune: true
@@ -42,7 +42,7 @@ spec:
   source:
     path: clusters/k8s-keiretsu/argo-cd/apps
     repoURL: https://github.com/rajsinghtech/kubernetes-manifests
-    targetRevision: stg
+    targetRevision: keiretsu
   syncPolicy:
     automated:
       prune: true

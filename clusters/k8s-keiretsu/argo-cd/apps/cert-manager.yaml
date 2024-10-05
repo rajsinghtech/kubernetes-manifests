@@ -11,7 +11,7 @@ spec:
   source:
     path: clusters/k8s-keiretsu/apps/cert-manager
     repoURL: https://github.com/rajsinghtech/kubernetes-manifests
-    targetRevision: stg
+    targetRevision: keiretsu
   syncPolicy:
     automated:
       prune: true
