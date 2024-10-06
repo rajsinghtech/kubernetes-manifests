@@ -7,7 +7,7 @@ spec:
   kafka:
     resources:
       requests:
-        memory: 1Gi
+        memory: 0.5Gi
         cpu: "500m"
       limits:
         memory: 1Gi
