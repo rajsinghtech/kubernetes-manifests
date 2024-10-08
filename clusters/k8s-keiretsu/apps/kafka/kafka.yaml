@@ -7,10 +7,10 @@ spec:
   kafka:
     resources:
       requests:
-        memory: 0.3Gi
+        memory: 212Mi
         cpu: "500m"
       limits:
-        memory: 0.5Gi
+        memory: 512Mi
         cpu: "1"
     template:
       pod:
