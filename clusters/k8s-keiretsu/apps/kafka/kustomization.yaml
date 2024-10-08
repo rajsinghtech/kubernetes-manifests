@@ -7,6 +7,7 @@ resources:
   # - kafkaconnect.yaml
   # - kafkaconnector.yaml
   - bucket.yaml
+  - s3manager.yaml
 
 helmCharts:
   - name: strimzi-kafka-operator
