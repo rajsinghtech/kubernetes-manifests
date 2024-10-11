@@ -47,13 +47,13 @@ spec:
           brokers:
             - broker: 0
               advertisedHost: 10.0.100.12
-              advertisedPort: 31769
+              advertisedPort: 31712
             - broker: 1
               advertisedHost: 10.0.100.13
-              advertisedPort: 31769
+              advertisedPort: 31713
             - broker: 2
               advertisedHost: 10.0.100.14
-              advertisedPort: 31769
+              advertisedPort: 31714
     # metricsConfig:
     #   type: jmxPrometheusExporter
     #   valueFrom:
