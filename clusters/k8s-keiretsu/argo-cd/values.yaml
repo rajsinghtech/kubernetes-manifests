@@ -1,7 +1,15 @@
     global:
       domain: argocd-keiretsu.rajsingh.info
+    rbac:
+      policy.csv: |
+        p, role:org-admin, applications, *, */*, allow
+        p, role:org-admin, clusters, get, *, allow
+        p, role:org-admin, repositories, *, *, allow
+        p, role:org-admin, logs, get, *, allow
+        p, role:org-admin, exec, create, */*, allow
     configs:
       cm:
+        exec.enabled: "true"
         kustomize.buildOptions: --enable-helm
         kustomize.path.v5.0.1: /usr/local/bin/kustomize
         kustomize.buildOptions.v5.0.1: --enable-helm
