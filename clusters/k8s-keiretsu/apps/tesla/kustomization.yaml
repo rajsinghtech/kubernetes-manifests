@@ -8,9 +8,6 @@ resources:
   - certificate.yaml
   - serviceMonitor.yaml
   - private-key-proxy.yaml
-  # - kafka.yaml  
-  - bucket.yaml
-  - s3manager.yaml
 helmCharts:
   - name: fleet-telemetry
     repo: https://teslamotors.github.io/helm-charts/
@@ -22,8 +19,8 @@ helmCharts:
 configMapGenerator:
   - name: fleet-api
     files:
-      - fleet-api/fleet_telemetry_config.json
-      - fleet-api/configFleet.sh
+      - fleet_telemetry_config.json
+      - configFleet.sh
 
 generatorOptions:
   disableNameSuffixHash: true

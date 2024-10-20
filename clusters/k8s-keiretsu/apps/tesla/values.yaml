@@ -37,8 +37,7 @@ config:
           "logger"
         ],
         "V": [
-          "logger",
-          "kafka"
+          "logger"
         ]
       },
       "tls": {
