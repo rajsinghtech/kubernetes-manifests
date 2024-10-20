@@ -14,13 +14,7 @@ spec:
       peers:
         - name: "client-1"
           peerASN: 65000
-          peerAddress: 10.0.100.12
-        - name: "client-2"
-          peerASN: 65000
-          peerAddress: 10.0.100.13
-        - name: "client-3"
-          peerASN: 65000
-          peerAddress: 10.0.100.14
+          peerAddress: 10.0.0.1
 ---
 apiVersion: cilium.io/v2alpha1
 kind: CiliumBGPPeerConfig
