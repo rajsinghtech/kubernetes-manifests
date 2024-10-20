@@ -8,6 +8,9 @@ resources:
   - certificate.yaml
   - serviceMonitor.yaml
   - private-key-proxy.yaml
+  - kafka.yaml
+  - bucket.yaml
+  - s3manager.yaml
 helmCharts:
   - name: fleet-telemetry
     repo: https://teslamotors.github.io/helm-charts/
