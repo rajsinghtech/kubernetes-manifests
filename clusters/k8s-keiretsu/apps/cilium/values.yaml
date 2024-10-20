@@ -48,3 +48,5 @@ envoy:
   enabled: true
 rollOutCiliumPods: true
 localRedirectPolicy: true
+bgpControlPlane:
+  enabled: true
