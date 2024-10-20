@@ -47,4 +47,5 @@ spec:
         addresses:
           - ClusterIP
           - ExternalIP
-          - LoadBalancerIP
+          - LoadBalancerIP    
+    - advertisementType: "PodCIDR"
