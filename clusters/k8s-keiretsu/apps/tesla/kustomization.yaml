@@ -8,7 +8,7 @@ resources:
   - certificate.yaml
   - serviceMonitor.yaml
   - private-key-proxy.yaml
-  - kafka.yaml
+  # - kafka.yaml
   - bucket.yaml
   - s3manager.yaml
 helmCharts:
