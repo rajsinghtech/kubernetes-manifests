@@ -10,7 +10,6 @@ spec:
   bgpInstances:
     - name: "unifi"
       localASN: 64512
-      routerID: "10.0.0.1"  # Added router ID to match FRR configuration
       peers:
         - name: "client-1"
           peerASN: 64513
