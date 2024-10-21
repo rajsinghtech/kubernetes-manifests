@@ -3,5 +3,8 @@ kind: CiliumLoadBalancerIPPool
 metadata:
   name: "k8s-pool"
 spec:
-  cidrs:
+  blocks:
   - cidr: "10.96.0.0/16"
+  serviceSelector:
+    matchExpressions:
+      - {key: somekey, operator: NotIn, values: ['never-used-value']}

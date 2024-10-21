@@ -2,7 +2,7 @@ image:
   tag: v0.3.2
 service:
   # annotations:
-  type: NodePort 
+  type: LoadBalancer
 tlsSecret:
   name: fleet-telemetry-tesla-rajsingh-tls
 config:

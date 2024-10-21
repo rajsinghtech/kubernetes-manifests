@@ -22,5 +22,17 @@ configMapGenerator:
       - fleet_telemetry_config.json
       - configFleet.sh
 
+patches:
+  - target:
+      kind: Service
+      name: fleet-telemetry
+    patch: |-
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: fleet-telemetry
+      spec:
+        loadBalancerIP: 10.96.4.12
+
 generatorOptions:
   disableNameSuffixHash: true
