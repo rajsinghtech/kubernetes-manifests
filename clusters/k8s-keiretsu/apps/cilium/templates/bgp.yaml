@@ -49,4 +49,10 @@ spec:
           - ClusterIP
           - ExternalIP
           - LoadBalancerIP    
+      selector:
+        matchExpressions:
+        - {key: somekey, operator: NotIn, values: ['never-used-value']}
     - advertisementType: "PodCIDR"
+      selector:
+        matchExpressions:
+        - {key: somekey, operator: NotIn, values: ['never-used-value']}
