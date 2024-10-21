@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: pihole
+  namespace: argocd
+spec:
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: pihole
+  project: default
+  source:
+    path: clusters/k8s-keiretsu/apps/pihole
+    repoURL: https://github.com/rajsinghtech/kubernetes-manifests
+    targetRevision: keiretsu
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
