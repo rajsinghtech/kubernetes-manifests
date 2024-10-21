@@ -4,11 +4,11 @@ metadata:
   namespace: external-name
   name: frigate-svc
 spec:
-  externalName: frigate${LOCAL_FDQN}
+  externalName: frigate.local
   ports:
-  - name: http
-    port: 5000
-    protocol: TCP
-    targetPort: 5000
+    - name: http
+      port: 5000
+      protocol: TCP
+      targetPort: 5000
   sessionAffinity: None
   type: ExternalName

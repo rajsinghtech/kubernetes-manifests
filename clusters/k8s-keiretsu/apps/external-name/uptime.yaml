@@ -4,11 +4,11 @@ metadata:
   namespace: external-name
   name: uptime-svc
 spec:
-  externalName: uptime${LOCAL_FDQN}
+  externalName: uptime.local
   ports:
-  - name: http
-    port: 3001
-    protocol: TCP
-    targetPort: 3001
+    - name: http
+      port: 3001
+      protocol: TCP
+      targetPort: 3001
   sessionAffinity: None
   type: ExternalName

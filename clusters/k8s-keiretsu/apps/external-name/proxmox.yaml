@@ -4,11 +4,11 @@ metadata:
   namespace: external-name
   name: proxmox-svc
 spec:
-  externalName: proxmox${LOCAL_FDQN}
+  externalName: proxmox.local
   ports:
-  - name: https
-    port: 8006
-    protocol: TCP
-    targetPort: 8006
+    - name: https
+      port: 8006
+      protocol: TCP
+      targetPort: 8006
   sessionAffinity: None
   type: ExternalName
