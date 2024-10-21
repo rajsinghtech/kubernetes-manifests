@@ -11,7 +11,7 @@ spec:
     - name: "unifi"
       localASN: 64512
       peers:
-        - name: "client-1"
+        - name: "udm-1"
           peerASN: 64513
           peerAddress: 10.0.0.1
           peerConfigRef:

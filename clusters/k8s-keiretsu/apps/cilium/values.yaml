@@ -50,3 +50,5 @@ rollOutCiliumPods: true
 localRedirectPolicy: true
 bgpControlPlane:
   enabled: true
+bpf:
+  lbExternalClusterIP: true # https://docs.cilium.io/en/stable/network/kubernetes/kubeproxy-free/#external-access-to-clusterip-services
