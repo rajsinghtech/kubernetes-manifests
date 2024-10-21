@@ -1,7 +1,8 @@
 controller:
   replicaCount: 2
   service:
-    type: ClusterIP
+    type: LoadBalancer
+    loadBalancerIP: 10.96.10.10
   config:
     enable-access-log-for-default-backend: "true"
   metrics:
