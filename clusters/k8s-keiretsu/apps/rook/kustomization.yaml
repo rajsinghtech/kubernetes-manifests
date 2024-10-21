@@ -15,4 +15,5 @@ resources:
   - ./templates/storageclass.yaml
   - ./templates/filesystem.yaml
   - ./templates/objectstore.yaml
+  - ./templates/ingress.yaml
   # - ./templates/nfs.yaml

@@ -5,22 +5,22 @@ metadata:
   namespace: external-name
   annotations:
     cert-manager.io/cluster-issuer: global-issuer
-    kubernetes.io/tls-acme: 'true'
+    kubernetes.io/tls-acme: "true"
     haproxy.org/rewrite-target: /
 spec:
-  ingressClassName: haproxy
+  ingressClassName: nginx
   rules:
-  - host: code-server-kieretsu.rajsingh.info
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: code-server-svc
-            port:
-              number: 8443
+    - host: code-server-kieretsu.rajsingh.info
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: code-server-svc
+                port:
+                  number: 8443
   tls:
-  - secretName: code-server-rajsingh-tls
-    hosts:
-    - code-server-kieretsu.rajsingh.info
+    - secretName: code-server-rajsingh-tls
+      hosts:
+        - code-server-kieretsu.rajsingh.info
