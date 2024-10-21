@@ -3,7 +3,7 @@ kind: Kustomization
 
 resources:
   - templates/bgp.yaml
-
+  - templates/lbippool.yaml
 helmCharts:
   - name: cilium
     repo: https://helm.isovalent.com
