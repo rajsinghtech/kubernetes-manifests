@@ -7,7 +7,7 @@ metadata:
     cert-manager.io/cluster-issuer: global-issuer
     kubernetes.io/tls-acme: "true"
 spec:
-  ingressClassName: haproxy
+  ingressClassName: nginx
   rules:
     - host: homeassistant-kieretsu.rajsingh.ingo
       http:
@@ -33,7 +33,7 @@ metadata:
     cert-manager.io/cluster-issuer: global-issuer
     kubernetes.io/tls-acme: "true"
 spec:
-  ingressClassName: haproxy
+  ingressClassName: nginx
   rules:
     - host: truenas-kieretsu.rajsingh.ingo
       http:
@@ -61,7 +61,7 @@ metadata:
     haproxy.org/ssl-redirect: "true"
     kubernetes.io/tls-acme: "true"
 spec:
-  ingressClassName: haproxy
+  ingressClassName: nginx
   rules:
     - host: kvm-kieretsu.rajsingh.ingo
       http:
@@ -89,7 +89,7 @@ metadata:
     haproxy.org/ssl-redirect: "true"
     kubernetes.io/tls-acme: "true"
 spec:
-  ingressClassName: haproxy
+  ingressClassName: nginx
   rules:
     - host: proxmox-kieretsu.rajsingh.ingo
       http:
@@ -115,7 +115,7 @@ metadata:
     cert-manager.io/cluster-issuer: global-issuer
     kubernetes.io/tls-acme: "true"
 spec:
-  ingressClassName: haproxy
+  ingressClassName: nginx
   rules:
     - host: router-kieretsu.rajsingh.ingo
       http:
@@ -141,7 +141,7 @@ metadata:
     cert-manager.io/cluster-issuer: global-issuer
     kubernetes.io/tls-acme: "true"
 spec:
-  ingressClassName: haproxy
+  ingressClassName: nginx
   rules:
     - host: jellyfin-kieretsu.rajsingh.ingo
       http:
@@ -167,7 +167,7 @@ metadata:
     cert-manager.io/cluster-issuer: global-issuer
     kubernetes.io/tls-acme: "true"
 spec:
-  ingressClassName: haproxy
+  ingressClassName: nginx
   rules:
     - host: uptime-kieretsu.rajsingh.ingo
       http:
@@ -193,7 +193,7 @@ metadata:
     cert-manager.io/cluster-issuer: global-issuer
     kubernetes.io/tls-acme: "true"
 spec:
-  ingressClassName: haproxy
+  ingressClassName: nginx
   rules:
     - host: frigate-kieretsu.rajsingh.ingo
       http:
