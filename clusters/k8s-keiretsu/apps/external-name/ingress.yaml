@@ -9,7 +9,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: homeassistant-kieretsu.rajsingh.ingo
+    - host: homeassistant-kieretsu.rajsingh.info
       http:
         paths:
           - path: /
@@ -22,7 +22,7 @@ spec:
   tls:
     - secretName: homeassistant-tls
       hosts:
-        - homeassistant-kieretsu.rajsingh.ingo
+        - homeassistant-kieretsu.rajsingh.info
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -35,7 +35,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: truenas-kieretsu.rajsingh.ingo
+    - host: truenas-kieretsu.rajsingh.info
       http:
         paths:
           - path: /
@@ -48,7 +48,7 @@ spec:
   tls:
     - secretName: truenas-tls
       hosts:
-        - truenas-kieretsu.rajsingh.ingo
+        - truenas-kieretsu.rajsingh.info
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -63,7 +63,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: kvm-kieretsu.rajsingh.ingo
+    - host: kvm-kieretsu.rajsingh.info
       http:
         paths:
           - path: /
@@ -76,7 +76,7 @@ spec:
   tls:
     - secretName: kvm-tls
       hosts:
-        - kvm-kieretsu.rajsingh.ingo
+        - kvm-kieretsu.rajsingh.info
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -91,7 +91,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: proxmox-kieretsu.rajsingh.ingo
+    - host: proxmox-kieretsu.rajsingh.info
       http:
         paths:
           - path: /
@@ -104,7 +104,7 @@ spec:
   tls:
     - secretName: proxmox-tls
       hosts:
-        - proxmox-kieretsu.rajsingh.ingo
+        - proxmox-kieretsu.rajsingh.info
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -117,7 +117,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: router-kieretsu.rajsingh.ingo
+    - host: router-kieretsu.rajsingh.info
       http:
         paths:
           - path: /
@@ -130,7 +130,7 @@ spec:
   tls:
     - secretName: router-tls
       hosts:
-        - router-kieretsu.rajsingh.ingo
+        - router-kieretsu.rajsingh.info
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -143,7 +143,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: jellyfin-kieretsu.rajsingh.ingo
+    - host: jellyfin-kieretsu.rajsingh.info
       http:
         paths:
           - path: /
@@ -156,7 +156,7 @@ spec:
   tls:
     - secretName: jellyfin-tls
       hosts:
-        - jellyfin-kieretsu.rajsingh.ingo
+        - jellyfin-kieretsu.rajsingh.info
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -169,7 +169,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: uptime-kieretsu.rajsingh.ingo
+    - host: uptime-kieretsu.rajsingh.info
       http:
         paths:
           - path: /
@@ -182,7 +182,7 @@ spec:
   tls:
     - secretName: uptime-tls
       hosts:
-        - uptime-kieretsu.rajsingh.ingo
+        - uptime-kieretsu.rajsingh.info
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -195,7 +195,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: frigate-kieretsu.rajsingh.ingo
+    - host: frigate-kieretsu.rajsingh.info
       http:
         paths:
           - path: /
@@ -208,4 +208,4 @@ spec:
   tls:
     - secretName: frigate-tls
       hosts:
-        - frigate-kieretsu.rajsingh.ingo
+        - frigate-kieretsu.rajsingh.info
