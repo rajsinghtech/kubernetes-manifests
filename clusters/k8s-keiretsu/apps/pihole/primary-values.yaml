@@ -31,9 +31,9 @@ ingress:
     kubernetes.io/tls-acme: "true"
   enabled: true
   hosts:
-    - pihole-kieretsu.rajsingh.info
+    - pihole.rajsingh.info
   path: /
   tls:
     - secretName: pihole-raj-tls
       hosts:
-        - pihole-kieretsu.rajsingh.info
+        - pihole.rajsingh.info
