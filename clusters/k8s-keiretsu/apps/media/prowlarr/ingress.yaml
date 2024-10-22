@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: prowlarr-tls
+  namespace: media
+  annotations:
+    cert-manager.io/cluster-issuer: global-issuer
+    kubernetes.io/tls-acme: 'true'
+spec:
+  ingressClassName: haproxy
+  rules:
+  - host: prowlarr.${INGRESS_DOMAIN}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: prowlarr
+            port:
+              number: 9696
+  tls:
+  - secretName: prowlarr-tls
+    hosts:
+    - prowlarr.${INGRESS_DOMAIN}
