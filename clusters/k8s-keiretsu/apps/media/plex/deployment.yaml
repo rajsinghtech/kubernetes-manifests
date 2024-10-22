@@ -44,8 +44,6 @@ spec:
               mountPath: /tv
             - name: config-volume
               mountPath: /config
-            - name: nfs-volume-hack
-              mountPath: /hack/media
           env:
             - name: PUID
               value: "0"
@@ -53,8 +51,6 @@ spec:
               value: "0"
             - name: TZ
               value: America/Chicago
-          # - name: PLEX_CLAIM
-          #   value:
       volumes:
         - name: movies-volume
           persistentVolumeClaim:
