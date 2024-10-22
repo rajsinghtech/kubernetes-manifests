@@ -35,6 +35,6 @@ spec:
                 port:
                   number: 80
   tls:
-    - secretName: routerluke-tls
+    - secretName: router-luke-tls
       hosts:
         - router.lukehouge.com

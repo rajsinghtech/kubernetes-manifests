@@ -35,6 +35,6 @@ spec:
                 port:
                   number: 3001
   tls:
-    - secretName: uptimeluke-tls
+    - secretName: uptime-luke-tls
       hosts:
         - uptime.lukehouge.com

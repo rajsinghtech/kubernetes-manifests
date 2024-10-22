@@ -39,6 +39,6 @@ spec:
                 port:
                   number: 8006
   tls:
-    - secretName: proxmoxluke-tls
+    - secretName: proxmox-luke-tls
       hosts:
         - proxmox.lukehouge.com
