@@ -19,12 +19,12 @@ metadata:
   name: frigate-tls
   namespace: external-name
   annotations:
-    cert-manager.io/cluster-issuer: raj-issuer
+    cert-manager.io/cluster-issuer: luke-issuer
     kubernetes.io/tls-acme: "true"
 spec:
   ingressClassName: nginx
   rules:
-    - host: frigate.rajsingh.info
+    - host: frigate.lukehouge.com
       http:
         paths:
           - path: /
@@ -35,6 +35,6 @@ spec:
                 port:
                   number: 5000
   tls:
-    - secretName: frigateraj-tls
+    - secretName: frigateluke-tls
       hosts:
-        - frigate.rajsingh.info
+        - frigate.lukehouge.com

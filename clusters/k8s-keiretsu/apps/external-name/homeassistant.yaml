@@ -18,12 +18,12 @@ metadata:
   name: homeassistant-tls
   namespace: external-name
   annotations:
-    cert-manager.io/cluster-issuer: raj-issuer
+    cert-manager.io/cluster-issuer: luke-issuer
     kubernetes.io/tls-acme: "true"
 spec:
   ingressClassName: nginx
   rules:
-    - host: homeassistant.rajsingh.info
+    - host: homeassistant.lukehouge.com
       http:
         paths:
           - path: /
@@ -34,6 +34,6 @@ spec:
                 port:
                   number: 80
   tls:
-    - secretName: homeassistantraj-tls
+    - secretName: homeassistantluke-tls
       hosts:
-        - homeassistant.rajsingh.info
+        - homeassistant.lukehouge.com
