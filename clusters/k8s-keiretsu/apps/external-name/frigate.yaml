@@ -35,6 +35,6 @@ spec:
                 port:
                   number: 5000
   tls:
-    - secretName: frigateluke-tls
+    - secretName: frigate-luke-tls
       hosts:
         - frigate.lukehouge.com

@@ -35,6 +35,6 @@ spec:
                 port:
                   number: 8096
   tls:
-    - secretName: jellyfinluke-tls
+    - secretName: jellyfin-luke-tls
       hosts:
         - jellyfin.lukehouge.com

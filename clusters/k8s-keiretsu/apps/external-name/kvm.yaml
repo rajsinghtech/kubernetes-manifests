@@ -38,6 +38,6 @@ spec:
                 port:
                   number: 443
   tls:
-    - secretName: kvmluke-tls
+    - secretName: kvm-luke-tls
       hosts:
         - kvm.lukehouge.com
