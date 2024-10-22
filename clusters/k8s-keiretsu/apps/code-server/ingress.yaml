@@ -10,7 +10,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: code-server-kieretsu.rajsingh.info
+    - host: code-server.rajsingh.info
       http:
         paths:
           - path: /
@@ -21,6 +21,6 @@ spec:
                 port:
                   number: 8443
   tls:
-    - secretName: code-server-rajsingh-tls
+    - secretName: code-server-raj-tls
       hosts:
-        - code-server-kieretsu.rajsingh.info
+        - code-server.rajsingh.info

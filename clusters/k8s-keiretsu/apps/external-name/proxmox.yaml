@@ -12,3 +12,33 @@ spec:
       targetPort: 8006
   sessionAffinity: None
   type: ExternalName
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: proxmox-tls
+  namespace: external-name
+  annotations:
+    cert-manager.io/cluster-issuer: raj-issuer
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    kubernetes.io/tls-acme: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: proxmox.rajsingh.info
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: proxmox-svc
+                port:
+                  number: 8006
+  tls:
+    - secretName: proxmoxraj-tls
+      hosts:
+        - proxmox.rajsingh.info

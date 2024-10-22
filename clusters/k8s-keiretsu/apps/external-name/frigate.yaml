@@ -12,3 +12,29 @@ spec:
       targetPort: 5000
   sessionAffinity: None
   type: ExternalName
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: frigate-tls
+  namespace: external-name
+  annotations:
+    cert-manager.io/cluster-issuer: raj-issuer
+    kubernetes.io/tls-acme: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: frigate.rajsingh.info
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frigate-svc
+                port:
+                  number: 5000
+  tls:
+    - secretName: frigateraj-tls
+      hosts:
+        - frigate.rajsingh.info

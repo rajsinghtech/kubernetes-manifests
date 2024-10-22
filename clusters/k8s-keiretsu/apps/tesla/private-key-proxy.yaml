@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: curl-container
-          image: nicolaka/netshoot 
+          image: nicolaka/netshoot
           command: ["sh", "-c", "sleep infinity"]
           volumeMounts:
             - name: fleet-telemetry-tls
@@ -78,8 +78,8 @@ spec:
             secretName: tesla-fleet-api
         - name: fleet-telemetry-tls
           secret:
-            secretName: fleet-telemetry-tesla-rajsingh-tls
+            secretName: fleet-telemetry-tesla-raj-tls
         - name: fleet-api
           configMap:
             name: fleet-api
-            defaultMode: 0755  # Set the permissions for the files in the ConfigMap
+            defaultMode: 0755 # Set the permissions for the files in the ConfigMap

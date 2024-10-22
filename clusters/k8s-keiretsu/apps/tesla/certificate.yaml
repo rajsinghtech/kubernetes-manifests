@@ -9,7 +9,7 @@ spec:
     group: cert-manager.io
     kind: ClusterIssuer
     name: raj-issuer
-  secretName: fleet-telemetry-tesla-rajsingh-tls
+  secretName: fleet-telemetry-tesla-raj-tls
   usages:
     - digital signature
     - key encipherment

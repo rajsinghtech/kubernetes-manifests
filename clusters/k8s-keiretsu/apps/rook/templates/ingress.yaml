@@ -13,10 +13,10 @@ metadata:
 spec:
   tls:
    - hosts:
-     - rook-kieretsu.rajsingh.info
-     secretName: rook-kieretsu-rajsingh-info
+     - rook.rajsingh.info
+     secretName: rook-rajsingh-info
   rules:
-  - host: rook-kieretsu.rajsingh.info
+  - host: rook.rajsingh.info
     http:
       paths:
       - path: /

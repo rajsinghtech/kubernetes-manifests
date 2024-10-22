@@ -4,7 +4,7 @@ service:
   # annotations:
   type: LoadBalancer
 tlsSecret:
-  name: fleet-telemetry-tesla-rajsingh-tls
+  name: fleet-telemetry-tesla-raj-tls
 config:
   data: |
     {

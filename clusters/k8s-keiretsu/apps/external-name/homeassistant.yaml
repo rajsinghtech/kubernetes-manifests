@@ -11,3 +11,29 @@ spec:
       protocol: TCP
       targetPort: 80
   type: ExternalName
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: homeassistant-tls
+  namespace: external-name
+  annotations:
+    cert-manager.io/cluster-issuer: raj-issuer
+    kubernetes.io/tls-acme: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: homeassistant.rajsingh.info
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: homeassistant-svc
+                port:
+                  number: 80
+  tls:
+    - secretName: homeassistantraj-tls
+      hosts:
+        - homeassistant.rajsingh.info
