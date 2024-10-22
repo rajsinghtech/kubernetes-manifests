@@ -16,12 +16,6 @@ sudo chmod a+r /etc/bash_completion.d/kubectl
 echo 'alias k=kubectl' >>~/.bashrc
 echo 'complete -o default -F __start_kubectl k' >>~/.bashrc
 echo '------'
-echo 'Installing Fluxcd'
-curl -s https://fluxcd.io/install.sh | FLUX_VERSION=2.0.0 bash
-echo '------'
 apt update
 apt install dnsutils iputils-ping -y
-# echo 'Installing Tailscale'
-# curl -fsSL https://tailscale.com/install.sh | sh
-
-# tailscale up --authkey $TAILSCALE_KEY
+apt install rsync -y
