@@ -19,12 +19,12 @@ metadata:
   name: jellyfin-tls
   namespace: external-name
   annotations:
-    cert-manager.io/cluster-issuer: raj-issuer
+    cert-manager.io/cluster-issuer: luke-issuer
     kubernetes.io/tls-acme: "true"
 spec:
   ingressClassName: nginx
   rules:
-    - host: jellyfin.rajsingh.info
+    - host: jellyfin.lukehouge.com
       http:
         paths:
           - path: /
@@ -35,6 +35,6 @@ spec:
                 port:
                   number: 8096
   tls:
-    - secretName: jellyfinraj-tls
+    - secretName: jellyfinluke-tls
       hosts:
-        - jellyfin.rajsingh.info
+        - jellyfin.lukehouge.com

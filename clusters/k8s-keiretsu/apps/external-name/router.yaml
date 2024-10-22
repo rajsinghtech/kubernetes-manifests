@@ -19,12 +19,12 @@ metadata:
   name: router-tls
   namespace: external-name
   annotations:
-    cert-manager.io/cluster-issuer: raj-issuer
+    cert-manager.io/cluster-issuer: luke-issuer
     kubernetes.io/tls-acme: "true"
 spec:
   ingressClassName: nginx
   rules:
-    - host: router.rajsingh.info
+    - host: router.lukehouge.com
       http:
         paths:
           - path: /
@@ -35,6 +35,6 @@ spec:
                 port:
                   number: 80
   tls:
-    - secretName: routerraj-tls
+    - secretName: routerluke-tls
       hosts:
-        - router.rajsingh.info
+        - router.lukehouge.com

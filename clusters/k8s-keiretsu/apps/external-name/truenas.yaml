@@ -19,12 +19,12 @@ metadata:
   name: truenas-tls
   namespace: external-name
   annotations:
-    cert-manager.io/cluster-issuer: raj-issuer
+    cert-manager.io/cluster-issuer: luke-issuer
     kubernetes.io/tls-acme: "true"
 spec:
   ingressClassName: nginx
   rules:
-    - host: truenas.rajsingh.info
+    - host: truenas.lukehouge.com
       http:
         paths:
           - path: /
@@ -35,6 +35,6 @@ spec:
                 port:
                   number: 80
   tls:
-    - secretName: truenasraj-tls
+    - secretName: truenasluke-tls
       hosts:
-        - truenas.rajsingh.info
+        - truenas.lukehouge.com

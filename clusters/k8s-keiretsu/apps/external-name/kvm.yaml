@@ -18,7 +18,7 @@ metadata:
   name: kvm-tls
   namespace: external-name
   annotations:
-    cert-manager.io/cluster-issuer: raj-issuer
+    cert-manager.io/cluster-issuer: luke-issuer
     nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
@@ -27,7 +27,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: kvm.rajsingh.info
+    - host: kvm.lukehouge.com
       http:
         paths:
           - path: /
@@ -38,6 +38,6 @@ spec:
                 port:
                   number: 443
   tls:
-    - secretName: kvmraj-tls
+    - secretName: kvmluke-tls
       hosts:
-        - kvm.rajsingh.info
+        - kvm.lukehouge.com

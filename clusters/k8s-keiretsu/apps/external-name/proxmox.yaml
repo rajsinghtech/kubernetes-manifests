@@ -19,7 +19,7 @@ metadata:
   name: proxmox-tls
   namespace: external-name
   annotations:
-    cert-manager.io/cluster-issuer: raj-issuer
+    cert-manager.io/cluster-issuer: luke-issuer
     nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
@@ -28,7 +28,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: proxmox.rajsingh.info
+    - host: proxmox.lukehouge.com
       http:
         paths:
           - path: /
@@ -39,6 +39,6 @@ spec:
                 port:
                   number: 8006
   tls:
-    - secretName: proxmoxraj-tls
+    - secretName: proxmoxluke-tls
       hosts:
-        - proxmox.rajsingh.info
+        - proxmox.lukehouge.com
