@@ -9,4 +9,5 @@ resources:
 - ./sonarr
 - ./transmission-movies
 - ./transmission-tv
+- ./plex
 - secret.yaml
