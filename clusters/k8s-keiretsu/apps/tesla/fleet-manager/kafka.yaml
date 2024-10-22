@@ -2,32 +2,8 @@ apiVersion: kafka.strimzi.io/v1beta2
 kind: Kafka
 metadata:
   name: tesla
-  namespace: kafka
 spec:
   kafka:
-    # resources:
-    #   requests:
-    #     memory: 212Mi
-    #     cpu: "500m"
-    #   limits:
-    #     memory: 512Mi
-    #     cpu: "1"
-    # template:
-    #   pod:
-    #     affinity:
-    #       podAntiAffinity:
-    #         requiredDuringSchedulingIgnoredDuringExecution:
-    #           - labelSelector:
-    #               matchExpressions:
-    #                 - key: strimzi.io/cluster
-    #                   operator: In
-    #                   values:
-    #                     - tesla
-    #                 - key: strimzi.io/name
-    #                   operator: In
-    #                   values:
-    #                     - tesla-kafka
-    #             topologyKey: kubernetes.io/hostname
     version: 3.8.0
     replicas: 3
     listeners:
@@ -39,27 +15,6 @@ spec:
         port: 9093
         type: internal
         tls: true
-      - name: external
-        port: 9094
-        tls: false
-        type: nodeport
-        configuration:
-          brokers:
-            - broker: 0
-              advertisedHost: 10.0.100.12
-              advertisedPort: 31712
-            - broker: 1
-              advertisedHost: 10.0.100.13
-              advertisedPort: 31713
-            - broker: 2
-              advertisedHost: 10.0.100.14
-              advertisedPort: 31714
-    # metricsConfig:
-    #   type: jmxPrometheusExporter
-    #   valueFrom:
-    #     configMapKeyRef:
-    #       name: kafka-metrics
-    #       key: kafka-metrics-config.yml
     config:
       offsets.topic.replication.factor: 3
       transaction.state.log.replication.factor: 3
@@ -73,19 +28,11 @@ spec:
       - id: 0
         type: persistent-claim
         size: 20Gi
-        class: rook-cephfs 
-        deleteClaim: true 
+        deleteClaim: true
   zookeeper:
     replicas: 3
-    # metricsConfig:
-    #   type: jmxPrometheusExporter
-    #   valueFrom:
-    #     configMapKeyRef:
-    #       name: kafka-metrics
-    #       key: zookeeper-metrics-config.yml
     storage:
       type: persistent-claim
-      class: rook-cephfs
       size: 20Gi
       deleteClaim: true
   entityOperator:
