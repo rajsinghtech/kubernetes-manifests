@@ -85,8 +85,10 @@ metadata:
   namespace: external-name
   annotations:
     cert-manager.io/cluster-issuer: raj-issuer
-    haproxy.org/server-ssl: "true"
-    haproxy.org/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     kubernetes.io/tls-acme: "true"
 spec:
   ingressClassName: nginx
