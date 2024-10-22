@@ -4,22 +4,22 @@ metadata:
   name: radarr-tls
   namespace: media
   annotations:
-    cert-manager.io/cluster-issuer: global-issuer
-    kubernetes.io/tls-acme: 'true'
+    cert-manager.io/cluster-issuer: luke-issuer
+    kubernetes.io/tls-acme: "true"
 spec:
   ingressClassName: haproxy
   rules:
-  - host: radarr.${INGRESS_DOMAIN}
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: radarr
-            port:
-              number: 7878
+    - host: radarr.lukehouge.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: radarr
+                port:
+                  number: 7878
   tls:
-  - secretName: radarr-tls
-    hosts:
-    - radarr.${INGRESS_DOMAIN}
+    - secretName: radarr-luke-tls
+      hosts:
+        - radarr.lukehouge.com

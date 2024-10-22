@@ -13,35 +13,35 @@ spec:
         app: jellyfin
     spec:
       containers:
-      - name: jellyfin
-        image: lscr.io/linuxserver/jellyfin:latest
-        ports:
-        - name: http
-          containerPort: 8096
-          protocol: TCP
-        volumeMounts:
-        - name: tv-volume
-          mountPath: /data/tvshows
-        - name: movies-volume
-          mountPath: /data/movies
-        - name: config-volume
-          mountPath: /config
-        env:
-        - name: PUID
-          value: "0"
-        - name: GUID
-          value: "0"
-        - name: TZ
-          value: America/Chicago
-        - name: JELLYFIN_PublishedServerUrl
-          value: jellyfin.${INGRESS_DOMAIN}
+        - name: jellyfin
+          image: lscr.io/linuxserver/jellyfin:latest
+          ports:
+            - name: http
+              containerPort: 8096
+              protocol: TCP
+          volumeMounts:
+            - name: tv-volume
+              mountPath: /data/tvshows
+            - name: movies-volume
+              mountPath: /data/movies
+            - name: config-volume
+              mountPath: /config
+          env:
+            - name: PUID
+              value: "0"
+            - name: GUID
+              value: "0"
+            - name: TZ
+              value: America/Chicago
+            - name: JELLYFIN_PublishedServerUrl
+              value: jellyfin.lukehouge.com
       volumes:
-      - name: tv-volume
-        persistentVolumeClaim:
-          claimName: sonarr-tv
-      - name: movies-volume
-        persistentVolumeClaim:
-          claimName: radarr-movies
-      - name: config-volume
-        persistentVolumeClaim:
-          claimName: jellyfin-config
+        - name: tv-volume
+          persistentVolumeClaim:
+            claimName: sonarr-tv
+        - name: movies-volume
+          persistentVolumeClaim:
+            claimName: radarr-movies
+        - name: config-volume
+          persistentVolumeClaim:
+            claimName: jellyfin-config
