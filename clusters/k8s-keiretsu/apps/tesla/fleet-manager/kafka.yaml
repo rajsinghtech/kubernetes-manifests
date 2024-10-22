@@ -4,6 +4,13 @@ metadata:
   name: tesla
 spec:
   kafka:
+    resources:
+      requests:
+        memory: 212Mi
+        cpu: "500m"
+      limits:
+        memory: 1512Mi
+        cpu: "2"
     version: 3.8.0
     replicas: 3
     listeners:
