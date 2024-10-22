@@ -4,22 +4,22 @@ metadata:
   name: transmission-movies-tls
   namespace: media
   annotations:
-    cert-manager.io/cluster-issuer: global-issuer
-    kubernetes.io/tls-acme: 'true'
+    cert-manager.io/cluster-issuer: luke-issuer
+    kubernetes.io/tls-acme: "true"
 spec:
   ingressClassName: haproxy
   rules:
-  - host: transmission-movies.${INGRESS_DOMAIN}
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: transmission-movies
-            port:
-              number: 9091
+    - host: transmission-movies.lukehouge.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: transmission-movies
+                port:
+                  number: 9091
   tls:
-  - secretName: transmission-movies-tls
-    hosts:
-    - transmission-movies.${INGRESS_DOMAIN}
+    - secretName: transmission-movies-luke-tls
+      hosts:
+        - transmission-movies.lukehouge.com

@@ -1,27 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: radarr
+  name: sonarr
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
-      app: radarr
+      app: sonarr
   template:
     metadata:
       labels:
-        app: radarr
+        app: sonarr
     spec:
       containers:
-      - name: radarr
-        image: lscr.io/linuxserver/radarr:latest
+      - name: sonarr
+        image: lscr.io/linuxserver/sonarr:latest
         ports:
         - name: http
-          containerPort: 7878
+          containerPort: 8989
           protocol: TCP
         volumeMounts:
-        - name: movies-volume
-          mountPath: /movies
+        - name: tv-volume
+          mountPath: /tv
         - name: downloads-volume
           mountPath: /downloads
         - name: config-volume
@@ -34,12 +34,12 @@ spec:
         - name: TZ
           value: America/Chicago
       volumes:
-      - name: movies-volume
+      - name: tv-volume
         persistentVolumeClaim:
-          claimName: radarr-movies
+          claimName: sonarr-tv
       - name: downloads-volume
         persistentVolumeClaim:
-          claimName: transmission-movies-data
+          claimName: transmission-tv-data
       - name: config-volume
         persistentVolumeClaim:
-          claimName: radarr-config
+          claimName: sonarr-config

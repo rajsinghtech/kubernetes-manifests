@@ -4,22 +4,22 @@ metadata:
   name: sonarr-tls
   namespace: media
   annotations:
-    cert-manager.io/cluster-issuer: global-issuer
-    kubernetes.io/tls-acme: 'true'
+    cert-manager.io/cluster-issuer: luke-issuer
+    kubernetes.io/tls-acme: "true"
 spec:
   ingressClassName: haproxy
   rules:
-  - host: sonarr.${INGRESS_DOMAIN}
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: sonarr
-            port:
-              number: 8989
+    - host: sonarr.lukehouge.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: sonarr
+                port:
+                  number: 8989
   tls:
-  - secretName: sonarr-tls-kst92
-    hosts:
-    - sonarr.${INGRESS_DOMAIN}
+    - secretName: sonarr-tls-kst92
+      hosts:
+        - sonarr.lukehouge.com

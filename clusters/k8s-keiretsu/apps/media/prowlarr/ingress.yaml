@@ -4,22 +4,22 @@ metadata:
   name: prowlarr-tls
   namespace: media
   annotations:
-    cert-manager.io/cluster-issuer: global-issuer
-    kubernetes.io/tls-acme: 'true'
+    cert-manager.io/cluster-issuer: luke-issuer
+    kubernetes.io/tls-acme: "true"
 spec:
   ingressClassName: haproxy
   rules:
-  - host: prowlarr.${INGRESS_DOMAIN}
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: prowlarr
-            port:
-              number: 9696
+    - host: prowlarr.lukehouge.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: prowlarr
+                port:
+                  number: 9696
   tls:
-  - secretName: prowlarr-tls
-    hosts:
-    - prowlarr.${INGRESS_DOMAIN}
+    - secretName: prowlarr-luke-tls
+      hosts:
+        - prowlarr.lukehouge.com
