@@ -70,8 +70,8 @@ spec:
             defaultMode: 0755  # Set the permissions for the files in the ConfigMap
         - name: nfs-proxmox
           nfs:
-            path: /mnt/tank/k8s
-            server: 192.168.50.59
+            path: /tank/k8s
+            server: 192.168.50.69
         - name: nfs-proxmox-hack
           nfs:
             path: /vault/k8s
