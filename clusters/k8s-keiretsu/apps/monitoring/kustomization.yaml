@@ -9,6 +9,20 @@ helmCharts:
     releaseName: prometheus
     includeCRDs: true
     valuesFile: values.yaml
+  - name: loki
+    repo: https://grafana.github.io/helm-charts
+    version: 6.12.0
+    namespace: monitoring
+    releaseName: loki
+    includeCRDs: true
+    valuesFile: loki-values.yaml
+  - name: promtail
+    repo: https://grafana.github.io/helm-charts
+    version: 6.0.0
+    namespace: monitoring
+    releaseName: promtail
+    includeCRDs: true
+    valuesFile: promtail-values.yaml
 
 resources:
   - ./templates/configmap.yaml
@@ -17,6 +31,7 @@ resources:
   - ./templates/dashboards/ceph-osds.yaml
   - ./templates/dashboards/ceph-cluster.yaml
   - ./templates/dashboards/tesla-fleet-telemetry.yaml
+  - ./templates/bucket.yaml
 patches:
   # This is required because some CRD annotations are too long.
   - target:
