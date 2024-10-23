@@ -16,13 +16,13 @@ helmCharts:
     releaseName: loki
     includeCRDs: true
     valuesFile: loki-values.yaml
-  - name: promtail
-    repo: https://grafana.github.io/helm-charts
-    version: 6.0.0
-    namespace: monitoring
-    releaseName: promtail
-    includeCRDs: true
-    valuesFile: promtail-values.yaml
+  # - name: promtail
+  #   repo: https://grafana.github.io/helm-charts
+  #   version: 6.0.0
+  #   namespace: monitoring
+  #   releaseName: promtail
+  #   includeCRDs: true
+  #   valuesFile: promtail-values.yaml
 
 resources:
   - ./templates/configmap.yaml
