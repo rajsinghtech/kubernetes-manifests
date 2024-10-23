@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: prometheus
+  name: monitoring
   namespace: argocd
 spec:
   destination:
@@ -9,7 +9,7 @@ spec:
     namespace: monitoring
   project: default
   source:
-    path: clusters/k8s-keiretsu/apps/prometheus
+    path: clusters/k8s-keiretsu/apps/monitoring
     repoURL: https://github.com/rajsinghtech/kubernetes-manifests
     targetRevision: keiretsu
   syncPolicy:
