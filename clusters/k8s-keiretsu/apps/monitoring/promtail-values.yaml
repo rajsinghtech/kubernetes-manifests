@@ -9,7 +9,7 @@ config:
       - job_name: kafka
         kafka:
           brokers:
-          - tesla-kafka-brokers.kafka:9092
+          - tesla-kafka-brokers.tesla:9092
           topics:
           - tesla_V
           labels:
