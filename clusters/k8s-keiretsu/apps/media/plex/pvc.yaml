@@ -9,3 +9,27 @@ spec:
     requests:
       storage: 1Gi
   storageClassName: nfs-proxmox-hack
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: music
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: nfs-proxmox-hack
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: audiobooks
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: nfs-proxmox-hack
