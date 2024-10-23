@@ -1,5 +1,5 @@
-image:
-  tag: v1.115.0
+# image:
+#   tag: v1.115.0
 # env:
 # - name: DB_DATABASE_NAME
 #   value: immich
