@@ -12,3 +12,26 @@ helmCharts:
     releaseName: immich
     includeCRDs: true
     valuesFile: values.yaml
+patches:
+  - target:
+      kind: StatefulSet
+      name: immich-postgresql
+    patch: |-
+      apiVersion: apps/v1
+      kind: StatefulSet
+      metadata:
+        name: immich-postgresql
+      spec:
+        template:
+          spec:
+            containers:
+              - name: postgresql
+                resources:
+                  limits:
+                    cpu: 500m
+                    ephemeral-storage: 3Gi
+                    memory: 1256Mi
+                  requests:
+                    cpu: 150m
+                    ephemeral-storage: 100Mi
+                    memory: 192Mi
