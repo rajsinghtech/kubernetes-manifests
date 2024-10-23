@@ -43,6 +43,10 @@ spec:
               mountPath: /tv
             - name: config-volume
               mountPath: /config
+            - name: audiobooks-volume
+              mountPath: /audiobooks
+            - name: music-volume
+              mountPath: /music
           env:
             - name: PUID
               value: "0"
@@ -60,3 +64,9 @@ spec:
         - name: config-volume
           persistentVolumeClaim:
             claimName: plex-config
+        - name: audiobooks-volume
+          persistentVolumeClaim:
+            claimName: audiobooks
+        - name: music-volume
+          persistentVolumeClaim:
+            claimName: music
