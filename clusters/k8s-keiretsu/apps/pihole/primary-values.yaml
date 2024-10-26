@@ -38,4 +38,4 @@ ingress:
       hosts:
         - pihole.rajsingh.info
 DNS1: "10.43.0.10"
-DNS2: "8.8.4.4"
+DNS2: "10.43.0.10"
