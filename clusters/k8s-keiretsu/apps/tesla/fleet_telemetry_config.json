@@ -9,7 +9,7 @@
             "Location": { 
                 "interval_seconds": 15
             },                        
-            "BatteryLevel": {         
+            "CruiseState": {         
                "interval_seconds": 30 
             },                        
             "Odometer": {              
@@ -18,13 +18,13 @@
             "VehicleSpeed": {          
                 "interval_seconds": 15 
             },                         
-            "PackVoltage": {           
+            "LateralAcceleration": {           
                 "interval_seconds": 30 
             },                         
-            "OutsideTemp": {           
+            "MilesToArrival": {           
                 "interval_seconds": 120
             },                         
-            "InsideTemp": {            
+            "LifetimeEnergyUsedDrive": {            
                 "interval_seconds": 120
             },                         
             "DestinationLocation": {   
@@ -33,7 +33,7 @@
             "EstBatteryRange": {       
                 "interval_seconds": 30 
             },                         
-            "PackCurrent": {           
+            "LongitudinalAcceleration": {           
                 "interval_seconds": 30 
             }  
         },
