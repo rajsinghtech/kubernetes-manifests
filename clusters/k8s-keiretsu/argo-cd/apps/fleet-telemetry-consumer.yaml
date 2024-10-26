@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: fleet-manager
+  name: fleet-telemetry-consumer
   namespace: argocd
 spec:
   destination:
@@ -10,7 +10,7 @@ spec:
   project: default
   source:
     path: k8s
-    repoURL: https://github.com/rajsinghtech/fleet-manager
+    repoURL: https://github.com/rajsinghtech/fleet-telemetry-consumer
     targetRevision: init
   syncPolicy:
     automated:
