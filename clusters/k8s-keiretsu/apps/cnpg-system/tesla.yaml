@@ -1,0 +1,11 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: tesla
+  namespace: tesla
+spec:
+  instances: 3
+
+  storage:
+    size: 10Gi
+    storageClass: rook-cephfs
