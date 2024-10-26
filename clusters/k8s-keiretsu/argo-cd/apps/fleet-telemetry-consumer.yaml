@@ -11,7 +11,7 @@ spec:
   source:
     path: k8s
     repoURL: https://github.com/rajsinghtech/fleet-telemetry-consumer
-    targetRevision: init
+    targetRevision: HEAD
   syncPolicy:
     automated:
       prune: true
