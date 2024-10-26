@@ -9,3 +9,6 @@ spec:
   storage:
     size: 10Gi
     storageClass: rook-cephfs
+
+  monitoring:
+    enablePodMonitor: true
