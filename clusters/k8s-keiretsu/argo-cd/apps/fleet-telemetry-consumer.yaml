@@ -9,7 +9,7 @@ spec:
     namespace: tesla
   project: default
   source:
-    path: k8s
+    path: kustomization
     repoURL: https://github.com/rajsinghtech/fleet-telemetry-consumer
     targetRevision: HEAD
   syncPolicy:
