@@ -3,8 +3,8 @@ admin:
   passwordKey: password
 # dnsmasq:
 #   customDnsEntries:
-#     - address=/.stg.rajsingh.info/10.96.96.1
-#     - address=/.rajsingh.info/10.96.10.1
+#     - address=/.stg.lukehouge.com/10.96.96.1
+#     - address=/.lukehouge.com/10.96.10.1
 #     - address=/.lukehouge.com/192.168.50.7
 # persistentVolumeClaim:
 #   enabled: true
@@ -27,15 +27,15 @@ serviceDns:
 ingress:
   ingressClassName: nginx
   annotations:
-    cert-manager.io/cluster-issuer: raj-issuer
+    cert-manager.io/cluster-issuer: luke-issuer
     kubernetes.io/tls-acme: "true"
   enabled: true
   hosts:
-    - pihole.rajsingh.info
+    - pihole.lukehouge.com
   path: /
   tls:
-    - secretName: pihole-raj-tls
+    - secretName: pihole-luke-tls
       hosts:
-        - pihole.rajsingh.info
+        - pihole.lukehouge.com
 DNS1: "10.43.0.10"
 DNS2: "10.43.0.10"

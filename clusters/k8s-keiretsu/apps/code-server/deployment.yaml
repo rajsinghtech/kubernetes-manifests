@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: code-server
 spec:
-  replicas: 1  # Adjust the number of replicas as needed
+  replicas: 1 # Adjust the number of replicas as needed
   selector:
     matchLabels:
       app: code-server
@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: code-server
-          image: lscr.io/linuxserver/code-server:latest  # Docker image for code-server
+          image: lscr.io/linuxserver/code-server:latest # Docker image for code-server
           env:
             - name: PUID
               value: "0"
@@ -30,20 +30,20 @@ spec:
             # - name: HASHED_PASSWORD
             #   value: ""  # Optional: Leave empty if not using hashed password
             # - name: SUDO_PASSWORD
-                # secretKeyRef:
-                #   name: code-server-secret
-                #   key: admin-password
+            # secretKeyRef:
+            #   name: code-server-secret
+            #   key: admin-password
             # - name: SUDO_PASSWORD_HASH
             #   value: ""  # Optional: Leave empty if not using hashed sudo password
             - name: PROXY_DOMAIN
-              value: "rajsingh.info"  # Optional: Specify your domain
+              value: "lukehouge.com" # Optional: Specify your domain
             - name: DEFAULT_WORKSPACE
-              value: /mnt/tank/k8s  # Optional: Specify default workspace path
+              value: /mnt/tank/k8s # Optional: Specify default workspace path
           # volumeMounts:
           #   - name: config-volume
           #     mountPath: /config
           ports:
-            - containerPort: 8443  # Port inside the container (code-server default is 8443)
+            - containerPort: 8443 # Port inside the container (code-server default is 8443)
           # livenessProbe:
           #   httpGet:
           #     path: /healthz
@@ -67,7 +67,7 @@ spec:
         - name: startup-script
           configMap:
             name: startup-script
-            defaultMode: 0755  # Set the permissions for the files in the ConfigMap
+            defaultMode: 0755 # Set the permissions for the files in the ConfigMap
         - name: nfs-proxmox
           nfs:
             path: /tank/k8s
@@ -79,4 +79,4 @@ spec:
         - name: config-volume
           persistentVolumeClaim:
             claimName: code-server-config
-      restartPolicy: Always  # Restart policy for the pod
+      restartPolicy: Always # Restart policy for the pod

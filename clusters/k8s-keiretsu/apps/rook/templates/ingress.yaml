@@ -6,17 +6,17 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: "nginx"
     kubernetes.io/tls-acme: "true"
-    cert-manager.io/cluster-issuer: raj-issuer
+    cert-manager.io/cluster-issuer: luke-issuer
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     nginx.ingress.kubernetes.io/server-snippet: |
       proxy_ssl_verify off;
 spec:
   tls:
    - hosts:
-     - rook.rajsingh.info
+     - rook.lukehouge.com
      secretName: rook-rajsingh-info
   rules:
-  - host: rook.rajsingh.info
+  - host: rook.lukehouge.com
     http:
       paths:
       - path: /
