@@ -14,6 +14,28 @@ helmCharts:
     valuesFile: values.yaml
 patches:
   - target:
+      version: v1
+      kind: Deployment
+      name: immich-server
+    patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: immich-server
+        namespace: immich
+      spec:
+        template:
+          spec:
+            volumes:
+              - name: hack
+                persistentVolumeClaim:
+                  claimName: immich-hack-pics 
+            containers:
+              - name: immich-server
+                volumeMounts:
+                  - name: hack
+                    mountPath: /hack/pics
+  - target:
       kind: StatefulSet
       name: immich-postgresql
     patch: |-
