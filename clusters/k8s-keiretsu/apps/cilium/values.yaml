@@ -16,6 +16,7 @@ prometheus:
 k8sServiceHost: 127.0.0.1
 k8sServicePort: 6443
 extraConfig:
+  # Enable flow export
   export-file-path: "/var/run/cilium/hubble/hubble.log"
   export-aggregation: identity
   export-aggregation-state-filter: new error
