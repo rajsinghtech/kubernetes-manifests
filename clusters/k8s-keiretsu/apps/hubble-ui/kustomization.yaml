@@ -13,5 +13,13 @@ helmCharts:
       - monitoring.coreos.com/v1
       - networking.k8s.io/v1
 
+  - name: hubble-enterprise
+    repo: https://helm.isovalent.com
+    version: 1.12.14
+    namespace: kube-system
+    releaseName: hubble-enterprise
+    includeCRDs: true
+    valuesFile: hubble-enterprise-values.yaml
+
 resources:
   - ./templates/dns-visibility.yaml
