@@ -1,2 +1,14 @@
 timescape:
   enabled: true
+ingress:
+  enabled: true
+  host: hubble-ui.lukehouge.com
+  v1: true
+  ingressClassName: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: luke-issuer
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "96000"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "96000"
+  tls:
+    enabled: true
+    secretName: hubble-ui-luke-tls
