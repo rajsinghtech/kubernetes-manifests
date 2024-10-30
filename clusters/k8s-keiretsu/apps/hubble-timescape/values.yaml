@@ -1,0 +1,11 @@
+lite:
+  enabled: true
+  resources:
+    requests:
+      cpu: 300m
+      memory: 256Mi
+  clickhouse:
+    resources:
+      requests:
+        cpu: 700m
+        memory: 4Gi
