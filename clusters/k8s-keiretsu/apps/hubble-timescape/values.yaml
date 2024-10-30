@@ -9,3 +9,7 @@ lite:
       requests:
         cpu: 700m
         memory: 4Gi
+    volumes:
+      data:
+        size: 10Gi
+        storageClass: rook-cephfs
