@@ -1,5 +1,5 @@
 global:
-  domain: argocd.rajsingh.info
+  domain: argocd.lukehouge.com
 rbac:
   policy.csv: |
     p, role:org-admin, applications, *, */*, allow
@@ -51,7 +51,7 @@ server:
     tls: true
     ingressClassName: "nginx"
     annotations:
-      cert-manager.io/cluster-issuer: raj-issuer
+      cert-manager.io/cluster-issuer: luke-issuer
 
 controller:
   metrics:

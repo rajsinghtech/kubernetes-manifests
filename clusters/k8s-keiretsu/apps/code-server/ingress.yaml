@@ -4,13 +4,13 @@ metadata:
   name: code-server-tls
   namespace: external-name
   annotations:
-    cert-manager.io/cluster-issuer: raj-issuer
+    cert-manager.io/cluster-issuer: luke-issuer
     kubernetes.io/tls-acme: "true"
     haproxy.org/rewrite-target: /
 spec:
   ingressClassName: nginx
   rules:
-    - host: code-server.rajsingh.info
+    - host: code-server.lukehouge.com
       http:
         paths:
           - path: /
@@ -21,6 +21,6 @@ spec:
                 port:
                   number: 8443
   tls:
-    - secretName: code-server-raj-tls
+    - secretName: code-server-luke-tls
       hosts:
-        - code-server.rajsingh.info
+        - code-server.lukehouge.com
