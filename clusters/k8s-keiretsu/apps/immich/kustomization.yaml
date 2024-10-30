@@ -35,6 +35,13 @@ patches:
                 volumeMounts:
                   - name: hack
                     mountPath: /hack/pics
+                resources:
+                  requests:
+                    memory: "2Gi"
+                    cpu: "250m"
+                  limits:
+                    memory: "4Gi"
+                    cpu: "1000m"
   - target:
       kind: StatefulSet
       name: immich-postgresql
