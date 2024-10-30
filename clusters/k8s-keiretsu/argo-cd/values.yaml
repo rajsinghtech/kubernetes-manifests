@@ -1,5 +1,5 @@
 global:
-  domain: argocd-keiretsu.rajsingh.info
+  domain: argocd.rajsingh.info
 rbac:
   policy.csv: |
     p, role:org-admin, applications, *, */*, allow

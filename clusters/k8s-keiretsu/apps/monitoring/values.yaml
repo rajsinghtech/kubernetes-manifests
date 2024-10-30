@@ -115,8 +115,30 @@ grafana:
         gnetId: 20510
         revision: 1
         datasource: prometheus
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - grafana.lukehouge.com
+    tls:
+      - hosts:
+          - grafana.lukehouge.com
+        secretName: grafana-luke-tls
+    annotations:
+      cert-manager.io/cluster-issuer: luke-issuer
 
 prometheus:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - prometheus.lukehouge.com
+    tls:
+      - hosts:
+          - prometheus.lukehouge.com
+        secretName: prometheus-luke-tls
+    annotations:
+      cert-manager.io/cluster-issuer: luke-issuer
   prometheusSpec:
     serviceMonitorSelectorNilUsesHelmValues: false
     podMonitorSelectorNilUsesHelmValues: false
