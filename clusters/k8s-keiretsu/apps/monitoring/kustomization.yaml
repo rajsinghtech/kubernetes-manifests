@@ -9,13 +9,13 @@ helmCharts:
     releaseName: prometheus
     includeCRDs: true
     valuesFile: values.yaml
-  - name: loki
-    repo: https://grafana.github.io/helm-charts
-    version: 6.12.0
-    namespace: monitoring
-    releaseName: loki
-    includeCRDs: true
-    valuesFile: loki-values.yaml
+  # - name: loki
+  #   repo: https://grafana.github.io/helm-charts
+  #   version: 6.12.0
+  #   namespace: monitoring
+  #   releaseName: loki
+  #   includeCRDs: true
+  #   valuesFile: loki-values.yaml
   # - name: promtail
   #   repo: https://grafana.github.io/helm-charts
   #   version: 6.0.0
