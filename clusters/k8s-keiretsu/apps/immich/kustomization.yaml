@@ -26,15 +26,15 @@ patches:
       spec:
         template:
           spec:
-            volumes:
-              - name: hack
-                persistentVolumeClaim:
-                  claimName: immich-hack-pics 
+            # volumes:
+              # - name: hack
+              #   persistentVolumeClaim:
+              #     claimName: immich-hack-pics 
             containers:
               - name: immich-server
-                volumeMounts:
-                  - name: hack
-                    mountPath: /hack/pics
+                # volumeMounts:
+                #   - name: hack
+                #     mountPath: /hack/pics
                 resources:
                   requests:
                     memory: "2Gi"

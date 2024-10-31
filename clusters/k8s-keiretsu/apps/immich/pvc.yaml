@@ -19,5 +19,5 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 1Gi
-  storageClassName: nfs-proxmox
+      storage: 200Gi
+  storageClassName: rook-cephfs
