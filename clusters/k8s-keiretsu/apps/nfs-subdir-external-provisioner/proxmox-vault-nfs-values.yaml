@@ -1,0 +1,7 @@
+nfs:
+  path: /vault/k8s
+  server: 192.168.50.104
+storageClass:
+  defaultClass: false
+  name: nfs-proxmox-vault
+  pathPattern: ${.PVC.namespace}/${.PVC.name}
