@@ -34,19 +34,3 @@ postgresql:
 
 redis:
   enabled: true
-
-microservices:
-  persistence:
-    external:
-      external:
-        enabled: true
-        existingClaim: immich-hack-pics
-        readOnly: true
-
-server:
-  persistence:
-    external:
-      external:
-        enabled: true
-        existingClaim: immich-hack-pics
-        readOnly: true
