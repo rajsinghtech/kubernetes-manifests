@@ -15,6 +15,13 @@ spec:
       containers:
         - name: plex
           image: lscr.io/linuxserver/plex:latest
+          resources:
+            requests:
+              memory: "3Gi"
+              cpu: "1000m"
+            limits:
+              memory: "6Gi"
+              cpu: "2000m"
           ports:
             - containerPort: 32400
               protocol: TCP
