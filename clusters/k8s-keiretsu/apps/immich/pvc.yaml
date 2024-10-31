@@ -1,14 +1,14 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: immich-hack-pics
+  name: immich-vault-pics
 spec:
   accessModes:
     - ReadWriteMany
   resources:
     requests:
       storage: 1Gi
-  storageClassName: nfs-proxmox-hack
+  storageClassName: nfs-proxmox-vault
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
