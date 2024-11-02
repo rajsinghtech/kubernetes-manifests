@@ -1,7 +1,0 @@
-nfs:
-  path: /vault/k8s
-  server: 192.168.50.253
-storageClass:
-  defaultClass: false
-  name: nfs-proxmox-hack
-  pathPattern: ${.PVC.namespace}/${.PVC.name}

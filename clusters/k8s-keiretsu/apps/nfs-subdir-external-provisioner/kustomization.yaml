@@ -11,12 +11,12 @@ helmCharts:
     valuesFile: proxmox-nfs-values.yaml
     name: nfs-subdir-external-provisioner
 
-  - releaseName: proxmox-hack-nfs
+  - releaseName: proxmox-tank-nfs
     repo: https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/
     version: 4.0.18
     namespace: nfs-subdir-external-provisioner
     includeCRDs: true
-    valuesFile: proxmox-hack-nfs-values.yaml
+    valuesFile: proxmox-tank-nfs-values.yaml
     name: nfs-subdir-external-provisioner
 
   - releaseName: proxmox-vault-nfs
@@ -26,7 +26,6 @@ helmCharts:
     includeCRDs: true
     valuesFile: proxmox-vault-nfs-values.yaml
     name: nfs-subdir-external-provisioner
-
 
 resources:
   - ./templates/storageclass.yaml
