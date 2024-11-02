@@ -59,8 +59,8 @@ spec:
               mountPath: /custom-cont-init.d
             - name: nfs-proxmox
               mountPath: /mnt/proxmox
-            - name: nfs-proxmox-hack
-              mountPath: /mnt/proxmox-hack
+            - name: nfs-proxmox-tank
+              mountPath: /mnt/proxmox-tank
             - name: config-volume
               mountPath: /config
       volumes:
@@ -72,7 +72,7 @@ spec:
           nfs:
             path: /tank/k8s
             server: 192.168.50.69
-        - name: nfs-proxmox-hack
+        - name: nfs-proxmox-tank
           nfs:
             path: /vault/k8s
             server: 192.168.50.253
