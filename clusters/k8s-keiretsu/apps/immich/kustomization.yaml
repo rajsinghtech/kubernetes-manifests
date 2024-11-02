@@ -27,13 +27,13 @@ patches:
         template:
           spec:
             volumes:
-              - name: hack
+              - name: vault
                 persistentVolumeClaim:
                   claimName: immich-vault-pics 
             containers:
               - name: immich-server
                 volumeMounts:
-                  - name: hack
+                  - name: vault
                     mountPath: /vault/pics
                 resources:
                   requests:
