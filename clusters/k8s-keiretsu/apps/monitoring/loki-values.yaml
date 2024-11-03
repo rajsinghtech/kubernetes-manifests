@@ -44,7 +44,7 @@ write:
   - secretRef:
       name: ceph-bucket-loki
   persistence:
-    storageClass: rook-cephfs
+    storageClass: ceph-hybrid-fs
 read:
   replicas: 1
   extraEnvFrom:
@@ -53,11 +53,11 @@ read:
 backend:
   replicas: 1
   persistence:
-    storageClass: rook-cephfs
+    storageClass: ceph-hybrid-fs
   extraEnvFrom:
   - secretRef:
       name: ceph-bucket-loki
 chunksCache:
   enabled: false
   persistence:
-    storageClass: rook-cephfs
+    storageClass: ceph-hybrid-fs

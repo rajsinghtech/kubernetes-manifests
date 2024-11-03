@@ -161,7 +161,7 @@ prometheus:
     storageSpec:
       volumeClaimTemplate:
         spec:
-          storageClassName: rook-cephfs
+          storageClassName: ceph-hybrid-fs
           resources:
             requests:
               storage: 10Gi
