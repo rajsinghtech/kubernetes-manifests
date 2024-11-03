@@ -1,9 +1,9 @@
 apiVersion: objectbucket.io/v1alpha1
 kind: ObjectBucketClaim
 metadata:
-  name: ceph-tesla
+  name: ceph-hybrid-tesla
   namespace: tesla
 spec:
-  bucketName: ceph-tesla
-  generateBucketName: ceph-tesla
+  bucketName: ceph-hybrid-tesla
+  generateBucketName: ceph-hybrid-tesla
   storageClassName: ceph-hybrid-bucket
