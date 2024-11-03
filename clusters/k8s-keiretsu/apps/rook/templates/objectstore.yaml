@@ -1,19 +1,22 @@
 apiVersion: ceph.rook.io/v1
 kind: CephObjectStore
 metadata:
-  name: my-store
+  name: hybrid-objectstore
   namespace: rook-ceph
 spec:
   metadataPool:
     failureDomain: host
     replicated:
       size: 3
+      hybridStorage:
+        primaryDeviceClass: ssd
+        secondaryDeviceClass: hdd
   dataPool:
     failureDomain: host
     erasureCoded:
       dataChunks: 2
       codingChunks: 1
-  preservePoolsOnDelete: true
+  preservePoolsOnDelete: false
   gateway:
     sslCertificateRef:
     port: 80
