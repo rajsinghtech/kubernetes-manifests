@@ -35,14 +35,14 @@ spec:
       - id: 0
         type: persistent-claim
         size: 20Gi
-        class: rook-cephfs
+        class: ceph-ssd-fs
         deleteClaim: true
   zookeeper:
     replicas: 3
     storage:
       type: persistent-claim
       size: 20Gi
-      class: rook-cephfs 
+      class: ceph-ssd-fs
       deleteClaim: true
   entityOperator:
     topicOperator: {}
