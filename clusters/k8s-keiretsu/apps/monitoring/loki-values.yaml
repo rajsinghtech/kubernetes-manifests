@@ -6,7 +6,7 @@ loki:
       ruler: ceph-bkt-loki
       admin: ceph-bkt-loki
     s3:
-      endpoint: rook-ceph-rgw-my-store.rook-ceph
+      endpoint: rook-ceph-rgw-hybrid-objectstore.rook-ceph
       accessKeyId: null
       secretAccessKey: null
       insecure: true

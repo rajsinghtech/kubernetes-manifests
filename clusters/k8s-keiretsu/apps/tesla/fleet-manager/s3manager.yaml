@@ -22,7 +22,7 @@ spec:
             - containerPort: 8080
           env:
             - name: ENDPOINT
-              value: "rook-ceph-rgw-my-store.rook-ceph.svc.cluster.local:80"
+              value: "rook-ceph-rgw-hybrid-objectstore.rook-ceph.svc.cluster.local:80"
             - name: USE_SSL
               value: "false"
             - name: ACCESS_KEY_ID
