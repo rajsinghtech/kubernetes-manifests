@@ -4,7 +4,6 @@ kind: Kustomization
 namespace: tesla
 resources:
   - kafka.yaml  
-  - bucket.yaml
   - s3manager.yaml
 
 generatorOptions:
