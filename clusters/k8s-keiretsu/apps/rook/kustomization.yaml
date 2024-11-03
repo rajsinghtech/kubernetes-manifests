@@ -16,5 +16,5 @@ resources:
   - ./templates/filesystem.yaml
   - ./templates/objectstore.yaml
   - ./templates/ingress.yaml
-  - ./templates/blockpool.yaml
+  - ./templates/buckets.yaml
   - ./templates/nfs.yaml
