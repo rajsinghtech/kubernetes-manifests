@@ -8,9 +8,10 @@ spec:
     replicated:
       size: 3
   dataPools:
+    - name: replicated
+      replicated:
+        size: 3
     - name: replicapool
-      # replicated:
-      #   size: 3
   preserveFilesystemOnDelete: true
   metadataServer:
     activeCount: 1
