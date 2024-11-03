@@ -7,3 +7,13 @@ spec:
   bucketName: ceph-hybrid-tesla
   generateBucketName: ceph-hybrid-tesla
   storageClassName: ceph-hybrid-bucket
+---
+apiVersion: objectbucket.io/v1alpha1
+kind: ObjectBucketClaim
+metadata:
+  name: ceph-hybrid-loki
+  namespace: monitoring
+spec:
+  bucketName: ceph-hybrid-loki
+  generateBucketName: ceph-hybrid-loki
+  storageClassName: ceph-hybrid-bucket
