@@ -6,4 +6,4 @@ metadata:
 spec:
   bucketName: ceph-tesla
   generateBucketName: ceph-tesla
-  storageClassName: rook-ceph-bucket
+  storageClassName: ceph-hybrid-bucket
