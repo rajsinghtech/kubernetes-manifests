@@ -32,7 +32,7 @@ spec:
     - name: replicated
       replicated:
         size: 3
-        deviceClass: ssd
+      deviceClass: ssd
   preserveFilesystemOnDelete: false
   metadataServer:
     activeCount: 1
@@ -51,7 +51,7 @@ spec:
     - name: replicated
       replicated:
         size: 3
-        deviceClass: hdd
+      deviceClass: hdd
   preserveFilesystemOnDelete: false
   metadataServer:
     activeCount: 1
