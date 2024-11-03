@@ -14,7 +14,7 @@ spec:
         hybridStorage:
           primaryDeviceClass: ssd
           secondaryDeviceClass: hdd
-  preserveFilesystemOnDelete: true
+  preserveFilesystemOnDelete: false
   metadataServer:
     activeCount: 1
     activeStandby: true
@@ -35,7 +35,7 @@ spec:
         hybridStorage:
           primaryDeviceClass: ssd
           secondaryDeviceClass: hdd
-  preserveFilesystemOnDelete: true
+  preserveFilesystemOnDelete: false
   metadataServer:
     activeCount: 1
     activeStandby: true
@@ -54,7 +54,7 @@ spec:
       replicated:
         size: 3
         deviceClass: ssd
-  preserveFilesystemOnDelete: true
+  preserveFilesystemOnDelete: false
   metadataServer:
     activeCount: 1
     activeStandby: true
@@ -73,7 +73,7 @@ spec:
       replicated:
         size: 3
         deviceClass: hdd
-  preserveFilesystemOnDelete: true
+  preserveFilesystemOnDelete: false
   metadataServer:
     activeCount: 1
     activeStandby: true
