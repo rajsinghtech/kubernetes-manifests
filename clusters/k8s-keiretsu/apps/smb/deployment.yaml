@@ -18,23 +18,29 @@ spec:
         ports:
         - containerPort: 139
         - containerPort: 445
+        - containerPort: 137
+          protocol: UDP # Added for nmbd
+        - containerPort: 138
+          protocol: UDP # Added for nmbd
         args:
         - -p
-        - -u "lhouge;applegeek" # User with password
+        - -n # Enable nmbd
+        - -w "WORKGROUP" # Specify your workgroup
+        - -u "lhouge;applegeek" # Add user
         - -s "public;/share" # Public share
         - -s "users;/srv;no;no;no;lhouge" # User share
         - -s "lhouge private share;/lhouge;no;no;no;lhouge" # Private share for user
         volumeMounts:
         - name: samba-volume
-          mountPath: /config # Config volume for Samba
+          mountPath: /config
         - name: nfs-proxmox-vault
-          mountPath: /mnt/proxmox-vault # NFS mount for vault
+          mountPath: /mnt/proxmox-vault
       volumes:
       - name: samba-volume
         persistentVolumeClaim:
-          claimName: samba-storage # Reference to PVC for Samba config
+          claimName: samba-storage
       - name: nfs-proxmox-vault
         nfs:
           path: /vault/k8s
-          server: 192.168.50.104 # NFS server for vault
-      restartPolicy: Always # Restart policy for the pod
+          server: 192.168.50.104
+      restartPolicy: Always
