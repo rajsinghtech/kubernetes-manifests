@@ -27,13 +27,14 @@ patches:
         template:
           spec:
             volumes:
-              - name: vault
-                persistentVolumeClaim:
-                  claimName: immich-vault-pics 
+              - name: nfs-proxmox-vault
+                nfs:
+                  path: /vault
+                  server: 192.168.50.104
             containers:
               - name: immich-server
                 volumeMounts:
-                  - name: vault
+                  - name: nfs-proxmox-vault
                     mountPath: /vault
                 resources:
                   requests:
