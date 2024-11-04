@@ -22,7 +22,7 @@ serviceMonitor:
     - 192.168.50.40
     - 192.168.50.104
   additionalLabels:
-    prometheus: kube-prometheus
+    release: "prometheus" 
 pveTargets: 
 - 192.168.50.112
 - 192.168.50.56
