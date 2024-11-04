@@ -42,7 +42,7 @@ patches:
                     cpu: "1000m"
                   limits:
                     memory: "4Gi"
-                    cpu: "2000m"
+                    cpu: "3000m"
   - target:
       kind: StatefulSet
       name: immich-postgresql
@@ -86,4 +86,4 @@ patches:
                     cpu: "2000m"
                   limits:
                     memory: "2Gi"
-                    cpu: "5000m"
+                    cpu: "4000m"
