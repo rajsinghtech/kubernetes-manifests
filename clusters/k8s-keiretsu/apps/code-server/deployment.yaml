@@ -81,7 +81,7 @@ spec:
         - name: ceph
           nfs:
             path: /
-            server: rook-ceph-nfs-k8s-nfs-a
+            server: rook-ceph-nfs-k8s-nfs-a.rook-ceph.svc.cluster.local
         - name: config-volume
           persistentVolumeClaim:
             claimName: code-server-config
