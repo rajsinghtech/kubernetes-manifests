@@ -39,10 +39,10 @@ patches:
                 resources:
                   requests:
                     memory: "2Gi"
-                    cpu: "250m"
+                    cpu: "1000m"
                   limits:
                     memory: "4Gi"
-                    # cpu: "1500m"
+                    cpu: "2000m"
   - target:
       kind: StatefulSet
       name: immich-postgresql
@@ -65,3 +65,25 @@ patches:
                     cpu: 150m
                     ephemeral-storage: 100Mi
                     memory: 192Mi
+  - target:
+      version: v1
+      kind: Deployment
+      name: immich-machine-learning
+    patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: immich-machine-learning
+        namespace: immich
+      spec:
+        template:
+          spec:
+            containers:
+              - name: immich-machine-learning
+                resources:
+                  requests:
+                    memory: "1Gi"
+                    cpu: "2000m"
+                  limits:
+                    memory: "2Gi"
+                    cpu: "5000m"
