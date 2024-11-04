@@ -1,0 +1,10 @@
+env:
+  pveAuthType: "token"
+  pveExistingSecretName: "prometheus-pve-exporter"
+serviceMonitor:
+  enabled: true
+pveTargets: 
+- 192.168.50.112
+- 192.168.50.56
+- 192.168.50.40
+- 192.168.50.104
