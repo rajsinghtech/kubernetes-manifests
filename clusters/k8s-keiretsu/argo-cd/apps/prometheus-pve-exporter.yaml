@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus-pve-exporter
+  namespace: argocd
+spec:
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: prometheus-pve-exporter
+  project: default
+  source:
+    path: clusters/k8s-keiretsu/apps/prometheus-pve-exporter
+    repoURL: https://github.com/rajsinghtech/kubernetes-manifests
+    targetRevision: keiretsu
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
