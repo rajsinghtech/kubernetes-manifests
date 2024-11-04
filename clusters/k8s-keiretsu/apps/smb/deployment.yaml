@@ -29,16 +29,10 @@ spec:
           mountPath: /config # Config volume for Samba
         - name: nfs-proxmox-vault
           mountPath: /mnt/proxmox-vault # NFS mount for vault
-        - name: nfs-proxmox-tank
-          mountPath: /mnt/proxmox-tank # NFS mount for tank
       volumes:
       - name: samba-volume
         persistentVolumeClaim:
           claimName: samba-storage # Reference to PVC for Samba config
-      - name: nfs-proxmox-tank
-        nfs:
-          path: /tank/k8s
-          server: 192.168.50.69 # NFS server for tank
       - name: nfs-proxmox-vault
         nfs:
           path: /vault/k8s
