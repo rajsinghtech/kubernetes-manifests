@@ -61,6 +61,8 @@ spec:
               mountPath: /mnt/proxmox
             - name: nfs-proxmox-tank
               mountPath: /mnt/proxmox-tank
+            - name: ceph
+              mountPath: /mnt/ceph
             - name: config-volume
               mountPath: /config
       volumes:
@@ -76,6 +78,10 @@ spec:
           nfs:
             path: /vault/k8s
             server: 192.168.50.104
+        - name: ceph
+          nfs:
+            path: /
+            server: rook-ceph-nfs-k8s-nfs-a
         - name: config-volume
           persistentVolumeClaim:
             claimName: code-server-config
