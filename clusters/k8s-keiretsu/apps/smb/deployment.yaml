@@ -25,11 +25,11 @@ spec:
         args:
         - -p
         - -n # Enable nmbd
-        - -w "WORKGROUP" # Specify your workgroup
-        - -u "lhouge;applegeek" # Add user
-        - -s "public;/share" # Public share
-        - -s "users;/srv;no;no;no;lhouge" # User share
-        - -s "lhouge private share;/lhouge;no;no;no;lhouge" # Private share for user
+        - -w WORKGROUP # Specify your workgroup
+        - -u lhouge;applegeek # Add user
+        - -s public;/share # Public share
+        - -s users;/srv;no;no;no;lhouge # User share
+        - -s lhouge private share;/lhouge;no;no;no;lhouge # Private share for user
         volumeMounts:
         - name: samba-volume
           mountPath: /config
