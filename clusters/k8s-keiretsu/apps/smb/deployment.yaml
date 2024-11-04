@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: smb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: smb
+  template:
+    metadata:
+      labels:
+        app: smb
+    spec:
+      containers:
+      - name: smb
+        image: dperson/samba
+        ports:
+        - containerPort: 139
+        - containerPort: 445
+        args:
+        - -p
+        - -u "lhouge;applegeek"
+        - -s "public;/share"
+        - -s "users;/srv;no;no;no;lhouge"
+        - -s "lhouge private share;/lhouge;no;no;no;lhouge"
+        volumeMounts:
+        - name: samba-storage
+          mountPath: /mount
+        - name: nfs-proxmox-vault
+          mountPath: /mnt/proxmox-vault
+        - name: nfs-proxmox-tank
+          mountPath: /mnt/proxmox-tank
+        - name: samba-volume
+          mountPath: /config
+      volumes:
+      - name: samba-volume
+        persistentVolumeClaim:
+          claimName: samba-storage
+      - name: nfs-proxmox-tank
+        nfs:
+          path: /tank/k8s
+          server: 192.168.50.69
+      - name: nfs-proxmox-vault
+        nfs:
+          path: /vault/k8s
+          server: 192.168.50.104
+    restartPolicy: Always # Restart policy for the pod

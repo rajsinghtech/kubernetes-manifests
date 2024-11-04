@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: smb
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 139
+    targetPort: 139
+    protocol: TCP
+  - port: 445
+    targetPort: 445
+    protocol: TCP
+  selector:
+    app: smb
