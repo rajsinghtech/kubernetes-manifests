@@ -34,7 +34,7 @@ patches:
               - name: immich-server
                 volumeMounts:
                   - name: vault
-                    mountPath: /vault/k8s/immich/immich-hack-pics
+                    mountPath: /vault/k8s
                 resources:
                   requests:
                     memory: "2Gi"
