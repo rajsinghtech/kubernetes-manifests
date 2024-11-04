@@ -3,21 +3,6 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 helmCharts:
-  - releaseName: proxmox-nfs
-    repo: https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/
-    version: 4.0.18
-    namespace: nfs-subdir-external-provisioner
-    includeCRDs: true
-    valuesFile: proxmox-nfs-values.yaml
-    name: nfs-subdir-external-provisioner
-
-  - releaseName: proxmox-tank-nfs
-    repo: https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/
-    version: 4.0.18
-    namespace: nfs-subdir-external-provisioner
-    includeCRDs: true
-    valuesFile: proxmox-tank-nfs-values.yaml
-    name: nfs-subdir-external-provisioner
 
   - releaseName: proxmox-vault-nfs
     repo: https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/
