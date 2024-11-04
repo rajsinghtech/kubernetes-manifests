@@ -20,29 +20,27 @@ spec:
         - containerPort: 445
         args:
         - -p
-        - -u "lhouge;applegeek"
-        - -s "public;/share"
-        - -s "users;/srv;no;no;no;lhouge"
-        - -s "lhouge private share;/lhouge;no;no;no;lhouge"
+        - -u "lhouge;applegeek" # User with password
+        - -s "public;/share" # Public share
+        - -s "users;/srv;no;no;no;lhouge" # User share
+        - -s "lhouge private share;/lhouge;no;no;no;lhouge" # Private share for user
         volumeMounts:
-        - name: samba-storage
-          mountPath: /mount
-        - name: nfs-proxmox-vault
-          mountPath: /mnt/proxmox-vault
-        - name: nfs-proxmox-tank
-          mountPath: /mnt/proxmox-tank
         - name: samba-volume
-          mountPath: /config
+          mountPath: /config # Config volume for Samba
+        - name: nfs-proxmox-vault
+          mountPath: /mnt/proxmox-vault # NFS mount for vault
+        - name: nfs-proxmox-tank
+          mountPath: /mnt/proxmox-tank # NFS mount for tank
       volumes:
       - name: samba-volume
         persistentVolumeClaim:
-          claimName: samba-storage
+          claimName: samba-storage # Reference to PVC for Samba config
       - name: nfs-proxmox-tank
         nfs:
           path: /tank/k8s
-          server: 192.168.50.69
+          server: 192.168.50.69 # NFS server for tank
       - name: nfs-proxmox-vault
         nfs:
           path: /vault/k8s
-          server: 192.168.50.104
-    restartPolicy: Always # Restart policy for the pod
+          server: 192.168.50.104 # NFS server for vault
+      restartPolicy: Always # Restart policy for the pod
