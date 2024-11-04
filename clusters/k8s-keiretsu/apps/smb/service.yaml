@@ -5,10 +5,12 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - port: 139
+  - name: samba-port-139
+    port: 139
     targetPort: 139
     protocol: TCP
-  - port: 445
+  - name: samba-port-445
+    port: 445
     targetPort: 445
     protocol: TCP
   selector:
