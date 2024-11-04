@@ -4,6 +4,25 @@ env:
   pveExistingSecretName: "prometheus-pve-exporter"
 serviceMonitor:
   enabled: true
+  interval: 30s
+  namespace: "monitoring"  # Adjust as needed
+  selector:
+    matchLabels:
+      release: prometheus  # Adjust based on your Prometheus setup
+  relabelings:
+    - source_labels: [__address__]
+      target_label: __param_target
+    - source_labels: [__param_target]
+      target_label: instance
+    - target_label: __address__
+      replacement: "prometheus-pve-exporter:9221"
+  pveTargets:
+    - 192.168.50.112
+    - 192.168.50.56
+    - 192.168.50.40
+    - 192.168.50.104
+  additionalLabels:
+    prometheus: kube-prometheus
 pveTargets: 
 - 192.168.50.112
 - 192.168.50.56
