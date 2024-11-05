@@ -4,7 +4,8 @@ kind: Kustomization
 namespace: prometheus-pve-exporter
 resources:
   - secret.yaml
-
+  - servicemonitor.yaml
+  
 helmCharts:
   - name: prometheus-pve-exporter
     repo: https://charts.christianhuth.de
