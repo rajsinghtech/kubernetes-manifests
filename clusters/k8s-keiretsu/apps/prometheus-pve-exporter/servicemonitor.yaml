@@ -32,3 +32,9 @@ spec:
           targetLabel: __param_target
         - sourceLabels: [__param_target]
           targetLabel: instance
+      metricRelabelings:
+        - source_labels: [__param_target]
+          action: replace
+          target_label: instance
+          regex: (.*)
+          replacement: $1
