@@ -114,6 +114,7 @@ grafana:
         revision: 5
         datasource: prometheus
       proxmox-ve:
+      # https://grafana.com/grafana/dashboards/13307-proxmox-ve/
         gnetId: 13307
         revision: 6
         datasource: prometheus
