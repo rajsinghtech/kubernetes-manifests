@@ -71,6 +71,14 @@ grafana:
           editable: true
           options:
             path: /var/lib/grafana/dashboards/ingress-nginx
+        - name: 'proxmox'
+          orgId: 1
+          folder: 'proxmox'
+          type: file
+          disableDeletion: false
+          editable: true
+          options:
+            path: /var/lib/grafana/dashboards/proxmox
   dashboards:
     argocd:
       # https://grafana.com/grafana/dashboards/19993-argocd-operational-overview/
@@ -99,7 +107,8 @@ grafana:
         gnetId: 20510
         revision: 1
         datasource: prometheus
-    prometheus:
+    proxmox:
+      # https://grafana.com/grafana/dashboards/10347-proxmox-via-prometheus/
       proxmox:
         gnetId: 10347
         revision: 5
