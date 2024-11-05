@@ -10,15 +10,6 @@ serviceMonitor:
     prometheus: kube-prometheus
   interval: 30s
   namespace: "monitoring"
-  metricRelabelings: []
-  relabelings: 
-    - source_labels: [__address__]
-      target_label: __param_target
-    - source_labels: [__param_target]
-      target_label: instance
-    - target_label: __address__
-      replacement: prometheus-pve-exporter:9221  # PVE exporter service.
-  # -- Prometheus
   pveTargets: 
     - 192.168.50.112
     - 192.168.50.56
