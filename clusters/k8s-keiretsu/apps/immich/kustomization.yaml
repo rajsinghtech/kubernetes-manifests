@@ -39,7 +39,7 @@ patches:
                 resources:
                   requests:
                     memory: "3Gi"
-                    cpu: "3000"
+                    cpu: "2000"
                   limits:
                     memory: "6Gi"
                     cpu: "6000"
