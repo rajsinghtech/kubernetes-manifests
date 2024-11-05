@@ -113,6 +113,10 @@ grafana:
         gnetId: 10347
         revision: 5
         datasource: prometheus
+      proxmox-ve:
+        gnetId: 13307
+        revision: 6
+        datasource: prometheus
   ingress:
     enabled: true
     ingressClassName: nginx
