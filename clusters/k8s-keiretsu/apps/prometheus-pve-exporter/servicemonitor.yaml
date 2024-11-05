@@ -11,30 +11,23 @@ spec:
     matchLabels:
       app.kubernetes.io/name: prometheus-pve-exporter
       app.kubernetes.io/instance: prometheus-pve-exporter
+  jobLabel: prometheus-pve-exporter
   namespaceSelector:
     matchNames:
       - prometheus-pve-exporter
   endpoints:
-    - port: http
-      path: /pve
+    - port: http  
       interval: 15s
-      params:
-        module: [default]
-        cluster: ['1']
-        node: ['1']
-        target:
-          - 192.168.50.112
-          - 192.168.50.56
-          - 192.168.50.40
-          - 192.168.50.104
+      scrapeTimeout: 3s
+      honorLabels: true
+      path: /pve
       relabelings:
-        - sourceLabels: [__address__]
-          targetLabel: __param_target
-        - sourceLabels: [__param_target]
-          targetLabel: instance
-      metricRelabelings:
+        - source_labels: [__address__]
+          target_label: __param_target
         - source_labels: [__param_target]
-          action: replace
           target_label: instance
-          regex: (.*)
-          replacement: $1
+      metricRelabelings:
+        - source_labels: [__address__]
+          target_label: __param_target
+        - source_labels: [__param_target]
+          target_label: instance
