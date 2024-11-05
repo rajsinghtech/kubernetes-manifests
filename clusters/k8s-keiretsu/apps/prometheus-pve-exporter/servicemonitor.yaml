@@ -2,6 +2,8 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   labels:
+    app.kubernetes.io/instance: prometheus-pve-exporter
+    app.kubernetes.io/name: prometheus-pve-exporter
   name: prometheus-pve-exporter
   namespace: prometheus-pve-exporter
 spec:
@@ -9,15 +11,16 @@ spec:
     - interval: 30s
       path: /metrics
       port: http
-    - params:
+    - interval: 30s
+      params:
         module: [default]
         cluster: ['1']
         node: ['1']
-        target:
-          - 192.168.50.112
-          - 192.168.50.56
-          - 192.168.50.40
-          - 192.168.50.104
+      relabel_configs:
+        - source_labels: [__address__]
+          target_label: __param_target
+        - source_labels: [__param_target]
+          target_label: instance
       path: /pve
       port: http
   namespaceSelector:
