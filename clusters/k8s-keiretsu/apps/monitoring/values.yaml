@@ -72,22 +72,6 @@ grafana:
           options:
             path: /var/lib/grafana/dashboards/ingress-nginx
   dashboards:
-    default:
-      # https://grafana.com/grafana/dashboards/14765-grpc-go/
-      grpc-go:
-        gnetId: 14765
-        revision: 3
-        datasource: prometheus
-      # https://grafana.com/grafana/dashboards/14192-clickhouse/
-      clickhouse:
-        gnetId: 14192
-        revision: 4
-        datasource: prometheus
-      # https://grafana.com/grafana/dashboards/13500-clickhouse-internal-exporter/
-      clickhouse-internal-exporter:
-        gnetId: 13500
-        revision: 1
-        datasource: prometheus
     argocd:
       # https://grafana.com/grafana/dashboards/19993-argocd-operational-overview/
       argocd-operational-overview:
@@ -114,6 +98,11 @@ grafana:
       ingress-nginx-request-handling-performance:
         gnetId: 20510
         revision: 1
+        datasource: prometheus
+    prometheus:
+      proxmox:
+        gnetId: 10347
+        revision: 5
         datasource: prometheus
   ingress:
     enabled: true
