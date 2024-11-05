@@ -4,7 +4,7 @@ kind: Kustomization
 helmCharts:
   - name: kube-prometheus-stack
     repo: https://prometheus-community.github.io/helm-charts
-    version: 62.7.0
+    version: 65.6.0
     namespace: monitoring
     releaseName: prometheus
     includeCRDs: true
@@ -29,6 +29,7 @@ resources:
   # - ./templates/secrets.yaml
   - ./templates/dashboards/ceph-pools.yaml
   - ./templates/dashboards/ceph-osds.yaml
+  - ./templates/dashboards/proxmox.yaml
   - ./templates/dashboards/ceph-cluster.yaml
   - ./templates/dashboards/tesla-fleet-telemetry.yaml
 patches:

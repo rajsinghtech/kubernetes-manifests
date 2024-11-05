@@ -1,0 +1,73 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: prometheus-pve-exporter
+  namespace: prometheus-pve-exporter
+  labels:
+    app.kubernetes.io/name: prometheus-pve-exporter
+    app.kubernetes.io/instance: prometheus-pve-exporter
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: prometheus-pve-exporter
+      app.kubernetes.io/instance: prometheus-pve-exporter
+  jobLabel: prometheus-pve-exporter
+  namespaceSelector:
+    matchNames:
+      - prometheus-pve-exporter
+  endpoints:
+    - honorLabels: &honor-labels true
+      relabelings: &relabelings
+      - action: replace
+        sourceLabels:
+          - __param_target
+        targetLabel: instance
+      params:
+        module: &module
+          - default
+        cluster: &cluster
+          - "0"
+        node: &node
+          - "1"
+        target:
+          - 192.168.50.112
+
+      path: &path /pve
+      port: &port http
+      scrapeTimeout: &scrape-timeout 5s
+    - honorLabels: *honor-labels
+      relabelings: *relabelings
+      params:
+        module: *module
+        cluster: *cluster
+        node: *node
+        target:
+          - 192.168.50.56
+      path: *path
+      port: *port
+      scrapeTimeout: *scrape-timeout
+    - honorLabels: *honor-labels
+      relabelings: *relabelings
+      params:
+        module: *module
+        cluster: *cluster
+        node: *node
+        target:
+          - 192.168.50.40
+      path: *path
+      port: *port
+      scrapeTimeout: *scrape-timeout
+    # Get cluster metrics
+    - honorLabels: *honor-labels
+      relabelings: *relabelings
+      params:
+        module: *module
+        cluster:
+          - "1"
+        node:
+          - "0"
+        target:
+          - 192.168.50.104
+      path: *path
+      port: *port
+      scrapeTimeout: *scrape-timeout
