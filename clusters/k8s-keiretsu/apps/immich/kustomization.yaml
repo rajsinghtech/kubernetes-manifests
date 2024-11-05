@@ -39,10 +39,10 @@ patches:
                 resources:
                   requests:
                     memory: "3Gi"
-                    cpu: "2000"
+                    cpu: "3"
                   limits:
                     memory: "6Gi"
-                    cpu: "6000"
+                    cpu: "6"
   - target:
       kind: StatefulSet
       name: immich-postgresql
