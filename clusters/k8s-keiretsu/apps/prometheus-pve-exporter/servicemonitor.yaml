@@ -16,27 +16,58 @@ spec:
     matchNames:
       - prometheus-pve-exporter
   endpoints:
-  - port: http
-    interval: 15s
-    path: /pve
-    params:
-      target:
-      - 192.168.50.112
-  - port: http
-    interval: 15s
-    path: /pve
-    params:
-      target:
-      - 192.168.50.56
-  - port: http
-    interval: 15s
-    path: /pve
-    params:
-      target:
-      - 192.168.50.40
-  - port: http
-    interval: 15s
-    path: /pve
-    params:
-      target:
-      - 192.168.50.104
+    - honorLabels: &honor-labels true
+      relabelings: &relabelings
+      - action: replace
+        sourceLabels:
+          - __param_target
+        targetLabel: instance
+      params:
+        module: &module
+          - default
+        cluster: &cluster
+          - "0"
+        node: &node
+          - "1"
+        target:
+          - 192.168.50.112
+
+      path: &path /pve
+      port: &port http
+      scrapeTimeout: &scrape-timeout 5s
+    - honorLabels: *honor-labels
+      relabelings: *relabelings
+      params:
+        module: *module
+        cluster: *cluster
+        node: *node
+        target:
+          - 192.168.50.56
+      path: *path
+      port: *port
+      scrapeTimeout: *scrape-timeout
+    - honorLabels: *honor-labels
+      relabelings: *relabelings
+      params:
+        module: *module
+        cluster: *cluster
+        node: *node
+        target:
+          - 192.168.50.40
+      path: *path
+      port: *port
+      scrapeTimeout: *scrape-timeout
+    # Get cluster metrics
+    - honorLabels: *honor-labels
+      relabelings: *relabelings
+      params:
+        module: *module
+        cluster:
+          - "1"
+        node:
+          - "0"
+        target:
+          - 192.168.50.104
+      path: *path
+      port: *port
+      scrapeTimeout: *scrape-timeout
