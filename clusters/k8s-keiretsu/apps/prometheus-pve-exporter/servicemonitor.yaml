@@ -16,22 +16,27 @@ spec:
     matchNames:
       - prometheus-pve-exporter
   endpoints:
-    - port: http  
-      interval: 15s
-      scrapeTimeout: 3s
-      honorLabels: true
-      path: /pve
-      relabelings:
-        - action: replace
-          source_labels: ["__address__"]
-          target_label: __param_target
-        - action: replace
-          source_labels: ["__param_target"]
-          target_label: instance
-      metricRelabelings:
-        - action: replace
-          source_labels: ["__address__"]
-          target_label: "__param_target"
-        - action: replace
-          source_labels: ["__param_target"]
-          target_label: "instance"
+  - port: http
+    interval: 15s
+    path: /pve
+    params:
+      target:
+      - 192.168.50.112
+  - port: http
+    interval: 15s
+    path: /pve
+    params:
+      target:
+      - 192.168.50.56
+  - port: http
+    interval: 15s
+    path: /pve
+    params:
+      target:
+      - 192.168.50.40
+  - port: http
+    interval: 15s
+    path: /pve
+    params:
+      target:
+      - 192.168.50.104
