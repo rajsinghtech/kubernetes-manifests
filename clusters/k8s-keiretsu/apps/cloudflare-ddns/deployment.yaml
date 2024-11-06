@@ -27,7 +27,6 @@ spec:
               value: "test.rajsingh.info"
             - name: PROXIED
               value: "true"
-          restartPolicy: Always
       securityContext:
         runAsUser: 1000
         runAsGroup: 1000
