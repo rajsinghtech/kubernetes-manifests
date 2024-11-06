@@ -20,8 +20,8 @@ spec:
           - /bin/sh
           - -c
           - |
-            api_token=$(echo "$API_TOKEN" | base64 -d)
-            zone_id=$(echo "$ZONE_ID" | base64 -d)
+            api_token=$(echo "$API_TOKEN")
+            zone_id=$(echo "$ZONE_ID")
             printf '{
               "cloudflare": [
                 {
