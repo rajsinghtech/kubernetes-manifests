@@ -27,6 +27,8 @@ spec:
               value: "test.rajsingh.info"
             - name: PROXIED
               value: "true"
+            - name: IP6_PROVIDER
+              value: "none"
       securityContext:
         runAsUser: 1000
         runAsGroup: 1000
