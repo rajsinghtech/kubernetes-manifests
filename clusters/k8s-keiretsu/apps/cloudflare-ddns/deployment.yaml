@@ -23,7 +23,7 @@ spec:
             # Decode secrets and escape variables correctly in config.json
             api_token=$(echo "$API_TOKEN" | base64 -d)
             zone_id=$(echo "$ZONE_ID" | base64 -d)
-            # Use printf to write JSON file to handle special characters properly
+            # Use printf to write JSON file with correct variable substitution
             printf '{
               "cloudflare": [
                 {
@@ -43,7 +43,7 @@ spec:
               "aaaa": false,
               "purgeUnknownRecords": false,
               "ttl": "Auto"
-            }' "$api_token" "$zone_id" > /config/config.json
+            }\n' "$api_token" "$zone_id" > /config/config.json
         env:
         - name: API_TOKEN
           valueFrom:
