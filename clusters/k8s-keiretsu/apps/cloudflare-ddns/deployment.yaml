@@ -20,17 +20,17 @@ spec:
           - /bin/sh
           - -c
           - |
-            # Decode secrets and substitute variables in config.json
-            api_token=$(echo $API_TOKEN | base64 -d)
-            zone_id=$(echo $ZONE_ID | base64 -d)
-            cat <<EOF > /config/config.json
-            {
+            # Decode secrets and escape variables correctly in config.json
+            api_token=$(echo "$API_TOKEN" | base64 -d)
+            zone_id=$(echo "$ZONE_ID" | base64 -d)
+            # Use printf to write JSON file to handle special characters properly
+            printf '{
               "cloudflare": [
                 {
                   "authentication": {
-                    "api_token": "${api_token}"
+                    "api_token": "%s"
                   },
-                  "zone_id": "${zone_id}",
+                  "zone_id": "%s",
                   "subdomains": [
                     {
                       "name": "api",
@@ -43,8 +43,7 @@ spec:
               "aaaa": false,
               "purgeUnknownRecords": false,
               "ttl": "Auto"
-            }
-            EOF
+            }' "$api_token" "$zone_id" > /config/config.json
         env:
         - name: API_TOKEN
           valueFrom:
