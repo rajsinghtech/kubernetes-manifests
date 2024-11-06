@@ -2,8 +2,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cloudflare-ddns
-  namespace: cloudflare-ddns
+  labels:
+    app: cloudflare-ddns
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: cloudflare-ddns
@@ -12,64 +14,20 @@ spec:
       labels:
         app: cloudflare-ddns
     spec:
-      # Init container to create config.json with variable substitution
-      initContainers:
-      - name: config-init
-        image: alpine:3.12
-        command:
-          - /bin/sh
-          - -c
-          - |
-            api_token=$(echo "$API_TOKEN")
-            zone_id=$(echo "$ZONE_ID")
-            printf '{
-              "cloudflare": [
-                {
-                  "authentication": {
-                    "api_token": "%s"
-                  },
-                  "zone_id": "%s",
-                  "subdomains": [
-                    {
-                      "name": "api",
-                      "proxied": true
-                    }
-                  ]
-                }
-              ],
-              "a": true,
-              "aaaa": false,
-              "purgeUnknownRecords": false,
-              "ttl": "Auto"
-            }\n' "$api_token" "$zone_id" > /config/config.json
-        env:
-        - name: API_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: cloudflare-ddns
-              key: cloudflared-k8s-tunnel-token-rajsingh-info
-        - name: ZONE_ID
-          valueFrom:
-            secretKeyRef:
-              name: cloudflare-ddns
-              key: cloudflared-k8s-tunnel-zone-id-rajsingh-info
-        volumeMounts:
-        - name: config-volume
-          mountPath: /config
-      # Main container
       containers:
-      - name: cloudflare-ddns
-        image: timothyjmiller/cloudflare-ddns:latest
-        resources:
-          limits:
-            memory: '32Mi'
-            cpu: '50m'
-        env:
-        - name: CONFIG_PATH
-          value: '/etc/cloudflare-ddns/config.json'
-        volumeMounts:
-        - name: config-volume
-          mountPath: '/etc/cloudflare-ddns'
-      volumes:
-      - name: config-volume
-        emptyDir: {}
+        - name: cloudflare-ddns
+          image: favonia/cloudflare-ddns:latest
+          env:
+            - name: CLOUDFLARE_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: cloudflare-ddns
+                  key: cloudflared-k8s-tunnel-zone-id-rajsingh-info
+            - name: DOMAINS
+              value: "test.rajsingh.info"
+            - name: PROXIED
+              value: "true"
+          restartPolicy: Always
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
