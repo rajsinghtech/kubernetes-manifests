@@ -21,7 +21,7 @@ spec:
             - name: CLOUDFLARE_API_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: cloudflare-ddns
+                  name: cloudflare
                   key: cloudflare-k8s-token-rajsingh-info
             - name: DOMAINS
               value: "fleet-telemetry.tesla.rajsingh.info"
@@ -29,8 +29,6 @@ spec:
               value: "true"
             - name: IP6_PROVIDER
               value: "none"
-            # - name: IP4_PROVIDER
-            #   value: "cloudflare.doh"
       securityContext:
         runAsUser: 1000
         runAsGroup: 1000
