@@ -20,10 +20,8 @@ spec:
           - /bin/sh
           - -c
           - |
-            # Decode secrets and escape variables correctly in config.json
             api_token=$(echo "$API_TOKEN" | base64 -d)
             zone_id=$(echo "$ZONE_ID" | base64 -d)
-            # Use printf to write JSON file with correct variable substitution
             printf '{
               "cloudflare": [
                 {
