@@ -9,7 +9,7 @@ spec:
     namespace: cloudflared
   project: default
   source:
-    path: clusters/k8s-keiretsu/apps/cloudflared
+    path: clusters/k8s-keiretsu/apps/cloudflare
     repoURL: https://github.com/rajsinghtech/kubernetes-manifests
     targetRevision: keiretsu
   syncPolicy:
