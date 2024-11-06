@@ -52,7 +52,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: cloudflare-ddns
-              key: zone_id
+              key: cloudflared-k8s-tunnel-zone-id-rajsingh-info
         volumeMounts:
         - name: config-volume
           mountPath: /config
