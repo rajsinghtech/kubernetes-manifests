@@ -24,13 +24,13 @@ spec:
                   name: cloudflare-ddns
                   key: cloudflared-k8s-tunnel-token-rajsingh-info
             - name: DOMAINS
-              value: "test.rajsingh.info"
+              value: "fleet-telemetry.tesla.rajsingh.info"
             - name: PROXIED
               value: "true"
             - name: IP6_PROVIDER
               value: "none"
-            - name: IP4_PROVIDER
-              value: "cloudflare.doh"
+            # - name: IP4_PROVIDER
+            #   value: "cloudflare.doh"
       securityContext:
         runAsUser: 1000
         runAsGroup: 1000
