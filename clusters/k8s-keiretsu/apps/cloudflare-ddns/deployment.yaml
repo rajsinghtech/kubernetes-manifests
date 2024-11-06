@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudflare-ddns
+  namespace: cloudflare-ddns
+spec:
+  selector:
+    matchLabels:
+      app: cloudflare-ddns
+  template:
+    metadata:
+      labels:
+        app: cloudflare-ddns
+    spec:
+      # Init container to create config.json with variable substitution
+      initContainers:
+      - name: config-init
+        image: alpine:3.12
+        command:
+          - /bin/sh
+          - -c
+          - |
+            # Decode secrets and substitute variables in config.json
+            api_token=$(echo $API_TOKEN | base64 -d)
+            zone_id=$(echo $ZONE_ID | base64 -d)
+            cat <<EOF > /config/config.json
+            {
+              "cloudflare": [
+                {
+                  "authentication": {
+                    "api_token": "$api_token"
+                  },
+                  "zone_id": "$zone_id",
+                  "subdomains": [
+                    { "name": "bob", "proxied": true }
+                  ]
+                }
+              ],
+              "a": true,
+              "aaaa": false,
+              "purgeUnknownRecords": false,
+              "ttl": "Auto"
+            }
+            EOF
+        env:
+        - name: API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: cloudflare-ddns
+              key: cloudflared-k8s-tunnel-token-rajsingh-info
+        - name: ZONE_ID
+          valueFrom:
+            secretKeyRef:
+              name: cloudflare-ddns
+              key: zone_id
+        volumeMounts:
+        - name: config-volume
+          mountPath: /config
+      # Main container
+      containers:
+      - name: cloudflare-ddns
+        image: timothyjmiller/cloudflare-ddns:latest
+        resources:
+          limits:
+            memory: '32Mi'
+            cpu: '50m'
+        env:
+        - name: CONFIG_PATH
+          value: '/etc/cloudflare-ddns/config.json'
+        volumeMounts:
+        - name: config-volume
+          mountPath: '/etc/cloudflare-ddns'
+      volumes:
+      - name: config-volume
+        emptyDir: {}
