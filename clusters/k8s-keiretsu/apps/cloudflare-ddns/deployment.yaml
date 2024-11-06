@@ -29,6 +29,8 @@ spec:
               value: "true"
             - name: IP6_PROVIDER
               value: "none"
+            - name: IP4_PROVIDER
+              value: "cloudflare.doh"
       securityContext:
         runAsUser: 1000
         runAsGroup: 1000
