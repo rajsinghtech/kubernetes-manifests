@@ -57,10 +57,8 @@ spec:
           volumeMounts:
             - name: startup-script
               mountPath: /custom-cont-init.d
-            - name: nfs-proxmox
-              mountPath: /mnt/proxmox
-            - name: nfs-proxmox-tank
-              mountPath: /mnt/proxmox-tank
+            - name: nfs-proxmox-vault
+              mountPath: /mnt/proxmox-vault
             - name: config-volume
               mountPath: /config
       volumes:
@@ -68,11 +66,7 @@ spec:
           configMap:
             name: startup-script
             defaultMode: 0755 # Set the permissions for the files in the ConfigMap
-        - name: nfs-proxmox
-          nfs:
-            path: /tank/k8s
-            server: 192.168.50.69
-        - name: nfs-proxmox-tank
+        - name: nfs-proxmox-vault
           nfs:
             path: /vault/k8s
             server: 192.168.50.104
