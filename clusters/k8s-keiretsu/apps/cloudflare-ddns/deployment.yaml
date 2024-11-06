@@ -22,7 +22,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: cloudflare-ddns
-                  key: cloudflared-k8s-tunnel-token-rajsingh-info
+                  key: cloudflare-k8s-token-rajsingh-info
             - name: DOMAINS
               value: "fleet-telemetry.tesla.rajsingh.info"
             - name: PROXIED
