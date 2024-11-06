@@ -22,7 +22,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: cloudflare-ddns
-                  key: cloudflared-k8s-tunnel-zone-id-rajsingh-info
+                  key: cloudflared-k8s-tunnel-token-rajsingh-info
             - name: DOMAINS
               value: "test.rajsingh.info"
             - name: PROXIED
