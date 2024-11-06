@@ -28,11 +28,14 @@ spec:
               "cloudflare": [
                 {
                   "authentication": {
-                    "api_token": "$api_token"
+                    "api_token": "${api_token}"
                   },
-                  "zone_id": "$zone_id",
+                  "zone_id": "${zone_id}",
                   "subdomains": [
-                    { "name": "bob", "proxied": true }
+                    {
+                      "name": "api",
+                      "proxied": true
+                    }
                   ]
                 }
               ],
