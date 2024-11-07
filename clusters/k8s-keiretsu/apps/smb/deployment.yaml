@@ -18,15 +18,10 @@ spec:
         ports:
         - containerPort: 139
         - containerPort: 445
-        - containerPort: 137
-          protocol: UDP # Added for nmbd
-        - containerPort: 138
-          protocol: UDP # Added for nmbd
         args:
         - -p
-        - -n  # Enable nmbd
-        - -u lhouge;applegeek  # Create user 'lhouge' with password 'applegeek'
-        - -s proxmox-vault;/mnt/proxmox-vault;yes;no;no;lhouge  # Proxmox vault share with 'read-only'
+        - -u "lhouge;applegeek" # Create user 'lhouge' with password 'applegeek'
+        - -s "proxmox-vault;/proxmox-vault;no;no;no;lhouge"
         volumeMounts:
         - name: samba-volume
           mountPath: /config
