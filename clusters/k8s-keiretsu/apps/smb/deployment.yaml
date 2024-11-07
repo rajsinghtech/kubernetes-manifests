@@ -36,7 +36,7 @@ spec:
                   name: smb-credentials
                   key: password  # The 'password' key in the secret
             - name: SHARE
-              value: "share;/smbshare/;yes;no;no;all;none"
+              value: share;/smbshare/;yes;no;no;all;none
           volumeMounts:
             - name: samba-volume
               mountPath: /config
@@ -44,7 +44,3 @@ spec:
               mountPath: /mnt/proxmox-vault
           ports:
             - containerPort: 445
-          args:
-            - -p
-            - -n # Enable nmbd
-            - -w WORKGROUP # Specify your workgroup
