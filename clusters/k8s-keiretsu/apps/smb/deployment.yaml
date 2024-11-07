@@ -26,7 +26,7 @@ spec:
         - -p
         - -n # Enable nmbd
         - -u lhouge;applegeek # Add user
-        - -s public;/share # Public share
+        - -s proxmox-vault;/mnt/proxmox-vault
         - -s users;/srv;no;no;no;lhouge # User share
         - -s lhouge private share;/lhouge;no;no;no;lhouge # Private share for user
         volumeMounts:
@@ -40,6 +40,6 @@ spec:
           claimName: samba-storage
       - name: nfs-proxmox-vault
         nfs:
-          path: /vault/k8s
+          path: /vault
           server: 192.168.50.104
       restartPolicy: Always
