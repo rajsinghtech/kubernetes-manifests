@@ -24,11 +24,9 @@ spec:
           protocol: UDP # Added for nmbd
         args:
         - -p
-        - -n # Enable nmbd
-        - -u lhouge;applegeek # Add user
-        - -s proxmox-vault;/mnt/proxmox-vault
-        - -s users;/srv;no;no;no;lhouge # User share
-        - -s lhouge private share;/lhouge;no;no;no;lhouge # Private share for user
+        - -n  # Enable nmbd
+        - -u lhouge;applegeek  # Create user 'lhouge' with password 'applegeek'
+        - -s proxmox-vault;/mnt/proxmox-vault;yes;no;no;lhouge  # Proxmox vault share with 'read-only'
         volumeMounts:
         - name: samba-volume
           mountPath: /config
