@@ -29,7 +29,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: smb-credentials
-                  key: username  # The 'user' key in the secret
+                  key: user  # The 'user' key in the secret
             - name: PASSWORD
               valueFrom:
                 secretKeyRef:
