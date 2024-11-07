@@ -20,8 +20,8 @@ spec:
         - containerPort: 445
         args:
         - -p
-        - -u "lhouge;applegeek" # Create user 'lhouge' with password 'applegeek'
-        - -s "proxmox-vault;/proxmox-vault;no;no;no;lhouge"
+        - -u lhouge;applegeek # Create user 'lhouge' with password 'applegeek'
+        - -s proxmox-vault;/proxmox-vault;no;no;no;lhouge
         volumeMounts:
         - name: samba-volume
           mountPath: /config
