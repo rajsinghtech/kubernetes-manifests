@@ -44,3 +44,7 @@ spec:
               mountPath: /mnt/proxmox-vault
           ports:
             - containerPort: 445
+          args:
+            - -p
+            - -n # Enable nmbd
+            - -w WORKGROUP # Specify your workgroup
