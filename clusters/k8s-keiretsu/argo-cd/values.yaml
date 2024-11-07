@@ -11,8 +11,8 @@ configs:
   cm:
     exec.enabled: "true"
     kustomize.buildOptions: --enable-helm
-    kustomize.path.v5.0.1: /usr/local/bin/kustomize
-    kustomize.buildOptions.v5.0.1: --enable-helm
+    # kustomize.path.v5.0.1: /usr/local/bin/kustomize
+    # kustomize.buildOptions.v5.0.1: --enable-helm
     resource.exclusions: |
       - apiGroups:
           - cilium.io
