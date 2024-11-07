@@ -19,7 +19,7 @@ spec:
         - containerPort: 139
         - containerPort: 445
         args:
-        - -s proxmox-vault;/proxmox-vault
+        - -s proxmox-vault;/mnt/proxmox-vault
         volumeMounts:
         - name: samba-volume
           mountPath: /config
