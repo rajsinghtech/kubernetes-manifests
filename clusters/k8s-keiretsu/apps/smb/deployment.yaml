@@ -13,28 +13,26 @@ spec:
         app: smb-server
     spec:
       containers:
-        - name: smb-server
-          image: dperson/samba
-          ports:
-            - containerPort: 139
-            - containerPort: 445
-          args:
-            - -p
-            - -u
-            - lhouge;applegeek  # Semicolon is part of the argument
-            - -s
-            - proxmox-vault;/proxmox-vault;no;no;no;lhouge
-          volumeMounts:
-            - name: samba-volume
-              mountPath: /config
-            - name: nfs-proxmox-vault
-              mountPath: /mnt/proxmox-vault
-      volumes:
+      - name: smb-server
+        image: dperson/samba
+        ports:
+        - containerPort: 139
+        - containerPort: 445
+        args:
+        - -p
+        - -u lhouge;applegeek # Create user 'lhouge' with password 'applegeek'
+        - -s proxmox-vault;/proxmox-vault;no;no;no;lhouge
+        volumeMounts:
         - name: samba-volume
-          persistentVolumeClaim:
-            claimName: samba-storage
+          mountPath: /config
         - name: nfs-proxmox-vault
-          nfs:
-            path: /vault
-            server: 192.168.50.104
+          mountPath: /mnt/proxmox-vault
+      volumes:
+      - name: samba-volume
+        persistentVolumeClaim:
+          claimName: samba-storage
+      - name: nfs-proxmox-vault
+        nfs:
+          path: /vault
+          server: 192.168.50.104
       restartPolicy: Always
