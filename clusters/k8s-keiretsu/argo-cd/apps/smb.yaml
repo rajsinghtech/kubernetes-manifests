@@ -1,12 +1,12 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: smb
+  name: smb-server
   namespace: argocd
 spec:
   destination:
     server: https://kubernetes.default.svc
-    namespace: smb
+    namespace: smb-server
   project: default
   source:
     path: clusters/k8s-keiretsu/apps/smb
