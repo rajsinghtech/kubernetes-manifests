@@ -31,43 +31,45 @@ spec:
           - "1"
         target:
           - 192.168.50.112
-
+          - 192.168.50.56
+          - 192.168.50.40
+          - 192.168.50.104
       path: &path /pve
       port: &port http
       scrapeTimeout: &scrape-timeout 5s
-    - honorLabels: *honor-labels
-      relabelings: *relabelings
-      params:
-        module: *module
-        cluster: *cluster
-        node: *node
-        target:
-          - 192.168.50.56
-      path: *path
-      port: *port
-      scrapeTimeout: *scrape-timeout
-    - honorLabels: *honor-labels
-      relabelings: *relabelings
-      params:
-        module: *module
-        cluster: *cluster
-        node: *node
-        target:
-          - 192.168.50.40
-      path: *path
-      port: *port
-      scrapeTimeout: *scrape-timeout
-    # Get cluster metrics
-    - honorLabels: *honor-labels
-      relabelings: *relabelings
-      params:
-        module: *module
-        cluster:
-          - "1"
-        node:
-          - "0"
-        target:
-          - 192.168.50.104
-      path: *path
-      port: *port
-      scrapeTimeout: *scrape-timeout
+    # - honorLabels: *honor-labels
+    #   relabelings: *relabelings
+    #   params:
+    #     module: *module
+    #     cluster: *cluster
+    #     node: *node
+    #     target:
+    #       - 192.168.50.56
+    #   path: *path
+    #   port: *port
+    #   scrapeTimeout: *scrape-timeout
+    # - honorLabels: *honor-labels
+    #   relabelings: *relabelings
+    #   params:
+    #     module: *module
+    #     cluster: *cluster
+    #     node: *node
+    #     target:
+    #       - 192.168.50.40
+    #   path: *path
+    #   port: *port
+    #   scrapeTimeout: *scrape-timeout
+    # # Get cluster metrics
+    # - honorLabels: *honor-labels
+    #   relabelings: *relabelings
+    #   params:
+    #     module: *module
+    #     cluster:
+    #       - "1"
+    #     node:
+    #       - "0"
+    #     target:
+    #       - 192.168.50.104
+    #   path: *path
+    #   port: *port
+    #   scrapeTimeout: *scrape-timeout

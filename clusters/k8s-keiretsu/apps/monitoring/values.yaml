@@ -6,10 +6,6 @@ grafana:
     limits:
       memory: 800Mi
 
-  plugins:
-    - isovalent-hubble-datasource
-    - isovalent-hubbleprocessancestry-panel
-
   grafana.ini:
     dataproxy:
       timeout: 300
@@ -141,7 +137,7 @@ prometheus:
     enableFeatures:
       - exemplar-storage
 
-    retention: 7d
+    retention: 30d
 
     resources:
       requests:
@@ -156,7 +152,7 @@ prometheus:
           storageClassName: ceph-hybrid-fs
           resources:
             requests:
-              storage: 10Gi
+              storage: 100Gi
 prometheusOperator:
   resources:
     limits:
@@ -187,9 +183,8 @@ kube-state-metrics:
 kubeProxy:
   enabled: false
 
-# EKS does not expose controller-manager, or scheduler metrics
 kubeControllerManager:
-  enabled: false
+  enabled: true
 
 kubeScheduler:
-  enabled: false
+  enabled: true
