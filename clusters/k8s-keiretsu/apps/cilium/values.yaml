@@ -13,6 +13,7 @@ prometheus:
   enabled: true
   serviceMonitor:
     enabled: true
+devices: '{vmbr0,eth0}'
 k8sServiceHost: 127.0.0.1
 k8sServicePort: 6443
 extraConfig:
