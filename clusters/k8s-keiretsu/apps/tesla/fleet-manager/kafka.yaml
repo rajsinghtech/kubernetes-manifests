@@ -32,11 +32,11 @@ spec:
     storage:
       type: jbod
       volumes:
-      - id: 0
-        type: persistent-claim
-        size: 20Gi
-        class: ceph-ssd-fs
-        deleteClaim: true
+        - id: 0
+          type: persistent-claim
+          size: 20Gi
+          class: ceph-hybrid-fs
+          deleteClaim: true
   zookeeper:
     replicas: 3
     storage:
