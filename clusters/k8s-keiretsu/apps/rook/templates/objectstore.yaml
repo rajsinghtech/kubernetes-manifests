@@ -7,13 +7,16 @@ spec:
   metadataPool:
     failureDomain: host
     replicated:
-      size: 1
+      size: 3
+      hybridStorage:
+        primaryDeviceClass: ssd
+        secondaryDeviceClass: hdd
   dataPool:
     failureDomain: host
     erasureCoded:
       dataChunks: 2
       codingChunks: 1
-  preservePoolsOnDelete: true
+  preservePoolsOnDelete: false
   gateway:
     sslCertificateRef:
     port: 80
