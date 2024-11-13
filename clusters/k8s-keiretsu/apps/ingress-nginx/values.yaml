@@ -1,5 +1,5 @@
 controller:
-  replicaCount: 2
+  replicaCount: 4
   service:
     type: LoadBalancer
     loadBalancerIP: 10.96.10.10
