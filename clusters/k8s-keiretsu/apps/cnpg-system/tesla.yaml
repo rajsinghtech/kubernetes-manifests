@@ -8,7 +8,7 @@ spec:
 
   storage:
     size: 10Gi
-    storageClass: ceph-ssd-fs
+    storageClass: ceph-hybrid-fs
 
   monitoring:
     enablePodMonitor: true
