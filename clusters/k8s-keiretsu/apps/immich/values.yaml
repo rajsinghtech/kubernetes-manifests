@@ -8,10 +8,10 @@ immich:
       existingClaim: immich
 
 postgresql:
-  enabled: false
-
+  enabled: true
+  global:
+    defaultStorageClass: nfs-proxmox-vault
 redis:
   enabled: true
-  architecture: standalone
-  auth:
-    enabled: false
+  global:
+    defaultStorageClass: nfs-proxmox-vault
