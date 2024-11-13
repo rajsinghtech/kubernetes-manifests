@@ -39,25 +39,29 @@ patches:
                     mountPath: /vault
                 env:
                   - name: DB_DATABASE_NAME
+                    value: 
                     valueFrom:
                       secretKeyRef:
-                        name: immich-postgres-app
                         key: dbname
+                        name: immich-postgres-app
                   - name: DB_HOSTNAME
+                    value: 
                     valueFrom:
                       secretKeyRef:
-                        name: immich-postgres-app
                         key: host
+                        name: immich-postgres-app
                   - name: DB_PASSWORD
+                    value: 
                     valueFrom:
                       secretKeyRef:
-                        name: immich-postgres-app
                         key: password
+                        name: immich-postgres-app
                   - name: DB_USERNAME
+                    value: 
                     valueFrom:
                       secretKeyRef:
-                        name: immich-postgres-app
                         key: username
+                        name: immich-postgres-app
                   - name: IMMICH_MACHINE_LEARNING_URL
                     value: http://immich-machine-learning:3003
                   - name: REDIS_HOSTNAME
