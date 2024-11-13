@@ -49,7 +49,7 @@ ipam:
     clusterPoolIPv4PodCIDRList: "10.42.0.0/16"
 routingMode: tunnel
 tunnelProtocol: vxlan
-# devices: '{vmbr0,eth0}'
+devices: 'vmbr0,eth0'
 # autoDirectNodeRoutes: true
 # directRoutingSkipUnreachable: true
 envoy:
