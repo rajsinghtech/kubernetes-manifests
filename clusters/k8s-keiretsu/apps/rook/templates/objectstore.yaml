@@ -8,9 +8,6 @@ spec:
     failureDomain: host
     replicated:
       size: 3
-      hybridStorage:
-        primaryDeviceClass: ssd
-        secondaryDeviceClass: hdd
   dataPool:
     failureDomain: host
     erasureCoded:
