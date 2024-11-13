@@ -31,6 +31,10 @@ immich:
 # # Dependencies
 postgresql:
   enabled: true
+  global:
+    defaultStorageClass: nfs-proxmox-vault
 
 redis:
   enabled: true
+  global:
+    defaultStorageClass: nfs-proxmox-vault
