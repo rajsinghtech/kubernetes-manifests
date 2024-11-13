@@ -84,6 +84,19 @@ patches:
               name: redis-data
             spec:
               storageClassName: nfs-proxmox-vault
+      template:
+          spec:
+            containers:
+              - name: redis
+                resources:
+                  limits:
+                    cpu: 500m
+                    ephemeral-storage: 3Gi
+                    memory: 2Gi
+                  requests:
+                    cpu: 150m
+                    ephemeral-storage: 100Mi
+                    memory: 1Gi
   - target:
       version: v1
       kind: Deployment
