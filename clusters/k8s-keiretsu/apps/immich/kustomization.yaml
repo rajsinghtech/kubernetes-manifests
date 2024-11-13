@@ -52,6 +52,11 @@ patches:
       metadata:
         name: immich-postgresql
       spec:
+        volumeClaimTemplates:
+          - metadata:
+              name: data
+            spec:
+              storageClassName: nfs-proxmox-vault
         template:
           spec:
             containers:
@@ -65,6 +70,20 @@ patches:
                     cpu: 150m
                     ephemeral-storage: 100Mi
                     memory: 1Gi
+  - target:
+      kind: StatefulSet
+      name: immich-redis-master
+    patch: |-
+      apiVersion: apps/v1
+      kind: StatefulSet
+      metadata:
+        name: immich-redis-master
+      spec:
+        volumeClaimTemplates:
+          - metadata:
+              name: redis-data
+            spec:
+              storageClassName: nfs-proxmox-vault
   - target:
       version: v1
       kind: Deployment
