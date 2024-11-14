@@ -5,5 +5,6 @@ namespace: cloudflare
 resources:
   - cloudflared-luke.yaml
   - cloudflared-raj.yaml
+  - cloudflared-typeo.yaml
   - cloudflare-ddns-raj.yaml
   - secret.yaml
