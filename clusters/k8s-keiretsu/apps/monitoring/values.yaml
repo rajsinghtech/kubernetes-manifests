@@ -7,8 +7,31 @@ grafana:
       memory: 800Mi
 
   grafana.ini:
+    security:
+      allow_embedding: true
+    auth.jwt:
+      enabled: true
+      enable_login_token: true
+      url_login: true
+      username_claim: sub
+      header_name: X-Forwarded-Access-Token
+      auto_sign_up: false
+      jwk_set_file: /var/lib/grafana/jwks/hubble-ui-public.json
     dataproxy:
       timeout: 300
+  sidecar:
+    dashboards:
+      enabled: true
+      label: grafana_dashboard
+      folderAnnotation: grafana_folder
+      provider:
+        foldersFromFilesStructure: true
+  extraConfigmapMounts:
+    - name: hubble-ui-grafana-public-jwks
+      mountPath: /var/lib/grafana/jwks/hubble-ui-public.json
+      subPath: jwks
+      configMap: hubble-ui-grafana-public-jwks
+      readOnly: true
 
   persistence:
     enabled: false 
@@ -24,14 +47,6 @@ grafana:
 
   serviceMonitor:
     enabled: true
-
-  sidecar:
-    dashboards:
-      enabled: true
-      label: grafana_dashboard
-      folderAnnotation: grafana_folder
-      provider:
-        foldersFromFilesStructure: true
 
   additionalDataSources:
     - name: Loki
