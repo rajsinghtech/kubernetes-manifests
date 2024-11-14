@@ -27,7 +27,7 @@ kind: Secret
 metadata:
   creationTimestamp: "2024-11-14T16:23:45Z"
   name: hubble-ui-grafana-secret
-  namespace: kube-system
+  namespace: hubble-ui
   resourceVersion: "1715984"
   uid: 335d03b9-8eb7-49b0-b45c-aaeb2a429f9a
 type: Opaque
