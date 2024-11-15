@@ -4,7 +4,7 @@ metadata:
   name: homeassistant
   namespace: homeassistant
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: homeassistant
@@ -16,21 +16,16 @@ spec:
       containers:
       - name: homeassistant
         image: homeassistant/home-assistant:stable
+        env:
+        - name: TZ
+          value: America/Chicago
         ports:
           - containerPort: 8123
-        resources: {}
         volumeMounts:
           - mountPath: /config
             name: homeassistant-config
-          - mountPath: /etc/localtime
-            name: homeassistant-time
-            readOnly: true
       restartPolicy: Always
       volumes:
         - name: homeassistant-config
           persistentVolumeClaim:
             claimName: homeassistant-config
-        - name: homeassistant-time
-          persistentVolumeClaim:
-            claimName: homeassistant-time
-            readOnly: true
