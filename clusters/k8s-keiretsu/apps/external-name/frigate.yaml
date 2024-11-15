@@ -1,40 +1,40 @@
-apiVersion: v1
-kind: Service
-metadata:
-  namespace: external-name
-  name: frigate-svc
-spec:
-  externalName: frigate.local
-  ports:
-    - name: http
-      port: 5000
-      protocol: TCP
-      targetPort: 5000
-  sessionAffinity: None
-  type: ExternalName
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   namespace: external-name
+#   name: frigate-svc
+# spec:
+#   externalName: frigate.local
+#   ports:
+#     - name: http
+#       port: 5000
+#       protocol: TCP
+#       targetPort: 5000
+#   sessionAffinity: None
+#   type: ExternalName
 ---
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: frigate-tls
-  namespace: external-name
-  annotations:
-    cert-manager.io/cluster-issuer: luke-issuer
-    kubernetes.io/tls-acme: "true"
-spec:
-  ingressClassName: nginx
-  rules:
-    - host: frigate.lukehouge.com
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: frigate-svc
-                port:
-                  number: 5000
-  tls:
-    - secretName: frigate-luke-tls
-      hosts:
-        - frigate.lukehouge.com
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: frigate-tls
+#   namespace: external-name
+#   annotations:
+#     cert-manager.io/cluster-issuer: luke-issuer
+#     kubernetes.io/tls-acme: "true"
+# spec:
+#   ingressClassName: nginx
+#   rules:
+#     - host: frigate.lukehouge.com
+#       http:
+#         paths:
+#           - path: /
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: frigate-svc
+#                 port:
+#                   number: 5000
+#   tls:
+#     - secretName: frigate-luke-tls
+#       hosts:
+#         - frigate.lukehouge.com
