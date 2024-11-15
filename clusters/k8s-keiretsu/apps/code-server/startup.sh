@@ -17,5 +17,4 @@ echo 'alias k=kubectl' >>~/.bashrc
 echo 'complete -o default -F __start_kubectl k' >>~/.bashrc
 echo '------'
 apt update
-apt install dnsutils iputils-ping -y
-apt install rsync -y
+apt install dnsutils iputils-ping rsync wget -y

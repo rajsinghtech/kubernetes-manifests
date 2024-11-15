@@ -21,11 +21,11 @@ spec:
           value: America/Chicago
         ports:
           - containerPort: 8123
-        # volumeMounts:
-        #   - mountPath: /config
-        #     name: homeassistant-config
+        volumeMounts:
+          - mountPath: /config
+            name: homeassistant-config
       restartPolicy: Always
-      # volumes:
-      #   - name: homeassistant-config
-      #     persistentVolumeClaim:
-      #       claimName: homeassistant-config
+      volumes:
+        - name: homeassistant-config
+          persistentVolumeClaim:
+            claimName: homeassistant-config
