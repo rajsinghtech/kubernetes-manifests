@@ -47,11 +47,11 @@ spec:
               subPath: frigate.yml
           resources:
             limits:
-              memory: "128Mi"
-              cpu: "500m"
+              memory: "10000Mi"
+              cpu: "10"
             requests:
-              memory: "64Mi"
-              cpu: "250m"
+              memory: "8000Mi"
+              cpu: "8"
           securityContext:
             privileged: true  # Required for USB and GPU access
       volumes:
