@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: homeassistant
+  namespace: homeassistant
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: homeassistant
+  template:
+    metadata:
+      labels:
+        app: homeassistant
+    spec:
+      containers:
+      - name: homeassistant
+        image: homeassistant/home-assistant:stable
+        ports:
+          - containerPort: 8123
+        resources: {}
+        volumeMounts:
+          - mountPath: /config
+            name: homeassistant-config
+          - mountPath: /etc/localtime
+            name: homeassistant-time
+            readOnly: true
+      restartPolicy: Always
+      volumes:
+        - name: homeassistant-config
+          persistentVolumeClaim:
+            claimName: homeassistant-config
+        - name: homeassistant-time
+          persistentVolumeClaim:
+            claimName: homeassistant-time
+            readOnly: true
