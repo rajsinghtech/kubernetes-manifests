@@ -9,7 +9,7 @@
             "Location": { 
                 "interval_seconds": 15
             },                        
-            "CruiseState": {         
+            "GpsHeading": {         
                "interval_seconds": 30 
             },                        
             "Odometer": {              
