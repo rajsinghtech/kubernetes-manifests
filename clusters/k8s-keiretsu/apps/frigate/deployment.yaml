@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frigate
+  labels:
+    app: frigate
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frigate
+  template:
+    metadata:
+      labels:
+        app: frigate
+    spec:
+      containers:
+        - name: frigate
+          image: ghcr.io/blakeblackshear/frigate:stable
+          ports:
+            - name: web
+              containerPort: 8971  # Web UI
+            - name: rtsp
+              containerPort: 8554  # RTSP
+            - name: stream-8555-tcp
+              containerPort: 8555
+              protocol: TCP  # Stream TCP
+            - name: stream-8555-udp
+              containerPort: 8555
+              protocol: UDP  # Stream UDP
+          env:
+            - name: FRIGATE_RTSP_PASSWORD
+              value: 'password'
+          volumeMounts:
+            - name: storage
+              mountPath: /media/frigate  # Mount the PVC to /media/frigate for persistent storage
+            - name: config
+              mountPath: /config  # Mount the configuration
+            - name: localtime
+              mountPath: /etc/localtime
+              readOnly: true
+            - name: tmp-cache
+              mountPath: /tmp/cache
+              subPath: cache
+            - name: writable-config
+              mountPath: /config/frigate.yml
+              subPath: frigate.yml
+          resources:
+            limits:
+              memory: "10000Mi"
+              cpu: "10"
+            requests:
+              memory: "8000Mi"
+              cpu: "8"
+          securityContext:
+            privileged: true  # Required for USB and GPU access
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: frigate-data-pvc  # Reference the PVC here
+        - name: config
+          configMap:
+            name: frigate-config  # Mount the ConfigMap for configuration
+        - name: localtime
+          hostPath:
+            path: /etc/localtime
+            type: File
+        - name: tmp-cache
+          emptyDir:
+            medium: Memory
+            sizeLimit: 1Gi
+        - name: writable-config
+          emptyDir: {}  # Use emptyDir to allow the app to write to the config file
+      restartPolicy: Always
