@@ -4,14 +4,28 @@ metadata:
   namespace: external-name
   name: proxmox-svc
 spec:
-  externalName: proxmox.local
   ports:
     - name: https
       port: 8006
       protocol: TCP
       targetPort: 8006
   sessionAffinity: None
-  type: ExternalName
+  clusterIP: None
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: proxmox-svc
+  namespace: external-name
+subsets:
+  - addresses:
+      - ip: 192.168.50.104
+      - ip: 192.168.50.112
+      - ip: 192.168.50.56
+      - ip: 192.168.50.40
+    ports:
+      - port: 8006
+        protocol: TCP
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -24,6 +38,9 @@ metadata:
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/service-upstream: "true"
+    nginx.ingress.kubernetes.io/upstream-check-path: "/"  # Health check path
+    nginx.ingress.kubernetes.io/upstream-check-interval: "5s"  # Optional: check every 5 seconds
     kubernetes.io/tls-acme: "true"
 spec:
   ingressClassName: nginx
