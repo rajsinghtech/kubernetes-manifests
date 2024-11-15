@@ -33,6 +33,8 @@ spec:
               mountPath: /media/frigate
             - name: config
               mountPath: /config
+            - mountPath: /dev/shm
+              name: dshm
           resources:
             limits:
               memory: "10000Mi"
@@ -49,4 +51,7 @@ spec:
         - name: config
           persistentVolumeClaim:
             claimName: frigate-config
+        - name: dshm
+          emptyDir:
+              medium: Memory
       restartPolicy: Always
