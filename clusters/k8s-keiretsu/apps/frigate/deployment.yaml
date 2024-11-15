@@ -28,23 +28,11 @@ spec:
             - name: stream-8555-udp
               containerPort: 8555
               protocol: UDP  # Stream UDP
-          env:
-            - name: FRIGATE_RTSP_PASSWORD
-              value: 'password'
           volumeMounts:
             - name: storage
-              mountPath: /media/frigate  # Mount the PVC to /media/frigate for persistent storage
+              mountPath: /media/frigate
             - name: config
-              mountPath: /config  # Mount the configuration
-            - name: localtime
-              mountPath: /etc/localtime
-              readOnly: true
-            - name: tmp-cache
-              mountPath: /tmp/cache
-              subPath: cache
-            - name: writable-config
-              mountPath: /config/frigate.yml
-              subPath: frigate.yml
+              mountPath: /config
           resources:
             limits:
               memory: "10000Mi"
@@ -57,18 +45,8 @@ spec:
       volumes:
         - name: storage
           persistentVolumeClaim:
-            claimName: frigate-data-pvc  # Reference the PVC here
+            claimName: frigate-data
         - name: config
-          configMap:
-            name: frigate-config  # Mount the ConfigMap for configuration
-        - name: localtime
-          hostPath:
-            path: /etc/localtime
-            type: File
-        - name: tmp-cache
-          emptyDir:
-            medium: Memory
-            sizeLimit: 1Gi
-        - name: writable-config
-          emptyDir: {}  # Use emptyDir to allow the app to write to the config file
+          persistentVolumeClaim:
+            claimName: frigate-config
       restartPolicy: Always
