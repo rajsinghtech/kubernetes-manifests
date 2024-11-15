@@ -10,13 +10,13 @@
                 "interval_seconds": 15
             },                        
             "GpsHeading": {         
-               "interval_seconds": 30 
+               "interval_seconds": 15 
             },                        
             "Odometer": {              
                 "interval_seconds": 600
             },                         
             "VehicleSpeed": {          
-                "interval_seconds": 15 
+                "interval_seconds": 30 
             },                         
             "LateralAcceleration": {           
                 "interval_seconds": 30 
