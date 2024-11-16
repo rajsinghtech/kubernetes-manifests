@@ -13,6 +13,7 @@ spec:
       labels:
         app: homeassistant
     spec:
+      hostNetwork: true
       containers:
       - name: homeassistant
         image: homeassistant/home-assistant:stable
