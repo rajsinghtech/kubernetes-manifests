@@ -1,29 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: jellyfin
+  name: emby
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: jellyfin
+      app: emby
   template:
     metadata:
       labels:
-        app: jellyfin
+        app: emby
     spec:
       containers:
-        - name: jellyfin
-          image: lscr.io/linuxserver/jellyfin:latest
+        - name: emby
+          image: emby/embyserver:latest
           ports:
             - name: http
               containerPort: 8096
               protocol: TCP
           volumeMounts:
             - name: tv-volume
-              mountPath: /data/tvshows
+              mountPath: /mnt/tvshows
             - name: movies-volume
-              mountPath: /data/movies
+              mountPath: /mnt/movies
             - name: config-volume
               mountPath: /config
           env:
@@ -34,7 +34,7 @@ spec:
             - name: TZ
               value: America/Chicago
             - name: JELLYFIN_PublishedServerUrl
-              value: jellyfin.lukehouge.com
+              value: emby.lukehouge.com
       volumes:
         - name: tv-volume
           persistentVolumeClaim:
@@ -44,4 +44,4 @@ spec:
             claimName: radarr-movies
         - name: config-volume
           persistentVolumeClaim:
-            claimName: jellyfin-config
+            claimName: emby-config

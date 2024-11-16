@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: jellyfin-tls
+  name: emby-tls
   namespace: media
   annotations:
     cert-manager.io/cluster-issuer: luke-issuer
@@ -9,17 +9,17 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: jellyfin.lukehouge.com
+    - host: emby.lukehouge.com
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: jellyfin
+                name: emby
                 port:
                   number: 8096
   tls:
-    - secretName: jellyfin-luke-tls
+    - secretName: emby-luke-tls
       hosts:
-        - jellyfin.lukehouge.com
+        - emby.lukehouge.com
