@@ -16,3 +16,5 @@ spec:
   - name: homekit-tcp
     port: 21063
     targetPort: 21063
+  type: LoadBalancer
+  loadBalancerIP: 10.96.10.12
