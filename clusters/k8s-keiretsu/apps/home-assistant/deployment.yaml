@@ -22,7 +22,7 @@ spec:
         ports:
           - containerPort: 8123
           - containerPort: 5353
-          - containerPort: 21063
+          - containerPort: 21084
         volumeMounts:
           - mountPath: /config
             name: homeassistant-config
