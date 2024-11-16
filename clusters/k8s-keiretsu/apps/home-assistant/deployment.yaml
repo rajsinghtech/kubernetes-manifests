@@ -17,6 +17,10 @@ spec:
       containers:
       - name: homeassistant
         image: homeassistant/home-assistant:stable
+        lifecycle:
+          postStart:
+            exec:
+              command: ["/bin/sh", "-c", "pip install pyalarmdotcomajax"]
         env:
         - name: TZ
           value: America/Chicago
