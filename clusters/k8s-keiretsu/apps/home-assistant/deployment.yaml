@@ -13,6 +13,7 @@ spec:
       labels:
         app: homeassistant
     spec:
+      hostNetwork: true
       containers:
       - name: homeassistant
         image: homeassistant/home-assistant:stable
@@ -23,6 +24,7 @@ spec:
           - containerPort: 8123
           - containerPort: 5353
           - containerPort: 21084
+          - containerPort: 51827
         volumeMounts:
           - mountPath: /config
             name: homeassistant-config
