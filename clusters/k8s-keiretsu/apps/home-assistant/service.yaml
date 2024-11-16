@@ -7,6 +7,12 @@ spec:
   selector:
     app: homeassistant
   ports:
-  - name: homeassistant
+  - name: homeassistant-web
     port: 8123
     targetPort: 8123
+  - name: homekit-udp
+    port: 5353
+    targetPort: 5353
+  - name: homekit-tcp
+    port: 21063
+    targetPort: 21063
