@@ -14,7 +14,7 @@ spec:
     port: 5353
     targetPort: 5353
   - name: homekit-tcp
-    port: 21063
-    targetPort: 21063
+    port: 21084
+    targetPort: 21084
   type: LoadBalancer
   loadBalancerIP: 10.96.10.12
