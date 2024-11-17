@@ -47,8 +47,11 @@ hubble:
 ipam:
   operator:
     clusterPoolIPv4PodCIDRList: "10.42.0.0/16"
-routingMode: tunnel
-tunnelProtocol: vxlan
+routingMode: native # tailscale
+socketLB: 
+  hostNamespaceOnly: true # tailscale
+
+# tunnelProtocol: vxlan
 devices: 'vmbr0,eth0'
 # autoDirectNodeRoutes: true
 # directRoutingSkipUnreachable: true
