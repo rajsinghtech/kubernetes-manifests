@@ -9,9 +9,9 @@ spec:
     namespace: rajsinghtech
   project: default
   source:
-    path: k8s
+    path: kustomization
     repoURL: https://github.com/rajsinghtech/portfolio
-    targetRevision: HEAD
+    targetRevision: hugo
   syncPolicy:
     automated:
       prune: true
