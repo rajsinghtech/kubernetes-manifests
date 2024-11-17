@@ -27,10 +27,10 @@ spec:
       volumes:
       - name: config
         configMap:
-          name: mosquitto-config
+          name: mqtt-config
       - name: certs
         secret:
-          secretName: mosquitto-tls
+          secretName: mqtt-tls
       - name: data
         persistentVolumeClaim:
-          claimName: mosquitto-data
+          claimName: mqtt-data
