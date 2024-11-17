@@ -12,3 +12,4 @@ helmCharts:
 
 resources:
   - secret.yaml
+  - 
