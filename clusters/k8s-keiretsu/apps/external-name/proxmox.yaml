@@ -38,7 +38,7 @@ metadata:
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/service-upstream: "true"
+    nginx.ingress.kubernetes.io/service-upstream: "false"
     nginx.ingress.kubernetes.io/upstream-check-path: "/"  # Health check path
     nginx.ingress.kubernetes.io/upstream-check-interval: "5s"  # Optional: check every 5 seconds
     kubernetes.io/tls-acme: "true"
