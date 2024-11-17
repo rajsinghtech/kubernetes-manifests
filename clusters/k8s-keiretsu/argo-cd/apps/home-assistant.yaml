@@ -6,7 +6,7 @@ metadata:
 spec:
   destination:
     server: https://kubernetes.default.svc
-    namespace: homeassistant
+    namespace: home
   project: default
   source:
     path: clusters/k8s-keiretsu/apps/home-assistant
