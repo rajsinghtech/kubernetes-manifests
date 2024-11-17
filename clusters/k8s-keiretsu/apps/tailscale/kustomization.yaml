@@ -1,6 +1,14 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
+helmCharts:
+  - name: tailscale-operator
+    repo: https://pkgs.tailscale.com/helmcharts
+    version: 1.76.6
+    namespace: tailscale
+    releaseName: tailscale-operator
+    includeCRDs: true
+    valuesFile: values.yaml
+
 resources:
-  - https://raw.githubusercontent.com/tailscale/tailscale/refs/heads/main/cmd/k8s-operator/deploy/manifests/operator.yaml
   - secret.yaml
