@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: frigate-tls
-  namespace: home
+  namespace: external-name
   annotations:
     cert-manager.io/cluster-issuer: luke-issuer
     nginx.ingress.kubernetes.io/rewrite-target: /
