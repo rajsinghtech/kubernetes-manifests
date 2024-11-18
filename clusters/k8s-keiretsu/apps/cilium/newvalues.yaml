@@ -63,7 +63,7 @@ rollOutCiliumPods: true
 localRedirectPolicy: true
 bgpControlPlane: # BGP
   enabled: true
-bpf.masquerade: true
 bpf:
   masquerade: true # native routing
   lbExternalClusterIP: true # BGP Pod cidr https://docs.cilium.io/en/stable/network/kubernetes/kubeproxy-free/#external-access-to-clusterip-services
+enableIPv4Masquerade: true
