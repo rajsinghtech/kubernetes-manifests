@@ -36,7 +36,7 @@ spec:
 apiVersion: tailscale.com/v1alpha1
 kind: Connector
 metadata:
-  name: connector
+  name: connector-test
 spec:
   tags:
     - tag:k8s
