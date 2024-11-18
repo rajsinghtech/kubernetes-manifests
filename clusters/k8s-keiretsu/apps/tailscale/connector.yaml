@@ -41,7 +41,7 @@ spec:
   tags:
     - tag:k8s
   hostname: connector
-  proxyClass: robbinsdale
+  proxyClass: robbinsdale-proxyclass
   subnetRouter:
     advertiseRoutes:
       # - "10.43.0.0/16"
