@@ -1,7 +1,7 @@
 apiVersion: tailscale.com/v1alpha1
 kind: ProxyClass
 metadata:
-  name: robbinsdale
+  name: robbinsdale-proxyclass
 spec:
   statefulSet:
     labels:
@@ -14,14 +14,14 @@ spec:
 apiVersion: tailscale.com/v1alpha1
 kind: ProxyGroup
 metadata:
-  name: robbinsdale
+  name: robbinsdale-proxygroup
 spec:
   type: egress
   tags:
     - tag:k8s
   replicas: 3
   hostnamePrefix: "robinsdale-k8s-"
-  proxyClass: robbinsdale
+  proxyClass: robbinsdale-proxyclass
 ---
 apiVersion: tailscale.com/v1alpha1
 kind: DNSConfig
@@ -44,7 +44,62 @@ spec:
   proxyClass: robbinsdale
   subnetRouter:
     advertiseRoutes:
-      - "10.43.0.0/24"
-      - "10.42.0.0/24"
+      - "10.43.0.0/16"
+      - "10.42.0.0/16"
       - "192.168.50.0/24"
   exitNode: true
+---
+apiVersion: tailscale.com/v1alpha1
+kind: Recorder
+metadata:
+  name: recorder
+spec:
+  enableUI: true
+---
+# apiVersion: "cilium.io/v2"
+# kind: CiliumLocalRedirectPolicy
+# metadata:
+#   name: "tailscale-redirect"
+#   namespace: kube-system
+# spec:
+#   redirectFrontend:
+#     redirectFrontend:
+#       serviceMatcher:
+#         namespace: kube-system
+#         serviceName: kube-dns
+#     redirectBackend:
+#       localEndpointSelector:
+#         matchLabels:
+#           k8s-app: tailscale-proxy
+#     toPorts:
+#       - name: dns
+#         port: "53"
+#         protocol: UDP
+#       - name: dns-tcp
+#         port: "53"
+#         protocol: TCP
+---
+# apiVersion: cilium.io/v2
+# kind: CiliumEgressGatewayPolicy
+# metadata:
+#   name: tailscale-code-server
+# spec:
+#   # Specify which pods should be subject to the current policy.
+#   # Multiple pod selectors can be specified.
+#   selectors:
+#   - podSelector:
+#       matchLabels:
+#         app: code-server
+#         # The following label selects default namespace
+#         io.kubernetes.pod.namespace: code-server
+#   egressGateway:
+#     # # Specify which node should act as gateway for this policy.
+#     # nodeSelector:
+#     #   matchLabels:
+#     #     node.kubernetes.io/name: a-specific-node
+
+#     # Specify the IP address used to SNAT traffic matched by the policy.
+#     # It must exist as an IP associated with a network interface on the instance.
+#     egressIP: 10.43.37.32
+#   destinationCIDRs:
+#   - "100.64.0.0/10"
