@@ -40,7 +40,7 @@ metadata:
 spec:
   tags:
     - tag:k8s
-  hostname: connector
+  hostname: robbinsdale-connector-0
   proxyClass: robbinsdale-proxyclass
   subnetRouter:
     advertiseRoutes:
@@ -57,7 +57,7 @@ metadata:
 spec:
   tags:
     - tag:k8s
-  hostname: connector
+  hostname: robbinsdale-connector-1
   proxyClass: robbinsdale-proxyclass
   subnetRouter:
     advertiseRoutes:
@@ -74,7 +74,7 @@ metadata:
 spec:
   tags:
     - tag:k8s
-  hostname: connector
+  hostname: obbinsdale-connector-2
   proxyClass: robbinsdale-proxyclass
   subnetRouter:
     advertiseRoutes:
