@@ -58,11 +58,11 @@ patches:
               - name: postgresql
                 resources:
                   limits:
-                    cpu: 500m
+                    cpu: 2000m
                     ephemeral-storage: 3Gi
                     memory: 2Gi
                   requests:
-                    cpu: 150m
+                    cpu: 500m
                     ephemeral-storage: 100Mi
                     memory: 1Gi
   - target:
