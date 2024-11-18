@@ -31,7 +31,7 @@ spec:
   nameserver:
     image:
       repo: tailscale/k8s-nameserver
-      tag: stable
+      tag: unstable
 ---
 apiVersion: tailscale.com/v1alpha1
 kind: Connector
