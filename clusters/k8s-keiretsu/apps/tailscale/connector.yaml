@@ -1,9 +1,50 @@
 apiVersion: tailscale.com/v1alpha1
+kind: ProxyClass
+metadata:
+  name: robbinsdale
+spec:
+  statefulSet:
+    labels:
+      app: tailscale-proxy
+  metrics:
+    enable: true
+  tailscale:
+    acceptRoutes: true
+---
+apiVersion: tailscale.com/v1alpha1
+kind: ProxyGroup
+metadata:
+  name: robbinsdale
+spec:
+  type: egress
+  tags:
+    - tag:k8s
+  replicas: 3
+  hostnamePrefix: "robinsdale-k8s-"
+  proxyClass: robbinsdale
+---
+apiVersion: tailscale.com/v1alpha1
+kind: DNSConfig
+metadata:
+  name: dnsconfig
+spec:
+  nameserver:
+    image:
+      repo: tailscale/k8s-nameserver
+      tag: stable
+---
+apiVersion: tailscale.com/v1alpha1
 kind: Connector
 metadata:
-  name: home-robbinsdale
+  name: connector
 spec:
-  hostname: home-robbinsdale
+  tags:
+    - tag:k8s
+  hostname: connector
+  proxyClass: robbinsdale
   subnetRouter:
     advertiseRoutes:
+      - "10.43.0.0/24"
+      - "10.42.0.0/24"
       - "192.168.50.0/24"
+  exitNode: true
