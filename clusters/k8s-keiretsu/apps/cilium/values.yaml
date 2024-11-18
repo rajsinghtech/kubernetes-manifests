@@ -59,4 +59,5 @@ localRedirectPolicy: true
 bgpControlPlane:
   enabled: true
 bpf:
+  masquerade: true
   lbExternalClusterIP: true # https://docs.cilium.io/en/stable/network/kubernetes/kubeproxy-free/#external-access-to-clusterip-services
