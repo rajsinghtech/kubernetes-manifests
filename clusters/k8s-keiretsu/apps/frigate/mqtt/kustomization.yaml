@@ -5,7 +5,6 @@ namespace: mqtt
 resources:
   - deployment.yaml
   - service.yaml
-  - ingress.yaml
   - pvc.yaml
 configMapGenerator:
   - name: mqtt-config
