@@ -1,15 +1,15 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: frigate
+  name: home
   namespace: argocd
 spec:
   destination:
     server: https://kubernetes.default.svc
-    namespace: frigate
+    namespace: home
   project: default
   source:
-    path: clusters/k8s-keiretsu/apps/frigate
+    path: clusters/k8s-keiretsu/apps/home
     repoURL: https://github.com/rajsinghtech/kubernetes-manifests
     targetRevision: keiretsu
   syncPolicy:
