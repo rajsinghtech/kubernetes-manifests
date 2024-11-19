@@ -25,7 +25,7 @@ spec:
         - "-p"  # Persist the Samba configuration
         volumeMounts:
         - name: config
-          mountPath: /etc/samba/smb.conf
+          mountPath: /etc/samba/
         - name: nfs-proxmox-vault
           mountPath: /mnt/proxmox-vault
       volumes:
