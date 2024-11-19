@@ -1,12 +1,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: smb-server
+  name: samba-service
 spec:
-  type: LoadBalancer
-  ports:
-    - port: 445
-      protocol: TCP
-      name: nfs
   selector:
-    app: smb-server
+    app: samba
+  ports:
+    - protocol: TCP
+      port: 139
+      targetPort: 139
+    - protocol: TCP
+      port: 445
+      targetPort: 445
+  type: ClusterIP
