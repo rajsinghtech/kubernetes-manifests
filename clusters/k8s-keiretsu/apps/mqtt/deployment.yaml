@@ -12,6 +12,26 @@ spec:
       labels:
         app: mqtt
     spec:
+      initContainers:
+      - name: init-mqtt
+        image:  eclipse-mosquitto
+        command: ['sh', '-c', 'mosquitto_passwd -c /etc/mosquitto/passwd "$USERNAME" "$PASSWORD"']
+        env:
+        - name: USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mqtt
+              key: FRIGATE_MQTT_USER
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: FRIGATE_MQTT_PASSWORD
+              key: password
+        volumeMounts:
+        - mountPath: /mosquitto/config/
+          name: config
+        - mountPath: /etc/mosquitto/passwd
+          name: password
       containers:
       - name: mosquitto
         image: eclipse-mosquitto
@@ -24,6 +44,8 @@ spec:
           name: certs
         - mountPath: /mosquitto/data/
           name: data
+        - mountPath: /etc/mosquitto/passwd
+          name: password
       volumes:
       - name: config
         configMap:
@@ -34,3 +56,5 @@ spec:
       - name: data
         persistentVolumeClaim:
           claimName: mqtt-data
+      - name: password
+        emptryDir: {}
