@@ -10,4 +10,4 @@ resources:
 configMapGenerator:
   - name: mqtt-config
     files:
-    - config.yaml
+    - mosquitto.conf
