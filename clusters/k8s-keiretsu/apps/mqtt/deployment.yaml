@@ -25,8 +25,8 @@ spec:
         - name: PASSWORD
           valueFrom:
             secretKeyRef:
-              name: FRIGATE_MQTT_PASSWORD
-              key: password
+              name: mqtt
+              key: FRIGATE_MQTT_PASSWORD
         volumeMounts:
         - mountPath: /mosquitto/config/
           name: config
