@@ -15,8 +15,7 @@ spec:
       initContainers:
       - name: init-mqtt
         image:  eclipse-mosquitto
-        # command: ['sh', '-c', 'mosquitto_passwd -c /etc/mosquitto/passwd "$USERNAME" "$PASSWORD"']
-        command: ['sh', '-c', 'echo "$USERNAME" && echo "$PASSWORD"']
+        command: ['sh', '-c', 'echo "$USERNAME:$PASSWORD" > /etc/mosquitto/passwd && mosquitto mosquitto_passwd -U /etc/mosquitto/passwd']
         env:
         - name: USERNAME
           valueFrom:
@@ -31,7 +30,7 @@ spec:
         volumeMounts:
         - mountPath: /mosquitto/config/
           name: config
-        - mountPath: /etc/mosquitto/passwd
+        - mountPath: /etc/mosquitto/
           name: password
       containers:
       - name: mosquitto
@@ -45,7 +44,7 @@ spec:
           name: certs
         - mountPath: /mosquitto/data/
           name: data
-        - mountPath: /etc/mosquitto/passwd
+        - mountPath: /etc/mosquitto/
           name: password
       volumes:
       - name: config
