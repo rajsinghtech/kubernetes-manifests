@@ -28,20 +28,17 @@ spec:
               name: mqtt
               key: FRIGATE_MQTT_PASSWORD
         volumeMounts:
-        - mountPath: /mosquitto/config/
-          name: config
         - mountPath: /etc/mosquitto/
           name: password
       containers:
       - name: mosquitto
         image: eclipse-mosquitto
+        command: ['sh', '-c', 'mosquitto -c /etc/mosquitto/mosquitto.conf']
         ports:
         - containerPort: 1883
         volumeMounts:
         - mountPath: /etc/mosquitto/
           name: config
-        - mountPath: /mosquitto/certs/
-          name: certs
         - mountPath: /mosquitto/data/
           name: data
         - mountPath: /etc/mosquitto/
@@ -50,9 +47,6 @@ spec:
       - name: config
         configMap:
           name: mqtt-config
-      - name: certs
-        secret:
-          secretName: mqtt-tls
       - name: data
         persistentVolumeClaim:
           claimName: mqtt-data
