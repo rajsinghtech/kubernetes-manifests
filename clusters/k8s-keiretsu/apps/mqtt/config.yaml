@@ -11,8 +11,4 @@ data:
     
     port 1883
 
-    cafile /etc/ssl/certs/ca-certificates.crt
-    keyfile /mosquitto/certs/tls.key
-    certfile /mosquitto/certs/tls.crt
-
     allow_anonymous true
