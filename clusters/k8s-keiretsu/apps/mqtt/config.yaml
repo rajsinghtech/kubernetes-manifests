@@ -1,13 +1,7 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: mqtt-config
-data:
-  mosquitto.conf: |
-    persistence true
-    persistence_location /mosquitto/data/
-    log_dest stdout
-    listener 1882 0.0.0.0
-    allow_anonymous true
-    protocol mqtt
-    password_file /etc/mosquitto/passwd
+persistence true
+persistence_location /mosquitto/data/
+log_dest stdout
+listener 1882 0.0.0.0
+allow_anonymous true
+protocol mqtt
+password_file /etc/mosquitto/passwd
