@@ -15,7 +15,8 @@ spec:
       initContainers:
       - name: init-mqtt
         image:  eclipse-mosquitto
-        command: ['sh', '-c', 'mosquitto_passwd -c /etc/mosquitto/passwd "$USERNAME" "$PASSWORD"']
+        # command: ['sh', '-c', 'mosquitto_passwd -c /etc/mosquitto/passwd "$USERNAME" "$PASSWORD"']
+        command: ['sh', '-c', 'sleep infinity']
         env:
         - name: USERNAME
           valueFrom:
