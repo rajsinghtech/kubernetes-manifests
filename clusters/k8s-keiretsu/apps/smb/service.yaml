@@ -1,15 +1,17 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: samba-service
+  name: smb-server
 spec:
   selector:
     app: samba
   ports:
-    - protocol: TCP
+    - name: smb-netbios
+      protocol: TCP
       port: 139
       targetPort: 139
-    - protocol: TCP
+    - name: smb-ldap
+      protocol: TCP
       port: 445
       targetPort: 445
   type: ClusterIP
