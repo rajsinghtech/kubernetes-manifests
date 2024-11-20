@@ -3,10 +3,15 @@ kind: Service
 metadata:
   name: smb-server
 spec:
-  type: LoadBalancer
-  ports:
-    - port: 445
-      protocol: TCP
-      name: nfs
   selector:
-    app: smb-server
+    app: samba
+  ports:
+    - name: smb-netbios
+      protocol: TCP
+      port: 139
+      targetPort: 139
+    - name: smb-ldap
+      protocol: TCP
+      port: 445
+      targetPort: 445
+  type: ClusterIP
