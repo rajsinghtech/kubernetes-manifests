@@ -43,10 +43,10 @@ spec:
           weight: 1
       matches:
       - path:
-          value: "/sonarr"
+          value: "/sonarr/"
       filters:
       - type: URLRewrite
         urlRewrite:
           path:
             type: ReplacePrefixMatch
-            replacePrefixMatch: /sonarr
+            replacePrefixMatch: /sonarr/
