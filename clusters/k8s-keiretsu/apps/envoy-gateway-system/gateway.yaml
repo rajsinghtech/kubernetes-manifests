@@ -65,7 +65,7 @@ spec:
     group: cert-manager.io
     kind: ClusterIssuer
     name: raj-issuer
-  secretName: raj-wildcard-https
+  secretName: raj-wildcard-tls
   usages:
     - digital signature
     - key encipherment
@@ -82,7 +82,7 @@ spec:
     group: cert-manager.io
     kind: ClusterIssuer
     name: raj-issuer
-  secretName: raj-wildcard-https
+  secretName: luke-wildcard-tls
   usages:
     - digital signature
     - key encipherment
