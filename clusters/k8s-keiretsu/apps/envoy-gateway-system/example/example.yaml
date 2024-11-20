@@ -15,7 +15,9 @@ metadata:
   name: backend
 spec:
   parentRefs:
-    - name: eg
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: eg
   rules:
     - backendRefs:
         - group: ""
