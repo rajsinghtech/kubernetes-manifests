@@ -4,7 +4,7 @@
 #   namespace: "monitoring"
 ingress:
   enabled: true
-  host: hubble-ui.lukehouge.com
+  host: hubble.lukehouge.com
   v1: true
   ingressClassName: nginx
   annotations:
