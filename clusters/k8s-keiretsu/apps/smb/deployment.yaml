@@ -18,17 +18,20 @@ spec:
         ports:
         - containerPort: 139
         - containerPort: 445
+        env:
+          - name: USER
+            value: "lhouge;password" # create user
         args:
-        - -s proxmox-vault;/mnt/proxmox-vault
+        - "-p"  # Persist the Samba configuration
         volumeMounts:
-        - name: samba-volume
-          mountPath: /config
+        - name: config
+          mountPath: /etc/samba/
         - name: nfs-proxmox-vault
           mountPath: /mnt/proxmox-vault
       volumes:
-      - name: samba-volume
-        persistentVolumeClaim:
-          claimName: samba-storage
+      - name: config
+        configMap:
+          name: smb-config
       - name: nfs-proxmox-vault
         nfs:
           path: /vault

@@ -7,3 +7,7 @@ resources:
   - service.yaml
   - pvc.yaml
   - secret.yaml
+configMapGenerator:
+  - name: smb-config
+    files:
+    - smb.conf
