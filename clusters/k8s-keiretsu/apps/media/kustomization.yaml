@@ -11,3 +11,4 @@ resources:
 - ./transmission-tv
 - ./plex
 - secret.yaml
+- httproute.yaml
