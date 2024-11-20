@@ -11,6 +11,8 @@ metadata:
   name: media
   annotations:
     cert-manager.io/cluster-issuer: raj-issuer
+    kubernetes.io/tls-acme: "true"
+  namespace: media
 spec:
   gatewayClassName: eg
   listeners:
