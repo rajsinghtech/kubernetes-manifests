@@ -6,3 +6,4 @@ resources:
   - gateway.yaml
   - media.yaml
   - hubble.yaml
+  - ./example
