@@ -1,7 +1,7 @@
-grafana:
-  enabled: true
-  enabledNodesGraph: true
-  namespace: "monitoring"
+# grafana:
+#   enabled: true
+#   enabledNodesGraph: true
+#   namespace: "monitoring"
 ingress:
   enabled: true
   host: hubble-ui.lukehouge.com
