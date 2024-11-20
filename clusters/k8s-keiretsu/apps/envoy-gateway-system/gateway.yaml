@@ -4,14 +4,19 @@ metadata:
   name: eg
 spec:
   controllerName: gateway.envoyproxy.io/gatewayclass-controller
+  parametersRef:
+    group: gateway.envoyproxy.io
+    kind: EnvoyProxy
+    name: custom-proxy-config
+    namespace: envoy-gateway-system
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
-  name: robbinsdale
-  annotations:
-    cert-manager.io/cluster-issuer: raj-issuer
-    kubernetes.io/tls-acme: "true"
+  name: robbinsdale 
+  # annotations:
+    # cert-manager.io/cluster-issuer: raj-issuer
+    # kubernetes.io/tls-acme: "true"
 spec:
   gatewayClassName: eg
   listeners:
@@ -21,32 +26,6 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
-    - name: hubble
-      protocol: HTTPS
-      port: 443
-      hostname: hubble.rajsingh.info
-      allowedRoutes:
-        namespaces:
-          from: All
-      tls:
-        mode: Terminate
-        certificateRefs:
-        - group: ''
-          kind: Secret
-          name: raj-hubble-https
-    - name: k8s
-      protocol: HTTPS
-      port: 443
-      hostname: k8s.rajsingh.info
-      allowedRoutes:
-        namespaces:
-          from: All
-      tls:
-        mode: Terminate
-        certificateRefs:
-        - group: ''
-          kind: Secret
-          name: raj-k8s-https
     - name: wildcard-raj
       protocol: HTTPS
       port: 443
@@ -59,4 +38,51 @@ spec:
         certificateRefs:
         - group: ''
           kind: Secret
-          name: raj-wildcard-https
+          name: raj-wildcard-tls
+    - name: wildcard-luke
+      protocol: HTTPS
+      port: 443
+      hostname: "*.lukehouge.com"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        mode: Terminate
+        certificateRefs:
+        - group: ''
+          kind: Secret
+          name: luke-wildcard-tls
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: raj-wildcard-tls
+  namespace: envoy-gateway-system
+spec:
+  dnsNames:
+    - '*.rajsingh.info'
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: raj-issuer
+  secretName: raj-wildcard-https
+  usages:
+    - digital signature
+    - key encipherment
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: luke-wildcard-tls
+  namespace: envoy-gateway-system
+spec:
+  dnsNames:
+    - '*.lukehouge.com'
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: raj-issuer
+  secretName: raj-wildcard-https
+  usages:
+    - digital signature
+    - key encipherment
