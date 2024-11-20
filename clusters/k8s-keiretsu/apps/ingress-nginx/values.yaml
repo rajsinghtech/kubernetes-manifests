@@ -15,4 +15,5 @@ controller:
       memory: 256Mi
     limits:
       memory: 256Mi
+  kind: DaemonSet
   allowSnippetAnnotations: true
