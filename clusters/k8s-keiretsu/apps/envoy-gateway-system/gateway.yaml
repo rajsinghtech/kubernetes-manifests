@@ -24,6 +24,7 @@ spec:
     - name: https
       protocol: HTTPS
       port: 443
+      hostname: hubble.rajsingh.info
       allowedRoutes:
         namespaces:
           from: All
@@ -32,4 +33,4 @@ spec:
         certificateRefs:
         - group: ''
           kind: Secret
-          name: raj-media-https
+          name: raj-hubble-https
