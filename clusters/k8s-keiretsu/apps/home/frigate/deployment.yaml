@@ -28,6 +28,8 @@ spec:
             - name: stream-8555-udp
               containerPort: 8555
               protocol: UDP  # Stream UDP
+            - name: internal
+              containerPort: 5000  # Internal unauthenticated port
           volumeMounts:
             - name: storage
               mountPath: /media/frigate
