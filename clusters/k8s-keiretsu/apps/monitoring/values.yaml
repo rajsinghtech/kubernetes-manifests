@@ -97,7 +97,7 @@ grafana:
           disableDeletion: false
           editable: true
           options:
-            path: /var/lib/grafana/dashboards/envoy-gateway'
+            path: /var/lib/grafana/dashboards/envoy-gateway
   dashboards:
     argocd:
       # https://grafana.com/grafana/dashboards/19993-argocd-operational-overview/
