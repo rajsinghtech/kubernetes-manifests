@@ -11,6 +11,7 @@ metadata:
   name: robbinsdale
   annotations:
     cert-manager.io/cluster-issuer: raj-issuer
+    cert-manager.io/common-name: "Robbinsdale"
     kubernetes.io/tls-acme: "true"
 spec:
   gatewayClassName: eg
