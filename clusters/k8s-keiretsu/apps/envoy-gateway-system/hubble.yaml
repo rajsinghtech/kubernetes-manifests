@@ -30,10 +30,14 @@ metadata:
   namespace: hubble-ui
 spec:
   parentRefs:
-    - name: eg
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: eg
+      namespace: envoy-gateway-system
   rules:
     - backendRefs:
-        - kind: Service
+        - group: ""
+          kind: Service
           name: hubble-ui
           port: 80
           weight: 1
