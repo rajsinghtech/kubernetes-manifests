@@ -4,4 +4,3 @@ kind: Kustomization
 resources:
   - https://github.com/envoyproxy/gateway/releases/download/v1.2.1/install.yaml
   - gateway.yaml
-  - https://raw.githubusercontent.com/Kuadrant/gateway-api-state-metrics/main/config/examples/kube-prometheus/bundle.yaml
