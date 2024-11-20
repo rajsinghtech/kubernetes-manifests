@@ -8,6 +8,7 @@ spec:
     - group: gateway.networking.k8s.io
       kind: Gateway
       name: robbinsdale
+      namespace: envoy-gateway-system
   hostnames:
     - "sonarr.rajsingh.info"
   rules:
