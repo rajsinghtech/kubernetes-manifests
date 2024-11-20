@@ -39,7 +39,7 @@ spec:
       matches:
         - path:
             type: PathPrefix
-            value: /
+            value: /hubble
 ---
 apiVersion: v1
 kind: ServiceAccount
