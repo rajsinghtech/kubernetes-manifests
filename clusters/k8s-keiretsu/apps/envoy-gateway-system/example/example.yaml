@@ -29,17 +29,6 @@ spec:
         - path:
             type: PathPrefix
             value: /
-    - backendRefs:
-        - group: ""
-          kind: Service
-          name: hubble-ui
-          port: 80
-          namespace: hubble-ui
-          weight: 1
-      matches:
-        - path:
-            type: PathPrefix
-            value: /hubble
 ---
 apiVersion: v1
 kind: ServiceAccount
