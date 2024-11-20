@@ -8,11 +8,10 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
-  name: media
+  name: gateway
   annotations:
     cert-manager.io/cluster-issuer: raj-issuer
     kubernetes.io/tls-acme: "true"
-  namespace: media
 spec:
   gatewayClassName: eg
   listeners:
