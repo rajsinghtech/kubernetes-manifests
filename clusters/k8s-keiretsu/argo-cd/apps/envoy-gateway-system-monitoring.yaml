@@ -12,6 +12,11 @@ spec:
     path: config/examples/dashboards
     repoURL: https://github.com/Kuadrant/gateway-api-state-metrics
     targetRevision: HEAD
+    kustomize:
+      commonLabels:
+        grafana_dashboard: 1
+      commonAnnotations:
+        grafana_folder: "envoy-gateway"
   syncPolicy:
     automated:
       prune: true
@@ -19,8 +24,3 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - ServerSideApply=true
-  kustomize:
-    commonLabels:
-      grafana_dashboard: 1
-    commonAnnotations:
-      grafana_folder: "envoy-gateway"
