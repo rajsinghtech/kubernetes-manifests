@@ -9,8 +9,8 @@ spec:
     app: frigate
   ports:
     - name: web
-      port: 8971  # The port the service will be accessible on externally
-      targetPort: 8971  # The port inside the container to forward traffic to
+      port: 8971
+      targetPort: 8971
     - name: rtsp
       port: 8554
       targetPort: 8554
@@ -22,5 +22,8 @@ spec:
       port: 8555
       targetPort: 8555
       protocol: UDP
-  type: LoadBalancer  # This makes the service a LoadBalancer
+    - name: internal
+      port: 5000
+      targetPort: 5000
+  type: LoadBalancer
   loadBalancerIP: 10.96.10.12
