@@ -5,7 +5,9 @@ metadata:
   namespace: media
 spec:
   parentRefs:
-    - name: eg
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: eg
   hostnames:
     - "sonarr.rajsingh.info"
   rules:
