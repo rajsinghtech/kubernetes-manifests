@@ -90,6 +90,14 @@ grafana:
           editable: true
           options:
             path: /var/lib/grafana/dashboards/proxmox
+        - name: 'envoy-gateway'
+          orgId: 1
+          folder: 'envoy-gateway'
+          type: file
+          disableDeletion: false
+          editable: true
+          options:
+            path: /var/lib/grafana/dashboards/envoy-gateway'
   dashboards:
     argocd:
       # https://grafana.com/grafana/dashboards/19993-argocd-operational-overview/

@@ -19,3 +19,8 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - ServerSideApply=true
+  kustomize:
+    commonLabels:
+      grafana_dashboard: 1
+    commonAnnotations:
+      grafana_folder: "envoy-gateway"
