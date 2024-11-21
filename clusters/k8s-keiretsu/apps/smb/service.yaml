@@ -14,4 +14,5 @@ spec:
       protocol: TCP
       port: 445
       targetPort: 445
-  type: ClusterIP
+  type: LoadBalancer
+  loadBalancerIP: 10.96.10.15
