@@ -22,7 +22,12 @@ spec:
         volumeMounts:
         - name: config-volume
           mountPath: /app/data/configs
+        - name: data-volume
+          mountPath: /data
       volumes:
       - name: config-volume
         persistentVolumeClaim:
           claimName: homarr-config
+      - name: data-volume
+        persistentVolumeClaim:
+          claimName: homarr-data

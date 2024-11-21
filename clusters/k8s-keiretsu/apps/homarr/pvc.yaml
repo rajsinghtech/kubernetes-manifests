@@ -9,3 +9,14 @@ spec:
     requests:
       storage: 5Gi
   storageClassName: nfs-proxmox-vault
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: homarr-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
