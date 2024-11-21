@@ -29,7 +29,7 @@ endpoints:
   - 192.168.50.56
   - 192.168.50.40
 ---
-apiVersion: gateway.networking.k8s.io/v1alpha2
+apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: proxmox
