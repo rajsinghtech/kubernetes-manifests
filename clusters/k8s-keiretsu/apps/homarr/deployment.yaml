@@ -22,7 +22,6 @@ spec:
         volumeMounts:
         - name: config-volume
           mountPath: /app/data/configs
-        restartPolicy: Always
       volumes:
       - name: config-volume
         persistentVolumeClaim:
