@@ -10,3 +10,9 @@ helmCharts:
     releaseName: strimzi-kafka-operator
     includeCRDs: true
     valuesFile: values.yaml
+
+resources:
+  - certificate.yaml
+  - tlsroute.yaml
+  - cluster.yaml
+  - nodepool.yaml
