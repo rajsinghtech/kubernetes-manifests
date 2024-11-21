@@ -65,6 +65,16 @@ patches:
                     cpu: 500m
                     ephemeral-storage: 100Mi
                     memory: 1Gi
+                livenessProbe:
+                  initialDelaySeconds: 10800  # Waits 3 hours before first check
+                  periodSeconds: 30          # Check every 30 seconds
+                  timeoutSeconds: 5          # Command timeout
+                  failureThreshold: 360      # Allows 3 hours of failures
+                readinessProbe:
+                  initialDelaySeconds: 5      # Starts after 5 seconds
+                  periodSeconds: 10           # Check every 10 seconds
+                  timeoutSeconds: 5           # Command timeout
+                  failureThreshold: 6         # Tolerates 6 consecutive failures
   - target:
       version: v1
       kind: Deployment
