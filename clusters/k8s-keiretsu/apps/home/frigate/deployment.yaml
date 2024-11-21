@@ -68,4 +68,5 @@ spec:
         - name: dshm
           emptyDir:
               medium: Memory
+              sizeLimit: 1Gi
       restartPolicy: Always
