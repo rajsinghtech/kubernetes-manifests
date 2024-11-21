@@ -9,13 +9,16 @@ spec:
   selector:
     matchLabels:
       app: frigate
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
   template:
     metadata:
       labels:
         app: frigate
     spec:
-      strategy:
-        type: Recreate
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
