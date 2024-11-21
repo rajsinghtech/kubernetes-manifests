@@ -55,6 +55,9 @@ spec:
     - name: kafka-listener
       protocol: TLS
       port: 9092
+      allowedRoutes:
+        namespaces:
+          from: All
       tls:
         mode: Passthrough
 ---
