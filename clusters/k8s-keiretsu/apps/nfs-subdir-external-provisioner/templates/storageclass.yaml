@@ -1,0 +1,11 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-path
+  annotations:
+    objectset.rio.cattle.io/owner-name: local-storage
+    objectset.rio.cattle.io/owner-namespace: kube-system
+    storageclass.kubernetes.io/is-default-class: 'false'
+provisioner: rancher.io/local-path
+reclaimPolicy: Delete
+volumeBindingMode: WaitForFirstConsumer

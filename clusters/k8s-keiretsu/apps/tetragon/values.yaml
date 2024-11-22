@@ -1,0 +1,36 @@
+exportDirectory: "/var/run/cilium/hubble"
+# priorityClassName: high-priority
+tetragon:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 250Mi
+    limits:
+      memory: 400Mi
+  exportAllowList: |-
+    {"event_set":["PROCESS_DNS", "PROCESS_EXEC", "PROCESS_EXIT", "PROCESS_FILE", "PROCESS_CONNECT", "PROCESS_CLOSE", "PROCESS_ACCEPT"]}
+  # exportDenyList: |-
+  #   {"event_set":["PROCESS_DNS"]}
+  # enableCiliumAPI: false
+  # enableProcessCred: false
+  # enableProcessNs: false
+  # enablePolicyFilter: true
+  # extraArgs:
+  #   verbose: "3"
+  #   release-pinned-bpf: true
+  #   detach-old-bpf: true
+  #   rb-size: "98304"
+  flowExportFilename: tetragon-flows.log
+  prometheus:
+    serviceMonitor:
+      enabled: true
+tetragonOperator:
+  podInfo:
+    enabled: true
+dashboards:
+  enabled: true
+  namespace: monitoring
+  annotations:
+    grafana_folder: "Tetragon"
+  health:
+    enabled: true

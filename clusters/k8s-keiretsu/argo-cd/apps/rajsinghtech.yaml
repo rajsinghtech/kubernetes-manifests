@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: rajsinghtech-portfolio
+  namespace: argocd
+spec:
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: rajsinghtech
+  project: default
+  source:
+    path: kustomization
+    repoURL: https://github.com/rajsinghtech/portfolio
+    targetRevision: hugo
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

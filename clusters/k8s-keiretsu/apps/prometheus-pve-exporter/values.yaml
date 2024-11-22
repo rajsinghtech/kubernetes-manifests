@@ -1,0 +1,22 @@
+env:
+  pveAuthType: "token"
+  pveUser: pve-exporter@pam
+  pveExistingSecretName: "prometheus-pve-exporter"
+# serviceMonitor:
+#   enabled: false
+#   additionalLabels:
+#     release: prometheus
+#   selector:
+#     prometheus: kube-prometheus
+#   interval: 30s
+#   namespace: "monitoring"
+#   pveTargets: 
+#     - 192.168.50.112
+#     - 192.168.50.56
+#     - 192.168.50.40
+#     - 192.168.50.104
+pveTargets: 
+  - 192.168.50.112
+  - 192.168.50.56
+  - 192.168.50.40
+  - 192.168.50.104

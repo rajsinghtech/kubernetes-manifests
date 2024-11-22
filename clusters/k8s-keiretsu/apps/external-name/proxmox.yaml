@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: external-name
+  name: proxmox-svc
+spec:
+  ports:
+    - name: https
+      port: 8006
+      protocol: TCP
+      targetPort: 8006
+  sessionAffinity: None
+  clusterIP: None
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: proxmox-svc
+  namespace: external-name
+subsets:
+  - addresses:
+      - ip: 192.168.50.104
+      - ip: 192.168.50.112
+      - ip: 192.168.50.56
+      - ip: 192.168.50.40
+    ports:
+      - port: 8006
+        protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: proxmox-tls
+  namespace: external-name
+  annotations:
+    cert-manager.io/cluster-issuer: luke-issuer
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/service-upstream: "false"
+    nginx.ingress.kubernetes.io/upstream-check-path: "/"  # Health check path
+    nginx.ingress.kubernetes.io/upstream-check-interval: "5s"  # Optional: check every 5 seconds
+    kubernetes.io/tls-acme: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: proxmox.lukehouge.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: proxmox-svc
+                port:
+                  number: 8006
+  tls:
+    - secretName: proxmox-luke-tls
+      hosts:
+        - proxmox.lukehouge.com

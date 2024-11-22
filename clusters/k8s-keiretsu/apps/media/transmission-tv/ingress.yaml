@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: transmission-tv-tls
+  namespace: media
+  annotations:
+    cert-manager.io/cluster-issuer: luke-issuer
+    kubernetes.io/tls-acme: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: transmission-tv.lukehouge.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: transmission-tv
+                port:
+                  number: 9091
+  tls:
+    - secretName: transmission-tv-luke-tls
+      hosts:
+        - transmission-tv.lukehouge.com
