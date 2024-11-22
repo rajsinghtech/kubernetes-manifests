@@ -9,6 +9,7 @@ rbac:
     p, role:org-admin, exec, create, */*, allow
 configs:
   cm:
+    resource.ignoreResourceUpdatesEnabled: "false"
     exec.enabled: "true"
     kustomize.buildOptions: --enable-helm
     # kustomize.path.v5.0.1: /usr/local/bin/kustomize
