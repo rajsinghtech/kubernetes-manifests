@@ -4,8 +4,9 @@ admin:
 strategyType: RollingUpdate
 maxSurge: 25%
 maxUnavailable: 25%
-# dnsmasq:
-#   customDnsEntries:
+dnsmasq:
+  customDnsEntries:
+    - address=/.cluster.local/10.43.0.10
 #     - address=/.stg.lukehouge.com/10.96.96.1
 #     - address=/.lukehouge.com/10.96.10.1
 #     - address=/.lukehouge.com/192.168.50.7
