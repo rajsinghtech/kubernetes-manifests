@@ -169,7 +169,7 @@ spec:
           requests:
             cpu: 25m
             memory: 5Mi
-        args: [ "-localip", "169.254.20.10,__PILLAR__DNS__SERVER__", "-conf", "/etc/Corefile", "-upstreamsvc", "kube-dns-upstream", "-skipteardown=true", "-setupinterface=false", "-setupiptables=false" ]
+        args: [ "-localip", "169.254.20.10,10.43.0.10", "-conf", "/etc/Corefile", "-upstreamsvc", "kube-dns-upstream", "-skipteardown=true", "-setupinterface=false", "-setupiptables=false" ]
         securityContext:
           capabilities:
             add:
