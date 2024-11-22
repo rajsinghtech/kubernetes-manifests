@@ -1,17 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: immich
+  name: tesla
   namespace: argocd
 spec:
   destination:
     server: https://kubernetes.default.svc
-    namespace: immich
+    namespace: tesla
   project: default
   source:
-    path: clusters/k8s-keiretsu/apps/immich
+    path: clusters/k8s-robbinsdale/apps/tesla
     repoURL: https://github.com/rajsinghtech/kubernetes-manifests
-    targetRevision: keiretsu
+    targetRevision: HEAD
   syncPolicy:
     automated:
       prune: true

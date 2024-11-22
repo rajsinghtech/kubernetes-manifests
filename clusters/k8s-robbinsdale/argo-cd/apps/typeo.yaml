@@ -1,17 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: tailscale
+  name: typeo
   namespace: argocd
 spec:
   destination:
     server: https://kubernetes.default.svc
-    namespace: tailscale
+    namespace: typeo
   project: default
   source:
-    path: clusters/k8s-keiretsu/apps/tailscale
+    path: clusters/k8s-robbinsdale/apps/typeo
     repoURL: https://github.com/rajsinghtech/kubernetes-manifests
-    targetRevision: keiretsu
+    targetRevision: HEAD
   syncPolicy:
     automated:
       prune: true
