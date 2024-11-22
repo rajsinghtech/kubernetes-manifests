@@ -10,18 +10,18 @@ spec:
     enable: true
   tailscale:
     acceptRoutes: true
----
-apiVersion: tailscale.com/v1alpha1
-kind: ProxyGroup
-metadata:
-  name: robbinsdale-proxygroup
-spec:
-  type: egress
-  tags:
-    - tag:k8s
-  replicas: 3
-  hostnamePrefix: "robinsdale-k8s-"
-  proxyClass: robbinsdale-proxyclass
+# ---
+# apiVersion: tailscale.com/v1alpha1
+# kind: ProxyGroup
+# metadata:
+#   name: robbinsdale-proxygroup
+# spec:
+#   type: egress
+#   tags:
+#     - tag:k8s
+#   replicas: 3
+#   hostnamePrefix: "robinsdale-k8s-"
+#   proxyClass: robbinsdale-proxyclass
 ---
 apiVersion: tailscale.com/v1alpha1
 kind: DNSConfig

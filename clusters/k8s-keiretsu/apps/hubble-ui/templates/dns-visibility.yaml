@@ -13,6 +13,7 @@ spec:
         operator: "NotIn"
         values:
         - kube-dns
+        - node-local-dns
   enableDefaultDeny:
     egress: false
     ingress: false
@@ -27,6 +28,19 @@ spec:
             protocol: TCP
           - port: "53"
             protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: node-local-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: TCP
+            - port: "53"
+              protocol: UDP
           rules:
             dns:
               - matchPattern: "*"
