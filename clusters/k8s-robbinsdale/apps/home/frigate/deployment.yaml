@@ -24,7 +24,7 @@ spec:
               - key: kubernetes.io/hostname
                 operator: In
                 values:
-                - proxmox-titan
+                - proxmox-tank
                 - proxmox-stone
       containers:
         - name: frigate
