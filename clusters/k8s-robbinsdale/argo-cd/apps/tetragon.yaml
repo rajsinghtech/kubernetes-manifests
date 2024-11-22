@@ -9,9 +9,9 @@
 #     namespace: tetragon
 #   project: default
 #   source:
-#     path: clusters/k8s-keiretsu/apps/tetragon
+#     path: clusters/k8s-robbinsdale/apps/tetragon
 #     repoURL: https://github.com/rajsinghtech/kubernetes-manifests
-#     targetRevision: keiretsu
+#     targetRevision: HEAD
 #   syncPolicy:
 #     automated:
 #       prune: true

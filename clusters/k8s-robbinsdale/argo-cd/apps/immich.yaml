@@ -1,17 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: home
+  name: immich
   namespace: argocd
 spec:
   destination:
     server: https://kubernetes.default.svc
-    namespace: home
+    namespace: immich
   project: default
   source:
-    path: clusters/k8s-keiretsu/apps/home
+    path: clusters/k8s-robbinsdale/apps/immich
     repoURL: https://github.com/rajsinghtech/kubernetes-manifests
-    targetRevision: keiretsu
+    targetRevision: HEAD
   syncPolicy:
     automated:
       prune: true
