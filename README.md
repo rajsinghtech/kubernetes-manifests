@@ -1,11 +1,5 @@
-# kubernetes-manifests
-- To manually apply on cluster;
-  - `flux reconcile kustomization flux-system --with-source`
-- To use 1Password to populate credentials you must first setup secret `1password-secret` to store keys `connect_credentials` and `operator_token`
-  - ex:
-    ```bash
-    kubectl create secret generic 1password-secret \
-    --namespace=1password \
-    --from-literal=connect_credentials={connect_credentials} \
-    --from-literal=operator_token={operator_token}
-    ```
+# GitOps Repository
+Welcome to the GitOps repository for managing the `k8s-robbinsdale` Kubernetes cluster. This repository leverages [ArgoCD](https://argo-cd.readthedocs.io/en/stable/) for continuous delivery, [Kustomize](https://kustomize.io/) for configuration management, and [Helm](https://helm.sh/) for deploying applications. The repository defines the desired state of various applications and infrastructure components within the cluster, ensuring consistency and ease of management.
+
+## Overview
+This repository serves as the single source of truth for the `k8s-robbinsdale` Kubernetes cluster configurations. By following GitOps principles, any changes committed to this repository are automatically synchronized to the cluster, ensuring that the actual state matches the desired state defined here.

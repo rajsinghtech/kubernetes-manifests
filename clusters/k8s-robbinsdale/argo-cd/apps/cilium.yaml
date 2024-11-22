@@ -1,20 +1,19 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cert-manager
+  name: cilium
   namespace: argocd
 spec:
   destination:
     server: https://kubernetes.default.svc
-    namespace: cert-manager
   project: default
   source:
-    path: clusters/k8s-keiretsu/apps/cert-manager
+    path: clusters/k8s-robbinsdale/apps/cilium
     repoURL: https://github.com/rajsinghtech/kubernetes-manifests
-    targetRevision: keiretsu
+    targetRevision: HEAD
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
+    # syncOptions:
+    #   - CreateNamespace=true

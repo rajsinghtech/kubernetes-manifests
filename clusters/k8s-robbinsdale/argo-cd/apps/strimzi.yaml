@@ -1,17 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: ingress-nginx
+  name: strimzi
   namespace: argocd
 spec:
   destination:
     server: https://kubernetes.default.svc
-    namespace: ingress-nginx
+    namespace: strimzi
   project: default
   source:
-    path: clusters/k8s-keiretsu/apps/ingress-nginx
+    path: clusters/k8s-robbinsdale/apps/strimzi
     repoURL: https://github.com/rajsinghtech/kubernetes-manifests
-    targetRevision: keiretsu
+    targetRevision: HEAD
   syncPolicy:
     automated:
       prune: true

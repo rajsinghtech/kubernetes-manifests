@@ -11,9 +11,9 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: clusters/k8s-keiretsu/argo-cd
+    path: clusters/k8s-robbinsdale/argo-cd
     repoURL: https://github.com/rajsinghtech/kubernetes-manifests
-    targetRevision: keiretsu
+    targetRevision: HEAD
   syncPolicy:
     automated:
       prune: true
@@ -40,9 +40,9 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: clusters/k8s-keiretsu/argo-cd/apps
+    path: clusters/k8s-robbinsdale/argo-cd/apps
     repoURL: https://github.com/rajsinghtech/kubernetes-manifests
-    targetRevision: keiretsu
+    targetRevision: HEAD
   syncPolicy:
     automated:
       prune: false
