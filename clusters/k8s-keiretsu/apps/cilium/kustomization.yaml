@@ -4,8 +4,7 @@ kind: Kustomization
 resources:
   - templates/bgp.yaml
   - templates/lbippool.yaml
-  # - templates/nodelocaldns.yaml
-  - https://raw.githubusercontent.com/kubernetes/kubernetes/refs/heads/master/cluster/addons/dns/nodelocaldns/nodelocaldns.yaml
+  - templates/nodelocaldns.yaml
 helmCharts:
   - name: cilium
     repo: https://helm.isovalent.com
