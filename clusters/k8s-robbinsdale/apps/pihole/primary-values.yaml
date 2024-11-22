@@ -1,6 +1,9 @@
 admin:
   existingSecret: "pihole"
   passwordKey: password
+strategyType: RollingUpdate
+maxSurge: 25%
+maxUnavailable: 25%
 # dnsmasq:
 #   customDnsEntries:
 #     - address=/.stg.lukehouge.com/10.96.96.1
