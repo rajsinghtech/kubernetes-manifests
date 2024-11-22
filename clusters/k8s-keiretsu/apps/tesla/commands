@@ -1,0 +1,5 @@
+kubectl exec -n tesla deployment/tesla-http-proxy -- bash /api/configFleet.sh
+
+# postgres
+postgres-rw.tesla.svc.cluster.local
+5432

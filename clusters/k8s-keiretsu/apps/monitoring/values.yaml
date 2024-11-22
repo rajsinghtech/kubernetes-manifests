@@ -1,0 +1,213 @@
+grafana:
+  resources:
+    requests:
+      cpu: 500m
+      memory: 300Mi
+    limits:
+      memory: 800Mi
+
+  grafana.ini:
+    security:
+      allow_embedding: true
+    auth.jwt:
+      enabled: true
+      enable_login_token: true
+      url_login: true
+      username_claim: sub
+      header_name: X-Forwarded-Access-Token
+      auto_sign_up: false
+      jwk_set_file: /var/lib/grafana/jwks/hubble-ui-public.json
+    dataproxy:
+      timeout: 300
+  sidecar:
+    dashboards:
+      enabled: true
+      label: grafana_dashboard
+      folderAnnotation: grafana_folder
+      provider:
+        foldersFromFilesStructure: true
+  extraConfigmapMounts:
+    - name: hubble-ui-grafana-public-jwks
+      mountPath: /var/lib/grafana/jwks/hubble-ui-public.json
+      subPath: jwks
+      configMap: hubble-ui-grafana-public-jwks
+      readOnly: true
+
+  persistence:
+    enabled: false 
+
+  # needed since we're using a PVC and can't mount it to more than one pod at once
+  deploymentStrategy:
+    type: Recreate
+
+  # admin:
+  #   existingSecret: "grafana-credentials"
+  #   userKey: admin-user
+  #   passwordKey: admin-password
+
+  serviceMonitor:
+    enabled: true
+
+  additionalDataSources:
+    - name: Loki
+      type: loki
+      uid: loki
+      url: http://loki-read.monitoring:3100
+
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+        - name: 'default'
+          orgId: 1
+          folder: 'Default'
+          type: file
+          disableDeletion: false
+          editable: true
+          options:
+            path: /var/lib/grafana/dashboards/default
+        - name: 'argocd'
+          orgId: 1
+          folder: 'ArgoCD'
+          type: file
+          disableDeletion: false
+          editable: true
+          options:
+            path: /var/lib/grafana/dashboards/argocd
+        - name: 'ingress-nginx'
+          orgId: 1
+          folder: 'ingress-nginx'
+          type: file
+          disableDeletion: false
+          editable: true
+          options:
+            path: /var/lib/grafana/dashboards/ingress-nginx
+        - name: 'proxmox'
+          orgId: 1
+          folder: 'proxmox'
+          type: file
+          disableDeletion: false
+          editable: true
+          options:
+            path: /var/lib/grafana/dashboards/proxmox
+        - name: 'envoy-gateway'
+          orgId: 1
+          folder: 'envoy-gateway'
+          type: file
+          disableDeletion: false
+          editable: true
+          options:
+            path: /var/lib/grafana/dashboards/envoy-gateway
+  dashboards:
+    argocd:
+      # https://grafana.com/grafana/dashboards/19993-argocd-operational-overview/
+      argocd-operational-overview:
+        gnetId: 19993
+        revision: 2
+        datasource: prometheus
+      # https://grafana.com/grafana/dashboards/19975-argocd-notifications-overview/
+      argocd-notifications-overview:
+        gnetId: 19975
+        revision: 2
+        datasource: prometheus
+      # https://grafana.com/grafana/dashboards/19974-argocd-application-overview/
+      argocd-application-overview:
+        gnetId: 19974
+        revision: 2
+        datasource: prometheus
+    ingress-nginx:
+      # https://grafana.com/grafana/dashboards/16677-ingress-nginx-overview/
+      ingress-nginx-overview:
+        gnetId: 16677
+        revision: 2
+        datasource: prometheus
+      # https://grafana.com/grafana/dashboards/20510-ingress-nginx-request-handling-performance/
+      ingress-nginx-request-handling-performance:
+        gnetId: 20510
+        revision: 1
+        datasource: prometheus
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - grafana.lukehouge.com
+    tls:
+      - hosts:
+          - grafana.lukehouge.com
+        secretName: grafana-luke-tls
+    annotations:
+      cert-manager.io/cluster-issuer: luke-issuer
+
+prometheus:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - prometheus.lukehouge.com
+    tls:
+      - hosts:
+          - prometheus.lukehouge.com
+        secretName: prometheus-luke-tls
+    annotations:
+      cert-manager.io/cluster-issuer: luke-issuer
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false
+    probeSelectorNilUsesHelmValues: false
+    ruleSelectorNilUsesHelmValues: false
+
+    enableRemoteWriteReceiver: true
+    enableFeatures:
+      - exemplar-storage
+
+    retention: 30d
+
+    resources:
+      requests:
+        cpu: 2
+        memory: 4Gi
+      limits:
+        memory: 4Gi
+
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: ceph-hybrid-fs
+          resources:
+            requests:
+              storage: 100Gi
+prometheusOperator:
+  resources:
+    limits:
+      memory: 50Mi
+    requests:
+      cpu: 150m
+      memory: 50Mi
+
+prometheus-node-exporter:
+  resources:
+    limits:
+      memory: 50Mi
+    requests:
+      cpu: 100m
+      memory: 50Mi
+
+kube-state-metrics:
+  metricLabelsAllowlist:
+    - nodes=[topology.kubernetes.io/zone]
+  resources:
+    limits:
+      memory: 50Mi
+    requests:
+      cpu: 100m
+      memory: 50Mi
+
+# Disable kubeProxy scraping since we disable kube-proxy to use cilium KPR
+kubeProxy:
+  enabled: false
+
+kubeControllerManager:
+  enabled: true
+
+kubeScheduler:
+  enabled: true

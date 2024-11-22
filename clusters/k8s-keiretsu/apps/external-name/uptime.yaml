@@ -1,0 +1,40 @@
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   namespace: external-name
+#   name: uptime-svc
+# spec:
+#   externalName: uptime.local
+#   ports:
+#     - name: http
+#       port: 3001
+#       protocol: TCP
+#       targetPort: 3001
+#   sessionAffinity: None
+#   type: ExternalName
+# ---
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: uptime-tls
+#   namespace: external-name
+#   annotations:
+#     cert-manager.io/cluster-issuer: luke-issuer
+#     kubernetes.io/tls-acme: "true"
+# spec:
+#   ingressClassName: nginx
+#   rules:
+#     - host: uptime.lukehouge.com
+#       http:
+#         paths:
+#           - path: /
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: uptime-svc
+#                 port:
+#                   number: 3001
+#   tls:
+#     - secretName: uptime-luke-tls
+#       hosts:
+#         - uptime.lukehouge.com

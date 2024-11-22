@@ -1,0 +1,45 @@
+---
+apiVersion: cilium.io/v1alpha1
+kind: TracingPolicy
+metadata:
+  name: all-parsers
+spec:
+  parser:
+    interface:
+      enable: true
+      packet: true
+    tcp:
+      enable: true
+    udp:
+      enable: true
+    dns:
+      enable: true
+    http:
+      # Get a signoff from Tetragon team before enabling.
+      enable: false
+      selectors:
+        - matchPorts:
+          # list all ports
+          # These are ports exposed by otel-demo or jobs-app.
+          - 80
+          - 3550
+          - 5000
+          - 5050
+          - 7000
+          - 7070
+          - 8080
+          - 9555
+          - 50051
+          - 443
+          - 2181
+          - 9080
+          - 50051
+          - 9092
+          - 9200
+    tls:
+      # Get a signoff from Tetragon team before enabling.
+      enable: false
+      mode: socket
+      selectors:
+        - matchPorts:
+            - 443

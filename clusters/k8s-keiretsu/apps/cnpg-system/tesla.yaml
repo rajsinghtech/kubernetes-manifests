@@ -1,0 +1,14 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgres
+  namespace: tesla
+spec:
+  instances: 3
+
+  storage:
+    size: 10Gi
+    storageClass: ceph-hybrid-fs
+
+  monitoring:
+    enablePodMonitor: true

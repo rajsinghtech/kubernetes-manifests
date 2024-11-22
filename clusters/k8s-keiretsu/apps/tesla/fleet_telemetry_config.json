@@ -1,0 +1,46 @@
+{
+    "config": {
+        "port": 32484,
+        "exp": 1758097765,
+        "alert_types": [
+            "service"
+        ],
+        "fields": {
+            "Location": { 
+                "interval_seconds": 15
+            },                        
+            "GpsHeading": {         
+               "interval_seconds": 15 
+            },                        
+            "Odometer": {              
+                "interval_seconds": 600
+            },                         
+            "VehicleSpeed": {          
+                "interval_seconds": 30 
+            },                         
+            "LateralAcceleration": {           
+                "interval_seconds": 30 
+            },                         
+            "MilesToArrival": {           
+                "interval_seconds": 120
+            },                         
+            "LifetimeEnergyUsedDrive": {            
+                "interval_seconds": 120
+            },                         
+            "DestinationLocation": {   
+                "interval_seconds": 120
+            },                         
+            "EstBatteryRange": {       
+                "interval_seconds": 30 
+            },                         
+            "LongitudinalAcceleration": {           
+                "interval_seconds": 30 
+            }  
+        },
+        "ca": "$CA_CERT",
+        "hostname": "fleet-telemetry.tesla.rajsingh.info"
+    },
+    "vins": [
+        "7SAYGDEEXRA288618"
+    ]
+}

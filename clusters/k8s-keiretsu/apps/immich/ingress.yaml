@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: immich-tls
+  namespace: immich
+  annotations:
+    cert-manager.io/cluster-issuer: luke-issuer
+    kubernetes.io/tls-acme: 'true'
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: immich.lukehouge.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: immich-server
+            port:
+              number: 2283
+  tls:
+  - secretName: immich-tls
+    hosts:
+    - immich.lukehouge.com

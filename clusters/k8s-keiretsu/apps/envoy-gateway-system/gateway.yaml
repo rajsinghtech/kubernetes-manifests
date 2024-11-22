@@ -1,0 +1,96 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: eg
+spec:
+  controllerName: gateway.envoyproxy.io/gatewayclass-controller
+  parametersRef:
+    group: gateway.envoyproxy.io
+    kind: EnvoyProxy
+    name: custom-proxy-config
+    namespace: envoy-gateway-system
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: robbinsdale 
+  # annotations:
+    # cert-manager.io/cluster-issuer: raj-issuer
+    # kubernetes.io/tls-acme: "true"
+spec:
+  gatewayClassName: eg
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: wildcard-raj-https
+      protocol: HTTPS
+      port: 443
+      hostname: "*.rajsingh.info"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        mode: Terminate
+        certificateRefs:
+        - group: ''
+          kind: Secret
+          name: raj-wildcard-tls
+    - name: wildcard-luke-https
+      protocol: HTTPS
+      port: 443
+      hostname: "*.lukehouge.com"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        mode: Terminate
+        certificateRefs:
+        - group: ''
+          kind: Secret
+          name: luke-wildcard-tls
+    - name: kafka-listener
+      protocol: TLS
+      port: 9092
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        mode: Passthrough
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: raj-wildcard-tls
+  namespace: envoy-gateway-system
+spec:
+  dnsNames:
+    - '*.rajsingh.info'
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: raj-issuer
+  secretName: raj-wildcard-tls
+  usages:
+    - digital signature
+    - key encipherment
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: luke-wildcard-tls
+  namespace: envoy-gateway-system
+spec:
+  dnsNames:
+    - '*.lukehouge.com'
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: luke-issuer
+  secretName: luke-wildcard-tls
+  usages:
+    - digital signature
+    - key encipherment

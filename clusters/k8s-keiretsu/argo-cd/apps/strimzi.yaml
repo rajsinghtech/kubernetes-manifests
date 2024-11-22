@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: strimzi
+  namespace: argocd
+spec:
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: strimzi
+  project: default
+  source:
+    path: clusters/k8s-keiretsu/apps/strimzi
+    repoURL: https://github.com/rajsinghtech/kubernetes-manifests
+    targetRevision: keiretsu
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

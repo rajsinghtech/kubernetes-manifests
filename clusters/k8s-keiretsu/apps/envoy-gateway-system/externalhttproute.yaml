@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: proxmox
+  namespace: envoy-gateway-system
+spec:
+  ports:
+    - port: 8006
+      protocol: TCP
+      targetPort: 8006
+      name: https
+  selector:
+    app: proxmox
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: proxmox
+  namespace: envoy-gateway-system
+  labels:
+    kubernetes.io/service-name: proxmox
+addressType: IPv4
+ports:
+  - name: https
+    protocol: TCP
+    port: 8006
+endpoints:
+  - addresses:
+      - 192.168.50.104
+      - 192.168.50.112
+      # - 192.168.50.56
+      # - 192.168.50.40
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: proxmox
+  namespace: envoy-gateway-system
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: robbinsdale
+      namespace: envoy-gateway-system
+  hostnames:
+    - "proxmox.rajsingh.info"
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: proxmox
+          port: 8006
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: BackendTrafficPolicy
+metadata:
+  name: proxmox
+  namespace: envoy-gateway-system
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: proxmox
+  # healthCheck:
+  #   protocol: HTTPS
+  #   path: "/healthz"
+  #   intervalSeconds: 10
+  #   timeoutSeconds: 5
+  #   unhealthyThreshold: 3
+  #   healthyThreshold: 3

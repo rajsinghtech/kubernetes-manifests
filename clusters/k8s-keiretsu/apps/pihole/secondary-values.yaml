@@ -1,0 +1,41 @@
+admin:
+  existingSecret: "pihole"
+  passwordKey: password
+# dnsmasq:
+#   customDnsEntries:
+#     - address=/.stg.lukehouge.com/10.96.96.1
+#     - address=/.lukehouge.com/10.96.10.1
+#     - address=/.lukehouge.com/192.168.50.7
+# persistentVolumeClaim:
+#   enabled: true
+#   storageClass: "nfs-client"
+serviceWeb:
+  type: ClusterIP
+# podDnsConfig:
+#   enabled: true
+#   policy: "None"
+#   nameservers:
+#     - ${ROUTER_IP}
+hostname: "keiretsu-primary"
+serviceDns:
+  externalTrafficPolicy: Cluster
+  loadBalancerIP: "10.96.96.10"
+  mixedService: true
+  nodePort: ""
+  port: 53
+  type: LoadBalancer
+ingress:
+  ingressClassName: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: luke-issuer
+    kubernetes.io/tls-acme: "true"
+  enabled: true
+  hosts:
+    - pihole-secondary.lukehouge.com
+  path: /
+  tls:
+    - secretName: pihole-secondary-luke-tls
+      hosts:
+        - pihole-secondary.lukehouge.com
+DNS1: "10.43.0.10"
+DNS2: "10.43.0.10"
