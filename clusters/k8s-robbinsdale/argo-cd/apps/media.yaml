@@ -1,21 +1,20 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: envoy-gateway-system
+  name: media
   namespace: argocd
 spec:
   destination:
     server: https://kubernetes.default.svc
-    namespace: envoy-gateway-system
+    namespace: media
   project: default
   source:
-    path: clusters/k8s-keiretsu/apps/envoy-gateway-system
+    path: clusters/k8s-robbinsdale/apps/media
     repoURL: https://github.com/rajsinghtech/kubernetes-manifests
-    targetRevision: keiretsu
+    targetRevision: HEAD
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-      - ServerSideApply=true

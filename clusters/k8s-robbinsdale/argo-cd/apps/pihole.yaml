@@ -1,17 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: media
+  name: pihole
   namespace: argocd
 spec:
   destination:
     server: https://kubernetes.default.svc
-    namespace: media
+    namespace: pihole
   project: default
   source:
-    path: clusters/k8s-keiretsu/apps/media
+    path: clusters/k8s-robbinsdale/apps/pihole
     repoURL: https://github.com/rajsinghtech/kubernetes-manifests
-    targetRevision: keiretsu
+    targetRevision: HEAD
   syncPolicy:
     automated:
       prune: true

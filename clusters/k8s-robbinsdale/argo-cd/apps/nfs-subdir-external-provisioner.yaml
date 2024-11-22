@@ -1,17 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: typeo
+  name: nfs-subdir-external-provisioner
   namespace: argocd
 spec:
   destination:
     server: https://kubernetes.default.svc
-    namespace: typeo
+    namespace: nfs-subdir-external-provisioner
   project: default
   source:
-    path: clusters/k8s-keiretsu/apps/typeo
+    path: clusters/k8s-robbinsdale/apps/nfs-subdir-external-provisioner
     repoURL: https://github.com/rajsinghtech/kubernetes-manifests
-    targetRevision: keiretsu
+    targetRevision: HEAD
   syncPolicy:
     automated:
       prune: true
