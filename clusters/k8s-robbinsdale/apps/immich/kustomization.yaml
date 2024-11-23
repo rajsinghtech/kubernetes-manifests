@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   - pvc.yaml
   - ingress.yaml
+  - httproute.yaml
 helmCharts:
   - name: immich
     repo: https://immich-app.github.io/immich-charts
