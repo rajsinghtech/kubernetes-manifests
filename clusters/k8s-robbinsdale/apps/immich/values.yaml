@@ -12,6 +12,8 @@ postgresql:
   enabled: true
   global:
     defaultStorageClass: nfs-proxmox-vault
+  volumePermissions:
+    enabled: true
 redis:
   enabled: true
   global:
