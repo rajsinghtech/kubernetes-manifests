@@ -16,3 +16,5 @@ redis:
   enabled: true
   global:
     defaultStorageClass: nfs-proxmox-vault
+  volumePermissions:
+    enabled: true
