@@ -11,6 +11,7 @@ spec:
       namespace: envoy-gateway-system
   hostnames:
     - "immich.rajsingh.info"
+    - "immich.robbinsdale.rajsingh.info"
     - "immich.lukehouge.com"
   rules:
     - backendRefs:
