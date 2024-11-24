@@ -32,6 +32,7 @@ resources:
   - ./templates/dashboards/proxmox.yaml
   - ./templates/dashboards/ceph-cluster.yaml
   - ./templates/dashboards/tesla-fleet-telemetry.yaml
+  - ./templates/alertconfig.yaml
 patches:
   # This is required because some CRD annotations are too long.
   - target:
