@@ -46,7 +46,8 @@ spec:
             memory: "256Mi"  
           requests:
             cpu: "0.2"  
-            memory: "128Mi"  
+            memory: "128Mi"
+      dnsPolicy: None  
       dnsConfig:
         nameservers:
           - 10.96.10.96
