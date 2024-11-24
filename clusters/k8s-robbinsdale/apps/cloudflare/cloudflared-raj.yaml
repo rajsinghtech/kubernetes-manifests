@@ -47,3 +47,10 @@ spec:
           requests:
             cpu: "0.2"  
             memory: "128Mi"  
+      dnsConfig:
+        nameservers:
+          - 10.96.10.96
+          - 10.96.10.96
+        options:
+          - name: ndots
+            value: "2"
