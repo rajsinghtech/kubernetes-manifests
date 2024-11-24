@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: discord
+  namespace: monitoring
+  labels:
+    alertmanagerConfig: discord
+spec:
+  route:
+    groupBy: ['job']
+    groupWait: 30s
+    groupInterval: 5m
+    repeatInterval: 12h
+    receiver: 'webhook'
+  receivers:
+  - name: 'discord'
+    webhookConfigs:
+    - url: 'https://discord.com/api/webhooks/1310271519527800893/Twh9LOP-4nK_9zK2olWptdk3wlDWp-cGIIf8NDR4hQNmOXojggwoM0aPs1R2dguGl4p0'
