@@ -11,7 +11,7 @@ spec:
     groupWait: 30s
     groupInterval: 5m
     repeatInterval: 12h
-    receiver: 'webhook'
+    receiver: 'discord'
   receivers:
   - name: 'discord'
     webhookConfigs:
