@@ -3,7 +3,7 @@
 #   enabledNodesGraph: true
 #   namespace: "monitoring"
 ingress:
-  enabled: true
+  enabled: false
   host: hubble.lukehouge.com
   v1: true
   ingressClassName: nginx

@@ -86,6 +86,7 @@ metadata:
   namespace: envoy-gateway-system
 spec:
   dnsNames:
+    - '*.k8s.lukehouge.com'
     - '*.lukehouge.com'
   issuerRef:
     group: cert-manager.io

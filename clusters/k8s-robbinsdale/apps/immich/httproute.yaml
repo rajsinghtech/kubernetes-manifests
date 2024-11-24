@@ -10,8 +10,8 @@ spec:
       name: robbinsdale
       namespace: envoy-gateway-system
   hostnames:
-    - "immich.rajsingh.info"
-    - "immich.k8s.rajsingh.info"
+    - "immich.rajsingh.info" 
+    - "immich.k8s.rajsingh.info" 
     - "immich.lukehouge.com"
   rules:
     - backendRefs:
