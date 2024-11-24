@@ -126,8 +126,21 @@ grafana:
         gnetId: 20510
         revision: 1
         datasource: prometheus
+  route:
+    main:
+      enabled: true
+      apiVersion: gateway.networking.k8s.io/v1
+      kind: HTTPRoute
+      hostnames: 
+        - grafana.lukehouge.com
+        - grafana.rajsingh.info
+      parentRefs: 
+      - group: gateway.networking.k8s.io
+        kind: Gateway
+        name: robbinsdale
+        namespace: envoy-gateway-system
   ingress:
-    enabled: true
+    enabled: false
     ingressClassName: nginx
     hosts:
       - grafana.lukehouge.com
@@ -139,17 +152,21 @@ grafana:
       cert-manager.io/cluster-issuer: luke-issuer
 
 prometheus:
+  route:
+    main:
+      enabled: true
+      apiVersion: gateway.networking.k8s.io/v1
+      kind: HTTPRoute
+      hostnames: 
+        - prometheus.lukehouge.com
+        - prometheus.rajsingh.info
+      parentRefs: 
+      - group: gateway.networking.k8s.io
+        kind: Gateway
+        name: robbinsdale
+        namespace: envoy-gateway-system
   ingress:
-    enabled: true
-    ingressClassName: nginx
-    hosts:
-      - prometheus.lukehouge.com
-    tls:
-      - hosts:
-          - prometheus.lukehouge.com
-        secretName: prometheus-luke-tls
-    annotations:
-      cert-manager.io/cluster-issuer: luke-issuer
+    enabled: false
   prometheusSpec:
     serviceMonitorSelectorNilUsesHelmValues: false
     podMonitorSelectorNilUsesHelmValues: false
@@ -192,9 +209,22 @@ prometheus-node-exporter:
       cpu: 100m
       memory: 50Mi
 
+alertmanager:
+  route:
+    main:
+      enabled: true
+      apiVersion: gateway.networking.k8s.io/v1
+      kind: HTTPRoute
+      hostnames: 
+        - prometheus.lukehouge.com
+        - prometheus.rajsingh.info
+      parentRefs: 
+      - group: gateway.networking.k8s.io
+        kind: Gateway
+        name: robbinsdale
+        namespace: envoy-gateway-system
+        
 kube-state-metrics:
-  metricLabelsAllowlist:
-    - nodes=[topology.kubernetes.io/zone]
   resources:
     limits:
       memory: 50Mi
