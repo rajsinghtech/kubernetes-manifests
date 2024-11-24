@@ -50,7 +50,7 @@ spec:
       dnsConfig:
         nameservers:
           - 10.96.10.96
-          - 10.96.10.96
+          - 10.96.96.10
         options:
           - name: ndots
             value: "2"
