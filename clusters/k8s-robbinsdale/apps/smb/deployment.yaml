@@ -15,9 +15,6 @@ spec:
       containers:
       - name: smb-server
         image: dperson/samba
-        ports:
-        - containerPort: 139
-        - containerPort: 445
         env:
           - name: USER
             value: "lhouge;password" # create user
