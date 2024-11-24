@@ -33,7 +33,7 @@ resources:
   - ./templates/dashboards/ceph-cluster.yaml
   - ./templates/dashboards/tesla-fleet-telemetry.yaml
   - ./templates/alertconfig.yaml
-  - ./templates/secret.yaml
+  - ./templates/secrets.yaml
 patches:
   # This is required because some CRD annotations are too long.
   - target:
