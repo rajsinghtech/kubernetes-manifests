@@ -210,6 +210,22 @@ prometheus-node-exporter:
       memory: 50Mi
 
 alertmanager:
+  alertmanagerSpec:
+    replicas: 2
+    resources:
+      limits:
+        memory: 50Mi
+      requests:
+        cpu: 100m
+        memory: 50Mi
+
+    storage:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: ceph-hybrid-fs
+          resources:
+            requests:
+              storage: 1Gi
   route:
     main:
       enabled: true
