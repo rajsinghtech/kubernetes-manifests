@@ -6,6 +6,7 @@ metadata:
 spec:
   dnsNames:
     - frigate.lukehouge.com
+    - frigate-tunnel.lukehouge.com
   issuerRef:
     group: cert-manager.io
     kind: ClusterIssuer
