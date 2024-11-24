@@ -21,16 +21,11 @@ spec:
         matchers: [{name: severity, value: critical|error|warning, matchType: =~}]
   receivers:
   - name: "null"
-  - name: heartbeat
-    webhookConfigs:
-      - urlSecret:
-          name: alertmanager-secrets
-          key: healthchecks-io-url
   - name: discord
     discordConfigs:
       - sendResolved: true
         apiURL:
-          name: alertmanager
+          name: alertmanager-secrets
           key: discord-webhook-url
         title: >-
           {{ .GroupLabels.alertname }} - {{ .GroupLabels.namespace }}
