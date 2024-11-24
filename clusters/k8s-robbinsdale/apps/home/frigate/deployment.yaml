@@ -50,7 +50,7 @@ spec:
             - mountPath: /dev/shm
               name: dshm
             - name: secret-volume
-              mountPath: /path/to/your/certificate_folder:/etc/letsencrypt/live/frigate:ro
+              mountPath: /etc/letsencrypt/live/frigate:ro
           resources:
             limits:
               memory: "10000Mi"
