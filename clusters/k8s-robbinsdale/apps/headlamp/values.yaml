@@ -1,0 +1,14 @@
+fullnameOverride: headlamp
+ingress:
+  enabled: true
+  ingressClassName: nginx
+  hosts:
+    - host: headlamp.lukehouge.com
+      paths:
+        - path: /
+          type: Prefix
+          backend:
+            service:
+              name: headlamp
+              port:
+                number: 80
