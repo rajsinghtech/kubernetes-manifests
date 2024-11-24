@@ -10,8 +10,8 @@ spec:
       name: robbinsdale
       namespace: envoy-gateway-system
   hostnames:
-    - "hubble.rajsingh.info"
-    - "hubble.lukehouge.com"
+    - "code.rajsingh.info"
+    - "code.lukehouge.com"
   rules:
     - backendRefs:
         - group: ""
