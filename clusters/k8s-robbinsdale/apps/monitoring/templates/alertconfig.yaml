@@ -1,18 +1,81 @@
 apiVersion: monitoring.coreos.com/v1alpha1
 kind: AlertmanagerConfig
 metadata:
-  name: discord
-  namespace: monitoring
-  labels:
-    alertmanagerConfig: discord
+  name: cluster
 spec:
   route:
-    groupBy: ['job']
-    groupWait: 30s
-    groupInterval: 5m
-    repeatInterval: 12h
-    receiver: 'discord'
+    groupBy: ["alertname", "job"]
+    groupInterval: 10m
+    groupWait: 1m
+    receiver: "null"
+    repeatInterval: 1h
+    routes:
+      - receiver: "null"
+        matchers: [{name: alertname, value: InfoInhibitor, matchType: =}]
+      - receiver: heartbeat
+        groupInterval: 5m
+        groupWait: 0s
+        repeatInterval: 5m
+        matchers: [{name: alertname, value: Watchdog, matchType: =}]
+      - receiver: discord
+        matchers: [{name: severity, value: critical|error|warning, matchType: =~}]
   receivers:
-  - name: 'discord'
+  - name: "null"
+  - name: heartbeat
     webhookConfigs:
-    - url: 'https://discord.com/api/webhooks/1310271519527800893/Twh9LOP-4nK_9zK2olWptdk3wlDWp-cGIIf8NDR4hQNmOXojggwoM0aPs1R2dguGl4p0'
+      - urlSecret:
+          name: alertmanager-secrets
+          key: healthchecks-io-url
+  - name: discord
+    discordConfigs:
+      - sendResolved: true
+        apiURL:
+          name: alertmanager
+          key: discord-webhook-url
+        title: >-
+          {{ .GroupLabels.alertname }} - {{ .GroupLabels.namespace }}
+          {{- if ne .CommonLabels.severity "" }} ({{ .CommonLabels.severity}}){{- end }}
+          ({{ .GroupLabels.cluster }})
+          [{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}]
+        message: |-
+          {{- $root := . -}}
+          {{- $rm := stringSlice "instance" "kubernetes_node" "endpoint" "prometheus" "service" "cluster" "container" "job" "severity" -}}
+          {{- $common := ( ( .CommonLabels.Remove $root.GroupLabels.Names ).Remove $rm ) -}}
+          {{- if gt (len $common.SortedPairs) 0 -}}
+          ## Common Labels
+          {{- range $common.SortedPairs }}
+          > {{ .Name }}: `{{ .Value }}`
+          {{- end }}
+          {{- end }}
+          ## Alerts
+          {{- range .Alerts }}
+            {{- $msg := "Alert description not available" }}
+            {{- if ne .Annotations.description "" }}
+            {{- $msg = .Annotations.description }}
+            {{- else if ne .Annotations.summary "" }}
+            {{- $msg = .Annotations.summary }}
+            {{- else if ne .Annotations.message "" }}
+            {{- $msg = .Annotations.message }}
+            {{- end }}
+          - {{ reReplaceAll "([^\n])\n([^\n])" "$1 $2" $msg | reReplaceAll "\n" "\n  " | trimSpace }}
+            {{- "\n  " }}
+            > [Source]({{ .GeneratorURL }})
+            > [Runbook]({{ .Annotations.runbook_url }})
+            {{- $uniq := ( ( .Labels.Remove $root.GroupLabels.Names ).Remove $root.CommonLabels.Names ) }}
+            {{- if gt (len $uniq.SortedPairs) 0 }}
+              {{- range $uniq.SortedPairs }}
+            > {{ .Name }}: `{{ .Value }}`
+              {{- end }}
+            {{- end }}
+          {{- end }}
+  inhibitRules:
+    - sourceMatch: [{name: severity, value: critical, matchType: =}]
+      targetMatch: [{ name: severity, value: error|warning|info, matchType: =~ }]
+      equal: ["namespace", "alertname"]
+    - sourceMatch: [{name: severity, value: error|warning, matchType: =}]
+      targetMatch: [{ name: severity, value: info, matchType: = }]
+      equal: ["namespace", "alertname"]
+    - sourceMatch: [{name: alertname, value: InfoInhibitor, matchType: =}]
+      targetMatch: [{ name: severity, value: info, matchType: = }]
+      equal: ["namespace"]
+    - targetMatch: [{ name: alertname, value: InfoInhibitor, matchType: = }]
