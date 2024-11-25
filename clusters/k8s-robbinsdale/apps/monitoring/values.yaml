@@ -211,7 +211,7 @@ prometheus-node-exporter:
 
 alertmanager:
   alertmanagerSpec:
-    replicas: 2
+    replicas: 1
     resources:
       limits:
         memory: 50Mi
