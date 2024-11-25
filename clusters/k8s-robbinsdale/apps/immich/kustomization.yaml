@@ -38,11 +38,11 @@ patches:
                     mountPath: /vault
                 resources:
                   requests:
-                    memory: "3Gi"
-                    cpu: "3"
-                  limits:
                     memory: "6Gi"
                     cpu: "6"
+                  limits:
+                    memory: "12Gi"
+                    cpu: "12"
   - target:
       kind: StatefulSet
       name: immich-postgresql
