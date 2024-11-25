@@ -97,3 +97,24 @@ patches:
                   limits:
                     memory: "4Gi"
                     cpu: "4000m"
+  - target:
+      kind: StatefulSet
+      name: immich-redis-master
+    patch: |-
+      apiVersion: apps/v1
+      kind: StatefulSet
+      metadata:
+        name: immich-redis-master
+      template:
+          spec:
+            containers:
+              - name: redis
+                resources:
+                  limits:
+                    cpu: 2000m
+                    ephemeral-storage: 3Gi
+                    memory: 2Gi
+                  requests:
+                    cpu: 1000m
+                    ephemeral-storage: 100Mi
+                    memory: 1Gi
