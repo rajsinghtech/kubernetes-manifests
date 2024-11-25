@@ -58,13 +58,13 @@ patches:
               - name: postgresql
                 resources:
                   limits:
-                    cpu: 2000m
+                    cpu: 4000m
                     ephemeral-storage: 3Gi
-                    memory: 2Gi
+                    memory: 6Gi
                   requests:
-                    cpu: 500m
+                    cpu: 2000m
                     ephemeral-storage: 100Mi
-                    memory: 1Gi
+                    memory: 3Gi
                 livenessProbe:
                   initialDelaySeconds: 10800  # Waits 3 hours before first check
                   periodSeconds: 30          # Check every 30 seconds
