@@ -18,3 +18,4 @@ resources:
   - ./templates/httproute.yaml
   - ./templates/buckets.yaml
   - ./templates/nfs.yaml
+  - ./templates/toolbox.yaml
