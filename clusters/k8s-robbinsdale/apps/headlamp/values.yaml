@@ -1,6 +1,6 @@
 fullnameOverride: headlamp
 ingress:
-  enabled: true
+  enabled: false
   ingressClassName: nginx
   hosts:
     - host: headlamp.lukehouge.com

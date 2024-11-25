@@ -33,7 +33,7 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: luke-issuer
     kubernetes.io/tls-acme: "true"
-  enabled: true
+  enabled: false
   hosts:
     - pihole-secondary.lukehouge.com
   path: /

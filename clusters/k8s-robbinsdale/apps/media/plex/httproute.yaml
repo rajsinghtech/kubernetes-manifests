@@ -1,8 +1,8 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: code
-  namespace: code-server
+  name: plex
+  namespace: media
 spec:
   parentRefs:
     - group: gateway.networking.k8s.io
@@ -10,14 +10,14 @@ spec:
       name: robbinsdale
       namespace: envoy-gateway-system
   hostnames:
-    - "code.rajsingh.info"
-    - "code.lukehouge.com"
+    - "plex.rajsingh.info"
+    - "plex.lukehouge.com"
   rules:
     - backendRefs:
         - group: ""
           kind: Service
-          name: hubble-ui
-          port: 80
+          name: plex
+          port: 32400
           weight: 1
       matches:
         - path:
