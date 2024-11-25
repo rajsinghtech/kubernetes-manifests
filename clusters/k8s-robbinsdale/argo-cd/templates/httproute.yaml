@@ -2,7 +2,7 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: argocd
-  namespace: argocd-ceph
+  namespace: argocd
 spec:
   parentRefs:
     - group: gateway.networking.k8s.io
