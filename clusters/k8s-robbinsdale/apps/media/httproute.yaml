@@ -9,6 +9,7 @@ spec:
       name: robbinsdale
       namespace: envoy-gateway-system
   hostnames:
+    - "media.lukehouge.com"
     - "media.rajsingh.info"
   rules:
     - backendRefs:
