@@ -14,3 +14,4 @@ helmCharts:
 resources:
   - ./templates/argo-cd.yaml
   - ./templates/namespace.yaml
+  - ./templates/httproute.yaml
