@@ -5,7 +5,7 @@
 ingress:
   enabled: false
   host: hubble.lukehouge.com
-  v1: true
+  v1: false
   ingressClassName: nginx
   annotations:
     cert-manager.io/cluster-issuer: luke-issuer
