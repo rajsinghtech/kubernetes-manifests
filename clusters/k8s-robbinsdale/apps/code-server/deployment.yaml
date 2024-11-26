@@ -38,7 +38,7 @@ spec:
             - name: PROXY_DOMAIN
               value: "lukehouge.com" # Optional: Specify your domain
             - name: DEFAULT_WORKSPACE
-              value: /mnt/tank/k8s # Optional: Specify default workspace path
+              value: /mnt # Optional: Specify default workspace path
           # volumeMounts:
           #   - name: config-volume
           #     mountPath: /config
@@ -63,6 +63,15 @@ spec:
               mountPath: /config
             - name: ceph-hybrid-fs
               mountPath: /mnt/ceph
+            - name: certificate-volume
+              mountPath: /le-ssl/keys/letsencrypt/
+          resources:
+            requests:
+              memory: "0.5Mi"
+              cpu: "100m"
+            limits:
+              memory: "4Gi"
+              cpu: "4"
       volumes:
         - name: startup-script
           configMap:
@@ -79,4 +88,12 @@ spec:
         - name: config-volume
           persistentVolumeClaim:
             claimName: code-server-config
+        - name: certificate-volume
+          secret:
+            secretName: code-server-luke-tls
+            items:
+            - key: tls.crt
+              path: fullchain.pem
+            - key: tls.key
+              path: privkey.pem
       restartPolicy: Always # Restart policy for the pod

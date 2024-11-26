@@ -4,7 +4,7 @@ namespace: code-server
 resources:
   - deployment.yaml
   - service.yaml
-  - httproute.yaml
+  - certificate.yaml
   - pvc.yaml
   - secret.yaml
 configMapGenerator:
