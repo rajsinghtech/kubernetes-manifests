@@ -16,7 +16,7 @@ spec:
     - backendRefs:
         - group: ""
           kind: Service
-          name: hubble-ui
+          name: code-server
           port: 80
           weight: 1
       matches:
