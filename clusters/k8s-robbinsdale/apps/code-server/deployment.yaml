@@ -35,10 +35,10 @@ spec:
             #   key: admin-password
             # - name: SUDO_PASSWORD_HASH
             #   value: ""  # Optional: Leave empty if not using hashed sudo password
-            - name: PROXY_DOMAIN
-              value: "lukehouge.com" # Optional: Specify your domain
+            # - name: PROXY_DOMAIN
+            #   value: "code.lukehouge.com" # Optional: Specify your domain
             - name: DEFAULT_WORKSPACE
-              value: /mnt/tank/k8s # Optional: Specify default workspace path
+              value: /mnt # Optional: Specify default workspace path
           # volumeMounts:
           #   - name: config-volume
           #     mountPath: /config
