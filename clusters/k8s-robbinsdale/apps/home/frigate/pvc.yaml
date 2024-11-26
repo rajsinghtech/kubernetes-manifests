@@ -8,7 +8,7 @@ spec:
   resources:
     requests:
       storage: 3000Gi
-  storageClassName: ceph-hybrid-fs
+  storageClassName: ceph-hdd-fs
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
