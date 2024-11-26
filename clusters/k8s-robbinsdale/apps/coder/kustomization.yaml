@@ -13,3 +13,30 @@ helmCharts:
 
 resources:
   - postgres.yaml
+
+patches:
+  - target:
+      version: v1
+      kind: Deployment
+      name: coder
+    patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: coder
+        namespace: coder
+      spec:
+        template:
+          spec:
+            containers:
+              - name: coder
+                livenessProbe:
+                  initialDelaySeconds: 10800  # Waits 3 hours before first check
+                  periodSeconds: 30          # Check every 30 seconds
+                  timeoutSeconds: 5          # Command timeout
+                  failureThreshold: 360      # Allows 3 hours of failures
+                readinessProbe:
+                  initialDelaySeconds: 5      # Starts after 5 seconds
+                  periodSeconds: 10           # Check every 10 seconds
+                  timeoutSeconds: 5           # Command timeout
+                  failureThreshold: 6         # Tolerates 6 consecutive failures
