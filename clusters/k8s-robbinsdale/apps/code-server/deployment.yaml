@@ -61,6 +61,8 @@ spec:
               mountPath: /mnt/proxmox-vault
             - name: config-volume
               mountPath: /config
+            - name: ceph-hybrid-fs
+              mountPath: /mnt/ceph
       volumes:
         - name: startup-script
           configMap:
@@ -70,6 +72,10 @@ spec:
           nfs:
             path: /vault/k8s
             server: 192.168.50.104
+        - name: ceph-hybrid-fs
+          nfs:
+            path: /ceph
+            server: 10.43.143.159
         - name: config-volume
           persistentVolumeClaim:
             claimName: code-server-config
