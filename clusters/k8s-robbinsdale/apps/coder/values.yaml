@@ -15,7 +15,7 @@ coder:
           # You'll need to create a secret called coder-db-url with your
           # Postgres connection URL like:
           # postgres://coder:password@postgres:5432/coder?sslmode=disable
-          name: coder-db-url
+          name: coder-postgres-app
           key: url
 
     # (Optional) For production deployments the access URL should be set.
