@@ -1,15 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: code-server
-  annotations:
-    external-dns.alpha.kubernetes.io/hostname: code-server.lukehouge.com
+  name: code-server-svc
 spec:
   selector:
     app: code-server  # Match labels with your Deployment
   ports:
     - name: https
       protocol: TCP
-      port: 443  # Port exposed by the service
+      port: 8443  # Port exposed by the service
       targetPort: 8443  # Port on the pods (matches containerPort in Deployment)
-  type: LoadBalancer
+  type: NodePort  # Expose service on a static port on each node
