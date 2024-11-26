@@ -225,7 +225,7 @@ alertmanager:
           storageClassName: ceph-hybrid-fs
           resources:
             requests:
-              storage: 1Gi
+              storage: 10Gi
   route:
     main:
       enabled: true

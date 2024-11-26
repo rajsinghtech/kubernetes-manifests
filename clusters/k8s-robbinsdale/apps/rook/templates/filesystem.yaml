@@ -11,9 +11,9 @@ spec:
     - name: replicated
       replicated:
         size: 3
-        hybridStorage:
-          primaryDeviceClass: ssd
-          secondaryDeviceClass: hdd
+        # hybridStorage:
+        #   primaryDeviceClass: ssd
+        #   secondaryDeviceClass: hdd
   preserveFilesystemOnDelete: false
   metadataServer:
     activeCount: 1
