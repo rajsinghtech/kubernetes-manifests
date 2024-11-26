@@ -22,7 +22,13 @@ coder:
     # If you're just trying Coder, access the dashboard via the service IP.
     # - name: CODER_ACCESS_URL
     #   value: "https://coder.example.com"
-
+  volumes:
+    - name: coder-data
+      persistentVolumeClaim:
+        claimName: coder-pvc
+  volumeMounts:
+    - name: coder-data
+      mountPath: /config
   #tls:
   #  secretNames:
   #    - my-tls-secret-name
