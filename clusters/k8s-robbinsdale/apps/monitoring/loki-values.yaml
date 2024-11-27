@@ -18,13 +18,13 @@ loki:
       enabled: false
   schemaConfig:
     configs:
-    - from: 2024-04-01
-      store: tsdb
-      object_store: s3
-      schema: v13
-      index:
-        prefix: index_
-        period: 24h
+      - from: 2024-04-01
+        store: tsdb
+        object_store: s3
+        schema: v13
+        index:
+          prefix: index_
+          period: 24h
   auth_enabled: false
   commonConfig:
     replication_factor: 1
@@ -41,23 +41,23 @@ ingress:
 write:
   replicas: 1
   extraEnvFrom:
-  - secretRef:
-      name: ceph-hybrid-loki
+    - secretRef:
+        name: ceph-hybrid-loki
   persistence:
-    storageClass: ceph-hybrid-fs
+    storageClass: ceph-generic-fs
 read:
   replicas: 1
   extraEnvFrom:
-  - secretRef:
-      name: ceph-hybrid-loki
+    - secretRef:
+        name: ceph-hybrid-loki
 backend:
   replicas: 1
   persistence:
-    storageClass: ceph-hybrid-fs
+    storageClass: ceph-generic-fs
   extraEnvFrom:
-  - secretRef:
-      name: ceph-hybrid-loki
+    - secretRef:
+        name: ceph-hybrid-loki
 chunksCache:
   enabled: false
   persistence:
-    storageClass: ceph-hybrid-fs
+    storageClass: ceph-generic-fs
