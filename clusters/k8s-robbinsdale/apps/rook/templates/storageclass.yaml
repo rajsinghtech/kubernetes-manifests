@@ -8,35 +8,35 @@ reclaimPolicy: Delete
 parameters:
   objectStoreName: hybrid-objectstore
   objectStoreNamespace: rook-ceph
----
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: ceph-hybrid-fs
-  annotations:
-    storageclass.kubernetes.io/is-default-class: "true"
-# Change "rook-ceph" provisioner prefix to match the operator namespace if needed
-provisioner: rook-ceph.cephfs.csi.ceph.com
-parameters:
-  # clusterID is the namespace where the rook cluster is running
-  # If you change this namespace, also change the namespace below where the secret namespaces are defined
-  clusterID: rook-ceph
+# ---
+# apiVersion: storage.k8s.io/v1
+# kind: StorageClass
+# metadata:
+#   name: ceph-hybrid-fs
+#   annotations:
+#     storageclass.kubernetes.io/is-default-class: "true"
+# # Change "rook-ceph" provisioner prefix to match the operator namespace if needed
+# provisioner: rook-ceph.cephfs.csi.ceph.com
+# parameters:
+#   # clusterID is the namespace where the rook cluster is running
+#   # If you change this namespace, also change the namespace below where the secret namespaces are defined
+#   clusterID: rook-ceph
 
-  # CephFS filesystem name into which the volume shall be created
-  fsName: hybrid-fs
+#   # CephFS filesystem name into which the volume shall be created
+#   fsName: hybrid-fs
 
-  # Ceph pool into which the volume shall be created
-  # Required for provisionVolume: "true"
-  pool: hybrid-fs-replicated
+#   # Ceph pool into which the volume shall be created
+#   # Required for provisionVolume: "true"
+#   pool: hybrid-fs-replicated
 
-  # The secrets contain Ceph admin credentials. These are generated automatically by the operator
-  # in the same namespace as the cluster.
-  csi.storage.k8s.io/provisioner-secret-name: rook-csi-cephfs-provisioner
-  csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
-  csi.storage.k8s.io/controller-expand-secret-name: rook-csi-cephfs-provisioner
-  csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph
-  csi.storage.k8s.io/node-stage-secret-name: rook-csi-cephfs-node
-  csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
+#   # The secrets contain Ceph admin credentials. These are generated automatically by the operator
+#   # in the same namespace as the cluster.
+#   csi.storage.k8s.io/provisioner-secret-name: rook-csi-cephfs-provisioner
+#   csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
+#   csi.storage.k8s.io/controller-expand-secret-name: rook-csi-cephfs-provisioner
+#   csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph
+#   csi.storage.k8s.io/node-stage-secret-name: rook-csi-cephfs-node
+#   csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
 # ---
 # apiVersion: storage.k8s.io/v1
 # kind: StorageClass
@@ -82,6 +82,33 @@ parameters:
   # Ceph pool into which the volume shall be created
   # Required for provisionVolume: "true"
   pool: hdd-fs-replicated
+
+  # The secrets contain Ceph admin credentials. These are generated automatically by the operator
+  # in the same namespace as the cluster.
+  csi.storage.k8s.io/provisioner-secret-name: rook-csi-cephfs-provisioner
+  csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
+  csi.storage.k8s.io/controller-expand-secret-name: rook-csi-cephfs-provisioner
+  csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph
+  csi.storage.k8s.io/node-stage-secret-name: rook-csi-cephfs-node
+  csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: ceph-generic-fs
+# Change "rook-ceph" provisioner prefix to match the operator namespace if needed
+provisioner: rook-ceph.cephfs.csi.ceph.com
+parameters:
+  # clusterID is the namespace where the rook cluster is running
+  # If you change this namespace, also change the namespace below where the secret namespaces are defined
+  clusterID: rook-ceph
+
+  # CephFS filesystem name into which the volume shall be created
+  fsName: generic-fs
+
+  # Ceph pool into which the volume shall be created
+  # Required for provisionVolume: "true"
+  pool: generic-fs-replicated
 
   # The secrets contain Ceph admin credentials. These are generated automatically by the operator
   # in the same namespace as the cluster.

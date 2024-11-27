@@ -19,3 +19,4 @@ resources:
   - ./templates/buckets.yaml
   - ./templates/nfs.yaml
   - ./templates/toolbox.yaml
+  - ./templates/filesystem-generic.yaml
