@@ -1,0 +1,5 @@
+tls:
+  secretName: kubewall-raj-tls
+service:
+  type: LoadBalancer
+  port: 443
