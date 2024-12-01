@@ -1,0 +1,12 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+helmCharts:
+  - name: openebs
+    repo: https://openebs.github.io/openebs
+    version: 3.10.0
+    namespace: openebs
+    releaseName: openebs
+    includeCRDs: true
+    valuesFile: values.yaml
