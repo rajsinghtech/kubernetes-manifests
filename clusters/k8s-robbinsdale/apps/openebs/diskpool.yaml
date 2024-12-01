@@ -1,0 +1,39 @@
+apiVersion: "openebs.io/v1beta2"
+kind: DiskPool
+metadata:
+  name: proxmox-stone
+  namespace: openebs
+spec:
+  node: proxmox-stone
+  disks: 
+  - "aio:///dev/disk/by-id/ata-WDC_WD40PURZ-85AKKY0_WD-WX12D40EDDKH"
+---
+apiVersion: "openebs.io/v1beta2"
+kind: DiskPool
+metadata:
+  name: proxmox-tank
+  namespace: openebs
+spec:
+  node: proxmox-stone
+  disks: 
+  - "aio:///dev/disk/by-id/ata-WDC_WD40PURZ-85TTDY0_WD-WCC7K3SJK032"
+---
+apiVersion: "openebs.io/v1beta2"
+kind: DiskPool
+metadata:
+  name: proxmox-titan
+  namespace: openebs
+spec:
+  node: proxmox-stone
+  disks: 
+  - "aio:///dev/disk/by-id/ata-WDC_WD40PURZ-85AKKY0_WD-WX32D40FNXX4"
+---
+apiVersion: "openebs.io/v1beta2"
+kind: DiskPool
+metadata:
+  name: proxmox-vault
+  namespace: openebs
+spec:
+  node: proxmox-stone
+  disks: 
+  - "aio:///dev/disk/by-id/ata-WDC_WD40PURZ-85AKKY0_WD-WX62D3010ADX"

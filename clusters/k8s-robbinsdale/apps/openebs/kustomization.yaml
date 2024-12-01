@@ -10,3 +10,7 @@ helmCharts:
     releaseName: openebs
     includeCRDs: true
     valuesFile: values.yaml
+
+resources:
+  - diskpool.yaml
+  - storageclass.yaml
