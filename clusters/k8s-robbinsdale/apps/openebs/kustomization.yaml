@@ -4,7 +4,7 @@ kind: Kustomization
 
 helmCharts:
   - name: openebs
-    repo: https://openebs.github.io/charts
+    repo: https://openebs.github.io/openebs
     version: 4.1.1 
     namespace: openebs
     releaseName: openebs
