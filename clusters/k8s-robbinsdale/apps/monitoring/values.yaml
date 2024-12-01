@@ -189,7 +189,7 @@ prometheus:
     storageSpec:
       volumeClaimTemplate:
         spec:
-          storageClassName: ceph-hdd-fs
+          storageClassName: nfs-proxmox-vault
           resources:
             requests:
               storage: 100Gi
@@ -222,7 +222,7 @@ alertmanager:
     storage:
       volumeClaimTemplate:
         spec:
-          storageClassName: ceph-hdd-fs
+          storageClassName: nfs-proxmox-vault
           resources:
             requests:
               storage: 10Gi

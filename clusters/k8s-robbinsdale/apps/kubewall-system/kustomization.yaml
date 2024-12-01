@@ -5,7 +5,7 @@ kind: Kustomization
 helmCharts:
   - name: kubewall
     repo: oci://ghcr.io/kubewall/charts/kubewall
-    version: v0.0.4
+    version: 0.0.9
     namespace: kubewall-system
     releaseName: kubewall
     includeCRDs: true
