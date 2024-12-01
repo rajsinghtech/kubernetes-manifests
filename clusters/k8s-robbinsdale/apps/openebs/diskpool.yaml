@@ -1,7 +1,7 @@
 apiVersion: "openebs.io/v1beta2"
 kind: DiskPool
 metadata:
-  name: proxmox-stone
+  name: stone
   namespace: openebs
 spec:
   node: proxmox-stone
@@ -11,7 +11,7 @@ spec:
 apiVersion: "openebs.io/v1beta2"
 kind: DiskPool
 metadata:
-  name: proxmox-tank
+  name: tank
   namespace: openebs
 spec:
   node: proxmox-tank
@@ -21,7 +21,7 @@ spec:
 apiVersion: "openebs.io/v1beta2"
 kind: DiskPool
 metadata:
-  name: proxmox-titan
+  name: titan
   namespace: openebs
 spec:
   node: proxmox-titan
@@ -31,7 +31,7 @@ spec:
 apiVersion: "openebs.io/v1beta2"
 kind: DiskPool
 metadata:
-  name: proxmox-vault
+  name: vault
   namespace: openebs
 spec:
   node: proxmox-vault
