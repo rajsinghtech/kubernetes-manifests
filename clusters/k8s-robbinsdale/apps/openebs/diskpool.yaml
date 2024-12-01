@@ -14,7 +14,7 @@ metadata:
   name: proxmox-tank
   namespace: openebs
 spec:
-  node: proxmox-stone
+  node: proxmox-tank
   disks: 
   - "aio:///dev/disk/by-id/ata-WDC_WD40PURZ-85TTDY0_WD-WCC7K3SJK032"
 ---
@@ -24,7 +24,7 @@ metadata:
   name: proxmox-titan
   namespace: openebs
 spec:
-  node: proxmox-stone
+  node: proxmox-titan
   disks: 
   - "aio:///dev/disk/by-id/ata-WDC_WD40PURZ-85AKKY0_WD-WX32D40FNXX4"
 ---
@@ -34,6 +34,6 @@ metadata:
   name: proxmox-vault
   namespace: openebs
 spec:
-  node: proxmox-stone
+  node: proxmox-vault
   disks: 
   - "aio:///dev/disk/by-id/ata-WDC_WD40PURZ-85AKKY0_WD-WX62D3010ADX"
