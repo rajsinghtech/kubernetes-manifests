@@ -42,7 +42,7 @@ spec:
         # for more info: https://docs.ceph.com/docs/master/rados/operations/placement-groups/#specifying-expected-pool-size
         #target_size_ratio: ".5"
   # Whether to preserve filesystem after CephFilesystem CRD deletion
-  preserveFilesystemOnDelete: true
+  preserveFilesystemOnDelete: false
   # The metadata service (mds) configuration
   metadataServer:
     # The number of active MDS instances
@@ -65,35 +65,35 @@ spec:
       #  - key: mds-node
       #    operator: Exists
       #  podAffinity:
-      podAntiAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-                - key: app
-                  operator: In
-                  values:
-                    - rook-ceph-mds
-            ## Add this if you want to allow mds daemons for different filesystems to run on one
-            ## node. The value in "values" must match .metadata.name.
-            #    - key: rook_file_system
-            #          operator: In
-            #          values:
-            #            - generic-fs
-            # topologyKey: kubernetes.io/hostname will place MDS across different hosts
-            topologyKey: kubernetes.io/hostname
-        preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                  - key: app
-                    operator: In
-                    values:
-                      - rook-ceph-mds
-              # topologyKey: */zone can be used to spread MDS across different AZ
-              # Use <topologyKey: failure-domain.beta.kubernetes.io/zone> in k8s cluster if your cluster is v1.16 or lower
-              # Use <topologyKey: topology.kubernetes.io/zone>  in k8s cluster is v1.17 or upper
-              topologyKey: topology.kubernetes.io/zone
+    #   podAntiAffinity:
+    #     requiredDuringSchedulingIgnoredDuringExecution:
+    #       - labelSelector:
+    #           matchExpressions:
+    #             - key: app
+    #               operator: In
+    #               values:
+    #                 - rook-ceph-mds
+    #         ## Add this if you want to allow mds daemons for different filesystems to run on one
+    #         ## node. The value in "values" must match .metadata.name.
+    #         #    - key: rook_file_system
+    #         #          operator: In
+    #         #          values:
+    #         #            - generic-fs
+    #         # topologyKey: kubernetes.io/hostname will place MDS across different hosts
+    #         topologyKey: kubernetes.io/hostname
+    #     preferredDuringSchedulingIgnoredDuringExecution:
+    #       - weight: 100
+    #         podAffinityTerm:
+    #           labelSelector:
+    #             matchExpressions:
+    #               - key: app
+    #                 operator: In
+    #                 values:
+    #                   - rook-ceph-mds
+    #           # topologyKey: */zone can be used to spread MDS across different AZ
+    #           # Use <topologyKey: failure-domain.beta.kubernetes.io/zone> in k8s cluster if your cluster is v1.16 or lower
+    #           # Use <topologyKey: topology.kubernetes.io/zone>  in k8s cluster is v1.17 or upper
+    #           topologyKey: topology.kubernetes.io/zone
     # A key/value list of annotations
     # annotations:
     #  key: value
@@ -135,23 +135,23 @@ spec:
   #   snapshotRetention:
   #     - path: /
   #       duration: "h 24"
----
-# create default csi subvolume group
-apiVersion: ceph.rook.io/v1
-kind: CephFilesystemSubVolumeGroup
-metadata:
-  name: generic-fs-csi # lets keep the svg crd name same as `filesystem name + csi` for the default csi svg
-  namespace: rook-ceph # namespace:cluster
-spec:
-  # The name of the subvolume group. If not set, the default is the name of the subvolumeGroup CR.
-  name: csi
-  # filesystemName is the metadata name of the CephFilesystem CR where the subvolume group will be created
-  filesystemName: generic-fs
-  # reference https://docs.ceph.com/en/latest/cephfs/fs-volumes/#pinning-subvolumes-and-subvolume-groups
-  # only one out of (export, distributed, random) can be set at a time
-  # by default pinning is set with value: distributed=1
-  # for disabling default values set (distributed=0)
-  pinning:
-    distributed: 1 # distributed=<0, 1> (disabled=0)
-    # export:                 # export=<0-256> (disabled=-1)
-    # random:                 # random=[0.0, 1.0](disabled=0.0)
+# ---
+# # create default csi subvolume group
+# apiVersion: ceph.rook.io/v1
+# kind: CephFilesystemSubVolumeGroup
+# metadata:
+#   name: generic-fs-csi # lets keep the svg crd name same as `filesystem name + csi` for the default csi svg
+#   namespace: rook-ceph # namespace:cluster
+# spec:
+#   # The name of the subvolume group. If not set, the default is the name of the subvolumeGroup CR.
+#   name: csi
+#   # filesystemName is the metadata name of the CephFilesystem CR where the subvolume group will be created
+#   filesystemName: generic-fs
+#   # reference https://docs.ceph.com/en/latest/cephfs/fs-volumes/#pinning-subvolumes-and-subvolume-groups
+#   # only one out of (export, distributed, random) can be set at a time
+#   # by default pinning is set with value: distributed=1
+#   # for disabling default values set (distributed=0)
+#   pinning:
+#     distributed: 1 # distributed=<0, 1> (disabled=0)
+#     # export:                 # export=<0-256> (disabled=-1)
+#     # random:                 # random=[0.0, 1.0](disabled=0.0)
