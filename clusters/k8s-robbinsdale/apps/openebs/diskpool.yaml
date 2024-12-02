@@ -6,7 +6,7 @@ metadata:
 spec:
   node: proxmox-stone
   disks: 
-  - "aio:///dev/disk/by-id/ata-WDC_WD40PURZ-85AKKY0_WD-WX12D40EDDKH"
+  - "/dev/disk/by-id/ata-WDC_WD40PURZ-85AKKY0_WD-WX12D40EDDKH"
 ---
 apiVersion: "openebs.io/v1beta2"
 kind: DiskPool
@@ -16,7 +16,7 @@ metadata:
 spec:
   node: proxmox-tank
   disks: 
-  - "aio:///dev/disk/by-id/ata-WDC_WD40PURZ-85TTDY0_WD-WCC7K3SJK032"
+  - "/dev/disk/by-id/ata-WDC_WD40PURZ-85TTDY0_WD-WCC7K3SJK032"
 ---
 apiVersion: "openebs.io/v1beta2"
 kind: DiskPool
@@ -26,7 +26,7 @@ metadata:
 spec:
   node: proxmox-titan
   disks: 
-  - "aio:///dev/disk/by-id/ata-WDC_WD40PURZ-85AKKY0_WD-WX32D40FNXX4"
+  - "/dev/disk/by-id/ata-WDC_WD40PURZ-85AKKY0_WD-WX32D40FNXX4"
 ---
 apiVersion: "openebs.io/v1beta2"
 kind: DiskPool
@@ -36,4 +36,4 @@ metadata:
 spec:
   node: proxmox-vault
   disks: 
-  - "aio:///dev/disk/by-id/ata-WDC_WD40PURZ-85AKKY0_WD-WX62D3010ADX"
+  - "/dev/disk/by-id/ata-WDC_WD40PURZ-85AKKY0_WD-WX62D3010ADX"
