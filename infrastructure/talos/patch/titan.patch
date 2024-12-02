@@ -1,0 +1,10 @@
+machine:
+  network:
+    hostname: titan
+    interfaces:
+      - interface: bond0
+        dhcp: true
+        bond:
+          mode: balance-alb
+          deviceSelectors:
+            - busPath: 01:*
