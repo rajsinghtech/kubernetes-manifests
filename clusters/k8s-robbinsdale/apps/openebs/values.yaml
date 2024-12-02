@@ -1,0 +1,3 @@
+mayastor:
+  io_engine:
+    envcontext: "iova-mode=pa"

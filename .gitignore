@@ -6,3 +6,4 @@ tf/**/alpo-*.yaml
 tf/**/kubeconfig_*
 tfplan
 charts
+infrastructure/talos/*.yaml
