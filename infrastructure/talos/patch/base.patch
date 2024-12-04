@@ -2,9 +2,26 @@ cluster:
   network:
     cni:
       name: none
+    dnsDomain: k8s.robbinsdale.local
+    podSubnets:
+    - 10.1.0.0/16
+    serviceSubnets:
+    - 10.0.0.0/16
   proxy:
     disabled: true
+  controlPlane:
+    endpoint: https://k8s.robbinsdale.local:6443
+  clusterName: k8s.robbinsdale.local
+  apiServer:
+    certSANs:
+    - k8s.robbinsdale.local
+    - k8s.robbinsdale.rajsingh.info
+    - k8s.robbinsdale.lukehouge.com
 machine:
+  certSANs:
+  - k8s.robbinsdale.local
+  - k8s.robbinsdale.rajsingh.info
+  - k8s.robbinsdale.lukehouge.com
   sysctls:
     vm.nr_hugepages: "1024"
   nodeLabels:
