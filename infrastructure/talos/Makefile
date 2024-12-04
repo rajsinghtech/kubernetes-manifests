@@ -2,7 +2,7 @@ secret:
 	talosctl gen secrets -o secrets.yaml
 
 config:
-	talosctl gen config --with-secrets secrets.yaml robbinsdale https://192.168.50.25:6443 --dns-domain k8s.robbinsdale.local --additional-sans k8s.robbinsdale.rajsingh.info k8s.robbinsdale.lukehouge.com
+	talosctl gen config --with-secrets secrets.yaml --config-patch @patch/base.patch k8s.robbinsdale.local https://k8s.robbinsdale.local:6443
 	cp ./talosconfig ~/.talos/config
 
 patch-machineconfig:
@@ -15,28 +15,24 @@ apply:
 	talosctl apply-config --insecure -n 192.168.50.97 --file proxmox.yaml
 
 bootstrap:
-	talosctl bootstrap --talosconfig=./talosconfig -n 192.168.50.97 -e 192.168.50.97
+	talosctl bootstrap --talosconfig=./talosconfig -n 192.168.50.97 -e k8s.robbinsdale.local
 
 apply-proxmox:
 	talosctl apply-config --insecure -n 192.168.50.97 --file proxmox.yaml
 
 update-proxmox:
 	${MAKE} patch-machineconfig
-	talosctl -e 192.168.50.97 -n 192.168.50.97 apply-config --file proxmox.yaml
-	
-talosconfig:
-	talosctl --talosconfig=./talosconfig -n 192.168.50.97 -e 192.168.50.97 version
-
+	talosctl -e k8s.robbinsdale.local -n 192.168.50.97 apply-config --file proxmox.yaml
 
 kubeconfig:
-	talosctl kubeconfig ~/.kube/talosconfig -n 192.168.50.97 -e 192.168.50.97 --talosconfig=./talosconfig
+	talosctl kubeconfig ~/.kube/talosconfig -n 192.168.50.97 -e k8s.robbinsdale.local --talosconfig=./talosconfig -f
 
 k9s:
-	k9s --context admin@robbinsdale
+	k9s --kubeconfig ~/.kube/talosconfig --context admin@robbinsdale
 
 health:
-	talosctl health --talosconfig=./talosconfig -n 192.168.50.97 -e 192.168.50.97
+	talosctl health --talosconfig=./talosconfig -n 192.168.50.97 -e k8s.robbinsdale.local
 
 dashboard:
-	talosctl dashboard --talosconfig=./talosconfig -n 192.168.50.97 -e 192.168.50.97
+	talosctl dashboard --talosconfig=./talosconfig -n 192.168.50.97 -e k8s.robbinsdale.local
 

@@ -2,9 +2,12 @@ machine:
   network:
     hostname: titan
     interfaces:
-      - interface: bond0
-        dhcp: true
-        bond:
-          mode: balance-alb
-          deviceSelectors:
-            - busPath: 01:*
+    - interface: bond0
+      dhcp: true
+      bond:
+        mode: balance-alb
+        deviceSelectors:
+        - busPath: 0000:01:*
+  install:
+    disk: /dev/nvme0n1
+    wipe: true

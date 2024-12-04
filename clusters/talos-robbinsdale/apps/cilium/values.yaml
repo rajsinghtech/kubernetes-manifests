@@ -1,0 +1,47 @@
+kubeProxyReplacement: true
+routingMode: native
+autoDirectNodeRoutes: true
+directRoutingSkipUnreachable: true
+bpf:
+  # datapathMode: netkit
+  masquerade: true
+ipv4:
+  enabled: true
+enableIPv4BIGTCP: true
+ipv4NativeRoutingCIDR: 10.0.0.0/8
+enableIPv4Masquerade: true
+bandwidthManager:
+  enabled: true
+  bbr: true
+ipam:
+  mode: "cluster-pool"
+  operator:
+    clusterPoolIPv4PodCIDRList:
+      - "10.1.0.0/16"
+    clusterPoolIPv4MaskSize: 24
+# Talos specific settings
+cgroup:
+  autoMount:
+    enabled: false
+  hostRoot: /sys/fs/cgroup
+k8sServiceHost: localhost
+k8sServicePort: 7445
+securityContext:
+  capabilities:
+    ciliumAgent:
+    - CHOWN
+    - KILL
+    - NET_ADMIN
+    - NET_RAW
+    - IPC_LOCK
+    - SYS_ADMIN
+    - SYS_RESOURCE
+    - DAC_OVERRIDE
+    - FOWNER
+    - SETGID
+    - SETUID
+    cleanCiliumState:
+    - NET_ADMIN
+    - SYS_ADMIN
+    - SYS_RESOURCE
+

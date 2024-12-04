@@ -7,3 +7,4 @@ tf/**/kubeconfig_*
 tfplan
 charts
 infrastructure/talos/*.yaml
+infrastructure/talos/talosconfig
