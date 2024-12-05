@@ -1,7 +1,11 @@
 mayastor:
-  io_engine:
-    envcontext: "iova-mode=pa"
-agents:
-  core:
-    requestTimeout: 60s
-    minTimeouts: false
+  csi:
+    node:
+      initContainers:
+        enabled: false
+engines:
+  local:
+    lvm:
+      enabled: false
+    zfs:
+      enabled: false
