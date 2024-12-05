@@ -1,5 +1,5 @@
 kubeProxyReplacement: true
-devices: 'vmbr0,eth0'
+devices: 'bond0,eth0'
 routingMode: native
 autoDirectNodeRoutes: true
 directRoutingSkipUnreachable: true
