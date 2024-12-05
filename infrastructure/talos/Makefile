@@ -11,8 +11,8 @@ init:
 	${MAKE} config
 	# talosctl apply-config --insecure -n 192.168.50.97 --file proxmox.yaml
 	# talosctl apply-config --insecure -n 192.168.50.184 --file proxmox.yaml
-	talosctl apply-config --insecure -n 192.168.50.213 --file proxmox.yaml
-	talosctl apply-config --insecure -n 192.168.50.51 --file tank.yaml
+	# talosctl apply-config --insecure -n 192.168.50.213 --file proxmox.yaml
+	# talosctl apply-config --insecure -n 192.168.50.51 --file tank.yaml
 
 bootstrap:
 	talosctl bootstrap --talosconfig=./talosconfig -n 192.168.50.97 -e k8s.robbinsdale.local
@@ -24,7 +24,7 @@ apply:
 	${MAKE} config
 	talosctl -e k8s.robbinsdale.local -n 192.168.50.97 apply-config --file proxmox.yaml
 	talosctl -e k8s.robbinsdale.local -n 192.168.50.184 apply-config --file proxmox.yaml
-	# talosctl -e k8s.robbinsdale.local -n 192.168.50.213 apply-config --file proxmox.yaml
+	talosctl -e k8s.robbinsdale.local -n 192.168.50.213 apply-config --file proxmox.yaml	
 	talosctl -e k8s.robbinsdale.local -n 192.168.50.51 apply-config --file tank.yaml
 
 kubeconfig:

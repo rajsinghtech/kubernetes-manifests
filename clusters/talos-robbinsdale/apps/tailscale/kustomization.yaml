@@ -14,3 +14,4 @@ resources:
   - secret.yaml
   - connector.yaml
   - namespace.yaml
+  - generic-device-plugin.yaml

@@ -6,6 +6,12 @@ spec:
   statefulSet:
     labels:
       app: tailscale-proxy
+    pod:
+      tailscaleContainer:
+        resources:
+          requests:
+          limits:
+            smarter-devices/net_tun: "1"
   metrics:
     enable: true
   tailscale:

@@ -1,0 +1,6 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: media
+  labels:
+    pod-security.kubernetes.io/enforce: privileged
