@@ -7,8 +7,8 @@ maxUnavailable: 25%
 dnsmasq:
   customDnsEntries:
     - address=/.cluster.local/10.43.0.10
-#     - address=/.stg.lukehouge.com/10.96.96.1
-#     - address=/.lukehouge.com/10.96.10.1
+#     - address=/.stg.lukehouge.com/10.69.96.1
+#     - address=/.lukehouge.com/10.69.10.1
 #     - address=/.lukehouge.com/192.168.50.7
 # persistentVolumeClaim:
 #   enabled: true
@@ -23,7 +23,7 @@ serviceWeb:
 hostname: "keiretsu-primary"
 serviceDns:
   externalTrafficPolicy: Cluster
-  loadBalancerIP: "10.96.10.96"
+  loadBalancerIP: "10.69.10.69"
   mixedService: true
   nodePort: ""
   port: 53
