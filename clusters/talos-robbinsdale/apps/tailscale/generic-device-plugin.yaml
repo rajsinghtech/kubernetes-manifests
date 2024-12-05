@@ -21,7 +21,7 @@ spec:
       - operator: "Exists"
         effect: "NoSchedule"
       containers:
-      - image: squat/generic-device-plugin
+      - image: ghcr.io/squat/generic-device-plugin
         args:
         - --device
         - |
@@ -31,18 +31,13 @@ spec:
               paths:
                 - path: /dev/net/tun          
         name: generic-device-plugin
-        resources:
-          requests:
-            cpu: 50m
-            memory: 10Mi
-          limits:
-            cpu: 50m
-            memory: 20Mi
         ports:
         - containerPort: 8080
           name: http
         securityContext:
-          privileged: true
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities: { drop: ["ALL"] }
         volumeMounts:
         - name: device-plugin
           mountPath: /var/lib/kubelet/device-plugins
