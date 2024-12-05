@@ -12,5 +12,5 @@ helmCharts:
     valuesFile: values.yaml
 
 resources:
-  - diskpool.yaml
+  # - diskpool.yaml
   - storageclass.yaml
