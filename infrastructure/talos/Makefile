@@ -39,3 +39,5 @@ health:
 dashboard:
 	talosctl dashboard --talosconfig=./talosconfig -n 192.168.50.51 -e k8s.robbinsdale.local
 
+disk:
+	talosctl get disk --talosconfig=./talosconfig -n 192.168.50.51 -e k8s.robbinsdale.local

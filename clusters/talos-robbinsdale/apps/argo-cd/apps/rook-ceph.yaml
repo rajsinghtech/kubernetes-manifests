@@ -1,15 +1,15 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: openebs
+  name: rook-ceph
   namespace: argocd
 spec:
   destination:
     server: https://kubernetes.default.svc
-    namespace: openebs
+    namespace: rook-ceph
   project: default
   source:
-    path: clusters/talos-robbinsdale/apps/openebs
+    path: clusters/talos-robbinsdale/apps/rook-ceph
     repoURL: https://github.com/rajsinghtech/kubernetes-manifests
     targetRevision: HEAD
   syncPolicy:
