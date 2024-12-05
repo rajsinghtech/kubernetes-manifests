@@ -10,9 +10,9 @@ ipv4:
 enableIPv4BIGTCP: true
 ipv4NativeRoutingCIDR: 10.0.0.0/8
 enableIPv4Masquerade: true
-bandwidthManager:
-  enabled: true
-  bbr: true
+# bandwidthManager:
+#   enabled: true
+#   bbr: true
 ipam:
   mode: "cluster-pool"
   operator:
