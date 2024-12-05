@@ -15,4 +15,4 @@ spec:
       port: 445
       targetPort: 445
   type: LoadBalancer
-  loadBalancerIP: 10.96.10.15
+  loadBalancerIP: 10.69.10.15
