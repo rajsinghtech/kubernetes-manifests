@@ -12,3 +12,4 @@ resources:
 - ./plex
 - secret.yaml
 - httproute.yaml
+- namespace.yaml
