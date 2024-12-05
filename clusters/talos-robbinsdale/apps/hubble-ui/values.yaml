@@ -2,15 +2,6 @@
 #   enabled: true
 #   enabledNodesGraph: true
 #   namespace: "monitoring"
-ingress:
-  enabled: false
-  host: hubble.lukehouge.com
-  v1: false
-  ingressClassName: nginx
-  annotations:
-    cert-manager.io/cluster-issuer: luke-issuer
-    nginx.ingress.kubernetes.io/proxy-read-timeout: "96000"
-    nginx.ingress.kubernetes.io/proxy-send-timeout: "96000"
-  tls:
-    enabled: true
-    secretName: hubble-ui-luke-tls
+frontend:
+  server:
+    host: hubble.lukehouge.com
