@@ -2,17 +2,17 @@ secret:
 	talosctl gen secrets -o secrets.yaml
 
 config:
-	talosctl gen config --with-secrets secrets.yaml --config-patch @patch/base.patch k8s.robbinsdale.local https://k8s.robbinsdale.local:6443
+	talosctl gen config --with-secrets secrets.yaml --config-patch @patch/base.patch k8s.robbinsdale.local https://k8s.robbinsdale.local:6443 -f
 	cp ./talosconfig ~/.talos/config
-
-patch-machineconfig:
-	talosctl machineconfig patch controlplane.yaml --patch @patch/base.patch --output controlplane.yaml
-	talosctl machineconfig patch worker.yaml --patch @patch/base.patch --output worker.yaml
 	talosctl machineconfig patch controlplane.yaml --patch @patch/proxmox.patch --output proxmox.yaml
+	talosctl machineconfig patch controlplane.yaml --patch @patch/tank.patch --output tank.yaml
 
-apply:
-	${MAKE} patch-machineconfig
-	talosctl apply-config --insecure -n 192.168.50.97 --file proxmox.yaml
+init:
+	${MAKE} config
+	# talosctl apply-config --insecure -n 192.168.50.97 --file proxmox.yaml
+	# talosctl apply-config --insecure -n 192.168.50.184 --file proxmox.yaml
+	# talosctl apply-config --insecure -n 192.168.50.213 --file proxmox.yaml
+	talosctl apply-config --insecure -n 192.168.50.51 --file tank.yaml
 
 bootstrap:
 	talosctl bootstrap --talosconfig=./talosconfig -n 192.168.50.97 -e k8s.robbinsdale.local
@@ -20,9 +20,12 @@ bootstrap:
 apply-proxmox:
 	talosctl apply-config --insecure -n 192.168.50.97 --file proxmox.yaml
 
-update-proxmox:
-	${MAKE} patch-machineconfig
+apply:
+	${MAKE} config
 	talosctl -e k8s.robbinsdale.local -n 192.168.50.97 apply-config --file proxmox.yaml
+	talosctl -e k8s.robbinsdale.local -n 192.168.50.184 apply-config --file proxmox.yaml
+	talosctl -e k8s.robbinsdale.local -n 192.168.50.213 apply-config --file proxmox.yaml
+	talosctl -e k8s.robbinsdale.local -n 192.168.50.51 apply-config --file tank.yaml
 
 kubeconfig:
 	talosctl kubeconfig ~/.kube/talosconfig -n 192.168.50.97 -e k8s.robbinsdale.local --talosconfig=./talosconfig -f

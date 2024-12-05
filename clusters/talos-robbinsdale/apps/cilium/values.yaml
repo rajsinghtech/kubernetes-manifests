@@ -3,7 +3,6 @@ routingMode: native
 autoDirectNodeRoutes: true
 directRoutingSkipUnreachable: true
 bpf:
-  # datapathMode: netkit
   masquerade: true
 ipv4:
   enabled: true
@@ -19,6 +18,9 @@ ipam:
     clusterPoolIPv4PodCIDRList:
       - "10.1.0.0/16"
     clusterPoolIPv4MaskSize: 24
+operator:
+  rollOutPods: true
+rollOutCiliumPods: true
 # Talos specific settings
 cgroup:
   autoMount:
