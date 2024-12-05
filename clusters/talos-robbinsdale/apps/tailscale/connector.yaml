@@ -4,8 +4,8 @@ metadata:
   name: connector
 spec:
   hostname: robinsdale-connector
-  exitNode: false
-  proxyClass: kernel-org-tun
+  exitNode: true
+  proxyClass: squat-tun
   subnetRouter:
     advertiseRoutes:
       - "10.69.0.0/16" # load-balancers
