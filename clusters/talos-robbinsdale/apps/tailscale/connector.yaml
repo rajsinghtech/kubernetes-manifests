@@ -22,16 +22,16 @@ spec:
 #   replicas: 3
 #   hostnamePrefix: "robinsdale-k8s-"
 #   proxyClass: robbinsdale-proxyclass
----
-apiVersion: tailscale.com/v1alpha1
-kind: DNSConfig
-metadata:
-  name: dnsconfig
-spec:
-  nameserver:
-    image:
-      repo: tailscale/k8s-nameserver
-      tag: unstable
+# ---
+# apiVersion: tailscale.com/v1alpha1
+# kind: DNSConfig
+# metadata:
+#   name: dnsconfig
+# spec:
+#   nameserver:
+#     image:
+#       repo: tailscale/k8s-nameserver
+#       tag: unstable
 ---
 apiVersion: tailscale.com/v1alpha1
 kind: Connector
