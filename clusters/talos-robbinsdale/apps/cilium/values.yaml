@@ -10,12 +10,14 @@ tunnelProtocol: vxlan
 bpf:
   masquerade: true
   lbExternalClusterIP: true # https://docs.cilium.io/en/stable/network/kubernetes/kubeproxy-free/#external-access-to-clusterip-services
-ipv4:
-  enabled: true
-ipv4NativeRoutingCIDR: 10.1.0.0/16
+# ipv4:
+#   enabled: true
+# ipv4NativeRoutingCIDR: 10.1.0.0/16
 # bandwidthManager:
 #   enabled: true
 #   bbr: true
+envoy:
+  enabled: true
 ipam:
   mode: "cluster-pool"
   operator:
