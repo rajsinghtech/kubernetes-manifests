@@ -51,3 +51,11 @@ machine:
       - rbind
       - rshared
       - rw
+      - bind
+    - destination: /var/mnt
+      type: bind
+      source: /var/mnt
+      options:
+      - bind
+      - rshared
+      - rw
