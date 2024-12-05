@@ -8,7 +8,7 @@ spec:
 
   storage:
     size: 10Gi
-    storageClass: ceph-generic-fs
+    storageClass: local-path
 
   monitoring:
     enablePodMonitor: true

@@ -44,7 +44,7 @@ write:
     - secretRef:
         name: ceph-hybrid-loki
   persistence:
-    storageClass: ceph-generic-fs
+    storageClass: local-path
 read:
   replicas: 1
   extraEnvFrom:
@@ -53,11 +53,11 @@ read:
 backend:
   replicas: 1
   persistence:
-    storageClass: ceph-generic-fs
+    storageClass: local-path
   extraEnvFrom:
     - secretRef:
         name: ceph-hybrid-loki
 chunksCache:
   enabled: false
   persistence:
-    storageClass: ceph-generic-fs
+    storageClass: local-path
