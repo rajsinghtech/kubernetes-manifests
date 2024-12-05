@@ -13,7 +13,7 @@ spec:
       peers:
         - name: "udm-1"
           peerASN: 64513
-          peerAddress: 10.0.0.1
+          peerAddress: 192.168.50.1
           peerConfigRef:
             name: "cilium-peer"
 ---
