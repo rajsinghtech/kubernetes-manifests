@@ -1,5 +1,5 @@
 kubeProxyReplacement: true
-devices: 'bond0,eth0'
+# devices: 'bond0,eth0'
 routingMode: native
 autoDirectNodeRoutes: true
 directRoutingSkipUnreachable: true
@@ -9,7 +9,7 @@ bpf:
 ipv4:
   enabled: true
 enableIPv4BIGTCP: true
-ipv4NativeRoutingCIDR: 10.0.0.0/8
+ipv4NativeRoutingCIDR: 10.1.0.0/16
 enableIPv4Masquerade: true
 # bandwidthManager:
 #   enabled: true
