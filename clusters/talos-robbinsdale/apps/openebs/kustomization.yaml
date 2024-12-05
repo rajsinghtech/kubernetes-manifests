@@ -13,4 +13,5 @@ helmCharts:
 
 resources:
   # - diskpool.yaml
-  - storageclass.yaml
+  # - storageclass.yaml
+  - namespace.yaml
