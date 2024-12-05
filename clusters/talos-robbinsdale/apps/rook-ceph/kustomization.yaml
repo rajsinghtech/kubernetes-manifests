@@ -13,3 +13,6 @@ helmCharts:
 resources:
   - namespace.yaml
   - cluster.yaml
+  - httproute.yaml
+  - filesystem.yaml
+  - toolbox.yaml
