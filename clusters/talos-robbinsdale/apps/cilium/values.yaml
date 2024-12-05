@@ -4,6 +4,7 @@ autoDirectNodeRoutes: true
 directRoutingSkipUnreachable: true
 bpf:
   masquerade: true
+  lbExternalClusterIP: true # https://docs.cilium.io/en/stable/network/kubernetes/kubeproxy-free/#external-access-to-clusterip-services
 ipv4:
   enabled: true
 enableIPv4BIGTCP: true
@@ -21,6 +22,9 @@ ipam:
 operator:
   rollOutPods: true
 rollOutCiliumPods: true
+localRedirectPolicy: true
+bgpControlPlane:
+  enabled: true
 # Talos specific settings
 cgroup:
   autoMount:
