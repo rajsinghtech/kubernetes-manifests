@@ -11,6 +11,3 @@ helmCharts:
     includeCRDs: true
     valuesFile: proxmox-vault-nfs-values.yaml
     name: nfs-subdir-external-provisioner
-
-resources:
-  - ./templates/storageclass.yaml
