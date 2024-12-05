@@ -13,5 +13,6 @@ helmCharts:
 resources:
   - secret.yaml
   - connector.yaml
+  - proxyclass.yaml
   - namespace.yaml
   - generic-device-plugin.yaml

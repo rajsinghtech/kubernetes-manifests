@@ -1,0 +1,25 @@
+apiVersion: tailscale.com/v1alpha1
+kind: ProxyClass
+metadata:
+  name: kernel-org-tun
+spec:
+  statefulSet:
+    pod:
+      tailscaleContainer:
+        resources:
+          limits:
+            squat.ai/tun: 1
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsUser: 0
+          capabilities:
+            drop: ["ALL"]
+            add: ["NET_ADMIN", "NET_RAW"]
+          seccompProfile: { type: Unconfined }
+      tailscaleInitContainer:
+        securityContext:
+          privileged: true
+      tolerations:
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
+          effect: NoSchedule
