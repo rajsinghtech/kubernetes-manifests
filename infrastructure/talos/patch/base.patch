@@ -1,4 +1,7 @@
 cluster:
+  discovery:
+    enabled: true
+  allowSchedulingOnControlPlanes: true
   network:
     cni:
       name: none
@@ -18,6 +21,10 @@ cluster:
     - k8s.robbinsdale.rajsingh.info
     - k8s.robbinsdale.lukehouge.com
 machine:
+  features:
+    hostDNS:
+      enabled: false # Enable host DNS caching resolver.
+      forwardKubeDNSToHost: false
   certSANs:
   - k8s.robbinsdale.local
   - k8s.robbinsdale.rajsingh.info

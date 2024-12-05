@@ -1,7 +1,6 @@
 
 machine:
   network:
-    hostname: proxmox
     interfaces:
     - interface: eth0
       dhcp: true

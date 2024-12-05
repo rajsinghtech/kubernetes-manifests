@@ -1,4 +1,0 @@
-kubectl create ns monitoring
-kustomize build clusters/k8s-robbinsdale/apps/monitoring --enable-helm | kubectl apply --server-side -f - || true
-kustomize build clusters/talos-robbinsdale/apps/cilium --enable-helm | kubectl apply --server-side -f - 
-kustomize build clusters/k8s-robbinsdale/argo-cd --enable-helm | kubectl apply --server-side -f - 
