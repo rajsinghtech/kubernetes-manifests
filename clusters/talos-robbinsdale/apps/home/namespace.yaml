@@ -1,0 +1,6 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: home
+  labels:
+    pod-security.kubernetes.io/enforce: privileged
