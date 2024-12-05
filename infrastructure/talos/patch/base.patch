@@ -19,14 +19,6 @@ cluster:
     - k8s.robbinsdale.local
     - k8s.robbinsdale.rajsingh.info
     - k8s.robbinsdale.lukehouge.com
-    admissionControl:
-    - name: PodSecurity
-      configuration:
-        apiVersion: pod-security.admission.config.k8s.io/v1alpha1
-        kind: PodSecurityConfiguration
-        exemptions:
-          namespaces:
-          - openebs
 machine:
   features:
     hostDNS:
@@ -36,27 +28,8 @@ machine:
   - k8s.robbinsdale.local
   - k8s.robbinsdale.rajsingh.info
   - k8s.robbinsdale.lukehouge.com
-  sysctls:
-    vm.nr_hugepages: "1024"
   nodeLabels:
     openebs.io/engine: mayastor
   kubelet:
     extraArgs:
       rotate-server-certificates: true
-    extraMounts:
-    - destination: /var/local/openebs
-      type: bind
-      source: /var/local/openebs
-      options:
-      - rbind
-      - rshared
-      - rw
-      - bind
-    - destination: /var/openebs/local
-      type: bind
-      source: /var/openebs/local
-      options:
-      - rbind
-      - rshared
-      - rw
-      - bind
