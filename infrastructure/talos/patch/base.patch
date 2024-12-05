@@ -44,18 +44,11 @@ machine:
     extraArgs:
       rotate-server-certificates: true
     extraMounts:
-    - destination: /var/openebs/local
+    - destination: /var/local/openebs
       type: bind
-      source: /var/openebs/local
+      source: /var/local/openebs
       options:
       - rbind
       - rshared
       - rw
       - bind
-    - destination: /var/mnt
-      type: bind
-      source: /var/mnt
-      options:
-      - bind
-      - rshared
-      - rw
