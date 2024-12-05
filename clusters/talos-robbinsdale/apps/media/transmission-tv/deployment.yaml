@@ -23,6 +23,9 @@ spec:
           capabilities:
             add:
             - NET_ADMIN
+        resources:
+          limits:
+            squat.ai/tun: "1"
         volumeMounts:
         - name: data-volume
           mountPath: /data

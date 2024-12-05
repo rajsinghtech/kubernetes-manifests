@@ -12,7 +12,7 @@ spec:
   roles:
     - broker
   storage:
-    class: ceph-generic-fs
+    class: local-path
     size: 10G
     type: persistent-claim
 ---
@@ -30,6 +30,6 @@ spec:
   roles:
     - controller
   storage:
-    class: ceph-generic-fs
+    class: local-path
     size: 10G
     type: persistent-claim
