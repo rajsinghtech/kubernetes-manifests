@@ -34,6 +34,8 @@ machine:
   nodeLabels:
     openebs.io/engine: mayastor
   kubelet:
+    extraArgs:
+      rotate-server-certificates: true
     extraMounts:
     - destination: /var/openebs/local
       type: bind

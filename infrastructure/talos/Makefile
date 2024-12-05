@@ -37,5 +37,5 @@ health:
 	talosctl health --talosconfig=./talosconfig -n 192.168.50.97 -e k8s.robbinsdale.local
 
 dashboard:
-	talosctl dashboard --talosconfig=./talosconfig -n 192.168.50.97 -e k8s.robbinsdale.local
+	talosctl dashboard --talosconfig=./talosconfig -n 192.168.50.51 -e k8s.robbinsdale.local
 
