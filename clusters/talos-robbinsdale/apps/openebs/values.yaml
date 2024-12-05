@@ -3,6 +3,8 @@ mayastor:
     node:
       initContainers:
         enabled: false
+  etcd:
+    clusterDomain: "cluster.robbinsdale"
 engines:
   local:
     lvm:
