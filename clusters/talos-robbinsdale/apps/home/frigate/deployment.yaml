@@ -16,16 +16,16 @@ spec:
       labels:
         app: frigate
     spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: kubernetes.io/hostname
-                operator: In
-                values:
-                - proxmox-tank
-                - proxmox-stone
+      # affinity:
+      #   nodeAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #       nodeSelectorTerms:
+      #       - matchExpressions:
+      #         - key: kubernetes.io/hostname
+      #           operator: In
+      #           values:
+      #           - proxmox-tank
+      #           - proxmox-stone
       containers:
         - name: frigate
           image: ghcr.io/blakeblackshear/frigate:stable
