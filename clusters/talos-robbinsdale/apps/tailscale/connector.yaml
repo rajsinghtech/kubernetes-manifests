@@ -4,7 +4,7 @@ metadata:
   name: connector
 spec:
   hostname: robinsdale-connector
-  exitNode: true
+  exitNode: false
   proxyClass: kernel-org-tun
   subnetRouter:
     advertiseRoutes:
