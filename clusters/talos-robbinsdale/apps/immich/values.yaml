@@ -1,0 +1,22 @@
+image:
+  tag: v1.120.2
+
+immich:
+  metrics:
+    enabled: false
+  persistence:
+    library:
+      existingClaim: immich
+
+postgresql:
+  enabled: true
+  global:
+    defaultStorageClass: nfs-proxmox-vault
+  volumePermissions:
+    enabled: true
+redis:
+  enabled: true
+  global:
+    defaultStorageClass: nfs-proxmox-vault
+  volumePermissions:
+    enabled: true
