@@ -20,9 +20,7 @@ extraConfig:
   export-file-path: "/var/run/cilium/hubble/hubble.log"
   export-aggregation: identity
   export-aggregation-state-filter: new error
-hubble:
-  relay:
-    enabled: true
+
   metrics:
     dashboards:
       enabled: true

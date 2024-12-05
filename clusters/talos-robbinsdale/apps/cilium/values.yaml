@@ -25,6 +25,9 @@ rollOutCiliumPods: true
 localRedirectPolicy: true
 bgpControlPlane:
   enabled: true
+hubble:
+  relay:
+    enabled: true
 # Talos specific settings
 cgroup:
   autoMount:

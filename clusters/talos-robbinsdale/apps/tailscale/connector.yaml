@@ -11,7 +11,7 @@ spec:
         resources:
           requests:
           limits:
-            smarter-devices/net_tun: "1"
+            squat.ai/tun: "1"
   metrics:
     enable: true
   tailscale:

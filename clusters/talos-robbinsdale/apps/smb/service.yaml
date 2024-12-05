@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: smb-server
+spec:
+  selector:
+    app: samba
+  ports:
+    - name: smb-netbios
+      protocol: TCP
+      port: 139
+      targetPort: 139
+    - name: smb-ldap
+      protocol: TCP
+      port: 445
+      targetPort: 445
+  type: LoadBalancer
+  loadBalancerIP: 10.96.10.15
