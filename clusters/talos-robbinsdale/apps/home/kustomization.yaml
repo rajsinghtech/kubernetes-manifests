@@ -5,4 +5,5 @@ namespace: home
 resources:
 # - ./frigate
 # - ./mqtt
-- ./home-assistant
+  - ./home-assistant
+  - namespace.yaml
