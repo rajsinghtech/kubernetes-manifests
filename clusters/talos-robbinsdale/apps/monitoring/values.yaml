@@ -189,10 +189,10 @@ prometheus:
     storageSpec:
       volumeClaimTemplate:
         spec:
-          storageClassName: nfs-proxmox-vault
+          # storageClassName: nfs-proxmox-vault
           resources:
             requests:
-              storage: 100Gi
+              storage: 50Gi
 prometheusOperator:
   resources:
     limits:
@@ -222,7 +222,7 @@ alertmanager:
     storage:
       volumeClaimTemplate:
         spec:
-          storageClassName: nfs-proxmox-vault
+          # storageClassName: nfs-proxmox-vault
           resources:
             requests:
               storage: 10Gi
