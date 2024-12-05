@@ -12,4 +12,4 @@ helmCharts:
 
 resources:
   - secret.yaml
-  - connector.yaml
+  # - connector.yaml

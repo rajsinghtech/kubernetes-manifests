@@ -36,11 +36,11 @@ spec:
 apiVersion: tailscale.com/v1alpha1
 kind: Connector
 metadata:
-  name: talos-robbinsdale-connector-0
+  name: robbinsdale-connector-0
 spec:
   tags:
     - tag:k8s
-  hostname: talos-robbinsdale-connector-0
+  hostname: robbinsdale-connector-0
   proxyClass: robbinsdale-proxyclass
   subnetRouter:
     advertiseRoutes:
@@ -53,11 +53,11 @@ spec:
 apiVersion: tailscale.com/v1alpha1
 kind: Connector
 metadata:
-  name: talos-robbinsdale-connector-1
+  name: robbinsdale-connector-1
 spec:
   tags:
     - tag:k8s
-  hostname: talos-robbinsdale-connector-1
+  hostname: robbinsdale-connector-1
   proxyClass: robbinsdale-proxyclass
   subnetRouter:
     advertiseRoutes:
@@ -70,11 +70,11 @@ spec:
 apiVersion: tailscale.com/v1alpha1
 kind: Connector
 metadata:
-  name: talos-robbinsdale-connector-2
+  name: robbinsdale-connector-2
 spec:
   tags:
     - tag:k8s
-  hostname: talos-robbinsdale-connector-2
+  hostname: robbinsdale-connector-2
   proxyClass: robbinsdale-proxyclass
   subnetRouter:
     advertiseRoutes:
@@ -135,6 +135,6 @@ spec:
 
 #     # Specify the IP address used to SNAT traffic matched by the policy.
 #     # It must exist as an IP associated with a network interface on the instance.
-#     egressIP: 10.0.37.32
+#     egressIP: 10.43.37.32
 #   destinationCIDRs:
 #   - "100.64.0.0/10"
