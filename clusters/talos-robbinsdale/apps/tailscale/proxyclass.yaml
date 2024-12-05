@@ -3,6 +3,10 @@ kind: ProxyClass
 metadata:
   name: kernel-org-tun
 spec:
+  metrics:
+    enable: true
+  tailscale:
+    acceptRoutes: true
   statefulSet:
     pod:
       tailscaleContainer:
