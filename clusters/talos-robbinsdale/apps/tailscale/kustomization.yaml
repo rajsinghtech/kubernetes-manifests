@@ -15,4 +15,3 @@ resources:
   - connector.yaml
   - proxyclass.yaml
   - namespace.yaml
-  - generic-device-plugin.yaml

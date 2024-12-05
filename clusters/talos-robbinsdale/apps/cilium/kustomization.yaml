@@ -12,3 +12,6 @@ helmCharts:
     apiVersions:
       - monitoring.coreos.com/v1
 
+resources:
+  - nodelocaldns.yaml
+  - generic-device-plugin.yaml
