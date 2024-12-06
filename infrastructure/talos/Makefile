@@ -26,6 +26,12 @@ apply:
 	talosctl -e k8s.robbinsdale.local -n 192.168.50.184 apply-config --file proxmox.yaml
 	talosctl -e k8s.robbinsdale.local -n 192.168.50.213 apply-config --file proxmox.yaml	
 	talosctl -e k8s.robbinsdale.local -n 192.168.50.51 apply-config --file tank.yaml
+iso: 
+	@echo "Uploading schematic and retrieving ID..."
+	@SCHEMATIC_ID=$$(curl -s -X POST --data-binary @patch/schematic.yaml https://factory.talos.dev/schematics | jq -r '.id'); \
+	echo "Schematic ID: $$SCHEMATIC_ID"; \
+	echo "Downloading ISO..."; \
+	curl -O https://factory.talos.dev/image/$$SCHEMATIC_ID/v1.8.3/metal-amd64.iso
 
 kubeconfig:
 	talosctl kubeconfig ~/.kube/talosconfig -n 192.168.50.97 -e k8s.robbinsdale.local --talosconfig=./talosconfig -f

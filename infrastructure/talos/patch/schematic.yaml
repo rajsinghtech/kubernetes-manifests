@@ -1,0 +1,20 @@
+customization:
+  systemExtensions:
+    officialExtensions:
+      - siderolabs/amd-ucode
+      - siderolabs/intel-ucode
+      - siderolabs/realtek-firmware
+      - siderolabs/tailscale
+      - siderolabs/thunderbolt
+      - siderolabs/util-linux-tools
+      - siderolabs/zfs
+#   extraKernelArgs: # optional
+#     - vga=791
+#   meta: # optional, allows to set initial Talos META
+#     - key: 0xa
+#       value: "{}"
+# overlay: # optional
+#   name: rpi_generic
+#   image: siderolabs/sbc-raspberry-pi
+#   options: # optional, any valid yaml, depends on the overlay implementation
+#     data: "mydata"
