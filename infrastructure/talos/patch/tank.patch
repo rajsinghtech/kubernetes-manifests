@@ -11,7 +11,8 @@ machine:
         deviceSelectors:
         - hardwareAddr: 'a0:36:9f:55:dc:60'
         - hardwareAddr: 'a0:36:9f:55:dc:62'
-
   install:
     disk: /dev/nvme0n1
-    wipe: true
+    extraKernelArgs:
+    - talos.platform=metal
+    - reboot=k
