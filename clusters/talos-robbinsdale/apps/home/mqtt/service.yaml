@@ -6,9 +6,9 @@ spec:
   selector:
     app: mqtt
   ports:
-  - name: mqtt
-    port: 1883
-    protocol: TCP
-    targetPort: 1883
+    - name: mqtt
+      port: 1883
+      protocol: TCP
+      targetPort: 1883
   type: LoadBalancer
-  loadBalancerIP: 10.96.10.11
+  loadBalancerIP: 10.69.10.11
