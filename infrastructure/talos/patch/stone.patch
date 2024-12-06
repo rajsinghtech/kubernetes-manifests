@@ -1,6 +1,6 @@
 machine:
   network:
-    hostname: tank
+    hostname: stone
     interfaces:
     - interface: enp1s0f1
       dhcp: true
@@ -11,4 +11,4 @@ machine:
     bootloader: true
     extraKernelArgs:
     - talos.platform=metal
-    - reboot=k
+    # - reboot=k

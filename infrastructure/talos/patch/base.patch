@@ -16,7 +16,7 @@ cluster:
   clusterName: k8s.robbinsdale.local
   apiServer:
     certSANs:
-    - k8s.robbinsdale.local
+    - 192.168.50.25
     - k8s.robbinsdale.rajsingh.info
     - k8s.robbinsdale.lukehouge.com
 machine:
@@ -25,14 +25,15 @@ machine:
       enabled: false # Enable host DNS caching resolver.
       forwardKubeDNSToHost: false
   certSANs:
+  - 192.168.50.25
   - k8s.robbinsdale.local
   - k8s.robbinsdale.rajsingh.info
   - k8s.robbinsdale.lukehouge.com
   nodeLabels:
     openebs.io/engine: mayastor
   kubelet:
-    extraArgs:
-      rotate-server-certificates: true
+    # extraArgs:
+    #   rotate-server-certificates: true
     extraMounts:
     - destination: /var/local-path-provisioner
       type: bind
