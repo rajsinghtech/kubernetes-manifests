@@ -1,8 +1,7 @@
-
 machine:
   network:
     interfaces:
-    - interface: eth0
+    - interface: enxbc241183faec
       dhcp: true
       vip:
         ip: 192.168.50.25
