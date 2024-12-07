@@ -2,6 +2,7 @@ global:
   domain: argocd.lukehouge.com
 configs:
   cm:
+    url: https://argocd.rajsingh.info
     admin.enabled: false
     resource.ignoreResourceUpdatesEnabled: "false"
     exec.enabled: "true"
