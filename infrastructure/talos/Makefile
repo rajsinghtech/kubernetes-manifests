@@ -2,7 +2,7 @@ secret:
 	talosctl gen secrets -o secrets.yaml
 
 config:
-	talosctl gen config --with-secrets secrets.yaml --config-patch @patch/base.patch k8s.robbinsdale.local https://k8s.robbinsdale.local:6443 -f
+	talosctl gen config --with-secrets secrets.yaml --config-patch @patch/base.patch k8s.robbinsdale.local https://k8s.robbinsdale.local:6443 -f 
 	cp ./talosconfig ~/.talos/config
 	talosctl machineconfig patch controlplane.yaml --patch @patch/talos2.patch --output talos2.yaml
 	talosctl machineconfig patch controlplane.yaml --patch @patch/talos3.patch --output talos3.yaml
