@@ -28,8 +28,8 @@ resources:
   - ./templates/configmap.yaml
   - ./templates/alertconfig.yaml
   - ./templates/secrets.yaml
-  - https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/high-availability-1.21+.yaml
-  - https://raw.githubusercontent.com/alex1989hu/kubelet-serving-cert-approver/main/deploy/standalone-install.yaml
+  # - https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/high-availability-1.21+.yaml
+  # - https://raw.githubusercontent.com/alex1989hu/kubelet-serving-cert-approver/main/deploy/standalone-install.yaml
 patches:
   # This is required because some CRD annotations are too long.
   - target:
