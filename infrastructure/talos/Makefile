@@ -67,3 +67,9 @@ reset:
 	talosctl -e 192.168.50.184 -n 192.168.50.184 reset --system-labels-to-wipe EPHEMERAL,STATE --graceful=false --reboot 
 	talosctl -e  192.168.50.51 -n 192.168.50.51 reset --system-labels-to-wipe EPHEMERAL,STATE --graceful=false --reboot
 	# talosctl -e 192.168.50.82 -n 192.168.50.82 reset --system-labels-to-wipe EPHEMERAL,STATE --graceful=false --reboot
+
+reboot:
+	talosctl -e 192.168.50.213 -n 192.168.50.213 reboot
+	talosctl -e 192.168.50.184 -n 192.168.50.184 reboot
+	talosctl -e 192.168.50.51 -n 192.168.50.51 reboot
+	# talosctl -e 192.168.50.82 -n 192.168.50.82 reboot
