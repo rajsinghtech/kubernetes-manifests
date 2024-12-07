@@ -2,6 +2,7 @@ global:
   domain: argocd.lukehouge.com
 configs:
   cm:
+    admin.enabled: false
     resource.ignoreResourceUpdatesEnabled: "false"
     exec.enabled: "true"
     kustomize.buildOptions: --enable-helm
@@ -14,14 +15,14 @@ configs:
           - "*"
     dex.config: |
       connectors:
-         - type: github
-         id: github
-         name: GitHub
-         config:
-           clientID: $argocd-oidc-secret:oidc.clientID
-           clientSecret: $argocd-oidc-secret:oidc.clientSecret
-           orgs:
-            - name: rajsinghtech
+      - type: github
+        id: github
+        name: GitHub
+        config:
+          clientID: $argocd-oidc-secret:oidc.clientID
+          clientSecret: $argocd-oidc-secret:oidc.clientSecret
+          orgs:
+          - name: rajsinghtech
     rbac: 
       policy.csv: |
         g, org:admin, role:admin
