@@ -11,4 +11,4 @@ helmCharts:
     valuesFile: values.yaml
 
 resources:
- - tesla.yaml
+ - cluster.yaml
