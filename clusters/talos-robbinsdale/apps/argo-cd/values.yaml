@@ -23,7 +23,7 @@ configs:
           clientID: $argocd-oidc-secret:oidc.clientID
           clientSecret: $argocd-oidc-secret:oidc.clientSecret
           orgs:
-          - name: rajsinghtech
+          - name: lukeandraj
     rbac: 
       policy.csv: |
         g, org:admin, role:admin
