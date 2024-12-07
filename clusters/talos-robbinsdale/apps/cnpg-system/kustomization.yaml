@@ -9,6 +9,3 @@ helmCharts:
     releaseName: cnpg
     includeCRDs: true
     valuesFile: values.yaml
-
-resources:
- - cluster.yaml
