@@ -24,10 +24,10 @@ configs:
           clientSecret: $argocd-oidc-secret:oidc.clientSecret
           orgs:
           - name: lukeandraj
-    rbac: 
-      policy.csv: |
-        g, lukeandraj:robbinsdale, role:admin
-      policy.default: role:admin
+  rbac: 
+    policy.csv: |
+      g, lukeandraj:robbinsdale, role:admin
+    policy.default: role:admin
   params:
     controller.repo.server.timeout.seconds: "300"
     server.repo.server.timeout.seconds: "300"
