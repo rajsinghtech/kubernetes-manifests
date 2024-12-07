@@ -8,13 +8,5 @@ spec:
   provider:
     type: Kubernetes
     kubernetes:
-      envoyHpa:
-        minReplicas: 2
-        maxReplicas: 10
-        metrics:
-          - resource:
-              name: cpu
-              target:
-                averageUtilization: 60
-                type: Utilization
-            type: Resource
+      envoyDeployment:
+        replicas: 4
