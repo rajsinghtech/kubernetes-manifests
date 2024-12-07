@@ -26,7 +26,7 @@ configs:
           - name: lukeandraj
     rbac: 
       policy.csv: |
-        g, galosone:one, role:admin
+        g, lukeandraj:robbinsdale, role:admin
       policy.default: role:admin
   params:
     controller.repo.server.timeout.seconds: "300"
