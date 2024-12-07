@@ -12,6 +12,20 @@ configs:
           - CiliumIdentity
         clusters:
           - "*"
+    dex.config: |
+      connectors:
+         - type: github
+         id: github
+         name: GitHub
+         config:
+           clientID: $argocd-oidc-secret:oidc.clientID
+           clientSecret: $argocd-oidc-secret:oidc.clientSecret
+           orgs:
+            - name: rajsinghtech
+    rbac: 
+      policy.csv: |
+        g, org:admin, role:admin
+        g, org:backend, role:readonly
   params:
     controller.repo.server.timeout.seconds: "300"
     server.repo.server.timeout.seconds: "300"
@@ -20,8 +34,6 @@ configs:
       type: helm
       name: argo-cd
       url: https://argoproj.github.io/argo-helm
-dex:
-  enabled: false
 server:
   env:
     - name: ARGOCD_GRPC_KEEP_ALIVE_MIN

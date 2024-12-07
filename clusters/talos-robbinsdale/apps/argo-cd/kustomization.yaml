@@ -13,3 +13,4 @@ helmCharts:
       - monitoring.coreos.com/v1
 resources:
   - ./templates/namespace.yaml
+  - ./templates/secret.yaml
