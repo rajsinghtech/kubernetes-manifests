@@ -67,7 +67,7 @@ link:
 reset:
 	talosctl -e 192.168.50.213 -n 192.168.50.213 reset --system-labels-to-wipe EPHEMERAL,STATE --graceful=false --reboot
 	talosctl -e 192.168.50.184 -n 192.168.50.184 reset --system-labels-to-wipe EPHEMERAL,STATE --graceful=false --reboot 
-	talosctl -e  192.168.50.51 -n 192.168.50.51 reset --system-labels-to-wipe EPHEMERAL,STATE --graceful=false --reboot
+	talosctl -e  192.168.50.51 -n 192.168.50.51 reset --system-labels-to-wipe EPHEMERAL,STATE --graceful=false --reboot --user-disks-to-wipe /dev/nvme1n1,/dev/sda,/dev/sdb,/dev/sdc,/dev/sdd
 	# talosctl -e 192.168.50.82 -n 192.168.50.82 reset --system-labels-to-wipe EPHEMERAL,STATE --graceful=false --reboot
 
 reboot:

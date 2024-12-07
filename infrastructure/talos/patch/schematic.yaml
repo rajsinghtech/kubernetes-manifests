@@ -4,7 +4,7 @@ customization:
       - siderolabs/amd-ucode
       - siderolabs/intel-ucode
       - siderolabs/realtek-firmware
-      - siderolabs/tailscale
+      # - siderolabs/tailscale
       - siderolabs/thunderbolt
       - siderolabs/util-linux-tools
       - siderolabs/zfs
