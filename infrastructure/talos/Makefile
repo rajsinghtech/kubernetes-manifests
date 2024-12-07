@@ -4,6 +4,7 @@ secret:
 config:
 	talosctl gen config --with-secrets secrets.yaml --config-patch @patch/base.patch k8s.robbinsdale.local https://k8s.robbinsdale.local:6443 -f 
 	cp ./talosconfig ~/.talos/config
+	talosctl machineconfig patch controlplane.yaml --patch @patch/talos.patch --output talos.yaml
 	talosctl machineconfig patch controlplane.yaml --patch @patch/talos2.patch --output talos2.yaml
 	talosctl machineconfig patch controlplane.yaml --patch @patch/talos3.patch --output talos3.yaml
 	talosctl machineconfig patch controlplane.yaml --patch @patch/tank.patch --output tank.yaml
@@ -11,6 +12,7 @@ config:
 
 init:
 	${MAKE} config
+	talosctl apply-config --insecure -n 192.168.50.97 --file talos.yaml --mode=try
 	talosctl apply-config --insecure -n 192.168.50.184 --file talos2.yaml --mode=try
 	talosctl apply-config --insecure -n 192.168.50.213 --file talos3.yaml --mode=try
 	talosctl apply-config --insecure -n 192.168.50.51 --file tank.yaml --mode=try
