@@ -5,7 +5,6 @@ namespace: smb
 resources:
   - deployment.yaml
   - service.yaml
-  - pvc.yaml
   - secret.yaml
 configMapGenerator:
   - name: smb-config
