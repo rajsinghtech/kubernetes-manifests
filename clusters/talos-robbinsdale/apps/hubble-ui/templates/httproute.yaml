@@ -39,4 +39,4 @@ spec:
     clientSecret:
       name: "hubble-oidc"
     redirectURL: "https://hubble.rajsingh.info"
-    logoutPath: "/"
+    # logoutPath: "/"
