@@ -2,9 +2,11 @@ apiVersion: v1
 kind: Service
 metadata:
   name: smb-server
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname:  smb.lukehouge.com
 spec:
   selector:
-    app: samba
+    app: smb-server
   ports:
     - name: smb-netbios
       protocol: TCP
