@@ -11,7 +11,6 @@ spec:
       namespace: envoy-gateway-system
   hostnames:
     - "hubble.rajsingh.info"
-    - "hubble.lukehouge.com"
   rules:
     - backendRefs:
         - group: ""
@@ -23,3 +22,21 @@ spec:
         - path:
             type: PathPrefix
             value: /
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: hubble
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: hubble
+  oidc:
+    provider:
+      issuer: "https://accounts.google.com"
+    clientID: "Ov23li7jTibc49JqFUdg"
+    clientSecret:
+      name: "hubble-oidc"
+    redirectURL: "https://hubble.rajsingh.info/oauth2/callback"
+    logoutPath: "/logout"

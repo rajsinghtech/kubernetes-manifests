@@ -17,3 +17,4 @@ resources:
   - ./templates/dns-visibility.yaml
   - ./templates/grafana.yaml
   - ./templates/httproute.yaml
+  - ./templates/secret.yaml
