@@ -15,6 +15,13 @@ spec:
       containers:
       - name: smb-server
         image: dperson/samba
+        resources:
+          limits:
+            cpu: "1"
+            memory: "1Gi"
+          requests:
+            cpu: "200m"
+            memory: "256Mi"
         env:
           - name: USER
             value: "lhouge;password" # create user
