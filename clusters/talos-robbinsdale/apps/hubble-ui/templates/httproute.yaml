@@ -38,5 +38,5 @@ spec:
     clientID: "Ov23li7jTibc49JqFUdg"
     clientSecret:
       name: "hubble-oidc"
-    redirectURL: "https://hubble.rajsingh.info/oauth2/callback"
-    logoutPath: "/logout"
+    redirectURL: "https://hubble.rajsingh.info"
+    logoutPath: "/"
