@@ -6,7 +6,7 @@ metadata:
     external-dns.alpha.kubernetes.io/hostname:  smb.lukehouge.com
 spec:
   selector:
-    app: samba
+    app: smb-server
   ports:
     - name: smb-netbios
       protocol: TCP
@@ -16,3 +16,5 @@ spec:
       protocol: TCP
       port: 445
       targetPort: 445
+  type: LoadBalancer
+  loadBalancerIP: 10.96.10.15
