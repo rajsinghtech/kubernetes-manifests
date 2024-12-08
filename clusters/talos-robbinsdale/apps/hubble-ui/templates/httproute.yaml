@@ -34,7 +34,7 @@ spec:
       name: hubble
   oidc:
     provider:
-      issuer: "https://accounts.google.com"
+      issuer: "https://token.actions.githubusercontent.com"
     clientID: "Ov23li7jTibc49JqFUdg"
     clientSecret:
       name: "hubble-oidc"
