@@ -115,17 +115,6 @@ grafana:
         gnetId: 19974
         revision: 2
         datasource: prometheus
-    ingress-nginx:
-      # https://grafana.com/grafana/dashboards/16677-ingress-nginx-overview/
-      ingress-nginx-overview:
-        gnetId: 16677
-        revision: 2
-        datasource: prometheus
-      # https://grafana.com/grafana/dashboards/20510-ingress-nginx-request-handling-performance/
-      ingress-nginx-request-handling-performance:
-        gnetId: 20510
-        revision: 1
-        datasource: prometheus
     ceph:
       ceph-cluster:
         gnetId: 2842
