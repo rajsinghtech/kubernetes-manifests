@@ -1,7 +1,0 @@
-machine:
-  network:
-    interfaces:
-    - interface: enxbc24114b88a9
-      dhcp: true
-      vip:
-        ip: 192.168.50.25

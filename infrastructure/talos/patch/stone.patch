@@ -1,14 +1,8 @@
 machine:
   network:
-    hostname: stone
+    hostname: stone-proxmox.local
     interfaces:
-    - interface: enp1s0f1
+    - interface: enxbc241183faec
       dhcp: true
       vip:
         ip: 192.168.50.25
-  install:
-    disk: /dev/nvme1n1
-    bootloader: true
-    extraKernelArgs:
-    - talos.platform=metal
-    # - reboot=k
