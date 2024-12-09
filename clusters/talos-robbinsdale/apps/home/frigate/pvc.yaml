@@ -8,7 +8,7 @@ spec:
   resources:
     requests:
       storage: 3000Gi
-  storageClassName: ceph-block
+  storageClassName: rook-cephfs
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
