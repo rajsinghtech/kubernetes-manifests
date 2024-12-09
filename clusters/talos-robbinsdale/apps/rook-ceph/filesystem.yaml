@@ -27,7 +27,7 @@ spec:
   # The list of data pool specs. Can use replication or erasure coding.
   dataPools:
     - name: replicated
-      failureDomain: host
+      failureDomain: osd
       replicated:
         size: 3
         # Disallow setting pool with replica 1, this could lead to data loss without recovery.

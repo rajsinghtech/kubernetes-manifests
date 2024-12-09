@@ -4,6 +4,19 @@ metadata:
   name: ceph-blockpool
   namespace: rook-ceph
 spec:
-  failureDomain: host
+  failureDomain: osd
   replicated:
     size: 3
+---
+apiVersion: ceph.rook.io/v1
+kind: CephBlockPool
+metadata:
+  name: ceph-blockpool-single-compressed
+  namespace: rook-ceph
+spec:
+  failureDomain: osd
+  replicated:
+    size: 1
+  parameters:
+    # Inline compression mode for the data pool
+    compression_mode: aggressive
