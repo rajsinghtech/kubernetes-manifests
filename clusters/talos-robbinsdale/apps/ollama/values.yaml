@@ -1,0 +1,11 @@
+persistentVolume:
+  enabled: false
+  existingClaim: ollama
+ollama:
+  gpu:
+    enabled: false
+  models:
+    pull:
+      # - mistral
+      - llama2
+replicaCount: 1
