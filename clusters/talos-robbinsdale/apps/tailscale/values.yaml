@@ -1,2 +1,0 @@
-apiServerProxyConfig:
-  mode: "true" # "true", "false", "noauth"
