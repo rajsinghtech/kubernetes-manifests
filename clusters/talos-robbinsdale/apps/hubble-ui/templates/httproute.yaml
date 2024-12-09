@@ -22,21 +22,21 @@ spec:
         - path:
             type: PathPrefix
             value: /
----
-apiVersion: gateway.envoyproxy.io/v1alpha1
-kind: SecurityPolicy
-metadata:
-  name: hubble
-spec:
-  targetRefs:
-    - group: gateway.networking.k8s.io
-      kind: HTTPRoute
-      name: hubble
-  oidc:
-    provider:
-      issuer: "https://token.actions.githubusercontent.com"
-    clientID: "Ov23li7jTibc49JqFUdg"
-    clientSecret:
-      name: "hubble-oidc"
-    redirectURL: "https://hubble.rajsingh.info"
-    # logoutPath: "/"
+# ---
+# apiVersion: gateway.envoyproxy.io/v1alpha1
+# kind: SecurityPolicy
+# metadata:
+#   name: hubble
+# spec:
+#   targetRefs:
+#     - group: gateway.networking.k8s.io
+#       kind: HTTPRoute
+#       name: hubble
+#   oidc:
+#     provider:
+#       issuer: "https://token.actions.githubusercontent.com"
+#     clientID: "Ov23li7jTibc49JqFUdg"
+#     clientSecret:
+#       name: "hubble-oidc"
+#     redirectURL: "https://hubble.rajsingh.info"
+#     # logoutPath: "/"

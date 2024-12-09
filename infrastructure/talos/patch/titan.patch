@@ -1,6 +1,6 @@
 machine:
   network:
-    hostname: tank.local
+    hostname: titan.local
     interfaces:
     - interface: enp1s0f1
       dhcp: true
