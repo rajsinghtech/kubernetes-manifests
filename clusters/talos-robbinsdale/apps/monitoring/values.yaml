@@ -74,14 +74,14 @@ grafana:
           editable: true
           options:
             path: /var/lib/grafana/dashboards/argocd
-        - name: 'ingress-nginx'
+        - name: 'ceph'
           orgId: 1
-          folder: 'ingress-nginx'
+          folder: 'Ceph'
           type: file
           disableDeletion: false
           editable: true
           options:
-            path: /var/lib/grafana/dashboards/ingress-nginx
+            path: /var/lib/grafana/dashboards/ceph
         - name: 'proxmox'
           orgId: 1
           folder: 'proxmox'
@@ -125,6 +125,19 @@ grafana:
       ingress-nginx-request-handling-performance:
         gnetId: 20510
         revision: 1
+        datasource: prometheus
+    ceph:
+      ceph-cluster:
+        gnetId: 2842
+        revision: 18
+        datasource: prometheus
+      ceph-osd:
+        gnetId: 5336
+        revision: 9
+        datasource: prometheus
+      ceph-pools:
+        gnetId: 5342
+        revision: 9
         datasource: prometheus
   route:
     main:
@@ -189,7 +202,7 @@ prometheus:
     storageSpec:
       volumeClaimTemplate:
         spec:
-          # storageClassName: nfs-proxmox-vault
+          storageClassName: rook-cephfs
           resources:
             requests:
               storage: 50Gi
@@ -209,6 +222,16 @@ prometheus-node-exporter:
       cpu: 100m
       memory: 50Mi
 
+nodeExporter:
+  enabled: true
+  operatingSystems:
+    linux:
+      enabled: true
+    aix:
+      enabled: false
+    darwin:
+      enabled: false
+
 alertmanager:
   alertmanagerSpec:
     replicas: 1
@@ -222,7 +245,7 @@ alertmanager:
     storage:
       volumeClaimTemplate:
         spec:
-          # storageClassName: nfs-proxmox-vault
+          storageClassName: rook-cephfs
           resources:
             requests:
               storage: 10Gi
