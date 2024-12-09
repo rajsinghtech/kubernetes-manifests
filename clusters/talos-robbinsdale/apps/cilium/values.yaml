@@ -1,6 +1,4 @@
 kubeProxyReplacement: true
-gatewayAPI:
-  enabled: true
 # devices: 'bond0,eth0'
 autoDirectNodeRoutes: true
 directRoutingSkipUnreachable: false
@@ -35,6 +33,10 @@ bgpControlPlane:
 hubble:
   relay:
     enabled: true
+gatewayAPI:
+  enabled: true
+  gatewayClass:
+    create: true
 # Talos specific settings
 cgroup:
   autoMount:
@@ -60,4 +62,3 @@ securityContext:
     - NET_ADMIN
     - SYS_ADMIN
     - SYS_RESOURCE
-
