@@ -4,3 +4,4 @@ metadata:
   name: tailscale
   labels:
     pod-security.kubernetes.io/enforce: privileged
+    argocd.argoproj.io/sync-options: Prune=false
