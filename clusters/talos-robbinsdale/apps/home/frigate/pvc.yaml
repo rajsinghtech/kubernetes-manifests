@@ -8,7 +8,7 @@ spec:
   resources:
     requests:
       storage: 3000Gi
-  storageClassName: nfs-proxmox-vault
+  storageClassName: ceph-block
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
