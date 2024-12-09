@@ -4,11 +4,11 @@ metadata:
   name: frigate-data
 spec:
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
       storage: 3000Gi
-  storageClassName: rook-cephfs
+  storageClassName: ceph-block
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
