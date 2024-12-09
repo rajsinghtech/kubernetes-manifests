@@ -33,10 +33,6 @@ bgpControlPlane:
 hubble:
   relay:
     enabled: true
-gatewayAPI:
-  enabled: true
-  gatewayClass:
-    create: "true"
 # Talos specific settings
 cgroup:
   autoMount:

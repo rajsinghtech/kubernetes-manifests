@@ -1,0 +1,15 @@
+replicaCount: 3
+
+manageCRDs: true
+
+metrics:
+  # Disable auth checks when scraping metrics (allow anyone to scrape)
+  disableAuth: true
+
+resources:
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+  requests:
+    cpu: 100m
+    memory: 64Mi
