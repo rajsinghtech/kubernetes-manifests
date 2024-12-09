@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plex
+  namespace: media
+  labels:
+    app: plex
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: plex
+  template:
+    metadata:
+      labels:
+        app: plex
+    spec:
+      containers:
+        - name: plex
+          image: docker.io/plexinc/pms-docker:plexpass
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 32400
+              name: http
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /identity
+              port: 32400
+            failureThreshold: 3
+            initialDelaySeconds: 15
+            timeoutSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /identity
+              port: 32400
+            failureThreshold: 3
+            initialDelaySeconds: 15
+            timeoutSeconds: 10
+          resources:
+            requests:
+              cpu: 2000m
+              gpu.intel.com/i915: 1
+              gpu.intel.com/millicores: 1000
+              memory: 2Gi
+            limits:
+              cpu: 7000m
+              gpu.intel.com/i915: 1
+              gpu.intel.com/millicores: 1000
+              memory: 8Gi
+          env:
+            - name: TZ
+              value: America/Los_Angeles
+            - name: VERSION
+              value: docker
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: gpu
+              mountPath: /dev/dri
+            - name: media
+              mountPath: /media
+            - name: transcode
+              mountPath: /transcode
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: plex-config
+        - name: gpu
+          hostPath:
+            path: /dev/dri
+        - name: media
+          persistentVolumeClaim:
+            claimName: plex-media
+        - name: transcode
+          emptyDir:
+            medium: Memory
+            sizeLimit: 6Gi

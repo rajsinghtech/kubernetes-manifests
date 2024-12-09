@@ -1,0 +1,8 @@
+ollama:
+  enabled: false
+persistence:
+  enabled: false
+  existingClaim: open-webui
+pipelines:
+  enabled: false
+ollamaUrls: ["http://ollama.ollama.svc.cluster.local:11434"]

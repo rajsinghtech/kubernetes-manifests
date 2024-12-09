@@ -98,6 +98,14 @@ grafana:
           editable: true
           options:
             path: /var/lib/grafana/dashboards/envoy-gateway
+        - name: 'kubernetes'
+          orgId: 1
+          folder: 'Kubernetes'
+          type: file
+          disableDeletion: false
+          editable: true
+          options:
+            path: /var/lib/grafana/dashboards/kubernetes
   dashboards:
     argocd:
       # https://grafana.com/grafana/dashboards/19993-argocd-operational-overview/
