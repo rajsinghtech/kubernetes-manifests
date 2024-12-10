@@ -26,20 +26,20 @@ spec:
             - containerPort: 32400
               name: http
               protocol: TCP
-          readinessProbe:
-            httpGet:
-              path: /identity
-              port: 32400
-            failureThreshold: 3
-            initialDelaySeconds: 15
-            timeoutSeconds: 10
-          livenessProbe:
-            httpGet:
-              path: /identity
-              port: 32400
-            failureThreshold: 3
-            initialDelaySeconds: 15
-            timeoutSeconds: 10
+          # readinessProbe:
+          #   httpGet:
+          #     path: /identity
+          #     port: 32400
+          #   failureThreshold: 3
+          #   initialDelaySeconds: 15
+          #   timeoutSeconds: 10
+          # livenessProbe:
+          #   httpGet:
+          #     path: /identity
+          #     port: 32400
+          #   failureThreshold: 3
+          #   initialDelaySeconds: 15
+          #   timeoutSeconds: 10
           resources:
             requests:
               cpu: 2000m
