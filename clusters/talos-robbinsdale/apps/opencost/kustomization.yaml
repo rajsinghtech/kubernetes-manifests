@@ -8,3 +8,6 @@ helmCharts:
   namespace: opencost
   includeCRDs: true
   valuesFile: values.yaml
+
+resources:
+  - httproute.yaml

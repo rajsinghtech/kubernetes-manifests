@@ -5,6 +5,7 @@ kind: Kustomization
 resources:
   - secret.yaml
   - external-dns.yaml
+  - httproute.yaml
 
 helmCharts:
   - name: pihole
