@@ -55,17 +55,20 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config
-            - name: media
-              mountPath: /media
             - name: transcode
               mountPath: /transcode
+            - name: tv-volume
+              mountPath: /tv
+            - name: movies-volume
+              mountPath: /movies
+            - name: audiobooks-volume
+              mountPath: /audiobooks
+            - name: music-volume
+              mountPath: /music
       volumes:
         - name: config
           persistentVolumeClaim:
             claimName: plex-config
-        - name: media
-          persistentVolumeClaim:
-            claimName: plex-media
         - name: transcode
           emptyDir:
             medium: Memory
