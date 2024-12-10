@@ -16,3 +16,6 @@ helmCharts:
     version: 4.0.6
     releaseName: open-webui
     valuesFile: values-webui.yaml
+
+resources:
+  - httproute.yaml
