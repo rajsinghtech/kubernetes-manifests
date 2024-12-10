@@ -55,8 +55,6 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config
-            - name: gpu
-              mountPath: /dev/dri
             - name: media
               mountPath: /media
             - name: transcode
