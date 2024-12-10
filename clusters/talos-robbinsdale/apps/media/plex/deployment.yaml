@@ -56,15 +56,15 @@ spec:
             - name: config
               mountPath: /config
             - name: transcode
-              mountPath: /transcode
+              mountPath: /media/transcode
             - name: tv-volume
-              mountPath: /tv
+              mountPath: /media/tv
             - name: movies-volume
-              mountPath: /movies
+              mountPath: /media/movies
             - name: audiobooks-volume
-              mountPath: /audiobooks
+              mountPath: /media/audiobooks
             - name: music-volume
-              mountPath: /music
+              mountPath: /media/music
       volumes:
         - name: config
           persistentVolumeClaim:
