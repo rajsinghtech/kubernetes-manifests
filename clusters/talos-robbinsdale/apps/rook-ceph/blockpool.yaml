@@ -6,7 +6,7 @@ metadata:
 spec:
   failureDomain: osd
   replicated:
-    size: 2
+    size: 3
 ---
 apiVersion: ceph.rook.io/v1
 kind: CephBlockPool
@@ -16,7 +16,7 @@ metadata:
 spec:
   failureDomain: osd
   replicated:
-    size: 1
+    size: 2
   parameters:
     # Inline compression mode for the data pool
     compression_mode: force
