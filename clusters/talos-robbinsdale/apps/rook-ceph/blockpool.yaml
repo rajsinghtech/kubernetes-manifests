@@ -6,7 +6,7 @@ metadata:
 spec:
   failureDomain: osd
   replicated:
-    size: 3
+    size: 2
 ---
 apiVersion: ceph.rook.io/v1
 kind: CephBlockPool
