@@ -16,7 +16,7 @@ metadata:
 spec:
   failureDomain: osd
   replicated:
-    size: 1
+    size: 2
   parameters:
     # Inline compression mode for the data pool
     compression_mode: aggressive
