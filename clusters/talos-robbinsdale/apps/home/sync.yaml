@@ -9,7 +9,7 @@ spec:
   resources:
     requests:
       storage: 10000Gi
-  storageClassName: "ceph-block-single-compressed"
+  storageClassName: "ceph-block-duplicated-compressed"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
