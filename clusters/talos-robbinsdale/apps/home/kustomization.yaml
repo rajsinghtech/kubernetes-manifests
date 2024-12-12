@@ -7,4 +7,5 @@ resources:
   - ./mqtt
   - ./home-assistant
   - namespace.yaml
-  - sync.yaml
+  - sync-vault.yaml
+  - sync-vault-k8s.yaml
