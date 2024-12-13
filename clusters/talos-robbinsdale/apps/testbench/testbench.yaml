@@ -82,7 +82,7 @@ spec:
         command: ["/bin/sh", "-c"]
         args:
           - while true; do
-            curl -s http://hello-world-service.default.svc.cluster.local:80;
+            curl -s http://hello-world.testbench.svc.cluster.local:80;
             echo " - Request completed.";
             sleep 5;
             done;
