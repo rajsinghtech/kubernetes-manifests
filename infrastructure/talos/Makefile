@@ -70,7 +70,7 @@ reset:
 	talosctl -e vault-proxmox.local -n vault-proxmox.local reset --system-labels-to-wipe EPHEMERAL,STATE --graceful=false --reboot --user-disks-to-wipe /dev/sdb
 	talosctl -e tank.local -n tank.local reset --system-labels-to-wipe EPHEMERAL,STATE --graceful=false --reboot --user-disks-to-wipe /dev/nvme1n1,/dev/sda,/dev/sdb,/dev/sdc,/dev/sdd
 	talosctl -e titan.local -n titan.local reset --system-labels-to-wipe EPHEMERAL,STATE --graceful=false --reboot --user-disks-to-wipe /dev/nvme0n1,/dev/sda,/dev/sdb,/dev/sdc,/dev/sdd
-	talosctl -e stone-proxmox.local -n stone-proxmox.local reset --system-labels-to-wipe EPHEMERAL,STATE --graceful=false --reboot --user-disks-to-wipe /dev/sdc
+	talosctl -e stone-proxmox.local -n stone-proxmox.local reset --system-labels-to-wipe EPHEMERAL,STATE --graceful=false --reboot --user-disks-to-wipe /dev/sdc,/dev/sdd
 
 reboot:
 	talosctl -e vault-proxmox.local -n vault-proxmox.local reboot
