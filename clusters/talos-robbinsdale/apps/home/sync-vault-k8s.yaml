@@ -9,7 +9,7 @@ spec:
   resources:
     requests:
       storage: 10000Gi
-  storageClassName: "ceph-block-duplicated-compressed"
+  storageClassName: "ceph-block-duplicated"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -50,7 +50,7 @@ spec:
     copyMethod: Direct
     capacity: 10000Gi
     accessModes: ["ReadWriteOnce"]
-    storageClassName: ceph-block-single-compressed
+    storageClassName: ceph-block-duplicated
     destinationPVC: vault-k8s-ceph
     # volumeSnapshotClassName: csi-rbdplugin-snapshotclass
 ---
