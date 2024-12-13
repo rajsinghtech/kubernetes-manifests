@@ -9,11 +9,11 @@ parameters:
   clusterID: rook-ceph # namespace:cluster
 
   # CephFS filesystem name into which the volume shall be created
-  fsName: myfs
+  fsName: filesystem
 
   # Ceph pool into which the volume shall be created
   # Required for provisionVolume: "true"
-  pool: myfs-replicated
+  pool: filesystem-replicated
 
   # The secrets contain Ceph admin credentials. These are generated automatically by the operator
   # in the same namespace as the cluster.
@@ -48,7 +48,7 @@ kind: StorageClass
 metadata:
   annotations:
     storageclass.kubernetes.io/is-default-class: "true"
-  name: ceph-block
+  name: ceph-block-replicated
 parameters:
   clusterID: rook-ceph
   csi.storage.k8s.io/controller-expand-secret-name: rook-csi-rbd-provisioner
@@ -60,7 +60,7 @@ parameters:
   csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
   imageFeatures: layering
   imageFormat: "2"
-  pool: ceph-blockpool
+  pool: ceph-blockpool-replicated
 provisioner: rook-ceph.rbd.csi.ceph.com
 allowVolumeExpansion: true
 reclaimPolicy: Delete
@@ -69,7 +69,7 @@ volumeBindingMode: Immediate
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: ceph-block-duplicated-compressed
+  name: ceph-block-duplicated
 parameters:
   clusterID: rook-ceph
   csi.storage.k8s.io/controller-expand-secret-name: rook-csi-rbd-provisioner
@@ -81,7 +81,7 @@ parameters:
   csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
   imageFeatures: layering
   imageFormat: "2"
-  pool: ceph-blockpool-duplicated-compressed
+  pool: ceph-blockpool-duplicated
 provisioner: rook-ceph.rbd.csi.ceph.com
 allowVolumeExpansion: true
 reclaimPolicy: Delete
