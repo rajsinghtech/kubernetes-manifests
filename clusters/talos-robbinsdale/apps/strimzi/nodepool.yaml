@@ -12,7 +12,7 @@ spec:
   roles:
     - broker
   storage:
-    class: ceph-block
+    class: ceph-block-duplicated
     size: 10G
     type: persistent-claim
 ---
@@ -30,6 +30,6 @@ spec:
   roles:
     - controller
   storage:
-    class: ceph-block
+    class: ceph-block-duplicated
     size: 10G
     type: persistent-claim
