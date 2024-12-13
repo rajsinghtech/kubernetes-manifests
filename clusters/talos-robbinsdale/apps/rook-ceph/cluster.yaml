@@ -151,29 +151,29 @@ spec:
     periodicity: daily # one of: hourly, daily, weekly, monthly
     maxLogSize: 500M # SUFFIX may be 'M' or 'G'. Must be at least 1M.
   # automate [data cleanup process](https://github.com/rook/rook/blob/master/Documentation/Storage-Configuration/ceph-teardown.md#delete-the-data-on-hosts) in cluster destruction.
-  cleanupPolicy:
-    # Since cluster cleanup is destructive to data, confirmation is required.
-    # To destroy all Rook data on hosts during uninstall, confirmation must be set to "yes-really-destroy-data".
-    # This value should only be set when the cluster is about to be deleted. After the confirmation is set,
-    # Rook will immediately stop configuring the cluster and only wait for the delete command.
-    # If the empty string is set, Rook will not destroy any data on hosts during uninstall.
-    confirmation: "yes-really-destroy-data"
-    # sanitizeDisks represents settings for sanitizing OSD disks on cluster deletion
-    sanitizeDisks:
-      # method indicates if the entire disk should be sanitized or simply ceph's metadata
-      # in both case, re-install is possible
-      # possible choices are 'complete' or 'quick' (default)
-      method: quick
-      # dataSource indicate where to get random bytes from to write on the disk
-      # possible choices are 'zero' (default) or 'random'
-      # using random sources will consume entropy from the system and will take much more time then the zero source
-      dataSource: zero
-      # iteration overwrite N times instead of the default (1)
-      # takes an integer value
-      iteration: 1
-    # allowUninstallWithVolumes defines how the uninstall should be performed
-    # If set to true, cephCluster deletion does not wait for the PVs to be deleted.
-    allowUninstallWithVolumes: true
+  # cleanupPolicy:
+  #   # Since cluster cleanup is destructive to data, confirmation is required.
+  #   # To destroy all Rook data on hosts during uninstall, confirmation must be set to "yes-really-destroy-data".
+  #   # This value should only be set when the cluster is about to be deleted. After the confirmation is set,
+  #   # Rook will immediately stop configuring the cluster and only wait for the delete command.
+  #   # If the empty string is set, Rook will not destroy any data on hosts during uninstall.
+  #   confirmation: "yes-really-destroy-data"
+  #   # sanitizeDisks represents settings for sanitizing OSD disks on cluster deletion
+  #   sanitizeDisks:
+  #     # method indicates if the entire disk should be sanitized or simply ceph's metadata
+  #     # in both case, re-install is possible
+  #     # possible choices are 'complete' or 'quick' (default)
+  #     method: quick
+  #     # dataSource indicate where to get random bytes from to write on the disk
+  #     # possible choices are 'zero' (default) or 'random'
+  #     # using random sources will consume entropy from the system and will take much more time then the zero source
+  #     dataSource: zero
+  #     # iteration overwrite N times instead of the default (1)
+  #     # takes an integer value
+  #     iteration: 1
+  #   # allowUninstallWithVolumes defines how the uninstall should be performed
+  #   # If set to true, cephCluster deletion does not wait for the PVs to be deleted.
+  #   allowUninstallWithVolumes: true
   # To control where various services will be scheduled by kubernetes, use the placement configuration sections below.
   # The example under 'all' would have all services scheduled on kubernetes nodes labeled with 'role=storage-node' and
   # tolerate taints with a key of 'storage-node'.

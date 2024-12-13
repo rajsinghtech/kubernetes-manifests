@@ -3,7 +3,7 @@ global:
 configs:
   cm:
     url: https://argocd.rajsingh.info
-    admin.enabled: false
+    admin.enabled: true
     resource.ignoreResourceUpdatesEnabled: "false"
     exec.enabled: "true"
     kustomize.buildOptions: --enable-helm
