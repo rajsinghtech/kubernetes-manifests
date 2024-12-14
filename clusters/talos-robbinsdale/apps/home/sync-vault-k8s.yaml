@@ -51,7 +51,7 @@ spec:
     capacity: 10000Gi
     accessModes: ["ReadWriteOnce"]
     storageClassName: ceph-block-duplicated
-    destinationPVC: vault-k8s-ceph
+    destinationPVC: vault-k8s-pvc
     # volumeSnapshotClassName: csi-rbdplugin-snapshotclass
 ---
 apiVersion: volsync.backube/v1alpha1
@@ -60,7 +60,7 @@ metadata:
   name: vault-k8s-source
   namespace: home
 spec:
-  sourcePVC: vault-k8s-pvc
+  sourcePVC: vault-k8s-ceph
   trigger:
     # Replicate every 5 minutes
     manual: first
