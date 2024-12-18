@@ -8,7 +8,7 @@ spec:
   resources:
     requests:
       storage: 3000Gi
-  storageClassName: ceph-blockpool-replicated
+  storageClassName: ceph-block-replicated
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
