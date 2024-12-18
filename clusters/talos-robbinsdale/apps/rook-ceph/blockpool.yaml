@@ -18,6 +18,6 @@ metadata:
 spec:
   failureDomain: osd
   replicated:
-    size: 2
+    size: 1
   parameters:
     compression_mode: force
