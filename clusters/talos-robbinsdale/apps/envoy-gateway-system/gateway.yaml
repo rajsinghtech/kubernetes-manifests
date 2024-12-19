@@ -13,11 +13,14 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
-  name: robbinsdale 
+  name: robbinsdale
   # annotations:
     # cert-manager.io/cluster-issuer: raj-issuer
     # kubernetes.io/tls-acme: "true"
 spec:
+  addresses:
+    - type: IPAddress
+      value: 10.69.10.14
   gatewayClassName: eg
   listeners:
     - name: http
@@ -96,3 +99,30 @@ spec:
   usages:
     - digital signature
     - key encipherment
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: public
+  # annotations:
+    # cert-manager.io/cluster-issuer: raj-issuer
+    # kubernetes.io/tls-acme: "true"
+spec:
+  addresses:
+    - type: IPAddress
+      value: 10.69.10.10
+  gatewayClassName: eg
+  listeners:
+    - name: wildcard-raj-https
+      protocol: HTTPS
+      port: 443
+      hostname: "*.rajsingh.info"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        mode: Terminate
+        certificateRefs:
+        - group: ''
+          kind: Secret
+          name: raj-wildcard-tls
