@@ -110,7 +110,7 @@ metadata:
 spec:
   addresses:
     - type: IPAddress
-      value: 10.69.10.10
+      value: 10.69.10.16
   gatewayClassName: eg
   listeners:
     - name: wildcard-raj-https
