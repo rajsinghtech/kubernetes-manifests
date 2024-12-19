@@ -75,7 +75,7 @@ spec:
         # - name: ceph-generic-fs
         #   nfs:
         #     path: /ceph
-            server: 10.43.143.159
+            # server: 10.43.143.159
         - name: config-volume
           persistentVolumeClaim:
             claimName: code-server-config
