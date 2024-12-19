@@ -6,10 +6,10 @@
 # Using this will ignore remaining config in this file
 # externalConfig: https://example.com/server-luci/config.yaml
 
-title: "App dashboard"
-subtitle: "Homer"
+title: "Robbinsdale"
+subtitle: "Luke's and Raj's Homelab"
 # documentTitle: "Welcome" # Customize the browser tab text
-logo: "assets/logo.png"
+logo: "https://www.governmentjobs.com/AgencyPages/robbinsdalemn/agencyImages/download/City_Secondary.png"
 # Alternatively a fa icon can be provided:
 # icon: "fas fa-skull-crossbones"
 
@@ -24,11 +24,11 @@ connectivityCheck: true # whether you want to display a message when the apps ar
                         # You should set it to true when using an authentication proxy, it also reloads the page when a redirection is detected when checking connectivity.
 
 # Optional: Proxy / hosting option
-proxy:
-  useCredentials: false # send cookies & authorization headers when fetching service specific data. Set to `true` if you use an authentication proxy. Can be overrided on service level. 
-  headers: # send custom headers when fetching service specific data. Can also be set on a service level.
-    Test: "Example"
-    Test1: "Example1"
+# proxy:
+#   useCredentials: false # send cookies & authorization headers when fetching service specific data. Set to `true` if you use an authentication proxy. Can be overrided on service level. 
+#   headers: # send custom headers when fetching service specific data. Can also be set on a service level.
+#     Test: "Example"
+#     Test1: "Example1"
 
 
 # Set the default layout and color scheme
@@ -91,27 +91,27 @@ message:
   #   title: 'id'
   #   content: 'value'
   # refreshInterval: 10000
-  style: "is-warning"
-  title: "Optional message!"
-  icon: "fa fa-exclamation-triangle"
-  # The content also accepts HTML content, so you can add divs, images or whatever you want to make match your needs.
-  content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+  # style: "is-warning"
+  # title: "Optional message!"
+  # icon: "fa fa-exclamation-triangle"
+  # # The content also accepts HTML content, so you can add divs, images or whatever you want to make match your needs.
+  # content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
 
 # Optional navbar
 # links: [] # Allows for navbar (dark mode, layout, and search) without any links
 links:
-  - name: "Link 1"
+  - name: "Kubernetes Manifests"
     icon: "fab fa-github"
-    url: "https://github.com/bastienwirtz/homer"
+    url: "https://github.com/rajsinghtech/kubernetes-manifests"
     target: "_blank" # optional html tag target attribute
-  - name: "link 2"
-    icon: "fas fa-book"
-    url: "https://github.com/bastienwirtz/homer"
+  # - name: "link 2"
+  #   icon: "fas fa-book"
+  #   url: "https://github.com/bastienwirtz/homer"
   # this will link to a second homer page that will load config from page2.yml and keep default config values as in config.yml file
   # see url field and assets/page.yml used in this example:
-  - name: "Second Page"
-    icon: "fas fa-file-alt"
-    url: "#page2"
+  # - name: "Second Page"
+  #   icon: "fas fa-file-alt"
+  #   url: "#page2"
 
 # Services
 # First level array represents a group.
@@ -123,30 +123,30 @@ services:
     # logo: "path/to/logo"
     # class: "highlight-purple" # Optional css class to add on the service group. 
     items:
-      - name: "Awesome app"
+      - name: "Jellyfin"
         logo: "assets/tools/sample.png"
         # Alternatively a fa icon can be provided:
         # icon: "fab fa-jenkins"
-        subtitle: "Bookmark example"
+        subtitle: "Media"
         tag: "app"
         keywords: "self hosted reddit" # optional keyword used for searching purpose
-        url: "https://www.reddit.com/r/selfhosted/"
+        url: "https://jellyfin.org/images/logo.svg"
         target: "_blank" # optional html tag target attribute
-      - name: "Another one"
-        logo: "assets/tools/sample2.png"
-        subtitle: "Another application"
+      - name: "Jellyseerr"
+        logo: "https://raw.githubusercontent.com/Fallenbagel/jellyseerr/develop/public/logo_full.svg"
+        subtitle: "Media"
         tag: "app"
         # Optional tagstyle
         tagstyle: "is-success"
         url: "#"
-  - name: "Other group"
+  - name: "Critical"
     icon: "fas fa-heartbeat"
     items:
       - name: "Pi-hole"
-        logo: "assets/tools/sample.png"
+        logo: "https://wp-cdn.pi-hole.net/wp-content/uploads/2016/12/Vortex-R.png"
         # subtitle: "Network-wide Ad Blocking" # optional, if no subtitle is defined, PiHole statistics will be shown
         tag: "other"
-        url: "https://pihole-primary.rajsingh.info/admin"
+        url: "https://pihole.lukehouge.com/admin"
         type: "PiHole" # optional, loads a specific component that provides extra features. MUST MATCH a file name (without file extension) available in `src/components/services`
         target: "_blank" # optional html a tag target attribute
         # class: "green" # optional custom CSS class for card, useful with custom stylesheet
