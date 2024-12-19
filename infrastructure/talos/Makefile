@@ -14,7 +14,7 @@ init:
 	talosctl apply-config --insecure -n vault-proxmox.local --file vault.yaml
 	talosctl apply-config --insecure -n tank.local --file tank.yaml 
 	talosctl apply-config --insecure -n titan.local --file titan.yaml
-	talosctl apply-config --insecure -n stone-proxmox.local --file stone.yaml
+	talosctl apply-config --insecure -n stone.local --file stone.yaml
 
 bootstrap:
 	talosctl bootstrap --talosconfig=./talosconfig -n tank.local -e tank.local
@@ -27,7 +27,7 @@ apply:
 	talosctl -e vault-proxmox.local -n vault-proxmox.local apply-config --file vault.yaml
 	talosctl -e tank.local -n tank.local apply-config --file tank.yaml
 	talosctl -e titan.local -n titan.local apply-config --file titan.yaml
-	talosctl -e stone-proxmox.local -n stone-proxmox.local apply-config --file stone.yaml
+	talosctl -e stone.local -n stone.local apply-config --file stone.yaml
 	
 iso: 
 	@echo "Uploading schematic and retrieving ID..."
@@ -55,7 +55,7 @@ disk:
 	talosctl -e vault-proxmox.local -n vault-proxmox.local get discoveredvolumes
 	talosctl -e tank.local -n tank.local get discoveredvolumes
 	talosctl -e titan.local -n titan.local get discoveredvolumes
-	talosctl -e stone-proxmox.local -n stone-proxmox.local get discoveredvolumes
+	talosctl -e stone.local -n stone.local get discoveredvolumes
 
 etcd:
 	talosctl service etcd --talosconfig=./talosconfig -n titan.local -e k8s.robbinsdale.local
@@ -70,10 +70,10 @@ reset:
 	talosctl -e vault-proxmox.local -n vault-proxmox.local reset --system-labels-to-wipe EPHEMERAL,STATE --graceful=false --reboot --user-disks-to-wipe /dev/sdb
 	talosctl -e tank.local -n tank.local reset --system-labels-to-wipe EPHEMERAL,STATE --graceful=false --reboot --user-disks-to-wipe /dev/nvme1n1,/dev/sda,/dev/sdb,/dev/sdc,/dev/sdd
 	talosctl -e titan.local -n titan.local reset --system-labels-to-wipe EPHEMERAL,STATE --graceful=false --reboot --user-disks-to-wipe /dev/nvme0n1,/dev/sda,/dev/sdb,/dev/sdc,/dev/sdd
-	talosctl -e stone-proxmox.local -n stone-proxmox.local reset --system-labels-to-wipe EPHEMERAL,STATE --graceful=false --reboot --user-disks-to-wipe /dev/sdc,/dev/sdd
+	talosctl -e stone.local -n stone.local reset --system-labels-to-wipe EPHEMERAL,STATE --graceful=false --reboot --user-disks-to-wipe /dev/sdc,/dev/sdd
 
 reboot:
 	talosctl -e vault-proxmox.local -n vault-proxmox.local reboot
-	talosctl -e stone-proxmox.local -n stone-proxmox.local reboot
+	talosctl -e stone.local -n stone.local reboot
 	talosctl -e tank.local -n tank.local reboot
 	talosctl -e titan.local -n titan.local reboot
