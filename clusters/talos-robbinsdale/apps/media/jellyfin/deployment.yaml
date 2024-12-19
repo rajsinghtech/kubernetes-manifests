@@ -12,6 +12,7 @@ spec:
       labels:
         app: jellyfin
     spec:
+      hostname: jellyfin.rajsingh.info
       containers:
         - name: jellyfin
           image: jellyfin/jellyfin:latest
@@ -34,7 +35,7 @@ spec:
             - name: TZ
               value: America/Chicago
             - name: JELLYFIN_PublishedServerUrl
-              value: jellyfin.lukehouge.com
+              value: jellyfin.rajsingh.info
       volumes:
         - name: tv-volume
           persistentVolumeClaim:

@@ -15,7 +15,7 @@ spec:
       namespace: envoy-gateway-system
   hostnames:
     - "jellyfin.rajsingh.info"
-    - "jellyfin.lukehouge.com"
+    # - "jellyfin.lukehouge.com"
   rules:
     - backendRefs:
         - group: ""
