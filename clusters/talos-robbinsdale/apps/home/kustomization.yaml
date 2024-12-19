@@ -6,6 +6,7 @@ resources:
   - ./frigate
   - ./mqtt
   - ./home-assistant
+  - ./code-server
   - namespace.yaml
   - sync-vault.yaml
   - sync-vault-k8s.yaml
