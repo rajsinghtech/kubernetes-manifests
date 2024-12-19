@@ -124,13 +124,13 @@ services:
     # class: "highlight-purple" # Optional css class to add on the service group. 
     items:
       - name: "Jellyfin"
-        logo: "assets/tools/sample.png"
+        logo: "https://jellyfin.org/images/logo.svg"
         # Alternatively a fa icon can be provided:
         # icon: "fab fa-jenkins"
         subtitle: "Media"
         tag: "app"
         keywords: "self hosted reddit" # optional keyword used for searching purpose
-        url: "https://jellyfin.org/images/logo.svg"
+        url: "https://jellyfin.lukehouge.com"
         target: "_blank" # optional html tag target attribute
       - name: "Jellyseerr"
         logo: "https://raw.githubusercontent.com/Fallenbagel/jellyseerr/develop/public/logo_full.svg"
