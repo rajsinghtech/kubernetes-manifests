@@ -51,15 +51,15 @@ spec:
               name: dshm
             - name: secret-volume
               mountPath: /etc/letsencrypt/live/frigate/
+            - name: cache
+              mountPath: /tmp/cache/
           resources:
             limits:
-              memory: "10000Mi"
-              cpu: "10"
+              memory: "8Gi"
+              cpu: "6"
             requests:
-              memory: "8000Mi"
-              cpu: "8"
-          securityContext:
-            privileged: true  # Required for USB and GPU access
+              memory: "4Gi"
+              cpu: "3"
       volumes:
         - name: storage
           persistentVolumeClaim:
@@ -70,7 +70,10 @@ spec:
         - name: dshm
           emptyDir:
               medium: Memory
-              sizeLimit: 10Gi
+              sizeLimit: 1Gi
+        - name: cache
+          emptyDir:
+            sizeLimit: 10Gi
         - name: secret-volume
           secret:
             secretName: frigate-luke-tls
