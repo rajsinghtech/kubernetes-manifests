@@ -19,7 +19,7 @@ resources:
   - storageclass.yaml
   - volumesnapshot.yaml
   - blockpool.yaml
-  - github.com/rancher/local-path-provisioner/deploy?ref=v0.0.26
+  - github.com/rancher/local-path-provisioner/deploy?ref=v0.0.30
 patches:
   - patch: |-
       kind: ConfigMap
