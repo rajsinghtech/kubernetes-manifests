@@ -4,7 +4,7 @@ kind: Kustomization
 helmCharts:
   - name: rook-ceph
     repo: https://charts.rook.io/release
-    version: v1.16.0-beta.0
+    version: v1.16.0
     namespace: rook-ceph
     releaseName: rook-ceph
     includeCRDs: true
