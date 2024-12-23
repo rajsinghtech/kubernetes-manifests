@@ -4,7 +4,7 @@ kind: Kustomization
 helmCharts:
   - name: kube-prometheus-stack
     repo: https://prometheus-community.github.io/helm-charts
-    version: 66.2.2
+    version: 67.4.0
     namespace: monitoring
     releaseName: prometheus
     includeCRDs: true
