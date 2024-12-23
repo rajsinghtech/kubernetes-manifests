@@ -1,7 +1,0 @@
-mayastor:
-  io_engine:
-    envcontext: "iova-mode=pa"
-agents:
-  core:
-    requestTimeout: 60s
-    minTimeouts: false

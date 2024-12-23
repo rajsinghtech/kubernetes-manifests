@@ -1,7 +1,0 @@
-tls:
-  secretName: kubewall-raj-tls
-service:
-  type: LoadBalancer
-  port: 443
-pvc:
-  storageClass: "nfs-proxmox-vault"  # Storage class for the PVC (leave empty for default)
