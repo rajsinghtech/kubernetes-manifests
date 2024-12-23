@@ -6,7 +6,7 @@ namespace: ollama
 helmCharts:
   - name: ollama
     repo: https://otwld.github.io/ollama-helm/
-    version: 1.0.0
+    version: 1.1.2
     releaseName: ollama
     valuesFile: values.yaml
 
