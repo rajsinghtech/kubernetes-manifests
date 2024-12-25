@@ -1,0 +1,6 @@
+kind: Kustomization
+namespace: minecraft
+resources:
+  - pvc.yaml
+  - deployment.yaml
+  - service.yaml
