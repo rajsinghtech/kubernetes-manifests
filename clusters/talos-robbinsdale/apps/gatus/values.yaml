@@ -26,3 +26,12 @@ config:
         - type: discord
           description: "Luke portfolio is down"
           send-on-resolved: true
+    - name: Jellyfin
+      url: https://jellyfin.rajsingh.info
+      interval: 60s
+      conditions:
+        - "[STATUS] == 200"
+      alerts:
+        - type: discord
+          description: "Jellyfin is down"
+          send-on-resolved: true
