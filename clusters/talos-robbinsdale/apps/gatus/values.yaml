@@ -6,7 +6,7 @@ envFrom:
 config:
   alerting:
     discord:
-      webhook-url: "{$discord-webhook-url}"
+      webhook-url: "${discord-webhook-url}"
   endpoints:
     - name: Raj Singh Portfolio
       url: https://rajsingh.info
