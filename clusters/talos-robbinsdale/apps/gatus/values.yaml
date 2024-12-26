@@ -1,2 +1,9 @@
 image:
   tag: latest
+config:
+  endpoints:
+    - name: Raj Singh Portfolio
+      url: https://rajsingh.info
+      interval: 60s
+      conditions:
+        - "[STATUS] == 200"

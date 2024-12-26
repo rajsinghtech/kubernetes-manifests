@@ -10,3 +10,6 @@ helmCharts:
     releaseName: gatus
     includeCRDs: true
     valuesFile: values.yaml
+
+resources:
+  - httproute.yaml
