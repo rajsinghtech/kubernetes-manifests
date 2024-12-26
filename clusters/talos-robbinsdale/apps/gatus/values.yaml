@@ -18,7 +18,7 @@ config:
           description: "Raj portfolio is down"
           send-on-resolved: true
     - name: Luke Houge Portfolio
-      url: https://lukehouge.com
+      url: https://www.lukehouge.com
       interval: 60s
       conditions:
         - "[STATUS] == 200"
