@@ -35,3 +35,27 @@ config:
         - type: discord
           description: "Jellyfin is down"
           send-on-resolved: true
+    - name: PiHole Primary DNS
+      url: "10.69.10.69"
+      dns:
+        query-name: "google.com"
+        query-type: "A"
+      conditions:
+        # - "[BODY] == 93.184.215.14"
+        - "[DNS_RCODE] == NOERROR"
+      alerts:
+        - type: discord
+          description: "PiHole Primary DNS is down"
+          send-on-resolved: true
+    - name: PiHole Secondary DNS
+      url: "10.69.69.10"
+      dns:
+        query-name: "google.com"
+        query-type: "A"
+      conditions:
+        # - "[BODY] == 93.184.215.14"
+        - "[DNS_RCODE] == NOERROR"
+      alerts:
+        - type: discord
+          description: "PiHole Secondary DNS is down"
+          send-on-resolved: true
