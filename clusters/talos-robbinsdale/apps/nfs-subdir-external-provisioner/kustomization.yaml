@@ -12,9 +12,9 @@ helmCharts:
     valuesFile: proxmox-vault-nfs-values.yaml
     name: nfs-subdir-external-provisioner
 
-  - releaseName: csi-driver-nfs
-    repo: https://raw.githubusercontent.com/kubernetes-csi/csi-driver-nfs/master/charts
-    version: v4.9.0
-    namespace: kube-system
-    includeCRDs: true
-    name: csi-driver-nfs
+  # - releaseName: csi-driver-nfs
+  #   repo: https://raw.githubusercontent.com/kubernetes-csi/csi-driver-nfs/master/charts
+  #   version: v4.9.0
+  #   namespace: kube-system
+  #   includeCRDs: true
+  #   name: csi-driver-nfs
