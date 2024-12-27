@@ -44,5 +44,5 @@ spec:
     manual: first
   rsync:
     sshKeys: volsync-rsync-dst-src-jellyfin
-    address: volsync-rsync-dst-jellyfin.home
+    address: volsync-rsync-dst-jellyfin
     copyMethod: Direct
