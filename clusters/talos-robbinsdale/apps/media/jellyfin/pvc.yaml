@@ -9,3 +9,40 @@ spec:
     requests:
       storage: 1Gi
   storageClassName: nfs-proxmox-vault
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jellyfin-config-replica
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: rook-cephfs
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationDestination
+metadata:
+  name: jellyfin
+  namespace: home
+spec:
+  rsync:
+    copyMethod: Direct
+    destinationPVC: jellyfin-config-replica
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: jellyfin
+  namespace: home
+spec:
+  sourcePVC: jellyfin-config
+  trigger:
+    # schedule: "0 0 * * *"
+    manual: first
+  rsync:
+    sshKeys: volsync-rsync-dst-src-jellyfin
+    address: volsync-rsync-dst-jellyfin.home
+    copyMethod: Direct
