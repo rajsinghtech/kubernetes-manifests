@@ -45,4 +45,4 @@ spec:
             claimName: radarr-movies
         - name: config-volume
           persistentVolumeClaim:
-            claimName: jellyfin-config
+            claimName: jellyfin-config-replica
