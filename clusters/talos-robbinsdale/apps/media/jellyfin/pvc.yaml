@@ -40,7 +40,7 @@ metadata:
 spec:
   sourcePVC: jellyfin-config-replica
   trigger:
-    schedule: "0 0 * * *"
+    schedule: "0 */23 * * *"
     # manual: first
   rsync:
     sshKeys: volsync-rsync-dst-src-jellyfin
