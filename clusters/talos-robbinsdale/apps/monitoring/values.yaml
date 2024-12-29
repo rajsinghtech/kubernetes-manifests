@@ -60,7 +60,7 @@ grafana:
       providers:
         - name: 'default'
           orgId: 1
-          folder: 'Default'
+          folder: 'default'
           type: file
           disableDeletion: false
           editable: true
@@ -68,7 +68,7 @@ grafana:
             path: /var/lib/grafana/dashboards/default
         - name: 'argocd'
           orgId: 1
-          folder: 'ArgoCD'
+          folder: 'argocd'
           type: file
           disableDeletion: false
           editable: true
@@ -76,7 +76,7 @@ grafana:
             path: /var/lib/grafana/dashboards/argocd
         - name: 'ceph'
           orgId: 1
-          folder: 'Ceph'
+          folder: 'ceph'
           type: file
           disableDeletion: false
           editable: true
@@ -100,7 +100,7 @@ grafana:
             path: /var/lib/grafana/dashboards/envoy-gateway
         - name: 'kubernetes'
           orgId: 1
-          folder: 'Kubernetes'
+          folder: 'kubernetes'
           type: file
           disableDeletion: false
           editable: true
@@ -108,7 +108,7 @@ grafana:
             path: /var/lib/grafana/dashboards/kubernetes
         - name: 'volsync'
           orgId: 1
-          folder: 'VolSync'
+          folder: 'volsync'
           type: file
           disableDeletion: false
           editable: true
