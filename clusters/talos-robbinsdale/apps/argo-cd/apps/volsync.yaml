@@ -6,7 +6,7 @@ metadata:
 spec:
   destination:
     server: https://kubernetes.default.svc
-    namespace: volsync
+    namespace: volsync-system
   project: default
   source:
     path: clusters/talos-robbinsdale/apps/volsync
