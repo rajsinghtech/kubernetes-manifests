@@ -144,7 +144,8 @@ grafana:
         gnetId: 5342
         revision: 9
         datasource: prometheus
-      volsync:
+    volsync:
+      volsync-overview:
         gnetId: 21356
         revision: 3
         datasource: prometheus
