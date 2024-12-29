@@ -25,6 +25,8 @@ spec:
         env:
         - name: EULA
           value: "TRUE"
+        - name: TYPE
+          value: "PAPER"
         volumeMounts:
         - name: data
           mountPath: /data
