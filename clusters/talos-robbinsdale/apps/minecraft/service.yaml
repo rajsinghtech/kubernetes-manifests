@@ -12,5 +12,5 @@ spec:
   selector:
     app: civo-mc-bedrock
   ports:
-    - port: 19132
+    - port: 25565
       protocol: UDP
