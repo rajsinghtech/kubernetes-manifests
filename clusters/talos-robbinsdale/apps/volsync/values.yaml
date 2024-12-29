@@ -3,7 +3,7 @@ replicaCount: 1
 manageCRDs: true
 
 metrics:
-  disableAuth: false
+  disableAuth: true
 
 resources:
   limits:
