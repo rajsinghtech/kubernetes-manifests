@@ -22,6 +22,9 @@ spec:
           requests:
             cpu: 500m
             memory: 1Gi
+        ports:
+        - containerPort: 25565
+          protocol: UDP
         env:
         - name: EULA
           value: "TRUE"
