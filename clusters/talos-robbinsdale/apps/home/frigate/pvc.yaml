@@ -21,3 +21,38 @@ spec:
     requests:
       storage: 1Gi
   storageClassName: nfs-proxmox-vault
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: frigate-config-replica
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: rook-cephfs
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationDestination
+metadata:
+  name: frigate-config
+spec:
+  rsync:
+    copyMethod: Direct
+    destinationPVC: frigate-config
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: frigate-config
+spec:
+  sourcePVC: frigate-config-replica
+  trigger:
+    schedule: "0 */23 * * *"
+    # manual: first
+  rsync:
+    sshKeys: volsync-rsync-dst-src-frigate-config
+    address: volsync-rsync-dst-frigate-config
+    copyMethod: Direct
