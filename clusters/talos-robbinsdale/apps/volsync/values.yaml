@@ -3,8 +3,7 @@ replicaCount: 1
 manageCRDs: true
 
 metrics:
-  # Disable auth checks when scraping metrics (allow anyone to scrape)
-  disableAuth: true
+  disableAuth: false
 
 resources:
   limits:
