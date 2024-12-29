@@ -29,8 +29,8 @@ resources:
   - ./templates/alertconfig.yaml
   - ./templates/secrets.yaml
   - ./templates/namespace.yaml
-  - ./templates/scrutiny-collector.yaml
-  - ./templates/scrutiny-web.yaml
+  # - ./templates/scrutiny-collector.yaml
+  # - ./templates/scrutiny-web.yaml
 patches:
   # This is required because some CRD annotations are too long.
   - target:
