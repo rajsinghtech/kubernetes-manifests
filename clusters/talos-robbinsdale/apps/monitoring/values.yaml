@@ -106,6 +106,14 @@ grafana:
           editable: true
           options:
             path: /var/lib/grafana/dashboards/kubernetes
+        - name: 'volsync'
+          orgId: 1
+          folder: 'VolSync'
+          type: file
+          disableDeletion: false
+          editable: true
+          options:
+            path: /var/lib/grafana/dashboards/volsync
   dashboards:
     argocd:
       # https://grafana.com/grafana/dashboards/19993-argocd-operational-overview/
@@ -135,6 +143,10 @@ grafana:
       ceph-pools:
         gnetId: 5342
         revision: 9
+        datasource: prometheus
+      volsync:
+        gnetId: 21356
+        revision: 3
         datasource: prometheus
   route:
     main:
