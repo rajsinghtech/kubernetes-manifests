@@ -6,7 +6,7 @@ helmCharts:
     repo: https://prometheus-community.github.io/helm-charts
     version: 67.5.0
     namespace: monitoring
-    releaseName: prometheus
+    releaseName: kube-prometheus-stack
     includeCRDs: true
     valuesFile: values.yaml
   # - name: loki
