@@ -29,6 +29,7 @@ resources:
   - ./templates/alertconfig.yaml
   - ./templates/secrets.yaml
   - ./templates/namespace.yaml
+  - ./karma
   # - ./templates/scrutiny-collector.yaml
   # - ./templates/scrutiny-web.yaml
 patches:
