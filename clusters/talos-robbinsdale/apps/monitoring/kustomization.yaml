@@ -30,6 +30,7 @@ resources:
   - ./templates/secrets.yaml
   - ./templates/namespace.yaml
   - ./karma
+  - ./metrics-server
   # - ./templates/scrutiny-collector.yaml
   # - ./templates/scrutiny-web.yaml
 patches:
