@@ -32,8 +32,8 @@ machine:
   nodeLabels:
     openebs.io/engine: mayastor
   kubelet:
-    # extraArgs:
-    #   rotate-server-certificates: true
+    extraArgs:
+      rotate-server-certificates: true
     extraMounts:
     - destination: /var/local-path-provisioner
       type: bind
