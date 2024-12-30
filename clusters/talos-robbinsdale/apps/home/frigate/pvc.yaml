@@ -39,6 +39,8 @@ kind: ReplicationDestination
 metadata:
   name: frigate-config
 spec:
+  trigger:
+    schedule: "0 */22 * * *"
   rsync:
     copyMethod: Direct
     destinationPVC: frigate-config
@@ -50,7 +52,7 @@ metadata:
 spec:
   sourcePVC: frigate-config-replica
   trigger:
-    schedule: "0 */23 * * *"
+    schedule: "0 */22 * * *"
     # manual: first
   rsync:
     sshKeys: volsync-rsync-dst-src-frigate-config

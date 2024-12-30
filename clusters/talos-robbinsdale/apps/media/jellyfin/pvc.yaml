@@ -28,6 +28,8 @@ metadata:
   name: jellyfin
   namespace: home
 spec:
+  trigger:
+    schedule: "0 */23 * * *"
   rsync:
     copyMethod: Direct
     destinationPVC: jellyfin-config
