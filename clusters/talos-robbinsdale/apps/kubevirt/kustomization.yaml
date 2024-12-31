@@ -9,3 +9,4 @@ resources:
   # - cdi.yaml
   - vm.yaml
   - win11.yaml
+  - datavolume.yaml
