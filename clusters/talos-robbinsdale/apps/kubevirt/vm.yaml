@@ -74,7 +74,7 @@ spec:
             storage: 35Gi
         accessModes:
           - ReadWriteMany
-        storageClassName: "nfs-csi"
+        storageClassName: "rook-cephfs"
       source:
         http:
           url: "https://fedora.mirror.wearetriple.com/linux/releases/40/Cloud/x86_64/images/Fedora-Cloud-Base-Generic.x86_64-40-1.14.qcow2"
