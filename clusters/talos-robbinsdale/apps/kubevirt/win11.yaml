@@ -5,6 +5,7 @@ metadata:
   labels:
     special: vmi-windows
   name: vmi-windows
+  namespace: kubevirt
 spec:
   domain:
     clock:
