@@ -88,7 +88,7 @@ spec:
           requests:
             storage: 35Gi
         accessModes:
-          - ReadWriteMany
-        storageClassName: "rook-cephfs"
+          - ReadWriteOnce
+        storageClassName: "ceph-block-replicated"
       source:
         blank: {}
