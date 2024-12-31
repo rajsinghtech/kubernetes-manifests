@@ -59,3 +59,12 @@ config:
       #   - type: discord
       #     description: "PiHole Secondary DNS is down"
       #     send-on-resolved: true
+    - name: Frigate
+      url: https://frigate.lukehouge.com
+      interval: 60s
+      conditions:
+        - "[STATUS] == 200"
+      alerts:
+        - type: discord
+          description: "Frigate is down"
+          send-on-resolved: true
