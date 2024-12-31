@@ -75,3 +75,13 @@ spec:
       source:
         http:
           url: "https://archive.org/download/tiny11-2311/tiny11%202311%20x64.iso"
+  - metadata:
+      name: disk-windows
+    spec:
+      storage:
+        resources:
+          requests:
+            storage: 35Gi
+        accessModes:
+          - ReadWriteMany
+        storageClassName: "rook-cephfs"
