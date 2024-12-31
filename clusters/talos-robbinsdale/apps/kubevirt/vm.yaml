@@ -3,7 +3,7 @@ kind: VirtualMachine
 metadata:
   name: fedora-vm
 spec:
-  running: false
+  running: true
   template:
     metadata:
       labels:
