@@ -8,3 +8,4 @@ resources:
   - https://github.com/kubevirt/containerized-data-importer/releases/download/v1.61.0/cdi-cr.yaml
   # - cdi.yaml
   - vm.yaml
+  - win11.yaml
