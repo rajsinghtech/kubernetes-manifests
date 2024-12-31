@@ -10,3 +10,4 @@ resources:
   - vm.yaml
   - win11.yaml
   - datavolume.yaml
+  - pvc.yaml
