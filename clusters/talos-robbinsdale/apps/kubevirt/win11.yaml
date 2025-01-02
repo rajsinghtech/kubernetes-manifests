@@ -4,7 +4,7 @@ kind: VirtualMachine
 metadata:
   name: windows-vm
 spec:
-  running: false
+  running: true
   template:
     metadata:
       labels:
