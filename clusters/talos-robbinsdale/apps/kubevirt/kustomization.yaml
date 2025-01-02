@@ -11,3 +11,4 @@ resources:
   - win11.yaml
   - datavolume.yaml
   - pvc.yaml
+  - https://github.com/wavezhang/virtVNC/raw/master/k8s/virtvnc.yaml
