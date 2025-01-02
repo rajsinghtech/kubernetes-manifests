@@ -33,6 +33,10 @@ spec:
           - cdrom:
               bus: sata
             name: winiso
+          - cdrom:
+              bus: sata
+            name: virtio
+
           interfaces:
           - masquerade: {}
             model: e1000
@@ -66,6 +70,9 @@ spec:
       - name: winiso
         persistentVolumeClaim:
           claimName: win11cd-pvc
+      - containerDisk:
+          image: kubevirt/virtio-container-disk
+        name: virtio
   # dataVolumeTemplates:
   # - metadata:
   #     name: win11cd-pvc
