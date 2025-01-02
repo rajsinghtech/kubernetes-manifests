@@ -1,0 +1,103 @@
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: kv-novnc
+subjects:
+- kind: ServiceAccount
+  name: kv-novnc
+  namespace: kubevirt
+roleRef:
+  kind: ClusterRole
+  name: kv-novnc
+  apiGroup: rbac.authorization.k8s.io
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: kv-novnc
+rules:
+- apiGroups:
+  - subresources.kubevirt.io
+  resources:
+  - virtualmachineinstances/console
+  - virtualmachineinstances/vnc
+  verbs:
+  - get
+- apiGroups:
+  - kubevirt.io
+  resources:
+  - virtualmachines
+  - virtualmachineinstances
+  - virtualmachineinstancepresets
+  - virtualmachineinstancereplicasets
+  - virtualmachineinstancemigrations
+  verbs:
+  - get
+  - list
+  - watch
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: kv-novnc
+  name: kv-novnc
+  namespace: kubevirt
+spec:
+  ports:
+  - port: 8001
+    protocol: TCP
+    targetPort: 8001
+  selector:
+    app: kv-novnc
+  type: ClusterIP
+---
+# Create k8s secret for basic HTTP authentication
+apiVersion: v1
+kind: Secret
+metadata:
+  name: kv-novnc-basic-auth
+  namespace: traefik
+type: kubernetes.io/basic-auth
+data:
+  username: c29tZXVzZXI=    # default value: someuser (base64 encoded)
+  password: c29tZXBhc3M=    # default value: somepass (base64 encoded)
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kv-novnc
+  namespace: kubevirt
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kv-novnc
+  template:
+    metadata:
+      labels:
+        app: kv-novnc
+    spec:
+      serviceAccountName: kv-novnc
+      # nodeSelector:
+      #   node-role.kubernetes.io/master: ''
+      # tolerations: 
+      # - key: "node-role.kubernetes.io/master"
+      #   operator: "Equal"
+      #   value: ""
+      #   effect: "NoSchedule"
+      containers:
+      - name: kv-novnc
+        image: ghcr.io/scog/kubevirt-novnc:latest
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            port: 8001
+            path: /
+            scheme: HTTP
+          failureThreshold: 30
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
