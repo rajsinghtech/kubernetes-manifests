@@ -12,3 +12,22 @@ resources:
   - datavolume.yaml
   - pvc.yaml
   - https://github.com/wavezhang/virtVNC/raw/master/k8s/virtvnc.yaml
+patches:
+  - target:
+      kind: Deployment
+      name: virtvnc
+    patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: virtvnc
+        namespace: kubevirt
+      spec:
+        template:
+          spec:
+            nodeSelector: null
+            tolerations:
+              - key: "node-role.kubernetes.io/master"
+                operator: "Equal"
+                value: ""
+                effect: "NoSchedule"
