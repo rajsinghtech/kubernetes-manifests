@@ -2,14 +2,14 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-helmCharts:
-  - name: rancher
-    repo: https://releases.rancher.com/server-charts/stable
-    version: 2.10.1
-    namespace: cattle-system
-    releaseName: rancher
-    includeCRDs: true
-    valuesFile: values.yaml
+# helmCharts:
+#   - name: rancher
+#     repo: https://releases.rancher.com/server-charts/stable
+#     version: 2.10.1
+#     namespace: cattle-system
+#     releaseName: rancher
+#     includeCRDs: true
+#     valuesFile: values.yaml
 
 resources:
   - httproute.yaml
