@@ -10,3 +10,6 @@ helmCharts:
     releaseName: rancher
     includeCRDs: true
     valuesFile: values.yaml
+
+resources:
+  - httproute.yaml
