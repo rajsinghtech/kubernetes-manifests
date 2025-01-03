@@ -1,5 +1,0 @@
-bootstrapPassword: password
-replicas: 1
-hostname: rancher.rajsingh.info
-ingress:
-  enabled: false
