@@ -14,3 +14,4 @@ helmCharts:
 resources:
  - secret.yaml
  - rbac.yaml
+ - egress.yaml
