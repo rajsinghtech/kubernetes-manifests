@@ -16,3 +16,4 @@ resources:
  - rbac.yaml
  - egress.yaml
  - namespace.yaml
+ - connector.yaml
