@@ -47,6 +47,9 @@ health:
 
 dashboard:
 	talosctl dashboard --talosconfig=./talosconfig -n tank.local -e tank.local
+	talosctl dashboard --talosconfig=./talosconfig -n titan.local -e titan.local
+	talosctl dashboard --talosconfig=./talosconfig -n stone.local -e stone.local
+	talosctl dashboard --talosconfig=./talosconfig -n vault-proxmox.local -e vault-proxmox.local
 
 disk:
 	# talosctl get disk --talosconfig=./talosconfig -n titan.local -e k8s.robbinsdale.local
@@ -73,7 +76,13 @@ reset:
 	talosctl -e stone.local -n stone.local reset --system-labels-to-wipe EPHEMERAL,STATE --graceful=false --reboot --user-disks-to-wipe /dev/sdc
 
 reboot:
-	talosctl -e vault-proxmox.local -n vault-proxmox.local reboot
-	talosctl -e stone.local -n stone.local reboot
-	talosctl -e tank.local -n tank.local reboot
-	talosctl -e titan.local -n titan.local reboot
+	talosctl -e vault-proxmox.local -n vault-proxmox.local reboot --debug
+	talosctl -e stone.local -n stone.local reboot --debug
+	talosctl -e tank.local -n tank.local reboot --debug
+	talosctl -e titan.local -n titan.local reboot --debug
+
+service:
+	talosctl service --talosconfig=./talosconfig -n titan.local -e k8s.robbinsdale.local
+	talosctl service --talosconfig=./talosconfig -n tank.local -e k8s.robbinsdale.local
+	talosctl service --talosconfig=./talosconfig -n stone.local -e k8s.robbinsdale.local
+	talosctl service --talosconfig=./talosconfig -n vault-proxmox.local -e k8s.robbinsdale.local
