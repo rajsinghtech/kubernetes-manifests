@@ -1,34 +1,15 @@
-# apiVersion: tailscale.com/v1alpha1
-# kind: ProxyClass
-# metadata:
-#   name: robbinsdale-proxyclass
-# spec:
-#   statefulSet:
-#     labels:
-#       app: tailscale-proxy
-#     pod:
-#       tailscaleContainer:
-#         resources:
-#           requests:
-#           limits:
-#             squat.ai/tun: "1"
-#   metrics:
-#     enable: true
-#   tailscale:
-#     acceptRoutes: true
-# ---
 apiVersion: tailscale.com/v1alpha1
 kind: Connector
 metadata:
-  name: robbinsdale-connector-0
+  name: robbinsdale-connector
 spec:
   tags:
     - tag:k8s
-  hostname: robbinsdale-connector-0
-  # proxyClass: robbinsdale-proxyclass
+  hostname: robbinsdale-connector
   subnetRouter:
     advertiseRoutes:
+      - "192.168.50.0/24"
       - "10.0.0.0/16"
       - "10.1.0.0/16"
       - "10.69.0.0/16"
-  exitNode: true
+  exitNode: false
