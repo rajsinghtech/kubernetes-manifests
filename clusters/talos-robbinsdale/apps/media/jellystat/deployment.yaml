@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  jellystat
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name:  jellystat
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    spec:
+      containers:
+      - image: cyfershepard/jellystat:latest
+        name: jellystat
+        resources:
+          requests:
+            cpu: 20m
+            memory: 55Mi
+          limits:
+            cpu: 100m
+            memory: 200Mi
+        # env:
+        # - name:  ENVVARNAME
+        #   value:  ENVVARVALUE
+        ports:
+        - containerPort:  3000
+          name:  http
+        volumeMounts:
+        - mountPath: /data
+          name: data
+      volumes:
+        - name: data
+          emptyDir: {}
+      restartPolicy: Always
+      imagePullPolicy: Always
