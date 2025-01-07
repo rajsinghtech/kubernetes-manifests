@@ -7,3 +7,4 @@ resources:
   - service.yaml
   - pg.yaml
   - httproute.yaml
+  - pvc.yaml
