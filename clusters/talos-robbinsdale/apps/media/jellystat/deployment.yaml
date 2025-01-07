@@ -41,6 +41,11 @@ spec:
                 secretKeyRef:
                   name: jellystat-db-app
                   key: port
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: jellystat-db-app
+                  key: dbname
             - name: JWT_SECRET
               value: "my-secret-jwt-key"
             - name: TZ
