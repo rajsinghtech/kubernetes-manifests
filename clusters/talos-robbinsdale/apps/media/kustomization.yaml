@@ -12,6 +12,7 @@ resources:
 - ./transmission-tv
 - ./plex
 - ./jellyseerr
+- ./jellystat
 - secret.yaml
 - httproute.yaml
 - namespace.yaml
