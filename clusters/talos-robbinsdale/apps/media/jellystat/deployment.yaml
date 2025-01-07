@@ -1,39 +1,54 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name:  jellystat
+  name: jellystat
+  namespace: media
+  labels:
+    app: jellystat
 spec:
+  replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name:  jellystat
-  strategy:
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 1
-    type: RollingUpdate
+      app: jellystat
   template:
+    metadata:
+      labels:
+        app: jellystat
     spec:
       containers:
-      - image: cyfershepard/jellystat:latest
-        name: jellystat
-        resources:
-          requests:
-            cpu: 20m
-            memory: 55Mi
-          limits:
-            cpu: 100m
-            memory: 200Mi
-        # env:
-        # - name:  ENVVARNAME
-        #   value:  ENVVARVALUE
-        ports:
-        - containerPort:  3000
-          name:  http
-        volumeMounts:
-        - mountPath: /data
-          name: data
+        - name: jellystat
+          image: cyfershepard/jellystat:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: jellystat-db-app
+                  key: username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: jellystat-db-app
+                  key: password
+            - name: POSTGRES_IP
+              valueFrom:
+                secretKeyRef:
+                  name: jellystat-db-app
+                  key: host
+            - name: POSTGRES_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: jellystat-db-app
+                  key: port
+            - name: JWT_SECRET
+              value: "my-secret-jwt-key"
+            - name: TZ
+              value: "America/Chicago"
+          volumeMounts:
+            - name: jellystat-backup-data
+              mountPath: /app/backend/backup-data
       volumes:
-        - name: data
-          emptyDir: {}
-      restartPolicy: Always
-      imagePullPolicy: Always
+        - name: jellystat-backup-data
+          persistentVolumeClaim:
+            claimName: jellystat-backup-pvc
