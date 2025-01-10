@@ -13,31 +13,31 @@ spec:
         app: smb-server
     spec:
       containers:
-      - name: smb-server
-        image: dperson/samba
-        resources:
-          limits:
-            cpu: "1"
-            memory: "1Gi"
-          requests:
-            cpu: "10m"
-            memory: "5Mi"
-        env:
-          - name: USER
-            value: "lhouge;password" # create user
-        args:
-        - "-p"  # Persist the Samba configuration
-        volumeMounts:
-        - name: config
-          mountPath: /etc/samba/
-        - name: nfs-proxmox-vault
-          mountPath: /mnt/proxmox-vault
+        - name: smb-server
+          image: dperson/samba
+          resources:
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+            requests:
+              cpu: "10m"
+              memory: "5Mi"
+          env:
+            - name: USER
+              value: "lhouge;password" # create user
+          args:
+            - "-p" # Persist the Samba configuration
+          volumeMounts:
+            - name: config
+              mountPath: /etc/samba/
+            - name: nfs-truenas
+              mountPath: /mnt/proxmox-vault
       volumes:
-      - name: config
-        configMap:
-          name: smb-config
-      - name: nfs-proxmox-vault
-        nfs:
-          path: /vault
-          server: 192.168.50.104
+        - name: config
+          configMap:
+            name: smb-config
+        - name: nfs-truenas
+          nfs:
+            path: /vault
+            server: 192.168.50.104
       restartPolicy: Always
