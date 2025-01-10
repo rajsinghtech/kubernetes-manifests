@@ -27,14 +27,14 @@ patches:
         template:
           spec:
             volumes:
-              - name: nfs-proxmox-vault
+              - name: nfs-truenas
                 nfs:
                   path: /vault
                   server: 192.168.50.104
             containers:
               - name: immich-server
                 volumeMounts:
-                  - name: nfs-proxmox-vault
+                  - name: nfs-truenas
                     mountPath: /vault
                 resources:
                   requests:

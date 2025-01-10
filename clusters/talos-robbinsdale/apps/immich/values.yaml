@@ -11,12 +11,12 @@ immich:
 postgresql:
   enabled: true
   global:
-    defaultStorageClass: nfs-proxmox-vault
+    defaultStorageClass: nfs-truenas
   volumePermissions:
     enabled: true
 redis:
   enabled: true
   global:
-    defaultStorageClass: nfs-proxmox-vault
+    defaultStorageClass: nfs-truenas
   volumePermissions:
     enabled: true
