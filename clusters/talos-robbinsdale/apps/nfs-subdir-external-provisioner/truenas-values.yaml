@@ -1,5 +1,5 @@
 nfs:
-  path: /vault/k8s
+  path: /mnt/vault/k8s
   server: truenas.local
 storageClass:
   defaultClass: false

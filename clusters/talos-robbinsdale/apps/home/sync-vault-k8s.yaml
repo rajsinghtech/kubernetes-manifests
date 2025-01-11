@@ -37,7 +37,7 @@
 #     - ReadWriteMany
 #   persistentVolumeReclaimPolicy: Retain
 #   nfs:
-#     path: /vault/k8s
+#     path: /mnt/vault/k8s
 #     server: truenas.local
 # ---
 # apiVersion: volsync.backube/v1alpha1
