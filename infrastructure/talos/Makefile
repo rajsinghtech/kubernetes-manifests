@@ -13,6 +13,8 @@ init:
 	talosctl apply-config --insecure -n tank.local --file tank.yaml 
 	talosctl apply-config --insecure -n titan.local --file titan.yaml
 	talosctl apply-config --insecure -n stone.local --file stone.yaml
+	sleep 10
+	${MAKE} bootstrap
 
 bootstrap:
 	talosctl bootstrap --talosconfig=./talosconfig -n tank.local -e tank.local
@@ -31,7 +33,8 @@ iso:
 	@SCHEMATIC_ID=$$(curl -s -X POST --data-binary @patch/schematic.yaml https://factory.talos.dev/schematics | jq -r '.id'); \
 	echo "Schematic ID: $$SCHEMATIC_ID"; \
 	echo "Downloading ISO..."; \
-	curl -O https://factory.talos.dev/image/32553c72324961acdc4b6a531a1143e84dc5d3bd5225589150f5d273142c5908/v1.9.1/metal-amd64.iso
+	echo "curl -O https://factory.talos.dev/image/$${SCHEMATIC_ID}/v1.9.1/metal-amd64.iso"
+	curl -O https://factory.talos.dev/image/$${SCHEMATIC_ID}/v1.9.1/metal-amd64.iso
 
 kubeconfig:
 	talosctl kubeconfig ~/.kube/talosconfig -n tank.local -e k8s.robbinsdale.local --talosconfig=./talosconfig -f
@@ -78,3 +81,14 @@ service:
 	talosctl service --talosconfig=./talosconfig -n tank.local -e k8s.robbinsdale.local
 	talosctl service --talosconfig=./talosconfig -n titan.local -e k8s.robbinsdale.local
 	talosctl service --talosconfig=./talosconfig -n stone.local -e k8s.robbinsdale.local
+
+upgrade:
+	talosctl upgrade --nodes tank.local --image ghcr.io/siderolabs/installer:v1.9.1 -e tank.local
+	talosctl upgrade --nodes titan.local --image ghcr.io/siderolabs/installer:v1.9.1 -e titan.local
+	talosctl upgrade --nodes stone.local --image ghcr.io/siderolabs/installer:v1.9.1 -e stone.local
+
+standalone:
+	talosctl machineconfig patch controlplane.yaml --patch @patch/vault.patch --output vault.yaml
+	talosctl apply-config --insecure -n vault.local --file vault.yaml
+	talosctl bootstrap --talosconfig=./talosconfig -n vault.local -e vault.local
+	talosctl kubeconfig ~/.kube/personal/vault.yaml -n vault.local -e vault.local --talosconfig=./talosconfig -f

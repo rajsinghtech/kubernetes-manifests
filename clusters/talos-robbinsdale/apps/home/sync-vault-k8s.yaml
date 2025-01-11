@@ -38,7 +38,7 @@
 #   persistentVolumeReclaimPolicy: Retain
 #   nfs:
 #     path: /vault/k8s
-#     server: 192.168.50.104
+#     server: truenas.local
 # ---
 # apiVersion: volsync.backube/v1alpha1
 # kind: ReplicationDestination
