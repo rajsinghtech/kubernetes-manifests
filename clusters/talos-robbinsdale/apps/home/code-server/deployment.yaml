@@ -71,7 +71,7 @@ spec:
         - name: nfs-truenas
           nfs:
             path: /vault/k8s
-            server: 192.168.50.104
+            server: truenas.local
         # - name: ceph-generic-fs
         #   nfs:
         #     path: /ceph

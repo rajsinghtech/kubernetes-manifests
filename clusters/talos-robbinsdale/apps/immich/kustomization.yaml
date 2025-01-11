@@ -30,7 +30,7 @@ patches:
               - name: nfs-truenas
                 nfs:
                   path: /vault
-                  server: 192.168.50.104
+                  server: truenas.local
             containers:
               - name: immich-server
                 volumeMounts:
