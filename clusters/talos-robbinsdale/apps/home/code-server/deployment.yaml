@@ -70,7 +70,7 @@ spec:
             defaultMode: 0755 # Set the permissions for the files in the ConfigMap
         - name: nfs-truenas
           nfs:
-            path: /vault/k8s
+            path: /mnt/vault/k8s
             server: truenas.local
         # - name: ceph-generic-fs
         #   nfs:
