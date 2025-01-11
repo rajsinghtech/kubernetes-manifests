@@ -29,13 +29,13 @@ patches:
             volumes:
               - name: nfs-truenas
                 nfs:
-                  path: /vault
+                  path: /mnt/vault
                   server: truenas.local
             containers:
               - name: immich-server
                 volumeMounts:
                   - name: nfs-truenas
-                    mountPath: /vault
+                    mountPath: /mnt/vault
                 resources:
                   requests:
                     memory: "6Gi"

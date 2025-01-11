@@ -38,6 +38,6 @@ spec:
             name: smb-config
         - name: nfs-truenas
           nfs:
-            path: /vault
+            path: /mnt/vault
             server: truenas.local
       restartPolicy: Always
