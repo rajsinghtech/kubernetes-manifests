@@ -4,12 +4,12 @@ kind: Kustomization
 
 helmCharts:
 
-  - releaseName: proxmox-vault-nfs
+  - releaseName: truenas-nfs
     repo: https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/
     version: 4.0.18
     namespace: nfs-subdir-external-provisioner
     includeCRDs: true
-    valuesFile: proxmox-vault-nfs-values.yaml
+    valuesFile: truenas-values.yaml
     name: nfs-subdir-external-provisioner
 
   # - releaseName: csi-driver-nfs
