@@ -43,14 +43,14 @@ spec:
     schedule: "0 */22 * * *"
   rsync:
     copyMethod: Direct
-    destinationPVC: frigate-config
+    destinationPVC: frigate-config-replica
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
   name: frigate-config
 spec:
-  sourcePVC: frigate-config-replica
+  sourcePVC: frigate-config
   trigger:
     schedule: "0 */22 * * *"
     # manual: first
