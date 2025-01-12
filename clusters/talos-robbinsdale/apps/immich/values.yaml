@@ -1,6 +1,5 @@
 image:
   tag: v1.120.2
-
 envFrom:
   - secretRef:
       name: immich-postgres-user
@@ -19,20 +18,11 @@ env:
         key: password
 immich:
   metrics:
-    enabled: false
+    enabled: true
   persistence:
     library:
       existingClaim: immich
-
 postgresql:
   enabled: false
-  global:
-    defaultStorageClass: nfs-truenas
-  volumePermissions:
-    enabled: true
 redis:
   enabled: false
-  global:
-    defaultStorageClass: nfs-truenas
-  volumePermissions:
-    enabled: true
