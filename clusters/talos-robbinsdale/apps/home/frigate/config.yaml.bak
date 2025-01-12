@@ -1,3 +1,5 @@
+auth:
+  reset_admin_password: true
 mqtt:
   host: 10.69.10.11
   port: 1883
