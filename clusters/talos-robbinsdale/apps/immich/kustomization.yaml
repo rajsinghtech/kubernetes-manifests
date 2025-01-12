@@ -4,7 +4,7 @@ kind: Kustomization
 resources:
   - pvc.yaml
   - httproute.yaml
-  - secret.yaml
+  # - secret.yaml
   - pg.yaml
 helmCharts:
   - name: immich
