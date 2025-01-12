@@ -9,7 +9,7 @@ immich:
       existingClaim: immich
 
 postgresql:
-  enabled: true
+  enabled: false
   global:
     defaultStorageClass: nfs-truenas
   volumePermissions:
