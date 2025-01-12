@@ -32,7 +32,7 @@ spec:
     schedule: "0 */23 * * *"
   rsync:
     copyMethod: Direct
-    destinationPVC: jellyfin-config-replica
+    destinationPVC: jellyfin-config
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
@@ -40,7 +40,7 @@ metadata:
   name: jellyfin
   namespace: home
 spec:
-  sourcePVC: jellyfin-config
+  sourcePVC: jellyfin-config-replica
   trigger:
     schedule: "0 */23 * * *"
     # manual: first
