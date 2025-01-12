@@ -31,8 +31,8 @@ patches:
             env:
               - name: DB_DATABASE_NAME
                 value: immich
-              - name: DB_HOSTNAME
-                value: "immich-postgres-rw.immich"
+              # - name: DB_HOSTNAME
+              #   value: 
               - name: DB_PASSWORD
                 valueFrom:
                   secretKeyRef:

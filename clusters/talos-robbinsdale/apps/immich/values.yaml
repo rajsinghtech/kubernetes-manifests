@@ -1,9 +1,9 @@
 image:
   tag: v1.120.2
 
-# env:
+env:
 #   # REDIS_HOSTNAME: '{{ printf "%s-redis-master" .Release.Name }}'
-#   DB_HOSTNAME: "{{ .Release.Name }}-postgresql"
+  DB_HOSTNAME: "immich-postgres-rw.media"
 #   DB_USERNAME: "{{ .Values.postgresql.global.postgresql.auth.username }}"
 #   DB_DATABASE_NAME: "{{ .Values.postgresql.global.postgresql.auth.database }}"
 #   # -- You should provide your own secret outside of this helm-chart and use `postgresql.global.postgresql.auth.existingSecret` to provide credentials to the postgresql instance
