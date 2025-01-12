@@ -11,13 +11,12 @@ spec:
       namespace: envoy-gateway-system
   hostnames:
     - "jellyseerr.rajsingh.info"
-    - "jellyseerr.lukehouge.com"
   rules:
     - backendRefs:
         - group: ""
           kind: Service
           name: jellyseerr
-          port: 8989
+          port: 5055
           weight: 1
       matches:
         - path:
