@@ -11,6 +11,7 @@ spec:
       namespace: envoy-gateway-system
   hostnames:
     - "jellyseerr.rajsingh.info"
+    - "jellyseerr.lukehouge.com"
   rules:
     - backendRefs:
         - group: ""
