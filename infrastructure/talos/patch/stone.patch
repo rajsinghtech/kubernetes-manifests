@@ -7,7 +7,7 @@ machine:
       vip:
         ip: 192.168.50.25
   install:
-    disk: /dev/nvme1n1
+    disk: /dev/nvme0n1
     bootloader: true
     extraKernelArgs:
     - talos.platform=metal
