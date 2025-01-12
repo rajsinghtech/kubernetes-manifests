@@ -7,4 +7,5 @@ resources:
   - cloudflared-raj.yaml
   - cloudflared-typeo.yaml
   - cloudflare-ddns-raj.yaml
+  - cloudflare-ddns-luke.yaml
   - secret.yaml
