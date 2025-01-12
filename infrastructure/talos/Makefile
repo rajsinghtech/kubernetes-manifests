@@ -69,8 +69,8 @@ link:
 
 reset:
 	talosctl -e tank.local -n tank.local reset --system-labels-to-wipe EPHEMERAL,STATE --graceful=false --reboot --user-disks-to-wipe /dev/nvme1n1,/dev/sda,/dev/sdb,/dev/sdc,/dev/sdd
-	talosctl -e titan.local -n titan.local reset --system-labels-to-wipe EPHEMERAL,STATE --graceful=false --reboot --user-disks-to-wipe /dev/nvme0n1,/dev/sdb,/dev/sdc,/dev/sdd,/dev/sde
-	talosctl -e stone.local -n stone.local reset --system-labels-to-wipe EPHEMERAL,STATE --graceful=false --reboot --user-disks-to-wipe /dev/nvme0n1,/dev/sda,/dev/sdb
+	talosctl -e titan.local -n titan.local reset --system-labels-to-wipe EPHEMERAL,STATE --graceful=false --reboot --user-disks-to-wipe /dev/nvme1n1,/dev/sdb,/dev/sdc,/dev/sdd,/dev/sde
+	talosctl -e stone.local -n stone.local reset --system-labels-to-wipe EPHEMERAL,STATE --graceful=false --reboot --user-disks-to-wipe /dev/nvme1n1,/dev/sdb,/dev/sdc
 
 reboot:
 	talosctl -e tank.local -n tank.local reboot --debug
