@@ -32,7 +32,7 @@ patches:
               - name: DB_DATABASE_NAME
                 value: immich
               - name: DB_HOSTNAME
-                value: immich-rw 
+                value: immich-postgres-rw.immich
               - name: DB_PASSWORD
                 valueFrom:
                   secretKeyRef:
