@@ -7,8 +7,8 @@ resources:
   - https://github.com/kubevirt/containerized-data-importer/releases/download/v1.61.0/cdi-operator.yaml
   - https://github.com/kubevirt/containerized-data-importer/releases/download/v1.61.0/cdi-cr.yaml
   # - cdi.yaml
-  - vm.yaml
-  - win11.yaml
+  # - vm.yaml
+  # - win11.yaml
   - datavolume.yaml
   - pvc.yaml
-  - virtvnc.yaml
+  - virtvnc.yaml 
