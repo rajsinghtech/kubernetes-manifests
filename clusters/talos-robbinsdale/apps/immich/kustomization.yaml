@@ -4,6 +4,8 @@ kind: Kustomization
 resources:
   - pvc.yaml
   - httproute.yaml
+  - secret.yaml
+  - pg.yaml
 helmCharts:
   - name: immich
     repo: https://immich-app.github.io/immich-charts
@@ -43,38 +45,38 @@ patches:
                   limits:
                     memory: "12Gi"
                     cpu: "12"
-  - target:
-      kind: StatefulSet
-      name: immich-postgresql
-    patch: |-
-      apiVersion: apps/v1
-      kind: StatefulSet
-      metadata:
-        name: immich-postgresql
-      spec:
-        template:
-          spec:
-            containers:
-              - name: postgresql
-                resources:
-                  limits:
-                    cpu: 4000m
-                    ephemeral-storage: 3Gi
-                    memory: 6Gi
-                  requests:
-                    cpu: 2000m
-                    ephemeral-storage: 100Mi
-                    memory: 3Gi
-                livenessProbe:
-                  initialDelaySeconds: 10800  # Waits 3 hours before first check
-                  periodSeconds: 30          # Check every 30 seconds
-                  timeoutSeconds: 5          # Command timeout
-                  failureThreshold: 360      # Allows 3 hours of failures
-                readinessProbe:
-                  initialDelaySeconds: 5      # Starts after 5 seconds
-                  periodSeconds: 10           # Check every 10 seconds
-                  timeoutSeconds: 5           # Command timeout
-                  failureThreshold: 6         # Tolerates 6 consecutive failures
+  # - target:
+  #     kind: StatefulSet
+  #     name: immich-postgresql
+  #   patch: |-
+  #     apiVersion: apps/v1
+  #     kind: StatefulSet
+  #     metadata:
+  #       name: immich-postgresql
+  #     spec:
+  #       template:
+  #         spec:
+  #           containers:
+  #             - name: postgresql
+  #               resources:
+  #                 limits:
+  #                   cpu: 4000m
+  #                   ephemeral-storage: 3Gi
+  #                   memory: 6Gi
+  #                 requests:
+  #                   cpu: 2000m
+  #                   ephemeral-storage: 100Mi
+  #                   memory: 3Gi
+  #               livenessProbe:
+  #                 initialDelaySeconds: 10800  # Waits 3 hours before first check
+  #                 periodSeconds: 30          # Check every 30 seconds
+  #                 timeoutSeconds: 5          # Command timeout
+  #                 failureThreshold: 360      # Allows 3 hours of failures
+  #               readinessProbe:
+  #                 initialDelaySeconds: 5      # Starts after 5 seconds
+  #                 periodSeconds: 10           # Check every 10 seconds
+  #                 timeoutSeconds: 5           # Command timeout
+  #                 failureThreshold: 6         # Tolerates 6 consecutive failures
   - target:
       version: v1
       kind: Deployment
