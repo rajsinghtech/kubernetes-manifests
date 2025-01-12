@@ -28,21 +28,6 @@ patches:
       spec:
         template:
           spec:
-            env:
-              - name: DB_DATABASE_NAME
-                value: immich
-              # - name: DB_HOSTNAME
-              #   value: 
-              - name: DB_PASSWORD
-                valueFrom:
-                  secretKeyRef:
-                    name: immich-postgres-user
-                    key: password
-              - name: DB_USERNAME
-                valueFrom:
-                  secretKeyRef:
-                    name: immich-postgres-user
-                    key: username
             volumes:
               - name: nfs-truenas
                 nfs:
@@ -60,6 +45,21 @@ patches:
                   limits:
                     memory: "12Gi"
                     cpu: "12"
+                env:
+                  - name: DB_DATABASE_NAME
+                    value: immich
+                  - name: DB_HOSTNAME
+                    value: immich-postgres-rw.media
+                  - name: DB_PASSWORD
+                    valueFrom:
+                      secretKeyRef:
+                        name: immich-postgres-user
+                        key: password
+                  - name: DB_USERNAME
+                    valueFrom:
+                      secretKeyRef:
+                        name: immich-postgres-user
+                        key: username
   # - target:
   #     kind: StatefulSet
   #     name: immich-postgresql
