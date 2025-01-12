@@ -11,7 +11,12 @@ env:
         name: immich-postgres-user
         key: password
   DB_HOSTNAME: immich-postgres-rw.immich.svc
-
+  REDIS_HOSTNAME: dragonfly-immich
+  REDIS_PASSWORD:
+    valueFrom:
+      secretKeyRef:
+        name: immich-dragonfly-secret
+        key: password
 immich:
   metrics:
     enabled: false
@@ -26,7 +31,7 @@ postgresql:
   volumePermissions:
     enabled: true
 redis:
-  enabled: true
+  enabled: false
   global:
     defaultStorageClass: nfs-truenas
   volumePermissions:
