@@ -3,7 +3,7 @@ kind: Cluster
 metadata:
   name: jellystat-db
 spec:
-  instances: 1
+  instances: 3
   storage:
     size: 10Gi
     storageClass: rook-cephfs
