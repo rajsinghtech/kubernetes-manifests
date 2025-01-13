@@ -6,7 +6,7 @@ metadata:
   name: cloudflared-typeo
   namespace: cloudflared
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       pod: cloudflared-typeo
