@@ -191,7 +191,7 @@ prometheus:
   ingress:
     enabled: false
   prometheusSpec:
-    repliacas: 2
+    replicas: 2
     serviceMonitorSelectorNilUsesHelmValues: false
     podMonitorSelectorNilUsesHelmValues: false
     probeSelectorNilUsesHelmValues: false
