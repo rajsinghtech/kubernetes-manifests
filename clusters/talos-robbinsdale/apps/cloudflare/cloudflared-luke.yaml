@@ -6,7 +6,7 @@ metadata:
   name: cloudflared-luke
   namespace: cloudflared
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       pod: cloudflared-luke

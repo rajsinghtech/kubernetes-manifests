@@ -144,10 +144,9 @@ services:
     items:
       - name: "Pi-hole"
         logo: "https://wp-cdn.pi-hole.net/wp-content/uploads/2016/12/Vortex-R.png"
-        # subtitle: "Network-wide Ad Blocking" # optional, if no subtitle is defined, PiHole statistics will be shown
         tag: "other"
         url: "https://pihole.lukehouge.com/admin"
-        type: "PiHole" # optional, loads a specific component that provides extra features. MUST MATCH a file name (without file extension) available in `src/components/services`
-        target: "_blank" # optional html a tag target attribute
-        # class: "green" # optional custom CSS class for card, useful with custom stylesheet
-        # background: red # optional color for card to set color directly without custom stylesheet
+      - name: "Status"
+        logo: "https://gatus.io/img/logo-with-light-text.svg"
+        tag: "other"
+        url: "https://status.rajsingh.info"

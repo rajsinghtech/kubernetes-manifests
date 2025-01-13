@@ -191,6 +191,7 @@ prometheus:
   ingress:
     enabled: false
   prometheusSpec:
+    repliacas: 2
     serviceMonitorSelectorNilUsesHelmValues: false
     podMonitorSelectorNilUsesHelmValues: false
     probeSelectorNilUsesHelmValues: false
@@ -255,7 +256,7 @@ nodeExporter:
 
 alertmanager:
   alertmanagerSpec:
-    replicas: 1
+    replicas: 3
     resources:
       limits:
         memory: 50Mi
