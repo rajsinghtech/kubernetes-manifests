@@ -5,7 +5,7 @@ metadata:
   name: dragonfly-immich
   namespace: immich
 spec:
-  replicas: 1
+  replicas: 3
   args:
     - --maxmemory=1000M
     - --proactor_threads=2
