@@ -11,7 +11,9 @@ spec:
       namespace: envoy-gateway-system
   hostnames:
     - "homer.rajsingh.info"
+    - "home.rajsingh.info"
     - "homer.lukehouge.com"
+    - "home.lukehouge.com"
   rules:
     - backendRefs:
         - group: ""
