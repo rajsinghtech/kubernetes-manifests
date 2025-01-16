@@ -4,7 +4,6 @@ kind: Kustomization
 helmCharts:
   - name: clabernetes
     repo: oci://ghcr.io/srl-labs/clabernetes/clabernetes
-    releaseName: clabernetes
     namespace: clabernetes
     version: 0.2.4
     valuesFile: values.yaml
