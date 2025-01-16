@@ -3,7 +3,7 @@ kind: Kustomization
 helmCharts:
 - name: opencost
   repo: https://opencost.github.io/opencost-helm-chart
-  version: 1.43.0
+  version: 1.43.1
   releaseName: opencost
   namespace: opencost
   includeCRDs: true
