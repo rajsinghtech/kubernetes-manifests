@@ -8,3 +8,6 @@ helmCharts:
     namespace: clabernetes
     version: 0.2.4
     valuesFile: values.yaml
+
+resources:
+  - httproute.yaml
