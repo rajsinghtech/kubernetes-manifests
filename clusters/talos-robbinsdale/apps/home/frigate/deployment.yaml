@@ -28,7 +28,7 @@ spec:
       #           - proxmox-stone
       containers:
         - name: frigate
-          image: ghcr.io/blakeblackshear/frigate:stable
+          image: ghcr.io/blakeblackshear/frigate:0.15.0-beta5
           ports:
             - name: web
               containerPort: 8971  # Web UI
