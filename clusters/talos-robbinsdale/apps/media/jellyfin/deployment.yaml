@@ -25,6 +25,10 @@ spec:
               mountPath: /media/tvshows
             - name: movies-volume
               mountPath: /media/movies
+            - name: music-volume
+              mountPath: /media/music
+            - name: audiobooks-volume
+              mountPath: /media/audiobooks                            
             - name: config-volume
               mountPath: /config
           env:
@@ -43,6 +47,12 @@ spec:
         - name: movies-volume
           persistentVolumeClaim:
             claimName: radarr-movies
+        - name: audiobooks-volume
+          persistentVolumeClaim:
+            claimName: audiobooks
+        - name: music-volume
+          persistentVolumeClaim:
+            claimName: music
         - name: config-volume
           persistentVolumeClaim:
             claimName: jellyfin-config-replica
