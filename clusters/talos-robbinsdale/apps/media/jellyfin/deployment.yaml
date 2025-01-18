@@ -49,10 +49,10 @@ spec:
             claimName: radarr-movies
         - name: audiobooks-volume
           persistentVolumeClaim:
-            claimName: audiobooks
+            claimName: readarr-books
         - name: music-volume
           persistentVolumeClaim:
-            claimName: music
+            claimName: lidarr-music
         - name: config-volume
           persistentVolumeClaim:
             claimName: jellyfin-config-replica
