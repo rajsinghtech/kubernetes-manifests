@@ -33,3 +33,8 @@ ui:
     requests:
       cpu: 100m
       memory: 50Mi
+  image:
+    tag: v1.7.0-pre.0
+server:
+  image:
+    tag: v1.7.0-pre.0
