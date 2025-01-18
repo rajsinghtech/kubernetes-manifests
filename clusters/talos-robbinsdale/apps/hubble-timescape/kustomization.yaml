@@ -1,0 +1,17 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+helmCharts:
+  - name: hubble-timescape
+    repo: https://helm.isovalent.com
+    version: 1.7.0-pre.0 
+    namespace: hubble-timescape
+    releaseName: hubble-timescape
+    includeCRDs: true
+    valuesFile: values.yaml
+    apiVersions:
+      - monitoring.coreos.com/v1
+      - networking.k8s.io/v1
+
+resources:
+  - ./templates/httproute.yaml
