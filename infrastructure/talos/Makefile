@@ -83,9 +83,9 @@ service:
 	talosctl service --talosconfig=./talosconfig -n stone.local -e k8s.robbinsdale.local
 
 upgrade:
-	talosctl upgrade --nodes tank.local --image ghcr.io/siderolabs/installer:v1.9.1 -e tank.local
-	talosctl upgrade --nodes titan.local --image ghcr.io/siderolabs/installer:v1.9.1 -e titan.local
-	talosctl upgrade --nodes stone.local --image ghcr.io/siderolabs/installer:v1.9.1 -e stone.local
+	talosctl upgrade --nodes tank.local --image ghcr.io/siderolabs/installer:v1.9.2 -e tank.local
+	talosctl upgrade --nodes titan.local --image ghcr.io/siderolabs/installer:v1.9.2 -e titan.local
+	talosctl upgrade --nodes stone.local --image ghcr.io/siderolabs/installer:v1.9.2 -e stone.local
 
 standalone:
 	talosctl machineconfig patch controlplane.yaml --patch @patch/vault.patch --output vault.yaml
