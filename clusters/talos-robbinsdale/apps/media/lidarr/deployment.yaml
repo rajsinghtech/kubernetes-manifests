@@ -34,7 +34,7 @@ spec:
             - name: TZ
               value: America/Chicago
       volumes:
-        - name: tv-volume
+        - name: music-volume
           persistentVolumeClaim:
             claimName: lidarr-music
         - name: downloads-volume
