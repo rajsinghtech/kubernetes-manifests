@@ -13,6 +13,8 @@ resources:
 - ./plex
 - ./jellyseerr
 - ./jellystat
+- ./lidarr
+- ./transmission-music
 - secret.yaml
 - httproute.yaml
 - namespace.yaml
