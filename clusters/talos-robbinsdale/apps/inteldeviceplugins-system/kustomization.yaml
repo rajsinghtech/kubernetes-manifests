@@ -2,6 +2,8 @@ kind: Kustomization
 resources:
   - https://github.com/kubernetes-sigs/node-feature-discovery/deployment/overlays/default?ref=v0.17.1
   - https://raw.githubusercontent.com/intel/intel-device-plugins-for-kubernetes/main/deployments/operator/samples/deviceplugin_v1_gpudeviceplugin.yaml
+  - https://github.com/intel/intel-device-plugins-for-kubernetes/deployments/nfd/overlays/node-feature-rules?ref=v0.31.1
+
 helmCharts:
   - name: intel-device-plugins-operator
     repo: https://intel.github.io/helm-charts/
