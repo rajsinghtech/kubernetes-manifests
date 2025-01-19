@@ -33,3 +33,15 @@ spec:
     requests:
       storage: 1Gi
   storageClassName: nfs-truenas
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: plex-config-ceph
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: rook-cephfs

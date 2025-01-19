@@ -1,0 +1,23 @@
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationDestination
+metadata:
+  name: prowlarr-ceph
+spec:
+  trigger:
+    manual: first
+  rsync:
+    copyMethod: Direct
+    destinationPVC: prowlarr-config-ceph
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: prowlarr-nfs
+spec:
+  sourcePVC: prowlarr-config
+  trigger:
+    manual: first
+  rsync:
+    sshKeys: volsync-rsync-dst-src-prowlarr-ceph
+    address: volsync-rsync-dst-prowlarr-ceph
+    copyMethod: Direct

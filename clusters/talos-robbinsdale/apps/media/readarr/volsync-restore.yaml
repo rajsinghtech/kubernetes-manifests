@@ -1,0 +1,23 @@
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationDestination
+metadata:
+  name: readarr-ceph
+spec:
+  trigger:
+    manual: first
+  rsync:
+    copyMethod: Direct
+    destinationPVC: readarr-config-ceph
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: readarr-nfs
+spec:
+  sourcePVC: readarr-config
+  trigger:
+    manual: first
+  rsync:
+    sshKeys: volsync-rsync-dst-src-readarr-ceph
+    address: volsync-rsync-dst-readarr-ceph
+    copyMethod: Direct
