@@ -1,7 +1,7 @@
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationDestination
 metadata:
-  name: prowlarr-ceph
+  name: prowlarr-config-ceph
 spec:
   trigger:
     manual: first
@@ -12,7 +12,7 @@ spec:
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
-  name: prowlarr-nfs
+  name: prowlarr-config-nfs
 spec:
   sourcePVC: prowlarr-config
   trigger:

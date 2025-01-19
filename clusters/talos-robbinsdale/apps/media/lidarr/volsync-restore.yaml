@@ -1,7 +1,7 @@
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationDestination
 metadata:
-  name: lidarr-ceph
+  name: lidarr-config-ceph
 spec:
   trigger:
     manual: first
@@ -12,7 +12,7 @@ spec:
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
-  name: lidarr-nfs
+  name: lidarr-config-nfs
 spec:
   sourcePVC: lidarr-config
   trigger:
