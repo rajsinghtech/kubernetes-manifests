@@ -68,7 +68,7 @@ spec:
       volumes:
         - name: config
           persistentVolumeClaim:
-            claimName: plex-config
+            claimName: plex-config-ceph
         - name: transcode
           emptyDir:
             medium: Memory

@@ -34,4 +34,4 @@ spec:
       volumes:
         - name: config-volume
           persistentVolumeClaim:
-            claimName: jellyseerr-config
+            claimName: jellyseerr-config-ceph

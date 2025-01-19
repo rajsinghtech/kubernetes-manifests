@@ -1,7 +1,7 @@
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationDestination
 metadata:
-  name: jellyseerr-ceph
+  name: jellyseerr-config-ceph
 spec:
   trigger:
     manual: first
@@ -12,7 +12,7 @@ spec:
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
-  name: jellyseerr-nfs
+  name: jellyseerr-config-nfs
 spec:
   sourcePVC: jellyseerr-config
   trigger:

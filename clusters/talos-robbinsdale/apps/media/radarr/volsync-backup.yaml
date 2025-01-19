@@ -1,7 +1,7 @@
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationDestination
 metadata:
-  name: radarr-nfs
+  name: radarr-config-nfs
 spec:
   trigger:
     schedule: "0 */7 * * *"
@@ -12,7 +12,7 @@ spec:
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
-  name: radarr-ceph
+  name: radarr-config-ceph
 spec:
   sourcePVC: radarr-config-ceph
   trigger:

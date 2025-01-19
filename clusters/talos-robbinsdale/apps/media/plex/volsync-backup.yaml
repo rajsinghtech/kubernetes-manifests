@@ -1,7 +1,7 @@
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationDestination
 metadata:
-  name: plex-nfs
+  name: plex-config-nfs
 spec:
   trigger:
     schedule: "0 */5 * * *"
@@ -12,7 +12,7 @@ spec:
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
-  name: plex-ceph
+  name: plex-config-ceph
 spec:
   sourcePVC: plex-config-ceph
   trigger:

@@ -42,4 +42,4 @@ spec:
             claimName: transmission-books-data
         - name: config-volume
           persistentVolumeClaim:
-            claimName: readarr-config
+            claimName: readarr-config-ceph
