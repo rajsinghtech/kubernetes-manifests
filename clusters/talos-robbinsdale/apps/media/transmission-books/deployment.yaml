@@ -63,4 +63,4 @@ spec:
           claimName: transmission-books-data
       - name: config-volume
         persistentVolumeClaim:
-          claimName: transmission-books-config-ceph
+          claimName: transmission-books-config
