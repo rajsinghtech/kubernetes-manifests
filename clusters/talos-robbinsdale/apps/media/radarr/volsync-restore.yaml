@@ -1,0 +1,23 @@
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationDestination
+metadata:
+  name: radarr-ceph
+spec:
+  trigger:
+    manual: first
+  rsync:
+    copyMethod: Direct
+    destinationPVC: radarr-config-ceph
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: radarr-nfs
+spec:
+  sourcePVC: radarr-config
+  trigger:
+    manual: first
+  rsync:
+    sshKeys: volsync-rsync-dst-src-radarr-ceph
+    address: volsync-rsync-dst-radarr-ceph
+    copyMethod: Direct

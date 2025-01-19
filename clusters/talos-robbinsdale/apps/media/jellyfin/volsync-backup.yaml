@@ -1,0 +1,23 @@
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationDestination
+metadata:
+  name: jellyfin-nfs
+spec:
+  trigger:
+    schedule: "0 */2 * * *"
+  rsync:
+    copyMethod: Direct
+    destinationPVC: jellyfin-config
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: jellyfin-ceph
+spec:
+  sourcePVC: jellyfin-config-ceph
+  trigger:
+    schedule: "0 */2 * * *"
+  rsync:
+    sshKeys: volsync-rsync-dst-src-jellyfin-nfs
+    address: volsync-rsync-dst-jellyfin-nfs
+    copyMethod: Direct

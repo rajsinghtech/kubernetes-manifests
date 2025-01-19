@@ -1,0 +1,23 @@
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationDestination
+metadata:
+  name: lidarr-ceph
+spec:
+  trigger:
+    manual: first
+  rsync:
+    copyMethod: Direct
+    destinationPVC: lidarr-config-ceph
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: lidarr-nfs
+spec:
+  sourcePVC: lidarr-config
+  trigger:
+    manual: first
+  rsync:
+    sshKeys: volsync-rsync-dst-src-lidarr-ceph
+    address: volsync-rsync-dst-lidarr-ceph
+    copyMethod: Direct
