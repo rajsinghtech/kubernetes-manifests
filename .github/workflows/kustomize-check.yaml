@@ -4,13 +4,13 @@ on:
   pull_request:
     branches:
       - '**'
-    paths:
-      - 'clusters/talos-robbinsdale/apps/**'
+    # paths:
+    #   - 'clusters/talos-robbinsdale/apps/**'
   push:
     branches:
       - '**'
-    paths:
-      - 'clusters/talos-robbinsdale/apps/**'
+    # paths:
+    #   - 'clusters/talos-robbinsdale/apps/**'
 
 jobs:
   validate:
