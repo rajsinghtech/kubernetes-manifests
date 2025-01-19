@@ -1,41 +1,38 @@
 name: Kustomize Validation
 
 on:
-  push:
-    branches:
-      - '**'
   pull_request:
     branches:
       - '**'
+    paths:
+      - 'clusters/talos-robbinsdale/apps/**'
+  push:
+    branches:
+      - '**'
+    paths:
+      - 'clusters/talos-robbinsdale/apps/**'
 
 jobs:
-  validate-kustomize:
+  validate:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v4
+      
       - name: Install Kustomize
         run: |
-          curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
-          sudo mv kustomize /usr/local/bin/
-
+          curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
+      
       - name: Install Helm
-        uses: azure/setup-helm@v3
-        with:
-          version: 'latest'
-
+        run: |
+          curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+          chmod 700 get_helm.sh
+          ./get_helm.sh
+      
       - name: Validate Kustomize builds
         run: |
           find clusters/talos-robbinsdale/apps/* -type d -maxdepth 0 | while read dir; do
-            echo "Validating kustomize build for $dir"
+            echo "Validating $dir..."
             if [ -f "$dir/kustomization.yaml" ]; then
-              kustomize build --enable-helm "$dir"
-              if [ $? -ne 0 ]; then
-                echo "Error: Kustomize build failed for $dir"
-                exit 1
-              fi
-            else
-              echo "Skipping $dir - no kustomization.yaml found"
+              KUBERNETES_VERSION=1.30.0 kustomize build --enable-helm "$dir" || exit 1
             fi
           done 
