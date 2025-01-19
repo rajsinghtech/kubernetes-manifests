@@ -21,3 +21,15 @@ spec:
     requests:
       storage: 1Gi
   storageClassName: nfs-truenas
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sonarr-config-ceph
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: rook-cephfs

@@ -1,0 +1,23 @@
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationDestination
+metadata:
+  name: bazarr-nfs
+spec:
+  trigger:
+    schedule: "0 */1 * * *"
+  rsync:
+    copyMethod: Direct
+    destinationPVC: bazarr-config
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: bazarr-ceph
+spec:
+  sourcePVC: bazarr-config-ceph
+  trigger:
+    schedule: "0 */1 * * *"
+  rsync:
+    sshKeys: volsync-rsync-dst-src-bazarr-nfs
+    address: volsync-rsync-dst-bazarr-nfs
+    copyMethod: Direct
