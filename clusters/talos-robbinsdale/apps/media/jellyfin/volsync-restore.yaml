@@ -1,7 +1,7 @@
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationDestination
 metadata:
-  name: jellyfin-ceph
+  name: jellyfin-config-ceph
 spec:
   trigger:
     manual: first
@@ -12,7 +12,7 @@ spec:
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
-  name: jellyfin-nfs
+  name: jellyfin-config-nfs
 spec:
   sourcePVC: jellyfin-config
   trigger:

@@ -42,4 +42,4 @@ spec:
           claimName: sonarr-tv
       - name: config-volume
         persistentVolumeClaim:
-          claimName: bazarr-config
+          claimName: bazarr-config-ceph

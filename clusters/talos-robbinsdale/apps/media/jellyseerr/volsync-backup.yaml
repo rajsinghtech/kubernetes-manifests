@@ -1,7 +1,7 @@
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationDestination
 metadata:
-  name: jellyseerr-nfs
+  name: jellyseerr-config-nfs
 spec:
   trigger:
     schedule: "0 */3 * * *"
@@ -12,7 +12,7 @@ spec:
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
-  name: jellyseerr-ceph
+  name: jellyseerr-config-ceph
 spec:
   sourcePVC: jellyseerr-config-ceph
   trigger:
