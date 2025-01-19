@@ -1,7 +1,7 @@
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationDestination
 metadata:
-  name: readarr-nfs
+  name: readarr-config-nfs
 spec:
   trigger:
     schedule: "0 */8 * * *"
@@ -12,7 +12,7 @@ spec:
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
-  name: readarr-ceph
+  name: readarr-config-ceph
 spec:
   sourcePVC: readarr-config-ceph
   trigger:

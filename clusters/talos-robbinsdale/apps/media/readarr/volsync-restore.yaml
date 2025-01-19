@@ -1,7 +1,7 @@
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationDestination
 metadata:
-  name: readarr-ceph
+  name: readarr-config-ceph
 spec:
   trigger:
     manual: first
@@ -12,7 +12,7 @@ spec:
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
-  name: readarr-nfs
+  name: readarr-config-nfs
 spec:
   sourcePVC: readarr-config
   trigger:
