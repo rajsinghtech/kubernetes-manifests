@@ -114,6 +114,14 @@ grafana:
           editable: true
           options:
             path: /var/lib/grafana/dashboards/volsync
+        - name: "gateway-api"
+          orgId: 1
+          folder: "gateway-api"
+          type: file
+          disableDeletion: false
+          editable: true
+          options:
+            path: /var/lib/grafana/dashboards/gateway-api
   dashboards:
     argocd:
       # https://grafana.com/grafana/dashboards/19993-argocd-operational-overview/
@@ -149,7 +157,7 @@ grafana:
         gnetId: 21356
         revision: 3
         datasource: prometheus
-    envoy-gateway:
+    gateway-api:
       # Gateway API Dashboards from Kuadrant
       gateway-api-gatewayclasses:
         gnetId: 19432
