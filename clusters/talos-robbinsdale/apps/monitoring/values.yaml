@@ -286,6 +286,7 @@ alertmanager:
         namespace: envoy-gateway-system
 
 kube-state-metrics:
+  enabled: true
   resources:
     limits:
       memory: 50Mi
