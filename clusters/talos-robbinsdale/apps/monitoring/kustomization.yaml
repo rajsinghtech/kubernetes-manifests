@@ -18,7 +18,7 @@ helmCharts:
     valuesFile: prometheus-values.yaml
   - name: grafana
     repo: https://grafana.github.io/helm-charts
-    version: 8.0.0
+    version: 8.8.5
     namespace: monitoring
     releaseName: grafana
     includeCRDs: false
