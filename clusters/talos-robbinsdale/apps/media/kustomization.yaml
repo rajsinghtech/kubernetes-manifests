@@ -17,6 +17,7 @@ resources:
 - ./transmission-music
 - ./readarr
 - ./transmission-books
+- ./audioarr
 - secret.yaml
 - httproute.yaml
 - namespace.yaml
