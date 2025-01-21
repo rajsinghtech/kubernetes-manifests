@@ -1,0 +1,151 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kbench
+spec:
+  template:
+    metadata:
+      labels:
+        kbench: fio
+    spec:
+      containers:
+      - name: kbench
+        image: yasker/kbench:latest
+        imagePullPolicy: Always
+        env:
+#        - name: MODE
+#          value: "quick" # for debugging
+#        - name: MODE
+#          value: "random-read-iops"
+#        - name: MODE
+#          value: "sequential-read-iops"
+#        - name: MODE
+#          value: "random-read-bandwidth"
+#        - name: MODE
+#          value: "sequential-read-bandwidth"
+#        - name: MODE
+#          value: "random-read-latency"
+#        - name: MODE
+#          value: "sequential-read-latency"
+#        - name: MODE
+#          value: "random-write-iops"
+#        - name: MODE
+#          value: "sequential-write-iops"
+#        - name: MODE
+#          value: "random-write-bandwidth"
+#        - name: MODE
+#          value: "sequential-write-bandwidth"
+#        - name: MODE
+#          value: "random-write-latency"
+#        - name: MODE
+#          value: "sequential-write-latency"
+        - name: MODE
+          value: "full" # run all tests
+        - name: FIRST_VOL_NAME
+          value: NFS
+        - name: FIRST_VOL_FILE
+          value: "/volume1/test"
+        - name: SECOND_VOL_NAME
+          value: CEPHFS
+        - name: SECOND_VOL_FILE
+          value: "/volume2/test"
+        - name: SIZE
+          value: "10G" # must be smaller or match the PVC size
+        - name: CPU_IDLE_PROF
+          value: "disabled" # must be "enabled" or "disabled"
+        volumeMounts:
+        - name: vol1
+          mountPath: /volume1/
+        - name: vol2
+          mountPath: /volume2/
+        command: ["bash", "/fio/cmp_run.sh"]
+        #volumeDevices:
+        #- name: vol1
+        #  devicePath: /volume1/test
+        #- name: vol2
+        #  devicePath: /volume2/test
+      restartPolicy: Never
+      volumes:
+      - name: vol1
+        persistentVolumeClaim:
+          claimName: kbench-pvc-nfs
+      - name: vol2
+        persistentVolumeClaim:
+          claimName: kbench-pvc-cephfs
+  backoffLimit: 0
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kbench-2
+spec:
+  template:
+    metadata:
+      labels:
+        kbench: fio
+    spec:
+      containers:
+      - name: kbench
+        image: yasker/kbench:latest
+        imagePullPolicy: Always
+        env:
+#        - name: MODE
+#          value: "quick" # for debugging
+#        - name: MODE
+#          value: "random-read-iops"
+#        - name: MODE
+#          value: "sequential-read-iops"
+#        - name: MODE
+#          value: "random-read-bandwidth"
+#        - name: MODE
+#          value: "sequential-read-bandwidth"
+#        - name: MODE
+#          value: "random-read-latency"
+#        - name: MODE
+#          value: "sequential-read-latency"
+#        - name: MODE
+#          value: "random-write-iops"
+#        - name: MODE
+#          value: "sequential-write-iops"
+#        - name: MODE
+#          value: "random-write-bandwidth"
+#        - name: MODE
+#          value: "sequential-write-bandwidth"
+#        - name: MODE
+#          value: "random-write-latency"
+#        - name: MODE
+#          value: "sequential-write-latency"
+        - name: MODE
+          value: "full" # run all tests
+        - name: FIRST_VOL_NAME
+          value: CEPHBLOCK
+        - name: FIRST_VOL_FILE
+          value: "/volume1/test"
+        - name: SECOND_VOL_NAME
+          value: localpath
+        - name: SECOND_VOL_FILE
+          value: "/volume2/test"
+        - name: SIZE
+          value: "10G" # must be smaller or match the PVC size
+        - name: CPU_IDLE_PROF
+          value: "disabled" # must be "enabled" or "disabled"
+        volumeMounts:
+        - name: vol1
+          mountPath: /volume1/
+        - name: vol2
+          mountPath: /volume2/
+        command: ["bash", "/fio/cmp_run.sh"]
+        #volumeDevices:
+        #- name: vol1
+        #  devicePath: /volume1/test
+        #- name: vol2
+        #  devicePath: /volume2/test
+      restartPolicy: Never
+      volumes:
+      - name: vol1
+        persistentVolumeClaim:
+          claimName: kbench-pvc-cephblock
+      - name: vol2
+        persistentVolumeClaim:
+          claimName: kbench-pvc-localpath
+  backoffLimit: 0
