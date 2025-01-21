@@ -34,7 +34,7 @@ grafana:
       readOnly: true
 
   persistence:
-    enabled: false 
+    enabled: false
 
   # needed since we're using a PVC and can't mount it to more than one pod at once
   deploymentStrategy:
@@ -58,57 +58,57 @@ grafana:
     dashboardproviders.yaml:
       apiVersion: 1
       providers:
-        - name: 'default'
+        - name: "default"
           orgId: 1
-          folder: 'default'
+          folder: "default"
           type: file
           disableDeletion: false
           editable: true
           options:
             path: /var/lib/grafana/dashboards/default
-        - name: 'argocd'
+        - name: "argocd"
           orgId: 1
-          folder: 'argocd'
+          folder: "argocd"
           type: file
           disableDeletion: false
           editable: true
           options:
             path: /var/lib/grafana/dashboards/argocd
-        - name: 'ceph'
+        - name: "ceph"
           orgId: 1
-          folder: 'ceph'
+          folder: "ceph"
           type: file
           disableDeletion: false
           editable: true
           options:
             path: /var/lib/grafana/dashboards/ceph
-        - name: 'proxmox'
+        - name: "proxmox"
           orgId: 1
-          folder: 'proxmox'
+          folder: "proxmox"
           type: file
           disableDeletion: false
           editable: true
           options:
             path: /var/lib/grafana/dashboards/proxmox
-        - name: 'envoy-gateway'
+        - name: "envoy-gateway"
           orgId: 1
-          folder: 'envoy-gateway'
+          folder: "envoy-gateway"
           type: file
           disableDeletion: false
           editable: true
           options:
             path: /var/lib/grafana/dashboards/envoy-gateway
-        - name: 'kubernetes'
+        - name: "kubernetes"
           orgId: 1
-          folder: 'kubernetes'
+          folder: "kubernetes"
           type: file
           disableDeletion: false
           editable: true
           options:
             path: /var/lib/grafana/dashboards/kubernetes
-        - name: 'volsync'
+        - name: "volsync"
           orgId: 1
-          folder: 'volsync'
+          folder: "volsync"
           type: file
           disableDeletion: false
           editable: true
@@ -149,19 +149,49 @@ grafana:
         gnetId: 21356
         revision: 3
         datasource: prometheus
+    envoy-gateway:
+      # Gateway API Dashboards from Kuadrant
+      gateway-api-gatewayclasses:
+        gnetId: 19432
+        revision: 2
+        datasource: prometheus
+      gateway-api-gateways:
+        gnetId: 19433
+        revision: 2
+        datasource: prometheus
+      gateway-api-httproutes:
+        gnetId: 19434
+        revision: 2
+        datasource: prometheus
+      gateway-api-grpcroutes:
+        gnetId: 19570
+        revision: 2
+        datasource: prometheus
+      gateway-api-tlsroutes:
+        gnetId: 19572
+        revision: 2
+        datasource: prometheus
+      gateway-api-tcproutes:
+        gnetId: 19571
+        revision: 2
+        datasource: prometheus
+      gateway-api-udproutes:
+        gnetId: 19573
+        revision: 2
+        datasource: prometheus
   route:
     main:
       enabled: true
       apiVersion: gateway.networking.k8s.io/v1
       kind: HTTPRoute
-      hostnames: 
+      hostnames:
         - grafana.lukehouge.com
         - grafana.rajsingh.info
-      parentRefs: 
-      - group: gateway.networking.k8s.io
-        kind: Gateway
-        name: robbinsdale
-        namespace: envoy-gateway-system
+      parentRefs:
+        - group: gateway.networking.k8s.io
+          kind: Gateway
+          name: robbinsdale
+          namespace: envoy-gateway-system
   ingress:
     enabled: false
     ingressClassName: nginx
@@ -180,14 +210,14 @@ prometheus:
       enabled: true
       apiVersion: gateway.networking.k8s.io/v1
       kind: HTTPRoute
-      hostnames: 
+      hostnames:
         - prometheus.lukehouge.com
         - prometheus.rajsingh.info
-      parentRefs: 
-      - group: gateway.networking.k8s.io
-        kind: Gateway
-        name: robbinsdale
-        namespace: envoy-gateway-system
+      parentRefs:
+        - group: gateway.networking.k8s.io
+          kind: Gateway
+          name: robbinsdale
+          namespace: envoy-gateway-system
   ingress:
     enabled: false
   prometheusSpec:
@@ -208,10 +238,10 @@ prometheus:
         metrics_path: /metrics
         scheme: http
         dns_sd_configs:
-        - names:
-          - opencost.opencost
-          type: 'A'
-          port: 9003
+          - names:
+              - opencost.opencost
+            type: "A"
+            port: 9003
     retention: 30d
 
     resources:
@@ -276,14 +306,14 @@ alertmanager:
       enabled: true
       apiVersion: gateway.networking.k8s.io/v1
       kind: HTTPRoute
-      hostnames: 
+      hostnames:
         - alertmanager.lukehouge.com
         - alertmanager.rajsingh.info
-      parentRefs: 
-      - group: gateway.networking.k8s.io
-        kind: Gateway
-        name: robbinsdale
-        namespace: envoy-gateway-system
+      parentRefs:
+        - group: gateway.networking.k8s.io
+          kind: Gateway
+          name: robbinsdale
+          namespace: envoy-gateway-system
 
 kube-state-metrics:
   resources:

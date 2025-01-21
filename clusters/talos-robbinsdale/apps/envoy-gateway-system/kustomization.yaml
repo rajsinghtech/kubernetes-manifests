@@ -1,7 +1,20 @@
 ---
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+helmCharts:
+  - name: gateway-helm
+    repo: oci://docker.io/envoyproxy
+    releaseName: eg
+    namespace: envoy-gateway-system
+    version: v1.2.5
+  - name: gateway-addons-helm
+    repo: oci://docker.io/envoyproxy
+    releaseName: eg-addons
+    namespace: monitoring
+    version: v1.2.5
+    valuesInline:
+      opentelemetry-collector:
+        enabled: true
 resources:
-  - https://github.com/envoyproxy/gateway/releases/download/v1.2.3/install.yaml
   - gateway.yaml
   - envoy.yaml
