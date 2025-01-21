@@ -122,8 +122,6 @@ grafana:
           editable: true
           options:
             path: /var/lib/grafana/dashboards/gateway-api
-    dashboardsConfigMaps:
-      envoy-gateway: "grafana-dashboards"
   dashboards:
     argocd:
       # https://grafana.com/grafana/dashboards/19993-argocd-operational-overview/

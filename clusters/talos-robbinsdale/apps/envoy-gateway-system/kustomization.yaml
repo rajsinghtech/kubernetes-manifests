@@ -28,6 +28,20 @@ helmCharts:
       tempo:
         enabled: false
 
+
 resources:
   - gateway.yaml
   - envoy.yaml
+
+patches:
+  - patch: |-
+      apiVersion: v1
+      kind: ConfigMap
+      metadata:
+        name: envoy-gateway-dashboards
+        labels:
+          grafana_dashboard: "1"
+          grafana_folder: envoy-gateway
+    target:
+      kind: ConfigMap
+      name: grafana-dashboards

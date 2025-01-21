@@ -50,3 +50,16 @@ patches:
       version: v1
       kind: CustomResourceDefinition
     path: ./patches/sync-options-replace.yaml
+  - patch: |-
+      apiVersion: v1
+      kind: ConfigMap
+      metadata:
+        name: envoy-gateway-grafana-dashboards
+        namespace: monitoring
+        labels:
+          grafana_dashboard: "1"
+          grafana_folder: envoy-gateway
+    target:
+      kind: ConfigMap
+      name: grafana-dashboards
+      namespace: monitoring
