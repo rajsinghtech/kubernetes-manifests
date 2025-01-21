@@ -1,0 +1,23 @@
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationDestination
+metadata:
+  name: audioarr-config-nfs
+spec:
+  trigger:
+    schedule: "0 */8 * * *"
+  rsync:
+    copyMethod: Direct
+    destinationPVC: audioarr-config
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: audioarr-config-ceph
+spec:
+  sourcePVC: audioarr-config-ceph
+  trigger:
+    schedule: "0 */8 * * *"
+  rsync:
+    sshKeys: volsync-rsync-dst-src-audioarr-nfs
+    address: volsync-rsync-dst-audioarr-nfs
+    copyMethod: Direct
