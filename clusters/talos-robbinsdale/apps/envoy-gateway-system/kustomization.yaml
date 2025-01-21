@@ -2,6 +2,33 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - https://github.com/envoyproxy/gateway/releases/download/v1.2.3/install.yaml
   - gateway.yaml
   - envoy.yaml
+helmCharts:
+  - name: gateway-helm
+    repo: oci://docker.io/envoyproxy
+    version: v1.2.5
+    namespace: envoy-gateway-system
+    releaseName: eg
+    includeCRDs: true
+    valuesFile: gateway-values.yaml
+  - name: gateway-addons-helm
+    repo: oci://docker.io/envoyproxy
+    version: v1.2.5
+    namespace: monitoring
+    releaseName: eg-addons
+    includeCRDs: true
+    valuesFile: gateway-addons-values.yaml
+patches:
+  - patch: |-
+      apiVersion: v1
+      kind: ConfigMap
+      metadata:
+        name: envoy-gateway-grafana-dashboards
+        labels:
+          grafana_dashboard: "1"
+          grafana_folder: envoy-gateway
+    target:
+      kind: ConfigMap
+      name: grafana-dashboards
+      namespace: monitoring
