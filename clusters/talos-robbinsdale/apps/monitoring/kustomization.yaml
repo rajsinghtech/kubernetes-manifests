@@ -23,6 +23,12 @@ helmCharts:
   #   releaseName: promtail
   #   includeCRDs: true
   #   valuesFile: promtail-values.yaml
+  - name: kube-state-metrics
+    repo: https://prometheus-community.github.io/helm-charts
+    version: 5.28.0
+    namespace: monitoring
+    releaseName: kube-state-metrics
+    includeCRDs: true
 
 resources:
   - ./templates/configmap.yaml
