@@ -25,7 +25,7 @@ helmCharts:
     valuesFile: grafana-values.yaml
   - name: fluent-bit
     repo: https://fluent.github.io/helm-charts
-    version: 0.30.4
+    version: 0.48.5
     namespace: monitoring
     releaseName: fluent-bit
     includeCRDs: false
