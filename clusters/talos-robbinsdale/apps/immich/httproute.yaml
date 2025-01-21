@@ -9,6 +9,10 @@ spec:
       kind: Gateway
       name: robbinsdale
       namespace: envoy-gateway-system
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: public
+      namespace: envoy-gateway-system
   hostnames:
     - "immich.rajsingh.info" 
     - "immich.k8s.rajsingh.info" 
