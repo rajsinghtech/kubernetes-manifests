@@ -29,6 +29,10 @@ helmCharts:
     namespace: monitoring
     releaseName: kube-state-metrics
     includeCRDs: true
+    valuesInline:
+      prometheus:
+        monitor:
+          enabled: true
 
 resources:
   - ./templates/configmap.yaml
