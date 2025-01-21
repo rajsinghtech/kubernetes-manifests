@@ -58,14 +58,14 @@ grafana:
     dashboardproviders.yaml:
       apiVersion: 1
       providers:
-        - name: "default"
+        - name: 'envoy-gateway'
           orgId: 1
-          folder: "default"
+          folder: 'envoy-gateway'
           type: file
           disableDeletion: false
           editable: true
           options:
-            path: /var/lib/grafana/dashboards/default
+            path: /var/lib/grafana/dashboards/envoy-gateway
         - name: "argocd"
           orgId: 1
           folder: "argocd"
