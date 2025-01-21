@@ -66,9 +66,9 @@ grafana:
           editable: true
           options:
             path: /var/lib/grafana/dashboards/default
-        - name: 'envoy-gateway'
+        - name: "envoy-gateway"
           orgId: 1
-          folder: 'envoy-gateway'
+          folder: "envoy-gateway"
           type: file
           disableDeletion: false
           editable: true
@@ -98,14 +98,6 @@ grafana:
           editable: true
           options:
             path: /var/lib/grafana/dashboards/proxmox
-        - name: "envoy-gateway"
-          orgId: 1
-          folder: "envoy-gateway"
-          type: file
-          disableDeletion: false
-          editable: true
-          options:
-            path: /var/lib/grafana/dashboards/envoy-gateway
         - name: "kubernetes"
           orgId: 1
           folder: "kubernetes"
