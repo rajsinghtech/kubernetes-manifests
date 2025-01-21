@@ -6,11 +6,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: readarr
+      app: audioarr
   template:
     metadata:
       labels:
-        app: readarr
+        app: audioarr
     spec:
       containers:
         - name: readarr
