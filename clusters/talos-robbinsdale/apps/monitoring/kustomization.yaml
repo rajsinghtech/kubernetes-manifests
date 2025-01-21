@@ -39,7 +39,7 @@ helmCharts:
     valuesFile: alloy-values.yaml
   - name: loki
     repo: https://grafana.github.io/helm-charts
-    version: 4.8.0
+    version: 4.10.0
     namespace: monitoring
     releaseName: loki
     includeCRDs: true
