@@ -14,9 +14,20 @@ helmCharts:
     version: v1.2.5
     valuesInline:
       opentelemetry-collector:
-        enabled: true
+        enabled: false
       grafana:
         enabled: false
+      loki:
+        enabled: false
+      prometheus:
+        enabled: false
+      fluent-bit:
+        enabled: false
+      alloy:
+        enabled: false
+      tempo:
+        enabled: false
+
 resources:
   - gateway.yaml
   - envoy.yaml
