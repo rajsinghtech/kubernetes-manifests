@@ -1,29 +1,4 @@
-# Values for Prometheus
 server:
   fullnameOverride: prometheus
-  retention: 15d
   persistentVolume:
-    enabled: false
-  readinessProbeInitialDelay: 0
-  global:
-    scrape_interval: 15s
-  service:
-    type: LoadBalancer
-  image:
-    repository: prom/prometheus
-  securityContext: {}
-  resources:
-    requests:
-      cpu: 500m
-      memory: 2Gi
-    limits:
-      cpu: 1000m
-      memory: 4Gi
-alertmanager:
-  enabled: false # Using kube-prometheus-stack's alertmanager
-prometheus-pushgateway:
-  enabled: false
-kube-state-metrics:
-  enabled: false
-prometheus-node-exporter:
-  enabled: false
+    enabled: true

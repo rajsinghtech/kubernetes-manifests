@@ -24,5 +24,3 @@ tempo:
         http:
           endpoint: "0.0.0.0:4318"
 fullnameOverride: tempo
-service:
-  type: LoadBalancer
