@@ -2,13 +2,62 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 helmCharts:
-  - name: kube-prometheus-stack
+  # - name: kube-prometheus-stack
+  #   repo: https://prometheus-community.github.io/helm-charts
+  #   version: 68.2.1
+  #   namespace: monitoring
+  #   releaseName: kube-prometheus-stack
+  #   includeCRDs: true
+  #   valuesFile: values.yaml
+  - name: prometheus
     repo: https://prometheus-community.github.io/helm-charts
-    version: 68.2.1
+    version: 25.21.0
     namespace: monitoring
-    releaseName: kube-prometheus-stack
+    releaseName: prometheus
     includeCRDs: true
-    valuesFile: values.yaml
+    valuesFile: prometheus-values.yaml
+  - name: grafana
+    repo: https://grafana.github.io/helm-charts
+    version: 8.0.0
+    namespace: monitoring
+    releaseName: grafana
+    includeCRDs: false
+    valuesFile: grafana-values.yaml
+  - name: fluent-bit
+    repo: https://fluent.github.io/helm-charts
+    version: 0.30.4
+    namespace: monitoring
+    releaseName: fluent-bit
+    includeCRDs: false
+    valuesFile: fluent-bit-values.yaml
+  - name: alloy
+    repo: https://grafana.github.io/helm-charts
+    version: 0.9.2
+    namespace: monitoring
+    releaseName: alloy
+    includeCRDs: false
+    valuesFile: alloy-values.yaml
+  - name: loki
+    repo: https://grafana.github.io/helm-charts
+    version: 4.8.0
+    namespace: monitoring
+    releaseName: loki
+    includeCRDs: true
+    valuesFile: loki-values.yaml
+  - name: tempo
+    repo: https://grafana.github.io/helm-charts
+    version: 1.3.1
+    namespace: monitoring
+    releaseName: tempo
+    includeCRDs: false
+    valuesFile: tempo-values.yaml
+  - name: opentelemetry-collector
+    repo: https://open-telemetry.github.io/opentelemetry-helm-charts
+    version: 0.113.0
+    namespace: monitoring
+    releaseName: opentelemetry-collector
+    includeCRDs: true
+    valuesFile: opentelemetry-collector-values.yaml
   # - name: loki
   #   repo: https://grafana.github.io/helm-charts
   #   version: 6.12.0
@@ -43,23 +92,3 @@ resources:
   # - ./metrics-server
   # - ./templates/scrutiny-collector.yaml
   # - ./templates/scrutiny-web.yaml
-patches:
-  # This is required because some CRD annotations are too long.
-  - target:
-      group: apiextensions.k8s.io
-      version: v1
-      kind: CustomResourceDefinition
-    path: ./patches/sync-options-replace.yaml
-  - patch: |-
-      apiVersion: v1
-      kind: ConfigMap
-      metadata:
-        name: envoy-gateway-grafana-dashboards
-        namespace: monitoring
-        labels:
-          grafana_dashboard: "1"
-          grafana_folder: envoy-gateway
-    target:
-      kind: ConfigMap
-      name: grafana-dashboards
-      namespace: monitoring
