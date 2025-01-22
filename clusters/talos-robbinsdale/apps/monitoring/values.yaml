@@ -136,8 +136,8 @@ grafana:
           namespace: envoy-gateway-system
 
 prometheus:
-  fullnameOverride: "prometheus"
   server:
+    fullnameOverride: "prometheus"
     additionalScrapeConfigs:
       - job_name: opencost
         honor_labels: true
