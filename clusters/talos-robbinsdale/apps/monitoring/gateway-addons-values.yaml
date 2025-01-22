@@ -4,3 +4,6 @@ prometheus:
   enabled: false
 opentelemetry-collector:
   enabled: true
+fluent-bit:
+  serviceMonitor:
+    enabled: true
