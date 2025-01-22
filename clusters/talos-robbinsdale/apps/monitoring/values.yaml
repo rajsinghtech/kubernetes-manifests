@@ -148,7 +148,8 @@ grafana:
       cert-manager.io/cluster-issuer: luke-issuer
 
 prometheus:
-  fullnameOverride: "prometheus"
+  server:
+    fullnameOverride: "prometheus"
   route:
     main:
       enabled: true
@@ -233,8 +234,8 @@ nodeExporter:
       enabled: false
 
 alertmanager:
-  fullnameOverride: "alertmanager"
-  nameOverride: "alertmanager"
+  server:
+    fullnameOverride: "alertmanager"
   alertmanagerSpec:
     replicas: 3
     resources:
