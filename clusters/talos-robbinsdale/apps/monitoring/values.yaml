@@ -14,7 +14,7 @@ grafana:
       provider:
         foldersFromFilesStructure: true
   persistence:
-    enabled: false 
+    enabled: false
   # admin:
   #   existingSecret: "grafana-credentials"
   #   userKey: admin-user
@@ -30,57 +30,57 @@ grafana:
     dashboardproviders.yaml:
       apiVersion: 1
       providers:
-        - name: 'default'
+        - name: "default"
           orgId: 1
-          folder: 'default'
+          folder: "default"
           type: file
           disableDeletion: false
           editable: true
           options:
             path: /var/lib/grafana/dashboards/default
-        - name: 'argocd'
+        - name: "argocd"
           orgId: 1
-          folder: 'argocd'
+          folder: "argocd"
           type: file
           disableDeletion: false
           editable: true
           options:
             path: /var/lib/grafana/dashboards/argocd
-        - name: 'ceph'
+        - name: "ceph"
           orgId: 1
-          folder: 'ceph'
+          folder: "ceph"
           type: file
           disableDeletion: false
           editable: true
           options:
             path: /var/lib/grafana/dashboards/ceph
-        - name: 'proxmox'
+        - name: "proxmox"
           orgId: 1
-          folder: 'proxmox'
+          folder: "proxmox"
           type: file
           disableDeletion: false
           editable: true
           options:
             path: /var/lib/grafana/dashboards/proxmox
-        - name: 'envoy-gateway'
+        - name: "envoy-gateway"
           orgId: 1
-          folder: 'envoy-gateway'
+          folder: "envoy-gateway"
           type: file
           disableDeletion: false
           editable: true
           options:
             path: /var/lib/grafana/dashboards/envoy-gateway
-        - name: 'kubernetes'
+        - name: "kubernetes"
           orgId: 1
-          folder: 'kubernetes'
+          folder: "kubernetes"
           type: file
           disableDeletion: false
           editable: true
           options:
             path: /var/lib/grafana/dashboards/kubernetes
-        - name: 'volsync'
+        - name: "volsync"
           orgId: 1
-          folder: 'volsync'
+          folder: "volsync"
           type: file
           disableDeletion: false
           editable: true
@@ -126,18 +126,18 @@ grafana:
       enabled: true
       apiVersion: gateway.networking.k8s.io/v1
       kind: HTTPRoute
-      hostnames: 
+      hostnames:
         - grafana2.lukehouge.com
         - grafana2.rajsingh.info
-      parentRefs: 
-      - group: gateway.networking.k8s.io
-        kind: Gateway
-        name: robbinsdale
-        namespace: envoy-gateway-system
+      parentRefs:
+        - group: gateway.networking.k8s.io
+          kind: Gateway
+          name: robbinsdale
+          namespace: envoy-gateway-system
 
 prometheus:
+  fullnameOverride: "prometheus"
   server:
-    fullnameOverride: "prometheus"
     additionalScrapeConfigs:
       - job_name: opencost
         honor_labels: true
@@ -146,10 +146,10 @@ prometheus:
         metrics_path: /metrics
         scheme: http
         dns_sd_configs:
-        - names:
-          - opencost.opencost
-          type: 'A'
-          port: 9003
+          - names:
+              - opencost.opencost
+            type: "A"
+            port: 9003
     retention: 30d
 
 kubeProxy:
