@@ -1,4 +1,4 @@
-# nameOverride: prometheus
+fullnameOverride: prometheus
 grafana:
   # fullnameOverride: "grafana"
   resources:
