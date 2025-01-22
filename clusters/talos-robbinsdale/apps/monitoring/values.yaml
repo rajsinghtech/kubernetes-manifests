@@ -1,3 +1,4 @@
+nameOverride: prometheus
 grafana:
   fullnameOverride: "grafana"
   resources:
@@ -203,6 +204,7 @@ prometheus:
               storage: 50Gi
 prometheusOperator:
   fullnameOverride: "prometheus-operator"
+  nameOverride: "prometheus-operator"
   resources:
     limits:
       memory: 50Mi
@@ -212,6 +214,7 @@ prometheusOperator:
 
 prometheus-node-exporter:
   fullnameOverride: "prometheus-node-exporter"
+  nameOverride: "prometheus-node-exporter"
   resources:
     limits:
       memory: 50Mi
@@ -231,6 +234,7 @@ nodeExporter:
 
 alertmanager:
   fullnameOverride: "alertmanager"
+  nameOverride: "alertmanager"
   alertmanagerSpec:
     replicas: 3
     resources:
@@ -263,6 +267,7 @@ alertmanager:
 
 kube-state-metrics:
   fullnameOverride: "kube-state-metrics"
+  nameOverride: "kube-state-metrics"
   enabled: true
   resources:
     limits:
