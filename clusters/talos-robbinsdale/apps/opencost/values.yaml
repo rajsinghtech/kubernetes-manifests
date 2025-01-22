@@ -10,6 +10,6 @@ opencost:
   prometheus:
     internal:
       enabled: true
-      serviceName: kube-prometheus-stack-prometheus
+      serviceName: prometheus
       namespaceName: monitoring
       port: 9090   
