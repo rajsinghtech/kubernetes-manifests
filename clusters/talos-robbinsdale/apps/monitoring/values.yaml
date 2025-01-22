@@ -152,6 +152,10 @@ prometheus:
             port: 9003
     retention: 30d
 
+alertmanager:
+  server:
+    fullnameOverride: "alertmanager"
+
 kubeProxy:
   enabled: false
 
