@@ -1,48 +1,5 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-helmCharts:
-  - name: kube-prometheus-stack
-    repo: https://prometheus-community.github.io/helm-charts
-    version: 68.2.1
-    namespace: monitoring
-    releaseName: kube-prometheus-stack
-    includeCRDs: true
-    valuesFile: values.yaml
-
-  - name: gateway-addons-helm
-    repo: oci://docker.io/envoyproxy
-    version: v1.2.5
-    namespace: monitoring
-    releaseName: eg-addons
-    includeCRDs: true
-    valuesFile: gateway-addons-values.yaml
-
 resources:
-  - ./templates/configmap.yaml
-  - ./templates/alertconfig.yaml
-  - ./templates/secrets.yaml
-  - ./templates/namespace.yaml
-  - ./karma
-  # - ./metrics-server
-  # - ./templates/scrutiny-collector.yaml
-  # - ./templates/scrutiny-web.yaml
-patches:
-  # This is required because some CRD annotations are too long.
-  - target:
-      group: apiextensions.k8s.io
-      version: v1
-      kind: CustomResourceDefinition
-    path: ./patches/sync-options-replace.yaml
-  - patch: |-
-      apiVersion: v1
-      kind: ConfigMap
-      metadata:
-        name: envoy-gateway-grafana-dashboards
-        labels:
-          grafana_dashboard: "1"
-          grafana_folder: envoy-gateway
-    target:
-      kind: ConfigMap
-      name: grafana-dashboards
-      namespace: monitoring
+  - https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/refs/tags/v0.79.2/bundle.yaml
