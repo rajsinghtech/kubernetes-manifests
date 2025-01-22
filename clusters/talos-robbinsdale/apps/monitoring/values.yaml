@@ -138,6 +138,21 @@ grafana:
 prometheus:
   prometheusSpec:
     serviceMonitorSelector: {}
+    externalUrl: https://prometheus.rajsingh.info
+    serviceMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false
+    probeSelectorNilUsesHelmValues: false
+    ruleSelectorNilUsesHelmValues: false
+    enableRemoteWriteReceiver: true
+    enableFeatures:
+      - exemplar-storage
+    retention: 30d
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          resources:
+            requests:
+              storage: 50Gi
   route:
     main:
       enabled: true
