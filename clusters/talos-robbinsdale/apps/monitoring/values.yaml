@@ -136,6 +136,8 @@ grafana:
           namespace: envoy-gateway-system
 
 prometheus:
+  prometheusSpec:
+    serviceMonitorSelector: {}
   route:
     main:
       enabled: true
