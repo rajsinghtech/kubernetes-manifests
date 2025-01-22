@@ -136,6 +136,19 @@ grafana:
           namespace: envoy-gateway-system
 
 prometheus:
+  route:
+    main:
+      enabled: true
+      apiVersion: gateway.networking.k8s.io/v1
+      kind: HTTPRoute
+      hostnames:
+        - prometheus.lukehouge.com
+        - prometheus.rajsingh.info
+      parentRefs:
+        - group: gateway.networking.k8s.io
+          kind: Gateway
+          name: robbinsdale
+          namespace: envoy-gateway-system
   server:
     additionalScrapeConfigs:
       - job_name: opencost
