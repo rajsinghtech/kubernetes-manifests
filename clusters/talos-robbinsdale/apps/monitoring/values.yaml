@@ -1,4 +1,5 @@
 grafana:
+  fullnameOverride: "grafana"
   resources:
     requests:
       cpu: 500m
@@ -146,6 +147,7 @@ grafana:
       cert-manager.io/cluster-issuer: luke-issuer
 
 prometheus:
+  fullnameOverride: "prometheus"
   route:
     main:
       enabled: true
@@ -232,6 +234,7 @@ prometheusOperator:
       memory: 50Mi
 
 prometheus-node-exporter:
+  fullnameOverride: "prometheus-node-exporter"
   resources:
     limits:
       memory: 50Mi
@@ -250,6 +253,7 @@ nodeExporter:
       enabled: false
 
 alertmanager:
+  fullnameOverride: "alertmanager"
   alertmanagerSpec:
     replicas: 3
     resources:
@@ -281,6 +285,7 @@ alertmanager:
         namespace: envoy-gateway-system
 
 kube-state-metrics:
+  fullnameOverride: "kube-state-metrics"
   enabled: true
   resources:
     limits:
