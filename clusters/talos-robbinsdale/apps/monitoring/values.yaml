@@ -1,6 +1,6 @@
-nameOverride: prometheus
+# nameOverride: prometheus
 grafana:
-  fullnameOverride: "grafana"
+  # fullnameOverride: "grafana"
   resources:
     requests:
       cpu: 500m
@@ -128,8 +128,8 @@ grafana:
       apiVersion: gateway.networking.k8s.io/v1
       kind: HTTPRoute
       hostnames: 
-        - grafana.lukehouge.com
-        - grafana.rajsingh.info
+        - grafana2.lukehouge.com
+        - grafana2.rajsingh.info
       parentRefs: 
       - group: gateway.networking.k8s.io
         kind: Gateway
