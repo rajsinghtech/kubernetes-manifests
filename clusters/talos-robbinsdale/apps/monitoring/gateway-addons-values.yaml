@@ -1,5 +1,5 @@
 grafana:
-  enabled: false
+  enabled: true
 prometheus:
   enabled: true
 opentelemetry-collector:
