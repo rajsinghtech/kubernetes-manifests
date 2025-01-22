@@ -9,26 +9,7 @@ helmCharts:
     releaseName: kube-prometheus-stack
     includeCRDs: true
     valuesFile: values.yaml
-  # - name: loki
-  #   repo: https://grafana.github.io/helm-charts
-  #   version: 6.12.0
-  #   namespace: monitoring
-  #   releaseName: loki
-  #   includeCRDs: true
-  #   valuesFile: loki-values.yaml
-  # - name: promtail
-  #   repo: https://grafana.github.io/helm-charts
-  #   version: 6.0.0
-  #   namespace: monitoring
-  #   releaseName: promtail
-  #   includeCRDs: true
-  #   valuesFile: promtail-values.yaml
-  # - name: kube-state-metrics
-  #   repo: https://prometheus-community.github.io/helm-charts
-  #   version: 5.28.0
-  #   namespace: monitoring
-  #   releaseName: kube-state-metrics
-  #   includeCRDs: true
+
   - name: gateway-addons-helm
     repo: oci://docker.io/envoyproxy
     version: v1.2.5

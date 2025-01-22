@@ -1,6 +1,5 @@
-fullnameOverride: prometheus
 grafana:
-  # fullnameOverride: "grafana"
+  fullnameOverride: "grafana"
   resources:
     requests:
       cpu: 500m
@@ -135,46 +134,10 @@ grafana:
         kind: Gateway
         name: robbinsdale
         namespace: envoy-gateway-system
-  ingress:
-    enabled: false
-    ingressClassName: nginx
-    hosts:
-      - grafana.lukehouge.com
-    tls:
-      - hosts:
-          - grafana.lukehouge.com
-        secretName: grafana-luke-tls
-    annotations:
-      cert-manager.io/cluster-issuer: luke-issuer
 
 prometheus:
   server:
     fullnameOverride: "prometheus"
-  route:
-    main:
-      enabled: true
-      apiVersion: gateway.networking.k8s.io/v1
-      kind: HTTPRoute
-      hostnames: 
-        - prometheus.lukehouge.com
-        - prometheus.rajsingh.info
-      parentRefs: 
-      - group: gateway.networking.k8s.io
-        kind: Gateway
-        name: robbinsdale
-        namespace: envoy-gateway-system
-  ingress:
-    enabled: false
-  prometheusSpec:
-    replicas: 2
-    serviceMonitorSelectorNilUsesHelmValues: false
-    podMonitorSelectorNilUsesHelmValues: false
-    probeSelectorNilUsesHelmValues: false
-    ruleSelectorNilUsesHelmValues: false
-
-    enableRemoteWriteReceiver: true
-    enableFeatures:
-      - exemplar-storage
     additionalScrapeConfigs:
       - job_name: opencost
         honor_labels: true
@@ -189,95 +152,6 @@ prometheus:
           port: 9003
     retention: 30d
 
-    resources:
-      requests:
-        cpu: 2
-        memory: 4Gi
-      limits:
-        memory: 4Gi
-
-    storageSpec:
-      volumeClaimTemplate:
-        spec:
-          # storageClassName: rook-cephfs
-          resources:
-            requests:
-              storage: 50Gi
-prometheusOperator:
-  fullnameOverride: "prometheus-operator"
-  nameOverride: "prometheus-operator"
-  resources:
-    limits:
-      memory: 50Mi
-    requests:
-      cpu: 150m
-      memory: 50Mi
-
-prometheus-node-exporter:
-  fullnameOverride: "prometheus-node-exporter"
-  nameOverride: "prometheus-node-exporter"
-  resources:
-    limits:
-      memory: 50Mi
-    requests:
-      cpu: 100m
-      memory: 50Mi
-
-nodeExporter:
-  enabled: true
-  operatingSystems:
-    linux:
-      enabled: true
-    aix:
-      enabled: false
-    darwin:
-      enabled: false
-
-alertmanager:
-  server:
-    fullnameOverride: "alertmanager"
-  alertmanagerSpec:
-    replicas: 3
-    resources:
-      limits:
-        memory: 50Mi
-      requests:
-        cpu: 100m
-        memory: 50Mi
-
-    storage:
-      volumeClaimTemplate:
-        spec:
-          # storageClassName: rook-cephfs
-          resources:
-            requests:
-              storage: 10Gi
-  route:
-    main:
-      enabled: true
-      apiVersion: gateway.networking.k8s.io/v1
-      kind: HTTPRoute
-      hostnames: 
-        - alertmanager.lukehouge.com
-        - alertmanager.rajsingh.info
-      parentRefs: 
-      - group: gateway.networking.k8s.io
-        kind: Gateway
-        name: robbinsdale
-        namespace: envoy-gateway-system
-
-kube-state-metrics:
-  fullnameOverride: "kube-state-metrics"
-  nameOverride: "kube-state-metrics"
-  enabled: true
-  resources:
-    limits:
-      memory: 50Mi
-    requests:
-      cpu: 100m
-      memory: 50Mi
-
-# Disable kubeProxy scraping since we disable kube-proxy to use cilium KPR
 kubeProxy:
   enabled: false
 
