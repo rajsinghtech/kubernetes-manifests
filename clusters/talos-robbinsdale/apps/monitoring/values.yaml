@@ -1,5 +1,4 @@
 grafana:
-  enabled: false
   fullnameOverride: "grafana"
   resources:
     requests:
@@ -137,11 +136,24 @@ grafana:
           namespace: envoy-gateway-system
 
 prometheus:
-  enabled: false
+  server:
+    additionalScrapeConfigs:
+      - job_name: opencost
+        honor_labels: true
+        scrape_interval: 1m
+        scrape_timeout: 10s
+        metrics_path: /metrics
+        scheme: http
+        dns_sd_configs:
+          - names:
+              - opencost.opencost
+            type: "A"
+            port: 9003
+    retention: 30d
 
 alertmanager:
-  enabled: false
-
+  enabled: true
+  
 kubeProxy:
   enabled: false
 
