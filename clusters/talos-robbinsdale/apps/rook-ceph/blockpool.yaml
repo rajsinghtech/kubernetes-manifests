@@ -9,3 +9,25 @@ spec:
     size: 3
   parameters:
     compression_mode: passive
+---
+apiVersion: ceph.rook.io/v1
+kind: CephBlockPool
+metadata:
+  name: ceph-blockpool-replicated-nvme
+  namespace: rook-ceph
+spec:
+  failureDomain: osd
+  replicated:
+    size: 3
+  deviceClass: nvme
+---
+apiVersion: ceph.rook.io/v1
+kind: CephBlockPool
+metadata:
+  name: ceph-blockpool-duplicated-nvme
+  namespace: rook-ceph
+spec:
+  failureDomain: osd
+  replicated:
+    size: 2
+  deviceClass: nvme
