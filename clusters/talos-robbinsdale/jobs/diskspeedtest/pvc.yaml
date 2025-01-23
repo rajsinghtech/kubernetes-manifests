@@ -52,3 +52,29 @@ spec:
   resources:
     requests:
       storage: 13Gi
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: kbench-pvc-cephblockpool-duplicated-nvme
+spec:
+  volumeMode: Filesystem
+  storageClassName: ceph-blockpool-duplicated-nvme
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 13Gi
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: kbench-pvc-cephblockpool-replicated-nvme
+spec:
+  volumeMode: Filesystem
+  storageClassName: ceph-blockpool-replicated-nvme
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 13Gi
