@@ -68,8 +68,8 @@ spec:
       volumes:
       - name: vol1
         persistentVolumeClaim:
-          claimName: kbench-pvc-cephblockpool-replicated-nvme
+          claimName: kbench-pvc-ceph-block-replicated-nvme
       - name: vol2
         persistentVolumeClaim:
-          claimName: kbench-pvc-cephblockpool-duplicated-nvme
+          claimName: kbench-pvc-ceph-block-duplicated-nvme
   backoffLimit: 0

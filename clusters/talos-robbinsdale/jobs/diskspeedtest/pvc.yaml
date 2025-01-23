@@ -29,11 +29,11 @@ spec:
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: kbench-pvc-cephblock
+  name: kbench-pvc-ceph-block-replicated-nvme
 spec:
   volumeMode: Filesystem
   #volumeMode: Block
-  storageClassName: ceph-block-replicated
+  storageClassName: ceph-block-replicated-nvme
   accessModes:
     - ReadWriteOnce
   resources:
@@ -56,10 +56,10 @@ spec:
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: kbench-pvc-cephblockpool-duplicated-nvme
+  name: kbench-pvc-ceph-block-duplicated-nvme
 spec:
   volumeMode: Filesystem
-  storageClassName: ceph-blockpool-duplicated-nvme
+  storageClassName: ceph-block-duplicated-nvme
   accessModes:
     - ReadWriteOnce
   resources:
@@ -69,10 +69,10 @@ spec:
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: kbench-pvc-cephblockpool-replicated-nvme
+  name: kbench-pvc-ceph-block-replicated-nvme
 spec:
   volumeMode: Filesystem
-  storageClassName: ceph-blockpool-replicated-nvme
+  storageClassName: ceph-block-replicated-nvme
   accessModes:
     - ReadWriteOnce
   resources:
