@@ -65,7 +65,14 @@ static:
 	talosctl get staticpods --talosconfig=./talosconfig -n titan.local -e k8s.robbinsdale.local
 
 link:
+	talosctl get links --talosconfig=./talosconfig -n tank.local -e k8s.robbinsdale.local
 	talosctl get links --talosconfig=./talosconfig -n titan.local -e k8s.robbinsdale.local
+	talosctl get links --talosconfig=./talosconfig -n stone.local -e k8s.robbinsdale.local
+
+addresses:
+	talosctl get addresses --talosconfig=./talosconfig -n tank.local -e k8s.robbinsdale.local
+	talosctl get addresses --talosconfig=./talosconfig -n titan.local -e k8s.robbinsdale.local
+	talosctl get addresses --talosconfig=./talosconfig -n stone.local -e k8s.robbinsdale.local
 
 reset:
 	talosctl -e tank.local -n tank.local reset --system-labels-to-wipe EPHEMERAL,STATE --graceful=false --reboot --user-disks-to-wipe /dev/nvme1n1,/dev/sda,/dev/sdb,/dev/sdc,/dev/sdd
