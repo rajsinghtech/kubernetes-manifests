@@ -69,8 +69,6 @@ volumeBindingMode: Immediate
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  annotations:
-    storageclass.kubernetes.io/is-default-class: "true"
   name: ceph-block-replicated-nvme
 parameters:
   clusterID: rook-ceph
@@ -92,8 +90,6 @@ volumeBindingMode: Immediate
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  annotations:
-    storageclass.kubernetes.io/is-default-class: "true"
   name: ceph-block-duplicated-nvme
 parameters:
   clusterID: rook-ceph
