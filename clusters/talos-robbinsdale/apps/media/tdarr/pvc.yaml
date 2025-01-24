@@ -13,6 +13,18 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  name: tdarr-server
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: nfs-truenas
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
   name: tdarr-transcode-cache
 spec:
   accessModes:

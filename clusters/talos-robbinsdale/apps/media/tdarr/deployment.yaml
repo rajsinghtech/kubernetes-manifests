@@ -47,7 +47,9 @@ spec:
         #   value: "all"
         volumeMounts:
         - name: tdarr-config
-          mountPath: /app
+          mountPath: /app/config
+        - name: tdarr-server
+          mountPath: /app/server
         - name: tv-volume
           mountPath: /media/tvshows
         - name: movies-volume
