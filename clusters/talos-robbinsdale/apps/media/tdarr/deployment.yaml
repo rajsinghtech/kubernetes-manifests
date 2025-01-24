@@ -66,10 +66,10 @@ spec:
           claimName: tdarr-config
       - name: tv-volume
         persistentVolumeClaim:
-          claimName: tv-volume
+          claimName: sonarr-tv
       - name: movies-volume
         persistentVolumeClaim:
-          claimName: movies-volume
+          claimName: radarr-movies
       - name: transcode-cache
         persistentVolumeClaim:
           claimName: transcode-cache
