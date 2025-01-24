@@ -72,4 +72,4 @@ spec:
           claimName: radarr-movies
       - name: transcode-cache
         persistentVolumeClaim:
-          claimName: transcode-cache
+          claimName: tdarr-transcode-cache
