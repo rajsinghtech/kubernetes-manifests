@@ -66,6 +66,9 @@ spec:
       - name: tdarr-config
         persistentVolumeClaim:
           claimName: tdarr-config
+      - name: tdarr-server
+        persistentVolumeClaim:
+          claimName: tdarr-server
       - name: tv-volume
         persistentVolumeClaim:
           claimName: sonarr-tv
