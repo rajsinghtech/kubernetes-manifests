@@ -25,7 +25,7 @@ spec:
         - containerPort: 8266
         env:
         - name: serverIP
-          value: "0.0.0.0"
+          value: "tdarr"
         - name: serverPort
           value: "8266"
         - name: inContainer
