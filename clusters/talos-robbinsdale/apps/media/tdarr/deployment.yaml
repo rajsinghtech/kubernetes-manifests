@@ -14,6 +14,10 @@ spec:
       labels:
         app: tdarr
     spec:
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 1
+      type: RollingUpdate
       containers:
       - name: tdarr
         image: ghcr.io/haveagitgat/tdarr
@@ -38,9 +42,9 @@ spec:
         - name: TZ
           value: "America/Chicago"
         - name: PUID
-          value: "1000"
+          value: "0"
         - name: PGID
-          value: "1000"
+          value: "0"
         # - name: NVIDIA_DRIVER_CAPABILITIES
         #   value: "all"
         # - name: NVIDIA_VISIBLE_DEVICES
@@ -62,6 +66,13 @@ spec:
             port: 8265
           initialDelaySeconds: 30
           periodSeconds: 10
+        resources:
+          requests:
+            memory: "7Gi"
+            cpu: "5"
+          limits:
+            memory: "7Gi"
+            cpu: "5"
       volumes:
       - name: tdarr-config
         persistentVolumeClaim:
