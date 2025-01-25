@@ -1,15 +1,11 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: tdarr-worker
   labels:
     app: tdarr-worker
 spec:
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 1
+  serviceName: tdarr-worker
   replicas: 3
   selector:
     matchLabels:
@@ -19,54 +15,53 @@ spec:
       labels:
         app: tdarr-worker
     spec:
-      type: RollingUpdate
       containers:
-      - name: tdarr-worker
-        image: ghcr.io/haveagitgat/tdarr_node
-        ports:
-        - containerPort: 8266
-        env:
-        - name: serverIP
-          value: "tdarr"
-        - name: serverPort
-          value: "8266"
-        - name: inContainer
-          value: "true"
-        - name: nodeName
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.name
-        - name: TZ
-          value: "America/Chicago"
-        - name: PUID
-          value: "0"
-        - name: PGID
-          value: "0"
-        # - name: NVIDIA_DRIVER_CAPABILITIES
-        #   value: "all"
-        # - name: NVIDIA_VISIBLE_DEVICES
-        #   value: "all"
-        volumeMounts:
-        - name: tv-volume
-          mountPath: /media/tvshows
-        - name: movies-volume
-          mountPath: /media/movies
-        - name: transcode-cache
-          mountPath: /temp
-        resources:
-          requests:
-            memory: "7Gi"
-            cpu: "5"
-          limits:
-            memory: "7Gi"
-            cpu: "5"
+        - name: tdarr-worker
+          image: ghcr.io/haveagitgat/tdarr_node
+          ports:
+            - containerPort: 8266
+          env:
+            - name: serverIP
+              value: "tdarr"
+            - name: serverPort
+              value: "8266"
+            - name: inContainer
+              value: "true"
+            - name: nodeName
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: TZ
+              value: "America/Chicago"
+            - name: PUID
+              value: "0"
+            - name: PGID
+              value: "0"
+          # - name: NVIDIA_DRIVER_CAPABILITIES
+          #   value: "all"
+          # - name: NVIDIA_VISIBLE_DEVICES
+          #   value: "all"
+          volumeMounts:
+            - name: tv-volume
+              mountPath: /media/tvshows
+            - name: movies-volume
+              mountPath: /media/movies
+            - name: transcode-cache
+              mountPath: /temp
+          resources:
+            requests:
+              memory: "7Gi"
+              cpu: "5"
+            limits:
+              memory: "7Gi"
+              cpu: "5"
       volumes:
-      - name: tv-volume
-        persistentVolumeClaim:
-          claimName: sonarr-tv
-      - name: movies-volume
-        persistentVolumeClaim:
-          claimName: radarr-movies
-      - name: transcode-cache
-        persistentVolumeClaim:
-          claimName: tdarr-transcode-cache
+        - name: tv-volume
+          persistentVolumeClaim:
+            claimName: sonarr-tv
+        - name: movies-volume
+          persistentVolumeClaim:
+            claimName: radarr-movies
+        - name: transcode-cache
+          persistentVolumeClaim:
+            claimName: tdarr-transcode-cache
