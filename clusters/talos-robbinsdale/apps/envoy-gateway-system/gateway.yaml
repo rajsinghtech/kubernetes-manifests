@@ -113,6 +113,15 @@ spec:
       value: 10.69.10.16
   gatewayClassName: eg
   listeners:
+    - name: fleet-telemetry
+      protocol: TLS
+      port: 443
+      hostname: "fleet-telemetry.rajsingh.info"
+      allowedRoutes:
+        namespaces:
+          from: tesla
+      tls:
+        mode: Passthrough
     - name: wildcard-raj-https
       protocol: HTTPS
       port: 443
@@ -139,12 +148,3 @@ spec:
         - group: ''
           kind: Secret
           name: luke-wildcard-tls
-    - name: fleet-telemetry
-      protocol: TLS
-      port: 8443
-      hostname: "fleet-telemetry.rajsingh.info"
-      allowedRoutes:
-        namespaces:
-          from: tesla
-      tls:
-        mode: Passthrough
