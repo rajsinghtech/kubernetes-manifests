@@ -50,11 +50,11 @@ spec:
               mountPath: /temp
           resources:
             requests:
-              memory: "7Gi"
-              cpu: "10"
+              memory: "5Gi"
+              cpu: "5"
             limits:
-              memory: "7Gi"
-              cpu: "10"
+              memory: "5Gi"
+              cpu: "5"
       volumes:
         - name: tv-volume
           persistentVolumeClaim:
