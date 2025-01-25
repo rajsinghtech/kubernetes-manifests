@@ -119,7 +119,13 @@ spec:
       hostname: "fleet-telemetry.rajsingh.info"
       allowedRoutes:
         namespaces:
-          from: tesla
+          from: Selector
+          selector:
+            matchLabels:
+              kubernetes.io/metadata.name: tesla
+        kinds:
+          - kind: TLSRoute
+            group: gateway.networking.k8s.io
       tls:
         mode: Passthrough
     - name: wildcard-raj-https
