@@ -51,10 +51,10 @@ spec:
           resources:
             requests:
               memory: "7Gi"
-              cpu: "5"
+              cpu: "10"
             limits:
               memory: "7Gi"
-              cpu: "5"
+              cpu: "10"
       volumes:
         - name: tv-volume
           persistentVolumeClaim:
