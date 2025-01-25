@@ -19,7 +19,7 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 1Gi
+      storage: 10Gi
   storageClassName: nfs-truenas
 ---
 apiVersion: v1
