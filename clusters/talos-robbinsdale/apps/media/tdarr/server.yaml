@@ -5,6 +5,11 @@ metadata:
   labels:
     app: tdarr
 spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
   replicas: 1
   selector:
     matchLabels:
@@ -14,10 +19,6 @@ spec:
       labels:
         app: tdarr
     spec:
-      rollingUpdate:
-        maxSurge: 1
-        maxUnavailable: 1
-      type: RollingUpdate
       containers:
       - name: tdarr
         image: ghcr.io/haveagitgat/tdarr
