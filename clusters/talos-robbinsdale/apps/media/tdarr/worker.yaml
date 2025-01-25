@@ -5,6 +5,11 @@ metadata:
   labels:
     app: tdarr-worker
 spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
   replicas: 3
   selector:
     matchLabels:
@@ -14,9 +19,6 @@ spec:
       labels:
         app: tdarr-worker
     spec:
-      rollingUpdate:
-        maxSurge: 1
-        maxUnavailable: 1
       type: RollingUpdate
       containers:
       - name: tdarr-worker
