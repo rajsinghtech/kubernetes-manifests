@@ -5,4 +5,4 @@ persistence:
   existingClaim: open-webui
 pipelines:
   enabled: false
-ollamaUrls: ["http://ollama.ollama.svc.cluster.local:11434"]
+ollamaUrls: ["http://tailscale-mac-mini:11434"]
