@@ -4,11 +4,11 @@ kind: Kustomization
 namespace: ollama
 
 helmCharts:
-  - name: ollama
-    repo: https://otwld.github.io/ollama-helm/
-    version: 1.4.0
-    releaseName: ollama
-    valuesFile: values.yaml
+  # - name: ollama
+  #   repo: https://otwld.github.io/ollama-helm/
+  #   version: 1.4.0
+  #   releaseName: ollama
+  #   valuesFile: values.yaml
 
 
   - name: open-webui
@@ -19,3 +19,4 @@ helmCharts:
 
 resources:
   - httproute.yaml
+  - tailscale.yaml
