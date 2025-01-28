@@ -14,6 +14,3 @@ helmCharts:
     releaseName: kube-prometheus-stack
     includeCRDs: true
     valuesFile: values-kube-prometheus-stack.yaml
-  - ./karma
-  - alertconfig.yaml
-  - secrets.yaml
