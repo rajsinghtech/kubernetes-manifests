@@ -18,6 +18,6 @@ spec:
   trigger:
     schedule: "0 */5 * * *"
   rsync:
-    sshKeys: volsync-rsync-dst-src-plex-nfs
-    address: volsync-rsync-dst-plex-nfs
+    sshKeys: volsync-rsync-dst-src-plex-config-nfs
+    address: volsync-rsync-dst-plex-config-nfs
     copyMethod: Direct

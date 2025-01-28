@@ -18,6 +18,6 @@ spec:
   trigger:
     manual: first
   rsync:
-    sshKeys: volsync-rsync-dst-src-plex-ceph
-    address: volsync-rsync-dst-plex-ceph
+    sshKeys: volsync-rsync-dst-src-plex-config-ceph
+    address: volsync-rsync-dst-plex-config-ceph
     copyMethod: Direct

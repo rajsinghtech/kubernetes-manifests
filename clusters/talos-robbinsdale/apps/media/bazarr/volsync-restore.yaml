@@ -18,6 +18,6 @@ spec:
   trigger:
     manual: first
   rsync:
-    sshKeys: volsync-rsync-dst-src-bazarr-ceph
-    address: volsync-rsync-dst-bazarr-ceph
+    sshKeys: volsync-rsync-dst-src-bazarr-config-ceph
+    address: volsync-rsync-dst-bazarr-config-ceph
     copyMethod: Direct

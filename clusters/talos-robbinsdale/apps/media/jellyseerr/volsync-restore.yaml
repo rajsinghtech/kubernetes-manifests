@@ -18,6 +18,6 @@ spec:
   trigger:
     manual: first
   rsync:
-    sshKeys: volsync-rsync-dst-src-jellyseerr-ceph
-    address: volsync-rsync-dst-jellyseerr-ceph
+    sshKeys: volsync-rsync-dst-src-jellyseerr-config-ceph
+    address: volsync-rsync-dst-jellyseerr-config-ceph
     copyMethod: Direct

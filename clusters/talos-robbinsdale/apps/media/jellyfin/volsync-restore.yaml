@@ -18,6 +18,6 @@ spec:
   trigger:
     manual: first
   rsync:
-    sshKeys: volsync-rsync-dst-src-jellyfin-ceph
-    address: volsync-rsync-dst-jellyfin-ceph
+    sshKeys: volsync-rsync-dst-src-jellyfin-config-ceph
+    address: volsync-rsync-dst-jellyfin-config-ceph
     copyMethod: Direct

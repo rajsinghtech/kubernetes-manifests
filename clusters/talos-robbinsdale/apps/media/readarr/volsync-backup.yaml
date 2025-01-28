@@ -18,6 +18,6 @@ spec:
   trigger:
     schedule: "0 */8 * * *"
   rsync:
-    sshKeys: volsync-rsync-dst-src-readarr-nfs
-    address: volsync-rsync-dst-readarr-nfs
+    sshKeys: volsync-rsync-dst-src-readarr-config-nfs
+    address: volsync-rsync-dst-readarr-config-nfs
     copyMethod: Direct
