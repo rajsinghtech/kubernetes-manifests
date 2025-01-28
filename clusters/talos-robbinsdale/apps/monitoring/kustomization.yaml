@@ -2,6 +2,9 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - namespace.yaml
+  - ./karma
+  - alertconfig.yaml
+  - secrets.yaml
 
 helmCharts:
   - name: kube-prometheus-stack
@@ -11,7 +14,6 @@ helmCharts:
     releaseName: kube-prometheus-stack
     includeCRDs: true
     valuesFile: values-kube-prometheus-stack.yaml
-resources:
   - ./karma
   - alertconfig.yaml
   - secrets.yaml
