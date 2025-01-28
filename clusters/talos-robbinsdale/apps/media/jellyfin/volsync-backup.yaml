@@ -18,6 +18,6 @@ spec:
   trigger:
     schedule: "0 */2 * * *"
   rsync:
-    sshKeys: volsync-rsync-dst-src-jellyfin-nfs
-    address: volsync-rsync-dst-jellyfin-nfs
+    sshKeys: volsync-rsync-dst-src-jellyfin-config-nfs
+    address: volsync-rsync-dst-jellyfin-config-nfs
     copyMethod: Direct

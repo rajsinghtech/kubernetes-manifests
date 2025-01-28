@@ -18,6 +18,6 @@ spec:
   trigger:
     manual: first
   rsync:
-    sshKeys: volsync-rsync-dst-src-readarr-ceph
-    address: volsync-rsync-dst-readarr-ceph
+    sshKeys: volsync-rsync-dst-src-readarr-config-ceph
+    address: volsync-rsync-dst-readarr-config-ceph
     copyMethod: Direct

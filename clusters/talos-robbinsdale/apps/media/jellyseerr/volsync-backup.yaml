@@ -18,6 +18,6 @@ spec:
   trigger:
     schedule: "0 */3 * * *"
   rsync:
-    sshKeys: volsync-rsync-dst-src-jellyseerr-nfs
-    address: volsync-rsync-dst-jellyseerr-nfs
+    sshKeys: volsync-rsync-dst-src-jellyseerr-config-nfs
+    address: volsync-rsync-dst-jellyseerr-config-nfs
     copyMethod: Direct

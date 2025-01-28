@@ -18,6 +18,6 @@ spec:
   trigger:
     manual: first
   rsync:
-    sshKeys: volsync-rsync-dst-src-audioarr-ceph
-    address: volsync-rsync-dst-audioarr-ceph
+    sshKeys: volsync-rsync-dst-src-audioarr-config-ceph
+    address: volsync-rsync-dst-audioarr-config-ceph
     copyMethod: Direct

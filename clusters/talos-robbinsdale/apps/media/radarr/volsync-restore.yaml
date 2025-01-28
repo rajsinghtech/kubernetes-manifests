@@ -18,6 +18,6 @@ spec:
   trigger:
     manual: first
   rsync:
-    sshKeys: volsync-rsync-dst-src-radarr-ceph
-    address: volsync-rsync-dst-radarr-ceph
+    sshKeys: volsync-rsync-dst-src-radarr-config-ceph
+    address: volsync-rsync-dst-radarr-config-ceph
     copyMethod: Direct
