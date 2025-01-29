@@ -1,6 +1,5 @@
 persistentVolume:
-  enabled: false
-  existingClaim: ollama
+  enabled: true
 ollama:
   gpu:
     enabled: false
