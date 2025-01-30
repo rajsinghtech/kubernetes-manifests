@@ -9,7 +9,7 @@ env:
       secretKeyRef:
         name: immich-postgres-user
         key: password
-  DB_HOSTNAME: immich-postgres-rw.immich.svc
+  DB_HOSTNAME: immich-postgres-ceph-rw.immich.svc
   REDIS_HOSTNAME: dragonfly-immich
   REDIS_PASSWORD:
     valueFrom:
