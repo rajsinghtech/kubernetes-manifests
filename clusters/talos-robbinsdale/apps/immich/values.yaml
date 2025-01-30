@@ -1,5 +1,5 @@
 image:
-  tag: v1.125.3
+  tag: v1.125.7
 envFrom:
   - secretRef:
       name: immich-postgres-user
