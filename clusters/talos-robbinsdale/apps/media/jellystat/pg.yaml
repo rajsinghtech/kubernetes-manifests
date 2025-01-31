@@ -11,4 +11,4 @@ spec:
   backup:
     # Volume snapshot backups
     volumeSnapshot:
-       className: csi-rbdplugin-snapclass
+       className: csi-cephfsplugin-snapclass
