@@ -7,3 +7,8 @@ spec:
   storage:
     size: 10Gi
     storageClass: rook-cephfs
+
+  backup:
+    # Volume snapshot backups
+    volumeSnapshot:
+       className: csi-rbdplugin-snapclass
