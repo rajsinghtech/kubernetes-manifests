@@ -1,0 +1,9 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Backup
+metadata:
+  name: immich-postgres-ceph
+spec:
+  cluster:
+    name: snapshot-cluster
+  method: volumeSnapshot
+  online: false
