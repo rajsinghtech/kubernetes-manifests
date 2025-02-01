@@ -36,3 +36,13 @@ spec:
     # Volume snapshot backups
     volumeSnapshot:
        className: csi-rbdplugin-snapclass
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: immich-postgres-ceph
+spec:
+  schedule: "0 0 * * * *"
+  backupOwnerReference: self
+  cluster:
+    name: immich-postgres-ceph  
