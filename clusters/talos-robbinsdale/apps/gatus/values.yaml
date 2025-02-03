@@ -27,15 +27,7 @@ config:
           description: "Luke portfolio is down"
           send-on-resolved: true
     - name: Jellyfin
-      url: https://jellyfin.rajsingh.info
-      interval: 60s
-      conditions:
-        - "[STATUS] == 200"
-      alerts:
-        - type: discord
-          description: "Jellyfin is down"
-          send-on-resolved: true
-      url: https://jellyfin.rajsingh.info
+      url: https://jellyfin.rajsingh.info/health
       interval: 60s
       conditions:
         - "[STATUS] == 200"
@@ -51,6 +43,15 @@ config:
       alerts:
         - type: discord
           description: "Jellystat is down"
+          send-on-resolved: true
+    - name: Jellyseerr
+      url: https://jellyseerr.rajsingh.info
+      interval: 60s
+      conditions:
+        - "[STATUS] == 200"
+      alerts:
+        - type: discord
+          description: "Jellyseerr is down"
           send-on-resolved: true
     - name: PiHole Primary DNS
       url: "10.69.10.69"
