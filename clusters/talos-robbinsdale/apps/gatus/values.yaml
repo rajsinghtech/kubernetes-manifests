@@ -35,6 +35,23 @@ config:
         - type: discord
           description: "Jellyfin is down"
           send-on-resolved: true
+      url: https://jellyfin.rajsingh.info
+      interval: 60s
+      conditions:
+        - "[STATUS] == 200"
+      alerts:
+        - type: discord
+          description: "Jellyfin is down"
+          send-on-resolved: true
+    - name: Jellystat
+      url: https://jellystat.rajsingh.info
+      interval: 60s
+      conditions:
+        - "[STATUS] == 200"
+      alerts:
+        - type: discord
+          description: "Jellystat is down"
+          send-on-resolved: true
     - name: PiHole Primary DNS
       url: "10.69.10.69"
       dns:
