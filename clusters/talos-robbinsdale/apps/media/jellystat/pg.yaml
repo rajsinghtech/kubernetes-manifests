@@ -2,6 +2,8 @@ apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
   name: jellystat-db
+  labels:
+    app: jellystat-pg
 spec:
   instances: 3
   storage:
