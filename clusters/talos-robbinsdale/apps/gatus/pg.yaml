@@ -2,9 +2,10 @@ apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
   name: gatus-pg
-  labels:
-    app: gatus-pg
 spec:
+  inheritedMetadata:
+    labels:
+      app: gatus-pg
   instances: 3
   storage:
     size: 10Gi
