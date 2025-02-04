@@ -2,9 +2,10 @@ apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
   name: jellystat-db
-  labels:
-    app: jellystat-pg
 spec:
+  inheritedMetadata:
+    labels:
+      app: jellystat-pg
   instances: 3
   storage:
     size: 10Gi
