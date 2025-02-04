@@ -4,7 +4,7 @@ envFrom:
   - secretRef:
       name: gatus
   - secretRef:
-      name: gatus-db-app
+      name: gatus-pg-app
 config:
   storage:
     type: postgres
