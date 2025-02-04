@@ -27,7 +27,7 @@ config:
           description: "Luke portfolio is down"
           send-on-resolved: true
     - name: Jellyfin
-      url: https://jellyfin.media:8096/health
+      url: https://jellyfin.media.svc.cluster.local:8096/health
       interval: 60s
       conditions:
         - "[STATUS] == 200"
