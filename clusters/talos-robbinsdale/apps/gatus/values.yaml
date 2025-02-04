@@ -3,7 +3,12 @@ image:
 envFrom:
   - secretRef:
       name: gatus
+  - secretRef:
+      name: gatus-db-app
 config:
+  storage:
+    type: postgres
+    path: "${uri}"
   alerting:
     discord:
       webhook-url: "${discord-webhook-url}"
