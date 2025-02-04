@@ -1,0 +1,14 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: gatus-db
+spec:
+  instances: 3
+  storage:
+    size: 10Gi
+    storageClass: rook-cephfs
+
+  backup:
+    # Volume snapshot backups
+    volumeSnapshot:
+       className: csi-cephfsplugin-snapclass
