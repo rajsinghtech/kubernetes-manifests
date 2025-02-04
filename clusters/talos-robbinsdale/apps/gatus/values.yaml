@@ -27,7 +27,7 @@ config:
           description: "Luke portfolio is down"
           send-on-resolved: true
     - name: Jellyfin
-      url: https://jellyfin.media.svc.cluster.local:8096/health
+      url: http://jellyfin.media:8096/health
       interval: 60s
       conditions:
         - "[STATUS] == 200"
@@ -36,7 +36,7 @@ config:
           description: "Jellyfin is down"
           send-on-resolved: true
     - name: Jellystat
-      url: https://jellystat.rajsingh.info
+      url: http://jellystat.media:3000
       interval: 60s
       conditions:
         - "[STATUS] == 200"
@@ -45,7 +45,7 @@ config:
           description: "Jellystat is down"
           send-on-resolved: true
     - name: Jellyseerr
-      url: https://jellyseerr.rajsingh.info
+      url: http://jellyseerr.media:5055
       interval: 60s
       conditions:
         - "[STATUS] == 200"
