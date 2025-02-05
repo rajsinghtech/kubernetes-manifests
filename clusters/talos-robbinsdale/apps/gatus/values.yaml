@@ -13,14 +13,34 @@ config:
     discord:
       webhook-url: "${discord-webhook-url}"
   endpoints:
-    - name: Raj Singh Portfolio
-      url: https://rajsingh.info
+    - name: Portfolio - Raj Singh
+      url: https://www.rajsingh.info
       interval: 60s
       conditions:
         - "[STATUS] == 200"
       alerts:
         - type: discord
           description: "Raj portfolio is down"
+          send-on-resolved: true
+    - name: Immich
+      url: http://immich-server.immich:2283/api/server-info/ping
+      interval: 60s
+      conditions:
+        - "[STATUS] == 200"
+      alerts:
+        - type: discord
+          description: "Raj portfolio is down"
+          send-on-resolved: true
+    - name: Envoy Public
+      url: https://gatus.rajsingh.info
+      client:
+        dns-resolver: "tcp://1.1.1.1:53"
+      interval: 60s
+      conditions:
+        - "[STATUS] == 200"
+      alerts:
+        - type: discord
+          description: "Envoy Public Gateway is down"
           send-on-resolved: true
     - name: Envoy Private
       url: https://gatus.rajsingh.info
@@ -33,7 +53,7 @@ config:
         - type: discord
           description: "Envoy Private Gateway is down"
           send-on-resolved: true
-    - name: Luke Houge Portfolio
+    - name: Portfolio - Luke Houge
       url: https://www.lukehouge.com
       interval: 60s
       conditions:
