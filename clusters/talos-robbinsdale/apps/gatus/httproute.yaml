@@ -11,7 +11,7 @@ spec:
       namespace: envoy-gateway-system
     - group: gateway.networking.k8s.io
       kind: Gateway
-      name: robbinsdale
+      name: private
       namespace: envoy-gateway-system
   hostnames:
     - "gatus.rajsingh.info"
