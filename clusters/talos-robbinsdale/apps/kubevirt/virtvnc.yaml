@@ -9,9 +9,9 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: kv-novnc
 subjects:
-- kind: ServiceAccount
-  name: kv-novnc
-  namespace: kubevirt
+  - kind: ServiceAccount
+    name: kv-novnc
+    namespace: kubevirt
 roleRef:
   kind: ClusterRole
   name: kv-novnc
@@ -22,25 +22,25 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: kv-novnc
 rules:
-- apiGroups:
-  - subresources.kubevirt.io
-  resources:
-  - virtualmachineinstances/console
-  - virtualmachineinstances/vnc
-  verbs:
-  - get
-- apiGroups:
-  - kubevirt.io
-  resources:
-  - virtualmachines
-  - virtualmachineinstances
-  - virtualmachineinstancepresets
-  - virtualmachineinstancereplicasets
-  - virtualmachineinstancemigrations
-  verbs:
-  - get
-  - list
-  - watch
+  - apiGroups:
+      - subresources.kubevirt.io
+    resources:
+      - virtualmachineinstances/console
+      - virtualmachineinstances/vnc
+    verbs:
+      - get
+  - apiGroups:
+      - kubevirt.io
+    resources:
+      - virtualmachines
+      - virtualmachineinstances
+      - virtualmachineinstancepresets
+      - virtualmachineinstancereplicasets
+      - virtualmachineinstancemigrations
+    verbs:
+      - get
+      - list
+      - watch
 ---
 apiVersion: v1
 kind: Service
@@ -51,9 +51,9 @@ metadata:
   namespace: kubevirt
 spec:
   ports:
-  - port: 8001
-    protocol: TCP
-    targetPort: 8001
+    - port: 8001
+      protocol: TCP
+      targetPort: 8001
   selector:
     app: kv-novnc
   type: ClusterIP
@@ -76,25 +76,25 @@ spec:
       serviceAccountName: kv-novnc
       # nodeSelector:
       #   node-role.kubernetes.io/master: ''
-      # tolerations: 
+      # tolerations:
       # - key: "node-role.kubernetes.io/master"
       #   operator: "Equal"
       #   value: ""
       #   effect: "NoSchedule"
       containers:
-      - name: kv-novnc
-        image: ghcr.io/scog/kubevirt-novnc:latest
-        imagePullPolicy: IfNotPresent
-        livenessProbe:
-          httpGet:
-            port: 8001
-            path: /
-            scheme: HTTP
-          failureThreshold: 30
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          successThreshold: 1
-          timeoutSeconds: 5
+        - name: kv-novnc
+          image: ghcr.io/scog/kubevirt-novnc:latest
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              port: 8001
+              path: /
+              scheme: HTTP
+            failureThreshold: 30
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
@@ -105,10 +105,10 @@ spec:
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
-      name: robbinsdale
+      name: private
       namespace: envoy-gateway-system
   hostnames:
-    - "kubevirt.rajsingh.info" 
+    - "kubevirt.rajsingh.info"
     - "kubevirt.lukehouge.com"
   rules:
     - backendRefs:

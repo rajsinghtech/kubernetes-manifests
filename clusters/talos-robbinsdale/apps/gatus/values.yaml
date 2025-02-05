@@ -23,7 +23,7 @@ config:
           description: "Raj portfolio is down"
           send-on-resolved: true
     - name: Immich
-      url: http://immich-server.immich:2283/api/server-info/ping
+      url: http://immich-server.immich:2283/api/server/ping
       interval: 60s
       conditions:
         - "[STATUS] == 200"

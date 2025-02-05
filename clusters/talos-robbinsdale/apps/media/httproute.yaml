@@ -6,7 +6,7 @@ spec:
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
-      name: robbinsdale
+      name: private
       namespace: envoy-gateway-system
   hostnames:
     - "media.lukehouge.com"
@@ -19,8 +19,8 @@ spec:
           port: 8989
           weight: 1
       matches:
-      - path:
-          value: "/sonarr"
+        - path:
+            value: "/sonarr"
     - backendRefs:
         - group: ""
           kind: Service
@@ -28,8 +28,8 @@ spec:
           port: 7878
           weight: 1
       matches:
-      - path:
-          value: "/radarr"
+        - path:
+            value: "/radarr"
     - backendRefs:
         - group: ""
           kind: Service
@@ -37,5 +37,5 @@ spec:
           port: 9696
           weight: 1
       matches:
-      - path:
-          value: "/prowlarr"
+        - path:
+            value: "/prowlarr"
