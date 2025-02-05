@@ -37,9 +37,9 @@ config:
           description: "Raj portfolio is down"
           send-on-resolved: true
     - name: Envoy Public
-      url: https://jellyfin.rajsingh.info
+      url: https://gatus.rajsingh.info
       client:
-        dns-resolver: "tcp://1.1.1.1:53"
+        dns-resolver: "udp://1.1.1.1:53"
       interval: 60s
       conditions:
         - "[STATUS] == 200"
