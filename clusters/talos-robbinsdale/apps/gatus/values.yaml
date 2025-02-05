@@ -13,6 +13,11 @@ config:
     discord:
       webhook-url: "${discord-webhook-url}"
   endpoints:
+    - name: ollama-mac-mini
+      url: http://tailscale-mac-mini:11434
+      interval: 60s
+      conditions:
+        - "[STATUS] == 200"
     - name: Portfolio - Raj Singh
       url: https://www.rajsingh.info
       interval: 60s
