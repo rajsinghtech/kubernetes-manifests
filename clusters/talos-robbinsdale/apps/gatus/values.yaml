@@ -17,10 +17,21 @@ config:
       url: https://rajsingh.info
       interval: 60s
       conditions:
-        - "[STATUS] == 200"   
+        - "[STATUS] == 200"
       alerts:
         - type: discord
           description: "Raj portfolio is down"
+          send-on-resolved: true
+    - name: Envoy Private
+      url: https://gatus.rajsingh.info
+      client:
+        dns-resolver: "tcp://10.69.10.69:53"
+      interval: 60s
+      conditions:
+        - "[STATUS] == 200"
+      alerts:
+        - type: discord
+          description: "Envoy Private Gateway is down"
           send-on-resolved: true
     - name: Luke Houge Portfolio
       url: https://www.lukehouge.com
