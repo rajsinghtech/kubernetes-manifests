@@ -15,9 +15,7 @@ spec:
       namespace: envoy-gateway-system
   hostnames:
     - "gatus.rajsingh.info"
-    - "status.rajsingh.info"
     - "gatus.lukehouge.com"
-    - "status.lukehouge.com"
   rules:
     - backendRefs:
         - group: ""
