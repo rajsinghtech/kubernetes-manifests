@@ -16,7 +16,8 @@ config:
     - name: ollama-mac-mini
       url: http://tailscale-mac-mini.ollama:11434
       interval: 60s
-      timeout: 30s
+      client:
+        timeout: 30s
       conditions:
         - "[STATUS] == 200"
     - name: Truenas
