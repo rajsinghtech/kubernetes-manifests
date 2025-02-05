@@ -37,6 +37,17 @@ config:
         - type: discord
           description: "Raj portfolio is down"
           send-on-resolved: true
+    - name: Cloudflared Tunnel
+      url: https://status.rajsingh.info
+      client:
+        dns-resolver: "tcp://1.1.1.1:53"
+      interval: 60s
+      conditions:
+        - "[STATUS] == 200"
+      alerts:
+        - type: discord
+          description: "Cloudflared Tunnel is down"
+          send-on-resolved: true
     - name: Envoy Public
       url: https://gatus.rajsingh.info
       client:
