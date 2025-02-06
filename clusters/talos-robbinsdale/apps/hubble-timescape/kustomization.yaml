@@ -8,10 +8,18 @@ helmCharts:
     namespace: hubble-timescape
     releaseName: hubble-timescape
     includeCRDs: true
-    valuesFile: values.yaml
+    valuesFile: hubble-timescape-values.yaml
     apiVersions:
       - monitoring.coreos.com/v1
       - networking.k8s.io/v1
+
+  - name: hubble-enterprise
+    repo: https://helm.isovalent.com
+    version: 1.12.17
+    namespace: kube-system
+    releaseName: hubble-enterprise
+    includeCRDs: true
+    valuesFile: hubble-enterprise-values.yaml
 
 resources:
   - ./templates/httproute.yaml
