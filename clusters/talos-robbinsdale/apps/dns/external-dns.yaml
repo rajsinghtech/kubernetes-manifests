@@ -82,7 +82,7 @@ spec:
             - --policy=upsert-only
             - --provider=pihole
             # Change this to the actual address of your Pi-hole web server
-            - --pihole-server=http://pihole-primary-web.pihole
+            - --pihole-server=http://pihole-primary-web.dns
       securityContext:
 ---
 apiVersion: apps/v1
@@ -128,7 +128,7 @@ spec:
             # - --policy=upsert-only
             - --provider=pihole
             # Change this to the actual address of your Pi-hole web server
-            - --pihole-server=http://pihole-secondary-web.pihole
+            - --pihole-server=http://pihole-secondary-web.dns
       securityContext:
         fsGroup: 65534 # For ExternalDNS to be able to read Kubernetes token files       fsGroup: 65534 # For ExternalDNS to be able to read Kubernetes token files
 ---
