@@ -30,7 +30,8 @@ spec:
         - CREATE EXTENSION IF NOT EXISTS "vectors";
         - CREATE EXTENSION IF NOT EXISTS "cube" CASCADE;
         - CREATE EXTENSION IF NOT EXISTS "earthdistance" CASCADE;
-
+  monitoring:
+    enablePodMonitor: true
   storage:
     size: 8Gi
     storageClass: ceph-block-replicated-nvme
