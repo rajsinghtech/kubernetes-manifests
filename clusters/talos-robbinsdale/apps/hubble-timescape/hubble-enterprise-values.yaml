@@ -1,0 +1,17 @@
+enabled: true
+dnsPolicy: ClusterFirstWithHostNet
+export:
+  mode: fluentd
+  fluentd:
+    output: |-
+      @type http
+      endpoint http://hubble-timescape-ingester.hubble-timescape.svc.cluster.local:4260/push
+      http_method post
+      # Retry on timeout, server errors and service unavailable
+      retryable_response_codes: 408, 500, 503
+      <format>
+        @type json
+      </format>
+      <buffer>
+        flush_interval 1s
+      </buffer>
