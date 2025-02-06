@@ -59,19 +59,19 @@ config:
           description: "Cloudflared Tunnel is down"
           send-on-resolved: true
     - name: Envoy Public
-      url: https://10.69.10.16
+      url: https://status.rajsingh.info
       interval: 60s
       conditions:
-        - "[STATUS] == 404"
+        - "[STATUS] == 200"
       alerts:
         - type: discord
           description: "Envoy Public Gateway is down"
           send-on-resolved: true
     - name: Envoy Private
-      url: https://10.69.10.14
+      url: https://gatus.rajsingh.info
       interval: 60s
       conditions:
-        - "[STATUS] == 404"
+        - "[STATUS] == 200"
       alerts:
         - type: discord
           description: "Envoy Private Gateway is down"
