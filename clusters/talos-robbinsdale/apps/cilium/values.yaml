@@ -33,6 +33,9 @@ bgpControlPlane:
 hubble:
   relay:
     enabled: true
+extraConfig:
+  # Enable flow export
+  export-file-path: "/var/run/cilium/hubble/hubble.log"
 # Talos specific settings
 cgroup:
   autoMount:
