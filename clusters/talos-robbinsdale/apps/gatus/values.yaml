@@ -14,20 +14,52 @@ config:
       webhook-url: "${discord-webhook-url}"
   endpoints:
     - name: ollama-mac-mini
+      group: tailscale
       url: http://tailscale-mac-mini.ollama:11434
       interval: 60s
       client:
         timeout: 30s
       conditions:
         - "[STATUS] == 200"
+    - name: Tank
+      group: servers
+      url: icmp://tank.local
+      interval: 60s
+      conditions:
+        - "[CONNECTED] == true"
+      alerts:
+        - type: discord
+          description: "Tank is down"
+          send-on-resolved: true
+    - name: Titan
+      group: servers
+      url: icmp://titan.local
+      interval: 60s
+      conditions:
+        - "[CONNECTED] == true"
+      alerts:
+        - type: discord
+          description: "Titan is down"
+          send-on-resolved: true
+    - name: Stone
+      group: servers
+      url: icmp://stone.local
+      interval: 60s
+      conditions:
+        - "[CONNECTED] == true"
+      alerts:
+        - type: discord
+          description: "Stone is down"
+          send-on-resolved: true
     - name: Truenas
+      group: servers
       url: http://truenas.local
       interval: 60s
       conditions:
         - "[STATUS] == 200"
       alerts:
         - type: discord
-          description: "Raj portfolio is down"
+          description: "Truenas is down"
           send-on-resolved: true
     - name: Portfolio - Raj Singh
       url: https://www.rajsingh.info
@@ -39,6 +71,7 @@ config:
           description: "Raj portfolio is down"
           send-on-resolved: true
     - name: Immich
+      group: home
       url: http://immich-server.immich:2283/api/server/ping
       interval: 60s
       conditions:
@@ -48,6 +81,7 @@ config:
           description: "Raj portfolio is down"
           send-on-resolved: true
     - name: Cloudflared Tunnel
+      group: network
       url: https://status.rajsingh.info
       client:
         dns-resolver: "tcp://1.1.1.1:53"
@@ -59,6 +93,7 @@ config:
           description: "Cloudflared Tunnel is down"
           send-on-resolved: true
     - name: Envoy Public
+      group: network
       url: https://status.rajsingh.info
       interval: 60s
       conditions:
@@ -68,6 +103,7 @@ config:
           description: "Envoy Public Gateway is down"
           send-on-resolved: true
     - name: Envoy Private
+      group: network
       url: https://gatus.rajsingh.info
       interval: 60s
       conditions:
@@ -77,6 +113,7 @@ config:
           description: "Envoy Private Gateway is down"
           send-on-resolved: true
     - name: Portfolio - Luke Houge
+      group: network
       url: https://www.lukehouge.com
       interval: 60s
       conditions:
@@ -86,6 +123,7 @@ config:
           description: "Luke portfolio is down"
           send-on-resolved: true
     - name: Jellyfin
+      group: media
       url: http://jellyfin.media:8096/health
       interval: 60s
       conditions:
@@ -95,6 +133,7 @@ config:
           description: "Jellyfin is down"
           send-on-resolved: true
     - name: Jellystat
+      group: media
       url: http://jellystat.media:3000
       interval: 60s
       conditions:
@@ -104,6 +143,7 @@ config:
           description: "Jellystat is down"
           send-on-resolved: true
     - name: Jellyseerr
+      group: media
       url: http://jellyseerr.media:5055
       interval: 60s
       conditions:
@@ -113,6 +153,7 @@ config:
           description: "Jellyseerr is down"
           send-on-resolved: true
     - name: PiHole Primary DNS
+      group: network 
       url: "10.69.10.69"
       dns:
         query-name: "google.com"
@@ -125,6 +166,7 @@ config:
       #     description: "PiHole Primary DNS is down"
       #     send-on-resolved: true
     - name: PiHole Secondary DNS
+      group: network
       url: "10.69.69.10"
       dns:
         query-name: "google.com"
@@ -137,6 +179,7 @@ config:
       #     description: "PiHole Secondary DNS is down"
       #     send-on-resolved: true
     - name: Frigate
+      group: home
       url: https://frigate.lukehouge.com
       interval: 60s
       conditions:
@@ -145,3 +188,14 @@ config:
         - type: discord
           description: "Frigate is down"
           send-on-resolved: true
+    - name: Homeassistant
+      group: home
+      url: https://homeassistant.lukehouge.com
+      interval: 60s
+      conditions:
+        - "[STATUS] == 200"
+      alerts:
+        - type: discord
+          description: "Homeassistant is down"
+          send-on-resolved: true
+
