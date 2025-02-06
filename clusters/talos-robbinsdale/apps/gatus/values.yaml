@@ -16,9 +16,9 @@ config:
     - name: ollama-mac-mini
       group: tailscale
       url: http://tailscale-mac-mini.ollama:11434
-      interval: 60s
+      interval: 600s
       client:
-        timeout: 30s
+        timeout: 60s
       conditions:
         - "[STATUS] == 200"
     - name: Tank
@@ -62,6 +62,7 @@ config:
           description: "Truenas is down"
           send-on-resolved: true
     - name: Portfolio - Raj Singh
+      group: website
       url: https://www.rajsingh.info
       interval: 60s
       conditions:
@@ -78,7 +79,7 @@ config:
         - "[STATUS] == 200"
       alerts:
         - type: discord
-          description: "Raj portfolio is down"
+          description: "Immich is down"
           send-on-resolved: true
     - name: Cloudflared Tunnel
       group: network
@@ -113,7 +114,7 @@ config:
           description: "Envoy Private Gateway is down"
           send-on-resolved: true
     - name: Portfolio - Luke Houge
-      group: network
+      group: website
       url: https://www.lukehouge.com
       interval: 60s
       conditions:
