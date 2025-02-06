@@ -136,7 +136,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: external-dns-unifi
-  namespace: external-dns
   labels:
     app.kubernetes.io/name: external-dns
     app.kubernetes.io/instance: external-dns-unifi
