@@ -1,7 +1,3 @@
-controllers:
-  gatus:
-    annotations:
-      security.alpha.kubernetes.io/sysctls: net.ipv4.ping_group_range=0 2147483647
 image:
   tag: latest
 envFrom:
@@ -27,7 +23,7 @@ config:
         - "[STATUS] == 200"
     - name: Tank
       group: servers
-      url: icmp://tank.local
+      url: tcp://tank.local:6443
       interval: 60s
       conditions:
         - "[CONNECTED] == true"
@@ -37,7 +33,7 @@ config:
           send-on-resolved: true
     - name: Titan
       group: servers
-      url: icmp://titan.local
+      url: tcp://titan.local:6443
       interval: 60s
       conditions:
         - "[CONNECTED] == true"
@@ -47,7 +43,7 @@ config:
           send-on-resolved: true
     - name: Stone
       group: servers
-      url: icmp://stone.local
+      url: tcp://stone.local:6443
       interval: 60s
       conditions:
         - "[CONNECTED] == true"
