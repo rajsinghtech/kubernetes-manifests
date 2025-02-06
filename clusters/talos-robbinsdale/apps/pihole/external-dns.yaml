@@ -136,49 +136,44 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: external-dns-unifi
+  namespace: external-dns
+  labels:
+    app.kubernetes.io/name: external-dns
+    app.kubernetes.io/instance: external-dns-unifi
 spec:
-  strategy:
-    type: Recreate
+  replicas: 1
   selector:
     matchLabels:
-      app: external-dns-unifi
+      app.kubernetes.io/name: external-dns
+      app.kubernetes.io/instance: external-dns-unifi
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
-        app: external-dns-unifi
+        app.kubernetes.io/name: external-dns
+        app.kubernetes.io/instance: external-dns-unifi
     spec:
       serviceAccountName: external-dns
+      securityContext:
+        fsGroup: 65534
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
       containers:
-        - name: webhook
-          image: ghcr.io/kashalls/external-dns-unifi-webhook:main
-          env:
-            - name: UNIFI_HOST
-              value: https://192.168.50.1 # replace with the address to your UniFi router/controller
-            - name: UNIFI_EXTERNAL_CONTROLLER
-              value: "false"
-            - name: UNIFI_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: external-dns-unifi-secret
-                  key: api-key
-            - name: LOG_LEVEL
-              value: "info"
-          livenessProbe:
-            httpGet:
-              path: /healthz
-              port: http-webhook
-            initialDelaySeconds: 10
-            timeoutSeconds: 5
-          readinessProbe:
-            httpGet:
-              path: /readyz
-              port: http-webhook
-            initialDelaySeconds: 10
-            timeoutSeconds: 5
         - name: external-dns
-          image: registry.k8s.io/external-dns/external-dns:v0.13.5
-          # If authentication is disabled and/or you didn't create
-          # a secret, you can remove this block.
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsGroup: 65532
+            runAsNonRoot: true
+            runAsUser: 65532
+          image: registry.k8s.io/external-dns/external-dns:v0.15.0
+          imagePullPolicy: IfNotPresent
           args:
             - --source=gateway-httproute
             - --source=gateway-tlsroute
@@ -186,13 +181,73 @@ spec:
             - --source=gateway-udproute
             - --source=service
             - --source=ingress
-            # Pihole only supports A/CNAME records so there is no mechanism to track ownership.
-            # You don't need to set this flag, but if you leave it unset, you will receive warning
-            # logs when ExternalDNS attempts to create TXT records.
-            - --registry=noop
-            # IMPORTANT: If you have records that you manage manually in Pi-hole, set
-            # the policy to upsert-only so they do not get deleted.
-            # - --policy=upsert-only
+            - --log-level=debug
+            - --log-format=text
+            - --interval=1m
+            - --source=ingress
+            - --source=service
+            - --policy=sync
+            - --registry=txt
+            - --txt-owner-id=default
+            - --txt-prefix=k8s.
             - --provider=webhook
-      securityContext:
-        fsGroup: 65534 # For ExternalDNS to be able to read Kubernetes token files
+            - --ignore-ingress-tls-spec
+          ports:
+            - name: http
+              protocol: TCP
+              containerPort: 7979
+          livenessProbe:
+            failureThreshold: 2
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          readinessProbe:
+            failureThreshold: 6
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+        - name: webhook
+          image: ghcr.io/kashalls/external-dns-unifi-webhook:main
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: UNIFI_HOST
+              value: https://192.168.50.1
+            - name: UNIFI_EXTERNAL_CONTROLLER
+              value: "false"
+            - name: UNIFI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: api-key
+                  name: external-dns-unifi-secret
+            - name: LOG_LEVEL
+              value: debug
+          ports:
+            - name: http-webhook
+              protocol: TCP
+              containerPort: 8080
+          livenessProbe:
+            failureThreshold: 2
+            httpGet:
+              path: /healthz
+              port: http-webhook
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          readinessProbe:
+            failureThreshold: 6
+            httpGet:
+              path: /readyz
+              port: http-webhook
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
