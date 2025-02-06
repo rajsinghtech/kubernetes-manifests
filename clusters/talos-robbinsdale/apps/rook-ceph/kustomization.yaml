@@ -19,7 +19,7 @@ resources:
   - storageclass.yaml
   - volumesnapshot.yaml
   - blockpool.yaml
-  - github.com/rancher/local-path-provisioner/deploy?ref=v0.0.30
+  - github.com/rancher/local-path-provisioner/deploy?ref=v0.0.31
   - s3.yaml
 patches:
   - patch: |-
