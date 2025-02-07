@@ -46,7 +46,7 @@ kind: ScheduledBackup
 metadata:
   name: immich-postgres-ceph
 spec:
-  schedule: "0 11 * * *"
+  schedule: "0 0 11 * * *"
   backupOwnerReference: self
   method: volumeSnapshot
   cluster:
