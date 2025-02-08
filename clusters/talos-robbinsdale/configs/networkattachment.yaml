@@ -5,14 +5,17 @@ metadata:
   namespace: rook-ceph
 spec:
   config: '{
-    "cniVersion": "0.3.0",
+    "cniVersion": "0.3.1",
     "name": "public-nad",
     "type": "macvlan",
     "mode": "bridge",
     "ipam": {
-    "type": "whereabouts",
-    "range": "10.2.1.0/24"
-    }
+      "type": "whereabouts",
+      "range": "10.2.1.0/24"
+      "routes": [
+          {"dst": "192.168.50.0/24"}
+        ]
+      }
     }'
 ---
 apiVersion: "k8s.cni.cncf.io/v1"
@@ -22,12 +25,15 @@ metadata:
   namespace: rook-ceph
 spec:
   config: '{
-    "cniVersion": "0.3.0",
+    "cniVersion": "0.3.1",
     "name": "cluster-nad",
     "type": "macvlan",
     "mode": "bridge",
     "ipam": {
-    "type": "whereabouts",
-    "range": "10.2.2.0/24"
-    }
+      "type": "whereabouts",
+      "range": "10.2.2.0/24"
+      "routes": [
+          {"dst": "192.168.50.0/24"}
+        ]
+      }
     }'
