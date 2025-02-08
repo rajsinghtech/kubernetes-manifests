@@ -118,10 +118,10 @@ spec:
     # enable host networking
     #provider: host
     # enable the Multus network provider
-    # provider: multus
-    # selectors:
-    #   public: rook-ceph/rook-public-nw
-    #   cluster: rook-ceph/rook-cluster-nw
+    provider: multus
+    selectors:
+      public: rook-ceph/rook-public-nw
+      cluster: rook-ceph/rook-cluster-nw
     #  The selector keys are required to be `public` and `cluster`.
     #  Based on the configuration, the operator will do the following:
     #    1. if only the `public` selector key is specified both public_network and cluster_network Ceph settings will listen on that interface
