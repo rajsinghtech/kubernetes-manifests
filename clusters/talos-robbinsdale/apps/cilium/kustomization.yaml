@@ -16,3 +16,4 @@ resources:
   - nodelocaldns.yaml
   - generic-device-plugin.yaml
   - https://raw.githubusercontent.com/k8snetworkplumbingwg/multus-cni/master/deployments/multus-daemonset-thick.yml
+  - https://raw.githubusercontent.com/k8snetworkplumbingwg/reference-deployment/refs/heads/master/multus-dhcp/dhcp-daemonset.yml
