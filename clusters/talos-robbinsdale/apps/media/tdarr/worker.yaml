@@ -46,12 +46,12 @@ spec:
               mountPath: /media/tvshows
             - name: movies-volume
               mountPath: /media/movies
-            - name: transcode-cache
-              mountPath: /temp
+            # - name: transcode-cache
+            #   mountPath: /temp
           resources:
             requests:
               memory: "5Gi"
-              cpu: "5"
+              cpu: "3"
             limits:
               memory: "5Gi"
               cpu: "5"
@@ -62,6 +62,6 @@ spec:
         - name: movies-volume
           persistentVolumeClaim:
             claimName: radarr-movies
-        - name: transcode-cache
-          persistentVolumeClaim:
-            claimName: tdarr-transcode-cache
+        # - name: transcode-cache
+        #   persistentVolumeClaim:
+        #     claimName: tdarr-transcode-cache
