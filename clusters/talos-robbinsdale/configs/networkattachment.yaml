@@ -3,6 +3,7 @@ apiVersion: "k8s.cni.cncf.io/v1"
 kind: NetworkAttachmentDefinition
 metadata:
   name: rook-public-nw
+  namespace: rook-ceph
 spec:
   config: '{
       "cniVersion": "0.3.0",
@@ -19,6 +20,7 @@ apiVersion: "k8s.cni.cncf.io/v1"
 kind: NetworkAttachmentDefinition
 metadata:
   name: rook-cluster-nw
+  namespace: rook-ceph
 spec:
   config: '{
       "cniVersion": "0.3.0",
