@@ -44,3 +44,12 @@ patches:
                   - "-f"
                   - "/usr/src/multus-cni/bin/multus-shim"
                   - "/host/opt/cni/bin/multus-shim"
+            containers:
+              - name: kube-multus
+                resources:
+                  requests:
+                    cpu: "100m"
+                    memory: "200Mi"
+                  limits:
+                    cpu: "100m"
+                    memory: "50Mi"
