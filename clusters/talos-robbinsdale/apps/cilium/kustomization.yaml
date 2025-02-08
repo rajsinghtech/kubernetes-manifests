@@ -52,4 +52,4 @@ patches:
                     memory: "200Mi"
                   limits:
                     cpu: "100m"
-                    memory: "50Mi"
+                    memory: "200Mi"
