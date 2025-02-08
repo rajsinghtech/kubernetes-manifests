@@ -9,7 +9,6 @@ spec:
       "cniVersion": "0.3.0",
       "name": "public-nad",
       "type": "macvlan",
-      # "master": "ens5",
       "mode": "bridge",
       "ipam": {
         "type": "dhcp",
@@ -26,7 +25,6 @@ spec:
       "cniVersion": "0.3.0",
       "name": "cluster-nad",
       "type": "macvlan",
-      # "master": "ens5",
       "mode": "bridge",
       "ipam": {
         "type": "dhcp",
