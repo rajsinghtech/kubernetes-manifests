@@ -69,11 +69,11 @@ spec:
           periodSeconds: 10
         resources:
           requests:
-            memory: "1Gi"
-            cpu: "1"
+            memory: "5Gi"
+            cpu: "3"
           limits:
-            memory: "3Gi"
-            cpu: "2"
+            memory: "5Gi"
+            cpu: "5"
       volumes:
       - name: tdarr-config
         persistentVolumeClaim:
