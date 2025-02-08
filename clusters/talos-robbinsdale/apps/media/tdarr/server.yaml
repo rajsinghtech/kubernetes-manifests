@@ -59,8 +59,8 @@ spec:
           mountPath: /media/tvshows
         - name: movies-volume
           mountPath: /media/movies
-        - name: transcode-cache
-          mountPath: /temp
+        # - name: transcode-cache
+        #   mountPath: /temp
         livenessProbe:
           httpGet:
             path: /
@@ -87,6 +87,6 @@ spec:
       - name: movies-volume
         persistentVolumeClaim:
           claimName: radarr-movies
-      - name: transcode-cache
-        persistentVolumeClaim:
-          claimName: tdarr-transcode-cache
+      # - name: transcode-cache
+      #   persistentVolumeClaim:
+      #     claimName: tdarr-transcode-cache
