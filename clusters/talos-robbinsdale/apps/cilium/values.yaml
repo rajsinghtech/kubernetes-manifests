@@ -1,3 +1,5 @@
+cni:
+  exclusive: false
 kubeProxyReplacement: true
 # devices: 'bond0,eth0'
 autoDirectNodeRoutes: true
