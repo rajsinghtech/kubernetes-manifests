@@ -2,6 +2,10 @@ machine:
   network:
     hostname: titan.local
     interfaces:
+    - interface: enp0s31f6
+      dhcp: true
+      vip:
+        ip: 192.168.51.25
     - interface: enp1s0f1
       dhcp: true
       vip:
