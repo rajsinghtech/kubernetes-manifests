@@ -21,7 +21,7 @@ resources:
   - blockpool.yaml
   - github.com/rancher/local-path-provisioner/deploy?ref=v0.0.31
   - s3.yaml
-  - mulus.yaml
+  - multus.yaml
 patches:
   - patch: |-
       kind: ConfigMap
