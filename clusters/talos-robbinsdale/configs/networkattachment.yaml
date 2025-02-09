@@ -13,11 +13,15 @@ spec:
       "type": "whereabouts",
       "range": "10.2.1.0/24",
       "routes": [
-          {"dst": "192.168.50.0/24",
-          "dst": "10.0.0.0/16}
-        ]
-      }
-    }'
+        {
+          "dst": "192.168.50.0/24"
+        },
+        {
+          "dst": "10.0.0.0/16"
+        }
+      ]
+    }
+  }'
 ---
 apiVersion: "k8s.cni.cncf.io/v1"
 kind: NetworkAttachmentDefinition
@@ -34,8 +38,12 @@ spec:
       "type": "whereabouts",
       "range": "10.2.2.0/24",
       "routes": [
-          {"dst": "192.168.50.0/24",
-          "dst": "10.0.0.0/16}
-        ]
-      }
-    }'
+        {
+          "dst": "192.168.50.0/24"
+        },
+        {
+          "dst": "10.0.0.0/16"
+        }
+      ]
+    }
+  }'
