@@ -37,8 +37,8 @@ iso:
 	curl -O https://factory.talos.dev/image/$${SCHEMATIC_ID}/v1.9.1/metal-amd64.iso
 
 kubeconfig:
-	cp infrastructure/talos/talosconfig ~/.talos/config.yaml
-	talosctl kubeconfig ~/.kube/talosconfig -n tank.local -e k8s.robbinsdale.local --talosconfig=./talosconfig -f
+	cp talosconfig ~/.talos/config.yaml
+	talosctl kubeconfig ~/.kube/talosconfig -e k8s.robbinsdale.local -e tank.local --talosconfig=./talosconfig -f
 
 k9s:
 	k9s --kubeconfig ~/.kube/talosconfig --context admin@robbinsdale
