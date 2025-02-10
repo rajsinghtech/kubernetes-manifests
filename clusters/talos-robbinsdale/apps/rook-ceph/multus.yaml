@@ -13,7 +13,7 @@ spec:
       labels:
         app: busybox-sleep
       annotations:
-        k8s.v1.cni.cncf.io/networks: rook-cluster-nw
+        k8s.v1.cni.cncf.io/networks: rook-public-nw
     spec:
       containers:
       - name: busybox
