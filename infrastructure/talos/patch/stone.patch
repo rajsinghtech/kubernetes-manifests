@@ -6,10 +6,11 @@ machine:
       dhcp: true
       vip:
         ip: 192.168.51.25
-    # - interface: enp1s0f1
-    #   dhcp: true
-    #   vip:
-    #     ip: 192.168.50.25
+    - interface: enp1s0f1
+      dhcp: true
+      vip:
+        ip: 192.168.50.25
+
   install:
     disk: /dev/nvme0n1
     bootloader: true
