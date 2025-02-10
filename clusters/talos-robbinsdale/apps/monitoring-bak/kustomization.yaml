@@ -20,7 +20,6 @@ helmCharts:
 
 resources:
   - ./templates/configmap.yaml
-  - ./templates/alertconfig.yaml
   - ./templates/secrets.yaml
   - ./templates/namespace.yaml
   - ./karma
