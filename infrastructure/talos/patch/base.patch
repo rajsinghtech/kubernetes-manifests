@@ -26,6 +26,7 @@ machine:
       forwardKubeDNSToHost: false
   certSANs:
   - 192.168.50.25
+  - 192.168.51.25
   - k8s.robbinsdale.local
   - k8s.robbinsdale.rajsingh.info
   - k8s.robbinsdale.lukehouge.com
