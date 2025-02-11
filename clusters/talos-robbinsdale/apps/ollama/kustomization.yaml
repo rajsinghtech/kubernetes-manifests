@@ -18,5 +18,6 @@ helmCharts:
     valuesFile: values-webui.yaml
 
 resources:
+  - pvc.yaml
   - httproute.yaml
   - tailscale.yaml
