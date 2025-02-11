@@ -6,3 +6,18 @@ persistence:
 pipelines:
   enabled: false
 ollamaUrls: ["http://tailscale-mac-mini:11434"]
+extraEnvVars:
+  - name: OAUTH_CLIENT_ID
+    valueFrom:
+      secretKeyRef:
+        name: open-webui
+        key: OAUTH_CLIENT_ID
+  - name: OAUTH_CLIENT_SECRET 
+    valueFrom:
+      secretKeyRef:
+        name: open-webui
+        key: OAUTH_CLIENT_SECRET
+  - name: OPENID_PROVIDER_URL
+    value: https://token.actions.githubusercontent.com
+  - name: OAUTH_PROVIDER_NAME
+    value: github

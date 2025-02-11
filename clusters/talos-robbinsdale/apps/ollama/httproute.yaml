@@ -10,7 +10,7 @@ spec:
       name: private
       namespace: envoy-gateway-system
   hostnames:
-    - "open-webui.rajsingh.info"
+    - "chat.rajsingh.info"
   rules:
     - backendRefs:
         - group: ""
