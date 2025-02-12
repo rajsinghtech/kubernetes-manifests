@@ -10,7 +10,7 @@ This repository serves as the single source of truth for the `k8s-robbinsdale` K
 
 - [Jellyfin](https://jellyfin.lukehouge.com): Streaming media server.
 - [OpenCost](https://opencost.rajsingh.info): Kubernetes resource cost monitoring.
-- [OpenWebUI](https://open-webui.rajsingh.info): AI model web interface.
+- [OpenWebUI](https://chat.rajsingh.info): AI model web interface.
 - [Minecraft](https://mc.rajsingh.info): Minecraft server.
 - [Typeo](https://typeo.io): Typing practice.
 

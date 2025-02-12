@@ -3,7 +3,7 @@ kind: Kustomization
 
 helmCharts:
   - name: cilium
-    repo: https://helm.cilium.io/
+    repo: https://helm.isovalent.com
     version: 1.16.6
     namespace: kube-system
     releaseName: cilium
