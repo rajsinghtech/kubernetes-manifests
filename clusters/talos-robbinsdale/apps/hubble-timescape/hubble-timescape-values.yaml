@@ -33,3 +33,6 @@ ui:
     requests:
       cpu: 100m
       memory: 50Mi
+server:
+  experimentalAPI:
+    enabled: true
