@@ -15,7 +15,7 @@ helmCharts:
 
   - name: hubble-enterprise
     repo: https://helm.isovalent.com
-    version: 1.12.17
+    version: 1.12.20
     namespace: kube-system
     releaseName: hubble-enterprise
     includeCRDs: true
