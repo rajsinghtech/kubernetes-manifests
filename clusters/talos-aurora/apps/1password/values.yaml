@@ -1,0 +1,3 @@
+operator:
+  create: true
+  pollingInterval: 60

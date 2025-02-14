@@ -9,4 +9,5 @@ charts
 infrastructure/talos/*.yaml
 infrastructure/talos/*.iso
 infrastructure/talos/talosconfig
+infrastructure/talos/aurora
 infrastructure/.DS_Store
