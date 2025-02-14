@@ -1,26 +1,27 @@
 apiVersion: tailscale.com/v1alpha1
 kind: Connector
 metadata:
-  name: robbinsdale-connector-1
+  name: aurora-connector-1
 spec:
   tags:
     - tag:k8s
-  hostname: robbinsdale-connector-1
+  hostname: aurora-connector-1
   subnetRouter:
     advertiseRoutes:
-      - "192.168.50.0/24"
-      - "192.168.51.0/24"
-      - "10.0.0.0/8"
+      - "192.168.68.0/24"
+      - "10.10.0.0/16"
+      - "10.11.0.0/16"
+      - "10.70.0.0/16"
   exitNode: false
 ---
 apiVersion: tailscale.com/v1alpha1
 kind: Connector
 metadata:
-  name: robbinsdale-connector-2
+  name: aurora-connector-2
 spec:
   tags:
     - tag:k8s
-  hostname: robbinsdale-connector-2
+  hostname: aurora-connector-2
   subnetRouter:
     advertiseRoutes:
       - "192.168.50.0/24"
