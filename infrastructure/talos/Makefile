@@ -33,12 +33,12 @@ iso:
 	@SCHEMATIC_ID=$$(curl -s -X POST --data-binary @patch/schematic.yaml https://factory.talos.dev/schematics | jq -r '.id'); \
 	echo "Schematic ID: $$SCHEMATIC_ID"; \
 	echo "Downloading ISO..."; \
-	echo "curl -O https://factory.talos.dev/image/$${SCHEMATIC_ID}/v1.9.1/metal-amd64.iso"
-	curl -O https://factory.talos.dev/image/$${SCHEMATIC_ID}/v1.9.1/metal-amd64.iso
+	echo "curl -O https://factory.talos.dev/image/$${SCHEMATIC_ID}/v1.9.4/metal-amd64.iso"
+	curl -O "https://factory.talos.dev/image/$${SCHEMATIC_ID}/v1.9.4/metal-amd64.iso"
 
 kubeconfig:
 	cp talosconfig ~/.talos/config.yaml
-	talosctl kubeconfig ~/.kube/talosconfig -e k8s.robbinsdale.local -e tank.local --talosconfig=./talosconfig -f
+	talosctl kubeconfig ~/.kube/talosconfig -n tank.local -e k8s.robbinsdale.local --talosconfig=./talosconfig -f
 
 k9s:
 	k9s --kubeconfig ~/.kube/talosconfig --context admin@robbinsdale
