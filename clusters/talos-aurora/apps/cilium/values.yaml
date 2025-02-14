@@ -1,8 +1,6 @@
 cni:
   exclusive: false
 kubeProxyReplacement: true
-operator:
-  replicas: 1
 # devices: 'bond0,eth0'
 autoDirectNodeRoutes: true
 directRoutingSkipUnreachable: false
@@ -29,6 +27,7 @@ ipam:
       - "10.11.0.0/16"
     clusterPoolIPv4MaskSize: 24
 operator:
+  replicas: 1
   rollOutPods: true
 rollOutCiliumPods: true
 localRedirectPolicy: true
