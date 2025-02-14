@@ -13,7 +13,7 @@ helmCharts:
 
   - name: open-webui
     repo: https://helm.openwebui.com/
-    version: 5.10.1
+    version: 5.11.0
     releaseName: open-webui
     valuesFile: values-webui.yaml
 
