@@ -9,6 +9,8 @@ ollamaUrls: ["http://tailscale-mac-mini:11434"]
 extraEnvVars:
   - name: WEBUI_AUTH_TRUSTED_EMAIL_HEADER
     value: Cf-Access-Authenticated-User-Email
+  - name: HOST
+    value: 127.0.0.1
   # - name: OAUTH_CLIENT_ID
   #   valueFrom:
   #     secretKeyRef:
