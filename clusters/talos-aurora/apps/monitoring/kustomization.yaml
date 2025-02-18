@@ -11,3 +11,10 @@ helmCharts:
     releaseName: kube-prometheus-stack
     includeCRDs: true
     valuesFile: values-kube-prometheus-stack.yaml
+
+  - name: netdata
+    repo: https://netdata.github.io/helmchart/
+    version: 3.7.125
+    namespace: monitoring
+    releaseName: netdata 
+    includeCRDs: true
