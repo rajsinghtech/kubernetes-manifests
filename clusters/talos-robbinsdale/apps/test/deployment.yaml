@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: test
-        image: ghcr.io/lukehouge/fastapi-app:latest
+        image: ghcr.io/lukehouge/fastapi-app:63ba05025c02594b64d3e672a662a543b9da92cc
         ports:
         - name: test
           protocol: TCP
