@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: test
-          image: ghcr.io/your-username/fastapi-app:latest  # This tag will be updated automatically by Argo CD Image Updater
+          image: ghcr.io/lukehouge/fastapi-app:latest  # This tag will be updated automatically by Argo CD Image Updater
           ports:
           - name: test
             protocol: TCP
