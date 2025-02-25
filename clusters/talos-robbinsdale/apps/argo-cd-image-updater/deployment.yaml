@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: argocd-image-updater
+  name: argo-cd-image-updater
   namespace: argocd
 spec:
   replicas: 1
@@ -26,3 +26,7 @@ spec:
           env:
             - name: ARGOCD_SERVER
               value: "argocd-server.argocd.svc.cluster.local"  # Default Argo CD API server URL inside the cluster
+      volumes:
+        - name: config-volume
+          configMap:
+            name: argocd-image-updater-config  # Refers to the ConfigMap that contains the config.yaml
