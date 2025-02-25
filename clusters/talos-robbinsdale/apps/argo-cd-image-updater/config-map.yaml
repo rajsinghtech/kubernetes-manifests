@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-image-updater-config
+  namespace: argocd
+data:
+  config.yaml: |
+    apiVersion: v1
+    kind: Config
+    repositories:
+      - url: https://github.com/argoproj/argo-cd  # Example repository, you can add your own GHCR registry here
+        name: argocd
+        enabled: true
+        updateInterval: 3600  # Check for updates every hour
+    imageRegistries:
+      - name: ghcr.io
+        url: https://ghcr.io
+    automaticUpdates: true  # Automatically trigger updates when a new image is available
