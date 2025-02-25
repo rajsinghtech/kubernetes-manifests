@@ -23,12 +23,6 @@ spec:
         - path:
             type: PathPrefix
             value: /
-      filters:
-        - type: URLRewrite
-          urlRewrite: 
-            path:
-              type: ReplacePrefixMatch
-              replacePrefixMatch: /admin
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
