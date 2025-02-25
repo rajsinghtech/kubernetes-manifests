@@ -1,4 +1,3 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -6,6 +5,9 @@ metadata:
   namespace: test
   labels:
     app: test
+  annotations:
+    argocd-image-updater.argoproj.io/image-list: ghcr.io/your-username/fastapi-app  # GHCR image to watch
+    argocd-image-updater.argoproj.io/auto-poll: "true"  # Automatically polls for new images
 spec:
   replicas: 1
   selector:
@@ -17,9 +19,9 @@ spec:
         app: test
     spec:
       containers:
-      - name: test
-        image: ghcr.io/lukehouge/fastapi-app:63ba05025c02594b64d3e672a662a543b9da92cc
-        ports:
         - name: test
-          protocol: TCP
-          containerPort: 8000
+          image: ghcr.io/your-username/fastapi-app:latest  # This tag will be updated automatically by Argo CD Image Updater
+          ports:
+          - name: test
+            protocol: TCP
+            containerPort: 8000
