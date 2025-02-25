@@ -14,7 +14,7 @@ helmCharts:
 
   - name: netdata
     repo: https://netdata.github.io/helmchart/
-    version: 3.7.125
+    version: 3.7.126
     namespace: monitoring
     releaseName: netdata 
     includeCRDs: true
