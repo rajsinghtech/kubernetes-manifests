@@ -4,8 +4,10 @@ metadata:
   name: test
   namespace: argocd
   annotations:
+    argocd-image-updater.argoproj.io/write-back-method: argocd
     argocd-image-updater.argoproj.io/image-list: ghcr.io/lukehouge/fastapi-app  # GHCR image to watch
     argocd-image-updater.argoproj.io/auto-poll: "true"  # Automatically polls for new images
+    argocd-image-updater.argoproj.io/update-strategy: latest
 spec:
   destination:
     server: https://kubernetes.default.svc
