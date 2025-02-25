@@ -3,6 +3,11 @@ kind: Application
 metadata:
   name: immich
   namespace: argocd
+  annotations:
+    argocd-image-updater.argoproj.io/image-list: immich-server=ghcr.io/immich-app/immich-server
+    argocd-image-updater.argoproj.io/immich-server.helm.image-name: immich.server.image.repository
+    argocd-image-updater.argoproj.io/immich-server.helm.image-tag: immich.image.tag
+    argocd-image-updater.argoproj.io/immich-server.allow-tags: regexp:^v\d+(\.\d+)*$
 spec:
   destination:
     server: https://kubernetes.default.svc
