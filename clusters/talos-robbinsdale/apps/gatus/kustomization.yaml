@@ -5,7 +5,7 @@ namespace: gatus
 helmCharts:
   - name: gatus
     repo: https://twin.github.io/helm-charts
-    version: 1.1.0
+    version: 1.2.0
     namespace: gatus
     releaseName: gatus
     includeCRDs: true
