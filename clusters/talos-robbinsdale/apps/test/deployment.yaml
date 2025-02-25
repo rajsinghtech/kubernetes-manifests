@@ -6,7 +6,7 @@ metadata:
   labels:
     app: test
   annotations:
-    argocd-image-updater.argoproj.io/image-list: ghcr.io/your-username/fastapi-app  # GHCR image to watch
+    argocd-image-updater.argoproj.io/image-list: ghcr.io/lukehouge/fastapi-app  # GHCR image to watch
     argocd-image-updater.argoproj.io/auto-poll: "true"  # Automatically polls for new images
 spec:
   replicas: 1
