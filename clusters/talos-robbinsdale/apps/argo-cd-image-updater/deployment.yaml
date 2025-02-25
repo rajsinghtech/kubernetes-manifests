@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: argocd-image-updater
+  namespace: argocd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: argocd-image-updater
+  template:
+    metadata:
+      labels:
+        app: argocd-image-updater
+    spec:
+      serviceAccountName: argocd-image-updater  # Using ServiceAccount for authentication
+      containers:
+        - name: argocd-image-updater
+          image: ghcr.io/argoproj-labs/argocd-image-updater:latest
+          command: ["/argocd-image-updater"]
+          args: ["--config", "/etc/argocd-image-updater/config.yaml"]
+          volumeMounts:
+            - mountPath: /etc/argocd-image-updater
+              name: config-volume
+              readOnly: true
+          env:
+            - name: ARGOCD_SERVER
+              value: "argocd-server.argocd.svc.cluster.local"  # Default Argo CD API server URL inside the cluster
