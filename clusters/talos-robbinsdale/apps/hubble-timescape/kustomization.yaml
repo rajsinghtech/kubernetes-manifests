@@ -4,7 +4,7 @@ kind: Kustomization
 helmCharts:
   - name: hubble-timescape
     repo: https://helm.isovalent.com
-    version: 1.6.0
+    version: 1.6.1
     namespace: hubble-timescape
     releaseName: hubble-timescape
     includeCRDs: true
