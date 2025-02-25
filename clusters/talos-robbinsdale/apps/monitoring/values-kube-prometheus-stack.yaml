@@ -127,7 +127,9 @@ grafana:
           kind: Gateway
           name: private
           namespace: envoy-gateway-system
-
+prometheusOperator:
+  admissionWebhooks:
+    enabled: false
 prometheus:
   prometheusSpec:
     serviceMonitorSelector: {}
