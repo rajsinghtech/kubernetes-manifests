@@ -46,7 +46,7 @@ spec:
     spec:
       containers:
       - name: etcd
-        image: quay.io/coreos/etcd:v3.4.2
+        image: quay.io/coreos/etcd:v3.4.36
         ports:
         - containerPort: 2379
           name: client
