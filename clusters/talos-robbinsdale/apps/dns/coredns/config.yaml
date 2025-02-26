@@ -14,7 +14,7 @@ data:
         etcd rajsingh.info lukehouge.com {
             stubzones
             path /skydns
-            endpoint http://etcd-client:2379
+            endpoint http://10.69.10.19:2379
         }
         cache 30
         loop
