@@ -13,6 +13,7 @@ spec:
   postgresql:
     shared_preload_libraries:
       - "vectors.so"
+    enableAlterSystem: true
 
   managed:
     roles:
