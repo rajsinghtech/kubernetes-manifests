@@ -16,7 +16,10 @@ data:
             stubzones
             path /skydns
             endpoint http://etcd-client:2379
+            timeout 5s
+            dial-timeout 2s
         }
         cache 30
+        forward . /etc/resolv.conf
         reload
     }
