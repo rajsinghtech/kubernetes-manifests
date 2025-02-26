@@ -11,7 +11,7 @@ data:
             lameduck 5s
         }
         ready
-        etcd kube-dc-1.home.lab {
+        etcd rajsingh.info lukehouge.com {
             stubzones
             path /skydns
             endpoint http://etcd-client:2379
