@@ -47,10 +47,10 @@ spec:
     - advertisementType: "Service"
       service:
         addresses:
-          # - ClusterIP
+          - ClusterIP
           - ExternalIP
           - LoadBalancerIP    
       selector:
         matchExpressions:
         - {key: somekey, operator: NotIn, values: ['never-used-value']}
-    # - advertisementType: "PodCIDR"
+        - advertisementType: "PodCIDR"
