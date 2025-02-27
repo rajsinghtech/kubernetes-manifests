@@ -96,7 +96,7 @@ spec:
         ## the DNS name. It must match the service name created for the etcd
         ## cluster. The choice to place it in an annotation instead of the env
         ## settings is because there should only be 1 service per etcd cluster.
-        serviceName: etcd
+        serviceName: dns 
     spec:
       ##
       ## Configuring the node affinity is necessary to prevent etcd servers from
