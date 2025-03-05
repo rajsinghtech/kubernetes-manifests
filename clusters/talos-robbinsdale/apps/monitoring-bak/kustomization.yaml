@@ -12,7 +12,7 @@ helmCharts:
 
   - name: gateway-addons-helm
     repo: oci://docker.io/envoyproxy
-    version: 1.3.0
+    version: 1.3.1
     namespace: monitoring
     releaseName: eg-addons
     includeCRDs: true
