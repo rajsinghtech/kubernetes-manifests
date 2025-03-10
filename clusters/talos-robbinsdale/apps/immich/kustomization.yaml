@@ -25,7 +25,7 @@ patches:
       kind: Deployment
       metadata:
         name: immich-server
-              spec:
+      spec:
         template:
           spec:
             volumes:
