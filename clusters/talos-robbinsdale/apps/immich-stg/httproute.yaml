@@ -13,9 +13,9 @@ spec:
       name: public
       namespace: envoy-gateway-system
   hostnames:
-    - "immich.rajsingh.info"
-    - "immich.k8s.rajsingh.info"
-    - "immich.lukehouge.com"
+    - "immich.stg.rajsingh.info"
+    - "immich.stg.k8s.rajsingh.info"
+    - "immich.stg.lukehouge.com"
   rules:
     - backendRefs:
         - group: ""
