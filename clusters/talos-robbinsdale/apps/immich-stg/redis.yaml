@@ -3,7 +3,7 @@ apiVersion: dragonflydb.io/v1alpha1
 kind: Dragonfly
 metadata:
   name: dragonfly-immich
-  spec:
+spec:
   replicas: 3
   args:
     - --maxmemory=1000M
