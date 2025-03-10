@@ -54,7 +54,7 @@ patches:
       kind: Deployment
       metadata:
         name: immich-machine-learning
-              spec:
+      spec:
         template:
           spec:
             containers:
