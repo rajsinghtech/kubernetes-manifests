@@ -14,7 +14,7 @@ spec:
     namespace: immich-stg
   project: default
   source:
-    path: clusters/talos-robbinsdale/apps/immich
+    path: clusters/talos-robbinsdale/apps/immich-stg
     repoURL: https://github.com/rajsinghtech/kubernetes-manifests
     targetRevision: HEAD
   syncPolicy:
