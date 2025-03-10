@@ -7,7 +7,6 @@ resources:
   - secret.yaml
   - pg.yaml
   - redis.yaml
-  - s3.yaml
 helmCharts:
   - name: immich
     repo: https://immich-app.github.io/immich-charts
