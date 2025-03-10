@@ -1,0 +1,35 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: immich-init-directories
+  namespace: immich-stg
+spec:
+  template:
+    spec:
+      containers:
+        - name: init-directories
+          image: busybox:latest
+          command:
+            - /bin/sh
+            - -c
+            - |
+              mkdir -p /data/upload/encoded-video
+              mkdir -p /data/upload/library
+              mkdir -p /data/upload/profile
+              mkdir -p /data/upload/thumbs
+              mkdir -p /data/upload/profile
+              mkdir -p /data/upload/backups
+              touch /data/upload/encoded-video/.immich
+              touch /data/upload/library/.immich
+              touch /data/upload/profile/.immich
+              touch /data/upload/thumbs/.immich
+              touch /data/upload/backups/.immich
+              echo "Immich directories initialized successfully"
+          volumeMounts:
+            - name: immich-data
+              mountPath: /data
+      restartPolicy: OnFailure
+      volumes:
+        - name: immich-data
+          persistentVolumeClaim:
+            claimName: immich
