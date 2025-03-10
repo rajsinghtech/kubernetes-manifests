@@ -4,7 +4,7 @@ metadata:
   name: immich
 spec:
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce 
   resources:
     requests:
       storage: 100Gi
