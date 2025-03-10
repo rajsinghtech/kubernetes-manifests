@@ -13,4 +13,4 @@ helmCharts:
       - monitoring.coreos.com/v1
 resources:
   - secret.yaml
-  - notifications.yaml
+  # - notifications.yaml

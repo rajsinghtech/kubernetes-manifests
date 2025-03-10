@@ -3,6 +3,8 @@ kind: ConfigMap
 metadata:
   name: argocd-notifications-cm
   namespace: argocd
+  annotations:
+    kustomize.config.k8s.io/behavior: "merge"
 data:
   subscriptions: |
     - recipients:
@@ -51,6 +53,6 @@ apiVersion: onepassword.com/v1
 kind: OnePasswordItem
 metadata:
   name: argocd-notifications-secret
-  namespace: argocd 
+  namespace: argocd
 spec:
   itemPath: "vaults/K8s/items/argocd-apps"
