@@ -22,26 +22,26 @@ spec:
         login: true
 
   bootstrap:
-    initdb:
-      database: immich
-      owner: immich
-      secret:
-        name: immich-postgres-user
-      postInitSQL:
-        - ALTER SYSTEM SET search_path TO "$user", public, vectors;
-        - SET search_path TO "$user", public, vectors;
-        - CREATE EXTENSION IF NOT EXISTS "vectors";
-        - ALTER SCHEMA vectors OWNER TO "immich";
-        - GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA vectors TO "immich";
-        - GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO "immich";
-        - CREATE EXTENSION IF NOT EXISTS cube WITH SCHEMA pg_catalog;
-        - CREATE EXTENSION IF NOT EXISTS earthdistance WITH SCHEMA pg_catalog;
-    # recovery:
-    #   volumeSnapshots:
-    #     storage:
-    #       name: immich-postgres-ceph-20250309110000
-    #       kind: VolumeSnapshot
-    #       apiGroup: snapshot.storage.k8s.io
+    # initdb:
+    #   database: immich
+    #   owner: immich
+    #   secret:
+    #     name: immich-postgres-user
+    #   postInitSQL:
+    #     - ALTER SYSTEM SET search_path TO "$user", public, vectors;
+    #     - SET search_path TO "$user", public, vectors;
+    #     - CREATE EXTENSION IF NOT EXISTS "vectors";
+    #     - ALTER SCHEMA vectors OWNER TO "immich";
+    #     - GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA vectors TO "immich";
+    #     - GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO "immich";
+    #     - CREATE EXTENSION IF NOT EXISTS cube WITH SCHEMA pg_catalog;
+    #     - CREATE EXTENSION IF NOT EXISTS earthdistance WITH SCHEMA pg_catalog;
+    recovery:
+      volumeSnapshots:
+        storage:
+          name: immich-postgres-ceph-20250309110000
+          kind: VolumeSnapshot
+          apiGroup: snapshot.storage.k8s.io
   monitoring:
     enablePodMonitor: true
   storage:
