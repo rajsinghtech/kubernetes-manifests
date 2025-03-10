@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: immich
+  name: immich-stg
   namespace: argocd
   annotations:
     argocd-image-updater.argoproj.io/image-list: immich-server=ghcr.io/immich-app/immich-server
