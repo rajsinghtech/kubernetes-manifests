@@ -4,7 +4,6 @@ envFrom:
   - secretRef:
       name: immich-postgres-user
 env:
-  IMMICH_IGNORE_MOUNT_CHECK_ERRORS: "true"
   DB_PASSWORD:
     valueFrom:
       secretKeyRef:

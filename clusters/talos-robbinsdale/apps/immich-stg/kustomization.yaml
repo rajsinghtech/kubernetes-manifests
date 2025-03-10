@@ -45,6 +45,9 @@ patches:
                   limits:
                     memory: "12Gi"
                     cpu: "12"
+                env:
+                  - name: IMMICH_IGNORE_MOUNT_CHECK_ERRORS
+                    value: "true"
   - target:
       version: v1
       kind: Deployment
