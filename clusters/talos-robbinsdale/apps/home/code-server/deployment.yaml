@@ -59,6 +59,8 @@ spec:
               mountPath: /custom-cont-init.d
             - name: nfs-truenas
               mountPath: /mnt/proxmox-vault
+            - name: nfs-unas
+              mountPath: /mnt/unas
             - name: config-volume
               mountPath: /config
             # - name: ceph-generic-fs
@@ -72,6 +74,10 @@ spec:
           nfs:
             path: /mnt/vault/k8s
             server: truenas.local
+                - name: nfs-truenas
+          nfs:
+            path: /var/nfs/shared/k8s
+            server: 192.168.50.115
         # - name: ceph-generic-fs
         #   nfs:
         #     path: /ceph
