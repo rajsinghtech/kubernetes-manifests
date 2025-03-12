@@ -78,3 +78,16 @@ spec:
   resources:
     requests:
       storage: 13Gi
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: kbench-pvc-unas-nfs
+spec:
+  volumeMode: Filesystem
+  storageClassName: nfs-unas
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 13Gi
