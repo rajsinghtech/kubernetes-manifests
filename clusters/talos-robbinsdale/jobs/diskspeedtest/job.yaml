@@ -71,5 +71,5 @@ spec:
           claimName: kbench-pvc-ceph-block-replicated-nvme
       - name: vol2
         persistentVolumeClaim:
-          claimName: kbench-pvc-ceph-block-duplicated-nvme
+          claimName: kbench-pvc-unas-nfs
   backoffLimit: 0
