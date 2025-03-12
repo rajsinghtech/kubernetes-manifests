@@ -74,7 +74,7 @@ spec:
           nfs:
             path: /mnt/vault/k8s
             server: truenas.local
-        - name: nfs-truenas
+        - name: nfs-unas
           nfs:
             path: /var/nfs/shared/k8s
             server: 192.168.50.115
