@@ -42,3 +42,8 @@ This repository serves as the single source of truth for the `k8s-robbinsdale` K
 
 - [Home Assistant](https://homeassistant.lukehouge.com)
 - [Frigate](https://frigate.lukehouge.com)
+
+
+## Updating Images
+- https://argocd-image-updater.readthedocs.io/en/stable/configuration/images/
+- TODO
