@@ -29,20 +29,6 @@ spec:
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: kbench-pvc-ceph-block-replicated-nvme
-spec:
-  volumeMode: Filesystem
-  #volumeMode: Block
-  storageClassName: ceph-block-replicated-nvme
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 13Gi
----
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
   name: kbench-pvc-localpath
 spec:
   volumeMode: Filesystem
