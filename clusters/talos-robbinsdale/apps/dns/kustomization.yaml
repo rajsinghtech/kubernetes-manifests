@@ -11,14 +11,14 @@ resources:
 helmCharts:
   - name: pihole
     repo: https://mojo2600.github.io/pihole-kubernetes/
-    version: 2.29.1
+    version: 2.27.0
     namespace: dns
     releaseName: pihole-primary
     includeCRDs: true
     valuesFile: primary-values.yaml
   - name: pihole
     repo: https://mojo2600.github.io/pihole-kubernetes/
-    version: 2.29.1
+    version: 2.27.0
     namespace: dns
     releaseName: pihole-secondary
     includeCRDs: true
