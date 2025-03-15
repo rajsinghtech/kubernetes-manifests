@@ -55,10 +55,6 @@ spec:
   nfs:
     path: /var/nfs/shared/k8s
     server: 192.168.50.115
-    mountOptions:
-      - nfsvers=4.1    # NFS version (adjust as needed)
-      - no_root_squash # Allows root operations
-      - rw             # Read-write
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationDestination
