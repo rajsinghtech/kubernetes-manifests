@@ -73,7 +73,7 @@ metadata:
   name: truenas-k8s-source
   namespace: home
 spec:
-  sourcePVC: truenas-k8s-unas
+  sourcePVC: truenas-k8s-pvc
   trigger:
     manual: first
   rsync:
