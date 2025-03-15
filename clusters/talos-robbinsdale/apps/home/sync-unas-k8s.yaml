@@ -1,0 +1,82 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: truenas-k8s-pvc
+  namespace: home
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10000Gi
+  storageClassName: ""
+  volumeName: truenas-k8s-pv
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: truenas-k8s-pv
+  namespace: home
+spec:
+  capacity:
+    storage: 10000Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: /mnt/vault/k8s
+    server: truenas.local
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: unas-k8s-pvc
+  namespace: home
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10000Gi
+  storageClassName: ""
+  volumeName: unas-k8s-pv
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: unas-k8s-pv
+  namespace: home
+spec:
+  capacity:
+    storage: 10000Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: /var/nfs/shared/k8s
+    server: 192.168.50.115
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationDestination
+metadata:
+  name: unas-k8s-destination
+  namespace: home
+spec:
+  rsync:
+    copyMethod: Direct
+    capacity: 10000Gi
+    destinationPVC: unas-k8s-pvc
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: truenas-k8s-source
+  namespace: home
+spec:
+  sourcePVC: truenas-k8s-unas
+  trigger:
+    manual: first
+  rsync:
+    sshKeys: volsync-rsync-dst-src-unas-k8s-destination
+    address: volsync-rsync-dst-unas-k8s-destination
+    copyMethod: Direct
