@@ -9,6 +9,8 @@ spec:
     requests:
       storage: 50Gi
   storageClassName: nfs-truenas
+  # storageClassName: smb
+  # volumeName: homarr-config-unas
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -21,3 +23,5 @@ spec:
     requests:
       storage: 50Gi
   storageClassName: nfs-truenas
+  # storageClassName: smb
+  # volumeName: homarr-data-unas

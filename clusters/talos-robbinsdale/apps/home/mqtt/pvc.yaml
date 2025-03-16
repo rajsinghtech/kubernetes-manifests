@@ -9,3 +9,5 @@ spec:
     requests:
       storage: 5Gi
   storageClassName: nfs-truenas
+  # storageClassName: smb
+  # volumeName: mqtt-data-unas

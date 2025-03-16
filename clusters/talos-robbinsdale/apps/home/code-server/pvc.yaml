@@ -8,5 +8,5 @@ spec:
   resources:
     requests:
       storage: 1Gi
-  volumeName: code-server-config
+  volumeName: code-server-config-unas
   storageClassName: smb

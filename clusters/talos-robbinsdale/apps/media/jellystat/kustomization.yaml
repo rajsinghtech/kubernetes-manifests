@@ -8,3 +8,4 @@ resources:
   - pg.yaml
   - httproute.yaml
   - pvc.yaml
+  - pv.yaml

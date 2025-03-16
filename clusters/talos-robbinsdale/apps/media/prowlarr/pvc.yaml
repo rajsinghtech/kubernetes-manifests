@@ -9,6 +9,8 @@ spec:
     requests:
       storage: 1Gi
   storageClassName: nfs-truenas
+  # storageClassName: smb
+  # volumeName: prowlarr-config-unas
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

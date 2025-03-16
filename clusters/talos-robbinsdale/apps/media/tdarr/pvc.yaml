@@ -9,6 +9,8 @@ spec:
     requests:
       storage: 1Gi
   storageClassName: nfs-truenas
+  # storageClassName: smb
+  # volumeName: tdarr-config-unas
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -21,6 +23,8 @@ spec:
     requests:
       storage: 10Gi
   storageClassName: nfs-truenas
+  # storageClassName: smb
+  # volumeName: tdarr-server-unas
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

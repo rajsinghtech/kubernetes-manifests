@@ -9,6 +9,8 @@ spec:
     requests:
       storage: 1Ti
   storageClassName: nfs-truenas
+  # storageClassName: smb
+  # volumeName: sonarr-tv-unas
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -21,6 +23,8 @@ spec:
     requests:
       storage: 1Gi
   storageClassName: nfs-truenas
+  # storageClassName: smb
+  # volumeName: sonarr-config-unas
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

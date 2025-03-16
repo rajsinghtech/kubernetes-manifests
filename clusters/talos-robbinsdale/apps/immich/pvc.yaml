@@ -9,3 +9,5 @@ spec:
     requests:
       storage: 200Gi
   storageClassName: nfs-truenas
+  # storageClassName: smb
+  # volumeName: immich-unas
