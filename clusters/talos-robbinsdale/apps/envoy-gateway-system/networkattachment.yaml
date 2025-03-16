@@ -45,9 +45,3 @@ spec:
           ports:
             - containerPort: 443
               protocol: TCP
-          securityContext:
-            capabilities:
-              add:
-                - NET_ADMIN
-                - NET_RAW
-      hostNetwork: false
