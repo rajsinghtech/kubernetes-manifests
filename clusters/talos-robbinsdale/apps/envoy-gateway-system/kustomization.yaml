@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   - gateway.yaml
   - envoy.yaml
+  - networkattachment.yaml
 helmCharts:
   - name: gateway-helm
     repo: oci://docker.io/envoyproxy
