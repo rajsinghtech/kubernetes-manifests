@@ -9,6 +9,8 @@ spec:
     requests:
       storage: 20Gi
   storageClassName: nfs-truenas
+  # storageClassName: smb
+  # volumeName: jellyfin-config-unas
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

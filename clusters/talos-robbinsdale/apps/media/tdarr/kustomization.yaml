@@ -7,4 +7,5 @@ resources:
   # - worker.yaml
   - service.yaml
   - pvc.yaml
+  - pv.yaml
   - httproute.yaml

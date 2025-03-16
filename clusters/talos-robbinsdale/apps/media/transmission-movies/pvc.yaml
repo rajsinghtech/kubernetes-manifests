@@ -9,6 +9,8 @@ spec:
     requests:
       storage: 500Gi
   storageClassName: nfs-truenas
+  # storageClassName: smb
+  # volumeName: transmission-movies-data-unas
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -21,3 +23,5 @@ spec:
     requests:
       storage: 1Gi
   storageClassName: nfs-truenas
+  # storageClassName: smb
+  # volumeName: transmission-movies-config

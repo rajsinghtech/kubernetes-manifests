@@ -10,3 +10,5 @@ spec:
     requests:
       storage: 1Gi
   storageClassName: nfs-truenas
+  # storageClassName: smb
+  # volumeName: jellystat-backup-pvc-unas

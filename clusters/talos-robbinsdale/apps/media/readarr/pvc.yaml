@@ -9,6 +9,8 @@ spec:
     requests:
       storage: 1Ti
   storageClassName: nfs-truenas
+  # storageClassName: smb
+  # volumeName: readarr-books-unas
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -21,6 +23,8 @@ spec:
     requests:
       storage: 1Gi
   storageClassName: nfs-truenas
+  # storageClassName: smb
+  # volumeName: readarr-config-unas
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

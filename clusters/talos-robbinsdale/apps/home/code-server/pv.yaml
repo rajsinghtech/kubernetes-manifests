@@ -3,7 +3,7 @@ kind: PersistentVolume
 metadata:
   annotations:
     pv.kubernetes.io/provisioned-by: smb.csi.k8s.io
-  name: code-server-config
+  name: code-server-config-unas
 spec:
   capacity:
     storage: 1Gi
