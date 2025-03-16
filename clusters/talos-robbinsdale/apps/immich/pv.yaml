@@ -6,7 +6,7 @@ metadata:
   name: immich-unas
 spec:
   capacity:
-    storage: 1Gi # TODO
+    storage: 2Ti
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
