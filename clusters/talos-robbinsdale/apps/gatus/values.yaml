@@ -34,6 +34,8 @@ config:
       group: kubernetes
       url: https://k8s.robbinsdale.local:6443/readyz
       interval: 60s
+      client:
+        insecure: true
       conditions:
         - "[STATUS] == 401"
       alerts:
