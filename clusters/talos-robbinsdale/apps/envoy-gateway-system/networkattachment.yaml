@@ -12,9 +12,42 @@ spec:
         "type": "static",
         "addresses": [
           {
-            "address": "192.168.50.100/24",
+            "address": "192.168.50.102/24",
             "gateway": "192.168.50.1"
           }
         ]
       }
     }'
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: socat-tunnel
+  namespace: envoy-gateway-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: socat-tunnel
+  template:
+    metadata:
+      annotations:
+        k8s.v1.cni.cncf.io/networks: lan
+      labels:
+        app: socat-tunnel
+    spec:
+      containers:
+        - name: socat
+          image: alpine/socat
+          args:
+            - "TCP-LISTEN:443,fork,reuseaddr"
+            - "TCP:10.69.10.14:443"
+          ports:
+            - containerPort: 443
+              protocol: TCP
+          securityContext:
+            capabilities:
+              add:
+                - NET_ADMIN
+                - NET_RAW
+      hostNetwork: false
