@@ -10,3 +10,19 @@ spec:
     kubernetes:
       envoyDeployment:
         replicas: 3
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyProxy
+metadata:
+  name: multus
+  namespace: envoy-gateway-system
+spec:
+  provider:
+    type: Kubernetes
+    kubernetes:
+      envoyDeployment:
+        replicas: 1
+      envoyDeployment:
+        pod:
+          annotations:
+            k8s.v1.cni.cncf.io/networks: lan
