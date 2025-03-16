@@ -22,7 +22,6 @@ spec:
     kubernetes:
       envoyDeployment:
         replicas: 1
-      envoyDeployment:
         pod:
           annotations:
             k8s.v1.cni.cncf.io/networks: lan
