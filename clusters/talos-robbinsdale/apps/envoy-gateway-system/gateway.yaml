@@ -1,13 +1,25 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: GatewayClass
 metadata:
-  name: eg
+  name: production
 spec:
   controllerName: gateway.envoyproxy.io/gatewayclass-controller
   parametersRef:
     group: gateway.envoyproxy.io
     kind: EnvoyProxy
     name: custom-proxy-config
+    namespace: envoy-gateway-system
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: lan
+spec:
+  controllerName: gateway.envoyproxy.io/gatewayclass-controller
+  parametersRef:
+    group: gateway.envoyproxy.io
+    kind: EnvoyProxy
+    name: multus
     namespace: envoy-gateway-system
 ---
 apiVersion: gateway.networking.k8s.io/v1
@@ -18,7 +30,7 @@ spec:
   addresses:
     - type: IPAddress
       value: 10.69.10.14
-  gatewayClassName: eg
+  gatewayClassName: lan
   listeners:
     - name: http
       protocol: HTTP
@@ -105,7 +117,7 @@ spec:
   addresses:
     - type: IPAddress
       value: 10.69.10.16
-  gatewayClassName: eg
+  gatewayClassName: production
   listeners:
     - name: wildcard-raj-https
       protocol: HTTPS
