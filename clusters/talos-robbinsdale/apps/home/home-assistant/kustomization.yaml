@@ -5,6 +5,6 @@ namespace: home
 resources:
   - deployment.yaml
   - service.yaml
-  - pv.yaml
-  - pvc.yaml
+  - nfs.yaml
+  - unas.yaml
   - httproute.yaml
