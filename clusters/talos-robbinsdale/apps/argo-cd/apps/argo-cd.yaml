@@ -39,10 +39,6 @@ spec:
     path: clusters/talos-robbinsdale/apps/argo-cd/apps
     repoURL: https://github.com/rajsinghtech/kubernetes-manifests
     targetRevision: HEAD
-  syncPolicy:
-    automated:
-      prune: false
-      selfHeal: false
     syncOptions:
       - CreateNamespace=true
     retry:
