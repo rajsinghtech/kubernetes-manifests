@@ -6,7 +6,6 @@ resources:
   - service.yaml
   - httproute.yaml
   - pvc.yaml
-  - pv.yaml
   - secret.yaml
 configMapGenerator:
   - name: startup-script

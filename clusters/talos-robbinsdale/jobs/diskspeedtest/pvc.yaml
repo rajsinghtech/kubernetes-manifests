@@ -68,10 +68,10 @@ spec:
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: kbench-pvc-unas-nfs
+  name: kbench-pvc-unas-smb
 spec:
   volumeMode: Filesystem
-  storageClassName: nfs-unas
+  storageClassName: unas-smb
   accessModes:
     - ReadWriteOnce
   resources:

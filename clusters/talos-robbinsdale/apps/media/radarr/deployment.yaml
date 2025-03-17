@@ -42,4 +42,4 @@ spec:
           claimName: transmission-movies-data
       - name: config-volume
         persistentVolumeClaim:
-          claimName: radarr-config-ceph
+          claimName: radarr-config-ceph # TODO: move to UNAS?

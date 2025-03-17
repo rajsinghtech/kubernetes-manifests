@@ -55,4 +55,4 @@ spec:
             claimName: lidarr-music
         - name: config-volume
           persistentVolumeClaim:
-            claimName: jellyfin-config-ceph
+            claimName: jellyfin-config-ceph # TODO: move to UNAS?

@@ -5,7 +5,8 @@ namespace: home
 resources:
   - deployment.yaml
   - service.yaml
-  - pvc.yaml
+  - nfs.yaml
+  - unas.yaml
 configMapGenerator:
   - name: mqtt-config
     files:
