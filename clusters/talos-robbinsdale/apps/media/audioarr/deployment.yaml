@@ -42,4 +42,4 @@ spec:
             claimName: transmission-books-data
         - name: config-volume
           persistentVolumeClaim:
-            claimName: audioarr-config-ceph
+            claimName: audioarr-config-ceph # TODO: move to UNAS?

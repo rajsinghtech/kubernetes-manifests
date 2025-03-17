@@ -18,7 +18,5 @@ helmCharts:
     valuesFile: values-webui.yaml
 
 resources:
-  # - secret.yaml
-  - pvc.yaml
-  # - httproute.yaml Uses cloudflare tunnel
+  - ceph.yaml
   - tailscale.yaml

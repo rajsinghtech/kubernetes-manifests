@@ -42,4 +42,4 @@ spec:
             claimName: transmission-music-data
         - name: config-volume
           persistentVolumeClaim:
-            claimName: lidarr-config-ceph
+            claimName: lidarr-config-ceph # TODO: move to UNAS?

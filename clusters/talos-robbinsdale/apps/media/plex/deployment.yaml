@@ -68,7 +68,7 @@ spec:
       volumes:
         - name: config
           persistentVolumeClaim:
-            claimName: plex-config-ceph
+            claimName: plex-config-ceph  # TODO: move to UNAS?
         - name: transcode
           emptyDir:
             medium: Memory

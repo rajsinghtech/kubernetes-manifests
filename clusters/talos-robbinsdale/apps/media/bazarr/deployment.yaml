@@ -42,4 +42,4 @@ spec:
           claimName: sonarr-tv
       - name: config-volume
         persistentVolumeClaim:
-          claimName: bazarr-config-ceph
+          claimName: bazarr-config-ceph # TODO: move to UNAS?
