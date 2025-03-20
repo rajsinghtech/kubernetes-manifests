@@ -9,4 +9,3 @@ resources:
   - ./code-server
   - ./homer
   - namespace.yaml
-  - sync-unas-k8s.yaml
