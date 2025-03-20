@@ -63,7 +63,7 @@ spec:
     # make sure this value is unique for every share in the cluster
     volumeHandle: smb-server.default.svc.cluster.local/share##
     volumeAttributes:
-      source: //192.168.50.115/k8s/test
+      source: //192.168.50.115/k8s
     nodeStageSecretRef:
       name: csi-smbcreds
       namespace: kube-system
