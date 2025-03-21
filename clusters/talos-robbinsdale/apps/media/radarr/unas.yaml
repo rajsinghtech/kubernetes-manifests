@@ -73,3 +73,14 @@ spec:
       storage: 5Gi
   volumeName: radarr-config-unas
   storageClassName: smb 
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationDestination
+metadata:
+  name: radarr-movies-unas
+spec:
+  trigger:
+    manual: first
+  rsync:
+    copyMethod: Direct
+    destinationPVC: radarr-movies-unas
