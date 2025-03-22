@@ -21,3 +21,29 @@ spec:
     requests:
       storage: 1Gi
   storageClassName: nfs-truenas 
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: frigate-config-nfs
+spec:
+  sourcePVC: frigate-config
+  trigger:
+    manual: first
+  rsync:
+    sshKeys: volsync-rsync-dst-src-frigate-config-unas
+    address: volsync-rsync-dst-frigate-config-unas
+    copyMethod: Direct
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: frigate-data-nfs
+spec:
+  sourcePVC: frigate-data
+  trigger:
+    manual: first
+  rsync:
+    sshKeys: volsync-rsync-dst-src-frigate-data-unas
+    address: volsync-rsync-dst-frigate-data-unas
+    copyMethod: Direct
