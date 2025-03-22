@@ -73,25 +73,3 @@ spec:
       storage: 5Gi
   volumeName: frigate-config-unas
   storageClassName: smb 
----
-apiVersion: volsync.backube/v1alpha1
-kind: ReplicationDestination
-metadata:
-  name: frigate-config-unas
-spec:
-  trigger:
-    manual: first
-  rsync:
-    copyMethod: Direct
-    destinationPVC: frigate-config-unas
----
-apiVersion: volsync.backube/v1alpha1
-kind: ReplicationDestination
-metadata:
-  name: frigate-data-unas
-spec:
-  trigger:
-    manual: first
-  rsync:
-    copyMethod: Direct
-    destinationPVC: frigate-data-unas
