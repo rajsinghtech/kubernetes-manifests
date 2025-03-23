@@ -20,17 +20,4 @@ spec:
   resources:
     requests:
       storage: 1Gi
-  storageClassName: nfs-truenas 
----
-apiVersion: volsync.backube/v1alpha1
-kind: ReplicationSource
-metadata:
-  name: sonarr-tv-nfs
-spec:
-  sourcePVC: sonarr-tv
-  trigger:
-    manual: first
-  rsync:
-    sshKeys: volsync-rsync-dst-src-sonarr-tv-unas
-    address: volsync-rsync-dst-sonarr-tv-unas
-    copyMethod: Direct
+  storageClassName: nfs-truenas
