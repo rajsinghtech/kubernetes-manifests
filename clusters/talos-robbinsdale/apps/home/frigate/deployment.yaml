@@ -63,10 +63,10 @@ spec:
       volumes:
         - name: storage
           persistentVolumeClaim:
-            claimName: frigate-data-unas
+            claimName: frigate-data
         - name: config
           persistentVolumeClaim:
-            claimName: frigate-config-unas
+            claimName: frigate-config
         - name: dshm
           emptyDir:
               medium: Memory
