@@ -8,3 +8,6 @@ spec:
   resources:
     requests:
       storage: 1Gi
+  storageClassName: smb	
+  volumeMode: Filesystem
+  volumeName: code-server-config
