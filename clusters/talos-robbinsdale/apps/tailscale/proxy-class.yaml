@@ -1,0 +1,28 @@
+apiVersion: tailscale.com/v1alpha1
+kind: ProxyClass
+metadata:
+  name: prod
+spec:
+  tailscale:
+    acceptRoutes: true
+  metrics:
+    enable: true
+    serviceMonitor:
+---
+apiVersion: tailscale.com/v1alpha1
+kind: ProxyClass
+metadata:
+  name: accept-routes
+spec:
+  tailscale:
+    acceptRoutes: true
+apiVersion: tailscale.com/v1alpha1
+kind: ProxyClass
+metadata:
+  name: metrics
+spec:
+  metrics:
+    enable: true
+    serviceMonitor:
+      enable: true
+---
