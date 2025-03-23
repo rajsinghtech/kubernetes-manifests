@@ -93,3 +93,80 @@ spec:
     address: volsync-rsync-dst-unas-k8s-destination
     copyMethod: Direct
 ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sonarr-tv-sync
+  namespace: home
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sonarr-tv-sync
+  template:
+    metadata:
+      labels:
+        app: sonarr-tv-sync
+    spec:
+      containers:
+      - name: sonarr-tv-sync
+        image: alpine:latest
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          apk add --no-cache rsync && \
+          while true; do
+            rsync -av /truenas/media/sonarr-tv/ /unas/media/sonarr-tv/
+            sleep 3600
+          done
+        volumeMounts:
+        - name: truenas-volume
+          mountPath: /truenas
+        - name: unas-volume
+          mountPath: /unas
+      volumes:
+      - name: truenas-volume
+        persistentVolumeClaim:
+          claimName: truenas-k8s-pvc
+      - name: unas-volume
+        persistentVolumeClaim:
+          claimName: unas-k8s-pvc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: radarr-movies-sync
+  namespace: home
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: radarr-movies-sync
+  template:
+    metadata:
+      labels:
+        app: radarr-movies-sync
+    spec:
+      containers:
+      - name: radarr-movies-sync
+        image: alpine:latest
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          apk add --no-cache rsync && \
+          while true; do
+            rsync -av /truenas/media/radarr-movies/ /unas/media/radarr-movies/
+            sleep 3600
+          done
+        volumeMounts:
+        - name: truenas-volume
+          mountPath: /truenas
+        - name: unas-volume
+          mountPath: /unas
+      volumes:
+      - name: truenas-volume
+        persistentVolumeClaim:
+          claimName: truenas-k8s-pvc
+      - name: unas-volume
+        persistentVolumeClaim:
+          claimName: unas-k8s-pvc
