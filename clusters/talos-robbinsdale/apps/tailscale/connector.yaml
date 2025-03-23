@@ -3,6 +3,7 @@ kind: Connector
 metadata:
   name: robbinsdale-connector-1
 spec:
+  proxyClass: prod
   tags:
     - tag:k8s
   hostname: robbinsdale-connector-1
@@ -20,6 +21,7 @@ kind: Connector
 metadata:
   name: robbinsdale-connector-2
 spec:
+  proxyClass: prod
   tags:
     - tag:k8s
   hostname: robbinsdale-connector-2
