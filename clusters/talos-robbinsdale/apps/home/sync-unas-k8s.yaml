@@ -168,3 +168,70 @@ spec:
       - name: unas-volume
         persistentVolumeClaim:
           claimName: unas-k8s-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: truenas-pics-pvc
+  namespace: home
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10000Gi
+  storageClassName: ""
+  volumeName: truenas-pics-pv
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: truenas-k8s-pv
+  namespace: home
+spec:
+  capacity:
+    storage: 10000Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: /mnt/vault/pics
+    server: truenas.local
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: immich-pics-sync
+  namespace: home
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: immich-pics-sync
+  template:
+    metadata:
+      labels:
+        app: immich-pics-sync
+    spec:
+      containers:
+      - name: immich-pics-sync
+        image: alpine:latest
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          apk add --no-cache rsync && \
+          rsync -av /truenas/apple_photos_library/ /unas/pics/ && \
+          echo "done" && \
+          sleep infinity
+        volumeMounts:
+        - name: truenas-volume
+          mountPath: /truenas
+        - name: unas-volume
+          mountPath: /unas
+      volumes:
+      - name: truenas-volume
+        persistentVolumeClaim:
+          claimName: truenas-pics-pvc
+      - name: unas-volume
+        persistentVolumeClaim:
+          claimName: unas-k8s-pvc
