@@ -16,7 +16,7 @@ spec:
     - file_mode=0777
   csi:
     driver: smb.csi.k8s.io
-    volumeHandle: smb-server.default.svc.cluster.local/share##
+    volumeHandle: smb-server.default.svc.cluster.local/media/sonarr-tv
     volumeAttributes:
       source: //192.168.50.115/k8s/media/sonarr-tv
     nodeStageSecretRef:
@@ -54,7 +54,7 @@ spec:
     - file_mode=0777
   csi:
     driver: smb.csi.k8s.io
-    volumeHandle: smb-server.default.svc.cluster.local/share##
+    volumeHandle: smb-server.default.svc.cluster.local/media/sonarr-config
     volumeAttributes:
       source: //192.168.50.115/k8s/media/sonarr-config
     nodeStageSecretRef:
@@ -73,3 +73,14 @@ spec:
       storage: 20Ti
   volumeName: sonarr-config-unas
   storageClassName: smb
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationDestination
+metadata:
+  name: sonarr-tv-unas
+spec:
+  trigger:
+    manual: first
+  rsync:
+    copyMethod: Direct
+    destinationPVC: sonarr-tv-unas
