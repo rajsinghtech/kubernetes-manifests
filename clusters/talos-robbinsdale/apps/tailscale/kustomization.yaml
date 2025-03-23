@@ -17,3 +17,4 @@ resources:
  - egress.yaml
  - namespace.yaml
  - connector.yaml
+ - proxy-class.yaml
