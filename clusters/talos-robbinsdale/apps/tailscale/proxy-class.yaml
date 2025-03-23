@@ -8,6 +8,7 @@ spec:
   metrics:
     enable: true
     serviceMonitor:
+      enable: true
 ---
 apiVersion: tailscale.com/v1alpha1
 kind: ProxyClass
@@ -16,6 +17,7 @@ metadata:
 spec:
   tailscale:
     acceptRoutes: true
+---
 apiVersion: tailscale.com/v1alpha1
 kind: ProxyClass
 metadata:
@@ -25,4 +27,3 @@ spec:
     enable: true
     serviceMonitor:
       enable: true
----
