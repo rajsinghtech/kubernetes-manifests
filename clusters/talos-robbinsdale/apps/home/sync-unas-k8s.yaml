@@ -168,3 +168,41 @@ spec:
       - name: unas-volume
         persistentVolumeClaim:
           claimName: unas-k8s-pvc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pics-sync
+  namespace: home
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pics-sync
+  template:
+    metadata:
+      labels:
+        app: pics-sync
+    spec:
+      containers:
+      - name: sync
+        image: alpine:latest
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          apk add --no-cache rsync && \
+          rsync -av /truenas/pics/ /unas/pics/ && \
+          echo "done" && \
+          sleep infinity
+        volumeMounts:
+        - name: truenas-volume
+          mountPath: /truenas
+        - name: unas-volume
+          mountPath: /unas
+      volumes:
+      - name: truenas-volume
+        persistentVolumeClaim:
+          claimName: truenas-k8s-pvc
+      - name: unas-volume
+        persistentVolumeClaim:
+          claimName: unas-k8s-pvc
