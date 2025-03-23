@@ -177,7 +177,7 @@ metadata:
   name: immich-sync
   namespace: home
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: immich-sync
