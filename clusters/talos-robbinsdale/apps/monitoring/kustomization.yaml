@@ -5,6 +5,7 @@ resources:
   - ./karma
   - alertconfig.yaml
   - secrets.yaml
+  - dashboard-tailscale.yaml
 
 helmCharts:
   - name: kube-prometheus-stack
