@@ -116,7 +116,7 @@ spec:
         - |
           apk add --no-cache rsync && \
           while true; do
-            rsync -av /truenas/media/sonarr-tv/ /unas/media/sonarr-tv/
+            rsync -av --delete /truenas/media/sonarr-tv/ /unas/media/sonarr-tv/
             sleep 3600
           done
         volumeMounts:
@@ -156,45 +156,6 @@ spec:
           apk add --no-cache rsync && \
           while true; do
             rsync -av /truenas/media/radarr-movies/ /unas/media/radarr-movies/
-            sleep 3600
-          done
-        volumeMounts:
-        - name: truenas-volume
-          mountPath: /truenas
-        - name: unas-volume
-          mountPath: /unas
-      volumes:
-      - name: truenas-volume
-        persistentVolumeClaim:
-          claimName: truenas-k8s-pvc
-      - name: unas-volume
-        persistentVolumeClaim:
-          claimName: unas-k8s-pvc
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: immich-sync
-  namespace: home
-spec:
-  replicas: 0
-  selector:
-    matchLabels:
-      app: immich-sync
-  template:
-    metadata:
-      labels:
-        app: immich-sync
-    spec:
-      containers:
-      - name: immich-sync
-        image: alpine:latest
-        command: ["/bin/sh", "-c"]
-        args:
-        - |
-          apk add --no-cache rsync && \
-          while true; do
-            rsync -av --delete /truenas/immich/ /unas/immich/
             sleep 3600
           done
         volumeMounts:
