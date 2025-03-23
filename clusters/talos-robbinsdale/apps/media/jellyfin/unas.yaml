@@ -16,7 +16,7 @@ spec:
     - file_mode=0777
   csi:
     driver: smb.csi.k8s.io
-    volumeHandle: smb-server.default.svc.cluster.local/share##
+    volumeHandle: smb-server.default.svc.cluster.local/k8s/media/jellyfin-config
     volumeAttributes:
       source: //192.168.50.115/k8s/media/jellyfin-config
     nodeStageSecretRef:
