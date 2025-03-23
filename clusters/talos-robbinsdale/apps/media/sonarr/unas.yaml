@@ -72,15 +72,4 @@ spec:
     requests:
       storage: 20Ti
   volumeName: sonarr-config-unas
-  storageClassName: smb 
----
-apiVersion: volsync.backube/v1alpha1
-kind: ReplicationDestination
-metadata:
-  name: sonarr-tv-unas
-spec:
-  trigger:
-    manual: first
-  rsync:
-    copyMethod: Direct
-    destinationPVC: sonarr-tv-unas
+  storageClassName: smb
