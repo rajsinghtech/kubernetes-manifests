@@ -191,7 +191,7 @@ spec:
         args:
         - |
           apk add --no-cache rsync && \
-          rsync -av /truenas/pics/ /unas/pics/ && \
+          rsync -avL /truenas/pics/ /unas/pics/ && \
           echo "done" && \
           sleep infinity
         volumeMounts:
