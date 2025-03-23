@@ -63,7 +63,7 @@ spec:
       volumes:
         - name: storage
           persistentVolumeClaim:
-            claimName: frigate-data
+            claimName: frigate-data-unas
         - name: config
           persistentVolumeClaim:
             claimName: frigate-config
