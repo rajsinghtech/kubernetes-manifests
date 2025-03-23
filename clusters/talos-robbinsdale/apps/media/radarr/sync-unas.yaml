@@ -1,0 +1,23 @@
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationDestination
+metadata:
+  name: radarr-movies
+  namespace: media
+spec:
+  rsync:
+    copyMethod: Direct
+    destinationPVC: radarr-movies-unas
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: radarr-movies
+  namespace: media
+spec:
+  sourcePVC: radarr-movies
+  trigger:
+    manual: first
+  rsync:
+    sshKeys: volsync-rsync-dst-src-radarr-movies
+    address: volsync-rsync-dst-radarr-movies
+    copyMethod: Direct
