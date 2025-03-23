@@ -61,7 +61,7 @@ spec:
     driver: smb.csi.k8s.io
     # volumeHandle format: {smb-server-address}#{sub-dir-name}#{share-name}
     # make sure this value is unique for every share in the cluster
-    volumeHandle: smb-server.default.svc.cluster.local/share##
+    volumeHandle: smb-server.default.svc.cluster.local/k8s/sync
     volumeAttributes:
       source: //192.168.50.115/k8s
     nodeStageSecretRef:
