@@ -1,0 +1,23 @@
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationDestination
+metadata:
+  name: sonarr-tv
+  namespace: media
+spec:
+  rsync:
+    copyMethod: Direct
+    destinationPVC: sonarr-tv-unas
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: sonarr-tv
+  namespace: media
+spec:
+  sourcePVC: sonarr-tv
+  trigger:
+    manual: first
+  rsync:
+    sshKeys: volsync-rsync-dst-src-sonarr-tv
+    address: volsync-rsync-dst-sonarr-tv
+    copyMethod: Direct
