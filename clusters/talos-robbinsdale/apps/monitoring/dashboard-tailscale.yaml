@@ -8,7 +8,7 @@ metadata:
   name: tailscale-grafana-dashboard
   namespace: monitoring
 data:
-  cnp.json: |-
+  tailscale.json: |-
     {
       "__inputs": [
         {
