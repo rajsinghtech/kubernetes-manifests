@@ -61,10 +61,6 @@ spec:
               mountPath: /mnt/proxmox-vault
             - name: nfs-unas
               mountPath: /mnt/unas
-            - name: config-volume
-              mountPath: /config
-            # - name: ceph-generic-fs
-            #   mountPath: /mnt/ceph
       volumes:
         - name: startup-script
           configMap:
@@ -82,7 +78,4 @@ spec:
         #   nfs:
         #     path: /ceph
         # server: 10.43.143.159
-        - name: config-volume
-          persistentVolumeClaim:
-            claimName: code-server-config
       restartPolicy: Always # Restart policy for the pod
