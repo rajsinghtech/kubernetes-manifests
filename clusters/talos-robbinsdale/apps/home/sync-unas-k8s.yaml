@@ -137,7 +137,7 @@ metadata:
   name: radarr-movies-sync
   namespace: home
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: radarr-movies-sync
@@ -206,3 +206,70 @@ spec:
       - name: unas-volume
         persistentVolumeClaim:
           claimName: unas-k8s-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: truenas-pics-pvc
+  namespace: home
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10000Gi
+  storageClassName: ""
+  volumeName: truenas-pics-pv
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: truenas-pics-pv
+  namespace: home
+spec:
+  capacity:
+    storage: 10000Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: /mnt/vault/pics
+    server: truenas.local
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pics-sync-truenas-to-truenas
+  namespace: home
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pics-sync-truenas-to-truenas
+  template:
+    metadata:
+      labels:
+        app: pics-sync-truenas-to-truenas
+    spec:
+      containers:
+      - name: sync
+        image: alpine:latest
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          apk add --no-cache rsync && \
+          rsync -av --ignore-existing /truenas-pics/apple_photos_library/ /truenas-k8s/pics/ && \
+          echo "done" && \
+          sleep infinity
+        volumeMounts:
+        - name: truenas-k8s-volume
+          mountPath: /truenas-k8s
+        - name: truenas-pics-volume
+          mountPath: /truenas-pics
+      volumes:
+      - name: truenas-k8s-volume
+        persistentVolumeClaim:
+          claimName: truenas-k8s-pvc
+      - name: truenas-pics-volume
+        persistentVolumeClaim:
+          claimName: truenas-pics-pvc
