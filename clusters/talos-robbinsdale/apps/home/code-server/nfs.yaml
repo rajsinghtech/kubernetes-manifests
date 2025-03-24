@@ -10,7 +10,7 @@ spec:
     requests:
       storage: 10000Gi
   storageClassName: ""
-  volumeName: truenas-k8s-pv
+  volumeName: truenas-k8s
 ---
 apiVersion: v1
 kind: PersistentVolume
