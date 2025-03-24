@@ -193,7 +193,7 @@ spec:
           apk add --no-cache rsync && \
           rsync -avL /truenas/pics/ /unas/pics/ && \
           echo "done" && \
-          sleep infinity
+          sleep 300
         volumeMounts:
         - name: truenas-volume
           mountPath: /truenas
