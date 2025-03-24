@@ -99,7 +99,7 @@ metadata:
   name: sonarr-tv-sync
   namespace: home
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: sonarr-tv-sync
@@ -273,3 +273,41 @@ spec:
       - name: truenas-pics-volume
         persistentVolumeClaim:
           claimName: truenas-pics-pvc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: immich-uploads-sync
+  namespace: home
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: immich-uploads-sync
+  template:
+    metadata:
+      labels:
+        app: immich-uploads-sync
+    spec:
+      containers:
+      - name: immich-uploads-sync
+        image: alpine:latest
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          apk add --no-cache rsync && \
+          rsync -av --delete /truenas/immich/immich/upload/ /unas/immich/immich/upload/ && \
+          echo "done" && \
+          sleep infinity
+        volumeMounts:
+        - name: truenas-volume
+          mountPath: /truenas
+        - name: unas-volume
+          mountPath: /unas
+      volumes:
+      - name: truenas-volume
+        persistentVolumeClaim:
+          claimName: truenas-k8s-pvc
+      - name: unas-volume
+        persistentVolumeClaim:
+          claimName: unas-k8s-pvc
