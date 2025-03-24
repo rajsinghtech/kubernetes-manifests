@@ -67,15 +67,9 @@ spec:
             name: startup-script
             defaultMode: 0755 # Set the permissions for the files in the ConfigMap
         - name: nfs-truenas
-          nfs:
-            path: /mnt/vault/k8s
-            server: truenas.local
+          persistentVolumeClaim:
+            claimName: truenas-k8s
         - name: nfs-unas
-          nfs:
-            path: /var/nfs/shared/k8s
-            server: 192.168.50.115
-        # - name: ceph-generic-fs
-        #   nfs:
-        #     path: /ceph
-        # server: 10.43.143.159
+          persistentVolumeClaim:
+            claimName: unas-k8s
       restartPolicy: Always # Restart policy for the pod

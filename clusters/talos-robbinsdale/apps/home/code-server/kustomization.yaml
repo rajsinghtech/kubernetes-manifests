@@ -6,6 +6,8 @@ resources:
   - service.yaml
   - httproute.yaml
   - secret.yaml
+  - nfs.yaml
+  - unas.yaml
 configMapGenerator:
   - name: startup-script
     files:
