@@ -280,7 +280,7 @@ metadata:
   name: immich-uploads-sync
   namespace: home
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app: immich-uploads-sync
