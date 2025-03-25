@@ -61,28 +61,15 @@ spec:
               mountPath: /mnt/proxmox-vault
             - name: nfs-unas
               mountPath: /mnt/unas
-            - name: config-volume
-              mountPath: /config
-            # - name: ceph-generic-fs
-            #   mountPath: /mnt/ceph
       volumes:
         - name: startup-script
           configMap:
             name: startup-script
             defaultMode: 0755 # Set the permissions for the files in the ConfigMap
         - name: nfs-truenas
-          nfs:
-            path: /mnt/vault/k8s
-            server: truenas.local
-        - name: nfs-unas
-          nfs:
-            path: /var/nfs/shared/k8s
-            server: 192.168.50.115
-        # - name: ceph-generic-fs
-        #   nfs:
-        #     path: /ceph
-        # server: 10.43.143.159
-        - name: config-volume
           persistentVolumeClaim:
-            claimName: code-server-config
+            claimName: truenas-k8s
+        - name: nfs-unas
+          persistentVolumeClaim:
+            claimName: unas-k8s
       restartPolicy: Always # Restart policy for the pod
