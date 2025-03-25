@@ -311,3 +311,117 @@ spec:
       - name: unas-volume
         persistentVolumeClaim:
           claimName: unas-k8s-pvc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: immich-thumbs-sync-2
+  namespace: home
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: immich-thumbs-sync-2
+  template:
+    metadata:
+      labels:
+        app: immich-thumbs-sync-2
+    spec:
+      containers:
+      - name: immich-thumbs-sync-2
+        image: alpine:latest
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          apk add --no-cache rsync && \
+          rsync -av --delete /truenas/immich/immich/thumbs/d203bad9-6eef-4b17-b50f-499483a806bc/ /unas/immich/immich/thumbs/d203bad9-6eef-4b17-b50f-499483a806bc/ && \
+          echo "done" && \
+          sleep infinity
+        volumeMounts:
+        - name: truenas-volume
+          mountPath: /truenas
+        - name: unas-volume
+          mountPath: /unas
+      volumes:
+      - name: truenas-volume
+        persistentVolumeClaim:
+          claimName: truenas-k8s-pvc
+      - name: unas-volume
+        persistentVolumeClaim:
+          claimName: unas-k8s-pvc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: immich-thumbs-sync-3
+  namespace: home
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: immich-thumbs-sync-3
+  template:
+    metadata:
+      labels:
+        app: immich-thumbs-sync-3
+    spec:
+      containers:
+      - name: immich-thumbs-sync-3
+        image: alpine:latest
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          apk add --no-cache rsync && \
+          rsync -av --delete /truenas/immich/immich/thumbs/dd9809ad-e4f8-44f7-aa08-f5769bfbca3f/ /unas/immich/immich/thumbs/dd9809ad-e4f8-44f7-aa08-f5769bfbca3f/ && \
+          echo "done" && \
+          sleep infinity
+        volumeMounts:
+        - name: truenas-volume
+          mountPath: /truenas
+        - name: unas-volume
+          mountPath: /unas
+      volumes:
+      - name: truenas-volume
+        persistentVolumeClaim:
+          claimName: truenas-k8s-pvc
+      - name: unas-volume
+        persistentVolumeClaim:
+          claimName: unas-k8s-pvc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: immich-thumbs-sync-4
+  namespace: home
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: immich-thumbs-sync-4
+  template:
+    metadata:
+      labels:
+        app: immich-thumbs-sync-4
+    spec:
+      containers:
+      - name: immich-thumbs-sync-4
+        image: alpine:latest
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          apk add --no-cache rsync && \
+          rsync -av --delete /truenas/immich/immich/thumbs/f4f860a5-1229-4f79-8f78-52b6497f1e29/ /unas/immich/immich/thumbs/f4f860a5-1229-4f79-8f78-52b6497f1e29/ && \
+          echo "done" && \
+          sleep infinity
+        volumeMounts:
+        - name: truenas-volume
+          mountPath: /truenas
+        - name: unas-volume
+          mountPath: /unas
+      volumes:
+      - name: truenas-volume
+        persistentVolumeClaim:
+          claimName: truenas-k8s-pvc
+      - name: unas-volume
+        persistentVolumeClaim:
+          claimName: unas-k8s-pvc
