@@ -242,7 +242,7 @@ metadata:
   name: pics-sync-truenas-to-truenas
   namespace: home
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: pics-sync-truenas-to-truenas
@@ -280,7 +280,7 @@ metadata:
   name: immich-uploads-sync
   namespace: home
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: immich-uploads-sync
@@ -318,7 +318,7 @@ metadata:
   name: immich-thumbs-sync-2
   namespace: home
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: immich-thumbs-sync-2
@@ -394,7 +394,7 @@ metadata:
   name: immich-thumbs-sync-4
   namespace: home
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: immich-thumbs-sync-4
