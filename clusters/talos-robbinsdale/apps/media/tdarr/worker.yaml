@@ -58,10 +58,10 @@ spec:
       volumes:
         - name: tv-volume
           persistentVolumeClaim:
-            claimName: sonarr-tv
+            claimName: sonarr-tv-unas
         - name: movies-volume
           persistentVolumeClaim:
-            claimName: radarr-movies
+            claimName: radarr-movies-unas
         # - name: transcode-cache
         #   persistentVolumeClaim:
         #     claimName: tdarr-transcode-cache

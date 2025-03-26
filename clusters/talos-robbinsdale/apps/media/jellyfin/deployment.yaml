@@ -43,16 +43,16 @@ spec:
       volumes:
         - name: tv-volume
           persistentVolumeClaim:
-            claimName: sonarr-tv
+            claimName: sonarr-tv-unas
         - name: movies-volume
           persistentVolumeClaim:
-            claimName: radarr-movies
+            claimName: radarr-movies-unas
         - name: audiobooks-volume
           persistentVolumeClaim:
-            claimName: readarr-books
+            claimName: readarr-books-unas
         - name: music-volume
           persistentVolumeClaim:
-            claimName: lidarr-music
+            claimName: lidarr-music-unas
         - name: config-volume
           persistentVolumeClaim:
-            claimName: jellyfin-config-ceph # TODO: move to UNAS?
+            claimName: jellyfin-config-ceph 

@@ -41,4 +41,4 @@ spec:
       volumes:
       - name: config-volume
         persistentVolumeClaim:
-          claimName: prowlarr-config-ceph # TODO: move to UNAS?
+          claimName: prowlarr-config-ceph 

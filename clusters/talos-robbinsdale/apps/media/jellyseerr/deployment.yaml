@@ -34,4 +34,4 @@ spec:
       volumes:
         - name: config-volume
           persistentVolumeClaim:
-            claimName: jellyseerr-config-ceph # TODO: move to UNAS?
+            claimName: jellyseerr-config-ceph 
