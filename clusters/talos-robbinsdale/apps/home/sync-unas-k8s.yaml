@@ -159,10 +159,11 @@ spec:
   nfs:
     path: /mnt/vault/pics
     server: truenas.local
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: all-but-immich-sync
+  name: all-but-immich-and-pics-sync
   namespace: home
 spec:
   replicas: 1
@@ -196,4 +197,3 @@ spec:
       - name: unas-volume
         persistentVolumeClaim:
           claimName: unas-k8s-pvc
----
