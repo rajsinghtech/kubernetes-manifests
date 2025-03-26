@@ -29,14 +29,13 @@ patches:
         template:
           spec:
             volumes:
-              - name: nfs-truenas
-                nfs:
-                  path: /mnt/vault
-                  server: truenas.local
+              - name: smb-unas
+                persistentVolumeClaim:
+                  claimName: immich-unas
             containers:
               - name: immich-server
                 volumeMounts:
-                  - name: nfs-truenas
+                  - name: smb-unas
                     mountPath: /mnt/vault
                 resources:
                   requests:
