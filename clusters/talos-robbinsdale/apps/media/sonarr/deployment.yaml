@@ -36,10 +36,10 @@ spec:
       volumes:
         - name: tv-volume
           persistentVolumeClaim:
-            claimName: sonarr-tv
+            claimName: sonarr-tv-unas
         - name: downloads-volume
           persistentVolumeClaim:
-            claimName: transmission-tv-data
+            claimName: transmission-tv-data-unas
         - name: config-volume
           persistentVolumeClaim:
             claimName: sonarr-config-ceph # TODO: move to UNAS

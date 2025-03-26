@@ -77,16 +77,16 @@ spec:
       volumes:
       - name: tdarr-config
         persistentVolumeClaim:
-          claimName: tdarr-config
+          claimName: tdarr-config-unas
       - name: tdarr-server
         persistentVolumeClaim:
-          claimName: tdarr-server
+          claimName: tdarr-server-unas
       - name: tv-volume
         persistentVolumeClaim:
-          claimName: sonarr-tv
+          claimName: sonarr-tv-unas
       - name: movies-volume
         persistentVolumeClaim:
-          claimName: radarr-movies
+          claimName: radarr-movies-unas
       # - name: transcode-cache
       #   persistentVolumeClaim:
       #     claimName: tdarr-transcode-cache

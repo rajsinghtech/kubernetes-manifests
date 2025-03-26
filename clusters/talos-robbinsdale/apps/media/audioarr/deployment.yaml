@@ -36,10 +36,10 @@ spec:
       volumes:
         - name: books-volume
           persistentVolumeClaim:
-            claimName: readarr-books
+            claimName: readarr-books-unas
         - name: downloads-volume
           persistentVolumeClaim:
-            claimName: transmission-books-data
+            claimName: transmission-books-data-unas
         - name: config-volume
           persistentVolumeClaim:
-            claimName: audioarr-config-ceph # TODO: move to UNAS?
+            claimName: audioarr-config-ceph 

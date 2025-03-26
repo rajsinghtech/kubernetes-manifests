@@ -68,20 +68,20 @@ spec:
       volumes:
         - name: config
           persistentVolumeClaim:
-            claimName: plex-config-ceph  # TODO: move to UNAS?
+            claimName: plex-config-ceph  
         - name: transcode
           emptyDir:
             medium: Memory
             sizeLimit: 6Gi
         - name: movies-volume
           persistentVolumeClaim:
-            claimName: radarr-movies
+            claimName: radarr-movies-unas
         - name: tv-volume
           persistentVolumeClaim:
-            claimName: sonarr-tv
+            claimName: sonarr-tv-unas
         - name: audiobooks-volume
           persistentVolumeClaim:
-            claimName: readarr-books
+            claimName: readarr-books-unas
         - name: music-volume
           persistentVolumeClaim:
-            claimName: lidarr-music
+            claimName: lidarr-music-unas

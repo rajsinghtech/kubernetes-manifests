@@ -36,10 +36,10 @@ spec:
       volumes:
       - name: movies-volume
         persistentVolumeClaim:
-          claimName: radarr-movies
+          claimName: radarr-movies-unas
       - name: downloads-volume
         persistentVolumeClaim:
-          claimName: transmission-movies-data
+          claimName: transmission-movies-data-unas
       - name: config-volume
         persistentVolumeClaim:
-          claimName: radarr-config-ceph # TODO: move to UNAS?
+          claimName: radarr-config-ceph 
