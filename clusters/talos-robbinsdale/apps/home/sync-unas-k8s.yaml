@@ -166,7 +166,7 @@ metadata:
   name: all-but-immich-and-pics-sync
   namespace: home
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: all-but-immich-and-pics-sync
