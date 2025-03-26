@@ -92,82 +92,7 @@ spec:
     sshKeys: volsync-rsync-dst-src-unas-k8s-destination
     address: volsync-rsync-dst-unas-k8s-destination
     copyMethod: Direct
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: sonarr-tv-sync
-  namespace: home
-spec:
-  replicas: 0
-  selector:
-    matchLabels:
-      app: sonarr-tv-sync
-  template:
-    metadata:
-      labels:
-        app: sonarr-tv-sync
-    spec:
-      containers:
-      - name: sonarr-tv-sync
-        image: alpine:latest
-        command: ["/bin/sh", "-c"]
-        args:
-        - |
-          apk add --no-cache rsync && \
-          rsync -av --delete /truenas/media/sonarr-tv/ /unas/media/sonarr-tv/ && \
-          echo "done" && \
-          sleep infinity
-        volumeMounts:
-        - name: truenas-volume
-          mountPath: /truenas
-        - name: unas-volume
-          mountPath: /unas
-      volumes:
-      - name: truenas-volume
-        persistentVolumeClaim:
-          claimName: truenas-k8s-pvc
-      - name: unas-volume
-        persistentVolumeClaim:
-          claimName: unas-k8s-pvc
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: radarr-movies-sync
-  namespace: home
-spec:
-  replicas: 0
-  selector:
-    matchLabels:
-      app: radarr-movies-sync
-  template:
-    metadata:
-      labels:
-        app: radarr-movies-sync
-    spec:
-      containers:
-      - name: radarr-movies-sync
-        image: alpine:latest
-        command: ["/bin/sh", "-c"]
-        args:
-        - |
-          apk add --no-cache rsync && \
-          rsync -av /truenas/media/radarr-movies/ /unas/media/radarr-movies/ && \
-          echo "done" && \
-          sleep infinity
-        volumeMounts:
-        - name: truenas-volume
-          mountPath: /truenas
-        - name: unas-volume
-          mountPath: /unas
-      volumes:
-      - name: truenas-volume
-        persistentVolumeClaim:
-          claimName: truenas-k8s-pvc
-      - name: unas-volume
-        persistentVolumeClaim:
-          claimName: unas-k8s-pvc
+    options: ["--exclude=immich/immich/thumbs/"]
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -239,120 +164,6 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: pics-sync-truenas-to-truenas
-  namespace: home
-spec:
-  replicas: 0
-  selector:
-    matchLabels:
-      app: pics-sync-truenas-to-truenas
-  template:
-    metadata:
-      labels:
-        app: pics-sync-truenas-to-truenas
-    spec:
-      containers:
-      - name: sync
-        image: alpine:latest
-        command: ["/bin/sh", "-c"]
-        args:
-        - |
-          apk add --no-cache rsync && \
-          rsync -av --ignore-existing /truenas-pics/apple_photos_library/ /truenas-k8s/pics/ && \
-          echo "done" && \
-          sleep infinity
-        volumeMounts:
-        - name: truenas-k8s-volume
-          mountPath: /truenas-k8s
-        - name: truenas-pics-volume
-          mountPath: /truenas-pics
-      volumes:
-      - name: truenas-k8s-volume
-        persistentVolumeClaim:
-          claimName: truenas-k8s-pvc
-      - name: truenas-pics-volume
-        persistentVolumeClaim:
-          claimName: truenas-pics-pvc
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: immich-uploads-sync
-  namespace: home
-spec:
-  replicas: 0
-  selector:
-    matchLabels:
-      app: immich-uploads-sync
-  template:
-    metadata:
-      labels:
-        app: immich-uploads-sync
-    spec:
-      containers:
-      - name: immich-uploads-sync
-        image: alpine:latest
-        command: ["/bin/sh", "-c"]
-        args:
-        - |
-          apk add --no-cache rsync && \
-          rsync -av --delete /truenas/immich/immich/upload/ /unas/immich/immich/upload/ && \
-          echo "done" && \
-          sleep infinity
-        volumeMounts:
-        - name: truenas-volume
-          mountPath: /truenas
-        - name: unas-volume
-          mountPath: /unas
-      volumes:
-      - name: truenas-volume
-        persistentVolumeClaim:
-          claimName: truenas-k8s-pvc
-      - name: unas-volume
-        persistentVolumeClaim:
-          claimName: unas-k8s-pvc
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: immich-thumbs-sync-2
-  namespace: home
-spec:
-  replicas: 0
-  selector:
-    matchLabels:
-      app: immich-thumbs-sync-2
-  template:
-    metadata:
-      labels:
-        app: immich-thumbs-sync-2
-    spec:
-      containers:
-      - name: immich-thumbs-sync-2
-        image: alpine:latest
-        command: ["/bin/sh", "-c"]
-        args:
-        - |
-          apk add --no-cache rsync && \
-          rsync -av --delete /truenas/immich/immich/thumbs/d203bad9-6eef-4b17-b50f-499483a806bc/ /unas/immich/immich/thumbs/d203bad9-6eef-4b17-b50f-499483a806bc/ && \
-          echo "done" && \
-          sleep infinity
-        volumeMounts:
-        - name: truenas-volume
-          mountPath: /truenas
-        - name: unas-volume
-          mountPath: /unas
-      volumes:
-      - name: truenas-volume
-        persistentVolumeClaim:
-          claimName: truenas-k8s-pvc
-      - name: unas-volume
-        persistentVolumeClaim:
-          claimName: unas-k8s-pvc
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
   name: immich-thumbs-sync-3
   namespace: home
 spec:
@@ -391,26 +202,26 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: immich-thumbs-sync-4
+  name: immich-thumbs-sync-2
   namespace: home
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
-      app: immich-thumbs-sync-4
+      app: immich-thumbs-sync-2
   template:
     metadata:
       labels:
-        app: immich-thumbs-sync-4
+        app: immich-thumbs-sync-2
     spec:
       containers:
-      - name: immich-thumbs-sync-4
+      - name: immich-thumbs-sync-2
         image: alpine:latest
         command: ["/bin/sh", "-c"]
         args:
         - |
           apk add --no-cache rsync && \
-          rsync -av --delete /truenas/immich/immich/thumbs/f4f860a5-1229-4f79-8f78-52b6497f1e29/ /unas/immich/immich/thumbs/f4f860a5-1229-4f79-8f78-52b6497f1e29/ && \
+          rsync -av --delete /truenas/immich/immich/thumbs/9939132d-c6e6-462b-9f33-4c3e6965ed34/ /unas/immich/immich/thumbs/9939132d-c6e6-462b-9f33-4c3e6965ed34/ && \
           echo "done" && \
           sleep infinity
         volumeMounts:
