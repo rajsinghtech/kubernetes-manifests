@@ -18,7 +18,7 @@ spec:
     driver: smb.csi.k8s.io
     volumeHandle: smb-server.default.svc.cluster.local/k8s/homarr-config
     volumeAttributes:
-      source: //192.168.50.115/k8s/homarr-config
+      source: //192.168.50.115/k8s/homarr/homarr-config
     nodeStageSecretRef:
       name: csi-smbcreds
       namespace: kube-system
@@ -56,7 +56,7 @@ spec:
     driver: smb.csi.k8s.io
     volumeHandle: smb-server.default.svc.cluster.local/k8s/homarr-data
     volumeAttributes:
-      source: //192.168.50.115/k8s/homarr-data
+      source: //192.168.50.115/k8s/homarr/homarr-data
     nodeStageSecretRef:
       name: csi-smbcreds
       namespace: kube-system
