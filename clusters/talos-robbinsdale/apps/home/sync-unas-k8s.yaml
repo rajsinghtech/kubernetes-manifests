@@ -68,38 +68,13 @@ spec:
       name: csi-smbcreds
       namespace: kube-system
 ---
-apiVersion: volsync.backube/v1alpha1
-kind: ReplicationDestination
-metadata:
-  name: unas-k8s-destination
-  namespace: home
-spec:
-  rsync:
-    copyMethod: Direct
-    capacity: 10000Gi
-    destinationPVC: unas-k8s-pvc
----
-apiVersion: volsync.backube/v1alpha1
-kind: ReplicationSource
-metadata:
-  name: truenas-k8s-source
-  namespace: home
-spec:
-  sourcePVC: truenas-k8s-pvc
-  trigger:
-    manual: first
-  rsync:
-    sshKeys: volsync-rsync-dst-src-unas-k8s-destination
-    address: volsync-rsync-dst-unas-k8s-destination
-    copyMethod: Direct
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: pics-sync
   namespace: home
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: pics-sync
