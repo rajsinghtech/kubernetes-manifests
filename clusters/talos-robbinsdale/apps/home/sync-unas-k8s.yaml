@@ -169,11 +169,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: all-but-immich-sync
+      app: all-but-immich-and-pics-sync
   template:
     metadata:
       labels:
-        app: pics-sync
+        app: all-but-immich-and-pics-sync
     spec:
       containers:
       - name: sync
