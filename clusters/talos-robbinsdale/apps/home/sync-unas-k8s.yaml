@@ -92,7 +92,6 @@ spec:
     sshKeys: volsync-rsync-dst-src-unas-k8s-destination
     address: volsync-rsync-dst-unas-k8s-destination
     copyMethod: Direct
-    options: ["--exclude=immich/immich/thumbs/"]
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -160,79 +159,3 @@ spec:
   nfs:
     path: /mnt/vault/pics
     server: truenas.local
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: immich-thumbs-sync-3
-  namespace: home
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: immich-thumbs-sync-3
-  template:
-    metadata:
-      labels:
-        app: immich-thumbs-sync-3
-    spec:
-      containers:
-      - name: immich-thumbs-sync-3
-        image: alpine:latest
-        command: ["/bin/sh", "-c"]
-        args:
-        - |
-          apk add --no-cache rsync && \
-          rsync -av --delete /truenas/immich/immich/thumbs/dd9809ad-e4f8-44f7-aa08-f5769bfbca3f/ /unas/immich/immich/thumbs/dd9809ad-e4f8-44f7-aa08-f5769bfbca3f/ && \
-          echo "done" && \
-          sleep infinity
-        volumeMounts:
-        - name: truenas-volume
-          mountPath: /truenas
-        - name: unas-volume
-          mountPath: /unas
-      volumes:
-      - name: truenas-volume
-        persistentVolumeClaim:
-          claimName: truenas-k8s-pvc
-      - name: unas-volume
-        persistentVolumeClaim:
-          claimName: unas-k8s-pvc
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: immich-thumbs-sync-2
-  namespace: home
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: immich-thumbs-sync-2
-  template:
-    metadata:
-      labels:
-        app: immich-thumbs-sync-2
-    spec:
-      containers:
-      - name: immich-thumbs-sync-2
-        image: alpine:latest
-        command: ["/bin/sh", "-c"]
-        args:
-        - |
-          apk add --no-cache rsync && \
-          rsync -av --delete /truenas/immich/immich/thumbs/9939132d-c6e6-462b-9f33-4c3e6965ed34/ /unas/immich/immich/thumbs/9939132d-c6e6-462b-9f33-4c3e6965ed34/ && \
-          echo "done" && \
-          sleep infinity
-        volumeMounts:
-        - name: truenas-volume
-          mountPath: /truenas
-        - name: unas-volume
-          mountPath: /unas
-      volumes:
-      - name: truenas-volume
-        persistentVolumeClaim:
-          claimName: truenas-k8s-pvc
-      - name: unas-volume
-        persistentVolumeClaim:
-          claimName: unas-k8s-pvc
