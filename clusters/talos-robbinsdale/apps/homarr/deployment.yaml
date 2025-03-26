@@ -27,7 +27,7 @@ spec:
       volumes:
       - name: config-volume
         persistentVolumeClaim:
-          claimName: homarr-config-unas
+          claimName: homarr-config
       - name: data-volume
         persistentVolumeClaim:
-          claimName: homarr-data-unas
+          claimName: homarr-data
