@@ -1,13 +1,13 @@
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationDestination
 metadata:
-  name: plex-config-nfs
+  name: plex-config-unas
 spec:
   trigger:
     schedule: "0 */5 * * *"
   rsync:
     copyMethod: Direct
-    destinationPVC: plex-config
+    destinationPVC: plex-config-unas
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
@@ -18,6 +18,6 @@ spec:
   trigger:
     schedule: "0 */5 * * *"
   rsync:
-    sshKeys: volsync-rsync-dst-src-plex-config-nfs
-    address: volsync-rsync-dst-plex-config-nfs
+    sshKeys: volsync-rsync-dst-src-plex-config-unas
+    address: volsync-rsync-dst-plex-config-unas
     copyMethod: Direct

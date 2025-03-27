@@ -1,13 +1,13 @@
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationDestination
 metadata:
-  name: sonarr-config-nfs
+  name: sonarr-config-unas
 spec:
   trigger:
     schedule: "0 */9 * * *"
   rsync:
     copyMethod: Direct
-    destinationPVC: sonarr-config
+    destinationPVC: sonarr-config-unas
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
@@ -18,6 +18,6 @@ spec:
   trigger:
     schedule: "0 */9 * * *"
   rsync:
-    sshKeys: volsync-rsync-dst-src-sonarr-config-nfs
-    address: volsync-rsync-dst-sonarr-config-nfs
+    sshKeys: volsync-rsync-dst-src-sonarr-config-unas
+    address: volsync-rsync-dst-sonarr-config-unas
     copyMethod: Direct
