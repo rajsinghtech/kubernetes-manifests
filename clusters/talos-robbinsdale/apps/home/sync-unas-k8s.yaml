@@ -179,7 +179,7 @@ metadata:
   name: frigate-config-sync
   namespace: home
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: frigate-config-sync
