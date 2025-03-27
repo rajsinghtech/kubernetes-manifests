@@ -8,4 +8,4 @@ spec:
   resources:
     requests:
       storage: 5Gi
-  storageClassName: rook-cephfs
+  storageClassName: ceph-block-replicated-nvme
