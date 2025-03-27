@@ -5,6 +5,5 @@ namespace: media
 resources:
   - deployment.yaml
   - service.yaml
-  - nfs.yaml
   - unas.yaml
   - httproute.yaml
