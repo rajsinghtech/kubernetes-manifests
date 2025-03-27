@@ -1,7 +1,0 @@
-nfs:
-  path: /mnt/vault/k8s
-  server: truenas.local
-storageClass:
-  defaultClass: false
-  name: nfs-truenas
-  pathPattern: ${.PVC.namespace}/${.PVC.name}

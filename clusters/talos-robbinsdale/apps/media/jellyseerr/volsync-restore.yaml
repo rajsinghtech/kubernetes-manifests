@@ -12,9 +12,9 @@ spec:
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
-  name: jellyseerr-config-nfs
+  name: jellyseerr-config-unas
 spec:
-  sourcePVC: jellyseerr-config
+  sourcePVC: jellyseerr-config-unas
   trigger:
     manual: first
   rsync:
