@@ -6,7 +6,6 @@ resources:
   - server.yaml
   # - worker.yaml
   - service.yaml
-  - nfs.yaml
   - unas.yaml
   - ceph.yaml
   - httproute.yaml
