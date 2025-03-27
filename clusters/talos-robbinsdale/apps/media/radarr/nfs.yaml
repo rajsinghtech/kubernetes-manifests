@@ -21,16 +21,3 @@ spec:
     requests:
       storage: 1Gi
   storageClassName: nfs-truenas
----
-apiVersion: volsync.backube/v1alpha1
-kind: ReplicationSource
-metadata:
-  name: radarr-movies-nfs
-spec:
-  sourcePVC: radarr-movies
-  trigger:
-    manual: first
-  rsync:
-    sshKeys: volsync-rsync-dst-src-radarr-movies-unas
-    address: volsync-rsync-dst-radarr-movies-unas
-    copyMethod: Clone
