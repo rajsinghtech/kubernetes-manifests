@@ -7,5 +7,4 @@ resources:
   - service.yaml
   - pg.yaml
   - httproute.yaml
-  - nfs.yaml
   - unas.yaml

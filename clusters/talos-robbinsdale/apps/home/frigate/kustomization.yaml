@@ -5,7 +5,6 @@ namespace: home
 resources:
   - deployment.yaml
   - service.yaml
-  - nfs.yaml
   - unas.yaml
   - certificate.yaml
   - ceph.yaml

@@ -6,7 +6,6 @@ resources:
   - deployment.yaml
   - service.yaml
   - httproute.yaml
-  - nfs.yaml
   - unas.yaml
   - ceph.yaml
 
