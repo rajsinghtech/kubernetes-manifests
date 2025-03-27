@@ -21,7 +21,7 @@ immich:
     enabled: true
   persistence:
     library:
-      existingClaim: immich
+      existingClaim: immich-unas
 postgresql:
   enabled: false
 redis:

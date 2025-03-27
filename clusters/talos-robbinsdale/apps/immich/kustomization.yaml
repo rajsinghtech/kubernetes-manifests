@@ -29,14 +29,14 @@ patches:
         template:
           spec:
             volumes:
-              - name: smb-unas
+              - name: smb-unas-pics
                 persistentVolumeClaim:
-                  claimName: immich-unas
+                  claimName: immich-unas-pics
             containers:
               - name: immich-server
                 volumeMounts:
-                  - name: smb-unas
-                    mountPath: /mnt/vault
+                  - name: smb-unas-pics
+                    mountPath: /mnt/vault/pics
                 resources:
                   requests:
                     memory: "6Gi"
