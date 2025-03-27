@@ -8,3 +8,4 @@ resources:
   - nfs.yaml
   - unas.yaml
   - certificate.yaml
+  - ceph.yaml
