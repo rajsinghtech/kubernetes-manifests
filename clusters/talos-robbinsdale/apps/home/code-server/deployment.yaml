@@ -57,19 +57,14 @@ spec:
           volumeMounts:
             - name: startup-script
               mountPath: /custom-cont-init.d
-            - name: nfs-truenas
-              mountPath: /mnt/proxmox-vault
-            - name: nfs-unas
+            - name: unas
               mountPath: /mnt/unas
       volumes:
         - name: startup-script
           configMap:
             name: startup-script
             defaultMode: 0755 # Set the permissions for the files in the ConfigMap
-        - name: nfs-truenas
-          persistentVolumeClaim:
-            claimName: truenas-k8s
-        - name: nfs-unas
+        - name: unas
           persistentVolumeClaim:
             claimName: unas-k8s
       restartPolicy: Always # Restart policy for the pod
