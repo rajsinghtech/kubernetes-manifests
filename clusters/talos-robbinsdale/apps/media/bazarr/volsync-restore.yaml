@@ -12,9 +12,9 @@ spec:
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
-  name: bazarr-config-nfs
+  name: bazarr-config-unas
 spec:
-  sourcePVC: bazarr-config
+  sourcePVC: bazarr-config-unas
   trigger:
     manual: first
   rsync:

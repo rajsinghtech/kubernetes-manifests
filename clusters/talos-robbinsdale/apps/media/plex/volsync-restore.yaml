@@ -12,9 +12,9 @@ spec:
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
-  name: plex-config-nfs
+  name: plex-config-unas
 spec:
-  sourcePVC: plex-config
+  sourcePVC: plex-config-unas
   trigger:
     manual: first
   rsync:

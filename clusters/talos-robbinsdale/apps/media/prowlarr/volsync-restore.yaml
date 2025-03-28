@@ -12,9 +12,9 @@ spec:
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
-  name: prowlarr-config-nfs
+  name: prowlarr-config-unas
 spec:
-  sourcePVC: prowlarr-config
+  sourcePVC: prowlarr-config-unas
   trigger:
     manual: first
   rsync:

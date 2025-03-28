@@ -12,9 +12,9 @@ spec:
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
-  name: lidarr-config-nfs
+  name: lidarr-config-unas
 spec:
-  sourcePVC: lidarr-config
+  sourcePVC: lidarr-config-unas
   trigger:
     manual: first
   rsync:

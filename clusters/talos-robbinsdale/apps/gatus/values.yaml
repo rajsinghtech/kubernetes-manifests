@@ -68,9 +68,9 @@ config:
       alerts:
         - type: discord
           send-on-resolved: true
-    - name: Truenas
+    - name: Ubiquiti UNAS Pro
       group: servers
-      url: http://truenas.local
+      url: http://nas.local
       interval: 60s
       conditions:
         - "[STATUS] == 200"
