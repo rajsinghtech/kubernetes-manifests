@@ -12,9 +12,9 @@ spec:
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
-  name: sonarr-config-nfs
+  name: sonarr-config-unas
 spec:
-  sourcePVC: sonarr-config
+  sourcePVC: sonarr-config-unas
   trigger:
     manual: first
   rsync:

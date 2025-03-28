@@ -12,9 +12,9 @@ spec:
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
-  name: readarr-config-nfs
+  name: readarr-config-unas
 spec:
-  sourcePVC: readarr-config
+  sourcePVC: readarr-config-unas
   trigger:
     manual: first
   rsync:

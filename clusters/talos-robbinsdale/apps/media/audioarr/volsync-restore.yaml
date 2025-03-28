@@ -12,9 +12,9 @@ spec:
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
-  name: audioarr-config-nfs
+  name: audioarr-config-unas
 spec:
-  sourcePVC: audioarr-config
+  sourcePVC: audioarr-config-unas
   trigger:
     manual: first
   rsync:

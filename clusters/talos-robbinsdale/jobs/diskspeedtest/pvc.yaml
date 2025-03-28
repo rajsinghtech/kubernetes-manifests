@@ -1,20 +1,6 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: kbench-pvc-nfs
-spec:
-  volumeMode: Filesystem
-  #volumeMode: Block
-  storageClassName: nfs-truenas 
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 13Gi
----
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
   name: kbench-pvc-cephfs
 spec:
   volumeMode: Filesystem

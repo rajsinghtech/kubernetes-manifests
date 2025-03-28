@@ -12,9 +12,9 @@ spec:
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
-  name: radarr-config-nfs
+  name: radarr-config-unas
 spec:
-  sourcePVC: radarr-config
+  sourcePVC: radarr-config-unas
   trigger:
     manual: first
   rsync:

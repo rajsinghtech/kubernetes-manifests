@@ -12,9 +12,9 @@ spec:
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
-  name: jellyfin-config-nfs
+  name: jellyfin-config-unas
 spec:
-  sourcePVC: jellyfin-config
+  sourcePVC: jellyfin-config-unas
   trigger:
     manual: first
   rsync:
