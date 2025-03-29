@@ -68,6 +68,15 @@ config:
       alerts:
         - type: discord
           send-on-resolved: true
+    - name: Vault
+      group: servers
+      url: tcp://vault.local:6443
+      interval: 60s
+      conditions:
+        - "[CONNECTED] == true"
+      alerts:
+        - type: discord
+          send-on-resolved: true
     - name: Ubiquiti UNAS Pro
       group: servers
       url: http://nas.local
