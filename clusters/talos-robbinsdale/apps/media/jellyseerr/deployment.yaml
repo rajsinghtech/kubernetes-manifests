@@ -22,6 +22,8 @@ spec:
           volumeMounts:
             - name: config-volume
               mountPath: /app/config
+            - name: logs-volume
+              mountPath: /app/config/logs
           env:
             - name: PUID
               value: "0"
@@ -35,3 +37,5 @@ spec:
         - name: config-volume
           persistentVolumeClaim:
             claimName: jellyseerr-config-ceph 
+        - name: logs-volume
+          emptyDir: {} 
