@@ -15,6 +15,7 @@ spec:
       - "10.1.0.0/16"
       - "10.69.0.0/16"
   exitNode: false
+  appConnector: {}
 ---
 apiVersion: tailscale.com/v1alpha1
 kind: Connector
@@ -33,3 +34,4 @@ spec:
       - "10.1.0.0/16"
       - "10.69.0.0/16"
   exitNode: false
+  appConnector: {}
