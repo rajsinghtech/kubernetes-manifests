@@ -13,7 +13,7 @@ spec:
       - "10.0.0.0/16" # K8s Services
       - "10.1.0.0/16" # K8s Pods
       - "10.69.0.0/16" # Production Services
-  exitNode: false
+  exitNode: true
 ---
 apiVersion: tailscale.com/v1alpha1
 kind: Connector
@@ -30,4 +30,4 @@ spec:
       - "10.0.0.0/16" # K8s Services
       - "10.1.0.0/16" # K8s Pods
       - "10.69.0.0/16" # Production Services
-  exitNode: false
+  exitNode: true
