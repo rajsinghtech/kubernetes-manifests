@@ -37,12 +37,11 @@ spec:
 apiVersion: tailscale.com/v1alpha1
 kind: Connector
 metadata:
-  name: ipchicken-app-connector
+  name: mpls-exit-node
 spec:
   proxyClass: prod
   tags:
     - tag:k8s
-    - tag:ipchicken
-  hostname: ipchicken-app-connector
-  exitNode: false
-  appConnector: {}
+    - tag:mpls
+  hostname: mpls-exit-node
+  exitNode: true
