@@ -37,11 +37,12 @@ spec:
 apiVersion: tailscale.com/v1alpha1
 kind: Connector
 metadata:
-  name: app-connector
+  name: ipchicken-app-connector
 spec:
   proxyClass: prod
   tags:
     - tag:k8s
-  hostname: robbinsdale-app-connector
+    - tag:ipchicken
+  hostname: ipchicken-app-connector
   exitNode: false
   appConnector: {}
