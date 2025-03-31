@@ -9,11 +9,10 @@ spec:
   hostname: robbinsdale-connector-1
   subnetRouter:
     advertiseRoutes:
-      - "192.168.50.0/24"
-      - "192.168.51.0/24"
-      - "10.0.0.0/16"
-      - "10.1.0.0/16"
-      - "10.69.0.0/16"
+      - "192.168.50.0/24" # LAN
+      - "10.0.0.0/16" # K8s Services
+      - "10.1.0.0/16" # K8s Pods
+      - "10.69.0.0/16" # Production Services
   exitNode: false
 ---
 apiVersion: tailscale.com/v1alpha1
@@ -27,21 +26,8 @@ spec:
   hostname: robbinsdale-connector-2
   subnetRouter:
     advertiseRoutes:
-      - "192.168.50.0/24"
-      - "192.168.51.0/24"
-      - "10.0.0.0/16"
-      - "10.1.0.0/16"
-      - "10.69.0.0/16"
+      - "192.168.50.0/24" # LAN
+      - "10.0.0.0/16" # K8s Services
+      - "10.1.0.0/16" # K8s Pods
+      - "10.69.0.0/16" # Production Services
   exitNode: false
----
-apiVersion: tailscale.com/v1alpha1
-kind: Connector
-metadata:
-  name: mpls-exit-node
-spec:
-  proxyClass: prod
-  tags:
-    - tag:k8s
-    - tag:mpls
-  hostname: mpls-exit-node
-  exitNode: true
