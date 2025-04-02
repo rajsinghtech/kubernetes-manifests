@@ -1,2 +1,3 @@
 apiServerProxyConfig:
   mode: "true"
+operatorHostname: "robbinsdale-k8s-operator"
