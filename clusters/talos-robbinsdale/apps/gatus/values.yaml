@@ -79,10 +79,10 @@ config:
           send-on-resolved: true
     - name: Ubiquiti UNAS Pro
       group: servers
-      url: http://nas.local
+      url: tcp://nas.local
       interval: 60s
       conditions:
-        - "[STATUS] == 200"
+        - "[CONNECTED] == true"
       alerts:
         - type: discord
           send-on-resolved: true
