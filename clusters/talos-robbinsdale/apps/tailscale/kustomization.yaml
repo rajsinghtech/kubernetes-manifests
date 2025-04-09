@@ -18,3 +18,4 @@ resources:
  - namespace.yaml
  - connector.yaml
  - proxy-class.yaml
+ - recording.yaml
