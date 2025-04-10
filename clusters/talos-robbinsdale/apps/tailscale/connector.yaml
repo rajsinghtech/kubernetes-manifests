@@ -15,7 +15,6 @@ spec:
       - "10.69.0.0/16" # Production Services
       - fd7a:115c:a1e0:b1a:0:23::/96
   exitNode: true
-  appConnector: {}
 ---
 apiVersion: tailscale.com/v1alpha1
 kind: Connector
@@ -34,4 +33,13 @@ spec:
       - "10.69.0.0/16" # Production Services
       - fd7a:115c:a1e0:b1a:0:23::/96
   exitNode: true
+---
+apiVersion: tailscale.com/v1alpha1
+kind: Connector
+metadata:
+  name: robbinsdale-app-connector-1
+spec:
+  proxyClass: prod
+  tags:
+    - tag:k8s
   appConnector: {}
