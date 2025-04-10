@@ -140,7 +140,7 @@ metadata:
     app.kubernetes.io/name: external-dns
     app.kubernetes.io/instance: external-dns-unifi
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: external-dns
