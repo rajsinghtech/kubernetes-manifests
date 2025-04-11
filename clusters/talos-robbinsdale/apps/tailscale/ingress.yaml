@@ -28,7 +28,7 @@ spec:
   ingressClassName: tailscale
   tls:
     - hosts:
-        - hubble
+        # - hubble
         - tailscale.hubble.rajsingh.info
 # ---
 # apiVersion: v1
