@@ -1,0 +1,15 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tailscale-hubble
+  namespace: hubble-ui
+spec:
+  defaultBackend:
+    service:
+      name: hubble-ui
+      port:
+        number: 80
+  ingressClassName: tailscale
+  tls:
+    - hosts:
+        - tailscale.hubble.rajsingh.info
