@@ -19,3 +19,4 @@ resources:
  - connector.yaml
  - proxy-class.yaml
  - recording.yaml
+ - ingress.yaml
