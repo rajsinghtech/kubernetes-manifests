@@ -17,8 +17,10 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: tailscale-hubble
+  name: tailscale-hubble-rajsingh
   namespace: hubble-ui
+  annotations:
+    cert-manager.io/cluster-issuer: raj-issuer
 spec:
   defaultBackend:
     service:
