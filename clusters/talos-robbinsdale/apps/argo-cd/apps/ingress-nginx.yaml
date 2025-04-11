@@ -9,7 +9,7 @@ spec:
     namespace: ingress-nginx
   project: default
   source:
-    path: clusters/k8s-keiretsu/apps/ingress-nginx
+    path: clusters/talos-robbinsdale/apps/ingress-nginx
     repoURL: https://github.com/rajsinghtech/kubernetes-manifests
     targetRevision: HEAD
   syncPolicy:
