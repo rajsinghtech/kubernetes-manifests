@@ -13,13 +13,13 @@ spec:
   tls:
     - hosts:
         - hubble
----
-apiVersion: v1
-kind: Service
-metadata:
-  annotations:
-    tailscale.com/tailnet-fqdn: tailscale.taila31de.ts.net
-  name:    # service name
-spec:
-  externalName: placeholder   # any value - will be overwritten by operator
-  type: ExternalName
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   annotations:
+#     tailscale.com/tailnet-fqdn: tailscale.taila31de.ts.net
+#   name:    # service name
+# spec:
+#   externalName: placeholder   # any value - will be overwritten by operator
+#   type: ExternalName
