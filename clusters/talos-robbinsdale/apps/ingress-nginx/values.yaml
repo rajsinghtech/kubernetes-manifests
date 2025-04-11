@@ -1,0 +1,16 @@
+controller:
+  replicaCount: 2
+  service:
+    type: ClusterIP
+  config:
+    enable-access-log-for-default-backend: "true"
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+  resources:
+    requests:
+      cpu: 50m
+      memory: 256Mi
+    limits:
+      memory: 256Mi

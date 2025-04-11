@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ingress-nginx-prd
+  namespace: argocd
+spec:
+  destination:
+    server: https://10.0.100.12:6443    
+    namespace: ingress-nginx
+  project: default
+  source:
+    path: clusters/k8s-keiretsu/apps/ingress-nginx
+    repoURL: https://github.com/rajsinghtech/kubernetes-manifests
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      # selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
