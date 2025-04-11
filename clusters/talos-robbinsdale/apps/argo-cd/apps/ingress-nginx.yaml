@@ -5,7 +5,7 @@ metadata:
   namespace: argocd
 spec:
   destination:
-    server: https://10.0.100.12:6443    
+    server: https://kubernetes.default.svc   
     namespace: ingress-nginx
   project: default
   source:
