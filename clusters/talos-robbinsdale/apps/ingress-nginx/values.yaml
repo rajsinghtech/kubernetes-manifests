@@ -2,7 +2,7 @@ controller:
   replicaCount: 2
   service:
     type: LoadBalancer
-    # loadBalancerClass: tailscale
+    loadBalancerClass: tailscale
   config:
     enable-access-log-for-default-backend: "true"
   metrics:
