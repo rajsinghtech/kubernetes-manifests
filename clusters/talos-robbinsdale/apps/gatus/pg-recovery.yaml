@@ -1,0 +1,45 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: gatus-pg-recovery
+  namespace: gatus
+spec:
+  instances: 3
+  storage:
+    size: 10Gi
+    storageClass: ceph-block-replicated-nvme
+  monitoring:
+    enablePodMonitor: true
+  bootstrap:
+    recovery:
+      source: gatus-pg-backup
+  # # Configure backup for the recovered cluster (different serverName to avoid conflicts)
+  # backup:
+  #   barmanObjectStore:
+  #     destinationPath: s3://backups/gatus-pg-recovery
+  #     endpointURL: http://rook-ceph-rgw-object-store.rook-ceph.svc:80
+  #     serverName: gatus-pg-recovery
+  #     s3Credentials:
+  #       accessKeyId:
+  #         name: gatus-ceph-bucket
+  #         key: AWS_ACCESS_KEY_ID
+  #       secretAccessKey:
+  #         name: gatus-ceph-bucket
+  #         key: AWS_SECRET_ACCESS_KEY
+  #     wal:
+  #       compression: gzip
+  #       maxParallel: 2
+  #   retentionPolicy: "30d"
+  # Reference to the source backup from the original cluster
+  externalClusters:
+  - name: gatus-pg-backup
+    barmanObjectStore:
+      destinationPath: s3://backups/gatus-pg
+      endpointURL: http://rook-ceph-rgw-object-store.rook-ceph.svc:80
+      s3Credentials:
+        accessKeyId:
+          name: gatus-ceph-bucket
+          key: AWS_ACCESS_KEY_ID
+        secretAccessKey:
+          name: gatus-ceph-bucket
+          key: AWS_SECRET_ACCESS_KEY 
