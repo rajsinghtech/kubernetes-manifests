@@ -41,7 +41,11 @@ spec:
             name: hubble-ui
             port:
               number: 80
-  ingressClassName: ngnix
+  ingressClassName: nginx
+  tls:
+    - secretName: tailscale-hubble-rajsingh-tls
+      hosts:
+        - tailscale.hubble.rajsingh.info
 # ---
 # apiVersion: v1
 # kind: Service
