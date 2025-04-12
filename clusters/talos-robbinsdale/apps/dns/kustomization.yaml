@@ -4,7 +4,7 @@ kind: Kustomization
 
 resources:
   - secret.yaml
-  - external-dns.yaml
+  # - external-dns.yaml
   - httproute.yaml
   # - ./coredns
 
