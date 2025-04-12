@@ -6,7 +6,6 @@ resources:
   - secret.yaml
   # - external-dns.yaml
   - httproute.yaml
-  # - ./coredns
 
 helmCharts:
   - name: pihole
