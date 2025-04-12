@@ -1,7 +1,7 @@
 controller:
   replicaCount: 2
   service:
-    type: ClusterIP
+    type: LoadBalancer
     loadBalancerClass: tailscale
   config:
     enable-access-log-for-default-backend: "true"
