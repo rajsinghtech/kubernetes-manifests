@@ -23,16 +23,27 @@ metadata:
     cert-manager.io/cluster-issuer: raj-issuer
     kubernetes.io/tls-acme: 'true'
 spec:
-  defaultBackend:
-    service:
-      name: hubble-ui
-      port:
-        number: 80
+  # defaultBackend:
+  #   service:
+  #     name: hubble-ui
+  #     port:
+  #       number: 80
+  rules:
+  - host: tailscale.hubble.rajsingh.info
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: hubble-ui
+            port:
+              number: 80
   ingressClassName: ngnix
   tls:
     - secretName: tailscale-hubble-rajsingh-tls
       hosts:
-        - tailscale-hubble.rajsingh.info
+        - tailscale.hubble.rajsingh.info
 # ---
 # apiVersion: v1
 # kind: Service
