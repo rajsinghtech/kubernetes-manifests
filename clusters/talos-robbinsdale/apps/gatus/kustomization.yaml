@@ -15,3 +15,4 @@ resources:
   - httproute.yaml
   - secret.yaml
   - pg.yaml
+  - bucket.yaml
