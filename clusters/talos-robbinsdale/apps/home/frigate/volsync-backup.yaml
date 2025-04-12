@@ -1,0 +1,23 @@
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationDestination
+metadata:
+  name: frigate-config-unas
+spec:
+  trigger:
+    schedule: "0 */11 * * *"
+  rsync:
+    copyMethod: Direct
+    destinationPVC: frigate-config-unas
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: frigate-config-ceph
+spec:
+  sourcePVC: frigate-config-ceph
+  trigger:
+    schedule: "0 */10 * * *"
+  rsync:
+    sshKeys: volsync-rsync-dst-src-frigate-config-unas
+    address: volsync-rsync-dst-frigate-config-unas
+    copyMethod: Direct
