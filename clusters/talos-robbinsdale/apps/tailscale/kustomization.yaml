@@ -20,3 +20,4 @@ resources:
  - proxy-class.yaml
  - recording.yaml
  - ingress.yaml
+ - dnsconfig.yaml
