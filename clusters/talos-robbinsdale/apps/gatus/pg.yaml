@@ -31,7 +31,7 @@ spec:
 apiVersion: postgresql.cnpg.io/v1
 kind: Backup
 metadata:
-  name: backup-test
+  name: backup-test2
 spec:
   method: barmanObjectStore
   cluster:
