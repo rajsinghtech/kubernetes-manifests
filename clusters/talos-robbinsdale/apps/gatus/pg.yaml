@@ -26,4 +26,12 @@ spec:
       wal:
         compression: gzip
         maxParallel: 2
-    schedule: "0 0 * * 0"  # Weekly backup at midnight on Sunday
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Backup
+metadata:
+  name: backup-test
+spec:
+  method: barmanObjectStore
+  cluster:
+    name: gatus-pg
