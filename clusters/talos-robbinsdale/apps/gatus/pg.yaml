@@ -6,7 +6,7 @@ spec:
   inheritedMetadata:
     labels:
       app: gatus-pg
-  instances: 3
+  instances: 4
   storage:
     size: 10Gi
     storageClass: ceph-block-replicated-nvme
