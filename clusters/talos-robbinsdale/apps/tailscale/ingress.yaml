@@ -22,6 +22,8 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: raj-issuer
     kubernetes.io/tls-acme: 'true'
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "96000"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "96000"
 spec:
   # defaultBackend:
   #   service:
