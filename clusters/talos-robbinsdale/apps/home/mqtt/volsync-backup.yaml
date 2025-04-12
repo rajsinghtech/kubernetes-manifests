@@ -1,0 +1,23 @@
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationDestination
+metadata:
+  name: mqtt-config-unas
+spec:
+  trigger:
+    schedule: "0 */11 * * *"
+  rsync:
+    copyMethod: Direct
+    destinationPVC: mqtt-config-unas
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: mqtt-config-ceph
+spec:
+  sourcePVC: mqtt-config-ceph
+  trigger:
+    schedule: "0 */10 * * *"
+  rsync:
+    sshKeys: volsync-rsync-dst-src-mqtt-config-unas
+    address: volsync-rsync-dst-mqtt-config-unas
+    copyMethod: Direct
