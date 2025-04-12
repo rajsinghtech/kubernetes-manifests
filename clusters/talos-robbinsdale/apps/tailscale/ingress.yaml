@@ -17,7 +17,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: tailscale-hubble-rajsingh
+  name: hubble
   namespace: hubble-ui
   annotations:
     cert-manager.io/cluster-issuer: raj-issuer
@@ -32,7 +32,7 @@ spec:
   tls:
     - secretName: tailscale-hubble-rajsingh-tls
       hosts:
-        - tailscale.hubble.rajsingh.info
+        - tailscale-hubble.rajsingh.info
 # ---
 # apiVersion: v1
 # kind: Service
