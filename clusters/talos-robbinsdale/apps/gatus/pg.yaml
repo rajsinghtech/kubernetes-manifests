@@ -16,18 +16,3 @@ spec:
   #   # Volume snapshot backups
   #   volumeSnapshot:
   #      className: csi-cephfsplugin-snapclass
----
-apiVersion: postgresql.cnpg.io/v1
-kind: Cluster
-metadata:
-  name: gatus
-spec:
-  inheritedMetadata:
-    labels:
-      app: gatus
-  instances: 3
-  storage:
-    size: 10Gi
-    storageClass: ceph-block-replicated-nvme
-  monitoring:
-    enablePodMonitor: true
