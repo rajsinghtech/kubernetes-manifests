@@ -21,6 +21,7 @@ metadata:
   namespace: hubble-ui
   annotations:
     cert-manager.io/cluster-issuer: raj-issuer
+    kubernetes.io/tls-acme: 'true'
 spec:
   defaultBackend:
     service:
@@ -29,8 +30,8 @@ spec:
         number: 80
   ingressClassName: ngnix
   tls:
-    - hosts:
-        # - hubble
+    - secretName: tailscale-hubble-rajsingh-tls
+      hosts:
         - tailscale.hubble.rajsingh.info
 # ---
 # apiVersion: v1
