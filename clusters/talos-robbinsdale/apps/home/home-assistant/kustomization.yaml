@@ -7,3 +7,5 @@ resources:
   - service.yaml
   - unas.yaml
   - httproute.yaml
+  - ceph.yaml
+  - volsync-restore.yaml

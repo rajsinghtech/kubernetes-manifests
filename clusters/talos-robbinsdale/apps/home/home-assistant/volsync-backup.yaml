@@ -1,0 +1,23 @@
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationDestination
+metadata:
+  name: homeassistant-config-unas
+spec:
+  trigger:
+    schedule: "0 */10 * * *"
+  rsync:
+    copyMethod: Direct
+    destinationPVC: homeassistant-config-unas
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: homeassistant-config-ceph
+spec:
+  sourcePVC: homeassistant-config-ceph
+  trigger:
+    schedule: "0 */10 * * *"
+  rsync:
+    sshKeys: volsync-rsync-dst-src-homeassistant-config-unas
+    address: volsync-rsync-dst-homeassistant-config-unas
+    copyMethod: Direct
