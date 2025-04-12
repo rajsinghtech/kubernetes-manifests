@@ -12,7 +12,18 @@ spec:
     storageClass: ceph-block-replicated-nvme
   monitoring:
     enablePodMonitor: true
-  # backup:
-  #   # Volume snapshot backups
-  #   volumeSnapshot:
-  #      className: csi-cephfsplugin-snapclass
+  backup:
+    barmanObjectStore:
+      destinationPath: s3://backups/gatus-pg
+      endpointURL: http://rook-ceph-rgw-object-store.rook-ceph.svc:80
+      s3Credentials:
+        accessKeyId:
+          name: gatus-ceph-bucket
+          key: AWS_ACCESS_KEY_ID
+        secretAccessKey:
+          name: gatus-ceph-bucket
+          key: AWS_SECRET_ACCESS_KEY
+      wal:
+        compression: gzip
+        maxParallel: 2
+    schedule: "0 0 * * 0"  # Weekly backup at midnight on Sunday
