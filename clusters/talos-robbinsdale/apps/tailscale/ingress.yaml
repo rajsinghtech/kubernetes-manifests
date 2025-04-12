@@ -29,7 +29,7 @@ spec:
   #     port:
   #       number: 80
   rules:
-  - host: tailscale.hubble.rajsingh.info
+  - host: *
     http:
       paths:
       - path: /
