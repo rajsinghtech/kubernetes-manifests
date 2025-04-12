@@ -31,7 +31,7 @@ spec:
   #     port:
   #       number: 80
   rules:
-  - host: *
+  - host: tailscale.hubble.rajsingh.info
     http:
       paths:
       - path: /
@@ -42,10 +42,6 @@ spec:
             port:
               number: 80
   ingressClassName: ngnix
-  tls:
-    - secretName: tailscale-hubble-rajsingh-tls
-      hosts:
-        - tailscale.hubble.rajsingh.info
 # ---
 # apiVersion: v1
 # kind: Service
