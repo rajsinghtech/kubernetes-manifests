@@ -4,8 +4,6 @@ metadata:
   name: minio
   namespace: home
 spec:
-  image: minio/minio:RELEASE.2025-04-02T00-47-35Z
-  imagePullPolicy: IfNotPresent
   features:
     bucketDNS: true
   env:
