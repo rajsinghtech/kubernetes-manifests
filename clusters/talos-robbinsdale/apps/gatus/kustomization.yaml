@@ -14,8 +14,8 @@ helmCharts:
 resources:
   - httproute.yaml
   - secret.yaml
-  - pg.yaml
-  - bucket.yaml
-  - s3manager.yaml
-  - backup.yaml
+  # - pg.yaml
+  # - bucket.yaml
+  # - s3manager.yaml
+  # - backup.yaml
   # - postgres.yaml
