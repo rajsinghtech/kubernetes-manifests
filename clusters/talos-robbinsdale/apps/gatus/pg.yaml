@@ -14,7 +14,7 @@ spec:
     enablePodMonitor: true
   backup:
     barmanObjectStore:
-      destinationPath: s3://gatus
+      destinationPath: s3://gatus/test
       endpointURL: http://rook-ceph-rgw-object-store.rook-ceph.svc.cluster.local:80
       s3Credentials:
         accessKeyId:
@@ -26,13 +26,3 @@ spec:
       wal:
         compression: gzip
         maxParallel: 2
-    retentionPolicy: "30d"
----
-apiVersion: postgresql.cnpg.io/v1
-kind: Backup
-metadata:
-  name: backup-test2
-spec:
-  method: barmanObjectStore
-  cluster:
-    name: gatus-pg
