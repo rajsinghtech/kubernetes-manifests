@@ -16,3 +16,4 @@ resources:
   - secret.yaml
   - pg.yaml
   - bucket.yaml
+  - s3manager.yaml
