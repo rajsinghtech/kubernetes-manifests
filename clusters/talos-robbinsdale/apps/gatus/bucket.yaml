@@ -3,5 +3,6 @@ kind: ObjectBucketClaim
 metadata:
   name: gatus-ceph-bucket
 spec:
+  generateBucketName: gatus
   bucketName: gatus
   storageClassName: rook-ceph-bucket
