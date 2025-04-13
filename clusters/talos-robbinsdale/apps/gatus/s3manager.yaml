@@ -77,8 +77,8 @@ spec:
       name: private
       namespace: envoy-gateway-system
   hostnames:
-    - "s3ui-gatus.rajsingh.info"
-    - "s3ui-gatus.lukehouge.com"
+    - "s3ui.gatus.rajsingh.info"
+    - "s3ui.gatus.lukehouge.com"
   rules:
     - backendRefs:
         - group: ""
