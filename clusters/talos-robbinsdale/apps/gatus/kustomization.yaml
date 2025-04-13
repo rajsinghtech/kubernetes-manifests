@@ -18,4 +18,4 @@ resources:
   - bucket.yaml
   - s3manager.yaml
   - backup.yaml
-  # - postgres.yaml
+  - postgres.yaml
