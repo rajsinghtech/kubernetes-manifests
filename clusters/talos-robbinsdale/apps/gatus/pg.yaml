@@ -19,9 +19,53 @@ spec:
       serverName: gatus
       s3Credentials:
         accessKeyId:
-          name: gatus-ceph-bucket
+          name: pg-ceph-bucket
           key: AWS_ACCESS_KEY_ID
         secretAccessKey:
-          name: gatus-ceph-bucket
+          name: pg-ceph-bucket
           key: AWS_SECRET_ACCESS_KEY
     retentionPolicy: "30d"
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: gatus
+spec:
+  inheritedMetadata:
+    labels:
+      app: gatus
+  instances: 3
+  storage:
+    size: 10Gi
+    storageClass: ceph-block-replicated-nvme
+  monitoring:
+    enablePodMonitor: true
+  backup:
+    barmanObjectStore:
+      destinationPath: s3://pg
+      endpointURL: http://rook-ceph-rgw-object-store.rook-ceph.svc.cluster.local:80
+      serverName: pg
+      s3Credentials:
+        accessKeyId:
+          name: pg-ceph-bucket
+          key: AWS_ACCESS_KEY_ID
+        secretAccessKey:
+          name: pg-ceph-bucket
+          key: AWS_SECRET_ACCESS_KEY
+    retentionPolicy: "30d"
+  bootstrap:
+    recovery:
+      source: gatus-pg
+  externalClusters:
+  - name: gatus-pg
+    barmanObjectStore:
+      destinationPath: s3://pg
+      endpointURL: http://rook-ceph-rgw-object-store.rook-ceph.svc.cluster.local:80
+      serverName: pg
+      s3Credentials:
+        accessKeyId:
+          name: pg-ceph-bucket
+          key: AWS_ACCESS_KEY_ID
+        secretAccessKey:
+          name: pg-ceph-bucket
+          key: AWS_SECRET_ACCESS_KEY 
