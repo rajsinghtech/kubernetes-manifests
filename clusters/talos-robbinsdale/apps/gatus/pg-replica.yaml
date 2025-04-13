@@ -15,8 +15,6 @@ spec:
   bootstrap:
     recovery:
       source: gatus-pg
-      recoveryTarget:
-        targetImmediate: true
   replica:
     enabled: true
     source: gatus-pg
