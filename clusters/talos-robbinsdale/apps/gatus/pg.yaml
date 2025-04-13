@@ -24,6 +24,3 @@ spec:
           name: gatus-ceph-bucket
           key: AWS_SECRET_ACCESS_KEY
     retentionPolicy: "30d"
-  walArchive:
-    compression: gzip
-    maxParallel: 2
