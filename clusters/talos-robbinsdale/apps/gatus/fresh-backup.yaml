@@ -1,7 +1,7 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Backup
 metadata:
-  name: first-backup
+  name: second-backup
 spec:
   method: barmanObjectStore
   cluster:
