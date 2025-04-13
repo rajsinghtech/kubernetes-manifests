@@ -10,7 +10,7 @@ spec:
     labels:
       app: minio
   configuration:
-    name: storage-configuration
+    name: minio-config-unas
   pools:
     - name: ceph-nvme
       servers: 1
