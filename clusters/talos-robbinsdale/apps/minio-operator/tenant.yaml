@@ -22,4 +22,4 @@ spec:
           storageClassName: ceph-block-replicated-nvme
           resources:
             requests:
-              storage: 50Gi
+              storage: 20Gi
