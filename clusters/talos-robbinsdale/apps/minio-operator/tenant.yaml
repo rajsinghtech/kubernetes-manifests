@@ -1,7 +1,7 @@
 apiVersion: minio.min.io/v2
 kind: Tenant
 metadata:
-  name: home
+  name: home-ceph
   namespace: home
 spec:
   features:
@@ -10,9 +10,9 @@ spec:
     labels:
       app: minio
   configuration:
-    name: minio-config-unas
-  erasureCodingConfig:
-    algorithm: standalone
+    name: minio-config-ceph
+  # erasureCodingConfig:
+  #   algorithm: standalone
   pools:
     - name: ceph-nvme
       servers: 4
@@ -22,6 +22,17 @@ spec:
           accessModes:
             - ReadWriteOnce
           storageClassName: ceph-block-replicated-nvme
+          resources:
+            requests:
+              storage: 50Gi
+    - name: unas-smb
+      servers: 4
+      volumesPerServer: 1
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteMany
+          storageClassName: unas-smb
           resources:
             requests:
               storage: 50Gi
