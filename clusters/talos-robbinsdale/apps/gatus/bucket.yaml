@@ -1,8 +1,8 @@
 apiVersion: objectbucket.io/v1alpha1
 kind: ObjectBucketClaim
 metadata:
-  name: pg-ceph-bucket
+  name: postgres
 spec:
-  generateBucketName: pg
-  bucketName: pg
+  generateBucketName: postgres
+  bucketName: postgres
   storageClassName: rook-ceph-bucket
