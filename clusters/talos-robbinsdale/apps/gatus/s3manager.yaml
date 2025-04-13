@@ -1,0 +1,37 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: s3manager
+  labels:
+    app: s3manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: s3manager
+  template:
+    metadata:
+      labels:
+        app: s3manager
+    spec:
+      containers:
+        - name: s3manager
+          image: cloudlena/s3manager:latest 
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ENDPOINT
+              value: "rook-ceph-rgw-object-store.rook-ceph.svc.cluster.local:80"
+            - name: USE_SSL
+              value: "false"
+            - name: ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: gatus-ceph-bucket
+                  key: AWS_ACCESS_KEY_ID
+            - name: SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: gatus-ceph-bucket
+                  key: AWS_SECRET_ACCESS_KEY
