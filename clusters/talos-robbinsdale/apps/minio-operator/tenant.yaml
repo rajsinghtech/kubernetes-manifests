@@ -4,7 +4,6 @@ metadata:
   name: minio
   namespace: home
 spec:
-  skipValidation: true
   features:
     bucketDNS: true
   poolsMetadata:
@@ -13,14 +12,14 @@ spec:
   configuration:
     name: minio-config
   pools:
-    - name: unas-smb
-      servers: 1
+    - name: ceph-nvme
+      servers: 4
       volumesPerServer: 1
       volumeClaimTemplate:
         spec:
           accessModes:
-            - ReadWriteMany
-          storageClassName: unas-smb
+            - ReadWriteOnce
+          storageClassName: ceph-block-replicated-nvme
           resources:
             requests:
               storage: 50Gi
