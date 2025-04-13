@@ -4,6 +4,7 @@ metadata:
   name: minio
   namespace: home
 spec:
+  skipValidation: true
   features:
     bucketDNS: true
   poolsMetadata:
