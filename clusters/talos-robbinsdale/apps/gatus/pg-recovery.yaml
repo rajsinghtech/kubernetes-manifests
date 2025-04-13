@@ -12,8 +12,7 @@ spec:
     enablePodMonitor: true
   bootstrap:
     recovery:
-      backup:
-        name: first-backup
+      source: gatus-pg
   # # Configure backup for the recovered cluster (different serverName to avoid conflicts)
   # backup:
   #   barmanObjectStore:
@@ -35,7 +34,7 @@ spec:
   externalClusters:
   - name: gatus-pg
     barmanObjectStore:
-      destinationPath: s3://gatus/gatus-pg
+      destinationPath: s3://gatus
       endpointURL: http://rook-ceph-rgw-object-store.rook-ceph.svc.cluster.local:80
       s3Credentials:
         accessKeyId:
@@ -44,3 +43,44 @@ spec:
         secretAccessKey:
           name: gatus-ceph-bucket
           key: AWS_SECRET_ACCESS_KEY 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: s3manager
+  labels:
+    app: s3manager
+spec:
+  selector:
+    app: s3manager
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: bktui
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: private
+      namespace: envoy-gateway-system
+  hostnames:
+    - "s3ui-gatus.rajsingh.info"
+    - "s3ui-gatus.lukehouge.com"
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: s3manager
+          port: 8080
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
