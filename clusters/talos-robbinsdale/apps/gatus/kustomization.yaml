@@ -18,3 +18,4 @@ resources:
   - pg-replica.yaml
   - bucket.yaml
   - s3manager.yaml
+  - fresh-backup.yaml

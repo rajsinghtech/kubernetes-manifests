@@ -15,9 +15,14 @@ spec:
   bootstrap:
     recovery:
       source: gatus-pg
+      recoveryTarget:
+        targetImmediate: true
   replica:
     enabled: true
     source: gatus-pg
+  walArchive:
+    compression: gzip
+    maxParallel: 2
   externalClusters:
   - name: gatus-pg
     barmanObjectStore:

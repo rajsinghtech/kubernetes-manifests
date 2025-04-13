@@ -24,12 +24,6 @@ spec:
           name: gatus-ceph-bucket
           key: AWS_SECRET_ACCESS_KEY
     retentionPolicy: "30d"
----
-apiVersion: postgresql.cnpg.io/v1
-kind: Backup
-metadata:
-  name: first-backup
-spec:
-  method: barmanObjectStore
-  cluster:
-    name: gatus-pg
+  walArchive:
+    compression: gzip
+    maxParallel: 2
