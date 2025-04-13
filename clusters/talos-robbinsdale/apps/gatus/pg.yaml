@@ -13,6 +13,7 @@ spec:
   monitoring:
     enablePodMonitor: true
   backup:
+    retentionPolicy: "30d"
     barmanObjectStore:
       destinationPath: s3://postgres
       endpointURL: http://rook-ceph-rgw-object-store.rook-ceph.svc.cluster.local:80
@@ -24,7 +25,9 @@ spec:
         secretAccessKey:
           name: postgres-ceph-bucket
           key: AWS_SECRET_ACCESS_KEY
-    retentionPolicy: "30d"
+      wal:
+        compression: bzip2
+        maxParallel: 8
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
@@ -41,7 +44,8 @@ spec:
   monitoring:
     enablePodMonitor: true
   backup:
-    barmanObjectStore:
+    retentionPolicy: "30d"
+    barmanObjectStore: &objStore
       destinationPath: s3://postgres
       endpointURL: http://rook-ceph-rgw-object-store.rook-ceph.svc.cluster.local:80
       serverName: postgres
@@ -52,20 +56,12 @@ spec:
         secretAccessKey:
           name: postgres-ceph-bucket
           key: AWS_SECRET_ACCESS_KEY
-    retentionPolicy: "30d"
+      wal:
+        compression: bzip2
+        maxParallel: 8
   bootstrap:
     recovery:
       source: gatus-pg
   externalClusters:
   - name: gatus-pg
-    barmanObjectStore:
-      destinationPath: s3://postgres
-      endpointURL: http://rook-ceph-rgw-object-store.rook-ceph.svc.cluster.local:80
-      serverName: postgres
-      s3Credentials:
-        accessKeyId:
-          name: postgres-ceph-bucket
-          key: AWS_ACCESS_KEY_ID
-        secretAccessKey:
-          name: postgres-ceph-bucket
-          key: AWS_SECRET_ACCESS_KEY 
+    barmanObjectStore: *objStore
