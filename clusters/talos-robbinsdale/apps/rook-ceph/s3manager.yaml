@@ -65,8 +65,8 @@ spec:
       name: private
       namespace: envoy-gateway-system
   hostnames:
-    - "bktui.rook.rajsingh.info"
-    - "bktui.rook.lukehouge.com"
+    - "s3ui.rajsingh.info"
+    - "s3ui.lukehouge.com"
   rules:
     - backendRefs:
         - group: ""
