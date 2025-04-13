@@ -17,6 +17,8 @@ spec:
       volumesPerServer: 1
       volumeClaimTemplate:
         spec:
+          accessModes:
+            - ReadWriteOnce
           storageClassName: ceph-block-replicated-nvme
           resources:
             requests:
