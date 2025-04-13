@@ -10,7 +10,7 @@ spec:
     labels:
       app: minio
   configuration:
-    name: minio-config
+    name: minio-config-unas
   pools:
     # - name: ceph-nvme
     #   servers: 4
