@@ -11,8 +11,9 @@ spec:
       app: minio
   configuration:
     name: minio-config-ceph
-  # erasureCodingConfig:
-  #   algorithm: standalone
+  env:
+    - name: MINIO_STORAGE_CLASS_STANDARD
+      value: "EC:2"
   pools:
     - name: ceph-nvme
       servers: 4
