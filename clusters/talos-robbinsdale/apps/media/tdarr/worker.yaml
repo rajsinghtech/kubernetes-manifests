@@ -6,7 +6,7 @@ metadata:
     app: tdarr-worker
 spec:
   serviceName: tdarr-worker
-  replicas: 3
+  replicas: 0
   selector:
     matchLabels:
       app: tdarr-worker
