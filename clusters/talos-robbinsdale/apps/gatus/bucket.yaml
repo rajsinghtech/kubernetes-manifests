@@ -1,8 +1,8 @@
-apiVersion: objectbucket.io/v1alpha1
-kind: ObjectBucketClaim
-metadata:
-  name: gatus-ceph-bucket
-spec:
-  generateBucketName: gatus
-  bucketName: gatus
-  storageClassName: rook-ceph-bucket
+# apiVersion: objectbucket.io/v1alpha1
+# kind: ObjectBucketClaim
+# metadata:
+#   name: gatus-ceph-bucket
+# spec:
+#   generateBucketName: gatus
+#   bucketName: gatus
+#   storageClassName: rook-ceph-bucket

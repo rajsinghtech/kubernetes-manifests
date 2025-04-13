@@ -27,12 +27,12 @@ spec:
         compression: gzip
         maxParallel: 2
     retentionPolicy: "30d"
----
-apiVersion: postgresql.cnpg.io/v1
-kind: Backup
-metadata:
-  name: first-backup
-spec:
-  method: barmanObjectStore
-  cluster:
-    name: gatus-pg
+# ---
+# apiVersion: postgresql.cnpg.io/v1
+# kind: Backup
+# metadata:
+#   name: first-backup
+# spec:
+#   method: barmanObjectStore
+#   cluster:
+#     name: gatus-pg
