@@ -15,5 +15,6 @@ resources:
   - httproute.yaml
   - secret.yaml
   - pg.yaml
+  - pg-replica.yaml
   - bucket.yaml
   - s3manager.yaml
