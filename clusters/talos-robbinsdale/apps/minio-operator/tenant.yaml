@@ -1,0 +1,17 @@
+apiVersion: minio.min.io/v2
+kind: Tenant
+metadata:
+  name: home
+  namespace: home
+spec:
+  ## Assign labels to the pool
+  poolsMetadata:
+    labels:
+      app: minio
+  volumesPerServer: 1
+  volumeClaimTemplate:
+    spec:
+      storageClassName: ceph-block-replicated-nvme
+      resources:
+        requests:
+          storage: 100Gi
