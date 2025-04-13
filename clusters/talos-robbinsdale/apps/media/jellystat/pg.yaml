@@ -20,10 +20,10 @@ spec:
       serverName: jellystat-db
       s3Credentials:
         accessKeyId:
-          name: postgres-ceph-bucket
+          name: jellystat-postgres-ceph-bucket
           key: AWS_ACCESS_KEY_ID
         secretAccessKey:
-          name: postgres-ceph-bucket
+          name: jellystat-postgres-ceph-bucket
           key: AWS_SECRET_ACCESS_KEY
       data:
         compression: bzip2
