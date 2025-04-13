@@ -42,11 +42,13 @@ spec:
           name: postgres-ceph-bucket
           key: AWS_SECRET_ACCESS_KEY
 ---
-apiVersion: objectbucket.io/v1alpha1
-kind: ObjectBucketClaim
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
 metadata:
-  name: postgres-ceph-bucket
+  name: gatus-postgres
 spec:
-  generateBucketName: postgres
-  bucketName: postgres
-  storageClassName: rook-ceph-bucket
+  schedule: "@daily"
+  immediate: true
+  backupOwnerReference: self
+  cluster:
+    name: gatus-pg
