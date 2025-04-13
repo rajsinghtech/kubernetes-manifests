@@ -1,11 +1,11 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: gatus
+  name: gatus-postgres
 spec:
   inheritedMetadata:
     labels:
-      app: gatus
+      app: gatus-postgres
   instances: 3
   storage:
     size: 10Gi
@@ -17,7 +17,7 @@ spec:
     barmanObjectStore: &objStore
       destinationPath: s3://postgres
       endpointURL: http://rook-ceph-rgw-object-store.rook-ceph.svc.cluster.local:80
-      serverName: gatus
+      serverName: gatus-postgres
       s3Credentials:
         accessKeyId:
           name: postgres-ceph-bucket
@@ -41,3 +41,12 @@ spec:
         secretAccessKey:
           name: postgres-ceph-bucket
           key: AWS_SECRET_ACCESS_KEY
+---
+apiVersion: objectbucket.io/v1alpha1
+kind: ObjectBucketClaim
+metadata:
+  name: postgres-ceph-bucket
+spec:
+  generateBucketName: postgres
+  bucketName: postgres
+  storageClassName: rook-ceph-bucket
