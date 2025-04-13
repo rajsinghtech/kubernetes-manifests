@@ -1,43 +1,30 @@
 apiVersion: minio.min.io/v2
 kind: Tenant
 metadata:
-  name: robbinsdale
+  name: minio
   namespace: home
 spec:
+  image: minio/minio:RELEASE.2025-04-02T00-47-35Z
+  imagePullPolicy: IfNotPresent
   features:
     bucketDNS: true
-  poolsMetadata:
-    labels:
-      app: minio
-  configuration:
-    name: minio-config-ceph
   env:
     - name: MINIO_STORAGE_CLASS_STANDARD
       value: "EC:2"
-    - name: MINIO_DOMAIN
-      value: "minio.home.svc.cluster.local"
     - name: MINIO_BROWSER
       value: "on"
+  mountPath: /export
   pools:
-    - name: ceph-nvme
+    - name: pool-1
       servers: 4
       volumesPerServer: 1
       volumeClaimTemplate:
+        metadata:
+          name: data
         spec:
           accessModes:
             - ReadWriteOnce
+          resources:
+            requests:
+              storage: 50Gi
           storageClassName: ceph-block-replicated-nvme
-          resources:
-            requests:
-              storage: 50Gi
-    - name: unas-smb
-      servers: 4
-      volumesPerServer: 1
-      volumeClaimTemplate:
-        spec:
-          accessModes:
-            - ReadWriteMany
-          storageClassName: unas-smb
-          resources:
-            requests:
-              storage: 50Gi
