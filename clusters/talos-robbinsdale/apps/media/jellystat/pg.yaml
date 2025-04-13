@@ -29,10 +29,10 @@ spec:
 apiVersion: postgresql.cnpg.io/v1
 kind: ScheduledBackup
 metadata:
-  name: jellystat-postgres
+  name: jellystat-db
 spec:
   schedule: "@daily"
   immediate: true
   backupOwnerReference: self
   cluster:
-    name: jellystat-postgres
+    name: jellystat-db
