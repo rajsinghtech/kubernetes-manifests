@@ -25,9 +25,6 @@ spec:
         secretAccessKey:
           name: postgres-ceph-bucket
           key: AWS_SECRET_ACCESS_KEY
-      wal:
-        compression: bzip2
-        maxParallel: 8
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
@@ -56,9 +53,6 @@ spec:
         secretAccessKey:
           name: postgres-ceph-bucket
           key: AWS_SECRET_ACCESS_KEY
-      wal:
-        compression: bzip2
-        maxParallel: 8
   bootstrap:
     recovery:
       source: gatus-pg
