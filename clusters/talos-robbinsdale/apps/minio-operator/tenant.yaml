@@ -1,7 +1,7 @@
 apiVersion: minio.min.io/v2
 kind: Tenant
 metadata:
-  name: robbinsdale
+  name: minio
   namespace: home
 spec:
   features:
@@ -10,19 +10,19 @@ spec:
     labels:
       app: minio
   configuration:
-    name: minio-config-ceph
+    name: minio-config
   pools:
-    - name: ceph-nvme
-      servers: 4
-      volumesPerServer: 1
-      volumeClaimTemplate:
-        spec:
-          accessModes:
-            - ReadWriteOnce
-          storageClassName: ceph-block-replicated-nvme
-          resources:
-            requests:
-              storage: 50Gi
+    # - name: ceph-nvme
+    #   servers: 4
+    #   volumesPerServer: 1
+    #   volumeClaimTemplate:
+    #     spec:
+    #       accessModes:
+    #         - ReadWriteOnce
+    #       storageClassName: ceph-block-replicated-nvme
+    #       resources:
+    #         requests:
+    #           storage: 50Gi
     - name: unas-smb
       servers: 4
       volumesPerServer: 1
