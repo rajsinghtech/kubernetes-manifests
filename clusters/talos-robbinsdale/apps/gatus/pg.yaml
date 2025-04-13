@@ -14,9 +14,9 @@ spec:
     enablePodMonitor: true
   backup:
     barmanObjectStore:
-      destinationPath: s3://gatus
+      destinationPath: s3://postgres
       endpointURL: http://rook-ceph-rgw-object-store.rook-ceph.svc.cluster.local:80
-      serverName: gatus
+      serverName: postgres
       s3Credentials:
         accessKeyId:
           name: pg-ceph-bucket
@@ -42,15 +42,15 @@ spec:
     enablePodMonitor: true
   backup:
     barmanObjectStore:
-      destinationPath: s3://pg
+      destinationPath: s3://postgres
       endpointURL: http://rook-ceph-rgw-object-store.rook-ceph.svc.cluster.local:80
-      serverName: pg
+      serverName: postgres
       s3Credentials:
         accessKeyId:
-          name: pg-ceph-bucket
+          name: postgres-ceph-bucket
           key: AWS_ACCESS_KEY_ID
         secretAccessKey:
-          name: pg-ceph-bucket
+          name: postgres-ceph-bucket
           key: AWS_SECRET_ACCESS_KEY
     retentionPolicy: "30d"
   bootstrap:
