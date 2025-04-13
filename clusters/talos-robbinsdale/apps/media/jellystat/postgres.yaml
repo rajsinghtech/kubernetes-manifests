@@ -1,11 +1,11 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: gatus-postgres
+  name: jellystat-postgres
 spec:
   inheritedMetadata:
     labels:
-      app: gatus-postgres
+      app: jellystat-postgres
   instances: 3
   storage:
     size: 10Gi
@@ -17,7 +17,7 @@ spec:
     barmanObjectStore: &objStore
       destinationPath: s3://postgres
       endpointURL: http://rook-ceph-rgw-object-store.rook-ceph.svc.cluster.local:80
-      serverName: gatus-postgres
+      serverName: jellystat-postgres
       s3Credentials:
         accessKeyId:
           name: postgres-ceph-bucket
@@ -27,13 +27,13 @@ spec:
           key: AWS_SECRET_ACCESS_KEY
   bootstrap:
     recovery:
-      source: gatus-pg
+      source: jellystat-pg
   externalClusters:
-  - name: gatus-pg
+  - name: jellystat-db
     barmanObjectStore: 
       destinationPath: s3://postgres
       endpointURL: http://rook-ceph-rgw-object-store.rook-ceph.svc.cluster.local:80
-      serverName: gatus-pg
+      serverName: jellystat-db
       s3Credentials:
         accessKeyId:
           name: postgres-ceph-bucket
@@ -45,10 +45,10 @@ spec:
 apiVersion: postgresql.cnpg.io/v1
 kind: ScheduledBackup
 metadata:
-  name: gatus-postgres
+  name: jellystat-postgres
 spec:
   schedule: "@daily"
   immediate: true
   backupOwnerReference: self
   cluster:
-    name: gatus-postgres
+    name: jellystat-postgres
