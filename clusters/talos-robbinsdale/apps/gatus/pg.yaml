@@ -19,10 +19,10 @@ spec:
       serverName: postgres
       s3Credentials:
         accessKeyId:
-          name: pg-ceph-bucket
+          name: postgres-ceph-bucket
           key: AWS_ACCESS_KEY_ID
         secretAccessKey:
-          name: pg-ceph-bucket
+          name: postgres-ceph-bucket
           key: AWS_SECRET_ACCESS_KEY
     retentionPolicy: "30d"
 ---
