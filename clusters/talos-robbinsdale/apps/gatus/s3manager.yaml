@@ -42,12 +42,12 @@ spec:
             - name: ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
-                  name: gatus-ceph-bucket
+                  name: postgres-ceph-bucket
                   key: AWS_ACCESS_KEY_ID
             - name: SECRET_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
-                  name: gatus-ceph-bucket
+                  name: postgres-ceph-bucket
                   key: AWS_SECRET_ACCESS_KEY
 ---
 apiVersion: v1
