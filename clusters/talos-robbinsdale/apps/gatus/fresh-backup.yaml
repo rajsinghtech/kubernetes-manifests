@@ -1,7 +1,7 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Backup
 metadata:
-  name: fresh-backup
+  name: first-backup
 spec:
   method: barmanObjectStore
   cluster:
