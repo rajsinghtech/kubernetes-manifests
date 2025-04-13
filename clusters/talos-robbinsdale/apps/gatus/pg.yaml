@@ -15,7 +15,7 @@ spec:
   backup:
     retentionPolicy: "30d"
     barmanObjectStore:
-      destinationPath: s3://postgres/postgres
+      destinationPath: s3://postgres/gatus-pg
       endpointURL: http://rook-ceph-rgw-object-store.rook-ceph.svc.cluster.local:80
       serverName: postgres
       s3Credentials:
