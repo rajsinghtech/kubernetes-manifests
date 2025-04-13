@@ -17,7 +17,7 @@ spec:
     barmanObjectStore: &objStore
       destinationPath: s3://postgres
       endpointURL: http://rook-ceph-rgw-object-store.rook-ceph.svc.cluster.local:80
-      serverName: gatus-pg
+      serverName: gatus
       s3Credentials:
         accessKeyId:
           name: postgres-ceph-bucket
@@ -30,4 +30,14 @@ spec:
       source: gatus-pg
   externalClusters:
   - name: gatus-pg
-    barmanObjectStore: *objStore
+    barmanObjectStore: 
+      destinationPath: s3://postgres
+      endpointURL: http://rook-ceph-rgw-object-store.rook-ceph.svc.cluster.local:80
+      serverName: gatus-pg
+      s3Credentials:
+        accessKeyId:
+          name: postgres-ceph-bucket
+          key: AWS_ACCESS_KEY_ID
+        secretAccessKey:
+          name: postgres-ceph-bucket
+          key: AWS_SECRET_ACCESS_KEY
