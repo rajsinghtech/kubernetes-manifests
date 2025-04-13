@@ -1,7 +1,7 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: ScheduledBackup
 metadata:
-  name: gatus-postgres-backup
+  name: gatus-postgres
 spec:
   schedule: "@daily"
   immediate: true
