@@ -38,4 +38,4 @@ spec:
       volumes:
         - name: homeassistant-config
           persistentVolumeClaim:
-            claimName: homeassistant-config-unas
+            claimName: homeassistant-config-ceph
