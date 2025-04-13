@@ -15,5 +15,5 @@ resources:
   - httproute.yaml
   - secret.yaml
   - bucket.yaml
-  - s3manager.yaml=
+  - s3manager.yaml
   - postgres.yaml
