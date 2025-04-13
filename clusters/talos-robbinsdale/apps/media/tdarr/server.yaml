@@ -10,7 +10,7 @@ spec:
     rollingUpdate:
       maxSurge: 1
       maxUnavailable: 1
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: tdarr
