@@ -6,7 +6,7 @@ spec:
   inheritedMetadata:
     labels:
       app: jellystat-pg
-  instances: 3
+  instances: 1
   storage:
     size: 10Gi
     storageClass: rook-cephfs
