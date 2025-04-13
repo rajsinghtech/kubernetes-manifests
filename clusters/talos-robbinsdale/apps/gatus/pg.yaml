@@ -25,3 +25,6 @@ spec:
         secretAccessKey:
           name: postgres-ceph-bucket
           key: AWS_SECRET_ACCESS_KEY
+      wal:
+        compression: bzip2
+        maxParallel: 8
