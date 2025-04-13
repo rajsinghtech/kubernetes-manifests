@@ -3,6 +3,6 @@ kind: ObjectBucketClaim
 metadata:
   name: jellystat-postgres-ceph-bucket
 spec:
-  generateBucketName: postgres
-  bucketName: postgres
+  generateBucketName: jellystat-postgres
+  bucketName: jellystat-postgres
   storageClassName: rook-ceph-bucket
