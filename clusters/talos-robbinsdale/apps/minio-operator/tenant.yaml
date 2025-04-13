@@ -11,9 +11,11 @@ spec:
       app: minio
   configuration:
     name: minio-config-unas
+  erasureCodingConfig:
+    algorithm: standalone
   pools:
     - name: ceph-nvme
-      servers: 1
+      servers: 4
       volumesPerServer: 1
       volumeClaimTemplate:
         spec:
@@ -22,4 +24,4 @@ spec:
           storageClassName: ceph-block-replicated-nvme
           resources:
             requests:
-              storage: 100Gi
+              storage: 50Gi
