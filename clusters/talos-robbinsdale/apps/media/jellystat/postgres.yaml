@@ -41,14 +41,14 @@ spec:
         secretAccessKey:
           name: postgres-ceph-bucket
           key: AWS_SECRET_ACCESS_KEY
----
-apiVersion: postgresql.cnpg.io/v1
-kind: ScheduledBackup
-metadata:
-  name: jellystat-postgres
-spec:
-  schedule: "@daily"
-  immediate: true
-  backupOwnerReference: self
-  cluster:
-    name: jellystat-postgres
+# ---
+# apiVersion: postgresql.cnpg.io/v1
+# kind: ScheduledBackup
+# metadata:
+#   name: jellystat-postgres
+# spec:
+#   schedule: "@weekly"
+#   immediate: true
+#   backupOwnerReference: self
+#   cluster:
+#     name: jellystat-postgres
