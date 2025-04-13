@@ -14,6 +14,10 @@ spec:
   env:
     - name: MINIO_STORAGE_CLASS_STANDARD
       value: "EC:2"
+    - name: MINIO_DOMAIN
+      value: "minio.home.svc.cluster.local"
+    - name: MINIO_BROWSER
+      value: "on"
   pools:
     - name: ceph-nvme
       servers: 4
