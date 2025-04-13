@@ -41,7 +41,14 @@ spec:
     - name: wildcard-raj-https
       protocol: HTTPS
       port: 443
-      hostname: "*.rajsingh.info"
+      hostname: "*.rajsingh.info" 
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: wildcard-raj-https
+      protocol: HTTPS
+      port: 443
+      hostname: "*.*.rajsingh.info" 
       allowedRoutes:
         namespaces:
           from: All
@@ -80,7 +87,7 @@ metadata:
   namespace: envoy-gateway-system
 spec:
   dnsNames:
-    - '*.k8s.rajsingh.info'
+    - '*.*.rajsingh.info'
     - '*.rajsingh.info'
   issuerRef:
     group: cert-manager.io
@@ -98,7 +105,7 @@ metadata:
   namespace: envoy-gateway-system
 spec:
   dnsNames:
-    - '*.k8s.lukehouge.com'
+    - '*.*.lukehouge.com'
     - '*.lukehouge.com'
   issuerRef:
     group: cert-manager.io
