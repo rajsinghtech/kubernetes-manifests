@@ -11,3 +11,4 @@ helmCharts:
 
 resources:
   - tenant.yaml
+  - secret.yaml

@@ -4,14 +4,20 @@ metadata:
   name: home
   namespace: home
 spec:
-  ## Assign labels to the pool
+  features:
+    bucketDNS: true
   poolsMetadata:
     labels:
       app: minio
-  volumesPerServer: 1
-  volumeClaimTemplate:
-    spec:
-      storageClassName: ceph-block-replicated-nvme
-      resources:
-        requests:
-          storage: 100Gi
+  configuration:
+    name: storage-configuration
+  pools:
+    - name: ceph-nvme
+      servers: 1
+      volumesPerServer: 1
+      volumeClaimTemplate:
+        spec:
+          storageClassName: ceph-block-replicated-nvme
+          resources:
+            requests:
+              storage: 100Gi
