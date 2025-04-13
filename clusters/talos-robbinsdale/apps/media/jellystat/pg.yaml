@@ -25,6 +25,10 @@ spec:
         secretAccessKey:
           name: postgres-ceph-bucket
           key: AWS_SECRET_ACCESS_KEY
+      data:
+        compression: bzip2
+      wal:
+        compression: bzip2
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: ScheduledBackup
