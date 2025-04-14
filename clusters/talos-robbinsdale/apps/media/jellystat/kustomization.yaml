@@ -9,4 +9,4 @@ resources:
   - httproute.yaml
   - unas.yaml
   - bucket.yaml
-  # - postgres.yaml
+  - postgres.yaml
