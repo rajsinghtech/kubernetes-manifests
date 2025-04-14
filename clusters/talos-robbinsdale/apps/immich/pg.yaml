@@ -43,6 +43,7 @@ spec:
     storageClass: ceph-block-replicated-nvme
 
   backup:
+    retentionPolicy: "30d"
     # Volume snapshot backups
     volumeSnapshot:
        className: csi-rbdplugin-snapclass
