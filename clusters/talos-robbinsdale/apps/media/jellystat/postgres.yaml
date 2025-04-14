@@ -27,7 +27,7 @@ spec:
           key: AWS_SECRET_ACCESS_KEY
   bootstrap:
     recovery:
-      source: jellystat-pg
+      source: jellystat-db
   externalClusters:
   - name: jellystat-db
     barmanObjectStore: 
