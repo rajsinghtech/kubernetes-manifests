@@ -7,5 +7,5 @@ resources:
   # - worker.yaml
   - service.yaml
   - unas.yaml
-  - ceph.yaml
+  # - ceph.yaml
   - httproute.yaml
