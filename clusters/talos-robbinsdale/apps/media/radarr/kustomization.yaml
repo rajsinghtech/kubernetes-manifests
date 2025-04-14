@@ -6,7 +6,7 @@ resources:
 # - deployment.yaml
   - service.yaml
   - unas.yaml
-  # - ceph.yaml
+  - ceph.yaml
   - httproute.yaml
   # - volsync-backup.yaml
-  # - volsync-restore.yaml
+  - volsync-restore.yaml
