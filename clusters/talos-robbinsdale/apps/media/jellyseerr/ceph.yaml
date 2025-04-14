@@ -4,7 +4,7 @@ metadata:
   name: jellyseerr-config-ceph
 spec:
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
       storage: 5Gi
