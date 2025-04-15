@@ -76,4 +76,4 @@ patches:
       metadata:
         name: descheduler-cronjob
       spec:
-        schedule: "0 0 * * *"
+        schedule: "*/5 * * * *" # every 5 minutes
