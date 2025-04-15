@@ -21,3 +21,4 @@ resources:
  - recording.yaml
  - ingress.yaml
  - dnsconfig.yaml
+ - ./tclip
