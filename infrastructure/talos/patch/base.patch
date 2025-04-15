@@ -19,6 +19,9 @@ cluster:
     - 192.168.50.25
     - k8s.robbinsdale.rajsingh.info
     - k8s.robbinsdale.lukehouge.com
+  extraManifests:
+    - https://raw.githubusercontent.com/alex1989hu/kubelet-serving-cert-approver/main/deploy/standalone-install.yaml
+    - https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 machine:
   features:
     hostDNS:
@@ -33,8 +36,8 @@ machine:
   nodeLabels:
     openebs.io/engine: mayastor
   kubelet:
-    # extraArgs:
-    #   rotate-server-certificates: true
+    extraArgs:
+      rotate-server-certificates: true
     extraMounts:
     - destination: /var/local-path-provisioner
       type: bind

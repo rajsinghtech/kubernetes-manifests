@@ -7,12 +7,13 @@ config:
 	talosctl machineconfig patch controlplane.yaml --patch @patch/tank.patch --output tank.yaml
 	talosctl machineconfig patch controlplane.yaml --patch @patch/titan.patch --output titan.yaml
 	talosctl machineconfig patch controlplane.yaml --patch @patch/stone.patch --output stone.yaml
-
+	talosctl machineconfig patch controlplane.yaml --patch @patch/silver.patch --output silver.yaml
 init:
 	${MAKE} config
 	talosctl apply-config --insecure -n tank.local --file tank.yaml 
 	talosctl apply-config --insecure -n titan.local --file titan.yaml
 	talosctl apply-config --insecure -n stone.local --file stone.yaml
+	talosctl apply-config --insecure -n silver.local --file silver.yaml
 	sleep 10
 	${MAKE} bootstrap
 
@@ -27,7 +28,7 @@ apply:
 	talosctl -e tank.local -n tank.local apply-config --file tank.yaml
 	talosctl -e titan.local -n titan.local apply-config --file titan.yaml
 	talosctl -e stone.local -n stone.local apply-config --file stone.yaml
-	
+	talosctl -e silver.local -n silver.local apply-config --file silver.yaml
 iso: 
 	@echo "Uploading schematic and retrieving ID..."
 	@SCHEMATIC_ID=$$(curl -s -X POST --data-binary @patch/schematic.yaml https://factory.talos.dev/schematics | jq -r '.id'); \
