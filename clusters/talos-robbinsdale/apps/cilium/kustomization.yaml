@@ -69,7 +69,7 @@ patches:
                     memory: "1000Mi"
   - target:
       kind: CronJob
-      name: descheduler
+      name: descheduler-cronjob
     patch: |-
       apiVersion: batch/v1
       kind: CronJob
