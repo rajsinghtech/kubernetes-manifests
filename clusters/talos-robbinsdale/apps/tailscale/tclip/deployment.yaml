@@ -25,12 +25,13 @@ spec:
                 secretKeyRef:
                   name: tailscale-authkeys
                   key: tclip-authkey
-            - name: DATA_DIR
-              value: "/data"
             - name: TSNET_HOSTNAME
-              value: "tclip"
+              value: "paste"
             - name: HTTP_PORT
               value: "80"
+          volumeMounts:
+            - name: data-volume
+              mountPath: /data
       volumes:
         - name: data-volume
           persistentVolumeClaim:
