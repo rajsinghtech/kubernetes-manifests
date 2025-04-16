@@ -73,7 +73,7 @@ spec:
               sizeLimit: 1Gi
         - name: cache
           emptyDir:
-            sizeLimit: 10Gi
+            sizeLimit: 50Gi
         - name: secret-volume
           secret:
             secretName: frigate-luke-tls
