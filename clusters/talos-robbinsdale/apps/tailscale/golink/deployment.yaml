@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: golink
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: golink
+  template:
+    metadata:
+      labels:
+        app: golink
+    spec:
+      containers:
+        - name: golink
+          image: ghcr.io/tailscale/golink:main
+          ports:
+            - containerPort: 80
+          env:
+            - name: TS_AUTHKEY
+              valueFrom:
+                secretKeyRef:
+                  name: tailscale-authkeys
+                  key: golink-authkey
+            - name: TS_HOSTNAME
+              value: "go"
+          args:
+            - "-sqlitedb"
+            - "/home/nonroot/golink.db"
+          volumeMounts:
+            - mountPath: /home/nonroot
+              name: data-volume
+      volumes:
+        - name: data-volume
+          persistentVolumeClaim:
+            claimName: golink-data-ceph 
