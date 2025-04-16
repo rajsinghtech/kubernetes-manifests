@@ -1,5 +1,7 @@
 expose:
   type: clusterIP
+  tls:
+    enabled: false
 
 externalURL: https://harbor.rajsingh.info
 
@@ -25,4 +27,4 @@ metrics:
   serviceMonitor:
     enabled: true
     additionalLabels:
-      release: prometheus 
+      prometheus: kube-prometheus-stack
