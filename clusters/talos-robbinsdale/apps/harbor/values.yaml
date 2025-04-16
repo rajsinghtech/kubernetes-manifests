@@ -1,0 +1,28 @@
+expose:
+  type: clusterIP
+
+externalURL: https://harbor.rajsingh.info
+
+persistence:
+  enabled: true
+  resourcePolicy: "keep"
+  persistentVolumeClaim:
+    registry:
+      storageClass: "ceph-block-replicated-nvme"
+    jobservice:
+      jobLog:
+        storageClass: "ceph-block-replicated-nvme"
+    database:
+      storageClass: "ceph-block-replicated-nvme"
+    redis:
+      storageClass: "ceph-block-replicated-nvme"
+    trivy:
+      storageClass: "ceph-block-replicated-nvme"
+  
+# Monitoring
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+    additionalLabels:
+      release: prometheus 
