@@ -4,3 +4,6 @@ kind: Kustomization
 namespace: tailscale
 resources:
   - deployment.yaml
+  - service.yaml
+  - ceph.yaml
+  - httproute.yaml
