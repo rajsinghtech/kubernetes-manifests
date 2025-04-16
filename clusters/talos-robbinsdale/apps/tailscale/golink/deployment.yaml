@@ -27,9 +27,9 @@ spec:
               value: "go"
           args:
             - "-sqlitedb"
-            - "/home/nonroot/golink.db"
+            - "/data/golink.db"
           volumeMounts:
-            - mountPath: /home/nonroot
+            - mountPath: /data
               name: data-volume
       volumes:
         - name: data-volume
