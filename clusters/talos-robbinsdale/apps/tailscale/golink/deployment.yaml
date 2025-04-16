@@ -22,7 +22,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: tailscale-authkeys
-                  key: golink-authkey
+                  key: tclip-authkey
             - name: TS_HOSTNAME
               value: "go"
           args:
