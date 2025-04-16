@@ -33,7 +33,18 @@ spec:
           volumeMounts:
             - mountPath: /data
               name: data-volume
+          securityContext:
+            runAsUser: 0
       volumes:
         - name: data-volume
           persistentVolumeClaim:
-            claimName: golink-data-ceph 
+            claimName: golink-data-ceph
+      initContainers:
+        - name: volume-permissions
+          image: busybox
+          command: ["sh", "-c", "chown -R 65532:65532 /data"]
+          volumeMounts:
+            - mountPath: /data
+              name: data-volume
+          securityContext:
+            runAsUser: 0 
