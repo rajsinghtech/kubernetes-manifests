@@ -27,10 +27,10 @@ spec:
                   key: tclip-authkey
             - name: DATA_DIR
               value: "/data"
-            - name: TS_HOSTNAME
+            - name: TSNET_HOSTNAME
               value: "tclip"
             - name: HTTP_PORT
-              value: "80" 
+              value: 80
       volumes:
         - name: data-volume
           persistentVolumeClaim:
