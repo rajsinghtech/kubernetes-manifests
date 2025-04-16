@@ -30,7 +30,7 @@ spec:
             - name: TSNET_HOSTNAME
               value: "tclip"
             - name: HTTP_PORT
-              value: 80
+              value: "80"
       volumes:
         - name: data-volume
           persistentVolumeClaim:
