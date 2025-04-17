@@ -21,7 +21,7 @@ helmCharts:
     
   - name: loki
     repo: https://grafana.github.io/helm-charts
-    version: 5.47.1
+    version: 5.48.0
     namespace: monitoring
     releaseName: loki
     includeCRDs: true
