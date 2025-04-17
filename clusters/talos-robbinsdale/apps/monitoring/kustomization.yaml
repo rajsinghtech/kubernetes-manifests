@@ -6,9 +6,6 @@ resources:
   - alertconfig.yaml
   - secrets.yaml
   - dashboard-tailscale.yaml
-  - loki-bucket.yaml
-  - loki-ceph-secret.yaml
-  - loki-dashboard.yaml
 
 helmCharts:
   - name: kube-prometheus-stack
@@ -18,18 +15,3 @@ helmCharts:
     releaseName: kube-prometheus-stack
     includeCRDs: true
     valuesFile: values-kube-prometheus-stack.yaml
-    
-  - name: loki
-    repo: https://grafana.github.io/helm-charts
-    version: 5.47.1
-    namespace: monitoring
-    releaseName: loki
-    includeCRDs: true
-    valuesFile: loki-values.yaml
-    
-  - name: promtail
-    repo: https://grafana.github.io/helm-charts
-    version: 6.15.3
-    namespace: monitoring
-    releaseName: promtail
-    valuesFile: promtail-values.yaml
