@@ -3,9 +3,10 @@ kind: ConfigMap
 metadata:
   name: dashboard-loki-logs
   namespace: monitoring
+  annotations:
+    grafana_folder: logs
   labels:
-    grafana_dashboard: "true"
-    grafana_folder: "logs"
+    grafana_dashboard: "1"
 data:
   loki-logs-dashboard.json: |-
     {
