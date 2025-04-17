@@ -42,21 +42,21 @@ write:
   replicas: 1
   extraEnvFrom:
     - secretRef:
-        name:loki-ceph-bucket
+        name: loki-ceph-bucket
   persistence:
     storageClass: ceph-block-replicated
 read:
   replicas: 1
   extraEnvFrom:
     - secretRef:
-        name:loki-ceph-bucket
+        name: loki-ceph-bucket
 backend:
   replicas: 1
   persistence:
     storageClass: ceph-block-replicated
   extraEnvFrom:
     - secretRef:
-        name:loki-ceph-bucket
+        name: loki-ceph-bucket
 chunksCache:
   enabled: false
   persistence:
