@@ -47,14 +47,14 @@ grafana:
           editable: true
           options:
             path: /var/lib/grafana/dashboards/ceph
-        - name: "proxmox"
+        - name: "logs"
           orgId: 1
-          folder: "proxmox"
+          folder: "logs"
           type: file
           disableDeletion: false
           editable: true
           options:
-            path: /var/lib/grafana/dashboards/proxmox
+            path: /var/lib/grafana/dashboards/logs
         - name: "envoy-gateway"
           orgId: 1
           folder: "envoy-gateway"
