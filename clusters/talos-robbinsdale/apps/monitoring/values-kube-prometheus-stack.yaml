@@ -106,7 +106,7 @@ grafana:
       loki-dashboard:
         gnetId: 10880 
         revision: 1
-        datasource: prometheus
+        datasource: loki
       # https://grafana.com/grafana/dashboards/16970-container-log-quick-search/
       kubernetes-logs:
         gnetId: 16970
