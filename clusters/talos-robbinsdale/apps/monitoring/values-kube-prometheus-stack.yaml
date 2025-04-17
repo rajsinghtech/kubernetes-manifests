@@ -17,8 +17,8 @@ grafana:
   additionalDataSources:
     - name: Loki
       type: loki
-      uid: loki
-      url: http://loki.monitoring:3100
+      url: http://loki-read:3100
+      access: proxy
   dashboardProviders:
     dashboardproviders.yaml:
       apiVersion: 1
@@ -187,3 +187,6 @@ kubeControllerManager:
 
 kubeScheduler:
   enabled: true
+
+defaultRules:
+  create: true
