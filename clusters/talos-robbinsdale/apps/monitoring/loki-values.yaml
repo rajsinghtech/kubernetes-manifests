@@ -6,7 +6,7 @@ loki:
       ruler: loki
       admin: loki
     s3:
-      endpoint: rook-ceph-rgw-hybrid-objectstore.rook-ceph
+      endpoint: rook-ceph-rgw-object-store.rook-ceph.svc.cluster.local
       accessKeyId: null
       secretAccessKey: null
       insecure: true
