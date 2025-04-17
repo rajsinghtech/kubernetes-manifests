@@ -22,7 +22,7 @@ resources:
   - github.com/rancher/local-path-provisioner/deploy?ref=v0.0.31
   - s3.yaml
   - s3manager.yaml
-  - multus.yaml
+  # - multus.yaml
 patches:
   - patch: |-
       kind: ConfigMap
