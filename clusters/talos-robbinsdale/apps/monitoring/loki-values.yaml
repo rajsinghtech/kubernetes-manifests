@@ -2,9 +2,9 @@ loki:
   storage:
     type: s3
     bucketNames:
-      chunks: loki-ceph-bucket
-      ruler: loki-ceph-bucket
-      admin: loki-ceph-bucket
+      chunks: loki
+      ruler: loki
+      admin: loki
     s3:
       endpoint: rook-ceph-rgw-hybrid-objectstore.rook-ceph
       accessKeyId: null
@@ -42,21 +42,21 @@ write:
   replicas: 1
   extraEnvFrom:
     - secretRef:
-        name: ceph-hybrid-loki
+        name:loki-ceph-bucket
   persistence:
     storageClass: ceph-block-replicated
 read:
   replicas: 1
   extraEnvFrom:
     - secretRef:
-        name: ceph-hybrid-loki
+        name:loki-ceph-bucket
 backend:
   replicas: 1
   persistence:
     storageClass: ceph-block-replicated
   extraEnvFrom:
     - secretRef:
-        name: ceph-hybrid-loki
+        name:loki-ceph-bucket
 chunksCache:
   enabled: false
   persistence:
