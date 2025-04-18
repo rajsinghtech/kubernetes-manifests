@@ -24,7 +24,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: tailscale-authkeys
-                  key: tclip-authkey
+                  key: TS_AUTHKEY
             - name: TSNET_HOSTNAME
               value: "paste"
             - name: HTTP_PORT
