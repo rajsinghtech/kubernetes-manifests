@@ -22,7 +22,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: tailscale-authkeys
-                  key: tclip-authkey
+                  key: TS_AUTHKEY
             - name: TS_HOSTNAME
               value: "idp"
           volumeMounts:

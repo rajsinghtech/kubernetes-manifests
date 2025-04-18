@@ -24,3 +24,4 @@ resources:
  - ./tclip
  - ./tsidp
  - ./golink
+ - ./tsmagicproxy
