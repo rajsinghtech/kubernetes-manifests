@@ -4,7 +4,7 @@ kind: Kustomization
 helmCharts:
   - name: rook-ceph
     repo: https://charts.rook.io/release
-    version: v1.16.6
+    version: v1.17.0
     namespace: rook-ceph
     releaseName: rook-ceph
     includeCRDs: true
@@ -22,7 +22,7 @@ resources:
   - github.com/rancher/local-path-provisioner/deploy?ref=v0.0.31
   - s3.yaml
   - s3manager.yaml
-  - multus.yaml
+  # - multus.yaml
 patches:
   - patch: |-
       kind: ConfigMap

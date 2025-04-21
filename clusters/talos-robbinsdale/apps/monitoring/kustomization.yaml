@@ -10,8 +10,21 @@ resources:
 helmCharts:
   - name: kube-prometheus-stack
     repo: https://prometheus-community.github.io/helm-charts
-    version: 70.4.2
+    version: 70.7.0
     namespace: monitoring
     releaseName: kube-prometheus-stack
     includeCRDs: true
     valuesFile: values-kube-prometheus-stack.yaml
+  - name: loki
+    repo: https://grafana.github.io/helm-charts
+    version: 6.29.0
+    namespace: monitoring
+    releaseName: loki
+    includeCRDs: true
+    valuesFile: loki-values.yaml
+  - name: promtail
+    repo: https://grafana.github.io/helm-charts
+    version: 6.16.6
+    namespace: monitoring
+    releaseName: promtail
+    valuesFile: promtail-values.yaml
