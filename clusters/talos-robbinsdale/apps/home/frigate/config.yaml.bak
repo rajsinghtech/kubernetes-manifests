@@ -1,5 +1,3 @@
-auth:
-  reset_admin_password: true
 mqtt:
   host: 10.69.10.11
   port: 1883
@@ -81,14 +79,16 @@ cameras:
           roles:
             - detect
     record:
-      enabled: True
+      enabled: true
       retain:
-        days: 10
+        days: 5
         mode: all
-      events:
+      alerts:
         retain:
-          default: 30
-          mode: motion
+          days: 60
+      detections:
+        retain:
+          days: 60
     ui:
       order: 9
     live:
@@ -118,14 +118,16 @@ cameras:
           roles:
             - detect
     record:
-      enabled: True
+      enabled: true
       retain:
-        days: 10
+        days: 5
         mode: all
-      events:
+      alerts:
         retain:
-          default: 30
-          mode: motion
+          days: 60
+      detections:
+        retain:
+          days: 60
     ui:
       order: 10
     live:
@@ -134,6 +136,9 @@ cameras:
       alley:
         coordinates: 0.54,0.004,0.587,0.307,0.663,0.305,0.755,0.439,0.723,0.005,1,0,1,1,0,1,0,0
         loitering_time: 0
+        filters:
+          person:
+            max_area: 25000
     review:
       alerts:
         required_zones: alley
@@ -149,14 +154,16 @@ cameras:
           roles:
             - detect
     record:
-      enabled: True
+      enabled: true
       retain:
-        days: 10
+        days: 5
         mode: all
-      events:
+      alerts:
         retain:
-          default: 30
-          mode: motion
+          days: 60
+      detections:
+        retain:
+          days: 60
     ui:
       order: 5
     live:
@@ -169,6 +176,15 @@ cameras:
     review:
       alerts:
         required_zones: yard
+        labels:
+          - cat
+          - dog
+          - person
+      detections:
+        labels:
+          - cat
+          - dog
+          - person
   house_side:
     ffmpeg:
       inputs:
@@ -181,14 +197,16 @@ cameras:
           roles:
             - detect
     record:
-      enabled: True
+      enabled: true
       retain:
-        days: 10
+        days: 5
         mode: all
-      events:
+      alerts:
         retain:
-          default: 30
-          mode: motion
+          days: 60
+      detections:
+        retain:
+          days: 60
     ui:
       order: 1
     live:
@@ -204,6 +222,24 @@ cameras:
           - cat
           - dog
           - person
+    genai:
+      prompt: Examine the person in these images from the {camera} security camera
+        at the side of the house. What are they doing, and how might their actions
+        suggest their purpose (e.g., delivering something, approaching, leaving)?
+        If they are carrying or interacting with a package, include details about
+        its source or destination. For additional context, this camera is placed on
+        the side entrance of our house, looking at the driveway, gate to our backyard,
+        and garage. This is the main entrance to our house off of the driveway and
+        most often used by residents coming from the garage or their car parked on
+        the driveway, or sometimes by guests.
+      objects:
+        - person
+    objects:
+      filters:
+        car:
+          mask:
+            - 1,0.884,0,0.87,0,1,1,1
+            - 1,0.674,0.79,0.671,0.792,1,1,1
   shop_1:
     ffmpeg:
       inputs:
@@ -212,14 +248,16 @@ cameras:
           roles:
             - record
     record:
-      enabled: True
+      enabled: true
       retain:
-        days: 10
+        days: 5
         mode: all
-      events:
+      alerts:
         retain:
-          default: 30
-          mode: motion
+          days: 60
+      detections:
+        retain:
+          days: 60
     objects:
       track: []
     ui:
@@ -234,14 +272,16 @@ cameras:
           roles:
             - record
     record:
-      enabled: True
+      enabled: true
       retain:
-        days: 10
+        days: 5
         mode: all
-      events:
+      alerts:
         retain:
-          default: 30
-          mode: motion
+          days: 60
+      detections:
+        retain:
+          days: 60
     objects:
       track: []
     ui:
@@ -260,14 +300,16 @@ cameras:
           roles:
             - detect
     record:
-      enabled: True
+      enabled: true
       retain:
-        days: 10
+        days: 5
         mode: all
-      events:
+      alerts:
         retain:
-          default: 30
-          mode: motion
+          days: 60
+      detections:
+        retain:
+          days: 60
     ui:
       order: 0
     live:
@@ -276,25 +318,45 @@ cameras:
       not_road:
         coordinates: 
           0.205,0,0.211,0.139,0.316,0.109,0.444,0.091,0.616,0.083,0.752,0.099,0.755,0,1,0,1,1,0,1,0,0
-        inertia: 3
-        loitering_time: 0
         objects:
           - cat
           - dog
           - person
           - suitecase
-      # car_valid:
-      #   coordinates: 0.216,0.149,0,0.491,0,1,0.456,1,0.49,0.109
-      #   loitering_time: 1
-      #   objects:
-      #     - car
-      #     - bus
-      #   inertia: 10
+      car_valid:
+        coordinates: 0.397,0.094,0.314,0.211,0.088,0.675,0,1,0.588,1,0.53,0.112
+        objects: car
+        filters:
+          car:
+            max_area: 60000
+        inertia: 3
+        loitering_time: 0
     review:
       alerts:
         required_zones:
-          # - car_valid
+          - car_valid
           - not_road
+    genai:
+      prompt: Examine the person in these images from the {camera} security camera
+        at the front driveway of the house. What are they doing, and how might their
+        actions suggest their purpose (e.g., delivering something, approaching, leaving)?
+        If they are carrying or interacting with a package, include details about
+        its source or destination. For additional context, this camera is placed on
+        the front of our garage, looking out onto the driveway in front, and the house
+        to the right. One of the 2 entrances to our house is the door directly to
+        the right, and the gate to our backyard is behind and to the right. Residents
+        often park on the driveway or in the garage and enter the house through the
+        side entrance.
+      objects:
+        - person
+    objects:
+      filters:
+        car:
+          mask:
+            - 0,0.844,1,0.831,1,0.928,1,1,0,1
+            - 0.634,0.522,0.642,0.835,0.917,0.839,0.899,0.521
+            - 0.572,0.126,0.571,0.284,0.731,0.295,0.73,0.129
+            - 0.038,0.362,0.043,0.67,0.271,0.668,0.268,0.351
   backyard_front:
     ffmpeg:
       inputs:
@@ -307,14 +369,16 @@ cameras:
           roles:
             - detect
     record:
-      enabled: True
+      enabled: true
       retain:
-        days: 10
+        days: 5
         mode: all
-      events:
+      alerts:
         retain:
-          default: 30
-          mode: motion
+          days: 60
+      detections:
+        retain:
+          days: 60
     ui:
       order: 4
     live:
@@ -322,8 +386,9 @@ cameras:
     zones:
       yard:
         coordinates: 
-          0.421,0.21,0.581,0.185,0.744,0.176,0.904,0.194,0.999,0.221,1,1,0,1,0,0,0.351,0.005,0.355,0.051,0.409,0.093
+          0.587,0.068,0.771,0.053,0.934,0.068,1,0.078,1,1,0,1,0,0,0.38,0,0.383,0.094,0.409,0.093
         loitering_time: 0
+        inertia: 3
     review:
       alerts:
         required_zones: yard
@@ -339,14 +404,16 @@ cameras:
           roles:
             - detect
     record:
-      enabled: True
+      enabled: true
       retain:
-        days: 10
+        days: 5
         mode: all
-      events:
+      alerts:
         retain:
-          default: 30
-          mode: motion
+          days: 60
+      detections:
+        retain:
+          days: 60
     ui:
       order: 3
     live:
@@ -362,6 +429,10 @@ cameras:
           - cat
           - dog
           - person
+    objects:
+      filters:
+        person:
+          min_score: 0.65
   backyard_back:
     ffmpeg:
       inputs:
@@ -374,14 +445,16 @@ cameras:
           roles:
             - detect
     record:
-      enabled: True
+      enabled: true
       retain:
-        days: 10
+        days: 5
         mode: all
-      events:
+      alerts:
         retain:
-          default: 30
-          mode: motion
+          days: 60
+      detections:
+        retain:
+          days: 60
     ui:
       order: 6
     live:
@@ -389,8 +462,9 @@ cameras:
     zones:
       yard:
         coordinates: 
-          0.007,0.336,0.218,0.211,0.391,0.139,0.509,0.112,0.57,0.09,0.602,0.039,0.64,0.032,0.675,0.056,0.677,0.084,0.761,0.095,0.829,0.096,0.885,0.104,0.927,0.111,0.932,0.042,1,0,1,1,0,1
+          0,0.301,0.223,0.149,0.39,0.075,0.502,0.04,0.569,0.014,0.57,0,0.675,0,0.713,0.015,0.752,0.017,0.789,0.028,0.837,0.041,0.933,0.07,0.934,0,1,0,1,1,0,1
         loitering_time: 0
+        inertia: 3
     review:
       alerts:
         required_zones: yard
@@ -406,14 +480,16 @@ cameras:
           roles:
             - detect
     record:
-      enabled: True
+      enabled: true
       retain:
-        days: 10
+        days: 5
         mode: all
-      events:
+      alerts:
         retain:
-          default: 30
-          mode: motion
+          days: 60
+      detections:
+        retain:
+          days: 60
     ui:
       order: 2
     review:
@@ -423,8 +499,24 @@ cameras:
     zones:
       front_yard:
         coordinates: 0,0,0,1,1,1,1,0.495,0.763,0.29,0.471,0.099,0.474,0
+        filters:
+          person:
+            min_area: 1000
     live:
       stream_name: front_door
+    genai:
+      prompt: Examine the person in these images from the {camera} security camera
+        at the front door. What are they doing, and how might their actions suggest
+        their purpose (e.g., delivering something, approaching, leaving)? If they
+        are carrying or interacting with a package, include details about its source
+        or destination. For additional context, this camera is placed on our front
+        porch, looking at the door and walkway up to the house from the street. This
+        is the second main entrance for the house and commonly used for mail, deliveries,
+        and guests. The door in the camera view leads into our living room.
+      objects:
+        - person
+      required_zones:
+        - front_yard
 birdseye:
   restream: true
 # Optional: Object configuration
@@ -433,8 +525,7 @@ objects:
   # Optional: list of objects to track from labelmap.txt (default: shown below)
   track:
     - person
-    # - car
-    - bus
+    - car
     - cat
     - dog
     - suitecase
@@ -498,7 +589,7 @@ snapshots:
       # person: 15
   # Optional: quality of the encoded jpeg, 0-100 (default: shown below)
   quality: 70
-version: 0.14
+version: 0.15-1
 camera_groups:
   Birdseye:
     order: 1
@@ -520,6 +611,66 @@ camera_groups:
       - house_side
       - shop_1
       - shop_2
+  Entrances:
+    order: 3
+    icon: LuDoorOpen
+    cameras:
+      - driveway
+      - house_side
+      - front_door
+  Outside:
+    order: 4
+    icon: LuTrees
+    cameras:
+      - driveway
+      - house_side
+      - front_door
+      - backyard_front
+      - backyard
+      - backyard_back
+      - alley_front
+      - alley_back
+  Backyard:
+    order: 5
+    icon: LuRockingChair
+    cameras:
+      - backyard_front
+      - backyard
+      - backyard_back
+  Inside:
+    order: 6
+    icon: LuWarehouse
+    cameras:
+      - garage
+      - shop_1
+      - shop_2
+  Fav:
+    order: 7
+    icon: LuStar
+    cameras:
+      - driveway
+      - house_side
+      - front_door
+      - garage
+      - backyard_front
+      - backyard
+      - backyard_back
+      - shop_2
+      - shop_1
+      - alley_front
+      - alley_back
 logger:
   logs:
     frigate.record.maintainer: debug
+notifications:
+  enabled: 'true'
+  email: Lukehouge@gmail.com
+semantic_search:
+  enabled: true
+  reindex: false
+  model_size: large
+genai:
+  enabled: true
+  provider: gemini
+  api_key: TODO
+  model: gemini-1.5-flash
