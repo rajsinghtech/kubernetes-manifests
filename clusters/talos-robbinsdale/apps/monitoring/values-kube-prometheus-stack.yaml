@@ -18,7 +18,7 @@ grafana:
     - name: Loki
       type: loki
       uid: loki
-      url: http://loki.monitoring:3100
+      url: http://loki-gateway.monitoring.svc.cluster.local
   dashboardProviders:
     dashboardproviders.yaml:
       apiVersion: 1
@@ -47,14 +47,14 @@ grafana:
           editable: true
           options:
             path: /var/lib/grafana/dashboards/ceph
-        - name: "proxmox"
+        - name: "logs"
           orgId: 1
-          folder: "proxmox"
+          folder: "logs"
           type: file
           disableDeletion: false
           editable: true
           options:
-            path: /var/lib/grafana/dashboards/proxmox
+            path: /var/lib/grafana/dashboards/logs
         - name: "envoy-gateway"
           orgId: 1
           folder: "envoy-gateway"
@@ -96,6 +96,22 @@ grafana:
         gnetId: 19974
         revision: 2
         datasource: prometheus
+    logs:
+      # https://grafana.com/grafana/dashboards/15141-kubernetes-service-logs/
+      loki-logs-app:
+        gnetId: 15141
+        revision: 1
+        datasource: loki
+      # https://grafana.com/grafana/dashboards/10880-loki-promtail/
+      loki-dashboard:
+        gnetId: 10880 
+        revision: 1
+        datasource: loki
+      # https://grafana.com/grafana/dashboards/16970-container-log-quick-search/
+      kubernetes-logs:
+        gnetId: 16970
+        revision: 1
+        datasource: loki
     ceph:
       ceph-cluster:
         gnetId: 2842

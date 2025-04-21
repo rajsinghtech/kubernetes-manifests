@@ -1,0 +1,16 @@
+serviceMonitor:
+  enabled: true
+
+config:
+  clients:
+    - url: http://loki-write.monitoring:3100/loki/api/v1/push
+resources:
+  requests:
+    cpu: 100m
+    memory: 512Mi
+  limits:
+    memory: 512Mi
+
+extraArgs:
+  - -client.external-labels=cluster=keiretsu
+  - -config.expand-env=true

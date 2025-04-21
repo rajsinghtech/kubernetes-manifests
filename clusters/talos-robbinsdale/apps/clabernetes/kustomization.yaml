@@ -6,7 +6,7 @@ helmCharts:
     repo: oci://ghcr.io/srl-labs/clabernetes
     releaseName: clabernetes
     namespace: clabernetes
-    version: 0.2.5
+    version: 0.2.6
     valuesFile: values.yaml
 resources:
   - httproute.yaml
