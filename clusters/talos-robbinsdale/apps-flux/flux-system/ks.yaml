@@ -5,7 +5,7 @@ metadata:
   name: &app flux-notifications 
   namespace: flux-system
 spec:
-  targetNamespace: cloudflare
+  targetNamespace: flux-system
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
