@@ -6,6 +6,7 @@ metadata:
   namespace: flux-system
 data:
   TIMEZONE: America/Chicago
+  CLUSTER_NAME: talos-robbinsdale
 
   # K8s
   CLUSTER_POD_CIDR: 10.1.0.0/16

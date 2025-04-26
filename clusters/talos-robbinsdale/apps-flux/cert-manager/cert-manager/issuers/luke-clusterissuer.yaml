@@ -1,0 +1,17 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: luke-issuer
+spec:
+  acme:
+    email: lukehouge@gmail.com
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: letsencrypt-key
+    solvers:
+    - dns01:
+        cloudflare:
+          email: lukehouge@gmail.com
+          apiTokenSecretRef:
+            name: cloudflare-luke
+            key: cert-manager-api-token
