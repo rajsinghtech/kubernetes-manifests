@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: cloudflared-typeo
+  name: cloudflared-typeo
+  namespace: cloudflared
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      pod: cloudflared-typeo
+  template:
+    metadata:
+      labels:
+        pod: cloudflared-typeo
+    spec:
+      containers:
+      - command:
+        - cloudflared
+        - tunnel
+        - --metrics
+        - 0.0.0.0:2000
+        - run
+        args:
+        - --token 
+        - $(token)
+        image: cloudflare/cloudflared:latest
+        name: cloudflared
+        env:
+        - name: token
+          valueFrom:
+            secretKeyRef:
+              name: cloudflare
+              key: "cloudflared-k8s-tunnel-token-typeo-io"
+        livenessProbe:
+          httpGet:
+            path: /ready
+            port: 2000
+          failureThreshold: 1
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        resources:
+          limits:
+            cpu: "0.5" 
+            memory: "256Mi"  
+          requests:
+            cpu: "0.2"  
+            memory: "128Mi"  
