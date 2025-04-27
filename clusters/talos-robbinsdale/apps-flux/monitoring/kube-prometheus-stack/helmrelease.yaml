@@ -31,13 +31,17 @@ spec:
             foldersFromFilesStructure: true
       persistence:
         enabled: false
+      # admin:
+      #   existingSecret: "grafana-credentials"
+      #   userKey: admin-user
+      #   passwordKey: admin-password
       serviceMonitor:
         enabled: true
       additionalDataSources:
         - name: Loki
           type: loki
           uid: loki
-          url: http://loki-gateway.monitoring.svc.cluster.local # Assuming Loki runs in the same ns
+          url: http://loki-gateway.monitoring.svc.cluster.local
       dashboardProviders:
         dashboardproviders.yaml:
           apiVersion: 1
@@ -50,16 +54,83 @@ spec:
               editable: true
               options:
                 path: /var/lib/grafana/dashboards/default
+            - name: "argocd"
+              orgId: 1
+              folder: "argocd"
+              type: file
+              disableDeletion: false
+              editable: true
+              options:
+                path: /var/lib/grafana/dashboards/argocd
+            - name: "ceph"
+              orgId: 1
+              folder: "ceph"
+              type: file
+              disableDeletion: false
+              editable: true
+              options:
+                path: /var/lib/grafana/dashboards/ceph
+            - name: "logs"
+              orgId: 1
+              folder: "logs"
+              type: file
+              disableDeletion: false
+              editable: true
+              options:
+                path: /var/lib/grafana/dashboards/logs
+            - name: "envoy-gateway"
+              orgId: 1
+              folder: "envoy-gateway"
+              type: file
+              disableDeletion: false
+              editable: true
+              options:
+                path: /var/lib/grafana/dashboards/envoy-gateway
+            - name: "kubernetes"
+              orgId: 1
+              folder: "kubernetes"
+              type: file
+              disableDeletion: false
+              editable: true
+              options:
+                path: /var/lib/grafana/dashboards/kubernetes
+            - name: "volsync"
+              orgId: 1
+              folder: "volsync"
+              type: file
+              disableDeletion: false
+              editable: true
+              options:
+                path: /var/lib/grafana/dashboards/volsync
       dashboards:
+        argocd:
+          # https://grafana.com/grafana/dashboards/19993-argocd-operational-overview/
+          argocd-operational-overview:
+            gnetId: 19993
+            revision: 2
+            datasource: prometheus
+          # https://grafana.com/grafana/dashboards/19975-argocd-notifications-overview/
+          argocd-notifications-overview:
+            gnetId: 19975
+            revision: 2
+            datasource: prometheus
+          # https://grafana.com/grafana/dashboards/19974-argocd-application-overview/
+          argocd-application-overview:
+            gnetId: 19974
+            revision: 2
+            datasource: prometheus
         logs:
+          # https://grafana.com/grafana/dashboards/15141-kubernetes-service-logs/
           loki-logs-app:
             gnetId: 15141
             revision: 1
             datasource: loki
+          # https://grafana.com/grafana/dashboards/10880-loki-promtail/
           loki-dashboard:
-            gnetId: 10880
+            gnetId: 10880 
             revision: 1
             datasource: loki
+          # https://grafana.com/grafana/dashboards/16970-container-log-quick-search/
           kubernetes-logs:
             gnetId: 16970
             revision: 1
@@ -82,6 +153,19 @@ spec:
             gnetId: 21356
             revision: 3
             datasource: prometheus
+      route:
+        main:
+          enabled: true
+          apiVersion: gateway.networking.k8s.io/v1
+          kind: HTTPRoute
+          hostnames:
+            - grafana.lukehouge.com
+            - grafana.rajsingh.info
+          parentRefs:
+            - group: gateway.networking.k8s.io
+              kind: Gateway
+              name: private
+              namespace: envoy-gateway-system
     prometheusOperator:
       admissionWebhooks:
         enabled: false
@@ -100,10 +184,22 @@ spec:
         storageSpec:
           volumeClaimTemplate:
             spec:
-              storageClassName: ceph-block-replicated-nvme # Use defined SC
               resources:
                 requests:
                   storage: 100Gi
+      route:
+        main:
+          enabled: true
+          apiVersion: gateway.networking.k8s.io/v1
+          kind: HTTPRoute
+          hostnames:
+            - prometheus.lukehouge.com
+            - prometheus.rajsingh.info
+          parentRefs:
+            - group: gateway.networking.k8s.io
+              kind: Gateway
+              name: private
+              namespace: envoy-gateway-system
       server:
         additionalScrapeConfigs:
           - job_name: opencost
@@ -112,14 +208,21 @@ spec:
             scrape_timeout: 10s
             metrics_path: /metrics
             scheme: http
-            static_configs:
-              - targets: ['opencost.opencost.svc.cluster.local:9003'] # Use FQDN
+            dns_sd_configs:
+              - names:
+                  - opencost.opencost
+                type: "A"
+                port: 9003
         retention: 30d
+
     alertmanager:
       enabled: true
+
     kubeProxy:
       enabled: false
+
     kubeControllerManager:
       enabled: true
+
     kubeScheduler:
-      enabled: true 
+      enabled: true
