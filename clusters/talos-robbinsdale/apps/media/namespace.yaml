@@ -4,5 +4,6 @@ metadata:
   name: media
   labels:
     pod-security.kubernetes.io/enforce: privileged
-  annotations:
-    argocd.argoproj.io/sync-options: Prune=false
+    kustomize.toolkit.fluxcd.io/prune: disabled
+#  annotations:
+#    argocd.argoproj.io/sync-options: Prune=false 
