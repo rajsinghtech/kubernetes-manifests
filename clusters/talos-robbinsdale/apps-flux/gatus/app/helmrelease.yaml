@@ -31,10 +31,10 @@ spec:
     config:
       storage:
         type: postgres
-        path: "${uri}"
+        path: "$${uri}"
       alerting:
         discord:
-          webhook-url: "${discord-webhook-url}"
+          webhook-url: "$${discord-webhook-url}"
       endpoints:
         - name: ollama-mac-mini
           group: tailscale
