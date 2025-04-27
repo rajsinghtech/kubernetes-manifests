@@ -1,0 +1,523 @@
+mqtt:
+  host: 10.69.10.11
+  port: 1883
+  user: lhouge
+  password: applegeek
+###################################################################################################################################################
+# CAMERAS
+# 
+# 4K / 8MP
+#   ⁠garage - 3840x2160 (8.29MP, 16:9)
+#   ⁠alley back - 3840x2160 (8.29MP, 16:9)
+# 6MP
+#   ⁠house side - 3072x2048 (6.39MP, 3:2)
+#   ⁠backyard back - 3072x2048 (6.39MP, 3:2)
+#   ⁠front door - 3072x2048 (6.39MP, 3:2)
+# 2K / 4MP
+#   ⁠driveway - 2688x1520 (4.09MP, 16:9)
+#   ⁠alley front - 2688x1520 (4.09MP, 16:9)
+#   ⁠backyard - 2688x1520 (4.09MP, 16:9)
+#   ⁠backyard front - 2688x1520 (4.09MP, 16:9)
+#   ⁠shop 1&2- 2688x1520 (4.09MP, 16:9)
+###################################################################################################################################################
+go2rtc:
+  streams:
+    alley_front:
+      - rtsp://frigate:Applegeek1@192.168.50.247:554/Streaming/Channels/1
+    alley_front_sub:
+      - rtsp://frigate:Applegeek1@192.168.50.247:554/Streaming/Channels/2
+    alley_back:
+      - rtsp://frigate:Applegeek1@192.168.50.246:554/Streaming/Channels/1
+    alley_back_sub:
+      - rtsp://frigate:Applegeek1@192.168.50.246:554/Streaming/Channels/2
+    backyard:
+      - rtsp://frigate:Applegeek1@192.168.50.249:554/Streaming/Channels/1
+    backyard_sub:
+      - rtsp://frigate:Applegeek1@192.168.50.249:554/Streaming/Channels/2
+    house_side:
+      - rtsp://frigate:Applegeek1@192.168.50.252:554/Streaming/Channels/1
+    house_side_sub:
+      - rtsp://frigate:Applegeek1@192.168.50.252:554/Streaming/Channels/2
+    driveway:
+      - rtsp://frigate:Applegeek1@192.168.50.8:554/Streaming/Channels/1
+    driveway_sub:
+      - rtsp://frigate:Applegeek1@192.168.50.8:554/Streaming/Channels/2
+    backyard_front:
+      - rtsp://frigate:Applegeek1@192.168.50.88:554/Streaming/Channels/1
+    backyard_front_sub:
+      - rtsp://frigate:Applegeek1@192.168.50.88:554/Streaming/Channels/2
+    garage:
+      - rtsp://frigate:Applegeek1@192.168.50.237:554/Streaming/Channels/1
+    garage_sub:
+      - rtsp://frigate:Applegeek1@192.168.50.237:554/Streaming/Channels/2
+    backyard_back:
+      - rtsp://frigate:Applegeek1@192.168.50.60:554/Streaming/Channels/1
+    backyard_back_sub:
+      - rtsp://frigate:Applegeek1@192.168.50.60:554/Streaming/Channels/2
+    front_door:
+      - rtsp://frigate:Applegeek1@192.168.50.42:554/Streaming/Channels/1
+    front_door_sub:
+      - rtsp://frigate:Applegeek1@192.168.50.42:554/Streaming/Channels/2
+    shop_1:
+      - rtsp://frigate:Applegeek1@192.168.50.250:554/Streaming/Channels/1
+    shop_1_sub:
+      - rtsp://frigate:Applegeek1@192.168.50.250:554/Streaming/Channels/2
+    shop_2:
+      - rtsp://frigate:Applegeek1@192.168.50.251:554/Streaming/Channels/1
+    shop_2_sub:
+      - rtsp://frigate:Applegeek1@192.168.50.251:554/Streaming/Channels/2
+cameras:
+  alley_front:
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/alley_front
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+        - path: rtsp://127.0.0.1:8554/alley_front_sub
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+    record:
+      enabled: True
+      retain:
+        days: 10
+        mode: all
+      events:
+        retain:
+          default: 30
+          mode: motion
+    ui:
+      order: 9
+    live:
+      stream_name: alley_front
+    zones:
+      alley:
+        coordinates: 0,0,0.539,0,0.542,0.115,0.621,0.111,0.619,0,1,0,1,1,0,1
+        loitering_time: 0
+    review:
+      alerts:
+        required_zones: alley
+    objects:
+      filters:
+        cat:
+          mask: 0.104,0.869,0.33,0.866,0.329,0.982,0.102,0.977
+        dog:
+          mask: 0.103,0.863,0.332,0.863,0.332,0.981,0.102,0.978
+  alley_back:
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/alley_back
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+        - path: rtsp://127.0.0.1:8554/alley_back_sub
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+    record:
+      enabled: True
+      retain:
+        days: 10
+        mode: all
+      events:
+        retain:
+          default: 30
+          mode: motion
+    ui:
+      order: 10
+    live:
+      stream_name: alley_back
+    zones:
+      alley:
+        coordinates: 0.54,0.004,0.587,0.307,0.663,0.305,0.755,0.439,0.723,0.005,1,0,1,1,0,1,0,0
+        loitering_time: 0
+    review:
+      alerts:
+        required_zones: alley
+  backyard:
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/backyard
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+        - path: rtsp://127.0.0.1:8554/backyard_sub
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+    record:
+      enabled: True
+      retain:
+        days: 10
+        mode: all
+      events:
+        retain:
+          default: 30
+          mode: motion
+    ui:
+      order: 5
+    live:
+      stream_name: backyard
+    zones:
+      yard:
+        coordinates: 
+          0.004,0.425,0.087,0.327,0.192,0.187,0.296,0.104,0.372,0.044,0.431,0.021,0.514,0.019,0.648,0.021,0.662,0,1,0,1,1,0,1
+        loitering_time: 0
+    review:
+      alerts:
+        required_zones: yard
+  house_side:
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/house_side
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+        - path: rtsp://127.0.0.1:8554/house_side_sub
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+    record:
+      enabled: True
+      retain:
+        days: 10
+        mode: all
+      events:
+        retain:
+          default: 30
+          mode: motion
+    ui:
+      order: 1
+    live:
+      stream_name: house_side
+    review:
+      detections:
+        labels:
+          - cat
+          - dog
+          - person
+      alerts:
+        labels:
+          - cat
+          - dog
+          - person
+  shop_1:
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/shop_1
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+    record:
+      enabled: True
+      retain:
+        days: 10
+        mode: all
+      events:
+        retain:
+          default: 30
+          mode: motion
+    objects:
+      track: []
+    ui:
+      order: 8
+    live:
+      stream_name: shop_2
+  shop_2:
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/shop_2
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+    record:
+      enabled: True
+      retain:
+        days: 10
+        mode: all
+      events:
+        retain:
+          default: 30
+          mode: motion
+    objects:
+      track: []
+    ui:
+      order: 7
+    live:
+      stream_name: shop_2
+  driveway:
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/driveway
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+        - path: rtsp://127.0.0.1:8554/driveway_sub
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+    record:
+      enabled: True
+      retain:
+        days: 10
+        mode: all
+      events:
+        retain:
+          default: 30
+          mode: motion
+    ui:
+      order: 0
+    live:
+      stream_name: driveway
+    zones:
+      not_road:
+        coordinates: 
+          0.205,0,0.211,0.139,0.316,0.109,0.444,0.091,0.616,0.083,0.752,0.099,0.755,0,1,0,1,1,0,1,0,0
+        inertia: 3
+        loitering_time: 0
+        objects:
+          - cat
+          - dog
+          - person
+          - suitecase
+      # car_valid:
+      #   coordinates: 0.216,0.149,0,0.491,0,1,0.456,1,0.49,0.109
+      #   loitering_time: 1
+      #   objects:
+      #     - car
+      #     - bus
+      #   inertia: 10
+    review:
+      alerts:
+        required_zones:
+          # - car_valid
+          - not_road
+  backyard_front:
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/backyard_front
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+        - path: rtsp://127.0.0.1:8554/backyard_front_sub
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+    record:
+      enabled: True
+      retain:
+        days: 10
+        mode: all
+      events:
+        retain:
+          default: 30
+          mode: motion
+    ui:
+      order: 4
+    live:
+      stream_name: backyard_front
+    zones:
+      yard:
+        coordinates: 
+          0.421,0.21,0.581,0.185,0.744,0.176,0.904,0.194,0.999,0.221,1,1,0,1,0,0,0.351,0.005,0.355,0.051,0.409,0.093
+        loitering_time: 0
+    review:
+      alerts:
+        required_zones: yard
+  garage:
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/garage
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+        - path: rtsp://127.0.0.1:8554/garage_sub
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+    record:
+      enabled: True
+      retain:
+        days: 10
+        mode: all
+      events:
+        retain:
+          default: 30
+          mode: motion
+    ui:
+      order: 3
+    live:
+      stream_name: garage
+    review:
+      detections:
+        labels:
+          - cat
+          - dog
+          - person
+      alerts:
+        labels:
+          - cat
+          - dog
+          - person
+  backyard_back:
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/backyard_back
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+        - path: rtsp://127.0.0.1:8554/backyard_back_sub
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+    record:
+      enabled: True
+      retain:
+        days: 10
+        mode: all
+      events:
+        retain:
+          default: 30
+          mode: motion
+    ui:
+      order: 6
+    live:
+      stream_name: backyard_back
+    zones:
+      yard:
+        coordinates: 
+          0.007,0.336,0.218,0.211,0.391,0.139,0.509,0.112,0.57,0.09,0.602,0.039,0.64,0.032,0.675,0.056,0.677,0.084,0.761,0.095,0.829,0.096,0.885,0.104,0.927,0.111,0.932,0.042,1,0,1,1,0,1
+        loitering_time: 0
+    review:
+      alerts:
+        required_zones: yard
+  front_door:
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/front_door
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+        - path: rtsp://127.0.0.1:8554/front_door_sub
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+    record:
+      enabled: True
+      retain:
+        days: 10
+        mode: all
+      events:
+        retain:
+          default: 30
+          mode: motion
+    ui:
+      order: 2
+    review:
+      alerts:
+        required_zones:
+          - front_yard
+    zones:
+      front_yard:
+        coordinates: 0,0,0,1,1,1,1,0.495,0.763,0.29,0.471,0.099,0.474,0
+    live:
+      stream_name: front_door
+birdseye:
+  restream: true
+# Optional: Object configuration
+# NOTE: Can be overridden at the camera level
+objects:
+  # Optional: list of objects to track from labelmap.txt (default: shown below)
+  track:
+    - person
+    # - car
+    - bus
+    - cat
+    - dog
+    - suitecase
+  filters:
+    person:
+      threshold: 0.70
+# Optional
+ui:
+  # Optional: Set the default live mode for cameras in the UI (default: shown below)
+  # live_mode: mse
+  # Optional: Set a timezone to use in the UI (default: use browser local time)
+  # timezone: None
+  # Optional: Use an experimental recordings / camera view UI (default: shown below)
+  # use_experimental: true
+  # Optional: Set the time format used.
+  # Options are browser, 12hour, or 24hour (default: shown below)
+  time_format: 12hour
+  # Optional: Set the date style for a specified length.
+  # Options are: full, long, medium, sort
+  # Examples:
+  #    short: 2/11/23
+  #    medium: Feb 11, 2023
+  #    full: Saturday, February 11, 2023
+  # (default: shown below).
+  date_style: full
+  # Optional: Set the time style for a specified length.
+  # Options are: full, long, medium, sort
+  # Examples:
+  #    short: 8:14 PM
+  #    medium: 8:15:22 PM
+  #    full: 8:15:22 PM Mountain Standard Time
+  # (default: shown below).
+  time_style: medium
+  # Optional: Ability to manually override the date / time styling to use strftime format
+  # https://www.gnu.org/software/libc/manual/html_node/Formatting-Calendar-Time.html
+  # possible values are shown above (default: not set)
+  # strftime_fmt: "%Y/%m/%d %H:%M"
+# Optional: Configuration for the jpg snapshots written to the clips directory for each event
+# NOTE: Can be overridden at the camera level
+snapshots:
+  # Optional: Enable writing jpg snapshot to /media/frigate/clips (default: shown below)
+  enabled: true
+  # Optional: save a clean PNG copy of the snapshot image (default: shown below)
+  clean_copy: true
+  # Optional: print a timestamp on the snapshots (default: shown below)
+  timestamp: true
+  # Optional: draw bounding box on the snapshots (default: shown below)
+  bounding_box: true
+  # Optional: crop the snapshot (default: shown below)
+  crop: false
+  # Optional: height to resize the snapshot to (default: original size)
+  # height: 175
+  # Optional: Restrict snapshots to objects that entered any of the listed zones (default: no required zones)
+  # required_zones: []
+  # Optional: Camera override for retention settings (default: global values)
+  # retain:
+    # Required: Default retention days (default: shown below)
+    # default: 10
+    # Optional: Per object retention days
+    # objects:
+      # person: 15
+  # Optional: quality of the encoded jpeg, 0-100 (default: shown below)
+  quality: 70
+version: 0.14
+camera_groups:
+  Birdseye:
+    order: 1
+    icon: LuEye
+    cameras: birdseye
+  All:
+    order: 2
+    icon: LuGalleryVertical
+    cameras:
+      - birdseye
+      - alley_back
+      - alley_front
+      - backyard
+      - backyard_back
+      - backyard_front
+      - driveway
+      - garage
+      - front_door
+      - house_side
+      - shop_1
+      - shop_2
+logger:
+  logs:
+    frigate.record.maintainer: debug
