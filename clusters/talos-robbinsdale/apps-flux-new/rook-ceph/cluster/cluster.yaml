@@ -1,0 +1,49 @@
+apiVersion: ceph.rook.io/v1
+kind: CephCluster
+metadata:
+  name: rook-ceph
+spec:
+  cephVersion:
+    image: quay.io/ceph/ceph:v19.2
+    allowUnsupported: false
+  dataDirHostPath: /var/lib/rook
+  skipUpgradeChecks: false
+  continueUpgradeAfterChecksEvenIfNotHealthy: false
+  waitTimeoutForHealthyOSDInMinutes: 10
+  upgradeOSDRequiresHealthyPGs: false
+  mon:
+    count: 3
+    allowMultiplePerNode: true
+  mgr:
+    count: 2
+    allowMultiplePerNode: false
+    modules:
+      - name: rook
+        enabled: true
+        settings:
+          balancerMode: upmap
+  dashboard:
+    enabled: true
+    ssl: false
+  monitoring:
+    enabled: true
+    metricsDisabled: false
+    exporter:
+      perfCountersPrioLimit: 5
+      statsPeriodSeconds: 5
+  network:
+    connections:
+      encryption:
+        enabled: false
+      compression:
+        enabled: false
+      requireMsgr2: false
+    provider: multus
+    selectors:
+      public: rook-ceph/rook-public-nw
+  crashCollector:
+    disable: false
+  logCollector:
+    enabled: true
+    periodicity: daily
+    maxLogSize: 500M 

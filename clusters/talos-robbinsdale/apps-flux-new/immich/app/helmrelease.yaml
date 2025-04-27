@@ -1,0 +1,51 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: immich
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: immich
+      version: 0.9.0
+      sourceRef:
+        kind: HelmRepository
+        name: immich
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    image:
+      tag: v1.126.1 # Use tag from original values
+    envFrom:
+      - secretRef:
+          name: immich-postgres-user
+    env:
+      DB_PASSWORD:
+        valueFrom:
+          secretKeyRef:
+            name: immich-postgres-user
+            key: password
+      DB_HOSTNAME: immich-postgres-ceph-rw.immich.svc.cluster.local # Fully qualified service name
+      REDIS_HOSTNAME: dragonfly-immich.immich.svc.cluster.local # Fully qualified service name
+      REDIS_PASSWORD:
+        valueFrom:
+          secretKeyRef:
+            name: immich-dragonfly-secret
+            key: password
+    immich:
+      metrics:
+        enabled: true
+      persistence:
+        library:
+          existingClaim: immich-unas-pics # Changed name to match PVC in unas.yaml
+    postgresql:
+      enabled: false
+    redis:
+      enabled: false 

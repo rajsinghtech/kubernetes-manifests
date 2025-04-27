@@ -1,0 +1,167 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: production
+spec:
+  controllerName: gateway.envoyproxy.io/gatewayclass-controller
+  parametersRef:
+    group: gateway.envoyproxy.io
+    kind: EnvoyProxy
+    name: custom-proxy-config
+    # namespace will be inherited
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: lan
+spec:
+  controllerName: gateway.envoyproxy.io/gatewayclass-controller
+  parametersRef:
+    group: gateway.envoyproxy.io
+    kind: EnvoyProxy
+    name: custom-proxy-config
+    # namespace will be inherited
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: private
+spec:
+  addresses:
+    - type: IPAddress
+      value: 10.69.10.14
+  gatewayClassName: lan
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: wildcard-raj-https
+      protocol: HTTPS
+      port: 443
+      hostname: "*.rajsingh.info"
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: wildcard-raj-https-sub
+      protocol: HTTPS
+      port: 443
+      hostname: "*.*.rajsingh.info"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        mode: Terminate
+        certificateRefs:
+        - group: ''
+          kind: Secret
+          name: raj-wildcard-tls
+    - name: wildcard-luke-https
+      protocol: HTTPS
+      port: 443
+      hostname: "*.lukehouge.com"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        mode: Terminate
+        certificateRefs:
+        - group: ''
+          kind: Secret
+          name: luke-wildcard-tls
+    - name: kafka-listener
+      protocol: TLS
+      port: 9092
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        mode: Passthrough
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: raj-wildcard-tls
+spec:
+  dnsNames:
+    - '*.*.rajsingh.info'
+    - '*.rajsingh.info'
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: raj-issuer
+  secretName: raj-wildcard-tls
+  usages:
+    - digital signature
+    - key encipherment
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: luke-wildcard-tls
+spec:
+  dnsNames:
+    - '*.*.lukehouge.com'
+    - '*.lukehouge.com'
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: luke-issuer
+  secretName: luke-wildcard-tls
+  usages:
+    - digital signature
+    - key encipherment
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: public
+spec:
+  addresses:
+    - type: IPAddress
+      value: 10.69.10.16
+  gatewayClassName: production
+  listeners:
+    - name: wildcard-raj-https
+      protocol: HTTPS
+      port: 443
+      hostname: "*.rajsingh.info"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        mode: Terminate
+        certificateRefs:
+        - group: ''
+          kind: Secret
+          name: raj-wildcard-tls
+    - name: wildcard-luke-https
+      protocol: HTTPS
+      port: 443
+      hostname: "*.lukehouge.com"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        mode: Terminate
+        certificateRefs:
+        - group: ''
+          kind: Secret
+          name: luke-wildcard-tls
+    - name: fleet-telemetry
+      protocol: TLS
+      port: 8443
+      hostname: "fleet-telemetry.tesla.rajsingh.info"
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              kubernetes.io/metadata.name: tesla
+        kinds:
+          - kind: TLSRoute
+            group: gateway.networking.k8s.io
+      tls:
+        mode: Passthrough 

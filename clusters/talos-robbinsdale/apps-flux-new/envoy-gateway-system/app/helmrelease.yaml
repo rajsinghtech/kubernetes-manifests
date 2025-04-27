@@ -1,0 +1,23 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: eg
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: gateway-helm
+      version: 1.3.2
+      sourceRef:
+        kind: OCIRepository # Using OCIRepository kind based on previous move
+        name: envoyproxy
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  # values: {} # Original valuesFile was empty 

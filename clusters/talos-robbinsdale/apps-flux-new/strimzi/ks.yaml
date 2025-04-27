@@ -1,0 +1,20 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app strimzi
+  namespace: flux-system
+spec:
+  targetNamespace: strimzi
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  path: ./clusters/${CLUSTER_NAME}/apps-flux/strimzi/app
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: home-kubernetes
+  wait: true
+  interval: 30m
+  retryInterval: 1m
+  timeout: 10m # Increased timeout for Kafka operator and cluster 

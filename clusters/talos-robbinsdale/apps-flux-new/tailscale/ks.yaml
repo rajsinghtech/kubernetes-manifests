@@ -1,0 +1,42 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app tailscale-operator
+  namespace: flux-system
+spec:
+  targetNamespace: tailscale
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  path: ./clusters/${CLUSTER_NAME}/apps-flux/tailscale/operator
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: home-kubernetes
+  wait: true
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app tailscale-resources
+  namespace: flux-system
+spec:
+  targetNamespace: tailscale
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  dependsOn:
+    - name: tailscale-operator
+  path: ./clusters/${CLUSTER_NAME}/apps-flux/tailscale/resources
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: home-kubernetes
+  wait: true
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m 

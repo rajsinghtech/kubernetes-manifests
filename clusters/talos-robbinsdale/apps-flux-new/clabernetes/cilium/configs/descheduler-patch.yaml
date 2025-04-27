@@ -1,0 +1,7 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: descheduler-cronjob
+spec:
+  schedule: "*/5 * * * *" # every 5 minutes 

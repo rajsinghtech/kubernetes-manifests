@@ -1,0 +1,18 @@
+# apiVersion: cdi.kubevirt.io/v1beta1
+# kind: DataVolume
+# metadata:
+#   annotations:
+#     cdi.kubevirt.io/allowClaimAdoption: 'true'
+#     cdi.kubevirt.io/storage.usePopulator: 'true'
+#   name: win11cd-pvc
+# spec:
+#   source:
+#     http:
+#       url: https://archive.org/download/tiny11-2311/tiny11%202311%20x64.iso
+#   storage:
+#     accessModes:
+#       - ReadWriteMany
+#     resources:
+#       requests:
+#         storage: 5Gi
+#     storageClassName: rook-cephfs 

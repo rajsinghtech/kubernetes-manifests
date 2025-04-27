@@ -1,0 +1,33 @@
+# apiVersion: v1
+# data:
+#   jwks: |
+#     {
+#       "keys": [
+#         {
+#           "kty": "RSA",
+#           "kid": "xLUxeSJynIpXYiO-xcj9wLQBUwPfzlb_dmHjQBv3YwY",
+#           "use": "sig",
+#           "alg": "RS256",
+#           "e": "AQAB",
+#           "n": "rHKHE9i4419CpMkfurtbGc85JV5kInmxDnR9P7klQFok2wBIwbJ5Wv9B6ZTPV0U4OT5aDOGUUHFJLejeJPh-SX7o3M46HmxSfDgKRq5W4ZmcACte85DHPreVyRhvdW6dvAN2I3M-tMANrFljTXBMVxZfLG81MjUKFY2bIDopIdSAr-7FFNy89WA9GOsOpPxI9Cubx53lKEnGxkBwXurgfklfXHipIqD9qzC-mmzCYgCKYxNA5-9MgVWWpDbK-kRZVHa0vVmZzS-V_EngpjpaCKOfV-QWSkTHdonEgL9HHsEkICatsOIimgAu0--uOnJD-RD8Vd1HyuM0y5uMvJWKoQ"
+#         }
+#       ]
+#     }
+# kind: ConfigMap
+# metadata:
+#   creationTimestamp: null
+#   name: hubble-ui-grafana-public-jwks
+#   namespace: monitoring
+# ---
+# apiVersion: v1
+# data:
+#   auth_token: ZXlKMGVYQWlPaUpxZDNRaUxDSmhiR2NpT2lKU1V6STFOaUlzSW10cFpDSTZJbmhNVlhobFUwcDVia2x3V0ZscFR5MTRZMm81ZDB4UlFsVjNVR1o2YkdKZlpHMUlhbEZDZGpOWmQxa2lmUS5leUpsZUhBaU9qRTNNekUyT0RjMk1qazJPVEVzSW1saGRDSTZNVGN6TVRZd01USXlPU3dpYzNWaUlqb2lZV1J0YVc0aWZRLlVSYXpUa2tVVjhNZDF1SWpPY0hUd0JUa0RNMnNaZmJkMURXNmwzRGRGZWpab0lad180UnNFQXRub0FSMkdhb2dOX0ROSWlXOU5kcFVUZU11Q2tJemJsMWFWZ0drdXNVckZYTU90cFdJSjhRMV9icW1RX3pmUzRnX3dMX3owT292N281LXdqOGFBd1UxcDFndmhSa3hlS092eWpRLXl2NHdWaWNDSDZDeERxSE1KdTdNSVEwS0hDWEpVTm5CQ253T3Z5LXFvdHJyVi1ic0tfWGU1WkN2MmJlNktydVZOc0M4OC1rZ0R5dHhNWm8zb19yS09pSVZSQTNzS2p1SGlqQVBhLWk5U3czcTNBRjNwVXZSemV5TFdtQ2xDMGswb213Zy1COTZpTlpoNzVDUV85Mmd1TVR2QmtWRUd5ZmhtWFZBNlpCMFNsb19lQWRsZTVBVFQ4WTFudw==
+#   endpoint: aHR0cDovL3Byb21ldGhldXMtZ3JhZmFuYS5tb25pdG9yaW5n
+# kind: Secret
+# metadata:
+#   creationTimestamp: "2024-11-14T16:23:45Z"
+#   name: hubble-ui-grafana-secret
+#   namespace: hubble-ui
+#   resourceVersion: "1715984"
+#   uid: 335d03b9-8eb7-49b0-b45c-aaeb2a429f9a
+# type: Opaque 

@@ -1,0 +1,60 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: immich-postgres-ceph
+spec:
+  inheritedMetadata:
+    labels:
+      app: immich-pg
+  # At the time of writing, immich is only compatible with pgvecto.rs <0.4. Latest postgres image with that version is 16.5.
+  imageName: ghcr.io/tensorchord/cloudnative-pgvecto.rs:16.5-v0.3.0
+  instances: 3
+
+  postgresql:
+    shared_preload_libraries:
+      - "vectors.so"
+    enableAlterSystem: true
+
+  managed:
+    roles:
+      - name: immich
+        superuser: true
+        login: true
+
+  bootstrap:
+    initdb:
+      database: immich
+      owner: immich
+      secret:
+        name: immich-postgres-user
+      postInitSQL:
+        - ALTER SYSTEM SET search_path TO "$user", public, vectors;
+        - SET search_path TO "$user", public, vectors;
+        - CREATE EXTENSION IF NOT EXISTS "vectors";
+        - ALTER SCHEMA vectors OWNER TO "immich";
+        - GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA vectors TO "immich";
+        - GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO "immich";
+        - CREATE EXTENSION IF NOT EXISTS cube WITH SCHEMA pg_catalog;
+        - CREATE EXTENSION IF NOT EXISTS earthdistance WITH SCHEMA pg_catalog;
+  monitoring:
+    enablePodMonitor: true
+  storage:
+    size: 8Gi
+    storageClass: ceph-block-replicated-nvme
+
+  backup:
+    retentionPolicy: "30d"
+    # Volume snapshot backups
+    volumeSnapshot:
+       className: csi-rbdplugin-snapclass
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: immich-postgres-ceph
+spec:
+  schedule: "0 0 11 * * *"
+  backupOwnerReference: self
+  method: volumeSnapshot
+  cluster:
+    name: immich-postgres-ceph 
