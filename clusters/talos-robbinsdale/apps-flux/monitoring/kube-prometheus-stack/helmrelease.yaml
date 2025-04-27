@@ -50,7 +50,6 @@ spec:
               editable: true
               options:
                 path: /var/lib/grafana/dashboards/default
-            # Add other providers as needed
       dashboards:
         logs:
           loki-logs-app:
