@@ -1,0 +1,23 @@
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationDestination
+metadata:
+  name: jellyseerr-config-unas
+spec:
+  trigger:
+    schedule: "0 */16 * * *"
+  rsync:
+    copyMethod: Direct
+    destinationPVC: jellyseerr-config-unas
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: jellyseerr-config-ceph
+spec:
+  sourcePVC: jellyseerr-config-ceph
+  trigger:
+    schedule: "0 */16 * * *"
+  rsync:
+    sshKeys: volsync-rsync-dst-src-jellyseerr-config-unas
+    address: volsync-rsync-dst-jellyseerr-config-unas
+    copyMethod: Direct

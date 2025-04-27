@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transmission-tv
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: transmission-tv
+  template:
+    metadata:
+      labels:
+        app: transmission-tv
+    spec:
+      containers:
+      - name: transmission-tv
+        image: haugene/transmission-openvpn
+        ports:
+        - name: http
+          containerPort: 9091
+          protocol: TCP
+        securityContext:
+          capabilities:
+            add:
+            - NET_ADMIN
+        resources:
+          limits:
+            squat.ai/tun: "1"
+        volumeMounts:
+        - name: data-volume
+          mountPath: /data
+        - name: config-volume
+          mountPath: /config
+        env:
+        - name: OPENVPN_PROVIDER
+          valueFrom:
+            secretKeyRef:
+              name: ipvanish-secret
+              key: OPENVPN_PROVIDER
+        - name: OPENVPN_CONFIG
+          valueFrom:
+            secretKeyRef:
+              name: ipvanish-secret
+              key: OPENVPN_CONFIG
+        - name: OPENVPN_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: ipvanish-secret
+              key: OPENVPN_USERNAME
+        - name: OPENVPN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: ipvanish-secret
+              key: OPENVPN_PASSWORD
+        - name: LOCAL_NETWORK
+          valueFrom:
+            secretKeyRef:
+              name: ipvanish-secret
+              key: LOCAL_NETWORK
+      volumes:
+      - name: data-volume
+        persistentVolumeClaim:
+          claimName: transmission-tv-data-unas
+      - name: config-volume
+        persistentVolumeClaim:
+          claimName: transmission-tv-config-unas
