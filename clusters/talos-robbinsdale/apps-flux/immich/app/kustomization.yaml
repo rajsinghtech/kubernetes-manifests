@@ -9,9 +9,6 @@ resources:
   - secret.yaml
   - pg.yaml
   - redis.yaml
-  - volsync-restore1.yaml
-  - volsync-restore2.yaml
-  - volsync-restore3.yaml
 patches:
   - target:
       version: v1
