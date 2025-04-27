@@ -17,7 +17,9 @@ resources:
   - ./emqx.yaml
   - ./external-dns.yaml
   - ./external-secrets.yaml
+  - ./minio-operator.yaml
   - ./grafana.yaml
+  - ./open-webui.yaml
   - ./harbor.yaml
   - ./immich.yaml
   - ./ingress-nginx.yaml
@@ -26,13 +28,17 @@ resources:
   - ./itzg.yaml
   - ./jetstack.yaml
   - ./k8s-gateway.yaml
+  - ./kubernetes-dashboard.yaml
+  - ./kyverno.yaml
   - ./metrics-server.yaml
+  - ./minio-operator.yaml
   - ./nextcloud.yaml
   - ./node-feature-discovery.yaml
   - ./ollama.yaml
   - ./opencost.yaml
   - ./openebs.yaml
   - ./openspeedtest.yaml
+  - ./open-webui.yaml
   - ./pihole.yaml
   - ./piraeus-charts.yaml
   - ./plane.yaml
