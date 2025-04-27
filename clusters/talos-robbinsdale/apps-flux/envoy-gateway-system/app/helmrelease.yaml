@@ -7,11 +7,11 @@ spec:
   interval: 30m
   chart:
     spec:
-      chart: gateway-helm
+      chart: ./charts/gateway-helm
       version: 1.0.3
       sourceRef:
-        kind: OCIRepository 
-        name: envoyproxy
+        kind: GitRepository
+        name: envoyproxy-repo
         namespace: flux-system
   install:
     remediation:
