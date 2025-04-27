@@ -22,6 +22,12 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
+      tls:
+        mode: Terminate
+        certificateRefs:
+        - group: ''
+          kind: Secret
+          name: raj-wildcard-tls
     - name: wildcard-luke-https
       protocol: HTTPS
       port: 443
