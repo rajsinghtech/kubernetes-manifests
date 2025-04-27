@@ -5,5 +5,10 @@ namespace: envoy-gateway-system
 resources:
   - helmrelease.yaml
   - envoy.yaml
-  - gateway.yaml
+  - gatewayclass-production.yaml
+  - gatewayclass-lan.yaml
+  - gateway-private.yaml
+  - certificate-raj-wildcard-tls.yaml
+  - certificate-luke-wildcard-tls.yaml
+  - gateway-public.yaml
   - networkattachment.yaml 
