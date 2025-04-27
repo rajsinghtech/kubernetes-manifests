@@ -22,7 +22,7 @@ spec:
       retries: 3
   values:
     image:
-      tag: v1.126.1 # Use tag from original values
+      tag: v1.126.1
     envFrom:
       - secretRef:
           name: immich-postgres-user
@@ -32,8 +32,8 @@ spec:
           secretKeyRef:
             name: immich-postgres-user
             key: password
-      DB_HOSTNAME: immich-postgres-ceph-rw.immich.svc.cluster.local # Fully qualified service name
-      REDIS_HOSTNAME: dragonfly-immich.immich.svc.cluster.local # Fully qualified service name
+      DB_HOSTNAME: immich-postgres-ceph-rw
+      REDIS_HOSTNAME: dragonfly-immich
       REDIS_PASSWORD:
         valueFrom:
           secretKeyRef:
@@ -44,8 +44,8 @@ spec:
         enabled: true
       persistence:
         library:
-          existingClaim: immich-unas-pics # Changed name to match PVC in unas.yaml
+          existingClaim: immich-unas
     postgresql:
       enabled: false
     redis:
-      enabled: false 
+      enabled: false
