@@ -52,19 +52,6 @@ spec:
                 path: /var/lib/grafana/dashboards/default
             # Add other providers as needed
       dashboards:
-        argocd:
-          argocd-operational-overview:
-            gnetId: 19993
-            revision: 2
-            datasource: prometheus
-          argocd-notifications-overview:
-            gnetId: 19975
-            revision: 2
-            datasource: prometheus
-          argocd-application-overview:
-            gnetId: 19974
-            revision: 2
-            datasource: prometheus
         logs:
           loki-logs-app:
             gnetId: 15141
