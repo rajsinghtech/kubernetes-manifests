@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frigate
+  labels:
+    app: frigate
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frigate
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: frigate
+    spec:
+      # affinity:
+      #   nodeAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #       nodeSelectorTerms:
+      #       - matchExpressions:
+      #         - key: kubernetes.io/hostname
+      #           operator: In
+      #           values:
+      #           - proxmox-tank
+      #           - proxmox-stone
+      containers:
+        - name: frigate
+          image: ghcr.io/blakeblackshear/frigate:0.15.0-beta5
+          ports:
+            - name: web
+              containerPort: 8971  # Web UI
+            - name: rtsp
+              containerPort: 8554  # RTSP
+            - name: stream-8555-tcp
+              containerPort: 8555
+              protocol: TCP  # Stream TCP
+            - name: stream-8555-udp
+              containerPort: 8555
+              protocol: UDP  # Stream UDP
+            - name: internal
+              containerPort: 5000  # Internal unauthenticated port
+          volumeMounts:
+            - name: storage
+              mountPath: /media/frigate
+            - name: config
+              mountPath: /config
+            - mountPath: /dev/shm
+              name: dshm
+            - name: secret-volume
+              mountPath: /etc/letsencrypt/live/frigate/
+            - name: cache
+              mountPath: /tmp/cache/
+          resources:
+            limits:
+              memory: "16Gi"
+              cpu: "8"
+            requests:
+              memory: "8Gi"
+              cpu: "4"
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: frigate-data-unas
+        - name: config
+          persistentVolumeClaim:
+            claimName: frigate-config-ceph
+        - name: dshm
+          emptyDir:
+              medium: Memory
+              sizeLimit: 1Gi
+        - name: cache
+          emptyDir:
+            sizeLimit: 50Gi
+        - name: secret-volume
+          secret:
+            secretName: frigate-luke-tls
+            items:
+            - key: tls.crt
+              path: fullchain.pem
+            - key: tls.key
+              path: privkey.pem
+      restartPolicy: Always
