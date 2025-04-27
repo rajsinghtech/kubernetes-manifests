@@ -11,7 +11,7 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: dragonfly-operator-system # MQTT depends on this
-    - name: rook-ceph-cluster
+    - name: rook-ceph-cluster-configdG
     - name: volsync
   path: ./clusters/${CLUSTER_NAME}/apps-flux/home/app
   prune: true
