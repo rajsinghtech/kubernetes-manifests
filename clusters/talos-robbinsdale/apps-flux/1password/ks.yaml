@@ -9,7 +9,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./clusters/${CLUSTER_NAME}/apps-flux/1passsword/connect
+  path: ./clusters/${CLUSTER_NAME}/apps-flux/1password/connect
   prune: true
   sourceRef:
     kind: GitRepository
