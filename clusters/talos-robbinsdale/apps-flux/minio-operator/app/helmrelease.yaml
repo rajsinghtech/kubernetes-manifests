@@ -11,7 +11,7 @@ spec:
       version: 7.1.0
       sourceRef:
         kind: HelmRepository
-        name: minio # Assuming repo name is minio, need to verify or create this HelmRepository
+        name: minio-operator # Assuming repo name is minio, need to verify or create this HelmRepository
         namespace: flux-system
   install:
     remediation:
