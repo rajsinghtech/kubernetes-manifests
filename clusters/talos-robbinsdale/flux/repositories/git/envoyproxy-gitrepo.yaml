@@ -1,0 +1,17 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: envoyproxy-repo
+  namespace: flux-system
+spec:
+  interval: 1h
+  url: https://github.com/envoyproxy/gateway.git
+  ref:
+    tag: v1.0.3 # Match the version used in HelmRelease
+  ignore: |
+    # Exclude common non-code files
+    **/*.md
+    **/*.txt
+    .github/
+    .gitignore 
