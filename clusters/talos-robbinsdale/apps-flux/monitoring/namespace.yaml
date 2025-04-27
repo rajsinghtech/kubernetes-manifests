@@ -5,5 +5,3 @@ metadata:
   labels:
     pod-security.kubernetes.io/enforce: privileged
     kustomize.toolkit.fluxcd.io/prune: disabled
-#  annotations:
-#    argocd.argoproj.io/sync-options: Prune=false # Removed Argo CD annotation 
