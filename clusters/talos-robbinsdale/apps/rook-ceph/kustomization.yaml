@@ -15,13 +15,13 @@ resources:
   - cluster.yaml
   - httproute.yaml
   - filesystem.yaml
-  - toolbox.yaml
+  # - toolbox.yaml
   - storageclass.yaml
   - volumesnapshot.yaml
   - blockpool.yaml
   - github.com/rancher/local-path-provisioner/deploy?ref=v0.0.31
   - s3.yaml
-  - s3manager.yaml
+  # - s3manager.yaml
   # - multus.yaml
 patches:
   - patch: |-
