@@ -3,12 +3,3 @@ kind: Kustomization
 resources:
   - ./namespace.yaml
   - ./ks.yaml
-  - prometheus-stack/
-  - loki/
-  - promtail/
-  - karma/
-  - alertconfig.yaml
-  - secrets.yaml
-  - dashboard-tailscale.yaml
-  - bucket.yaml
-  - flux-kustomization.yaml 
