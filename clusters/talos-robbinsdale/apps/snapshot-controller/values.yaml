@@ -1,9 +1,0 @@
-controller:
-  enabled: true
-
-  replicaCount: 3
-  serviceMonitor:
-    # Specifies whether a ServiceMonitor should be created
-    create: true
-
-  volumeSnapshotClasses: []

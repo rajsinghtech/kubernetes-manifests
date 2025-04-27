@@ -1,7 +1,0 @@
-# grafana:
-#   enabled: true
-#   enabledNodesGraph: true
-#   namespace: "monitoring"
-frontend:
-  server:
-    host: hubble.lukehouge.com

@@ -1,27 +1,6 @@
 ---
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-
-helmCharts:
-  - name: tailscale-operator
-    repo: https://pkgs.tailscale.com/helmcharts
-    version: 1.82.0
-    namespace: tailscale
-    releaseName: tailscale-operator
-    includeCRDs: true
-    valuesFile: values.yaml
-
 resources:
- - secret.yaml
- - rbac.yaml
- - egress.yaml
- - namespace.yaml
- - connector.yaml
- - proxy-class.yaml
- - recording.yaml
- - ingress.yaml
- - dnsconfig.yaml
- - ./tclip
- - ./tsidp
- - ./golink
- - ./tsmagicproxy
+  - ./namespace.yaml
+  - ./ks.yaml 

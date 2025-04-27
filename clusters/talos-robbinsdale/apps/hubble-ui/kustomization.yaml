@@ -1,20 +1,6 @@
+---
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-
-helmCharts:
-  - name: hubble-ui
-    repo: https://helm.isovalent.com
-    version: 1.3.3
-    namespace: hubble-ui
-    releaseName: hubble-ui
-    includeCRDs: true
-    valuesFile: values.yaml
-    apiVersions:
-      - monitoring.coreos.com/v1
-      - networking.k8s.io/v1
-
 resources:
-  - ./templates/dns-visibility.yaml
-  - ./templates/grafana.yaml
-  - ./templates/httproute.yaml
-  - ./templates/secret.yaml
+  - ./namespace.yaml
+  - ./ks.yaml 

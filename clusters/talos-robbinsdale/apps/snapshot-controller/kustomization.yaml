@@ -1,17 +1,6 @@
+---
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: snapshot-controller
-
-helmCharts:
-  - name: snapshot-controller
-    releaseName: snapshot-controller
-    namespace: snapshot-controller
-    repo: https://piraeus.io/helm-charts/
-    version: 4.0.2
-    valuesFile: values.yaml
-
 resources:
-  - namespace.yaml
-  - https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/v5.0.0/client/config/crd/snapshot.storage.k8s.io_volumesnapshotclasses.yaml
-  - https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/v5.0.0/client/config/crd/snapshot.storage.k8s.io_volumesnapshots.yaml
-  - https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/v5.0.0/client/config/crd/snapshot.storage.k8s.io_volumesnapshotcontents.yaml
+  - ./namespace.yaml
+  - ./ks.yaml 
