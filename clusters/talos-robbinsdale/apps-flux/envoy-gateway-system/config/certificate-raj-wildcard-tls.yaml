@@ -5,7 +5,6 @@ metadata:
   name: raj-wildcard-tls
 spec:
   dnsNames:
-    - '*.*.rajsingh.info'
     - '*.rajsingh.info'
   issuerRef:
     group: cert-manager.io

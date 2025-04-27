@@ -5,7 +5,6 @@ metadata:
   name: luke-wildcard-tls
 spec:
   dnsNames:
-    - '*.*.lukehouge.com'
     - '*.lukehouge.com'
   issuerRef:
     group: cert-manager.io
