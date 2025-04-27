@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plex
+  namespace: media
+  labels:
+    app: plex
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: plex
+  template:
+    metadata:
+      labels:
+        app: plex
+    spec:
+      containers:
+        - name: plex
+          image: docker.io/plexinc/pms-docker:plexpass
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 32400
+              name: http
+              protocol: TCP
+          # readinessProbe:
+          #   httpGet:
+          #     path: /identity
+          #     port: 32400
+          #   failureThreshold: 3
+          #   initialDelaySeconds: 15
+          #   timeoutSeconds: 10
+          # livenessProbe:
+          #   httpGet:
+          #     path: /identity
+          #     port: 32400
+          #   failureThreshold: 3
+          #   initialDelaySeconds: 15
+          #   timeoutSeconds: 10
+          resources:
+            requests:
+              cpu: 2000m
+              memory: 2Gi
+            limits:
+              cpu: 5000m
+              memory: 8Gi
+          env:
+            - name: TZ
+              value: America/Chicago
+            - name: VERSION
+              value: docker
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: transcode
+              mountPath: /transcode
+            - name: tv-volume
+              mountPath: /media/tv
+            - name: movies-volume
+              mountPath: /media/movies
+            - name: audiobooks-volume
+              mountPath: /media/audiobooks
+            - name: music-volume
+              mountPath: /media/music
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: plex-config-ceph  
+        - name: transcode
+          emptyDir:
+            medium: Memory
+            sizeLimit: 6Gi
+        - name: movies-volume
+          persistentVolumeClaim:
+            claimName: radarr-movies-unas
+        - name: tv-volume
+          persistentVolumeClaim:
+            claimName: sonarr-tv-unas
+        - name: audiobooks-volume
+          persistentVolumeClaim:
+            claimName: readarr-books-unas
+        - name: music-volume
+          persistentVolumeClaim:
+            claimName: lidarr-music-unas

@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bazarr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bazarr
+  template:
+    metadata:
+      labels:
+        app: bazarr
+    spec:
+      containers:
+      - name: bazarr
+        image: lscr.io/linuxserver/bazarr:latest
+        ports:
+        - name: http
+          containerPort: 6767
+          protocol: TCP
+        volumeMounts:
+        - name: movies-volume
+          mountPath: /movies
+        - name: tv-volume
+          mountPath: /tv
+        - name: config-volume
+          mountPath: /config
+        env:
+        - name: PUID
+          value: "0"
+        - name: GUID
+          value: "0"
+        - name: TZ
+          value: America/Chicago
+      volumes:
+      - name: movies-volume
+        persistentVolumeClaim:
+          claimName: radarr-movies-unas
+      - name: tv-volume
+        persistentVolumeClaim:
+          claimName: sonarr-tv-unas
+      - name: config-volume
+        persistentVolumeClaim:
+          claimName: bazarr-config-ceph 

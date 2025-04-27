@@ -1,0 +1,25 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: transmission-movies
+  namespace: media
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: private
+      namespace: envoy-gateway-system
+  hostnames:
+    - "transmission-movies.rajsingh.info"
+    - "transmission-movies.lukehouge.com"
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: transmission-movies
+          port: 9091
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /

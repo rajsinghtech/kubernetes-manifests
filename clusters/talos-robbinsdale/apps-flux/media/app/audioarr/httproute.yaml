@@ -1,0 +1,25 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: audioarr
+  namespace: media
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: private
+      namespace: envoy-gateway-system
+  hostnames:
+    - "audioarr.rajsingh.info"
+    - "audioarr.lukehouge.com"
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: audioarr
+          port: 8787
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
