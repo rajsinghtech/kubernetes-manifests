@@ -4,7 +4,6 @@ kind: Kustomization
 namespace: envoy-gateway-system
 resources:
   - https://github.com/envoyproxy/gateway/releases/download/v1.3.2/install.yaml
-  - helmrelease.yaml
   - envoy.yaml
   - gatewayclass-production.yaml
   - gatewayclass-lan.yaml
