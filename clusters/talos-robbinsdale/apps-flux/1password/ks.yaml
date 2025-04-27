@@ -5,7 +5,7 @@ metadata:
   name: &app 1password-connect
   namespace: flux-system
 spec:
-  targetNamespace: cloudflare
+  targetNamespace: 1password
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
