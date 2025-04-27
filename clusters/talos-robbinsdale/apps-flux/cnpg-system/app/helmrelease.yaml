@@ -27,7 +27,5 @@ spec:
         create: true
         namespace: "monitoring"
         configMapName: "cnpg-grafana-dashboard"
-        sidecarLabel: "grafana_dashboard" # Deprecated, but potentially still needed by older Grafana setups
-        sidecarLabelValue: "1" # Deprecated
         annotations:
           grafana_folder: Postgres 
