@@ -9,7 +9,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./clusters/${CLUSTER_NAME}/apps-flux//cloudflare/cloudflared
+  path: ./clusters/${CLUSTER_NAME}/apps-flux/cloudflare/cloudflared
   prune: true
   sourceRef:
     kind: GitRepository
