@@ -1,0 +1,90 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: immich
+resources:
+  - helmrelease.yaml
+  - unas.yaml
+  - httproute.yaml
+  - secret.yaml
+  - pg.yaml
+  - redis.yaml
+  - volsync-restore1.yaml
+  - volsync-restore2.yaml
+  - volsync-restore3.yaml
+patches:
+  - target:
+      version: v1
+      kind: Deployment
+      name: immich-server
+    patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: immich-server
+      spec:
+        template:
+          spec:
+            volumes:
+              - name: smb-unas-pics
+                persistentVolumeClaim:
+                  claimName: immich-unas-pics
+            containers:
+              - name: immich-server
+                volumeMounts:
+                  - name: smb-unas-pics
+                    mountPath: /mnt/vault/pics
+                resources:
+                  requests:
+                    memory: "6Gi"
+                    cpu: "6"
+                  limits:
+                    memory: "12Gi"
+                    cpu: "12"
+                env:
+                  - name: IMMICH_IGNORE_MOUNT_CHECK_ERRORS
+                    value: "true"
+  - target:
+      version: v1
+      kind: Deployment
+      name: immich-machine-learning
+    patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: immich-machine-learning
+      spec:
+        template:
+          spec:
+            containers:
+              - name: immich-machine-learning
+                resources:
+                  requests:
+                    memory: "2Gi"
+                    cpu: "2000m"
+                  limits:
+                    memory: "4Gi"
+                    cpu: "4000m"
+  - target:
+      kind: StatefulSet # Patching the redis provided by helm (if enabled, now disabled)
+      name: immich-redis-master
+      labelSelector: "app.kubernetes.io/instance=immich"
+    patch: |-
+      apiVersion: apps/v1
+      kind: StatefulSet
+      metadata:
+        name: immich-redis-master
+      spec:
+        template:
+          spec:
+            containers:
+              - name: redis
+                resources:
+                  limits:
+                    cpu: 2000m
+                    ephemeral-storage: 3Gi
+                    memory: 2Gi
+                  requests:
+                    cpu: 1000m
+                    ephemeral-storage: 100Mi
+                    memory: 1Gi 

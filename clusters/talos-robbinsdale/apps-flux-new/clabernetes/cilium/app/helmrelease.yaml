@@ -1,0 +1,83 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: cilium
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: cilium
+      version: 1.16.9
+      sourceRef:
+        kind: HelmRepository
+        name: isovalent
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    cni:
+      exclusive: false
+    kubeProxyReplacement: true
+    autoDirectNodeRoutes: true
+    directRoutingSkipUnreachable: false
+    enableIPv4BIGTCP: true
+    enableIPv4Masquerade: true
+    routingMode: native
+    bpf:
+      masquerade: true
+      lbExternalClusterIP: true
+    ipv4:
+      enabled: true
+    ipv4NativeRoutingCIDR: 10.0.0.0/8
+    bandwidthManager:
+      enabled: true
+      bbr: true
+    envoy:
+      enabled: true
+    ipam:
+      mode: "cluster-pool"
+      operator:
+        clusterPoolIPv4PodCIDRList:
+          - "10.1.0.0/16"
+        clusterPoolIPv4MaskSize: 24
+    operator:
+      rollOutPods: true
+    rollOutCiliumPods: true
+    localRedirectPolicy: true
+    bgpControlPlane:
+      enabled: true
+    hubble:
+      relay:
+        enabled: true
+    extraConfig:
+      export-file-path: "/var/run/cilium/hubble/hubble.log"
+    cgroup:
+      autoMount:
+        enabled: false
+      hostRoot: /sys/fs/cgroup
+    k8sServiceHost: localhost
+    k8sServicePort: 7445
+    securityContext:
+      capabilities:
+        ciliumAgent:
+        - CHOWN
+        - KILL
+        - NET_ADMIN
+        - NET_RAW
+        - IPC_LOCK
+        - SYS_ADMIN
+        - SYS_RESOURCE
+        - DAC_OVERRIDE
+        - FOWNER
+        - SETGID
+        - SETUID
+        cleanCiliumState:
+        - NET_ADMIN
+        - SYS_ADMIN
+        - SYS_RESOURCE 

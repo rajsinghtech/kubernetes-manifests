@@ -1,0 +1,30 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: rook-ceph-operator
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: rook-ceph
+      version: v1.16.2 # Use a recent stable version matching cluster manifests
+      sourceRef:
+        kind: HelmRepository
+        name: rook-ceph-charts # Use existing repo name
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    monitoring:
+      enabled: true
+      createPrometheusRules: true
+    toolbox:
+      enabled: false # Deploy toolbox separately via cluster kustomization
+    crds:
+      enabled: true 

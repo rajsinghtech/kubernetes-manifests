@@ -1,0 +1,33 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaNodePool
+metadata:
+  annotations:
+    strimzi.io/next-node-ids: "[10-100]"
+  labels:
+    strimzi.io/cluster: robbinsdale
+  name: broker
+spec:
+  replicas: 3
+  roles:
+    - broker
+  storage:
+    class: ceph-block-replicated
+    size: 10G
+    type: persistent-claim
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaNodePool
+metadata:
+  annotations:
+    strimzi.io/next-node-ids: "[0-9]"
+  labels:
+    strimzi.io/cluster: robbinsdale
+  name: controller
+spec:
+  replicas: 1
+  roles:
+    - controller
+  storage:
+    class: ceph-block-replicated
+    size: 10G
+    type: persistent-claim 

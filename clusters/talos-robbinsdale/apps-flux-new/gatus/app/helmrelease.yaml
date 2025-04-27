@@ -1,0 +1,230 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: gatus
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: gatus
+      version: 1.2.0 # Pinned version from original kustomization
+      sourceRef:
+        kind: HelmRepository
+        name: twin
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    image:
+      tag: latest
+    envFrom:
+      - secretRef:
+          name: gatus
+      - secretRef:
+          name: gatus-postgres-app
+    config:
+      storage:
+        type: postgres
+        path: "${uri}"
+      alerting:
+        discord:
+          webhook-url: "${discord-webhook-url}"
+      endpoints:
+        - name: ollama-mac-mini
+          group: tailscale
+          url: http://tailscale-mac-mini.ollama:11434
+          interval: 600s
+          client:
+            timeout: 60s
+          conditions:
+            - "[STATUS] == 200"
+        - name: Silver
+          group: servers
+          url: tcp://silver.local:6443
+          interval: 60s
+          conditions:
+            - "[CONNECTED] == true"
+          alerts:
+            - type: discord
+              send-on-resolved: true
+        - name: Kubernetes API
+          group: kubernetes
+          url: https://k8s.robbinsdale.local:6443/readyz
+          interval: 60s
+          client:
+            insecure: true
+          conditions:
+            - "[STATUS] == 401"
+          alerts:
+            - type: discord
+              send-on-resolved: true
+        - name: Tank
+          group: servers
+          url: tcp://tank.local:6443
+          interval: 60s
+          conditions:
+            - "[CONNECTED] == true"
+          alerts:
+            - type: discord
+              send-on-resolved: true
+        - name: Titan
+          group: servers
+          url: tcp://titan.local:6443
+          interval: 60s
+          conditions:
+            - "[CONNECTED] == true"
+          alerts:
+            - type: discord
+              send-on-resolved: true
+        - name: Stone
+          group: servers
+          url: tcp://stone.local:6443
+          interval: 60s
+          conditions:
+            - "[CONNECTED] == true"
+          alerts:
+            - type: discord
+              send-on-resolved: true
+        - name: Vault
+          group: servers
+          url: tcp://vault.local:6443
+          interval: 60s
+          conditions:
+            - "[CONNECTED] == true"
+          alerts:
+            - type: discord
+              send-on-resolved: true
+        - name: Ubiquiti UNAS Pro
+          group: servers
+          url: https://nas.local
+          interval: 60s
+          client:
+            insecure: true
+          conditions:
+            - "[STATUS] == 200"
+          alerts:
+            - type: discord
+              send-on-resolved: true
+        - name: Portfolio - Raj Singh
+          group: website
+          url: https://www.rajsingh.info
+          interval: 60s
+          conditions:
+            - "[STATUS] == 200"
+          alerts:
+            - type: discord
+              send-on-resolved: true
+        - name: Immich
+          group: home
+          url: http://immich-server.immich:2283/api/server/ping
+          interval: 60s
+          conditions:
+            - "[STATUS] == 200"
+          alerts:
+            - type: discord
+              send-on-resolved: true
+        - name: Cloudflared Tunnel
+          group: network
+          url: https://status.rajsingh.info
+          client:
+            dns-resolver: "tcp://1.1.1.1:53"
+          interval: 60s
+          conditions:
+            - "[STATUS] == 200"
+          alerts:
+            - type: discord
+              send-on-resolved: true
+        - name: Envoy Public
+          group: network
+          url: https://status.rajsingh.info
+          interval: 60s
+          conditions:
+            - "[STATUS] == 200"
+          alerts:
+            - type: discord
+              send-on-resolved: true
+        - name: Envoy Private
+          group: network
+          url: https://gatus.rajsingh.info
+          interval: 60s
+          conditions:
+            - "[STATUS] == 200"
+          alerts:
+            - type: discord
+              send-on-resolved: true
+        - name: Portfolio - Luke Houge
+          group: website
+          url: https://www.lukehouge.com
+          interval: 60s
+          conditions:
+            - "[STATUS] == 200"
+          alerts:
+            - type: discord
+              send-on-resolved: true
+        - name: Jellyfin
+          group: media
+          url: http://jellyfin.media:8096/health
+          interval: 60s
+          conditions:
+            - "[STATUS] == 200"
+          alerts:
+            - type: discord
+              send-on-resolved: true
+        - name: Jellystat
+          group: media
+          url: http://jellystat.media:3000
+          interval: 60s
+          conditions:
+            - "[STATUS] == 200"
+          alerts:
+            - type: discord
+              send-on-resolved: true
+        - name: Jellyseerr
+          group: media
+          url: http://jellyseerr.media:5055
+          interval: 60s
+          conditions:
+            - "[STATUS] == 200"
+          alerts:
+            - type: discord
+              send-on-resolved: true
+        - name: PiHole Primary DNS
+          group: network
+          url: "10.69.10.69"
+          dns:
+            query-name: "google.com"
+            query-type: "A"
+          conditions:
+            - "[DNS_RCODE] == NOERROR"
+        - name: PiHole Secondary DNS
+          group: network
+          url: "10.69.69.10"
+          dns:
+            query-name: "google.com"
+            query-type: "A"
+          conditions:
+            - "[DNS_RCODE] == NOERROR"
+        - name: Frigate
+          group: home
+          url: https://frigate.lukehouge.com
+          interval: 60s
+          conditions:
+            - "[STATUS] == 200"
+          alerts:
+            - type: discord
+              send-on-resolved: true
+        - name: Homeassistant
+          group: home
+          url: https://homeassistant.lukehouge.com
+          interval: 60s
+          conditions:
+            - "[STATUS] == 200"
+          alerts:
+            - type: discord
+              send-on-resolved: true 

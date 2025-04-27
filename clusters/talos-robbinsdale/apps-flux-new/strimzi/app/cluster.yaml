@@ -1,0 +1,38 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: Kafka
+metadata:
+  name: robbinsdale
+  annotations:
+    strimzi.io/kraft: enabled
+    strimzi.io/node-pools: enabled
+spec:
+  entityOperator:
+    topicOperator: {}
+    userOperator: {}
+  kafka:
+    authorization:
+      type: simple
+    listeners:
+    - authentication:
+        type: scram-sha-512
+      configuration:
+        brokerCertChainAndKey:
+          certificate: tls.crt
+          key: tls.key
+          secretName: kafka-raj-tls
+        brokers:
+        - advertisedHost: broker-10.kafka.k8s.rajsingh.info
+          advertisedPort: 9092
+          broker: 10
+        - advertisedHost: broker-11.kafka.k8s.rajsingh.info
+          advertisedPort: 9092
+          broker: 11
+        - advertisedHost: broker-12.kafka.k8s.rajsingh.info
+          advertisedPort: 9092
+          broker: 12
+        createBootstrapService: true
+      name: raj
+      port: 9092
+      tls: true
+      type: cluster-ip
+    version: 3.7.1 

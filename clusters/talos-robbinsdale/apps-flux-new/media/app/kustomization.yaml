@@ -1,0 +1,23 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: media
+resources:
+  - secret.yaml
+  - httproute.yaml
+  - ../../apps/media/jellyfin # Ref original path
+  - ../../apps/media/prowlarr # Ref original path
+  - ../../apps/media/radarr # Ref original path
+  - ../../apps/media/bazarr # Ref original path
+  - ../../apps/media/sonarr # Ref original path
+  - ../../apps/media/transmission-movies # Ref original path
+  - ../../apps/media/transmission-tv # Ref original path
+  - ../../apps/media/plex # Ref original path
+  - ../../apps/media/jellyseerr # Ref original path
+  - ../../apps/media/jellystat # Ref original path
+  - ../../apps/media/lidarr # Ref original path
+  - ../../apps/media/transmission-music # Ref original path
+  - ../../apps/media/readarr # Ref original path
+  - ../../apps/media/transmission-books # Ref original path
+  - ../../apps/media/audioarr # Ref original path
+  - ../../apps/media/tdarr # Ref original path 

@@ -1,0 +1,23 @@
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationDestination
+metadata:
+  name: immich-postgres-ceph-1
+spec:
+  trigger:
+    manual: first
+  rsync:
+    copyMethod: Direct
+    destinationPVC: immich-postgres-ceph-1
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: immich-postgres-1
+spec:
+  sourcePVC: immich-postgres-1
+  trigger:
+    manual: first
+  rsync:
+    sshKeys: volsync-rsync-dst-src-immich-postgres-ceph-1
+    address: volsync-rsync-dst-immich-postgres-ceph-1
+    copyMethod: Direct 

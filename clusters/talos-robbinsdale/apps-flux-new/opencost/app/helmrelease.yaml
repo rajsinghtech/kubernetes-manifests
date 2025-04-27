@@ -1,0 +1,36 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: opencost
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: opencost
+      version: 2.0.1
+      sourceRef:
+        kind: HelmRepository
+        name: opencost
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    opencost:
+      exporter:
+        defaultClusterId: robbinsdale
+      metrics:
+        serviceMonitor:
+          enabled: true
+          additionalLabels:
+            release: prometheus # Assuming this label is still correct for prometheus-community operator
+      prometheus:
+        internal:
+          enabled: true
+          serviceName: kube-prometheus-stack-prometheus.monitoring.svc.cluster.local # FQDN
+          port: 9090 

@@ -1,0 +1,113 @@
+---
+# Note: This is sourced from github.com/kubernetes-sigs/descheduler/kubernetes/cronjob?ref=release-1.32
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: descheduler-cronjob
+  namespace: kube-system
+spec:
+  schedule: "*/5 * * * *" # every 5 minutes
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          name: descheduler-pod
+        spec:
+          priorityClassName: system-cluster-critical
+          containers:
+          - name: descheduler
+            image: registry.k8s.io/descheduler/descheduler:v0.28.0
+            resources:
+              requests:
+                cpu: "100m"
+                memory: "100Mi"
+              limits:
+                cpu: "100m"
+                memory: "100Mi"
+            volumeMounts:
+            - mountPath: /policy-dir
+              name: policy-volume
+            command:
+              - "/bin/descheduler"
+            args:
+              - "--policy-config-file"
+              - "/policy-dir/policy.yaml"
+              - "--descheduling-interval"
+              - "0"
+              - "-v"
+              - "3"
+          restartPolicy: "Never"
+          serviceAccountName: descheduler
+          volumes:
+          - name: policy-volume
+            configMap:
+              name: descheduler-policy-configmap
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: descheduler-policy-configmap
+  namespace: kube-system
+data:
+  policy.yaml: |
+    apiVersion: "descheduler/v1alpha1"
+    kind: "DeschedulerPolicy"
+    profiles:
+      - name: LowNodeUtilization
+        pluginConfig:
+        - name: "LowNodeUtilization"
+          args:
+            thresholds:
+              "cpu" : 20
+              "memory": 20
+              "pods": 20
+            targetThresholds:
+              "cpu" : 50
+              "memory": 50
+              "pods": 50
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: descheduler-cluster-role
+rules:
+- apiGroups: [""]
+  resources: ["events"]
+  verbs: ["create", "update"]
+- apiGroups: [""]
+  resources: ["nodes"]
+  verbs: ["get", "watch", "list"]
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "watch", "list", "delete"]
+- apiGroups: [""]
+  resources: ["replicationcontrollers", "persistentvolumeclaims"]
+  verbs: ["get", "watch", "list"]
+- apiGroups: ["apps"]
+  resources: ["replicasets", "daemonsets", "statefulsets"]
+  verbs: ["get", "watch", "list"]
+- apiGroups: ["policy"]
+  resources: ["poddisruptionbudgets"]
+  verbs: ["get", "watch", "list"]
+- apiGroups: [""]
+  resources: ["pods/eviction"]
+  verbs: ["create"]
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: descheduler
+  namespace: kube-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: descheduler-cluster-role-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: descheduler-cluster-role
+subjects:
+  - name: descheduler
+    namespace: kube-system
+    kind: ServiceAccount 

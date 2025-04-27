@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test
+  labels:
+    app: test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test
+  template:
+    metadata:
+      labels:
+        app: test
+    spec:
+      containers:
+        - name: test
+          image: ghcr.io/lukehouge/fastapi-app:63ba05025c02594b64d3e672a662a543b9da92cc  # # Initial sha, this tag will be updated automatically by Flux Image Automation Controller
+          ports:
+          - name: test
+            protocol: TCP
+            containerPort: 8000 

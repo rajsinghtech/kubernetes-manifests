@@ -1,0 +1,19 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: unas-smb
+provisioner: smb.csi.k8s.io
+parameters:
+  source: //192.168.50.115/k8s
+  # if csi.storage.k8s.io/provisioner-secret is provided, will create a sub directory
+  # with PV name under source
+  csi.storage.k8s.io/provisioner-secret-name: csi-smbcreds
+  csi.storage.k8s.io/node-stage-secret-name: csi-smbcreds
+reclaimPolicy: Delete  # available values: Delete, Retain
+volumeBindingMode: Immediate
+allowVolumeExpansion: true
+mountOptions:
+  - dir_mode=0777
+  - file_mode=0777
+  - uid=1001
+  - gid=1001 

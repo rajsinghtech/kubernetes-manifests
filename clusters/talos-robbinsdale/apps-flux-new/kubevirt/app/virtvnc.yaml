@@ -1,0 +1,112 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kv-novnc
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: kv-novnc # ClusterRoleBinding might need a different name or to be applied once globally
+subjects:
+  - kind: ServiceAccount
+    name: kv-novnc
+    namespace: kubevirt # Namespace of the ServiceAccount
+roleRef:
+  kind: ClusterRole
+  name: kv-novnc
+  apiGroup: rbac.authorization.k8s.io
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: kv-novnc # ClusterRole should be applied once globally
+rules:
+  - apiGroups:
+      - subresources.kubevirt.io
+    resources:
+      - virtualmachineinstances/console
+      - virtualmachineinstances/vnc
+    verbs:
+      - get
+  - apiGroups:
+      - kubevirt.io
+    resources:
+      - virtualmachines
+      - virtualmachineinstances
+      - virtualmachineinstancepresets
+      - virtualmachineinstancereplicasets
+      - virtualmachineinstancemigrations
+    verbs:
+      - get
+      - list
+      - watch
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: kv-novnc
+  name: kv-novnc
+spec:
+  ports:
+    - port: 8001
+      protocol: TCP
+      targetPort: 8001
+  selector:
+    app: kv-novnc
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kv-novnc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kv-novnc
+  template:
+    metadata:
+      labels:
+        app: kv-novnc
+    spec:
+      serviceAccountName: kv-novnc
+      containers:
+        - name: kv-novnc
+          image: ghcr.io/scog/kubevirt-novnc:latest
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              port: 8001
+              path: /
+              scheme: HTTP
+            failureThreshold: 30
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: kubevirt
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: private
+      namespace: envoy-gateway-system
+  hostnames:
+    - "kubevirt.rajsingh.info"
+    - "kubevirt.lukehouge.com"
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: kv-novnc
+          port: 8001
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: / 

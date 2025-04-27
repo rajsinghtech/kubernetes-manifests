@@ -1,0 +1,21 @@
+---
+apiVersion: dragonflydb.io/v1alpha1
+kind: Dragonfly
+metadata:
+  name: dragonfly-immich
+spec:
+  replicas: 3
+  args:
+    - --maxmemory=1000M
+    - --proactor_threads=2
+    - --default_lua_flags=allow-undeclared-keys
+  authentication:
+    passwordFromSecret:
+      name: immich-dragonfly-secret
+      key: password
+  resources:
+    requests:
+      cpu: 25m
+      memory: 1000Mi
+    limits:
+      memory: 1500Mi 

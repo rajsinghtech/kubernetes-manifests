@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: busybox-sleep
+  namespace: rook-ceph
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: busybox-sleep
+  template:
+    metadata:
+      labels:
+        app: busybox-sleep
+      annotations:
+        k8s.v1.cni.cncf.io/networks: rook-public-nw
+    spec:
+      containers:
+      - name: busybox
+        image: busybox
+        command: ["sleep", "infinity"] 
