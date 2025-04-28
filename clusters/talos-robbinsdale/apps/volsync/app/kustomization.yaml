@@ -4,3 +4,4 @@ kind: Kustomization
 namespace: volsync-system
 resources:
   - helmrelease.yaml 
+  - servicemonitor.yaml
