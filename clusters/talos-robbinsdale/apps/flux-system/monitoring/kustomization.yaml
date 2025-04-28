@@ -17,3 +17,5 @@ configMapGenerator:
         kustomize.toolkit.fluxcd.io/substitute: disabled
       annotations:
         grafana_folder: Fluxcd
+generatorOptions:
+  disableNameSuffixHash: true
