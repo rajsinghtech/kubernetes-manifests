@@ -26,7 +26,7 @@ patches:
       metadata:
         name: local-path
         annotations:
-          storageclass.kubernetes.io/is-default-class: "true"    
+          storageclass.kubernetes.io/is-default-class: "false"    
   - patch: |-
       apiVersion: v1
       kind: Namespace
