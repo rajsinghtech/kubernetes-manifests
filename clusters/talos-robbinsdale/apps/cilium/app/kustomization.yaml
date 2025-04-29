@@ -12,7 +12,7 @@ resources:
   - github.com/kubernetes-sigs/descheduler/kubernetes/cronjob?ref=release-1.32
   - helmrelease.yaml
   - lbippool.yaml
-  - localredirect.yaml
+  - localredirects.yaml
   - bgp.yaml
 
 patches:
