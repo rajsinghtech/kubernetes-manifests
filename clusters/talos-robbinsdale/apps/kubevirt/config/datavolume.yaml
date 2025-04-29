@@ -8,11 +8,11 @@ metadata:
 spec:
   source:
     http:
-      url: https://archive.org/download/tiny-11-24h2-NTDEV/tiny11-ProN-24H2.iso
+      url: https://archive.org/download/tiny11-2311/tiny11%202311%20x64.iso
   storage:
     accessModes:
       - ReadWriteMany
     resources:
       requests:
         storage: 10Gi
-    storageClassName: unas-smb
+    storageClassName: local-path
