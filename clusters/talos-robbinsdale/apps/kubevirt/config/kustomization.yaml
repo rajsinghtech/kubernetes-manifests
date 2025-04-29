@@ -6,4 +6,6 @@ resources:
   - datavolume.yaml
   - pvc.yaml
   - virtvnc.yaml
+  # - vm.yaml
+  - win11.yaml
   # vm.yaml and win11.yaml are commented out as in original 
