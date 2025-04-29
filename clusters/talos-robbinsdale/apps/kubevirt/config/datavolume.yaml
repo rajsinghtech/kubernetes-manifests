@@ -14,5 +14,5 @@ spec:
       - ReadWriteOnce
     resources:
       requests:
-        storage: 10Gi
-    storageClassName: ceph-block-replicated-nvme
+        storage: 5Gi
+    storageClassName: unas-smb
