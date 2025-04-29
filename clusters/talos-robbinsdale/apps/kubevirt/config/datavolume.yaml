@@ -11,7 +11,7 @@ spec:
       url: https://archive.org/download/tiny11-2311/tiny11%202311%20x64.iso
   storage:
     accessModes:
-      - ReadWriteMany
+      - ReadWriteOnce
     resources:
       requests:
         storage: 5Gi
