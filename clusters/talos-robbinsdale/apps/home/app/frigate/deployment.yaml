@@ -83,3 +83,4 @@ spec:
             - key: tls.key
               path: privkey.pem
       restartPolicy: Always
+      terminationGracePeriodSeconds: 120
