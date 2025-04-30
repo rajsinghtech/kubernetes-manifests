@@ -5,6 +5,7 @@ metadata:
   name: cluster-settings
   namespace: flux-system
 data:
+  LOCATION: robbinsdale
   TIMEZONE: America/Chicago
   CLUSTER_NAME: talos-robbinsdale
 
