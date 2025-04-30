@@ -25,6 +25,6 @@ spec:
       mode: "true"
     operatorConfig:
       hostname: "${LOCATION}-k8s-operator" 
-      tags:
+      defaultTags:
         - k8s-operator
         - ${LOCATION}
