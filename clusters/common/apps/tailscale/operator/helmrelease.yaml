@@ -24,4 +24,7 @@ spec:
     apiServerProxyConfig:
       mode: "true"
     operatorConfig:
-      hostname: "robbinsdale-k8s-operator" 
+      hostname: "${LOCATION}-k8s-operator" 
+      tags:
+        - k8s-operator
+        - ${LOCATION}
