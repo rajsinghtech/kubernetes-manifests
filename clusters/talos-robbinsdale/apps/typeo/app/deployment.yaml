@@ -1,1 +1,47 @@
- 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: typeo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: typeo
+  template:
+    metadata:
+      labels:
+        app: typeo
+    spec:
+      containers:
+        - name: typeo
+          image: quay.io/rajsinghcpre/typeo:v0.0.4
+          ports:
+            - containerPort: 8080
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: FIREBASE_PROJECT_ID
+              value: "type-auth-dev"
+            - name: FIREBASE_PRIVATE_KEY_ID
+              value: "dcb9a9ce8d9da35065fd73024c8fa6f9f70de1eb"
+            - name: FIREBASE_PRIVATE_KEY
+              value: "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCaXM0O/1F5Tq0Y\nMlXM70qdDjq0kSgvsalC9ILZjeeBX6KWu7EPvGKUT6EeeEkAQuiQLuEAf3gTOuKX\n432H5KOQiK4LkEHxIGINOyZo7EgVap4YPbWkQU7X2wtoK1gFtSurQdYQHPrm55Iv\nfkz4n/ta88HYVhG3em6kDZ/KKp9zHymCvr85XbZQqW5TnRdC+6aHVPVqjHYyFeuz\nJhpJihYAl/YS0ULOevy2VvDxzQKBiImoBI+rSbdbQ0uUQrxZADCBeassyA8E1IaR\nNypkBzTvJnDkiSQ5Oxe9P5zq6zvvCL3YgBpWw41REqiV2KKd7Tj4dhXoegLFZSSU\n9x6xoFmRAgMBAAECggEAQh91obKCCpZGtKI/OdHZYuyo/hdeIQwYJvvJn3rXjAZV\nBf+xqb13dvOjX4OENe3zZGwIayevXoFvdkP3ToKFBFFgSMjLToiiJ+vKGND6Ud5B\nib3JdOqa5QFKYh2LD6rbYXmKwo0/dzEEYH7YZvpU+FGJnGvGHBQAmBrT84yNkAjD\nbr5OAdojj1aLINOTM0DJDlvvP1r+t9vxKWQCTirvkYB2YJvGB4l9zm5Gj2/sAy0r\nXFlPlgK9pZfIAhShwpBDW0zfZZb31pPtyE9YbXdlHoFOqIJLosv62CUgr/cFvB2L\nPDExLKbCxiQHxjkH5EvoWD7SibfFAazcFHdzEIUxLwKBgQDDAS39wPpt+SymMpFE\nHlkoHhsZAocojRwwQPgTDcfer/mI6P4fhP+T1cd/p1I+GK4mIZRe/t2TNYZs8w7x\n5KahEIKl7/X8WLn1+B2a3txoj6fNFjA0dXvGqOPIHKBuJ84UbO5zK4sSKvJJctoY\nB6HUGtGq/BG7Rmc7tDp1XOWTOwKBgQDKpT22Rn4Iox5qOBVSZ1zRX6fiYr0YLnlD\nwdT+b8Z8c1kVK3JRAtLs5aXe4ChdVBLvUpT5+IMkadMo8Oeq5GJ6tqB3aCQpgEab\nHn2Ad3C1LzzvwltAYAM82kV9z3wgUR93SpT5N73SuS87T4rAuR8aJNrdOWVEmxok\n4vKyANshowKBgQCW5uPLOTnSPn+RwRHu77k4tUts6Crlc4U7xhryy7g+mFj23K5C\nf+4zXbx7CWU4Tmr9cQDbHkki8Mmsp86J29IiU592f6IQfCyzriRiw1E2zOwiZag6\nACwfiHR0V8rCU6VC4yUHFMwS7A8ATZN+AvH1LCfSNCwYixu59PdD+PZjHwKBgQC4\nXXf04tN9tjJQvy+e5g1LK/UJAX46huWq4KmQx07VIPiWSw3ZaHFQOGsdh+ERcBE+\nDWsetZtSwLjtkaekEd8K+CasHGJyI5OZQzc5bvFq1kxhcfkla3Tmo0r/+IpcuJGh\nLYi16KHaGsM++dIqHwKN/aPmC3b34Qj7MENP8XlscwKBgQCnDFDs34t8rXIycH7E\nw/x4UmRzJ67U9k6egqjBL4J5cwvlKkmwayKIMwrbzn18q/RY+SCxFbUrT2J5tRfL\nthrajMHuww3D3Q1ulTIUluv9owZUxCQD/HoBbpD/uDHJNvCAtBqI7NVvifX8XJuO\nMtxsh9gvmdkJY5eCwdK1ykR0aQ==\n-----END PRIVATE KEY-----\n"
+            - name: FIREBASE_CLIENT_EMAIL
+              value: "firebase-adminsdk-5pk56@type-auth-dev.iam.gserviceaccount.com"
+            - name: FIREBASE_CLIENT_ID
+              value: "108999191110137252182"
+            - name: FIREBASE_CLIENT_X509_CERT_URL
+              value: "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-5pk56%40type-auth-dev.iam.gserviceaccount.com"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: typeo
+spec:
+  selector:
+    app: typeo
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP 
