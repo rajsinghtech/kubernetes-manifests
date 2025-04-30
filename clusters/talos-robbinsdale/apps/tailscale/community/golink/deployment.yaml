@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: golink
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: golink
+  template:
+    metadata:
+      labels:
+        app: golink
+    spec:
+      containers:
+        - name: golink
+          image: ghcr.io/tailscale/golink:main
+          ports:
+            - containerPort: 80
+          env:
+            - name: TS_AUTHKEY
+              valueFrom:
+                secretKeyRef:
+                  name: tailscale-authkeys
+                  key: TS_AUTHKEY
+            - name: TS_HOSTNAME
+              value: "go"
+          args:
+            - "-sqlitedb"
+            - "/home/nonroot/golink.db"
+          volumeMounts:
+            - mountPath: /home/nonroot
+              name: data-volume
+          securityContext:
+            runAsUser: 0
+      volumes:
+        - name: data-volume
+          persistentVolumeClaim:
+            claimName: golink-data-ceph
+      initContainers:
+        - name: volume-permissions
+          image: busybox
+          command: ["sh", "-c", "chown -R 65532:65532 /home/nonroot"]
+          volumeMounts:
+            - mountPath: /home/nonroot
+              name: data-volume
+          securityContext:
+            runAsUser: 0 
