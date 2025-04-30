@@ -13,6 +13,7 @@ spec:
     # exclude all
     /*
     # include kubernetes directory
+    !/clusters/common
     !/clusters/talos-robbinsdale
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
