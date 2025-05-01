@@ -1,53 +1,53 @@
 apiVersion: tailscale.com/v1alpha1
 kind: Connector
 metadata:
-  name: k8s-${LOCATION}-exit-node
+  name: &name k8s-${LOCATION}-exit-node
 spec:
   proxyClass: prod
   tags:
     - tag:k8s
     - tag:${LOCATION}
-  hostname: robbinsdale-exit-node
+  hostname: *name
   exitNode: true
 ---
 apiVersion: tailscale.com/v1alpha1
 kind: Connector
 metadata:
-  name: k8s-${LOCATION}-subnet-router-lan
+  name: &name k8s-${LOCATION}-lan
 spec:
   proxyClass: prod
   tags:
     - tag:k8s
     - tag:${LOCATION}
-  hostname: robbinsdale-subnet-router-lan
+  hostname: *name
   subnetRouter:
     advertiseRoutes:
       - "${LAN_CIDR}" # LAN
+# ---
+# apiVersion: tailscale.com/v1alpha1
+# kind: Connector
+# metadata:
+#   name: &name k8s-${LOCATION}-service
+# spec:
+#   proxyClass: prod
+#   tags:
+#     - tag:k8s
+#     - tag:${LOCATION}
+#   hostname: *name
+#   subnetRouter:
+#     advertiseRoutes:
+#       - "${CLUSTER_SERVICE_CIDR}" # K8s Services
 ---
 apiVersion: tailscale.com/v1alpha1
 kind: Connector
 metadata:
-  name: k8s-${LOCATION}-subnet-router-service
+  name: &name k8s-${LOCATION}-pod
 spec:
   proxyClass: prod
   tags:
     - tag:k8s
     - tag:${LOCATION}
-  hostname: robbinsdale-subnet-router-service
-  subnetRouter:
-    advertiseRoutes:
-      - "${CLUSTER_SERVICE_CIDR}" # K8s Services
----
-apiVersion: tailscale.com/v1alpha1
-kind: Connector
-metadata:
-  name: k8s-${LOCATION}-subnet-router-pod
-spec:
-  proxyClass: prod
-  tags:
-    - tag:k8s
-    - tag:${LOCATION}
-  hostname: robbinsdale-subnet-router-pod
+  hostname: *name
   subnetRouter:
     advertiseRoutes:
       - "${CLUSTER_POD_CIDR}" # K8s Pods
@@ -55,13 +55,13 @@ spec:
 apiVersion: tailscale.com/v1alpha1
 kind: Connector
 metadata:
-  name: k8s-${LOCATION}-subnet-router-lb
+  name: &name k8s-${LOCATION}-lb
 spec:
   proxyClass: prod
   tags:
     - tag:k8s
     - tag:${LOCATION}
-  hostname: robbinsdale-subnet-router-lb
+  hostname: *name
   subnetRouter:
     advertiseRoutes:
       - "${CLUSTER_LOAD_BALANCER_CIDR}" # K8s Load Balancer
@@ -69,13 +69,13 @@ spec:
 apiVersion: tailscale.com/v1alpha1
 kind: Connector
 metadata:
-  name: k8s-${LOCATION}-subnet-router-4via6
+  name: &name k8s-${LOCATION}-4via6
 spec:
   proxyClass: prod
   tags:
     - tag:k8s
     - tag:${LOCATION}
-  hostname: robbinsdale-subnet-router-4via6
+  hostname: *name
   subnetRouter:
     advertiseRoutes:
       - fd7a:115c:a1e0:b1a:0:${SITE_ID}::/96 # 4via6
