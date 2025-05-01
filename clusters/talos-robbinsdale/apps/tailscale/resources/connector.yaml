@@ -23,34 +23,34 @@ spec:
   subnetRouter:
     advertiseRoutes:
       - "${LAN_CIDR}" # LAN
-# ---
-# apiVersion: tailscale.com/v1alpha1
-# kind: Connector
-# metadata:
-#   name: &name k8s-${LOCATION}-service
-# spec:
-#   proxyClass: prod
-#   tags:
-#     - tag:k8s
-#     - tag:${LOCATION}
-#   hostname: *name
-#   subnetRouter:
-#     advertiseRoutes:
-#       - "${CLUSTER_SERVICE_CIDR}" # K8s Services
-# ---
-# apiVersion: tailscale.com/v1alpha1
-# kind: Connector
-# metadata:
-#   name: &name k8s-${LOCATION}-pod
-# spec:
-#   proxyClass: prod
-#   tags:
-#     - tag:k8s
-#     - tag:${LOCATION}
-#   hostname: *name
-#   subnetRouter:
-#     advertiseRoutes:
-#       - "${CLUSTER_POD_CIDR}" # K8s Pods
+---
+apiVersion: tailscale.com/v1alpha1
+kind: Connector
+metadata:
+  name: &name k8s-${LOCATION}-service
+spec:
+  proxyClass: prod
+  tags:
+    - tag:k8s
+    - tag:${LOCATION}
+  hostname: *name
+  subnetRouter:
+    advertiseRoutes:
+      - "${CLUSTER_SERVICE_CIDR}" # K8s Services
+---
+apiVersion: tailscale.com/v1alpha1
+kind: Connector
+metadata:
+  name: &name k8s-${LOCATION}-pod
+spec:
+  proxyClass: prod
+  tags:
+    - tag:k8s
+    - tag:${LOCATION}
+  hostname: *name
+  subnetRouter:
+    advertiseRoutes:
+      - "${CLUSTER_POD_CIDR}" # K8s Pods
 ---
 apiVersion: tailscale.com/v1alpha1
 kind: Connector
