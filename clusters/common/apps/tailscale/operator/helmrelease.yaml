@@ -25,7 +25,7 @@ spec:
       mode: "true"
     operatorConfig:
       hostname: "${LOCATION}-k8s-operator" 
-      logging: "dev" # info, debug, dev
+      logging: "debug" # info, debug, dev
       defaultTags:
         - k8s-operator
     oauth: {}
