@@ -10,6 +10,8 @@ spec:
       app.kubernetes.io/name: *app
   path: ./clusters/${CLUSTER_NAME}/apps/tailscale/resources
   prune: true
+  dependsOn:
+    - name: tailscale-operator
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
@@ -30,6 +32,8 @@ spec:
       app.kubernetes.io/name: *app
   path: ./clusters/${CLUSTER_NAME}/apps/tailscale/community
   prune: true
+  dependsOn:
+    - name: tailscale-operator
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
