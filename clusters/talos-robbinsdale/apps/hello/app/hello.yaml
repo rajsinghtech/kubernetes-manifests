@@ -1,20 +1,27 @@
-apiVersion: cilium.io/v2
-kind: CiliumNetworkPolicy
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
 metadata:
-  name: hello-world
+  name: hello 
 spec:
-  endpointSelector:
-    matchLabels:
-     app: hello-world
-  ingress:
-  - toPorts:
-    - ports:
-      - port: "80"
-        protocol: TCP
-      rules:
-        http:
-        - method: GET
-          path: /
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: private
+      namespace: envoy-gateway-system
+  hostnames:
+    - "hello.rajsingh.info"
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: hello-world
+          port: 80
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: / 
 ---
 apiVersion: apps/v1
 kind: Deployment
