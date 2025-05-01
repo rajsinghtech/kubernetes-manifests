@@ -6,5 +6,4 @@ resources:
  - ./tclip
  - ./tsidp
  - ./golink
- - ./tsmagicproxy
  - ./secret.yaml
