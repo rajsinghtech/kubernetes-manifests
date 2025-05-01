@@ -9,8 +9,8 @@ resources:
   - gateway-private.yaml
   - gateway-public.yaml 
   - gateway-ts.yaml
-  - envoy-proxy-base.yaml
-  - envoy-proxy-ts.yaml
+  - envoyproxy-base.yaml
+  - envoyproxy-ts.yaml
   - certificate-raj-wildcard-tls.yaml
   - certificate-luke-wildcard-tls.yaml
   - networkattachment.yaml 
