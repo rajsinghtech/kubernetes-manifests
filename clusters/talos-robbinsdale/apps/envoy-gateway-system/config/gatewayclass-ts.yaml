@@ -8,4 +8,4 @@ spec:
   parametersRef:
     group: gateway.envoyproxy.io
     kind: EnvoyProxy
-    name: ts-proxy-config
+    name: ts
