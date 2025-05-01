@@ -6,6 +6,7 @@ metadata:
   namespace: flux-system
 data:
   LOCATION: robbinsdale
+  SITE_ID: 1
   TIMEZONE: America/Chicago
   CLUSTER_NAME: talos-robbinsdale
 
@@ -14,5 +15,6 @@ data:
   CLUSTER_SERVICE_CIDR: 10.0.0.0/16
   CLUSTER_LOAD_BALANCER_CIDR: 10.69.0.0/16
 
-  #Netowrking
-  LOCAL_CIDR: 192.168.50.0/24
+  # Networking
+  LAN_CIDR: 192.168.50.0/24
+  LAN_GATEWAY_IP: 192.168.50.1

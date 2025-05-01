@@ -1,27 +1,81 @@
 apiVersion: tailscale.com/v1alpha1
 kind: Connector
 metadata:
-  name: robbinsdale-subnet-router
+  name: k8s-${LOCATION}-exit-node
 spec:
   proxyClass: prod
   tags:
     - tag:k8s
-  hostname: robbinsdale-subnet-router
+    - tag:${LOCATION}
+  hostname: robbinsdale-exit-node
+  exitNode: true
+---
+apiVersion: tailscale.com/v1alpha1
+kind: Connector
+metadata:
+  name: k8s-${LOCATION}-subnet-router-lan
+spec:
+  proxyClass: prod
+  tags:
+    - tag:k8s
+    - tag:${LOCATION}
+  hostname: robbinsdale-subnet-router-lan
   subnetRouter:
     advertiseRoutes:
-      - "192.168.50.0/24" # LAN
-      - "10.0.0.0/16" # K8s Services
-      - "10.1.0.0/16" # K8s Pods
-      - "10.69.0.0/16" # Production Services
-      - fd7a:115c:a1e0:b1a:0:23::/96
-  exitNode: true
-# ---
-# apiVersion: tailscale.com/v1alpha1
-# kind: Connector
-# metadata:
-#   name: robbinsdale-app-connector
-# spec:
-#   proxyClass: prod
-#   tags:
-#     - tag:k8s
-#   appConnector: {} 
+      - "${LAN_CIDR}" # LAN
+---
+apiVersion: tailscale.com/v1alpha1
+kind: Connector
+metadata:
+  name: k8s-${LOCATION}-subnet-router-service
+spec:
+  proxyClass: prod
+  tags:
+    - tag:k8s
+    - tag:${LOCATION}
+  hostname: robbinsdale-subnet-router-service
+  subnetRouter:
+    advertiseRoutes:
+      - "${CLUSTER_SERVICE_CIDR}" # K8s Services
+---
+apiVersion: tailscale.com/v1alpha1
+kind: Connector
+metadata:
+  name: k8s-${LOCATION}-subnet-router-pod
+spec:
+  proxyClass: prod
+  tags:
+    - tag:k8s
+    - tag:${LOCATION}
+  hostname: robbinsdale-subnet-router-pod
+  subnetRouter:
+    advertiseRoutes:
+      - "${CLUSTER_POD_CIDR}" # K8s Pods
+---
+apiVersion: tailscale.com/v1alpha1
+kind: Connector
+metadata:
+  name: k8s-${LOCATION}-subnet-router-lb
+spec:
+  proxyClass: prod
+  tags:
+    - tag:k8s
+    - tag:${LOCATION}
+  hostname: robbinsdale-subnet-router-lb
+  subnetRouter:
+    advertiseRoutes:
+      - "${CLUSTER_LOAD_BALANCER_CIDR}" # K8s Load Balancer
+---
+apiVersion: tailscale.com/v1alpha1
+kind: Connector
+metadata:
+  name: k8s-${LOCATION}-subnet-router-4via6
+spec:
+  proxyClass: prod
+  tags:
+    - tag:k8s
+    - tag:${LOCATION}
+  hostname: robbinsdale-subnet-router-4via6
+  subnetRouter:
+    advertiseRoutes:
+      - fd7a:115c:a1e0:b1a:0:${SITE_ID}::/96 # 4via6
