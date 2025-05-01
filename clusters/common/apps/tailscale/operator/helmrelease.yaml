@@ -24,6 +24,6 @@ spec:
     apiServerProxyConfig:
       mode: "true"
     operatorConfig:
-      hostname: "k8s-${LOCATION}-operator" 
+      hostname: "${LOCATION}-k8s-operator" 
       defaultTags:
         - k8s-operator
