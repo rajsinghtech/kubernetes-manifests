@@ -7,3 +7,4 @@ resources:
  - ./tsidp
  - ./golink
  - ./tsmagicproxy
+ - ./secret.yaml
