@@ -27,9 +27,9 @@ spec:
           key: AWS_SECRET_ACCESS_KEY
   bootstrap:
     recovery:
-      source: gatus-pg
+      source: gatus-postgres
   externalClusters:
-  - name: gatus-pg
+  - name: gatus-postgres
     barmanObjectStore:
       destinationPath: s3://postgres
       endpointURL: http://rook-ceph-rgw-object-store.rook-ceph.svc.cluster.local:80
