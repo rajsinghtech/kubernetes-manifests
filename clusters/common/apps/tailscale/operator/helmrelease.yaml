@@ -28,7 +28,6 @@ spec:
       logging: "dev" # info, debug, dev
       defaultTags:
         - k8s-operator
-    
     oauth: {}
       # clientId: ""
       # clientSecret: ""
