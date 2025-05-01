@@ -26,8 +26,3 @@ spec:
     operatorConfig:
       hostname: "${LOCATION}-k8s-operator" 
       logging: "debug" # info, debug, dev
-      defaultTags:
-        - k8s-operator
-    oauth: {}
-      # clientId: ""
-      # clientSecret: ""
