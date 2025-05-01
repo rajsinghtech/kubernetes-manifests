@@ -33,7 +33,7 @@ spec:
     barmanObjectStore:
       destinationPath: s3://postgres
       endpointURL: http://rook-ceph-rgw-object-store.rook-ceph.svc.cluster.local:80
-      serverName: gatus-pg
+      serverName: gatus-postgres
       s3Credentials:
         accessKeyId:
           name: postgres-ceph-bucket
