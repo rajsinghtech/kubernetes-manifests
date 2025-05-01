@@ -6,7 +6,7 @@ metadata:
   namespace: flux-system
 data:
   LOCATION: robbinsdale
-  SITE_ID: 1
+  SITE_ID: "1"
   TIMEZONE: America/Chicago
   CLUSTER_NAME: talos-robbinsdale
 
