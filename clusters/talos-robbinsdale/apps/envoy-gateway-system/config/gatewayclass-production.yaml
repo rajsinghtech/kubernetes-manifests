@@ -7,5 +7,5 @@ spec:
   parametersRef:
     group: gateway.envoyproxy.io
     kind: EnvoyProxy
-    name: custom-proxy-config
-    # namespace will be inherited 
+    name: base-proxy-config
+ 
