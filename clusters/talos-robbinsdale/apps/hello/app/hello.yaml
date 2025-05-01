@@ -69,7 +69,7 @@ data:
         listen 80;
 
         location / {
-          return 200 "Hello, World! I'm from ${LOCATION}";
+          return 200 "Hello, World! I'm from ${LOCATION}!";
         }
       }
     }
