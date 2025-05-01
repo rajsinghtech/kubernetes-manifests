@@ -1,7 +1,7 @@
 apiVersion: tailscale.com/v1alpha1
 kind: Connector
 metadata:
-  name: &name k8s-${LOCATION}-exit-node
+  name: &name k8s-${LOCATION}-entrypoint
 spec:
   proxyClass: prod
   tags:
@@ -9,73 +9,10 @@ spec:
     - tag:${LOCATION}
   hostname: *name
   exitNode: true
----
-apiVersion: tailscale.com/v1alpha1
-kind: Connector
-metadata:
-  name: &name k8s-${LOCATION}-lan
-spec:
-  proxyClass: prod
-  tags:
-    - tag:k8s
-    - tag:${LOCATION}
-  hostname: *name
   subnetRouter:
     advertiseRoutes:
       - "${LAN_CIDR}" # LAN
----
-apiVersion: tailscale.com/v1alpha1
-kind: Connector
-metadata:
-  name: &name k8s-${LOCATION}-service
-spec:
-  proxyClass: prod
-  tags:
-    - tag:k8s
-    - tag:${LOCATION}
-  hostname: *name
-  subnetRouter:
-    advertiseRoutes:
       - "${CLUSTER_SERVICE_CIDR}" # K8s Services
----
-apiVersion: tailscale.com/v1alpha1
-kind: Connector
-metadata:
-  name: &name k8s-${LOCATION}-pod
-spec:
-  proxyClass: prod
-  tags:
-    - tag:k8s
-    - tag:${LOCATION}
-  hostname: *name
-  subnetRouter:
-    advertiseRoutes:
       - "${CLUSTER_POD_CIDR}" # K8s Pods
----
-apiVersion: tailscale.com/v1alpha1
-kind: Connector
-metadata:
-  name: &name k8s-${LOCATION}-lb
-spec:
-  proxyClass: prod
-  tags:
-    - tag:k8s
-    - tag:${LOCATION}
-  hostname: *name
-  subnetRouter:
-    advertiseRoutes:
       - "${CLUSTER_LOAD_BALANCER_CIDR}" # K8s Load Balancer
----
-apiVersion: tailscale.com/v1alpha1
-kind: Connector
-metadata:
-  name: &name k8s-${LOCATION}-4via6
-spec:
-  proxyClass: prod
-  tags:
-    - tag:k8s
-    - tag:${LOCATION}
-  hostname: *name
-  subnetRouter:
-    advertiseRoutes:
       - fd7a:115c:a1e0:b1a:0:${SITE_ID}::/96 # 4via6
