@@ -2,14 +2,14 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app testbench
+  name: &app hello
   namespace: flux-system
 spec:
-  targetNamespace: testbench
+  targetNamespace: hello
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./clusters/${CLUSTER_NAME}/apps/testbench/app
+  path: ./clusters/${CLUSTER_NAME}/apps/hello/app
   prune: true
   sourceRef:
     kind: GitRepository

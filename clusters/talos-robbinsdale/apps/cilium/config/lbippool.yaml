@@ -4,7 +4,7 @@ metadata:
   name: "k8s-pool"
 spec:
   blocks:
-    - cidr: "10.69.0.0/16"
+    - cidr: "${CLUSTER_LOAD_BALANCER_CIDR}"
   serviceSelector:
     matchExpressions:
       - { key: somekey, operator: NotIn, values: ["never-used-value"] }
