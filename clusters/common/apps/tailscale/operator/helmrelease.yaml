@@ -27,4 +27,3 @@ spec:
       hostname: "k8s-${LOCATION}-operator" 
       defaultTags:
         - k8s-operator
-        - ${LOCATION}
