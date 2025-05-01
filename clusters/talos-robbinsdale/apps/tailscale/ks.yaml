@@ -30,8 +30,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: tailscale-operator
   path: ./clusters/${CLUSTER_NAME}/apps/tailscale/community
   prune: true
   sourceRef:
