@@ -17,7 +17,7 @@ spec:
         - group: ""
           kind: Service
           name: kube-prometheus-stack-grafana
-          port: 3000 # The http-web port from the service
+          port: 80 # The http-web port from the service
           weight: 1
       matches:
         - path:
