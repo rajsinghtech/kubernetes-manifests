@@ -6,15 +6,34 @@ spec:
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
-      name: ts
-      namespace: envoy-gateway-system
-    - group: gateway.networking.k8s.io
-      kind: Gateway
       name: public
       namespace: envoy-gateway-system
   hostnames:
     - "gatus.rajsingh.info"
     - "gatus.lukehouge.com"
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: gatus
+          port: 80
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: / 
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: status
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: ts
+      namespace: envoy-gateway-system
+  hostnames:
     - "status.rajsingh.info"
     - "status.lukehouge.com"
   rules:
