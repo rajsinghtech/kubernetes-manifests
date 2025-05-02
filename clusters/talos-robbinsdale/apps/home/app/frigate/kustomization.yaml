@@ -8,5 +8,5 @@ resources:
   - unas.yaml
   - certificate.yaml
   - ceph.yaml
-  - volsync-backup.yaml
-  # - volsync-restore.yaml
+  # - volsync-backup.yaml
+  - volsync-restore.yaml
