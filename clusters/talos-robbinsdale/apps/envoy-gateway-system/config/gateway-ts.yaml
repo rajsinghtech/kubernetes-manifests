@@ -12,7 +12,7 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
-    - name: wildcard-raj-https
+    - name: raj-wildcard-ts-https
       protocol: HTTPS
       port: 443
       hostname: "*.ts.rajsingh.info"
@@ -25,7 +25,7 @@ spec:
         - group: ''
           kind: Secret
           name: raj-wildcard-ts-tls
-    - name: wildcard-luke-https
+    - name: luke-wildcard-ts-https
       protocol: HTTPS
       port: 443
       hostname: "*.ts.lukehouge.com"
@@ -38,7 +38,7 @@ spec:
         - group: ''
           kind: Secret
           name: luke-wildcard-ts-tls
-    - name: wildcard-raj-https
+    - name: raj-wildcard-https
       protocol: HTTPS
       port: 443
       hostname: "*.rajsingh.info"
@@ -51,7 +51,7 @@ spec:
         - group: ''
           kind: Secret
           name: raj-wildcard-tls
-    - name: wildcard-luke-https
+    - name: luke-wildcard-https
       protocol: HTTPS
       port: 443
       hostname: "*.lukehouge.com"
