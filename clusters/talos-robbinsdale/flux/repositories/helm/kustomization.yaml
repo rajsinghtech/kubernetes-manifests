@@ -54,3 +54,4 @@ resources:
   - ./twin.yaml
   - ./weave-gitops.yaml
   - ./wger.yaml
+  - ./envoy-gateway.yaml
