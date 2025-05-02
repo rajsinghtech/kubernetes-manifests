@@ -38,3 +38,29 @@ spec:
         - group: ''
           kind: Secret
           name: luke-wildcard-ts-tls
+    - name: wildcard-raj-https
+      protocol: HTTPS
+      port: 443
+      hostname: "*.rajsingh.info"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        mode: Terminate
+        certificateRefs:
+        - group: ''
+          kind: Secret
+          name: raj-wildcard-tls
+    - name: wildcard-luke-https
+      protocol: HTTPS
+      port: 443
+      hostname: "*.lukehouge.com"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        mode: Terminate
+        certificateRefs:
+        - group: ''
+          kind: Secret
+          name: luke-wildcard-tls
