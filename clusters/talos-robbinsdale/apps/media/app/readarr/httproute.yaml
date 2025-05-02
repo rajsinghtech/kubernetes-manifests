@@ -7,7 +7,7 @@ spec:
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
-      name: private
+      name: ts
       namespace: envoy-gateway-system
   hostnames:
     - "readarr.rajsingh.info"
