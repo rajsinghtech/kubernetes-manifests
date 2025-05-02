@@ -6,6 +6,10 @@ spec:
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
+      name: private
+      namespace: envoy-gateway-system
+    - group: gateway.networking.k8s.io
+      kind: Gateway
       name: ts
       namespace: envoy-gateway-system
   hostnames:
@@ -29,6 +33,10 @@ metadata:
   name: pihole-secondary-web
 spec:
   parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: private
+      namespace: envoy-gateway-system
     - group: gateway.networking.k8s.io
       kind: Gateway
       name: ts
