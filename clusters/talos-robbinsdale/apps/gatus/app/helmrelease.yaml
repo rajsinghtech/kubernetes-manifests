@@ -142,7 +142,7 @@ spec:
               send-on-resolved: true
         - name: Envoy Public
           group: network
-          url: https://status.rajsingh.info
+          url: https://gatus.rajsingh.info
           interval: 60s
           conditions:
             - "[STATUS] == 200"
@@ -151,7 +151,7 @@ spec:
               send-on-resolved: true
         - name: Envoy Private
           group: network
-          url: https://hello.rajsingh.info
+          url: https://status.rajsingh.info
           interval: 60s
           conditions:
             - "[STATUS] == 200"
@@ -160,7 +160,7 @@ spec:
               send-on-resolved: true
         - name: Envoy Tailscale
           group: network
-          url: https://hello.ts.rajsingh.info
+          url: https://gatus.ts.rajsingh.info
           interval: 60s
           conditions:
             - "[STATUS] == 200"
