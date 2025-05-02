@@ -2,7 +2,7 @@
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: EnvoyProxy
 metadata:
-  name: base
+  name: private
 spec:
   provider:
     type: Kubernetes
