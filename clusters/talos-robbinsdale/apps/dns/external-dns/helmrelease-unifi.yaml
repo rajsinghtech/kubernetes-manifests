@@ -3,18 +3,16 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: external-dns-unifi
-  namespace: dns # Assuming it should go in the 'dns' namespace, adjust if needed
 spec:
   interval: 5m
   chart:
     spec:
-      # renovate: datasource=helm registryUrl=https://kubernetes-sigs.github.io/external-dns
       chart: external-dns
-      version: "*" # Using version from webhook docs, consider updating
+      version: "*" 
       sourceRef:
         kind: HelmRepository
         name: external-dns
-        namespace: flux-system # Namespace where the HelmRepository is defined
+        namespace: flux-system 
       interval: 1h
   install:
     remediation:
