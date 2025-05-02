@@ -7,7 +7,7 @@ metadata:
 spec:
   interval: 30m
   path: ./clusters/talos-robbinsdale/apps
-  prune: true
+  prune: false
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
@@ -63,7 +63,7 @@ metadata:
 spec:
   interval: 30m
   path: ./clusters/common/apps
-  prune: true
+  prune: false
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
