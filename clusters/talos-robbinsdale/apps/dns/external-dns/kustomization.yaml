@@ -6,6 +6,6 @@ resources:
   - rbac.yaml
   - deployment-primary.yaml
   - deployment-secondary.yaml
-  - deployment-unifi.yaml
+  - helmrelease-unifi.yaml
   - secret.yaml
   - httproute.yaml 
