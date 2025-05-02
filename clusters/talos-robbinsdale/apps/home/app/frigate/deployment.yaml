@@ -66,7 +66,7 @@ spec:
             claimName: frigate-data-unas
         - name: config
           persistentVolumeClaim:
-            claimName: frigate-config-unas
+            claimName: frigate-config-ceph
         - name: dshm
           emptyDir:
               medium: Memory
