@@ -6,7 +6,7 @@ spec:
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
-      name: public # Assuming public access
+      name: private
       namespace: envoy-gateway-system
   hostnames:
     - "grafana.rajsingh.info"
