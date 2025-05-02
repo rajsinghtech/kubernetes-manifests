@@ -8,3 +8,4 @@ spec:
     group: gateway.envoyproxy.io
     kind: EnvoyProxy
     name: private
+    namespace: envoy-gateway-system
