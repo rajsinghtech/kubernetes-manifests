@@ -8,7 +8,7 @@ resources:
   - unas.yaml
   - ceph.yaml
   # - volsync-backup.yaml
-  - volsync-restore.yaml   
+  # - volsync-restore.yaml   
 configMapGenerator:
   - name: mqtt-config
     files:
