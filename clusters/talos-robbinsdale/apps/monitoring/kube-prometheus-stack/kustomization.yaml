@@ -7,6 +7,10 @@ resources:
   - alertconfig.yaml
   - dashboard-tailscale.yaml
   - secrets.yaml
+  - kube-state-metrics-config.yaml
+  - alertmanager-httproute.yaml
+  - grafana-httproute.yaml
+  - prometheus-httproute.yaml
 configMapGenerator:
   - name: flux-kube-state-metrics-config
     files:
