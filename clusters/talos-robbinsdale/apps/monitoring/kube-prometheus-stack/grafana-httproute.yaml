@@ -6,12 +6,11 @@ spec:
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
-      name: private
+      name: ts
       namespace: envoy-gateway-system
   hostnames:
     - "grafana.rajsingh.info"
     - "grafana.lukehouge.com"
-    # Add other hostnames if needed, e.g., grafana.lukehouge.com
   rules:
     - backendRefs:
         - group: ""

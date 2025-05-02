@@ -6,7 +6,7 @@ spec:
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
-      name: private # Assuming internal access only for now
+      name: ts # Assuming internal access only for now
       namespace: envoy-gateway-system
   hostnames:
     - "alertmanager.rajsingh.info"

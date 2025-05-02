@@ -6,7 +6,7 @@ spec:
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
-      name: private # Assuming internal access only
+      name: ts # Assuming internal access only
       namespace: envoy-gateway-system
   hostnames:
     - "prometheus.rajsingh.info"
