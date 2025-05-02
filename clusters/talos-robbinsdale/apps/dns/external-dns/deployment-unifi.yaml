@@ -38,8 +38,8 @@ spec:
             runAsGroup: 65532
             runAsNonRoot: true
             runAsUser: 65532
-          image: registry.k8s.io/external-dns/external-dns:v0.15.0
-          imagePullPolicy: IfNotPresent
+          image: registry.k8s.io/external-dns/external-dns:latest
+          imagePullPolicy: Always
           args:
             - --source=gateway-httproute
             - --source=gateway-tlsroute
@@ -79,7 +79,7 @@ spec:
             timeoutSeconds: 5
         - name: webhook
           image: ghcr.io/kashalls/external-dns-unifi-webhook:main
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           env:
             - name: UNIFI_HOST
               value: https://192.168.50.1
