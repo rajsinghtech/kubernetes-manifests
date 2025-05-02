@@ -8,10 +8,6 @@ spec:
       kind: Gateway
       name: ts
       namespace: envoy-gateway-system
-    - group: gateway.networking.k8s.io
-      kind: Gateway
-      name: public
-      namespace: envoy-gateway-system
   hostnames:
     - "test.lukehouge.com"
   rules:
