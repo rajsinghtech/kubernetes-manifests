@@ -4,9 +4,9 @@ kind: Kustomization
 namespace: envoy-gateway-system
 resources:
   - certificate-raj-wildcard-tls.yaml
-  - certificate-luke-wildcard-tls.yaml
   - certificate-raj-wildcard-ts-tls.yaml
-  - certificate-luke-wildcard-ts-tls.yaml
+  - certificate-luke-wildcard-tls.yaml
+  - certificate-luke-wildcard-ts.tls.yaml
   - networkattachment.yaml 
   - gatewayclass-private.yaml
   - gatewayclass-public.yaml
