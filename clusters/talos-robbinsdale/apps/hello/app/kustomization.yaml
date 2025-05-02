@@ -4,6 +4,7 @@ kind: Kustomization
 namespace: hello 
 resources:
   - httproute-hello.yaml
+  - httproute-hello-ts.yaml
   - deployment-hello-world.yaml
   - configmap-nginx.yaml
   - service-hello-world.yaml
