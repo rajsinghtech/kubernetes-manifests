@@ -1,0 +1,24 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: envoy-gateway
+  namespace: envoy-gateway-system # Target namespace for the release
+spec:
+  interval: 5m
+  chart:
+    spec:
+      # renovate: registryUrl=oci://docker.io/envoyproxy
+      chart: gateway-helm
+      version: v0.0.0-latest # Use a specific stable version in production
+      sourceRef:
+        kind: HelmRepository
+        name: envoy-gateway
+        namespace: flux-system # Namespace of the HelmRepository
+      interval: 1m
+  releaseName: envoy-gateway
+  # install:
+  #   createNamespace: true # Let Flux create the namespace if it doesn't exist
+  # values: # Optional: Add custom values here
+  #   deployment:
+  #     replicas: 2
