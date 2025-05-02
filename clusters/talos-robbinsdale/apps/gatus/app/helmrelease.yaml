@@ -161,6 +161,8 @@ spec:
         - name: Envoy Tailscale
           group: network
           url: https://gatus.ts.rajsingh.info
+          client:
+            dns-resolver: "tcp://10.69.10.69:53"
           interval: 60s
           conditions:
             - "[STATUS] == 200"
