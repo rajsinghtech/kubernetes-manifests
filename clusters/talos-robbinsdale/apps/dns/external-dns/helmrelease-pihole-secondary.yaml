@@ -34,7 +34,7 @@ spec:
     extraArgs:
       - --ignore-ingress-tls-spec
       - --pihole-server=http://pihole-secondary-web.dns
-      - --pihole-api-version=6
+      # - --pihole-api-version=6
     policy: sync
     sources:
       - gateway-httproute
