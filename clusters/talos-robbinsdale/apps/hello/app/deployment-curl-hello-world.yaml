@@ -1,0 +1,25 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: curl-hello-world
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: curl-hello-world
+  template:
+    metadata:
+      labels:
+        app: curl-hello-world
+    spec:
+      containers:
+      - name: curl
+        image: curlimages/curl:latest
+        command: ["/bin/sh", "-c"]
+        args:
+          - while true; do
+            curl -s http://hello-world.testbench.svc.cluster.local:80;
+            echo " - Request completed.";
+            sleep 5;
+            done; 
