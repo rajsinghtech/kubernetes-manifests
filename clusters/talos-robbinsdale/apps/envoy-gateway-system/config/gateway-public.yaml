@@ -7,7 +7,7 @@ spec:
   addresses:
     - type: IPAddress
       value: 10.69.10.16
-  gatewayClassName: production
+  gatewayClassName: public
   listeners:
     - name: wildcard-raj-https
       protocol: HTTPS
