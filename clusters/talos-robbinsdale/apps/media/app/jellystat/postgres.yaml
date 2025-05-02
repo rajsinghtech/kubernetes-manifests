@@ -25,9 +25,9 @@ spec:
         secretAccessKey:
           name: jellystat-postgres-ceph-bucket
           key: AWS_SECRET_ACCESS_KEY
-  bootstrap:
-    recovery:
-      source: jellystat-db
+  # bootstrap:
+  #   recovery:
+  #     source: jellystat-db
   externalClusters:
   - name: jellystat-db
     barmanObjectStore: 
