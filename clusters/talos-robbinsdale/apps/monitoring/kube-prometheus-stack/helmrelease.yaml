@@ -230,3 +230,7 @@ spec:
 
     kubeScheduler:
       enabled: true
+
+    kubeEtcd:
+      enabled: false
+
