@@ -1,0 +1,72 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: external-dns-unifi
+  namespace: dns # Assuming it should go in the 'dns' namespace, adjust if needed
+spec:
+  interval: 5m
+  chart:
+    spec:
+      # renovate: datasource=helm registryUrl=https://kubernetes-sigs.github.io/external-dns
+      chart: external-dns
+      version: "*" # Using version from webhook docs, consider updating
+      sourceRef:
+        kind: HelmRepository
+        name: external-dns
+        namespace: flux-system # Namespace where the HelmRepository is defined
+      interval: 1h
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  values:
+    fullnameOverride: external-dns-unifi
+    logLevel: &logLevel debug
+    provider:
+      name: webhook
+      webhook:
+        image:
+          repository: ghcr.io/kashalls/external-dns-unifi-webhook
+          tag: main # replace with a versioned release tag
+        env:
+          - name: UNIFI_HOST
+            value: https://192.168.50.1 # replace with the address to your UniFi router/controller
+          - name: UNIFI_EXTERNAL_CONTROLLER
+            value: "false"
+          - name: UNIFI_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: external-dns-unifi-secret
+                key: api-key
+          - name: LOG_LEVEL
+            value: *logLevel
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: http-webhook
+          initialDelaySeconds: 10
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: http-webhook
+          initialDelaySeconds: 10
+          timeoutSeconds: 5
+    extraArgs:
+      - --ignore-ingress-tls-spec
+    policy: sync
+    sources:
+      - gateway-httproute
+      - gateway-tlsroute
+      - gateway-tcproute
+      - gateway-udproute
+      - service
+      - ingress
+    txtOwnerId: default
+    txtPrefix: k8s.
+    domainFilters: 
+      - rajsingh.info
+      - lukehouge.com
