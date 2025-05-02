@@ -158,6 +158,15 @@ spec:
           alerts:
             - type: discord
               send-on-resolved: true
+        - name: Envoy Tailscale
+          group: network
+          url: https://hello.ts.rajsingh.info
+          interval: 60s
+          conditions:
+            - "[STATUS] == 200"
+          alerts:
+            - type: discord
+              send-on-resolved: true
         - name: Portfolio - Luke Houge
           group: website
           url: https://www.lukehouge.com
