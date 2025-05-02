@@ -35,18 +35,3 @@ spec:
         - group: ''
           kind: Secret
           name: luke-wildcard-tls
-    - name: fleet-telemetry
-      protocol: TLS
-      port: 8443
-      hostname: "fleet-telemetry.tesla.rajsingh.info"
-      allowedRoutes:
-        namespaces:
-          from: Selector
-          selector:
-            matchLabels:
-              kubernetes.io/metadata.name: tesla
-        kinds:
-          - kind: TLSRoute
-            group: gateway.networking.k8s.io
-      tls:
-        mode: Passthrough 
