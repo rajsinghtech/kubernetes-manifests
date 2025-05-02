@@ -4,8 +4,8 @@ kind: Kustomization
 namespace: dns
 resources:
   - rbac.yaml
-  - deployment-primary.yaml
-  - deployment-secondary.yaml
   - helmrelease-unifi.yaml
+  - helmrelease-pihole-primary.yaml
+  - helmrelease-pihole-secondary.yaml
   - secret.yaml
   - httproute.yaml 
