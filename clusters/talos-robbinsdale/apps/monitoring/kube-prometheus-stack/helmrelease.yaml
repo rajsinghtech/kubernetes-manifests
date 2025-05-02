@@ -20,10 +20,10 @@ spec:
     cleanupOnFail: true
     remediation:
       retries: 3
-  valuesFrom:
-    - kind: ConfigMap
-      name: flux-kube-state-metrics-config
-      valuesKey: kube-state-metrics-config.yaml
+  # valuesFrom:
+  #   - kind: ConfigMap
+  #     name: flux-kube-state-metrics-config
+  #     valuesKey: kube-state-metrics-config.yaml
   values:
     grafana:
       sidecar:
