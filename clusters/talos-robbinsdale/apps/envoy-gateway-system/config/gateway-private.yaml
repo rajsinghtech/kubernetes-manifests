@@ -7,8 +7,8 @@ spec:
   addresses:
     - type: IPAddress
       value: 10.69.10.14
-  gatewayClassName: 
-  listeners: private
+  gatewayClassName: private
+  listeners:
     - name: http
       protocol: HTTP
       port: 80
