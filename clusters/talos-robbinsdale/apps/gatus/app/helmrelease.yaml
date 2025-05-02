@@ -151,7 +151,7 @@ spec:
               send-on-resolved: true
         - name: Envoy Private
           group: network
-          url: https://gatus.rajsingh.info
+          url: https://hello.rajsingh.info
           interval: 60s
           conditions:
             - "[STATUS] == 200"
