@@ -48,10 +48,15 @@ spec:
     server:
       persistence:
         external:
-          external:
-            enabled: true
-            existingClaim: immich-unas-pics
-            readOnly: true
+          enabled: true
+          existingClaim: immich-unas-pics
+          readOnly: true
+    microservices:
+      persistence:
+        external:
+          enabled: true
+          existingClaim: immich-unas-pics
+          readOnly: true
     postgresql:
       enabled: false
     redis:
