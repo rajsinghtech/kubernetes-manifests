@@ -49,6 +49,7 @@ spec:
           enabled: true
           existingClaim: immich-unas-pics
           mountPath: /mnt/vault/pics
+          type: persistentVolumeClaim
     postgresql:
       enabled: false
     redis:
