@@ -45,6 +45,10 @@ spec:
       persistence:
         library:
           existingClaim: immich-unas
+        external:
+          enabled: true
+          existingClaim: immich-unas-pics
+          mountPath: /mnt/vault/pics
     postgresql:
       enabled: false
     redis:
