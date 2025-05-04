@@ -8,4 +8,5 @@ resources:
   - deployment-hello-world.yaml
   - configmap-nginx.yaml
   - service-hello-world.yaml
+  - dnsendpoint.yaml
   # - deployment-curl-hello-world.yaml 

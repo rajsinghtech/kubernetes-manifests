@@ -2,7 +2,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: external-dns-raj
+  name: external-dns-cloudflared-raj       
 spec:
   interval: 5m
   chart:
@@ -21,7 +21,7 @@ spec:
     remediation:
       retries: 3
   values:
-    fullnameOverride: external-dns-cloudflare-raj         
+    fullnameOverride: external-dns-cloudflared-raj         
     logLevel: &logLevel debug
     provider: cloudflare
     env:
@@ -46,7 +46,7 @@ spec:
       # - gateway-tlsroute
       # - gateway-tcproute
       # - gateway-udproute
-      # - service
+      - service
       # - ingress
     domainFilters: 
       - rajsingh.info
