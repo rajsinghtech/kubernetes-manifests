@@ -42,11 +42,11 @@ spec:
       - --crd-source-kind=DNSEndpoint
     policy: sync
     sources:
-      - gateway-httproute
-      - gateway-tlsroute
-      - gateway-tcproute
-      - gateway-udproute
+      # - gateway-httproute
+      # - gateway-tlsroute
+      # - gateway-tcproute
+      # - gateway-udproute
       - service
-      - ingress
+      # - ingress
     domainFilters: 
       - rajsingh.info
