@@ -1,0 +1,49 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: external-dns-cloudflare-raj
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: external-dns
+      version: "*" 
+      sourceRef:
+        kind: HelmRepository
+        name: external-dns
+        namespace: flux-system 
+      interval: 1h
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  values:
+    fullnameOverride: external-dns-cloudflare-raj         
+    logLevel: &logLevel debug
+    provider: cloudflare
+    env:
+      - name: CF_API_KEY
+        valueFrom:
+          secretKeyRef:
+            name: cloudflare
+            key: cloudflare-k8s-token-rajsingh-info
+      - name: CF_API_EMAIL
+        value: rajsinghcpre@gmail.com
+    extraArgs:
+      - --gateway-label-filter=external-dns==cloudflare-raj
+      - --provider=cloudflare
+      - --cloudflare-proxied # (optional) enable the proxy feature of Cloudflare (DDOS protection, CDN...)
+      - --cloudflare-dns-records-per-page=5000 # (optional) configure how many DNS records to fetch per request
+    policy: sync
+    sources:
+      - gateway-httproute
+      - gateway-tlsroute
+      - gateway-tcproute
+      - gateway-udproute
+      - service
+      - ingress
+    domainFilters: 
+      - rajsingh.info
