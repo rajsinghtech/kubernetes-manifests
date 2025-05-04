@@ -6,6 +6,5 @@ resources:
   - helmrelease-unifi.yaml
   - helmrelease-pihole-primary.yaml
   - helmrelease-pihole-secondary.yaml
-  - helmrelease-cloudflare-raj.yaml
   - secret.yaml
   - httproute.yaml 
