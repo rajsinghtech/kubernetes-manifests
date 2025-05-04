@@ -34,7 +34,6 @@ spec:
         value: rajsinghcpre@gmail.com
     extraArgs:
       - --gateway-label-filter=external-dns==cloudflare-raj
-      - --provider=cloudflare
       - --cloudflare-proxied # (optional) enable the proxy feature of Cloudflare (DDOS protection, CDN...)
       - --cloudflare-dns-records-per-page=5000 # (optional) configure how many DNS records to fetch per request
     policy: sync
