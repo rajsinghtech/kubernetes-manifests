@@ -35,7 +35,6 @@ spec:
     extraArgs:
       - --gateway-label-filter=external-dns==cloudflare-raj
       - --zone-id-filter=c31c80ee424a352caf203c053c5afc71 # (optional) limit to a specific zone.
-      - --provider=cloudflare
       - --cloudflare-proxied # (optional) enable the proxy feature of Cloudflare (DDOS protection, CDN...)
       - --cloudflare-dns-records-per-page=5000 # (optional) configure how many DNS records to fetch per request
       - --cloudflare-region-key="us" # (optional) configure which region can decrypt HTTPS requests
