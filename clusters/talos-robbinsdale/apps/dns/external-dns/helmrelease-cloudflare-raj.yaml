@@ -25,7 +25,7 @@ spec:
     logLevel: &logLevel debug
     provider: cloudflare
     env:
-      - name: CF_API_KEY
+      - name: CF_API_TOKEN
         valueFrom:
           secretKeyRef:
             name: cloudflare
