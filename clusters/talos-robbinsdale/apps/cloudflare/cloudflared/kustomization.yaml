@@ -6,4 +6,5 @@ resources:
   - cloudflared-luke.yaml
   - cloudflared-raj.yaml
   - cloudflared-typeo.yaml
+  - external-dns-raj.yaml
   - secret.yaml
