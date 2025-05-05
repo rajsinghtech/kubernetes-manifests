@@ -1,0 +1,22 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: monitoring
+resources:
+  - helmrelease.yaml
+  - alertconfig.yaml
+  - dashboard-tailscale.yaml
+  - secrets.yaml
+  - alertmanager-httproute.yaml
+  - grafana-httproute.yaml
+  - prometheus-httproute.yaml
+configMapGenerator:
+  - name: flux-kube-state-metrics-config
+    files:
+      - kube-state-metrics-config.yaml
+    options:
+      labels:
+        app.kubernetes.io/part-of: flux
+        app.kubernetes.io/component: monitoring
+generatorOptions:
+  disableNameSuffixHash: true
