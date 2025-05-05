@@ -159,7 +159,7 @@ spec:
             datasource: prometheus
     prometheusOperator:
       admissionWebhooks:
-        enabled: false
+        enabled: true
     prometheus:
       prometheusSpec:
         serviceMonitorSelector: {}
