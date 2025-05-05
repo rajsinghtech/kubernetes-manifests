@@ -4,7 +4,7 @@ kind: Kustomization
 namespace: monitoring
 resources:
   - helmrelease.yaml
-  - alertconfig.yaml
+  # - alertconfig.yaml
   - dashboard-tailscale.yaml
   - secrets.yaml
   # - alertmanager-httproute.yaml
