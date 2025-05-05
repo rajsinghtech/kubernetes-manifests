@@ -12,6 +12,11 @@ resources:
   - github.com/kubernetes-sigs/descheduler/kubernetes/cronjob?ref=release-1.32
   - helmrelease.yaml
 
+configMapGenerator:
+  - name: cilium-values
+    files:
+      - values.yaml
+
 patches:
   - target:
       kind: DaemonSet
