@@ -2,14 +2,14 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app cnpg-system
+  name: &app local-path-storage
   namespace: flux-system
 spec:
-  targetNamespace: cnpg-system
+  targetNamespace: local-path-storage
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./clusters/${CLUSTER_NAME}/apps/cnpg-system/app
+  path: ./clusters/common/apps/local-path-storage/app
   prune: true
   sourceRef:
     kind: GitRepository
@@ -17,4 +17,4 @@ spec:
   wait: true
   interval: 30m
   retryInterval: 1m
-  timeout: 5m 
+  timeout: 5m
