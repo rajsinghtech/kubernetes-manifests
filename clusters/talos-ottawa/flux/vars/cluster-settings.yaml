@@ -5,10 +5,10 @@ metadata:
   name: cluster-settings
   namespace: flux-system
 data:
-  LOCATION: ottowa
+  LOCATION: ottawa
   SITE_ID: "2"
   TIMEZONE: America/New_York
-  CLUSTER_NAME: talos-ottowa
+  CLUSTER_NAME: talos-ottawa
 
   # K8s
   CLUSTER_POD_CIDR: 10.4.0.0/16
