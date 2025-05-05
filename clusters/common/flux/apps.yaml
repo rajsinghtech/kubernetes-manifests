@@ -2,11 +2,11 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: cluster-apps
+  name: common-apps
   namespace: flux-system
 spec:
   interval: 30m
-  path: ./clusters/talos-robbinsdale/apps
+  path: ./clusters/common/apps
   prune: false
   sourceRef:
     kind: GitRepository
@@ -17,6 +17,10 @@ spec:
       name: sops-gpg
   postBuild:
     substituteFrom:
+      - kind: ConfigMap
+        name: common-settings
+      - kind: Secret
+        name: common-secrets
       - kind: ConfigMap
         name: cluster-settings
       - kind: Secret
