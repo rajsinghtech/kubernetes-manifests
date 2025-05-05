@@ -24,7 +24,7 @@ ipam:
   mode: "cluster-pool"
   operator:
     clusterPoolIPv4PodCIDRList:
-      - "10.1.0.0/16"
+      - "10.4.0.0/16"
     clusterPoolIPv4MaskSize: 24
 operator:
   rollOutPods: true
