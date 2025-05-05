@@ -1,0 +1,41 @@
+cluster:
+  discovery:
+    enabled: true
+  allowSchedulingOnControlPlanes: true
+  network:
+    cni:
+      name: none
+    podSubnets:
+    - 10.4.0.0/16
+    serviceSubnets:
+    - 10.3.0.0/16
+  proxy:
+    disabled: true
+  controlPlane:
+    endpoint: https://k8s.ottowa.local:6443
+  clusterName: k8s.ottowa.local
+  apiServer:
+    certSANs:
+    - 192.168.169.25
+  extraManifests:
+    - https://raw.githubusercontent.com/alex1989hu/kubelet-serving-cert-approver/main/deploy/standalone-install.yaml
+    - https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+machine:
+  features:
+    hostDNS:
+      enabled: false 
+      forwardKubeDNSToHost: false
+  certSANs:
+  - 192.168.169.25
+  - k8s.ottowa.local
+  kubelet:
+    extraArgs:
+      rotate-server-certificates: true
+    extraMounts:
+    - destination: /var/local-path-provisioner
+      type: bind
+      source: /var/local-path-provisioner
+      options:
+      - bind
+      - rshared
+      - rw
