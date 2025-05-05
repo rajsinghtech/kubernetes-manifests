@@ -5,6 +5,5 @@ namespace: hubble-ui
 resources:
   - helmrelease.yaml
   - dns-visibility.yaml
-  - grafana.yaml
   - httproute.yaml
   - secret.yaml 
