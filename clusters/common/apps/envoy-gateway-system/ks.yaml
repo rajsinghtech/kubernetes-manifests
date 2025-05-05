@@ -9,7 +9,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./clusters/${CLUSTER_NAME}/apps/envoy-gateway-system/install
+  path: ./clusters/common/apps/envoy-gateway-system/install
   prune: true
   sourceRef:
     kind: GitRepository
