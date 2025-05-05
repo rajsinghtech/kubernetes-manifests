@@ -1,0 +1,57 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ./1password.yaml
+  - ./angelnu.yaml
+  - ./argoproj.yaml
+  - ./authentik.yaml
+  - ./backube-charts.yaml
+  - ./bjw-s.yaml
+  - ./cilium.yaml
+  - ./clabernetes.yaml
+  - ./cloudnative-pg.yaml
+  - ./coredns.yaml
+  - ./csi-driver-smb.yaml
+  - ./descheduler.yaml
+  - ./emqx.yaml
+  - ./external-dns.yaml
+  - ./external-secrets.yaml
+  - ./minio-operator.yaml
+  - ./grafana.yaml
+  - ./open-webui.yaml
+  - ./harbor.yaml
+  - ./immich.yaml
+  - ./ingress-nginx.yaml
+  - ./intel-charts.yaml
+  - ./isovalent.yaml
+  - ./itzg.yaml
+  - ./jetstack.yaml
+  - ./k8s-gateway.yaml
+  - ./kubernetes-dashboard.yaml
+  - ./kyverno.yaml
+  - ./metrics-server.yaml
+  - ./nextcloud.yaml
+  - ./node-feature-discovery.yaml
+  - ./ollama.yaml
+  - ./opencost.yaml
+  - ./openebs.yaml
+  - ./openspeedtest.yaml
+  - ./pihole.yaml
+  - ./piraeus-charts.yaml
+  - ./plane.yaml
+  - ./postfinance.yaml
+  - ./prometheus-community.yaml
+  - ./prometheus-community-web.yaml
+  - ./qdrant.yaml
+  - ./redash.yaml
+  - ./rook-ceph-charts.yaml
+  - ./spegel.yaml
+  - ./stakater.yaml
+  - ./stevehipwell.yaml
+  - ./strimzi.yaml
+  - ./tailscale.yaml
+  - ./twin.yaml
+  - ./weave-gitops.yaml
+  - ./wger.yaml
+  - ./envoy-gateway.yaml

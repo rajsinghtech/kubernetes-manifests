@@ -1,0 +1,14 @@
+machine:
+  network:
+    hostname: ms01-1.local
+    interfaces:
+    - interface: enp89s0
+      dhcp: true
+      vip:
+        ip: 192.168.169.25
+
+  install:
+    disk: /dev/nvme1n1
+    bootloader: true
+    extraKernelArgs:
+    - talos.platform=metal

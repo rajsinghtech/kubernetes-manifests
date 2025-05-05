@@ -1,0 +1,11 @@
+customization:
+  systemExtensions:
+    officialExtensions:
+      - siderolabs/amd-ucode
+      - siderolabs/amdgpu-firmware
+      - siderolabs/intel-ucode
+      - siderolabs/i915-ucode
+      - siderolabs/realtek-firmware
+      - siderolabs/thunderbolt
+      - siderolabs/util-linux-tools
+      - siderolabs/zfs
