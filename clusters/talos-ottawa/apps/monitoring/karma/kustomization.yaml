@@ -5,4 +5,4 @@ namespace: monitoring
 resources:
   - ./deployment.yaml
   - ./service.yaml
-  - ./httproute.yaml 
+  # - ./httproute.yaml 
