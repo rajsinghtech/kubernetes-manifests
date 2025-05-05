@@ -6,7 +6,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 30m
-  path: ./clusters/talos-ottowa/apps
+  path: ./clusters/talos-ottawa/apps
   prune: false
   sourceRef:
     kind: GitRepository

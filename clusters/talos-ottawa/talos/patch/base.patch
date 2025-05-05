@@ -12,8 +12,8 @@ cluster:
   proxy:
     disabled: true
   controlPlane:
-    endpoint: https://k8s.ottowa.local:6443
-  clusterName: k8s.ottowa.local
+    endpoint: https://k8s.ottawa.local:6443
+  clusterName: k8s.ottawa.local
   apiServer:
     certSANs:
     - 192.168.169.25
@@ -27,7 +27,7 @@ machine:
       forwardKubeDNSToHost: false
   certSANs:
   - 192.168.169.25
-  - k8s.ottowa.local
+  - k8s.ottawa.local
   kubelet:
     extraArgs:
       rotate-server-certificates: true
