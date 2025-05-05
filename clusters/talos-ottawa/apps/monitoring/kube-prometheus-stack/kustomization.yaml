@@ -6,7 +6,7 @@ resources:
   - helmrelease.yaml
   # - alertconfig.yaml
   - dashboard-tailscale.yaml
-  - secrets.yaml
+  # - secrets.yaml
   # - alertmanager-httproute.yaml
   # - grafana-httproute.yaml
   # - prometheus-httproute.yaml
