@@ -52,7 +52,6 @@ spec:
                 name: cluster-settings
               - kind: Secret
                 name: cluster-secrets
-        name: cluster-secrets
               - kind: ConfigMap
                 name: cluster-user-settings
                 optional: true
