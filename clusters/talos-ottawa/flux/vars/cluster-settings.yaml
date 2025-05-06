@@ -17,4 +17,4 @@ data:
 
   # Networking
   LAN_CIDR: 192.168.169.0/24
-  LAN_GATEWAY_IP: "192.168.69.1"
+  LAN_GATEWAY_IP: "192.168.169.1"
