@@ -8,4 +8,4 @@ spec:
       local:
         replicas: 3
     karmadaAPIServer:
-      serviceType: LoadBalancer
+      serviceType: ClusterIP
