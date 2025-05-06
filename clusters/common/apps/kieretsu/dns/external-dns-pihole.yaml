@@ -41,8 +41,8 @@ spec:
       - gateway-tlsroute
       - gateway-tcproute
       - gateway-udproute
-      # - service
-      # - ingress
+      - service
+      - ingress
     domainFilters: 
       - rajsingh.info
       - lukehouge.com
