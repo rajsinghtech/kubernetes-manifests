@@ -23,16 +23,3 @@ spec:
         - group: ''
           kind: Secret
           name: wildcard-common-https
-    - name: wildcard-${LOCATION}-common-https
-      protocol: HTTPS
-      port: 443
-      hostname: "*.${LOCATION}.${COMMON_DOMAIN}"
-      allowedRoutes:
-        namespaces:
-          from: All
-      tls:
-        mode: Terminate
-        certificateRefs:
-        - group: ''
-          kind: Secret
-          name: wildcard-${LOCATION}-common-https
