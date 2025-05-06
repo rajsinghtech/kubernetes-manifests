@@ -43,6 +43,6 @@ spec:
       - gateway-udproute
       - service
     domainFilters: 
-      - robbinsdale.rajsingh.info
+      - rajsingh.info
     txtOwnerId: kieretsu
     txtPrefix: k8s.${LOCATION}
