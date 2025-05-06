@@ -6,3 +6,4 @@ spec:
   enableUI: true
   tags:
     - "tag:k8s-recorder"
+    - "tag:${LOCATION}"
