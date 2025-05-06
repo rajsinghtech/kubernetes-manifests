@@ -45,3 +45,5 @@ spec:
       - ingress
     domainFilters: 
       - robbinsdale.rajsingh.info
+    txtOwnerId: kieretsu
+    txtPrefix: k8s.${LOCATION}
