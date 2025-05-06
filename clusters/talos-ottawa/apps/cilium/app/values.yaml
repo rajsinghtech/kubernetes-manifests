@@ -1,14 +1,11 @@
 cni:
   exclusive: false
 kubeProxyReplacement: true
-# devices: 'bond0,eth0'
 autoDirectNodeRoutes: true
-directRoutingSkipUnreachable: true 
+directRoutingSkipUnreachable: false
 enableIPv4BIGTCP: true
 enableIPv4Masquerade: true
 routingMode: native
-# routingMode: tunnel
-# tunnelProtocol: vxlan
 bpf:
   masquerade: true
   lbExternalClusterIP: true # https://docs.cilium.io/en/stable/network/kubernetes/kubeproxy-free/#external-access-to-clusterip-services
