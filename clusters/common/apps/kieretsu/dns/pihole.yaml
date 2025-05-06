@@ -2,7 +2,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: pihole-primary
+  name: pihole
 spec:
   interval: 30m
   chart:
@@ -29,7 +29,7 @@ spec:
     maxUnavailable: 25%
     serviceWeb:
       type: ClusterIP
-    hostname: "keiretsu-primary"
+    hostname: "keiretsu"
     serviceDns:
       externalTrafficPolicy: Cluster
       loadBalancerIP: "10.69.69.69"

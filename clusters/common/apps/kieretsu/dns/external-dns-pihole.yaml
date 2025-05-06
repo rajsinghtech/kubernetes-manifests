@@ -2,7 +2,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: external-dns-pihole-primary
+  name: external-dns-pihole
 spec:
   interval: 5m
   chart:
@@ -21,7 +21,7 @@ spec:
     remediation:
       retries: 3
   values:
-    fullnameOverride: external-dns-pihole-primary
+    fullnameOverride: external-dns-pihole
     logLevel: &logLevel debug
     provider: pihole
     env:
@@ -32,7 +32,7 @@ spec:
             key: "password"
     extraArgs:
       - --ignore-ingress-tls-spec
-      - --pihole-server=http://pihole-primary-web.kieretsu
+      - --pihole-server=http://pihole-web.kieretsu
       # - --pihole-api-version=6
       - --gateway-label-filter=external-dns==kieretsu
     policy: sync
@@ -41,8 +41,8 @@ spec:
       - gateway-tlsroute
       - gateway-tcproute
       - gateway-udproute
-      - service
-      - ingress
+      # - service
+      # - ingress
     domainFilters: 
       - rajsingh.info
       - lukehouge.com
