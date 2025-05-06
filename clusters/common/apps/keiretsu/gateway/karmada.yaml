@@ -4,5 +4,8 @@ metadata:
   name: karmada-keiretsu
 spec:
   components:
+    etcd:
+      local:
+        replicas: 3
     karmadaAPIServer:
       serviceType: LoadBalancer
