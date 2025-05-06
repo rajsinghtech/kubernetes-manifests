@@ -8,6 +8,7 @@ spec:
       local:
         replicas: 3
     karmadaAPIServer:
-      serviceType: LoadBalancer
+      serviceType: ClusterIP
       certSan:
         - keiretsu-karmada-${LOCATION}-apiserver.kieretsu.ts.net
+        - karmada-${LOCATION}-apiserver.keiretsu.svc.cluster.local
