@@ -6,4 +6,3 @@ resources:
   - connector.yaml
   - proxy-class.yaml 
   - dnsconfig.yaml
-  - recorder.yaml
