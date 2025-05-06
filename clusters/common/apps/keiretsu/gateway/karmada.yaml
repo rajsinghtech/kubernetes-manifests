@@ -1,11 +1,13 @@
 apiVersion: operator.karmada.io/v1alpha1
 kind: Karmada
 metadata:
-  name: karmada-keiretsu
+  name: karmada-${LOCATION}
 spec:
   components:
     etcd:
       local:
         replicas: 3
     karmadaAPIServer:
-      serviceType: ClusterIP
+      serviceType: LoadBalancer
+      certSan:
+        - keiretsu-karmada-${LOCATION}-apiserver.kieretsu.ts.net
