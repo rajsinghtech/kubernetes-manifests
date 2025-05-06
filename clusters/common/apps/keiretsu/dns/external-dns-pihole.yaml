@@ -45,6 +45,6 @@ spec:
       - service
     domainFilters: 
       - robbinsdale.rajsingh.info
-      - kieretsu.rajsingh.info
+      - keiretsu.rajsingh.info
     txtOwnerId: keiretsu
     txtPrefix: k8s.${LOCATION}.
