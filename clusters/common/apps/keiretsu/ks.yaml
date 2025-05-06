@@ -2,14 +2,14 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app kieretsu-gateway
+  name: &app keiretsu-gateway
   namespace: flux-system
 spec:
-  targetNamespace: kieretsu
+  targetNamespace: keiretsu
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./clusters/common/apps/kieretsu/gateway
+  path: ./clusters/common/apps/keiretsu/gateway
   dependsOn:
     - name: cert-manager
     - name: envoy-gateway-system-install
@@ -25,14 +25,14 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app kieretsu-dns
+  name: &app keiretsu-dns
   namespace: flux-system
 spec:
-  targetNamespace: kieretsu
+  targetNamespace: keiretsu
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./clusters/common/apps/kieretsu/dns
+  path: ./clusters/common/apps/keiretsu/dns
   prune: true
   sourceRef:
     kind: GitRepository

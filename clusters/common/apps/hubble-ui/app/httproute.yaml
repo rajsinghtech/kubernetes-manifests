@@ -7,7 +7,7 @@ spec:
     - group: gateway.networking.k8s.io
       kind: Gateway
       name: ts
-      namespace: kieretsu
+      namespace: keiretsu
   hostnames:
     - "hubble.${LOCATION}.${COMMON_DOMAIN}"
   rules:
