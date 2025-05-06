@@ -21,6 +21,3 @@ spec:
     remediation:
       retries: 3
   values:
-    frontend:
-      server:
-        host: hubble.lukehouge.com 
