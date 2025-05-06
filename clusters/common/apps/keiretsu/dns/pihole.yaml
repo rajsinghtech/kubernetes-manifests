@@ -32,7 +32,7 @@ spec:
     hostname: "keiretsu"
     serviceDns:
       externalTrafficPolicy: Cluster
-      loadBalancerIP: "10.69.69.69"
+      loadBalancerIP: "10.69.${SITE_ID}.69"
       mixedService: true
       nodePort: ""
       port: 53
