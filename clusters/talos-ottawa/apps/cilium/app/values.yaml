@@ -11,7 +11,7 @@ bpf:
   lbExternalClusterIP: true # https://docs.cilium.io/en/stable/network/kubernetes/kubeproxy-free/#external-access-to-clusterip-services
 ipv4:
   enabled: true
-ipv4NativeRoutingCIDR: 10.0.0.0/8
+ipv4NativeRoutingCIDR: 10.4.0.0/16
 bandwidthManager:
   enabled: true
   bbr: true
