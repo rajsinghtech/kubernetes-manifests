@@ -9,3 +9,4 @@ spec:
     group: gateway.envoyproxy.io
     kind: EnvoyProxy
     name: ts
+    namespace: kieretsu
