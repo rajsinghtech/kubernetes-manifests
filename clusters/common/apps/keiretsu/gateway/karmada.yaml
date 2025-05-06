@@ -18,17 +18,27 @@ kind: Service
 metadata:
   annotations:
     tailscale.com/tailnet-fqdn: keiretsu-karmada-robbinsdale-apiserver.keiretsu.ts.net
+    tailscale.com/proxy-group: "prod"
   name: external-karmada-robbinsdale-apiserver
 spec:
   externalName: placeholder   # any value - will be overwritten by operator
   type: ExternalName
+  ports:
+  - port: 5443
+    protocol: TCP
+    name: client
 ---
 apiVersion: v1
 kind: Service
 metadata:
   annotations:
     tailscale.com/tailnet-fqdn: keiretsu-karmada-ottawa-apiserver.keiretsu.ts.net
+    tailscale.com/proxy-group: "prod"
   name: external-karmada-ottawa-apiserver
 spec:
   externalName: placeholder   # any value - will be overwritten by operator
   type: ExternalName
+  ports:
+  - port: 5443
+    protocol: TCP
+    name: client
