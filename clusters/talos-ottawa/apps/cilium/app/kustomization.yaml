@@ -58,10 +58,10 @@ patches:
               - name: kube-multus
                 resources:
                   requests:
-                    cpu: "100m"
+                    cpu: "200m"
                     memory: "200Mi"
                   limits:
-                    cpu: "100m"
+                    cpu: "200m"
                     memory: "1000Mi"
   - target:
       kind: CronJob
