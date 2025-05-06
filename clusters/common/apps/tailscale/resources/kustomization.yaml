@@ -4,5 +4,6 @@ kind: Kustomization
 resources:
   - rbac.yaml
   - connector.yaml
-  - proxy-class.yaml 
+  - proxyclass.yaml 
   - dnsconfig.yaml
+  - proxygroup.yaml

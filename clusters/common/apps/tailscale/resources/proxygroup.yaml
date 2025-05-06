@@ -1,0 +1,7 @@
+apiVersion: tailscale.com/v1alpha1
+kind: ProxyGroup
+metadata:
+  name: prod
+spec:
+  type: egress
+  replicas: 3
