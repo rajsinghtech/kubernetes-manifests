@@ -47,4 +47,4 @@ spec:
       - robbinsdale.rajsingh.info
       - kieretsu.rajsingh.info
     txtOwnerId: keiretsu
-    txtPrefix: k8s.${LOCATION}
+    txtPrefix: k8s.${LOCATION}.
