@@ -26,3 +26,8 @@ spec:
     operatorConfig:
       hostname: "${LOCATION}-k8s-operator" 
       logging: "debug" # info, debug, dev
+      defaultTags:
+        - "tag:${LOCATION}"
+        - "tag:k8s-operator"
+    proxyConfig:
+      defaultTags: "tag:k8s,tag:${LOCATION}"
