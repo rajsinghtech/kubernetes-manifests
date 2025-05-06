@@ -34,7 +34,7 @@ spec:
       - --ignore-ingress-tls-spec
       - --pihole-server=http://pihole-primary-web.kieretsu
       # - --pihole-api-version=6
-      - --gateway-label-filter=external-dns==ts
+      - --gateway-label-filter=external-dns==kieretsu
     policy: sync
     sources:
       - gateway-httproute
