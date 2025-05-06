@@ -6,6 +6,9 @@ machine:
       dhcp: true
       vip:
         ip: 192.168.169.25
+    - interface: enp2s0f0np0
+      addresses:
+        - 192.168.249.31/24
 
   install:
     disk: /dev/nvme1n1

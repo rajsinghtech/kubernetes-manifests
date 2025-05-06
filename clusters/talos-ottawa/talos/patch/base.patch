@@ -29,6 +29,9 @@ machine:
   - 192.168.169.25
   - k8s.ottawa.local
   kubelet:
+    nodeIP:
+      validSubnets:
+      - 192.168.169.0/24
     extraArgs:
       rotate-server-certificates: true
     extraMounts:
