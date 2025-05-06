@@ -11,7 +11,12 @@ resources:
   # - https://raw.githubusercontent.com/k8snetworkplumbingwg/whereabouts/refs/heads/master/doc/crds/whereabouts.cni.cncf.io_overlappingrangeipreservations.yaml
   - github.com/kubernetes-sigs/descheduler/kubernetes/cronjob?ref=release-1.32
   - helmrelease.yaml
-
+generatorOptions:
+  disableNameSuffixHash: true
+configMapGenerator:
+  - name: cilium-values
+    files:
+      - values.yaml
 patches:
   - target:
       kind: DaemonSet
