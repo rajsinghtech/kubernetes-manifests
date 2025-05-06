@@ -9,7 +9,7 @@ spec:
       name: ts
       namespace: kieretsu
   hostnames:
-    - "hubble.keiretsu.rajsingh.info"
+    - "hubble.${LOCATION}.${COMMON_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""
