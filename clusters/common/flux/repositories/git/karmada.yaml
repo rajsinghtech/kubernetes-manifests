@@ -1,0 +1,11 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: karmada
+  namespace: flux-system # Assuming flux-system, adjust if needed
+spec:
+  interval: 30m
+  url: https://github.com/karmada-io/karmada
+  ref:
+    tag: v1.13.2
