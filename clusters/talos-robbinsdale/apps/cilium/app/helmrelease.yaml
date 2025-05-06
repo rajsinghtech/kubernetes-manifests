@@ -20,69 +20,8 @@ spec:
     cleanupOnFail: true
     remediation:
       retries: 3
-  values:
-    cni:
-      exclusive: false
-    kubeProxyReplacement: true
-    # devices: 'bond0,eth0'
-    autoDirectNodeRoutes: true
-    directRoutingSkipUnreachable: false
-    enableIPv4BIGTCP: true
-    enableIPv4Masquerade: true
-    routingMode: native
-    # routingMode: tunnel
-    # tunnelProtocol: vxlan
-    bpf:
-      masquerade: true
-      lbExternalClusterIP: true # https://docs.cilium.io/en/stable/network/kubernetes/kubeproxy-free/#external-access-to-clusterip-services
-    ipv4:
-      enabled: true
-    ipv4NativeRoutingCIDR: 10.0.0.0/8
-    bandwidthManager:
-      enabled: true
-      bbr: true
-    envoy:
-      enabled: true
-    ipam:
-      mode: "cluster-pool"
-      operator:
-        clusterPoolIPv4PodCIDRList:
-          - "10.1.0.0/16"
-        clusterPoolIPv4MaskSize: 24
-    operator:
-      rollOutPods: true
-    rollOutCiliumPods: true
-    localRedirectPolicy: true
-    bgpControlPlane:
-      enabled: true
-    hubble:
-      relay:
-        enabled: true
-    extraConfig:
-      # Enable flow export
-      export-file-path: "/var/run/cilium/hubble/hubble.log"
-    # Talos specific settings
-    cgroup:
-      autoMount:
-        enabled: false
-      hostRoot: /sys/fs/cgroup
-    k8sServiceHost: localhost
-    k8sServicePort: 7445
-    securityContext:
-      capabilities:
-        ciliumAgent:
-        - CHOWN
-        - KILL
-        - NET_ADMIN
-        - NET_RAW
-        - IPC_LOCK
-        - SYS_ADMIN
-        - SYS_RESOURCE
-        - DAC_OVERRIDE
-        - FOWNER
-        - SETGID
-        - SETUID
-        cleanCiliumState:
-        - NET_ADMIN
-        - SYS_ADMIN
-        - SYS_RESOURCE
+  valuesFrom:
+    - kind: ConfigMap
+      name: cilium-values
+      valuesKey: values.yaml
+      optional: false

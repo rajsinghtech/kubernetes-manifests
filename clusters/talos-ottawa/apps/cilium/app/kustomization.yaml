@@ -17,7 +17,6 @@ configMapGenerator:
   - name: cilium-values
     files:
       - values.yaml
-
 patches:
   - target:
       kind: DaemonSet
