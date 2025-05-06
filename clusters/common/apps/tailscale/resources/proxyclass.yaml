@@ -5,8 +5,6 @@ metadata:
 spec:
   tailscale:
     acceptRoutes: true
-    tags:
-      - "tag:${LOCATION}"
   metrics:
     enable: true
     serviceMonitor:
