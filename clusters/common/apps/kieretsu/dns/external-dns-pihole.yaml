@@ -42,7 +42,6 @@ spec:
       - gateway-tcproute
       - gateway-udproute
       - service
-      - ingress
     domainFilters: 
       - robbinsdale.rajsingh.info
     txtOwnerId: kieretsu
