@@ -47,7 +47,7 @@ spec:
     - advertisementType: "Service"
       service:
         addresses:
-          - ClusterIP
+          # - ClusterIP
           - ExternalIP
           - LoadBalancerIP
       selector:
