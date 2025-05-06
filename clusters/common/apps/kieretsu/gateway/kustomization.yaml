@@ -6,3 +6,4 @@ resources:
   - gateway.yaml
   - envoyproxy.yaml
   - issuer.yaml
+  - secret.yaml
