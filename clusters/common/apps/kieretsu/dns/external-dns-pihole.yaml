@@ -32,7 +32,7 @@ spec:
             key: "password"
     extraArgs:
       - --ignore-ingress-tls-spec
-      - --pihole-server=http://pihole-primary-web.dns
+      - --pihole-server=http://pihole-primary-web.kieretsu
       # - --pihole-api-version=6
       - --gateway-label-filter=external-dns==ts
     policy: sync
