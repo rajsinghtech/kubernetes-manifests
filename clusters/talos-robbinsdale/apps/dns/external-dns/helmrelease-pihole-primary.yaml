@@ -5,6 +5,7 @@ metadata:
   name: external-dns-pihole-primary
 spec:
   interval: 5m
+  releaseName: external-dns-pihole-primary
   chart:
     spec:
       chart: external-dns
