@@ -30,4 +30,4 @@ spec:
         - "tag:${LOCATION}"
         - "tag:k8s-operator"
     proxyConfig:
-      defaultTags: "tag:k8s\,tag:${LOCATION}"
+      defaultTags: "tag:k8s,tag:${LOCATION}"
