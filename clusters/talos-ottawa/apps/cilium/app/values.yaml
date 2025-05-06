@@ -3,7 +3,7 @@ cni:
 kubeProxyReplacement: true
 # devices: 'bond0,eth0'
 autoDirectNodeRoutes: true
-directRoutingSkipUnreachable: false
+directRoutingSkipUnreachable: true
 enableIPv4BIGTCP: true
 enableIPv4Masquerade: true
 routingMode: native
