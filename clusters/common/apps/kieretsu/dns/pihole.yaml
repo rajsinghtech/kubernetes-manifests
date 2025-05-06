@@ -1,0 +1,43 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: pihole-primary
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: pihole
+      version: 2.27.0
+      sourceRef:
+        kind: HelmRepository
+        name: pihole
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    admin:
+      existingSecret: "pihole"
+      passwordKey: password
+    strategyType: RollingUpdate
+    maxSurge: 25%
+    maxUnavailable: 25%
+    serviceWeb:
+      type: ClusterIP
+    hostname: "keiretsu-primary"
+    serviceDns:
+      externalTrafficPolicy: Cluster
+      loadBalancerIP: "10.69.69.69"
+      mixedService: true
+      nodePort: ""
+      port: 53
+      type: LoadBalancer
+    ingress:
+      enabled: false # Managed via HTTPRoute
+    podDnsConfig:
+      enabled: false 
