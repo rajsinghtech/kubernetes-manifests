@@ -9,6 +9,6 @@ spec:
         replicas: 3
     karmadaAPIServer:
       serviceType: ClusterIP
-      certSan:
+      certSANs:
         - keiretsu-karmada-${LOCATION}-apiserver.keiretsu.ts.net
         - karmada-${LOCATION}-apiserver.keiretsu.svc.cluster.local
