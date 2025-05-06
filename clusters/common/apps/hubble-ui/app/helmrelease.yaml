@@ -1,0 +1,26 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: hubble-ui
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: hubble-ui
+      version: 1.3.3
+      sourceRef:
+        kind: HelmRepository
+        name: isovalent # Use isovalent repo
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    frontend:
+      server:
+        host: hubble.lukehouge.com 
