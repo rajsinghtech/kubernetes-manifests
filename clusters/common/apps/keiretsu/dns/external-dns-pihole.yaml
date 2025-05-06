@@ -44,7 +44,7 @@ spec:
       - gateway-udproute
       - service
     domainFilters: 
-      - robbinsdale.rajsingh.info
-      - keiretsu.rajsingh.info
+      - ${LOCATION}.${COMMON_DOMAIN}
+      - keiretsu.${COMMON_DOMAIN}
     txtOwnerId: keiretsu
     txtPrefix: k8s.${LOCATION}.
