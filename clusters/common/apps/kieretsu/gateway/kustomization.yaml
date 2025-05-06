@@ -5,3 +5,4 @@ resources:
   - gatewayclass.yaml
   - gateway.yaml
   - envoyproxy.yaml
+  - issuer.yaml
