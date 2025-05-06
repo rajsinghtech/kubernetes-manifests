@@ -1,0 +1,8 @@
+apiVersion: operator.karmada.io/v1alpha1
+kind: Karmada
+metadata:
+  name: karmada-keiretsu
+spec:
+  components:
+    karmadaAPIServer:
+      serviceType: LoadBalancer
