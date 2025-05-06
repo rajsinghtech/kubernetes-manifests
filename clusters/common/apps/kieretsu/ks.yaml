@@ -12,7 +12,7 @@ spec:
   path: ./clusters/common/apps/kieretsu/gateway
   dependsOn:
     - name: cert-manager
-    - name: envoy-gateway-system
+    - name: envoy-gateway-system-install
   prune: true
   sourceRef:
     kind: GitRepository
