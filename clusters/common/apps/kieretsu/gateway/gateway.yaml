@@ -10,10 +10,10 @@ metadata:
 spec:
   gatewayClassName: ts
   listeners:
-    - name: ${LOCATION}-common-https
+    - name: wildcard-common-https
       protocol: HTTPS
       port: 443
-      hostname: "${LOCATION}.${COMMON_DOMAIN}"
+      hostname: "*.${COMMON_DOMAIN}"
       allowedRoutes:
         namespaces:
           from: All
@@ -22,7 +22,7 @@ spec:
         certificateRefs:
         - group: ''
           kind: Secret
-          name: ${LOCATION}-common-https
+          name: wildcard-common-https
     - name: wildcard-${LOCATION}-common-https
       protocol: HTTPS
       port: 443
