@@ -9,7 +9,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./clusters/common/apps/karmada/app
+  path: ./clusters/common/apps/karmada/operator
   prune: true
   sourceRef:
     kind: GitRepository
