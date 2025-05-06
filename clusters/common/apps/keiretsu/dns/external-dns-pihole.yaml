@@ -44,6 +44,7 @@ spec:
       - gateway-udproute
       - service
     domainFilters: 
-      - rajsingh.info
+      - robbinsdale.rajsingh.info
+      - kieretsu.rajsingh.info
     txtOwnerId: keiretsu
     txtPrefix: k8s.${LOCATION}

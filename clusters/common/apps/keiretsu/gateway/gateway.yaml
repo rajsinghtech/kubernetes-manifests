@@ -10,10 +10,10 @@ metadata:
 spec:
   gatewayClassName: ts
   listeners:
-    - name: wildcard-common-https
+    - name: wildcard-${LOCATION}-common-https
       protocol: HTTPS
       port: 443
-      hostname: "*.${COMMON_DOMAIN}"
+      hostname: "*.${LOCATION}.${COMMON_DOMAIN}"
       allowedRoutes:
         namespaces:
           from: All
@@ -22,4 +22,17 @@ spec:
         certificateRefs:
         - group: ''
           kind: Secret
-          name: wildcard-common-https
+          name: wildcard-${LOCATION}-common-https
+    - name: wildcard-keiretsu-common-https
+      protocol: HTTPS
+      port: 443
+      hostname: "*keiretsu.${COMMON_DOMAIN}"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        mode: Terminate
+        certificateRefs:
+        - group: ''
+          kind: Secret
+          name: wildcard-keiretsu-common-https
