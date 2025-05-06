@@ -26,7 +26,7 @@ spec:
     - name: wildcard-keiretsu-common-https
       protocol: HTTPS
       port: 443
-      hostname: "*keiretsu.${COMMON_DOMAIN}"
+      hostname: "*.keiretsu.${COMMON_DOMAIN}"
       allowedRoutes:
         namespaces:
           from: All
