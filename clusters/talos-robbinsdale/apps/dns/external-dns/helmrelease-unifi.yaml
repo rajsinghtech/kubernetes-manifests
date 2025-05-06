@@ -5,6 +5,7 @@ metadata:
   name: external-dns-unifi
 spec:
   interval: 5m
+  releaseName: external-dns-unifi
   chart:
     spec:
       chart: external-dns
