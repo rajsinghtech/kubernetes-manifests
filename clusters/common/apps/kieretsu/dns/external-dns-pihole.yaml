@@ -44,5 +44,4 @@ spec:
       - service
       - ingress
     domainFilters: 
-      - rajsingh.info
-      - lukehouge.com
+      - robbinsdale.rajsingh.info
