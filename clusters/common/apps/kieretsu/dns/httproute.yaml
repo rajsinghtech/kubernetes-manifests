@@ -14,7 +14,7 @@ spec:
     - backendRefs:
         - group: ""
           kind: Service
-          name: pihole-primary-web
+          name: pihole-web
           port: 80
           weight: 1
       matches:
