@@ -6,7 +6,7 @@ metadata:
   labels:
     external-dns: keiretsu
   annotations:
-    cert-manager.io/cluster-issuer: common-issuer
+    cert-manager.io/issuer: common-issuer
 spec:
   gatewayClassName: ts
   listeners:
