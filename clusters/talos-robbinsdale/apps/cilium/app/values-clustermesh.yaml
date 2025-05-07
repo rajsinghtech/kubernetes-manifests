@@ -4,7 +4,7 @@ clustermesh:
   useAPIServer: true
   apiserver:
     service:
-      tailscale.com/hostname: ottawa-cilium-clustermesh-apiserver
+      tailscale.com/hostname: robbinsdale-cilium-clustermesh-apiserver
       type: LoadBalancer
       loadBalancerClass: tailscale
 
