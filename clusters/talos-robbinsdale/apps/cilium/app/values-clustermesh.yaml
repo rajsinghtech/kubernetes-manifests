@@ -6,9 +6,22 @@ clustermesh:
   enableMCSAPISupport: true
   useAPIServer: true
   apiserver:
+    replicas: 3
     service:
       annotations:
         tailscale.com/hostname: ${LOCATION}-cilium-clustermesh-apiserver
       type: LoadBalancer
       loadBalancerClass: tailscale
-
+    # tls:
+    #   auto:
+    #     method: certmanager
+    #     certManagerIssuerRef:
+    #       group: cert-manager.io
+    #       kind: ClusterIssuer
+    #       name: cilium-clustermesh-ca-issuer
+  config:
+    enabled: true
+    clusters:
+    - name: ottawa
+      address: ottawa-cilium-clustermesh-apiserver.keiretsu.svc.cluster.local
+      port: 2379
