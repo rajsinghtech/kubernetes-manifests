@@ -9,7 +9,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./clusters/${CLUSTER_NAME}/apps/flux-system/notifications
+  path: ./clusters/common/apps/flux-system/notifications
   prune: true
   sourceRef:
     kind: GitRepository
@@ -29,7 +29,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./clusters/${CLUSTER_NAME}/apps/flux-system/capacitor
+  path: ./clusters/common/apps/flux-system/capacitor
   prune: true
   sourceRef:
     kind: GitRepository
@@ -49,7 +49,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./clusters/${CLUSTER_NAME}/apps/flux-system/monitoring
+  path: ./clusters/common/apps/flux-system/monitoring
   prune: true
   sourceRef:
     kind: GitRepository
