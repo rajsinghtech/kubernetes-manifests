@@ -9,7 +9,7 @@ spec:
   externalName: placeholder   # any value - will be overwritten by operator
   type: ExternalName 
   ports:
-  - name: https
+  - name: https # any value
     port: 2379
     protocol: TCP
 ---
@@ -24,6 +24,6 @@ spec:
   externalName: placeholder   # any value - will be overwritten by operator
   type: ExternalName 
   ports:
-  - name: https
+  - name: https # any value
     port: 2379
-    protocol: TCP
+    protocol: TCP 
