@@ -1,14 +1,12 @@
 machine:
   network:
-    hostname: ms01-1.local
+    hostname: ms01-2.local
     interfaces:
     - interface: enp89s0
       dhcp: true
-      vip:
-        ip: 192.168.169.25
     - interface: enp2s0f0np0
       addresses:
-        - 192.168.249.113/24
+        - 192.168.249.114/24
 
   install:
     disk: /dev/nvme1n1
