@@ -10,5 +10,7 @@ spec:
       envoyDeployment:
         replicas: 3 
       envoyService:
+        annotations:
+          tailscale.com/hostname: "${LOCATION}-envoy-ts"
         type: LoadBalancer
         loadBalancerClass: tailscale
