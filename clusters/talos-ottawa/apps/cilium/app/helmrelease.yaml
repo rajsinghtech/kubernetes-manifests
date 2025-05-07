@@ -8,10 +8,10 @@ spec:
   chart:
     spec:
       chart: cilium
-      version: 1.16.9
+      version: 1.17.3
       sourceRef:
         kind: HelmRepository
-        name: isovalent
+        name: cilium
         namespace: flux-system
   install:
     remediation:
