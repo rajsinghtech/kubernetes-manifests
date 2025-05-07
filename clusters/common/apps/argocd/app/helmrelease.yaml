@@ -1,0 +1,129 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: argo-cd
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: argo-cd
+      version: 7.8.10
+      sourceRef:
+        kind: HelmRepository
+        name: argoproj
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    global:
+      domain: argocd.${LOCATION}.${COMMON_DOMAIN}
+    configs:
+      cm:
+        url: https://argocd.${LOCATION}.${COMMON_DOMAIN}
+        admin.enabled: true
+        resource.ignoreResourceUpdatesEnabled: "false"
+        exec.enabled: "true"
+        kustomize.buildOptions: --enable-helm
+        resource.exclusions: |
+          - apiGroups:
+              - cilium.io
+            kinds:
+              - CiliumIdentity
+            clusters:
+              - "*"
+        dex.config: |
+          connectors:
+          - type: github
+            id: github
+            name: GitHub
+            config:
+              clientID: $argocd-oidc-secret:oidc.clientID
+              clientSecret: $argocd-oidc-secret:oidc.clientSecret
+              orgs:
+              - name: keiretsu-labs
+      rbac: 
+        policy.csv: |
+          g, keiretsu-labs:robbinsdale, role:admin
+        policy.default: role:admin
+      params:
+        controller.repo.server.timeout.seconds: "300"
+        server.repo.server.timeout.seconds: "300"
+      repositories:
+        argoproj-helm:
+          type: helm
+          name: argo-cd
+          url: https://argoproj.github.io/argo-helm
+    server:
+      env:
+        - name: ARGOCD_GRPC_KEEP_ALIVE_MIN
+          value: "30s"
+      extraArgs:
+        - --request-timeout=300s
+        - --insecure
+        - --repo-server-timeout-seconds=300
+      resources:
+        requests:
+          cpu: 500m
+          memory: 256Mi
+        limits:
+          memory: 256Mi
+
+    controller:
+      metrics:
+        enabled: true
+        serviceMonitor:
+          enabled: true
+
+    applicationSet:
+      metrics:
+        enabled: true
+        serviceMonitor:
+          enabled: true
+      resources:
+        requests:
+          cpu: 25m
+          memory: 128Mi
+        limits:
+          memory: 128Mi
+
+    repoServer:
+      metrics:
+        enabled: true
+        serviceMonitor:
+          enabled: true
+      resources:
+        requests:
+          cpu: 1
+          memory: 1Gi
+        limits:
+          memory: 1Gi
+
+    notifications:
+      metrics:
+        enabled: true
+        serviceMonitor:
+          enabled: true
+      resources:
+        requests:
+          cpu: 25m
+          memory: 128Mi
+        limits:
+          memory: 128Mi
+
+    redis:
+      metrics:
+        enabled: true
+        serviceMonitor:
+          enabled: true
+      resources:
+        requests:
+          cpu: 25m
+          memory: 512Mi
+        limits:
+          memory: 512Mi
