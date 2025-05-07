@@ -5,10 +5,12 @@ data:
 kind: ENC[AES256_GCM,data:k9Is/L6P,iv:nxU285kt8kAE7KR+P3NI4EKmiPo6UA4+9/rFDSSoieM=,tag:c3lG5gcgBgD29lcuKAM70A==,type:str]
 metadata:
     name: ENC[AES256_GCM,data:NJjiwi2RAMq1/rKF/NqUR6XEIQFsGo+XQwUD77sEYA==,iv:6buvguiIsdxE6uNZtxQGeY8O/UkXraDr9NDGe1x99Y0=,tag:fnA6SnOqCNtYJpu0a0DZDA==,type:str]
+    namespace: ENC[AES256_GCM,data:0VZC+uvucqvYqGIy,iv:XN1ntbUcKKVayzG8zxWDLT/sp0Q/Fa4toWn4wFBUd7c=,tag:0PzpLXkZNRuY9m/Sy500Ag==,type:str]
+    creationTimestamp: null
 type: ENC[AES256_GCM,data:lpvuF1O+UmEVKAiNSrJzfw4=,iv:QCnbPjfhH23bMHFuzqkIFMXoXhpQP/DwI3NqHKn8hWY=,tag:uuNk0n3ugQm8+CulpQQIig==,type:str]
 sops:
-    lastmodified: "2025-05-07T06:35:29Z"
-    mac: ENC[AES256_GCM,data:CV+tDH4sLYmBk4ie3ZVPvpemOQinfTXWaVCYmyOu/OCrtqEhDcFBs6lvwaHvZitYukc7pkUo9sB7W73PgDCPQCYbRSyRDVJAO7MlnRsKSsD38rc0e6mYTOyJG20i10ZL9UVwc1qDqkZF6Wyis70/bAGa7hpoKpCheHzvkhPJRQ4=,iv:PkfVFmvfALd+vZY13Zh1aK4NfMK1lph/7NAoChrI8WA=,tag:xmTHtqiNTvhcQaLtU/N4iw==,type:str]
+    lastmodified: "2025-05-07T06:45:11Z"
+    mac: ENC[AES256_GCM,data:3WR6lSe4RGBVE2TEFS4+8Vl0h2hXsEwjRaHScG/WXIhWnagfzqo2+BB/81tDFfb6yenOzDXqudzczjKnQcAwNMBZ1GGw0HpH/WzIGjPcSidLlQBKlY1PNstvZWj2T4c7hzOgQKDON7bSAPqWxY3qnQ8REURjclJS932ZmYj2pI8=,iv:pHNPwIJD98rOgoffpd6ho8Y4DF9TeJJDDhQjXtKwTc4=,tag:4zIR+Fnqbf0VFZydaRMaVg==,type:str]
     pgp:
         - created_at: "2025-05-07T06:35:29Z"
           enc: |-
