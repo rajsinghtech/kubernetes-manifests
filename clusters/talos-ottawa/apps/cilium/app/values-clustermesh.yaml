@@ -3,6 +3,8 @@ cluster:
   id: ${SITE_ID}
 clustermesh:
   enabled: true
+  maxConnectedClusters: 255
+  enableEndpointSliceSynchronization: true
   enableMCSAPISupport: true
   useAPIServer: true
   apiserver:
@@ -12,13 +14,14 @@ clustermesh:
         tailscale.com/hostname: ${LOCATION}-cilium-clustermesh-apiserver
       type: LoadBalancer
       loadBalancerClass: tailscale
-    # tls:
-    #   auto:
-    #     method: certmanager
-    #     certManagerIssuerRef:
-    #       group: cert-manager.io
-    #       kind: ClusterIssuer
-    #       name: cilium-clustermesh-ca-issuer
+    tls:
+      authMode: cluster
+      auto:
+        method: certmanager
+        certManagerIssuerRef:
+          group: cert-manager.io
+          kind: ClusterIssuer
+          name: internal
   config:
     enabled: true
     clusters:
