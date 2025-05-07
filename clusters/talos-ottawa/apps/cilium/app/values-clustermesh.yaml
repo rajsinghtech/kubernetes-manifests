@@ -21,7 +21,7 @@ clustermesh:
         certManagerIssuerRef:
           group: cert-manager.io
           kind: ClusterIssuer
-          name: common-issuer
+          name: internal
   config:
     enabled: true
     clusters:
