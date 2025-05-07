@@ -69,6 +69,15 @@ data:
         }
         prometheus :9253
         }
+    ts.net:53 {
+      errors
+      cache 30
+      reload
+      loop
+      bind 0.0.0.0
+      forward . 10.0.159.20
+      prometheus :9253
+    }
     .:53 {
         errors
         cache 30
