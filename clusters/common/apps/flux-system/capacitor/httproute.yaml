@@ -6,14 +6,10 @@ spec:
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
-      name: private
-      namespace: envoy-gateway-system
-    - group: gateway.networking.k8s.io
-      kind: Gateway
       name: ts
-      namespace: envoy-gateway-system
+      namespace: keiretsu
   hostnames:
-    - "capacitor.rajsingh.info"
+    - "capacitor.${LOCATION}.${COMMON_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""
