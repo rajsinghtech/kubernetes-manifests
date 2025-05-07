@@ -10,8 +10,11 @@ spec:
     karmadaAPIServer:
       serviceType: ClusterIP
       certSANs:
+        - keiretsu-karmada-${LOCATION}-apiserver
         - keiretsu-karmada-${LOCATION}-apiserver.keiretsu.ts.net
-        - external-karmada-${LOCATION}-apiserver.keiretsu.svc.cluster.local
+        - keiretsu-karmada-${LOCATION}-apiserver-external.keiretsu.svc.cluster.local
+        - keiretsu-karmada-${LOCATION}-apiserver-external.keiretsu
+        - keiretsu-karmada-${LOCATION}-apiserver-external
 ---
 apiVersion: v1
 kind: Service
@@ -19,7 +22,7 @@ metadata:
   annotations:
     tailscale.com/tailnet-fqdn: keiretsu-karmada-robbinsdale-apiserver.keiretsu.ts.net
     tailscale.com/proxy-group: "prod"
-  name: external-karmada-robbinsdale-apiserver
+  name: karmada-robbinsdale-apiserver-external
 spec:
   externalName: placeholder   # any value - will be overwritten by operator
   type: ExternalName
@@ -34,7 +37,7 @@ metadata:
   annotations:
     tailscale.com/tailnet-fqdn: keiretsu-karmada-ottawa-apiserver.keiretsu.ts.net
     tailscale.com/proxy-group: "prod"
-  name: external-karmada-ottawa-apiserver
+  name: karmada-ottawa-apiserver-external
 spec:
   externalName: placeholder   # any value - will be overwritten by operator
   type: ExternalName
