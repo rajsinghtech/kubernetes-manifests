@@ -10,7 +10,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   path: ./clusters/${CLUSTER_NAME}/apps/rook-ceph/app
-  prune: false
+  prune: true
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
@@ -33,7 +33,7 @@ spec:
     - name: rook-ceph-operator
     - name: snapshot-controller # Dependency for volume snapshots
   path: ./clusters/${CLUSTER_NAME}/apps/rook-ceph/config
-  prune: false
+  prune: true
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
