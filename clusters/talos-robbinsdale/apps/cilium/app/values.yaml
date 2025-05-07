@@ -1,6 +1,8 @@
 cluster:
   name: robbinsdale
   id: 1
+clustermesh:
+  enabled: true
 cni:
   exclusive: false
 kubeProxyReplacement: true
