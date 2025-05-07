@@ -1,8 +1,6 @@
 cluster:
   name: ottawa
   id: 2
-clustermesh:
-  enabled: true
 cni:
   exclusive: false
 kubeProxyReplacement: true
