@@ -1,3 +1,6 @@
+cluster:
+  name: ottawa
+  id: 2
 cni:
   exclusive: false
 kubeProxyReplacement: true

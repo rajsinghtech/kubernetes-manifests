@@ -1,3 +1,6 @@
+cluster:
+  name: robbinsdale
+  id: 1
 cni:
   exclusive: false
 kubeProxyReplacement: true
