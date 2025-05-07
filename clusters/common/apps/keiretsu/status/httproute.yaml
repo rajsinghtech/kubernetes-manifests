@@ -1,0 +1,23 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: gatus
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: ts
+      namespace: keiretsu
+  hostnames:
+    - "status.${LOCATION}.${COMMON_DOMAIN}"
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: gatus
+          port: 80
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: / 
