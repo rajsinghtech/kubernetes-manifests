@@ -75,7 +75,7 @@ data:
       reload
       loop
       bind 0.0.0.0
-      forward . 10.0.159.20
+      forward . 10.69.69.50
       prometheus :9253
     }
     .:53 {
