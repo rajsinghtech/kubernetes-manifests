@@ -6,9 +6,9 @@ cluster:
     cni:
       name: none
     podSubnets:
-    - 10.4.0.0/16
-    serviceSubnets:
     - 10.3.0.0/16
+    serviceSubnets:
+    - 10.2.0.0/16
   proxy:
     disabled: true
   controlPlane:
