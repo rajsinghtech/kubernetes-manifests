@@ -33,7 +33,7 @@ spec:
       endpoints:
         - name: ottawa
           group: karmada
-          url: https://keiretsu-karmada-ottawa-apiserver.kieretsu.ts.net:5443/readyz
+          url: https://keiretsu-karmada-ottawa-apiserver.keiretsu.ts.net:5443/readyz
           interval: 60s
           client:
             insecure: true
@@ -44,7 +44,7 @@ spec:
               send-on-resolved: true
         - name: robbinsdale
           group: karmada
-          url: https://keiretsu-karmada-robbinsdale-apiserver.kieretsu.ts.net:5443/readyz
+          url: https://keiretsu-karmada-robbinsdale-apiserver.keiretsu.ts.net:5443/readyz
           interval: 60s
           client:
             insecure: true
