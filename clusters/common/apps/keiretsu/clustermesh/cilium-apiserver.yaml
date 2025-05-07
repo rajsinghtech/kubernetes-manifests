@@ -12,7 +12,6 @@ spec:
   - name: https
     port: 2379
     protocol: TCP
-    targetPort: 2379
 ---
 apiVersion: v1
 kind: Service
@@ -28,4 +27,3 @@ spec:
   - name: https
     port: 2379
     protocol: TCP
-    targetPort: 2379
