@@ -7,4 +7,3 @@ resources:
   - envoyproxy.yaml
   - issuer.yaml
   - secret.yaml
-  - karmada.yaml
