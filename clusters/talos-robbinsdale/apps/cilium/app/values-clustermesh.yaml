@@ -3,6 +3,8 @@ cluster:
   id: ${SITE_ID}
 clustermesh:
   enabled: true
+  maxConnectedClusters: 255
+  enableEndpointSliceSynchronization: true
   enableMCSAPISupport: true
   useAPIServer: true
   apiserver:
@@ -13,6 +15,7 @@ clustermesh:
       type: LoadBalancer
       loadBalancerClass: tailscale
     tls:
+      authMode: cluster
       auto:
         method: certmanager
         certManagerIssuerRef:
