@@ -23,6 +23,8 @@ spec:
   values:
     global:
       domain: argocd.${LOCATION}.${COMMON_DOMAIN}
+      logging:
+        level: debug
     configs:
       cm:
         url: https://argocd.${LOCATION}.${COMMON_DOMAIN}
