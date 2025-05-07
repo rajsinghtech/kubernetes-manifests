@@ -5,15 +5,15 @@ config:
 	talosctl gen config --with-secrets secrets.yaml --config-patch @patch/base.patch k8s.ottawa.local https://k8s.ottawa.local:6443 -f 
 	cp ./talosconfig ~/.talos/config
 	talosctl machineconfig patch controlplane.yaml --patch @patch/ms01-1.patch --output ms01-1.yaml
-	# talosctl machineconfig patch controlplane.yaml --patch @patch/ms01-2.patch --output ms01-2.yaml
+	talosctl machineconfig patch controlplane.yaml --patch @patch/ms01-2.patch --output ms01-2.yaml
 	# talosctl machineconfig patch controlplane.yaml --patch @patch/ms01-3.patch --output ms01-3.yaml
 	# talosctl machineconfig patch controlplane.yaml --patch @patch/ms01-4.patch --output ms01-4.yaml
 init:
 	${MAKE} config
-	talosctl apply-config --insecure -n ms01-1.local --file ms01-1.yaml 
-	# talosctl apply-config --insecure -n ms01-2.local --file ms01-2.yaml
-	# talosctl apply-config --insecure -n ms01-3.local --file ms01-3.yaml
-	# talosctl apply-config --insecure -n ms01-4.local --file ms01-4.yaml
+	talosctl apply-config --insecure -n ms01-1 --file ms01-1.yaml 
+	talosctl apply-config --insecure -n ms01-2 --file ms01-2.yaml
+	# talosctl apply-config --insecure -n ms01-3 --file ms01-3.yaml
+	# talosctl apply-config --insecure -n ms01-4 --file ms01-4.yaml
 	sleep 10
 	${MAKE} bootstrap
 
@@ -26,7 +26,7 @@ apply-proxmox:
 apply:
 	${MAKE} config
 	talosctl -e ms01-1 -n ms01-1 apply-config --file ms01-1.yaml
-	# talosctl -e ms01-2 -n ms01-2 apply-config --file ms01-2.yaml
+	talosctl -e ms01-2 -n ms01-2 apply-config --file ms01-2.yaml
 	# talosctl -e ms01-3 -n ms01-3 apply-config --file ms01-3.yaml
 	# talosctl -e ms01-4 -n ms01-4 apply-config --file ms01-4.yaml
 iso: 
