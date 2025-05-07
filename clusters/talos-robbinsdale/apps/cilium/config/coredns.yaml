@@ -34,5 +34,5 @@ data:
     ts.net {
       errors
       cache 30
-      forward . 10.0.159.20
+      forward . 10.69.69.50
     }
