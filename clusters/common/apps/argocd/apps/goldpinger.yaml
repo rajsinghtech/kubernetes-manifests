@@ -5,6 +5,7 @@ metadata:
   namespace: argocd
 spec:
   destination:
+    name: kubernetes-ottawa
     server: https://kubernetes-ottawa.default.svc.cluster.local
     namespace: goldpinger
   project: default
