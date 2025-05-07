@@ -23,7 +23,7 @@ kind: Service
 metadata:
   name: kubernetes-ottawa
   annotations:
-    tailscale.com/tailnet-fqdn: kubernetes-ottawa
+    tailscale.com/tailnet-fqdn: kubernetes-ottawa.keiretsu.ts.net
     tailscale.com/proxy-group: prod
 spec:
   externalName: placeholder   # any value - will be overwritten by operator
@@ -38,7 +38,7 @@ kind: Service
 metadata:
   name: kubernetes-robbinsdale
   annotations:
-    tailscale.com/tailnet-fqdn: kubernetes-robbinsdale
+    tailscale.com/tailnet-fqdn: kubernetes-robbinsdale.keiretsu.ts.net
     tailscale.com/proxy-group: prod
 spec:
   externalName: placeholder   # any value - will be overwritten by operator
