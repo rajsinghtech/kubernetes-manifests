@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    tailscale.com/hostname: "k8s.${LOCATION}"
+    tailscale.com/hostname: "k8s-${LOCATION}"
   labels:
     component: apiserver
     provider: kubernetes
