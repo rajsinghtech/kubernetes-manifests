@@ -2,6 +2,7 @@ clustermesh:
   enabled: true
   enableMCSAPISupport: true
   useAPIServer: true
-  service:
-    type: LoadBalancer
-    loadBalancerClass: tailscale
+  apiserver:
+    service:
+      type: LoadBalancer
+      loadBalancerClass: tailscale
