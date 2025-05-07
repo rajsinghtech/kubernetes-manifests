@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    tailscale.com/tailnet-fqdn: ottawa-cilium-clustermesh-apiserver.keiretsu.ts.net
+    tailscale.com/proxy-group: prod
+  name: ottawa-cilium-clustermesh-apiserver
+spec:
+  externalName: placeholder   # any value - will be overwritten by operator
+  type: ExternalName 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    tailscale.com/tailnet-fqdn: robbinsdale-cilium-clustermesh-apiserver.keiretsu.ts.net
+    tailscale.com/proxy-group: prod
+  name: robbinsdale-cilium-clustermesh-apiserver
+spec:
+  externalName: placeholder   # any value - will be overwritten by operator
+  type: ExternalName 
