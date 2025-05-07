@@ -1,3 +1,6 @@
+cluster:
+  name: ${LOCATION}
+  id: ${SITE_ID}
 clustermesh:
   enabled: true
   enableMCSAPISupport: true
