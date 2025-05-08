@@ -28,10 +28,10 @@ metadata:
 spec:
   externalName: placeholder   # any value - will be overwritten by operator
   type: ExternalName 
-  ports:
-  - name: https # any value
-    port: 443
-    protocol: TCP
+  # ports:
+  # - name: https # any value
+  #   port: 443
+  #   protocol: TCP
 ---
 apiVersion: v1
 kind: Service
@@ -42,8 +42,8 @@ metadata:
     # tailscale.com/proxy-group: tailscale-egress-proxy
 spec:
   externalName: placeholder   # any value - will be overwritten by operator
-  type: ExternalName 
-  ports:
-  - name: https # any value
-    port: 443
-    protocol: TCP 
+  # type: ExternalName 
+  # ports:
+  # - name: https # any value
+  #   port: 443
+  #   protocol: TCP 
