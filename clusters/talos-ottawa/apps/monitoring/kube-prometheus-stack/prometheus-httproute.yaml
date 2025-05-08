@@ -7,10 +7,9 @@ spec:
     - group: gateway.networking.k8s.io
       kind: Gateway
       name: ts # Assuming internal access only
-      namespace: envoy-gateway-system
+      namespace: keiretsu
   hostnames:
-    - "prometheus.rajsingh.info"
-    - "prometheus.lukehouge.com"
+    - "prometheus.${LOCATION}.${COMMON_DOMAIN}"
     # Add other hostnames if needed, e.g., prometheus.lukehouge.com
   rules:
     - backendRefs:

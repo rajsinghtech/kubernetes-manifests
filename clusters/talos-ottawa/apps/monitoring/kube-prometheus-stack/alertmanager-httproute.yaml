@@ -7,10 +7,9 @@ spec:
     - group: gateway.networking.k8s.io
       kind: Gateway
       name: ts # Assuming internal access only for now
-      namespace: envoy-gateway-system
+      namespace: keiretsu
   hostnames:
-    - "alertmanager.rajsingh.info"
-    - "alertmanager.lukehouge.com"
+    - "alertmanager.${LOCATION}.${COMMON_DOMAIN}"
     # Add other hostnames if needed, e.g., alertmanager.lukehouge.com
   rules:
     - backendRefs:
