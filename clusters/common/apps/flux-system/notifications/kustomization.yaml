@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
   - ./reciever.yaml
   - ./secret.yaml
+  - ./ingress.yaml
