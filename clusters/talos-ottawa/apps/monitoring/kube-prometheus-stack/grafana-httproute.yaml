@@ -11,10 +11,9 @@ spec:
     - group: gateway.networking.k8s.io
       kind: Gateway
       name: ts
-      namespace: envoy-gateway-system
+      namespace: keiretsu
   hostnames:
-    - "grafana.rajsingh.info"
-    - "grafana.lukehouge.com"
+    - "grafana.${LOCATION}.${COMMON_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""
