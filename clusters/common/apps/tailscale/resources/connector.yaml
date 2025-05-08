@@ -3,7 +3,7 @@ kind: Connector
 metadata:
   name: &name k8s-${LOCATION}-entrypoint
 spec:
-  proxyClass: prod
+  proxyClass: tailscale-egress-proxy
   tags:
     - tag:k8s
     - tag:${LOCATION}
