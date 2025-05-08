@@ -24,14 +24,14 @@ metadata:
   name: kubernetes-ottawa
   annotations:
     tailscale.com/tailnet-fqdn: kubernetes-ottawa.keiretsu.ts.net
-    # tailscale.com/proxy-group: tailscale-egress-proxy
+    tailscale.com/proxy-group: tailscale-egress-proxy
 spec:
   externalName: placeholder   # any value - will be overwritten by operator
   type: ExternalName 
-  # ports:
-  # - name: https # any value
-  #   port: 443
-  #   protocol: TCP
+  ports:
+  - name: https # any value
+    port: 443
+    protocol: TCP
 ---
 apiVersion: v1
 kind: Service
@@ -39,11 +39,11 @@ metadata:
   name: kubernetes-robbinsdale
   annotations:
     tailscale.com/tailnet-fqdn: kubernetes-robbinsdale.keiretsu.ts.net
-    # tailscale.com/proxy-group: tailscale-egress-proxy
+    tailscale.com/proxy-group: tailscale-egress-proxy
 spec:
   externalName: placeholder   # any value - will be overwritten by operator
-  # type: ExternalName 
-  # ports:
-  # - name: https # any value
-  #   port: 443
-  #   protocol: TCP 
+  type: ExternalName 
+  ports:
+  - name: https # any value
+    port: 443
+    protocol: TCP 
