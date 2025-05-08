@@ -1,7 +1,7 @@
 apiVersion: tailscale.com/v1alpha1
 kind: ProxyClass
 metadata:
-  name: prod
+  name: tailscale-egress-proxy
 spec:
   tailscale:
     acceptRoutes: true
