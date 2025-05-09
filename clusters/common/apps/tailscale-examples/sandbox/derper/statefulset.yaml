@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: derper
+  namespace: tailscale
+  labels:
+    app.kubernetes.io/name: derper
+spec:
+  serviceName: "derper"
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: derper
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: derper
+    spec:
+      containers:
+      - name: derper
+        image: ghcr.io/erisa/ts-derper:latest
+        envFrom:
+        - configMapRef:
+            name: derper-env
+        ports:
+        - containerPort: 80  
+          protocol: TCP
+        - containerPort: 443 
+          protocol: TCP
+        - containerPort: 3478 
+          protocol: UDP
+        volumeMounts:
+        - name: lib-modules
+          mountPath: /lib/modules
+          readOnly: true
+        - name: certs
+          mountPath: /root/derper/${TS_DERP_HOSTNAME}
+        - name: tailscale-state
+          mountPath: /var/lib/tailscale
+        - name: dev-net-tun
+          mountPath: /dev/net/tun
+        # securityContext:
+        #   capabilities:
+        #     add:
+        #       - NET_ADMIN
+        #       - NET_RAW
+      volumes:
+      - name: lib-modules
+        hostPath:
+          path: /lib/modules
+          type: Directory
+      - name: certs
+        hostPath:
+          path: /path/to/certs  
+          type: Directory
+      - name: tailscale-state
+        emptyDir: {} 
+      - name: dev-net-tun
+        hostPath:
+          path: /dev/net/tun
+          type: CharDevice
+      hostNetwork: false
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
