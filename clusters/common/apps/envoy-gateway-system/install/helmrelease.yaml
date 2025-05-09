@@ -16,9 +16,7 @@ spec:
         namespace: flux-system 
       interval: 1m
   releaseName: eg
-  # install:
-  #   createNamespace: true # Let Flux create the namespace if it doesn't exist
-  values: # Optional: Add custom values here
+  values: 
     config:
       envoyGateway:
         extensionApis:
