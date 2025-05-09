@@ -5,7 +5,7 @@ metadata:
 spec:
   endpoints:
     - fqdn:
-        hostname: kubernetes-ottawa
+        hostname: kubernetes-ottawa.default
         port: 443
 ---
 apiVersion: gateway.networking.k8s.io/v1
@@ -43,7 +43,7 @@ metadata:
 spec:
   endpoints:
     - fqdn:
-        hostname: kubernetes-robbinsdale
+        hostname: kubernetes-robbinsdale.default
         port: 443
 ---
 apiVersion: gateway.networking.k8s.io/v1
