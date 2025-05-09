@@ -1,11 +1,11 @@
-# apiVersion: networking.k8s.io/v1
-# kind: Ingress
-# metadata:
-#   name: kubernetes-${LOCATION}
-# spec:
-#   defaultBackend:
-#     service:
-#       name: kubernetes-ottawa
-#       port:
-#         name: https
-#   ingressClassName: tailscale
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kubernetes-${LOCATION}
+spec:
+  defaultBackend:
+    service:
+      name: kubernetes-${LOCATION}
+      port:
+        name: https
+  ingressClassName: tailscale
