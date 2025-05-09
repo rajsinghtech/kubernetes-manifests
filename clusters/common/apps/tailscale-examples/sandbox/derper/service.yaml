@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: derper
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: derp.${LOCATION}.${COMMON_DOMAIN}
+spec:
+  ports:
+  - name: derp-http
+    port: 80
+    targetPort: 80
+  - name: derp-https
+    port: 443
+    targetPort: 443
+  - name: derp-stun
+    port: 3478
+    targetPort: 3478
+  selector:
+    app: derper

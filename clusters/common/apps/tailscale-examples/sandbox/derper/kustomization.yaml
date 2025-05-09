@@ -3,4 +3,6 @@ kind: Kustomization
 
 resources:
   - statefulset.yaml
-
+  - service.yaml
+  - certificate.yaml
+  - secret.yaml
