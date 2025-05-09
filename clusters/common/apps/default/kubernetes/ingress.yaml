@@ -5,7 +5,7 @@ metadata:
 spec:
   defaultBackend:
     service:
-      name: kubernetes-${LOCATION}
+      name: kubernetes
       port:
         name: https
   ingressClassName: tailscale
