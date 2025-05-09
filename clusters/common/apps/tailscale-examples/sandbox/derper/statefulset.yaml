@@ -6,7 +6,6 @@ metadata:
   labels:
     app.kubernetes.io/name: derper
 spec:
-  serviceName: "derper"
   replicas: 1
   selector:
     matchLabels:
@@ -19,46 +18,54 @@ spec:
       containers:
       - name: derper
         image: ghcr.io/erisa/ts-derper:latest
-        envFrom:
-        - configMapRef:
-            name: derper-env
+        env:
+        - name: TS_DERP_HOSTNAME
+          value: "derp.${LOCATION}.${COMMON_DOMAIN}"
+        - name: TS_DERP_VERIFY_CLIENTS
+          value: "true"
+        - name: TS_DERP_CERTMODE
+          value: "letsencrypt"
+        - name: TS_DERP_HTTP_PORT
+          value: "80"
+        - name: TS_DERP_LISTEN_PORT
+          value: "443"
+        - name: TS_DERP_STUN_PORT
+          value: "3478"
+        - name: TS_RUN_TAILSCALE
+          value: "true"
+        - name: TS_AUTHKEY
+          valueFrom:
+            secretKeyRef:
+              name: derper
+              key: TS_AUTHKEY
+        - name: TS_HOSTNAME
+          value: "derp-${LOCATION}"
+        - name: TS_USERSPACE
+          value: "false"
+        - name: TS_ACCEPT_DNS
+          value: "false"
+        - name: TS_STATE_DIR
+          value: "/var/lib/tailscale"
+        - name: TS_AUTH_ONCE
+          value: "true"
         ports:
-        - containerPort: 80  
+        - containerPort: 80
           protocol: TCP
-        - containerPort: 443 
+        - containerPort: 443
           protocol: TCP
-        - containerPort: 3478 
+        - containerPort: 3478
           protocol: UDP
         volumeMounts:
-        - name: lib-modules
-          mountPath: /lib/modules
-          readOnly: true
         - name: certs
           mountPath: /root/derper/${TS_DERP_HOSTNAME}
         - name: tailscale-state
           mountPath: /var/lib/tailscale
-        - name: dev-net-tun
-          mountPath: /dev/net/tun
-        # securityContext:
-        #   capabilities:
-        #     add:
-        #       - NET_ADMIN
-        #       - NET_RAW
       volumes:
-      - name: lib-modules
-        hostPath:
-          path: /lib/modules
-          type: Directory
       - name: certs
-        hostPath:
-          path: /path/to/certs  
-          type: Directory
+        secret:
+          secretName: common-derper-tls
       - name: tailscale-state
-        emptyDir: {} 
-      - name: dev-net-tun
-        hostPath:
-          path: /dev/net/tun
-          type: CharDevice
+        emptyDir: {}
       hostNetwork: false
       dnsPolicy: ClusterFirst
       restartPolicy: Always
