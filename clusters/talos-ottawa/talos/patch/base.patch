@@ -17,6 +17,7 @@ cluster:
   apiServer:
     certSANs:
     - 192.168.169.25
+    - default-kubernetes-ottawa-ingress.keiretsu.ts.net
     - kubernetes-ottawa.keiretsu.ts.net
     - kubernetes.ottawa.rajsingh.info
     - kubernetes-ottawa.default.svc.cluster.local

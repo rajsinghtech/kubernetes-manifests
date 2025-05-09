@@ -24,7 +24,7 @@ kind: Service
 metadata:
   name: kubernetes-ottawa
   annotations:
-    tailscale.com/tailnet-fqdn: kubernetes-ottawa.keiretsu.ts.net
+    tailscale.com/tailnet-fqdn: default-kubernetes-ottawa-ingress.keiretsu.ts.net
     tailscale.com/proxy-group: tailscale-egress-proxy
 spec:
   externalName: placeholder   # any value - will be overwritten by operator
@@ -39,7 +39,7 @@ kind: Service
 metadata:
   name: kubernetes-robbinsdale
   annotations:
-    tailscale.com/tailnet-fqdn: kubernetes-robbinsdale.keiretsu.ts.net
+    tailscale.com/tailnet-fqdn: default-kubernetes-robbinsdale-ingress.keiretsu.ts.net
     tailscale.com/proxy-group: tailscale-egress-proxy
 spec:
   externalName: placeholder   # any value - will be overwritten by operator
