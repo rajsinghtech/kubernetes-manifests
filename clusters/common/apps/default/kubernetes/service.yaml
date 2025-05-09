@@ -3,6 +3,7 @@ kind: Service
 metadata:
   annotations:
     tailscale.com/hostname: "kubernetes-${LOCATION}"
+    kustomize.toolkit.fluxcd.io/prune: disabled 
   labels:
     component: apiserver
     provider: kubernetes
@@ -15,8 +16,8 @@ spec:
     protocol: TCP
     targetPort: 6443
   sessionAffinity: None
-  type: LoadBalancer
-  loadBalancerClass: tailscale
+  type: ClusterIP
+  # loadBalancerClass: tailscale
 ---
 apiVersion: v1
 kind: Service
