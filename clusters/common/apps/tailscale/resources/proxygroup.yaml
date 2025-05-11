@@ -8,4 +8,4 @@ spec:
   #   - egress
   proxyClass: common
   type: egress
-  replicas: 3
+  replicas: 1
