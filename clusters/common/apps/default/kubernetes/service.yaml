@@ -25,7 +25,7 @@ metadata:
   name: kubernetes-ottawa
   annotations:
     tailscale.com/tailnet-fqdn: kubernetes-ottawa.keiretsu.ts.net
-    tailscale.com/proxy-group: tailscale-egress-proxy
+    tailscale.com/proxy-group: common-egress-proxy
 spec:
   externalName: placeholder   # any value - will be overwritten by operator
   type: ExternalName 
@@ -40,7 +40,7 @@ metadata:
   name: kubernetes-robbinsdale
   annotations:
     tailscale.com/tailnet-fqdn: kubernetes-robbinsdale.keiretsu.ts.net
-    tailscale.com/proxy-group: tailscale-egress-proxy
+    tailscale.com/proxy-group: common-egress-proxy
 spec:
   externalName: placeholder   # any value - will be overwritten by operator
   type: ExternalName 
