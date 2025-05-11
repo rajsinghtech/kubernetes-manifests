@@ -65,7 +65,7 @@ spec:
                 fieldRef:
                   fieldPath: status.podIP
             - name: HTTP_TARGETS
-              value: "http://goldpinger-ottawa:8080 http://goldpinger-robbinsdale:8080"
+              value: "http://goldpinger-ottawa:8080 http://goldpinger-robbinsdale:8080 "
             - name: TCP_TARGETS
               value: "goldpinger-ottawa.default.svc.cluster.local:8080 goldpinger-robbinsdale.default.svc.cluster.local:8080"
           image: "docker.io/bloomberg/goldpinger:3.10.2"

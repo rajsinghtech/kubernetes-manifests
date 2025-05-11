@@ -3,6 +3,9 @@ kind: ProxyGroup
 metadata:
   name: common-egress-proxy
 spec:
+  hostnamePrefix: ${LOCATION}-
+  # tags:
+  #   - egress
   proxyClass: common
   type: egress
   replicas: 3
