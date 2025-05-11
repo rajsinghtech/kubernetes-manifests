@@ -51,9 +51,7 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: status.podIP
-            - name: HTTP_TARGETS
-              value: http://goldpinger-cluster1.default.svc.cluster1.local:8080 http://goldpinger-cluster2.default.svc.cluster2.local:8080 http://goldpinger-cluster3.default.svc.cluster3.local:8080
-          image: "docker.io/bloomberg/goldpinger:latest"
+          image: "docker.io/bloomberg/goldpinger:v3.0.0"
           imagePullPolicy: Always
           securityContext:
             allowPrivilegeEscalation: false
@@ -83,7 +81,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: goldpinger-cluster3
+  name: goldpinger
   namespace: default
   labels:
     app: goldpinger
@@ -96,15 +94,26 @@ spec:
     app: goldpinger
   loadBalancerClass: tailscale
 ---
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
 metadata:
-  name: default
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: view
-subjects:
-  - kind: ServiceAccount
-    name: goldpinger-serviceaccount
-    namespace: default
+  name: goldpinger
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: ts
+      namespace: keiretsu
+  hostnames:
+    - "goldpinger.${LOCATION}.${COMMON_DOMAIN}"
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: hubble-ui
+          port: 80
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: / 
