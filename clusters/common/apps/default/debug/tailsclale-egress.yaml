@@ -1,29 +1,29 @@
 apiVersion: v1
 kind: Service
 metadata:
+  name: ottawa-goldpinger
   annotations:
-    tailscale.com/tailnet-fqdn: ottawa-cilium-clustermesh-apiserver.keiretsu.ts.net
+    tailscale.com/tailnet-fqdn: default-goldpinger-ottawa-ingress.keiretsu.ts.net
     tailscale.com/proxy-group: ${LOCATION}-egress-proxy
-  name: ottawa-cilium-clustermesh-apiserver
 spec:
   externalName: placeholder   # any value - will be overwritten by operator
   type: ExternalName 
   ports:
   - name: https # any value
-    port: 2379
+    port: 443
     protocol: TCP
 ---
 apiVersion: v1
 kind: Service
 metadata:
+  name: goldp-robbinsdale
   annotations:
-    tailscale.com/tailnet-fqdn: robbinsdale-cilium-clustermesh-apiserver.keiretsu.ts.net
+    tailscale.com/tailnet-fqdn: default-goldp-robbinsdale-ingress.keiretsu.ts.net
     tailscale.com/proxy-group: ${LOCATION}-egress-proxy
-  name: robbinsdale-cilium-clustermesh-apiserver
 spec:
   externalName: placeholder   # any value - will be overwritten by operator
   type: ExternalName 
   ports:
   - name: https # any value
-    port: 2379
+    port: 443
     protocol: TCP 
