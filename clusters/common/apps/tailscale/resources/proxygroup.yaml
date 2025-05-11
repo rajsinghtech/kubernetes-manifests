@@ -1,7 +1,7 @@
 apiVersion: tailscale.com/v1alpha1
 kind: ProxyGroup
 metadata:
-  name: ${LOCATION}-egress-proxy
+  name: common-egress-proxy
 spec:
   proxyClass: common
   type: egress

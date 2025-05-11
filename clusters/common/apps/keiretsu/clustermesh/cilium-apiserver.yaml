@@ -3,7 +3,7 @@ kind: Service
 metadata:
   annotations:
     tailscale.com/tailnet-fqdn: ottawa-cilium-clustermesh-apiserver.keiretsu.ts.net
-    tailscale.com/proxy-group: ${LOCATION}-egress-proxy
+    tailscale.com/proxy-group: common-egress-proxy
   name: ottawa-cilium-clustermesh-apiserver
 spec:
   externalName: placeholder   # any value - will be overwritten by operator
@@ -18,7 +18,7 @@ kind: Service
 metadata:
   annotations:
     tailscale.com/tailnet-fqdn: robbinsdale-cilium-clustermesh-apiserver.keiretsu.ts.net
-    tailscale.com/proxy-group: ${LOCATION}-egress-proxy
+    tailscale.com/proxy-group: common-egress-proxy
   name: robbinsdale-cilium-clustermesh-apiserver
 spec:
   externalName: placeholder   # any value - will be overwritten by operator
