@@ -66,8 +66,8 @@ spec:
                   fieldPath: status.podIP
             - name: HTTP_TARGETS
               value: "http://ottowa-goldpinger:8080 http://robbinsdale-goldpinger:8080"
-            - name: TCP_TARGETS
-              value: "ottowa-goldpinger:8080 robbinsdale-goldpinger:8080"
+            # - name: TCP_TARGETS
+            #   value: "ottowa-goldpinger:8080 robbinsdale-goldpinger:8080"
           image: "docker.io/bloomberg/goldpinger:v3.0.0"
           imagePullPolicy: Always
           securityContext:
