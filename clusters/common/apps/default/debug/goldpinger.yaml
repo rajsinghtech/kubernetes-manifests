@@ -68,7 +68,7 @@ spec:
               value: "http://ottowa-goldpinger:8080 http://robbinsdale-goldpinger:8080"
             - name: TCP_TARGETS
               value: "ottowa-goldpinger.default.svc.cluster.local:8080 robbinsdale-goldpinger.default.svc.cluster.local:8080"
-          image: "docker.io/bloomberg/goldpinger:v3.0.0"
+          image: "docker.io/bloomberg/goldpinger:v3.10.2"
           imagePullPolicy: Always
           securityContext:
             allowPrivilegeEscalation: false
