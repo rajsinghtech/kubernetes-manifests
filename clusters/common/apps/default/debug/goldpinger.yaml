@@ -102,7 +102,7 @@ metadata:
   namespace: default
   labels:
     app: goldpinger
-    tailscale.com/proxy-class: "common"
+    # tailscale.com/proxy-class: "common"
   annotations:
     tailscale.com/hostname: "goldpinger-${LOCATION}"
 spec:
