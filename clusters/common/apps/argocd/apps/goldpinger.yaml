@@ -6,7 +6,7 @@ metadata:
 spec:
   destination:
     server: https://kubernetes-ottawa.keiretsu.ts.net 
-    namespace: goldpinger
+    namespace: default
   project: default
   source:
     path: clusters/common/apps/argocd/app
