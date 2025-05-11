@@ -18,33 +18,33 @@ spec:
   sessionAffinity: None
   type: ClusterIP
   # loadBalancerClass: tailscale
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: kubernetes-ottawa
-#   annotations:
-#     tailscale.com/tailnet-fqdn: default-kubernetes-ottawa-ingress.keiretsu.ts.net
-#     # tailscale.com/proxy-group: common-egress-proxy
-# spec:
-#   externalName: placeholder   # any value - will be overwritten by operator
-#   type: ExternalName 
-#   ports:
-#   - name: https # any value
-#     port: 443
-#     protocol: TCP
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: kubernetes-robbinsdale
-#   annotations:
-#     tailscale.com/tailnet-fqdn: default-kubernetes-robbinsdale-ingress.keiretsu.ts.net
-#     # tailscale.com/proxy-group: common-egress-proxy
-# spec:
-#   externalName: placeholder   # any value - will be overwritten by operator
-#   type: ExternalName 
-#   ports:
-#   - name: https # any value
-#     port: 443
-#     protocol: TCP 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubernetes-ottawa
+  annotations:
+    tailscale.com/tailnet-fqdn: default-kubernetes-ottawa-ingress.keiretsu.ts.net
+    # tailscale.com/proxy-group: common-egress-proxy
+spec:
+  externalName: placeholder   # any value - will be overwritten by operator
+  type: ExternalName 
+  ports:
+  - name: https # any value
+    port: 443
+    protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubernetes-robbinsdale
+  annotations:
+    tailscale.com/tailnet-fqdn: default-kubernetes-robbinsdale-ingress.keiretsu.ts.net
+    # tailscale.com/proxy-group: common-egress-proxy
+spec:
+  externalName: placeholder   # any value - will be overwritten by operator
+  type: ExternalName 
+  ports:
+  - name: https # any value
+    port: 443
+    protocol: TCP 
