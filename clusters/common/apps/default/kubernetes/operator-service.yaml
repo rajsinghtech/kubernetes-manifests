@@ -5,7 +5,7 @@ metadata:
   name: ottawa-k8s-operator
   annotations:
     tailscale.com/tailnet-fqdn: ottawa-k8s-operator.keiretsu.ts.net
-    # tailscale.com/proxy-group: common-egress-proxy
+    tailscale.com/proxy-group: common-egress-proxy
 spec:
   externalName: placeholder   # any value - will be overwritten by operator
   type: ExternalName 
@@ -20,7 +20,7 @@ metadata:
   name: robbinsdale-k8s-operator
   annotations:
     tailscale.com/tailnet-fqdn: robbinsdale-k8s-operator.keiretsu.ts.net
-    # tailscale.com/proxy-group: common-egress-proxy
+    tailscale.com/proxy-group: common-egress-proxy
 spec:
   externalName: placeholder   # any value - will be overwritten by operator
   type: ExternalName 
