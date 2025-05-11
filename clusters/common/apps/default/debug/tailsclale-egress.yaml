@@ -3,27 +3,27 @@ kind: Service
 metadata:
   name: ottawa-goldpinger
   annotations:
-    tailscale.com/tailnet-fqdn: default-goldpinger-ottawa-ingress.keiretsu.ts.net
+    tailscale.com/tailnet-fqdn: ottawa-goldpinger.keiretsu.ts.net
     tailscale.com/proxy-group: ${LOCATION}-egress-proxy
 spec:
   externalName: placeholder   # any value - will be overwritten by operator
   type: ExternalName 
   ports:
-  - name: https # any value
-    port: 443
+  - name: http # any value
+    port: 8080
     protocol: TCP
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: goldp-robbinsdale
+  name: robbinsdale-goldpinger
   annotations:
-    tailscale.com/tailnet-fqdn: default-goldp-robbinsdale-ingress.keiretsu.ts.net
+    tailscale.com/tailnet-fqdn: robbinsdale-goldpinger.keiretsu.ts.net
     tailscale.com/proxy-group: ${LOCATION}-egress-proxy
 spec:
   externalName: placeholder   # any value - will be overwritten by operator
   type: ExternalName 
   ports:
-  - name: https # any value
-    port: 443
+  - name: http # any value
+    port: 8080
     protocol: TCP 
