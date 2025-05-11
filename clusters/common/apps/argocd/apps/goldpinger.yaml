@@ -1,36 +1,15 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: goldpinger-ottawa
+  name: argocd-app-ottawa
   namespace: argocd
 spec:
   destination:
-    server: https://kubernetes-ottawa.default.svc.cluster.local
+    server: https://kubernetes-ottawa.keiretsu.ts.net 
     namespace: goldpinger
   project: default
   source:
-    path: clusters/common/apps/goldpinger/app
-    repoURL: https://github.com/rajsinghtech/kubernetes-manifests
-    targetRevision: HEAD
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: false
-    syncOptions:
-      - CreateNamespace=true
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: goldpinger-robbinsdale
-  namespace: argocd
-spec:
-  destination:
-    server: https://kubernetes-robbinsdale.default.svc.cluster.local
-    namespace: goldpinger
-  project: default
-  source:
-    path: clusters/common/apps/goldpinger/app
+    path: clusters/common/apps/argocd/app
     repoURL: https://github.com/rajsinghtech/kubernetes-manifests
     targetRevision: HEAD
   syncPolicy:
