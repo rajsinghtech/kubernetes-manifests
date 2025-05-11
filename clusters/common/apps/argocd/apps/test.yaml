@@ -1,0 +1,41 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd-ottawa
+  namespace: argocd
+spec:
+  destination:
+    server: https://kubernetes-ottawa.keiretsu.ts.net 
+    namespace: default
+  project: default
+  source:
+    path: clusters/common/apps/argocd/test
+    repoURL: https://github.com/rajsinghtech/kubernetes-manifests
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: false
+    syncOptions:
+      - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd-robbinsdale
+  namespace: argocd
+spec:
+  destination:
+    server: https://kubernetes-robbinsdale.keiretsu.ts.net 
+    namespace: default
+  project: default
+  source:
+    path: clusters/common/apps/argocd/test
+    repoURL: https://github.com/rajsinghtech/kubernetes-manifests
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: false
+    syncOptions:
+      - CreateNamespace=true
