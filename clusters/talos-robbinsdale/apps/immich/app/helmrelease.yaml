@@ -22,7 +22,7 @@ spec:
       retries: 3
   values:
     image:
-      tag: v1.126.1
+      tag: v1.132.3
     envFrom:
       - secretRef:
           name: immich-postgres-user
