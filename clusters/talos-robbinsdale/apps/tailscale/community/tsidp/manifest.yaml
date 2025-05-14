@@ -15,6 +15,10 @@ rules:
   resources: ["secrets"]
   resourceNames: ["tsidp-state"] # Name of the secret tsidp will use for its state
   verbs: ["get", "update", "patch", "create"] # "create" is needed if the secret doesn't exist
+- apiGroups: [""]
+  resources: ["secrets"]
+  # No resourceNames, so it applies to all secrets in the namespace for these verbs
+  verbs: ["create", "get", "list", "watch"] # Allows creating/getting/listing/watching any secret
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -52,7 +56,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: tsidp
-        image: your-repo/tsidp:latest # !!! REPLACE with your tsidp image !!!
+        image: quay.io/rajsinghcpre/tsidp:rajsinghtech_tsidp-kubestore
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 443
@@ -77,11 +81,6 @@ spec:
         volumeMounts:
         - name: tsidp-data
           mountPath: /data
-  # volumeClaimTemplates:
-  # - metadata:
-  #     name: tsidp-data
-  #   spec:
-  #     accessModes: [ "ReadWriteOnce" ]
-  #     resources:
-  #       requests:
-  #         storage: 1Gi # Small PVC for oidc-key.json and funnel client data
+      volumes:
+      - name: tsidp-data
+        emptyDir: {}
