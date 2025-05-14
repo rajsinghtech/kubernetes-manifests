@@ -7,16 +7,3 @@ spec:
   tags:
     - "tag:k8s-recorder"
     - "tag:${LOCATION}"
----
-apiVersion: tailscale.com/v1alpha1
-kind: Recorder
-metadata:
-  name: tsidp
-spec:
-  enableUI: true
-  statefulSet:
-    pod:
-      container:
-        image: quay.io/rajsinghcpre/tsidp:rajsinghtech_tsidp-kubestore
-  tags:
-    - "tag:${LOCATION}"

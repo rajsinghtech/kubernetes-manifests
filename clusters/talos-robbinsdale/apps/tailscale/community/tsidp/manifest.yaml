@@ -1,0 +1,101 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: tsidp-sa
+  namespace: tailscale
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: tailscale
+  name: tsidp-state-manager
+rules:
+- apiGroups: [""]
+  resources: ["secrets"]
+  resourceNames: ["tsidp-state"] # Name of the secret tsidp will use for its state
+  verbs: ["get", "update", "patch", "create"] # "create" is needed if the secret doesn't exist
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: tsidp-sa-state-manager-binding
+  namespace: tailscale
+subjects:
+- kind: ServiceAccount
+  name: tsidp-sa
+  namespace: tailscale
+roleRef:
+  kind: Role
+  name: tsidp-state-manager
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: tsidp
+  namespace: tailscale
+  labels:
+    app: tsidp
+spec:
+  replicas: 1 # For HA, key/client data management needs more thought
+  serviceName: "tsidp"
+  selector:
+    matchLabels:
+      app: tsidp
+  template:
+    metadata:
+      labels:
+        app: tsidp
+    spec:
+      serviceAccountName: tsidp-sa
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: tsidp
+        image: your-repo/tsidp:latest # !!! REPLACE with your tsidp image !!!
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 443
+          name: https
+        env:
+        - name: TS_AUTHKEY
+          valueFrom:
+            secretKeyRef:
+              name: tailscale-authkeys
+              key: TS_AUTHKEY
+        - name: TAILSCALE_USE_WIP_CODE # Required by tsidp as of now
+          value: "1"
+        - name: TS_STATE # Using environment variable to set state
+          value: "kube:tsidp-state"
+        args:
+        - "-hostname=tsidp" # Or your desired MagicDNS hostname
+        - "-port=443"
+        - "-dir=/data"      # Directory for oidc-key.json, oidc-funnel-clients.json
+        # - "-state=kube:tsidp-state" # Alternatively, use flag; env var above takes precedence
+        # - "-funnel" # Uncomment if you want to enable Funnel
+        # - "-verbose" # Uncomment for more logs
+        volumeMounts:
+        - name: tsidp-data
+          mountPath: /data
+        readinessProbe:
+          httpGet:
+            path: / # Basic readiness check, assuming tsidp serves something on /
+            port: https
+            scheme: HTTPS
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /
+            port: https
+            scheme: HTTPS
+          initialDelaySeconds: 30
+          periodSeconds: 20
+  # volumeClaimTemplates:
+  # - metadata:
+  #     name: tsidp-data
+  #   spec:
+  #     accessModes: [ "ReadWriteOnce" ]
+  #     resources:
+  #       requests:
+  #         storage: 1Gi # Small PVC for oidc-key.json and funnel client data
