@@ -77,20 +77,6 @@ spec:
         volumeMounts:
         - name: tsidp-data
           mountPath: /data
-        readinessProbe:
-          httpGet:
-            path: / # Basic readiness check, assuming tsidp serves something on /
-            port: https
-            scheme: HTTPS
-          initialDelaySeconds: 10
-          periodSeconds: 10
-        livenessProbe:
-          httpGet:
-            path: /
-            port: https
-            scheme: HTTPS
-          initialDelaySeconds: 30
-          periodSeconds: 20
   # volumeClaimTemplates:
   # - metadata:
   #     name: tsidp-data
