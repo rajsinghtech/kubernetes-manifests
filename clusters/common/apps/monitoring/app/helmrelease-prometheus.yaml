@@ -547,7 +547,7 @@ spec:
             - list
             - watch
     prometheus-node-exporter:
-      enabled: false
+      enabled: true
     server:
       fullnameOverride: prometheus
       persistentVolume:
@@ -559,6 +559,9 @@ spec:
       service:
         # use LoadBalancer to expose prometheus
         type: LoadBalancer
+        loadBalancerClass: tailscale
+        annotations:
+          tailscale.com/hostname: "prometheus.${LOCATION}.keiretsu.ts.net
       # use dockerhub
       image:
         repository: prom/prometheus
