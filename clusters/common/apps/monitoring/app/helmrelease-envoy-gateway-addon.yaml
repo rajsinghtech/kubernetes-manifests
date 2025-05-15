@@ -1,0 +1,32 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: envoy-gateway-addon
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: gateway-addons-helm
+      version: v0.0.0-latest 
+      sourceRef:
+        kind: HelmRepository
+        name: envoy-gateway
+        namespace: flux-system 
+      interval: 1m
+  releaseName: eg
+  values: 
+    grafana:
+      enabled: false
+    prometheus:
+      enabled: false
+    loki:
+      enabled: false
+    alloy:
+      enabled: false
+    fluent-bit:
+      enabled: false
+    opentelemetry-collector:
+      enabled: false
+    tempo:
+      enabled: false
