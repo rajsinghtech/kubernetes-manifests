@@ -15,11 +15,11 @@ resources:
   - ./csi-driver-smb.yaml
   - ./descheduler.yaml
   - ./emqx.yaml
+  - ./envoy-gateway.yaml
   - ./external-dns.yaml
   - ./external-secrets.yaml
-  - ./minio-operator.yaml
+  - ./fluent.yaml
   - ./grafana.yaml
-  - ./open-webui.yaml
   - ./harbor.yaml
   - ./immich.yaml
   - ./ingress-nginx.yaml
@@ -31,12 +31,15 @@ resources:
   - ./kubernetes-dashboard.yaml
   - ./kyverno.yaml
   - ./metrics-server.yaml
+  - ./minio-operator.yaml
   - ./nextcloud.yaml
   - ./node-feature-discovery.yaml
   - ./ollama.yaml
+  - ./open-webui.yaml
   - ./opencost.yaml
   - ./openebs.yaml
   - ./openspeedtest.yaml
+  - ./opentelemetry.yaml
   - ./pihole.yaml
   - ./piraeus-charts.yaml
   - ./plane.yaml
@@ -54,4 +57,3 @@ resources:
   - ./twin.yaml
   - ./weave-gitops.yaml
   - ./wger.yaml
-  - ./envoy-gateway.yaml

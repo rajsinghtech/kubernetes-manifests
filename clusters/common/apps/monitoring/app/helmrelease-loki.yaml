@@ -1,0 +1,52 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: loki
+  namespace: default # Or a more specific namespace if needed
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: loki
+      version: "4.8.0"
+      sourceRef:
+        kind: HelmRepository
+        name: grafana
+        namespace: flux-system
+  values:
+    # Running a single replica of Loki
+    ## https://grafana.com/docs/loki/latest/setup/install/helm/install-monolithic/
+    deploymentMode: SingleBinary
+    fullnameOverride: loki
+    loki:
+      auth_enabled: false
+      compactorAddress: "loki"
+      memberlist: "loki-memberlist"
+      commonConfig:
+        replication_factor: 1
+      storage:
+        type: "filesystem"
+      rulerConfig:
+        storage:
+          type: "local"
+    test:
+      enabled: false
+    singleBinary:
+      replicas: 1
+    read:
+      replicas: 0
+    backend:
+      replicas: 0
+    write:
+      replicas: 0
+    monitoring:
+      lokiCanary:
+        enabled: false
+      selfMonitoring:
+        enabled: false
+        grafanaAgent:
+          installOperator: false
+    # Disable gateway.
+    gateway:
+      enabled: false 
