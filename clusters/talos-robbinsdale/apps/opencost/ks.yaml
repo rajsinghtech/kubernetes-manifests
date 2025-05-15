@@ -10,7 +10,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: kube-prometheus-stack # Depends on Prometheus
+    - name: monitoring
   path: ./clusters/${CLUSTER_NAME}/apps/opencost/app
   prune: true
   sourceRef:
