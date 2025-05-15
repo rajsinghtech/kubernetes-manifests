@@ -87,6 +87,14 @@ spec:
             editable: true
             options:
               path: /var/lib/grafana/dashboards/kubernetes
+          - name: "logs"
+            orgId: 1
+            folder: "logs"
+            type: file
+            disableDeletion: false
+            editable: true
+            options:
+              path: /var/lib/grafana/dashboards/logs
           - name: "volsync"
             orgId: 1
             folder: "volsync"
