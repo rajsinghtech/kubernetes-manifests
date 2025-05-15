@@ -564,7 +564,6 @@ spec:
 kind: HTTPRoute
 metadata:
   name: prometheus
-  namespace: keiretsu
 spec:
   hostnames:
     - "prometheus.${LOCATION}.${COMMON_DOMAIN}"
