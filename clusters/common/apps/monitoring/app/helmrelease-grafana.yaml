@@ -40,7 +40,7 @@ spec:
         parentRefs:
           - name: ts
             kind: Gateway
-            namespace: envoy-gateway-system
+            namespace: keiretsu
         hostnames:
           - "grafana.${LOCATION}.${COMMON_DOMAIN}"
     dashboardProviders:

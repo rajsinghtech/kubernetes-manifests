@@ -14,6 +14,15 @@ spec:
         name: prometheus-community
         namespace: flux-system
   values:
+    route:
+      main:
+        enabled: true
+        parentRefs:
+          - name: ts
+            kind: Gateway
+            namespace: keiretsu
+        hostnames:
+          - "prometheus.${LOCATION}.${COMMON_DOMAIN}"
     # To simplify the deployment, disable non-essential components
     alertmanager:
       enabled: true
