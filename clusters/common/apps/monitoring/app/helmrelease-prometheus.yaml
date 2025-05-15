@@ -561,22 +561,26 @@ spec:
         repository: prom/prometheus
       securityContext: {} 
 ---
+apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: prometheus
 spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: ts
+      namespace: keiretsu
   hostnames:
     - "prometheus.${LOCATION}.${COMMON_DOMAIN}"
-  parentRefs:
-    - name: ts
-      kind: Gateway
-      namespace: keiretsu
   rules:
-    - matches:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: prometheus
+          port: 80
+          weight: 1
+      matches:
         - path:
             type: PathPrefix
             value: /
-      backendRefs:
-        - name: prometheus
-          kind: Service
-          port: 80
