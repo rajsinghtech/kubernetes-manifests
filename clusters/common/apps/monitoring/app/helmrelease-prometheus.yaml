@@ -554,15 +554,12 @@ spec:
         enabled: false
       readinessProbeInitialDelay: 0
       global:
-        # Speed up scraping a bit from the default
         scrape_interval: 15s
       service:
-        # use LoadBalancer to expose prometheus
         type: LoadBalancer
         loadBalancerClass: tailscale
         annotations:
           tailscale.com/hostname: "prometheus.${LOCATION}.keiretsu.ts.net
-      # use dockerhub
       image:
         repository: prom/prometheus
       securityContext: {} 
