@@ -559,7 +559,7 @@ spec:
         type: LoadBalancer
         loadBalancerClass: tailscale
         annotations:
-          tailscale.com/hostname: "prometheus.${LOCATION}.keiretsu.ts.net
+          tailscale.com/hostname: "prometheus.${LOCATION}.keiretsu.ts.net"
       image:
         repository: prom/prometheus
       securityContext: {} 
