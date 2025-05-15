@@ -14,15 +14,6 @@ spec:
         name: prometheus-community
         namespace: flux-system
   values:
-    route:
-      main:
-        enabled: true
-        parentRefs:
-          - name: ts
-            kind: Gateway
-            namespace: keiretsu
-        hostnames:
-          - "prometheus.${LOCATION}.${COMMON_DOMAIN}"
     # To simplify the deployment, disable non-essential components
     alertmanager:
       enabled: true
@@ -572,3 +563,24 @@ spec:
       image:
         repository: prom/prometheus
       securityContext: {} 
+---
+kind: HTTPRoute
+metadata:
+  name: prometheus
+  namespace: keiretsu
+spec:
+  hostnames:
+    - "prometheus.${LOCATION}.${COMMON_DOMAIN}"
+  parentRefs:
+    - name: ts
+      kind: Gateway
+      namespace: keiretsu
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: prometheus
+          kind: Service
+          port: 80
