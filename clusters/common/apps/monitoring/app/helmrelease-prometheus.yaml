@@ -16,11 +16,11 @@ spec:
   values:
     # To simplify the deployment, disable non-essential components
     alertmanager:
-      enabled: false
+      enabled: true
     prometheus-pushgateway:
       enabled: false
     kube-state-metrics:
-      enabled: false
+      enabled: true
       customResourceState:
         enabled: true
         # Add (Cluster)Role permissions to list/watch the customResources defined in the config to rbac.extraRules
