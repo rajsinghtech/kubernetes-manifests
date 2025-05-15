@@ -7,36 +7,23 @@ spec:
   interval: 5m
   chart:
     spec:
-      chart: kube-prometheus-stack
-      version: "58.2.1"
+      chart: prometheus
+      version: "25.21.0"
       sourceRef:
         kind: HelmRepository
         name: prometheus-community
         namespace: flux-system
   values:
-    fullnameOverride: prometheus
+    # To simplify the deployment, disable non-essential components
     alertmanager:
       enabled: true
-    grafana:
+    prometheus-pushgateway:
       enabled: false
-    kubeProxy:
-      enabled: false
-    kubeControllerManager:
-      enabled: true
-    kubeScheduler:
-      enabled: true
-    kubelet:
-      enabled: true
-    kubeEtcd:
-      enabled: true
-    coreDns:
-      enabled: true
-    kubeApiServer:
-      enabled: true
-    kubeStateMetrics:
+    kube-state-metrics:
       enabled: true
       customResourceState:
         enabled: true
+        # Add (Cluster)Role permissions to list/watch the customResources defined in the config to rbac.extraRules
         config:
           kind: CustomResourceStateMetrics
           spec:
@@ -543,66 +530,68 @@ spec:
                           target_kind: [ "kind" ]
                           target_name: [ "name" ]
                           target_namespace: [ "namespace" ]
+    rbac:
+      extraRules:
+        - apiGroups:
+            - "gateway.networking.k8s.io"
+          resources:
+            - gateways
+            - gatewayclasses
+            - httproutes
+            - grpcroutes
+            - tcproutes
+            - tlsroutes
+            - udproutes
+            - backendtlspolicies
+          verbs:
+            - list
+            - watch
     prometheus-node-exporter:
       enabled: true
-    prometheusOperator:
-      enabled: true
-    prometheus:
-      enabled: true
-      prometheusSpec:
-        externalUrl: https://prometheus.rajsingh.info
-        enableFeatures:
-          - exemplar-storage
-        enableRemoteWriteReceiver: true
-        retention: 30d
-        storageSpec:
-          volumeClaimTemplate:
-            spec:
-              accessModes: ["ReadWriteOnce"]
-              resources:
-                requests:
-                  storage: 100Gi
-        serviceMonitorSelector: {}
-        serviceMonitorSelectorNilUsesHelmValues: false
-        podMonitorSelector: {}
-        podMonitorSelectorNilUsesHelmValues: false
-        probeSelector: {}
-        probeSelectorNilUsesHelmValues: false
-        ruleSelector: {}
-        ruleSelectorNilUsesHelmValues: false
-        additionalScrapeConfigs:
-          - job_name: opencost
-            honor_labels: true
-            scrape_interval: 1m
-            scrape_timeout: 10s
-            metrics_path: /metrics
-            scheme: http
-            dns_sd_configs:
-              - names:
-                  - opencost.opencost.svc
-                type: "A"
-                port: 9003
+    server:
+      fullnameOverride: prometheus
+      persistentVolume:
+        enabled: false
+      readinessProbeInitialDelay: 0
+      global:
+        scrape_interval: 15s
+      additionalScrapeConfigs:
+        - job_name: opencost
+          honor_labels: true
+          scrape_interval: 1m
+          scrape_timeout: 10s
+          metrics_path: /metrics
+          scheme: http
+          dns_sd_configs:
+            - names:
+                - opencost.opencost
+              type: "A"
+              port: 9003
+      retention: 30d
+      service:
+        type: LoadBalancer
+      image:
+        repository: prom/prometheus
+      securityContext: {} 
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: prometheus
-  namespace: monitoring
 spec:
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
-      name: private
-      namespace: envoy-gateway-system
+      name: ts
+      namespace: keiretsu
   hostnames:
-    - "prometheus.lukehouge.com"
-    - "prometheus.rajsingh.info"
+    - "prometheus.${LOCATION}.${COMMON_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""
           kind: Service
-          name: prometheus-operated
-          port: 9090
+          name: prometheus
+          port: 80
           weight: 1
       matches:
         - path:
