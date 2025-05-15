@@ -22,9 +22,16 @@ spec:
           - name: Prometheus
             type: prometheus
             url: http://prometheus
+          - name: Loki
+            type: loki
+            url: http://loki
     adminPassword: admin
     testFramework:
       enabled: false
+    persistence:
+      enabled: false
+    serviceMonitor:
+      enabled: true
     # service:
     #   type: LoadBalancer
     route:
@@ -49,4 +56,62 @@ spec:
             options:
               path: /var/lib/grafana/dashboards/envoy-gateway
     dashboardsConfigMaps:
-      envoy-gateway: "grafana-dashboards" 
+      envoy-gateway: "grafana-dashboards"
+    sidecar:
+      dashboards:
+        enabled: true
+        label: grafana_dashboard
+        folderAnnotation: grafana_folder
+        provider:
+          foldersFromFilesStructure: true
+    dashboards:
+      argocd:
+        # https://grafana.com/grafana/dashboards/19993-argocd-operational-overview/
+        argocd-operational-overview:
+          gnetId: 19993
+          revision: 2
+          datasource: prometheus
+        # https://grafana.com/grafana/dashboards/19975-argocd-notifications-overview/
+        argocd-notifications-overview:
+          gnetId: 19975
+          revision: 2
+          datasource: prometheus
+        # https://grafana.com/grafana/dashboards/19974-argocd-application-overview/
+        argocd-application-overview:
+          gnetId: 19974
+          revision: 2
+          datasource: prometheus
+      logs:
+        # https://grafana.com/grafana/dashboards/15141-kubernetes-service-logs/
+        loki-logs-app:
+          gnetId: 15141
+          revision: 1
+          datasource: loki
+        # https://grafana.com/grafana/dashboards/10880-loki-promtail/
+        loki-dashboard:
+          gnetId: 10880
+          revision: 1
+          datasource: loki
+        # https://grafana.com/grafana/dashboards/16970-container-log-quick-search/
+        kubernetes-logs:
+          gnetId: 16970
+          revision: 1
+          datasource: loki
+      ceph:
+        ceph-cluster:
+          gnetId: 2842
+          revision: 18
+          datasource: prometheus
+        ceph-osd:
+          gnetId: 5336
+          revision: 9
+          datasource: prometheus
+        ceph-pools:
+          gnetId: 5342
+          revision: 9
+          datasource: prometheus
+      volsync:
+        volsync-overview:
+          gnetId: 21356
+          revision: 3
+          datasource: prometheus 
