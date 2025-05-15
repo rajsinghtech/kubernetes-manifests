@@ -94,6 +94,14 @@ spec:
             editable: true
             options:
               path: /var/lib/grafana/dashboards/volsync
+          - name: "logs"
+            orgId: 1
+            folder: "logs"
+            type: file
+            disableDeletion: false
+            editable: true
+            options:
+              path: /var/lib/grafana/dashboards/logs
     dashboardsConfigMaps:
       envoy-gateway: "grafana-dashboards"
     sidecar:
