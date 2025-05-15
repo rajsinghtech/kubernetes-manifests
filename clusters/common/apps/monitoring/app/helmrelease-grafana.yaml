@@ -47,6 +47,30 @@ spec:
       dashboardproviders.yaml:
         apiVersion: 1
         providers:
+          - name: "default"
+            orgId: 1
+            folder: "default"
+            type: file
+            disableDeletion: false
+            editable: true
+            options:
+              path: /var/lib/grafana/dashboards/default
+          - name: "argocd"
+            orgId: 1
+            folder: "argocd"
+            type: file
+            disableDeletion: false
+            editable: true
+            options:
+              path: /var/lib/grafana/dashboards/argocd
+          - name: "ceph"
+            orgId: 1
+            folder: "ceph"
+            type: file
+            disableDeletion: false
+            editable: true
+            options:
+              path: /var/lib/grafana/dashboards/ceph
           - name: "envoy-gateway"
             orgId: 1
             folder: "envoy-gateway"
@@ -55,6 +79,22 @@ spec:
             editable: true
             options:
               path: /var/lib/grafana/dashboards/envoy-gateway
+          - name: "kubernetes"
+            orgId: 1
+            folder: "kubernetes"
+            type: file
+            disableDeletion: false
+            editable: true
+            options:
+              path: /var/lib/grafana/dashboards/kubernetes
+          - name: "volsync"
+            orgId: 1
+            folder: "volsync"
+            type: file
+            disableDeletion: false
+            editable: true
+            options:
+              path: /var/lib/grafana/dashboards/volsync
     dashboardsConfigMaps:
       envoy-gateway: "grafana-dashboards"
     sidecar:
