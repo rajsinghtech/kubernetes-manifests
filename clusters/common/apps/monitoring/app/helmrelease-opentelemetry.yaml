@@ -1,0 +1,115 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: opentelemetry-collector
+  namespace: default # Or a more specific namespace if needed
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: opentelemetry-collector
+      version: "0.117.3"
+      sourceRef:
+        kind: HelmRepository
+        name: opentelemetry
+        namespace: flux-system
+  values:
+    ports:
+      envoy-als:
+        enabled: true
+        containerPort: 9000
+        servicePort: 9000
+        hostPort: 9000
+        protocol: TCP
+        appProtocol: grpc
+    fullnameOverride: otel-collector
+    mode: deployment
+    image:
+      repository: "otel/opentelemetry-collector-contrib"
+      tag: "0.121.0"
+    config:
+      exporters:
+        prometheus:
+          endpoint: "[${env:MY_POD_IP}]:19001"
+        debug:
+          verbosity: detailed
+        loki:
+          endpoint: "http://loki.monitoring.svc:3100/loki/api/v1/push"
+        otlp:
+          endpoint: tempo.monitoring.svc:4317
+          tls:
+            insecure: true
+      extensions:
+        health_check:
+          endpoint: "[${env:MY_POD_IP}]:13133"
+      processors:
+        attributes:
+          actions:
+            - action: insert
+              key: loki.attribute.labels
+              value: k8s.pod.name, k8s.namespace.name
+      receivers:
+        envoyals:
+          endpoint: "[${env:MY_POD_IP}]:9000"
+        jaeger:
+          protocols:
+            grpc:
+              endpoint: "[${env:MY_POD_IP}]:14250"
+            thrift_http:
+              endpoint: "[${env:MY_POD_IP}]:14268"
+            thrift_compact:
+              endpoint: "[${env:MY_POD_IP}]:6831"
+        datadog:
+          endpoint: "[${env:MY_POD_IP}]:8126"
+        zipkin:
+          endpoint: "[${env:MY_POD_IP}]:9411"
+        otlp:
+          protocols:
+            grpc:
+              endpoint: "[${env:MY_POD_IP}]:4317"
+            http:
+              endpoint: "[${env:MY_POD_IP}]:4318"
+        prometheus:
+          config:
+            scrape_configs:
+              - job_name: opentelemetry-collector
+                scrape_interval: 10s
+                static_configs:
+                  - targets:
+                      - "[${env:MY_POD_IP}]:8888"
+      service:
+        telemetry:
+          metrics:
+            level: none
+            address: null # Disable the deprecated setting
+            readers:
+              - pull:
+                  exporter:
+                    prometheus:
+                      host: "localhost"
+                      port: 8888
+        extensions:
+          - health_check
+        pipelines:
+          metrics:
+            exporters:
+              - prometheus
+            receivers:
+              - datadog
+              - otlp
+          logs:
+            exporters:
+              - loki
+            processors:
+              - attributes
+            receivers:
+              - otlp
+              - envoyals
+          traces:
+            exporters:
+              - otlp
+            receivers:
+              - datadog
+              - otlp
+              - zipkin 
