@@ -21,7 +21,7 @@ spec:
         datasources:
           - name: Prometheus
             type: prometheus
-            url: http://prometheus-operated.monitoring.svc:9090
+            url: http://prometheus
             isDefault: true
           - name: Loki
             type: loki
