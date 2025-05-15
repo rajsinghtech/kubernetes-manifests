@@ -21,10 +21,11 @@ spec:
         datasources:
           - name: Prometheus
             type: prometheus
-            url: http://prometheus
+            url: http://prometheus-operated.monitoring.svc:9090
+            isDefault: true
           - name: Loki
             type: loki
-            url: http://loki
+            url: http://loki:3100
     adminPassword: admin
     testFramework:
       enabled: false
@@ -32,8 +33,6 @@ spec:
       enabled: false
     serviceMonitor:
       enabled: true
-    # service:
-    #   type: LoadBalancer
     route:
       main:
         enabled: true
@@ -87,14 +86,6 @@ spec:
             editable: true
             options:
               path: /var/lib/grafana/dashboards/kubernetes
-          - name: "logs"
-            orgId: 1
-            folder: "logs"
-            type: file
-            disableDeletion: false
-            editable: true
-            options:
-              path: /var/lib/grafana/dashboards/logs
           - name: "volsync"
             orgId: 1
             folder: "volsync"
