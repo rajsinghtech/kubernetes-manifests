@@ -28,6 +28,9 @@ spec:
         api_url:   https://idp.keiretsu.ts.net/oauth2/userinfo
         redirect_uri: https://grafana.${LOCATION}.${COMMON_DOMAIN}/login/generic_oauth
         login_attribute: preferred_username
+      server:
+        root_url: https://grafana.${LOCATION}.${COMMON_DOMAIN}
+        domain: grafana.${LOCATION}.${COMMON_DOMAIN}
     fullnameOverride: grafana
     datasources:
       datasources.yaml:
