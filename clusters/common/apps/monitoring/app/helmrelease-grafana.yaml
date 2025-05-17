@@ -14,6 +14,19 @@ spec:
         name: grafana
         namespace: flux-system
   values:
+    grafana.ini:
+      auth.generic_oauth:
+        enabled: true
+        name: TailscaleID
+        allow_sign_up: true
+        client_id: ""
+        client_secret: ""
+        scopes: openid email profile
+        auth_url:  https://idp.keiretsu.ts.net/oauth2/auth
+        token_url: https://idp.keiretsu.ts.net/oauth2/token
+        api_url:   https://idp.keiretsu.ts.net/oauth2/userinfo
+        redirect_uri: https://grafana.${LOCATION}.${COMMON_DOMAIN}/login/generic_oauth
+        login_attribute: preferred_username
     fullnameOverride: grafana
     datasources:
       datasources.yaml:
