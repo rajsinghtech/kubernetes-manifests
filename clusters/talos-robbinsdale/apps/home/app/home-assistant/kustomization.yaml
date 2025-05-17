@@ -8,5 +8,5 @@ resources:
   - unas.yaml
   - httproute.yaml
   - ceph.yaml
-  - volsync-backup.yaml
+  # - volsync-backup.yaml
   # - volsync-restore.yaml
