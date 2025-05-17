@@ -4,3 +4,4 @@ kind: Kustomization
 namespace: tailscale
 resources:
   - manifest.yaml
+  - egress.yaml
