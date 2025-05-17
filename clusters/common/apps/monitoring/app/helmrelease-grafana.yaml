@@ -14,13 +14,14 @@ spec:
         name: grafana
         namespace: flux-system
   values:
+    envRenderSecret:
+      GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET: ""
     grafana.ini:
       auth.generic_oauth:
         enabled: true
         name: TailscaleID
         allow_sign_up: true
         client_id: ""
-        client_secret: ""
         scopes: openid email profile
         auth_url:  https://idp.keiretsu.ts.net/oauth2/auth
         token_url: https://idp.keiretsu.ts.net/oauth2/token
