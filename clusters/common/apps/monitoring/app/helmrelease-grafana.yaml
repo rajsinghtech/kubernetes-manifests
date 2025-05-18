@@ -15,22 +15,22 @@ spec:
         namespace: flux-system
   values:
     envRenderSecret:
-      GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET: ""
+      GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET: "f9d3edaaee625bd625a6c089f708c43694ae115d25e60003d10308e035219bca"
     grafana.ini:
       auth.generic_oauth:
         enabled: true
         name: TailscaleID
         allow_sign_up: true
-        client_id: ""
+        client_id: "463f905aa1e665a2b530614f9e43d401"
         scopes: openid email profile
         auth_url:  https://idp.keiretsu.ts.net/authorize/funnel
         token_url: https://idp.keiretsu.ts.net/token
         api_url:   https://idp.keiretsu.ts.net/userinfo
-        redirect_uri: https://grafana.${LOCATION}.${COMMON_DOMAIN}/login/generic_oauth
+        redirect_uri: https://grafana.robbinsdale.rajsingh.info/login/generic_oauth
         login_attribute: preferred_username
       server:
-        root_url: https://grafana.${LOCATION}.${COMMON_DOMAIN}
-        domain: grafana.${LOCATION}.${COMMON_DOMAIN}
+        root_url: https://grafana.robbinsdale.rajsingh.info
+        domain: grafana.robbinsdale.rajsingh.info
     fullnameOverride: grafana
     datasources:
       datasources.yaml:
