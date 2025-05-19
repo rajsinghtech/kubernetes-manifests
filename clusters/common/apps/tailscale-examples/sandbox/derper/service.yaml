@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: derper
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: derp.${LOCATION}.${COMMON_DOMAIN}
+    external-dns.alpha.kubernetes.io/hostname: derp.${LOCATION}.${RAJSINGH_INFO_DOMAIN}
 spec:
   ports:
   - name: derp-http

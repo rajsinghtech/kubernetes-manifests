@@ -44,7 +44,7 @@ spec:
       - gateway-udproute
       - service
     domainFilters: 
-      - ${LOCATION}.${COMMON_DOMAIN}
-      - keiretsu.${COMMON_DOMAIN}
+      - ${LOCATION}.${RAJSINGH_INFO_DOMAIN}
+      - keiretsu.${RAJSINGH_INFO_DOMAIN}
     txtOwnerId: keiretsu
     txtPrefix: k8s.${LOCATION}.

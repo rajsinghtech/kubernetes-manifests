@@ -5,5 +5,5 @@ metadata:
   name: common-settings
   namespace: flux-system
 data:
-  COMMON_DOMAIN: rajsingh.info
-  COMMON_CLOUDFLARE_EMAIL: rajsinghcpre@gmail.com
+  RAJSINGH_INFO_DOMAIN: rajsingh.info
+  RAJSINGH_INFO_CLOUDFLARE_EMAIL: rajsinghcpre@gmail.com

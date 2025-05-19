@@ -58,7 +58,7 @@ spec:
             kind: Gateway
             namespace: keiretsu
         hostnames:
-          - "grafana.${LOCATION}.${COMMON_DOMAIN}"
+          - "grafana.${LOCATION}.${RAJSINGH_INFO_DOMAIN}"
     dashboardProviders:
       dashboardproviders.yaml:
         apiVersion: 1

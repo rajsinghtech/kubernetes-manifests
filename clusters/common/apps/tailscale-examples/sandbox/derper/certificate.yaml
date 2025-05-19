@@ -5,7 +5,7 @@ metadata:
   name: common-derper-tls
 spec:
   dnsNames:
-    - 'derp.${LOCATION}.${COMMON_DOMAIN}'
+    - 'derp.${LOCATION}.${RAJSINGH_INFO_DOMAIN}'
   issuerRef:
     group: cert-manager.io
     kind: ClusterIssuer

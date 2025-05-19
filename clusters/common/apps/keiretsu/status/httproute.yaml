@@ -9,7 +9,7 @@ spec:
       name: ts
       namespace: keiretsu
   hostnames:
-    - "status.${LOCATION}.${COMMON_DOMAIN}"
+    - "status.${LOCATION}.${RAJSINGH_INFO_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""
