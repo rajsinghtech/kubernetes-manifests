@@ -3,7 +3,7 @@ kind: ProxyGroup
 metadata:
   name: common-egress-proxy
 spec:
-  hostnamePrefix: ${LOCATION}-egress-proxy
+  hostnamePrefix: common-egress-proxy
   # tags:
   #   - egress
   proxyClass: common
@@ -15,9 +15,9 @@ kind: ProxyGroup
 metadata:
   name: common-ingress-proxy
 spec:
-  hostnamePrefix: ${LOCATION}-ingress-proxy
+  hostnamePrefix: common-ingress-proxy
   # tags:
   #   - ingress
   proxyClass: common
   type: ingress
-  replicas: 3
+  # replicas: 3
