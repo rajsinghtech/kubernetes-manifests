@@ -17,7 +17,7 @@ metadata:
 spec:
   hostnamePrefix: ${LOCATION}-ingress-proxy
   # tags:
-  #   - egress
+  #   - ingress
   proxyClass: common
   type: ingress
   replicas: 3
