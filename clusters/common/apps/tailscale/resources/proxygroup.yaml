@@ -8,4 +8,16 @@ spec:
   #   - egress
   proxyClass: common
   type: egress
-  replicas: 1
+  replicas: 3
+---
+apiVersion: tailscale.com/v1alpha1
+kind: ProxyGroup
+metadata:
+  name: common-ingress-proxy
+spec:
+  hostnamePrefix: ${LOCATION}-ingress-proxy
+  # tags:
+  #   - egress
+  proxyClass: common
+  type: ingress
+  replicas: 3

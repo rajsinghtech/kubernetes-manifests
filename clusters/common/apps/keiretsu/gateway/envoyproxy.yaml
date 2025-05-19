@@ -11,6 +11,7 @@ spec:
         replicas: 3 
       envoyService:
         annotations:
-          tailscale.com/hostname: "${LOCATION}-envoy-ts"
+          tailscale.com/hostname: common-envoy-ts
+          tailscale.com/proxy-group: common-ingress-proxy
         type: LoadBalancer
         loadBalancerClass: tailscale
