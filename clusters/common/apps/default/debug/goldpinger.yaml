@@ -125,7 +125,7 @@ spec:
       name: ts
       namespace: keiretsu
   hostnames:
-    - "goldpinger.${LOCATION}.${COMMON_DOMAIN}"
+    - "goldpinger.${LOCATION}.${RAJSINGH_INFO_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""

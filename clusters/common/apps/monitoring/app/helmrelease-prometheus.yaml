@@ -585,7 +585,7 @@ spec:
       name: ts
       namespace: keiretsu
   hostnames:
-    - "prometheus.${LOCATION}.${COMMON_DOMAIN}"
+    - "prometheus.${LOCATION}.${RAJSINGH_INFO_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""

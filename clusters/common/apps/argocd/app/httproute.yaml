@@ -9,7 +9,7 @@ spec:
       name: ts
       namespace: keiretsu
   hostnames:
-    - "argocd.${LOCATION}.${COMMON_DOMAIN}"
+    - "argocd.${LOCATION}.${RAJSINGH_INFO_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""

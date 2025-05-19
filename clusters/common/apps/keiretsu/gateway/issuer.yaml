@@ -4,14 +4,14 @@ metadata:
   name: common-issuer
 spec:
   acme:
-    email: ${COMMON_CLOUDFLARE_EMAIL}
+    email: ${RAJSINGH_INFO_CLOUDFLARE_EMAIL}
     server: https://acme-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
       name: letsencrypt-key
     solvers:
     - dns01:
         cloudflare:
-          email: ${COMMON_CLOUDFLARE_EMAIL}
+          email: ${RAJSINGH_INFO_CLOUDFLARE_EMAIL}
           apiTokenSecretRef:
             name: cloudflare-common
             key: cert-manager-api-token

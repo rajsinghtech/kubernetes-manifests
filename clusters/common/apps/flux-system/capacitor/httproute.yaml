@@ -9,7 +9,7 @@ spec:
       name: ts
       namespace: keiretsu
   hostnames:
-    - "capacitor.${LOCATION}.${COMMON_DOMAIN}"
+    - "capacitor.${LOCATION}.${RAJSINGH_INFO_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""

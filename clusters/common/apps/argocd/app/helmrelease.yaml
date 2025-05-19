@@ -22,12 +22,12 @@ spec:
       retries: 3
   values:
     global:
-      domain: argocd.${LOCATION}.${COMMON_DOMAIN}
+      domain: argocd.${LOCATION}.${RAJSINGH_INFO_DOMAIN}
       logging:
         level: debug
     configs:
       cm:
-        url: https://argocd.${LOCATION}.${COMMON_DOMAIN}
+        url: https://argocd.${LOCATION}.${RAJSINGH_INFO_DOMAIN}
         admin.enabled: true
         resource.ignoreResourceUpdatesEnabled: "false"
         exec.enabled: "true"
