@@ -24,8 +24,8 @@ spec:
     apiServerProxyConfig:
       mode: "true"
     operatorConfig:
-      image:
-        tag: unstable-v1.83.231
+      # image:
+      #   tag: unstable-v1.83.231
       hostname: "${LOCATION}-k8s-operator" 
       logging: "info" # info, debug, dev
       defaultTags:
@@ -33,5 +33,5 @@ spec:
         - "tag:k8s-operator"
     proxyConfig:
       defaultTags: "tag:k8s,tag:${LOCATION}"
-      image:
-        tag: unstable-v1.83.231
+      # image:
+      #   tag: unstable-v1.83.231
