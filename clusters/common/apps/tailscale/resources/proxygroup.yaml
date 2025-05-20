@@ -5,7 +5,7 @@ metadata:
 spec:
   hostnamePrefix: common-egress-proxy
   tags:
-    - egress
+    - tag:egress
   proxyClass: common
   type: egress
   replicas: 3
@@ -17,7 +17,7 @@ metadata:
 spec:
   hostnamePrefix: common-ingress-proxy
   tags:
-    - ingress
+    - tag:ingress
   proxyClass: common
   type: ingress
   replicas: 3
