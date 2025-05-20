@@ -25,7 +25,6 @@ spec:
   #     name: flux-kube-state-metrics-config
   #     valuesKey: kube-state-metrics-config.yaml
   values:
-    fullnameOverride: prometheus
     grafana:
       enabled: true
       envRenderSecret:
@@ -260,6 +259,7 @@ spec:
 
     kube-state-metrics:
       enabled: true
+      fullnameOverride: kube-state-metrics
       customResourceState:
         enabled: true
         # Add (Cluster)Role permissions to list/watch the customResources defined in the config to rbac.extraRules
