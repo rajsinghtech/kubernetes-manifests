@@ -7,3 +7,4 @@ resources:
   - configmap-nginx.yaml
   - service-hello-world.yaml
   - deployment-curl-hello-world.yaml
+  - deployment-curl-hello-world-egress.yaml
