@@ -19,6 +19,7 @@ spec:
         command: ["/bin/sh", "-c"]
         args:
           - while true; do
-            curl -sS http://100.68.181.139:80;
+            RESPONSE=$(curl -sS http://100.68.181.139:80)
+            echo "$RESPONSE"
             sleep 1;
             done; 
