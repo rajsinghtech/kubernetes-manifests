@@ -9,10 +9,15 @@ metadata:
   
 data:
   curl-loop.sh: |
-    #!/bin/sh
+    #!/bin/bash
+
+    URL="http://100.68.181.139/"
+    INTERVAL=1
+    echo "Starting infinite curl loop to $URL every $INTERVAL second(s)..."
     while true; do
-      curl -sS http://100.68.181.139:80;
-      sleep 1;
+        echo -e "\n[$(date)] Sending request to $URL"
+        curl -s $URL || echo "[$(date)] ❌ Failed to connect"
+        sleep $INTERVAL
     done
 ---
 apiVersion: apps/v1
