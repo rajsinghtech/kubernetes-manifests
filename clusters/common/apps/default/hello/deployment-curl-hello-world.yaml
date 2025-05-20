@@ -19,6 +19,6 @@ spec:
         command: ["/bin/sh", "-c"]
         args:
           - while true; do
-            curl http://100.68.181.139:80;
+            curl -sS http://100.68.181.139:80;
             sleep 1;
             done; 
