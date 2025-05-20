@@ -25,6 +25,7 @@ spec:
   #     name: flux-kube-state-metrics-config
   #     valuesKey: kube-state-metrics-config.yaml
   values:
+    fullnameOverride: prometheus
     grafana:
       enabled: true
       envRenderSecret:
@@ -243,6 +244,7 @@ spec:
 
     alertmanager:
       enabled: true
+      fullnameOverride: alertmanager
 
     kubeProxy:
       enabled: false
