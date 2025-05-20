@@ -30,15 +30,17 @@ spec:
       labels:
         grafana_dashboard: "1"
       enabled: false
-    prometheus:
-      enabled: true
-    loki:
-      enabled: true
-    alloy:
-      enabled: true
-    fluent-bit:
-      enabled: true
-    opentelemetry-collector:
-      enabled: true
-    tempo:
-      enabled: true
+    grafana:
+      enabled: false
+    # prometheus:
+    #   enabled: true
+    # loki:
+    #   enabled: true
+    # alloy:
+    #   enabled: true
+    # fluent-bit:
+    #   enabled: true
+    # opentelemetry-collector:
+    #   enabled: true
+    # tempo:
+    #   enabled: true
