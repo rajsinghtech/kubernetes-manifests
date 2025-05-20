@@ -2,23 +2,263 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: prometheus
+  name: kube-prometheus-stack
 spec:
-  interval: 5m
+  interval: 30m
   chart:
     spec:
-      chart: prometheus
-      version: "25.21.0"
+      chart: kube-prometheus-stack
+      version: 61.1.0 # Use a recent stable version
       sourceRef:
         kind: HelmRepository
-        name: prometheus-community
+        name: prometheus-community # Use prometheus-community repo (OCI or web based on previous steps)
         namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  # valuesFrom:
+  #   - kind: ConfigMap
+  #     name: flux-kube-state-metrics-config
+  #     valuesKey: kube-state-metrics-config.yaml
   values:
-    # To simplify the deployment, disable non-essential components
+    grafana:
+      enabled: true
+      envRenderSecret:
+        GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET: "f9d3edaaee625bd625a6c089f708c43694ae115d25e60003d10308e035219bca"
+      grafana.ini:
+        auth.generic_oauth:
+          enabled: true
+          name: TailscaleID
+          allow_sign_up: true
+          client_id: "463f905aa1e665a2b530614f9e43d401"
+          scopes: openid email profile
+          auth_url:  https://idp.keiretsu.ts.net/authorize/funnel
+          token_url: https://idp.keiretsu.ts.net/token
+          api_url:   https://idp.keiretsu.ts.net/userinfo
+          redirect_uri: https://grafana.robbinsdale.rajsingh.info/login/generic_oauth
+          login_attribute: preferred_username
+        server:
+          root_url: https://grafana.robbinsdale.rajsingh.info
+          domain: grafana.robbinsdale.rajsingh.info
+      fullnameOverride: grafana
+      datasources:
+        datasources.yaml:
+          apiVersion: 1
+          datasources:
+            - name: Prometheus
+              type: prometheus
+              url: http://prometheus
+              isDefault: true
+            - name: Loki
+              type: loki
+              url: http://loki:3100
+      adminPassword: admin
+      testFramework:
+        enabled: false
+      persistence:
+        enabled: false
+      serviceMonitor:
+        enabled: true
+      route:
+        main:
+          enabled: true
+          parentRefs:
+            - name: ts
+              kind: Gateway
+              namespace: keiretsu
+          hostnames:
+            - "grafana.${LOCATION}.${RAJSINGH_INFO_DOMAIN}"
+      dashboardProviders:
+        dashboardproviders.yaml:
+          apiVersion: 1
+          providers:
+            - name: "default"
+              orgId: 1
+              folder: "default"
+              type: file
+              disableDeletion: false
+              editable: true
+              options:
+                path: /var/lib/grafana/dashboards/default
+            - name: "argocd"
+              orgId: 1
+              folder: "argocd"
+              type: file
+              disableDeletion: false
+              editable: true
+              options:
+                path: /var/lib/grafana/dashboards/argocd
+            - name: "ceph"
+              orgId: 1
+              folder: "ceph"
+              type: file
+              disableDeletion: false
+              editable: true
+              options:
+                path: /var/lib/grafana/dashboards/ceph
+            - name: "envoy-gateway"
+              orgId: 1
+              folder: "envoy-gateway"
+              type: file
+              disableDeletion: false
+              editable: true
+              options:
+                path: /var/lib/grafana/dashboards/envoy-gateway
+            - name: "kubernetes"
+              orgId: 1
+              folder: "kubernetes"
+              type: file
+              disableDeletion: false
+              editable: true
+              options:
+                path: /var/lib/grafana/dashboards/kubernetes
+            - name: "volsync"
+              orgId: 1
+              folder: "volsync"
+              type: file
+              disableDeletion: false
+              editable: true
+              options:
+                path: /var/lib/grafana/dashboards/volsync
+            - name: "logs"
+              orgId: 1
+              folder: "logs"
+              type: file
+              disableDeletion: false
+              editable: true
+              options:
+                path: /var/lib/grafana/dashboards/logs
+      dashboardsConfigMaps:
+        envoy-gateway: "grafana-dashboards"
+      sidecar:
+        dashboards:
+          enabled: true
+          label: grafana_dashboard
+          folderAnnotation: grafana_folder
+          provider:
+            foldersFromFilesStructure: true
+      dashboards:
+        argocd:
+          # https://grafana.com/grafana/dashboards/19993-argocd-operational-overview/
+          argocd-operational-overview:
+            gnetId: 19993
+            revision: 2
+            datasource: prometheus
+          # https://grafana.com/grafana/dashboards/19975-argocd-notifications-overview/
+          argocd-notifications-overview:
+            gnetId: 19975
+            revision: 2
+            datasource: prometheus
+          # https://grafana.com/grafana/dashboards/19974-argocd-application-overview/
+          argocd-application-overview:
+            gnetId: 19974
+            revision: 2
+            datasource: prometheus
+        logs:
+          # https://grafana.com/grafana/dashboards/15141-kubernetes-service-logs/
+          loki-logs-app:
+            gnetId: 15141
+            revision: 1
+            datasource: loki
+          # https://grafana.com/grafana/dashboards/10880-loki-promtail/
+          loki-dashboard:
+            gnetId: 10880
+            revision: 1
+            datasource: loki
+          # https://grafana.com/grafana/dashboards/16970-container-log-quick-search/
+          kubernetes-logs:
+            gnetId: 16970
+            revision: 1
+            datasource: loki
+        ceph:
+          ceph-cluster:
+            gnetId: 2842
+            revision: 18
+            datasource: prometheus
+          ceph-osd:
+            gnetId: 5336
+            revision: 9
+            datasource: prometheus
+          ceph-pools:
+            gnetId: 5342
+            revision: 9
+            datasource: prometheus
+        volsync:
+          volsync-overview:
+            gnetId: 21356
+            revision: 3
+            datasource: prometheus   
+    prometheusOperator:
+      admissionWebhooks:
+        enabled: false
+    prometheus:
+      rbac:
+          extraRules:
+            - apiGroups:
+                - "gateway.networking.k8s.io"
+              resources:
+                - gateways
+                - gatewayclasses
+                - httproutes
+                - grpcroutes
+                - tcproutes
+                - tlsroutes
+                - udproutes
+                - backendtlspolicies
+              verbs:
+                - list
+                - watch
+      prometheusSpec:
+        serviceMonitorSelector: {}
+        externalUrl: https://prometheus.rajsingh.info
+        serviceMonitorSelectorNilUsesHelmValues: false
+        podMonitorSelectorNilUsesHelmValues: false
+        probeSelectorNilUsesHelmValues: false
+        ruleSelectorNilUsesHelmValues: false
+        enableRemoteWriteReceiver: true
+        enableFeatures:
+          - exemplar-storage
+        retention: 30d
+        storageSpec:
+          volumeClaimTemplate:
+            spec:
+              resources:
+                requests:
+                  storage: 100Gi
+      server:
+        additionalScrapeConfigs:
+          - job_name: opencost
+            honor_labels: true
+            scrape_interval: 1m
+            scrape_timeout: 10s
+            metrics_path: /metrics
+            scheme: http
+            dns_sd_configs:
+              - names:
+                  - opencost.opencost
+                type: "A"
+                port: 9003
+        retention: 30d
+
     alertmanager:
       enabled: true
-    prometheus-pushgateway:
+
+    kubeProxy:
       enabled: false
+
+    kubeControllerManager:
+      enabled: true
+
+    kubeScheduler:
+      enabled: true
+
+    kubeEtcd:
+      enabled: true
+
     kube-state-metrics:
       enabled: true
       customResourceState:
@@ -530,49 +770,6 @@ spec:
                           target_kind: [ "kind" ]
                           target_name: [ "name" ]
                           target_namespace: [ "namespace" ]
-    rbac:
-      extraRules:
-        - apiGroups:
-            - "gateway.networking.k8s.io"
-          resources:
-            - gateways
-            - gatewayclasses
-            - httproutes
-            - grpcroutes
-            - tcproutes
-            - tlsroutes
-            - udproutes
-            - backendtlspolicies
-          verbs:
-            - list
-            - watch
-    prometheus-node-exporter:
-      enabled: true
-    server:
-      fullnameOverride: prometheus
-      persistentVolume:
-        enabled: false
-      readinessProbeInitialDelay: 0
-      global:
-        scrape_interval: 15s
-      additionalScrapeConfigs:
-        - job_name: opencost
-          honor_labels: true
-          scrape_interval: 1m
-          scrape_timeout: 10s
-          metrics_path: /metrics
-          scheme: http
-          dns_sd_configs:
-            - names:
-                - opencost.opencost
-              type: "A"
-              port: 9003
-      retention: 30d
-      service:
-        type: LoadBalancer
-      image:
-        repository: prom/prometheus
-      securityContext: {} 
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
