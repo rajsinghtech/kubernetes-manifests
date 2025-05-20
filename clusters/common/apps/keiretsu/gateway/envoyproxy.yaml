@@ -12,6 +12,6 @@ spec:
       envoyService:
         annotations:
           tailscale.com/hostname: common-envoy-ts
-          tailscale.com/proxy-group: common-ingress-proxy
+          # tailscale.com/proxy-group: common-ingress-proxy
         type: LoadBalancer
         loadBalancerClass: tailscale
