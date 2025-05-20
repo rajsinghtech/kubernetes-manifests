@@ -19,14 +19,14 @@ spec:
     grafana:
       enabled: false
     prometheus:
-      enabled: false
+      enabled: true
     loki:
-      enabled: false
+      enabled: true
     alloy:
-      enabled: false
+      enabled: true
     fluent-bit:
-      enabled: false
+      enabled: true
     opentelemetry-collector:
-      enabled: false
+      enabled: true
     tempo:
-      enabled: false
+      enabled: true
