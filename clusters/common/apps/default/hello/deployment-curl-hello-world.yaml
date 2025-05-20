@@ -19,6 +19,7 @@ spec:
         command: ["/bin/sh", "-c"]
         args:
           - while true; do
-            curl -sS http://100.68.181.139:80;
+            echo "Curling at $(date)";
+            curl -v http://100.68.181.139:80;
             sleep 1;
             done; 
