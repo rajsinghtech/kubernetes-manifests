@@ -5,3 +5,4 @@ namespace: envoy-gateway-system
 resources:
   # - https://github.com/envoyproxy/gateway/releases/download/v1.3.2/install.yaml
   - helmrelease.yaml
+  - helmrelease-addon.yaml

@@ -16,7 +16,10 @@ spec:
       interval: 1m
   releaseName: eg
   values: 
-    grafana:
+    dashboard:
+      labels:
+        grafana_dashboard: "1"
+        grafana_folder: envoy-gateway
       enabled: false
     prometheus:
       enabled: true

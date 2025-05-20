@@ -130,8 +130,6 @@ spec:
               editable: true
               options:
                 path: /var/lib/grafana/dashboards/logs
-      dashboardsConfigMaps:
-        envoy-gateway: "grafana-dashboards"
       sidecar:
         dashboards:
           enabled: true
