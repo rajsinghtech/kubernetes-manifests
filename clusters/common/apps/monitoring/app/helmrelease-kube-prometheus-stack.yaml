@@ -27,6 +27,10 @@ spec:
   values:
     grafana:
       enabled: true
+      admin:
+        existingSecret: "grafana-credentials"
+        userKey: username
+        passwordKey: password
       envRenderSecret:
         GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET: "f9d3edaaee625bd625a6c089f708c43694ae115d25e60003d10308e035219bca"
       grafana.ini:
@@ -45,13 +49,11 @@ spec:
           root_url: https://grafana.robbinsdale.rajsingh.info
           domain: grafana.robbinsdale.rajsingh.info
       fullnameOverride: grafana
-      datasources:
-        datasources.yaml:
-          apiVersion: 1
-          datasources:
-            - name: Loki
-              type: loki
-              url: http://loki:3100
+      additionalDataSources:
+        - name: Loki
+          type: loki
+          uid: loki
+          url: http://loki.monitoring:3100
       adminPassword: admin
       testFramework:
         enabled: false
