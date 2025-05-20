@@ -11,8 +11,7 @@ data:
   curl-loop.sh: |
     #!/bin/sh
     while true; do
-      echo "Curling at $(date)";
-      curl http://100.68.181.139:80;
+      curl -sS http://100.68.181.139:80;
       sleep 1;
     done
 ---
