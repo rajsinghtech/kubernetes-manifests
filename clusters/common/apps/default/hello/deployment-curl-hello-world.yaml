@@ -12,7 +12,7 @@ data:
     #!/bin/sh
     while true; do
       echo "Curling at $(date)";
-      curl -v http://100.68.181.139:80;
+      curl http://100.68.181.139:80;
       sleep 1;
     done
 ---
