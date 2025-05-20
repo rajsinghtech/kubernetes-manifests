@@ -5,7 +5,7 @@ metadata:
   name: hello-world
   annotations:
     tailscale.com/proxy-group: common-ingress-proxy
-    tailscale.com/tags: hello
+    tailscale.com/tags: "tag:hello"
 spec:
   selector:
     app: hello-world
