@@ -1,17 +1,16 @@
 cni:
   exclusive: false
 kubeProxyReplacement: true
-autoDirectNodeRoutes: true
-directRoutingSkipUnreachable: false
+routingMode: tunnel
 enableIPv4BIGTCP: true
 enableIPv4Masquerade: true
-routingMode: native
+tunnel:
+  mode: vxlan
 bpf:
   masquerade: true
-  lbExternalClusterIP: true 
+  lbExternalClusterIP: true
 ipv4:
   enabled: true
-ipv4NativeRoutingCIDR: 10.0.0.0/8
 bandwidthManager:
   enabled: true
   bbr: true
