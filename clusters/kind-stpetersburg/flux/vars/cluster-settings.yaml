@@ -8,7 +8,7 @@ data:
   LOCATION: stpetersburg
   SITE_ID: "3"
   TIMEZONE: America/New_York
-  CLUSTER_NAME: talos-stpetersburg
+  CLUSTER_NAME: kind-stpetersburg
 
   # K8s
   CLUSTER_POD_CIDR: 10.5.0.0/16
