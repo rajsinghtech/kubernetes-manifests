@@ -1,14 +1,6 @@
 cni:
   exclusive: false
 kubeProxyReplacement: true
-routingMode: tunnel
-enableIPv4BIGTCP: true
-enableIPv4Masquerade: true
-tunnel:
-  mode: vxlan
-bpf:
-  masquerade: true
-  lbExternalClusterIP: true
 ipv4:
   enabled: true
 bandwidthManager:
