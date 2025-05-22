@@ -46,18 +46,18 @@ spec:
       - name: script
         configMap:
           name: curl-hello-world-script-egress 
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: hello-world-egress
-  annotations:
-    tailscale.com/tailnet-fqdn: default-hello-world.keiretsu.ts.net
-    # tailscale.com/proxy-group: common-egress-proxy
-spec:
-  externalName: placeholder   # any value - will be overwritten by operator
-  type: ExternalName 
-  ports:
-  - name: http # any value
-    port: 80
-    protocol: TCP
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: hello-world-egress
+#   annotations:
+#     tailscale.com/tailnet-fqdn: default-hello-world.keiretsu.ts.net
+#     tailscale.com/proxy-group: common-egress-proxy
+# spec:
+#   externalName: placeholder   # any value - will be overwritten by operator
+#   type: ExternalName 
+#   ports:
+#   - name: http # any value
+#     port: 80
+#     protocol: TCP
