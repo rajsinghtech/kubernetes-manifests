@@ -32,7 +32,7 @@
 #     hostname: "pihole-keiretsu-ts"
 #     serviceDns:
 #       annotations:
-#         tailscale.com/tailnet-fqdn: pihole-keiretsu-${LOCATION}.keiretsu.ts.net
+#         tailscale.com/tailnet-fqdn: pihole-${LOCATION}.keiretsu.ts.net
 #       externalTrafficPolicy: Cluster
 #       loadBalancerClass: tailscale
 #       mixedService: true
