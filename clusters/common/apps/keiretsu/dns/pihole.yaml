@@ -29,14 +29,13 @@ spec:
     maxUnavailable: 25%
     serviceWeb:
       type: ClusterIP
-    hostname: "pihole-${LOCATION}.keiretsu.ts.net"
+    hostname: "pihole-keiretsu-ts"
     serviceDns:
       annotations:
-        tailscale.com/tailnet-fqdn: pihole-${LOCATION}.keiretsu.ts.net
+        tailscale.com/tailnet-fqdn: pihole-keiretsu.keiretsu.ts.net
       externalTrafficPolicy: Cluster
       loadBalancerClass: tailscale
       mixedService: true
-      nodePort: ""
       port: 53
       type: LoadBalancer
     ingress:
