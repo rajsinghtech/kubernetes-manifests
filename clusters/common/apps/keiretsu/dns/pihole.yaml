@@ -21,6 +21,8 @@ spec:
     remediation:
       retries: 3
   values:
+    extraEnvVars:
+      FTLCONF_dns_listeningMode: 'all'
     admin:
       existingSecret: "pihole"
       passwordKey: password

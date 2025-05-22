@@ -38,6 +38,6 @@ spec:
       port: 53
       type: LoadBalancer
     ingress:
-      enabled: false # Managed via HTTPRoute
+      enabled: false
     podDnsConfig:
       enabled: false 
