@@ -22,6 +22,8 @@ spec:
     remediation:
       retries: 3
   values:
+    image:
+      tag: v0.17.0
     fullnameOverride: external-dns-pihole-keiretsu
     logLevel: &logLevel debug
     provider: pihole
