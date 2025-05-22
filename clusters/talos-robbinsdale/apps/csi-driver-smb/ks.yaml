@@ -5,7 +5,7 @@ metadata:
   name: &app csi-driver-smb
   namespace: flux-system
 spec:
-  targetNamespace: csi-driver-smb
+  targetNamespace: kube-system
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
