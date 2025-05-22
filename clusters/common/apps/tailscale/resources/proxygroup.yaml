@@ -15,7 +15,7 @@ kind: ProxyGroup
 metadata:
   name: common-ingress-proxy
 spec:
-  hostnamePrefix: common-ingress-proxy
+  hostnamePrefix: common-${LOCATION}-ingress-proxy
   tags:
     - tag:ingress
   proxyClass: common
