@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: hello-world
+  name: hello-world-2
   annotations:
     tailscale.com/proxy-group: common-ingress-proxy
     tailscale.com/tags: "tag:hello"
