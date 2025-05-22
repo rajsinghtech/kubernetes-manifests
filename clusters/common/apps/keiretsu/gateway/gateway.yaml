@@ -8,7 +8,7 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: common-issuer
 spec:
-  gatewayClassName: ts
+  gatewayClassName: keiretsu-ts
   listeners:
     - name: wildcard-${LOCATION}-common-https
       protocol: HTTPS

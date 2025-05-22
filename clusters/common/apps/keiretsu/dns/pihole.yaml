@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: pihole
-      version: 2.27.0
+      version: 2.31.0
       sourceRef:
         kind: HelmRepository
         name: pihole
@@ -29,15 +29,17 @@ spec:
     maxUnavailable: 25%
     serviceWeb:
       type: ClusterIP
-    hostname: "keiretsu"
+    hostname: "pihole-${LOCATION}.keiretsu.ts.net"
     serviceDns:
+      annotations:
+        tailscale.com/tailnet-fqdn: pihole-${LOCATION}.keiretsu.ts.net
       externalTrafficPolicy: Cluster
-      loadBalancerIP: "10.69.${SITE_ID}.69"
+      loadBalancerClass: tailscale
       mixedService: true
       nodePort: ""
       port: 53
       type: LoadBalancer
     ingress:
-      enabled: false # Managed via HTTPRoute
+      enabled: false 
     podDnsConfig:
       enabled: false 
