@@ -8,6 +8,8 @@ spec:
   address: https://github.com/rajsinghtech/kubernetes-manifests
   secretRef:
     name: kubernetes-manifests-github-token
+  username: fluxcd-bot
+  # commitStatusExpr: "'kustomization/' + event.involvedObject.name + '/cluster1'"
 ---
 apiVersion: notification.toolkit.fluxcd.io/v1beta3
 kind: Alert

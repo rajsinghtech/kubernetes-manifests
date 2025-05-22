@@ -38,8 +38,8 @@ spec:
     #   enabled: true
     # alloy:
     #   enabled: true
-    # fluent-bit:
-    #   enabled: true
+    fluent-bit:
+      enabled: false
     # opentelemetry-collector:
     #   enabled: true
     # tempo:
