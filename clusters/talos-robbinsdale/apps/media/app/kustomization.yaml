@@ -20,4 +20,4 @@ resources:
   - ./readarr 
   - ./transmission-books 
   - ./audioarr 
-  - ./tdarr  
+  # - ./tdarr  
