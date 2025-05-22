@@ -1,0 +1,24 @@
+apiVersion: notification.toolkit.fluxcd.io/v1beta3
+kind: Provider
+metadata:
+  name: kubernetes-manifests
+  namespace: flux-system
+spec:
+  type: github
+  address: https://github.com/rajsinghtech/kubernetes-manifests
+  secretRef:
+    name: kubernetes-manifests-github-token
+---
+apiVersion: notification.toolkit.fluxcd.io/v1beta3
+kind: Alert
+metadata:
+  name: kubernetes-manifests
+  namespace: flux-system
+spec:
+  providerRef:
+    name: kubernetes-manifests
+  eventSeverity: info
+  eventSources:
+    - kind: Kustomization
+      name: '*'
+      namespace: flux-system
