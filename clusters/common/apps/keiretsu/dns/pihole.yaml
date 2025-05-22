@@ -27,8 +27,6 @@ spec:
       existingSecret: "pihole"
       passwordKey: password
     strategyType: RollingUpdate
-    maxSurge: 25%
-    maxUnavailable: 25%
     serviceWeb:
       type: ClusterIP
     hostname: "pihole-keiretsu-ts"
