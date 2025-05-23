@@ -11,7 +11,7 @@ clustermesh:
     replicas: 3
     service:
       annotations:
-        tailscale.com/hostname: ${LOCATION}-cilium-clustermesh-apiserver
+        tailscale.com/hostname: ${LOCATION}
       type: LoadBalancer
       loadBalancerClass: tailscale 
     tls:
@@ -26,8 +26,8 @@ clustermesh:
     enabled: true
     domain: keiretsu.ts.net
     clusters:
-    - name: ottawa-cilium-clustermesh-apiserver
-      address: ottawa-cilium-clustermesh-apiserver.keiretsu.ts.net
+    - name: ottawa
+      address: ottawa.keiretsu.ts.net
       port: 2379
       ips:
       - 100.108.74.35
