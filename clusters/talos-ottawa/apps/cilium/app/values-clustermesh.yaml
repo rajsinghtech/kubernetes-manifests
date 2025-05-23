@@ -11,7 +11,7 @@ clustermesh:
     replicas: 3
     service:
       annotations:
-        tailscale.com/hostname: ${LOCATION}-cilium-clustermesh-apiserver
+        tailscale.com/hostname: ${LOCATION}
       type: LoadBalancer
       loadBalancerClass: tailscale
     tls:
@@ -26,7 +26,7 @@ clustermesh:
     enabled: true
     domain: keiretsu.ts.net
     clusters:
-    - name: robbinsdale-cilium-clustermesh-apiserver
-      address: robbinsdale-cilium-clustermesh-apiserver.keiretsu.ts.net
+    - name: robbinsdale
+      address: robbinsdale.keiretsu.ts.net
       ips: 
       - 100.118.142.99
