@@ -26,5 +26,4 @@ clustermesh:
     enabled: true
     clusters:
     - name: robbinsdale
-      address: robbinsdale-cilium-clustermesh-apiserver.keiretsu.svc.cluster.local
-      port: 2379
+      address: robbinsdale-cilium-clustermesh-apiserver.keiretsu.ts.net
