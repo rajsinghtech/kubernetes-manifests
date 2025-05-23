@@ -27,3 +27,5 @@ clustermesh:
     clusters:
     - name: robbinsdale
       address: robbinsdale-cilium-clustermesh-apiserver.keiretsu.ts.net
+      ips: 
+      - 100.118.142.99

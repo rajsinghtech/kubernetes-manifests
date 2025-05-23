@@ -28,3 +28,5 @@ clustermesh:
     - name: ottawa
       address: ottawa-cilium-clustermesh-apiserver.keiretsu.ts.net
       port: 2379
+      ips:
+      - 100.108.74.35
