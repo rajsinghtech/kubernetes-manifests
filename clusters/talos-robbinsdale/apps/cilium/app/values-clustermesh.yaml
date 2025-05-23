@@ -13,7 +13,7 @@ clustermesh:
       annotations:
         tailscale.com/hostname: ${LOCATION}-cilium-clustermesh-apiserver
       type: LoadBalancer
-      loadBalancerClass: tailscale
+      loadBalancerClass: tailscale 
     tls:
       authMode: cluster
       auto:
