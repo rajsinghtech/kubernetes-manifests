@@ -30,3 +30,4 @@ clustermesh:
     domain: keiretsu.ts.net
     clusters:
     - name: robbinsdale
+      address: robbinsdale.keiretsu.ts.net
