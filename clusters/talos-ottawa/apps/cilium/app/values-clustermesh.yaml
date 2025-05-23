@@ -28,5 +28,5 @@ clustermesh:
     clusters:
     - name: robbinsdale
       address: robbinsdale.keiretsu.ts.net
-      ips: 
-      - 100.118.142.99
+      # ips: 
+      # - 100.118.142.99
