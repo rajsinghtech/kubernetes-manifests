@@ -30,6 +30,3 @@ clustermesh:
     domain: keiretsu.ts.net
     clusters:
     - name: robbinsdale
-      address: robbinsdale.keiretsu.ts.net
-      # ips: 
-      # - 100.118.142.99
