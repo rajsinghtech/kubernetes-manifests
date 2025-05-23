@@ -24,8 +24,9 @@ clustermesh:
           name: internal
   config:
     enabled: true
+    domain: keiretsu.ts.net
     clusters:
-    - name: ottawa
+    - name: ottawa-cilium-clustermesh-apiserver
       address: ottawa-cilium-clustermesh-apiserver.keiretsu.ts.net
       port: 2379
       ips:

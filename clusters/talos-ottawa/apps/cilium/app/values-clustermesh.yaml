@@ -24,8 +24,9 @@ clustermesh:
           name: internal
   config:
     enabled: true
+    domain: keiretsu.ts.net
     clusters:
-    - name: robbinsdale
+    - name: robbinsdale-cilium-clustermesh-apiserver
       address: robbinsdale-cilium-clustermesh-apiserver.keiretsu.ts.net
       ips: 
       - 100.118.142.99
