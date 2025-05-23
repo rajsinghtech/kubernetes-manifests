@@ -26,5 +26,5 @@ clustermesh:
     enabled: true
     clusters:
     - name: ottawa
-      address: ottawa-cilium-clustermesh-apiserver.keiretsu.svc.cluster.local
+      address: ottawa-cilium-clustermesh-apiserver.keiretsu.ts.net
       port: 2379
