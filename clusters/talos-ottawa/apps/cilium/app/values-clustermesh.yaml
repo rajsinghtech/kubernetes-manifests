@@ -16,6 +16,9 @@ clustermesh:
       loadBalancerClass: tailscale
     tls:
       authMode: cluster
+      server:
+        extraDnsNames:
+        - ${LOCATION}.keiretsu.ts.net
       auto:
         method: certmanager
         certManagerIssuerRef:
