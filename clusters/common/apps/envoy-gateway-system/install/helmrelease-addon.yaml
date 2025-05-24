@@ -14,7 +14,7 @@ spec:
         name: envoy-gateway
         namespace: flux-system 
       interval: 1m
-  releaseName: eg
+  releaseName: eg-addons
   postRenderers:
     - kustomize:
         patches:
