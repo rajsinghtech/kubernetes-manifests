@@ -4,7 +4,7 @@ kind: Service
 metadata:
   name: hello-world
   annotations:
-    # external-dns.alpha.kubernetes.io/hostname: hello.robbinsdale.rajsingh.info
+    service.cilium.io/global: "true"
 spec:
   selector:
     app: hello-world
