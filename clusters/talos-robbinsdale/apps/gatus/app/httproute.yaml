@@ -7,7 +7,7 @@ spec:
     - group: gateway.networking.k8s.io
       kind: Gateway
       name: public
-      namespace: envoy-gateway-system
+      namespace: home
   hostnames:
     - "gatus.rajsingh.info"
     - "gatus.lukehouge.com"
@@ -32,7 +32,7 @@ spec:
     - group: gateway.networking.k8s.io
       kind: Gateway
       name: private
-      namespace: envoy-gateway-system
+      namespace: home
   hostnames:
     - "status.rajsingh.info"
     - "status.lukehouge.com"
@@ -57,7 +57,7 @@ spec:
     - group: gateway.networking.k8s.io
       kind: Gateway
       name: ts
-      namespace: envoy-gateway-system
+      namespace: home
   hostnames:
     - "gatus.ts.rajsingh.info"
     - "gatus.ts.lukehouge.com"
