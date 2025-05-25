@@ -28,7 +28,7 @@ clustermesh:
           name: internal
   config:
     enabled: true
-    domain: keiretsu.ts.net
+    domain: kube-system
     clusters:
     - name: ottawa-apiserver
       address: ottawa-apiserver.kube-system
