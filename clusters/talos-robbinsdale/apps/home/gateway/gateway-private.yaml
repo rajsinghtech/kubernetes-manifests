@@ -6,7 +6,6 @@ metadata:
   labels:
     external-dns: unifi
 spec:
-  addresses:
   gatewayClassName: private
   listeners:
     - name: http
