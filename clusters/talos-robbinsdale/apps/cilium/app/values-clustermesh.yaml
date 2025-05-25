@@ -31,4 +31,4 @@ clustermesh:
     domain: kube-system
     clusters:
     - name: ottawa-apiserver
-      address: ottawa-apiserver.kube-system
+      address: ottawa-apiserver.kube-system:2379
