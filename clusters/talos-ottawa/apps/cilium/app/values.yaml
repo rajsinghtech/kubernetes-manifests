@@ -2,7 +2,7 @@ cni:
   exclusive: false
 kubeProxyReplacement: true
 autoDirectNodeRoutes: true
-directRoutingSkipUnreachable: false
+directRoutingSkipUnreachable: true
 enableIPv4BIGTCP: true
 enableIPv4Masquerade: true
 routingMode: native
