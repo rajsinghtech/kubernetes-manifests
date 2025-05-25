@@ -19,6 +19,7 @@ clustermesh:
       server:
         extraDnsNames:
         - ${LOCATION}.keiretsu.ts.net
+        - ${LOCATION}-apiserver.kube-system
       auto:
         method: certmanager
         certManagerIssuerRef:
@@ -29,5 +30,5 @@ clustermesh:
     enabled: true
     domain: keiretsu.ts.net
     clusters:
-    - name: ottawa
-      address: ottawa.keiretsu.ts.net
+    - name: ottawa-apiserver
+      address: ottawa-apiserver.kube-system
