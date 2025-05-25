@@ -1,17 +1,8 @@
 cni:
   exclusive: false
 kubeProxyReplacement: true
-autoDirectNodeRoutes: true
-directRoutingSkipUnreachable: false
-enableIPv4BIGTCP: true
-enableIPv4Masquerade: true
-routingMode: native
-bpf:
-  masquerade: true
-  lbExternalClusterIP: true # https://docs.cilium.io/en/stable/network/kubernetes/kubeproxy-free/#external-access-to-clusterip-services
 ipv4:
   enabled: true
-ipv4NativeRoutingCIDR: 10.0.0.0/8
 bandwidthManager:
   enabled: true
   bbr: true
@@ -25,7 +16,7 @@ ipam:
     clusterPoolIPv4MaskSize: 24
 operator:
   rollOutPods: true
-  replicas: 2
+  replicas: 1
 rollOutCiliumPods: true
 localRedirectPolicy: true
 bgpControlPlane:
