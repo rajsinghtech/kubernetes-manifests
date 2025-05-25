@@ -33,3 +33,11 @@ clustermesh:
     - name: robbinsdale
       address: robbinsdale.kube-system
       port: 2379
+hubble:
+  tls:
+    auto:
+      method: certmanager
+      certManagerIssuerRef:
+        group: cert-manager.io
+        kind: ClusterIssuer
+        name: internal
