@@ -3,7 +3,7 @@ kind: Service
 metadata:
   annotations:
     tailscale.com/tailnet-fqdn: ottawa.keiretsu.ts.net
-  name: ottawa-cilium-clustermesh-apiserver
+  name: ottawa-apiserver
 spec:
   externalName: placeholder   # any value - will be overwritten by operator
   type: ExternalName 
@@ -17,7 +17,7 @@ kind: Service
 metadata:
   annotations:
     tailscale.com/tailnet-fqdn: robbinsdale.keiretsu.ts.net
-  name: robbinsdale-cilium-clustermesh-apiserver
+  name: robbinsdale-apiserver
 spec:
   externalName: placeholder   # any value - will be overwritten by operator
   type: ExternalName 
