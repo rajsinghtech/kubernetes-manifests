@@ -8,7 +8,7 @@ metadata:
 spec:
   addresses:
     - type: IPAddress
-      value: 10.69.10.14
+      value: 10.69.10.15
   gatewayClassName: public
   listeners:
     - name: raj-wildcard-https
