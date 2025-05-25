@@ -6,8 +6,6 @@ ipv4:
 bandwidthManager:
   enabled: true
   bbr: true
-envoy:
-  enabled: true
 ipam:
   mode: "cluster-pool"
   operator:
