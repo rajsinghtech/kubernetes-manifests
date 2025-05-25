@@ -19,7 +19,7 @@ clustermesh:
       server:
         extraDnsNames:
         - ${LOCATION}.keiretsu.ts.net
-        - ${LOCATION}-apiserver.kube-system
+        - ${LOCATION}.kube-system
       auto:
         method: certmanager
         certManagerIssuerRef:
@@ -30,6 +30,6 @@ clustermesh:
     enabled: true
     domain: kube-system
     clusters:
-    - name: ottawa-apiserver
-      address: ottawa-apiserver.kube-system
+    - name: ottawa
+      address: ottawa.kube-system
       port: 2379
