@@ -33,3 +33,11 @@ clustermesh:
     - name: ottawa
       address: ottawa.kube-system
       port: 2379
+hubble:
+  tls:
+    auto:
+      method: certmanager
+      certManagerIssuerRef:
+        group: cert-manager.io
+        kind: ClusterIssuer
+        name: internal
