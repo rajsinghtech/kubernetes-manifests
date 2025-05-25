@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: robbinsdale-k8s-operator
+  annotations:
+    tailscale.com/tailnet-fqdn: robbinsdale-k8s-operator.keiretsu.ts.net
+spec:
+  externalName: placeholder
+  type: ExternalName
+  ports:
+  - name: https
+    port: 443
+    protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ottawa-k8s-operator
+  annotations:
+    tailscale.com/tailnet-fqdn: ottawa-k8s-operator.keiretsu.ts.net
+spec:
+  externalName: placeholder
+  type: ExternalName
+  ports:
+  - name: https
+    port: 443
+    protocol: TCP
