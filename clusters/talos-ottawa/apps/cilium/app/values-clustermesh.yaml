@@ -32,3 +32,4 @@ clustermesh:
     clusters:
     - name: robbinsdale-apiserver
       address: robbinsdale-apiserver.kube-system
+      port: 2379

@@ -31,4 +31,5 @@ clustermesh:
     domain: kube-system
     clusters:
     - name: ottawa-apiserver
-      address: ottawa-apiserver.kube-system:2379
+      address: ottawa-apiserver.kube-system
+      port: 2379
