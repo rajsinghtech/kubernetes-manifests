@@ -8,7 +8,7 @@ spec:
     - group: gateway.networking.k8s.io
       kind: Gateway
       name: private
-      namespace: envoy-gateway-system
+      namespace: home
   hostnames:
     - "hello.rajsingh.info"
   rules:
