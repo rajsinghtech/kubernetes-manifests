@@ -7,5 +7,4 @@ resources:
   - ./mqtt 
   - ./home-assistant 
   - ./code-server 
-  - ./homer  
-  - ./gateway
+  - ./homer
