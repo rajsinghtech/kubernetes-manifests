@@ -14,7 +14,7 @@ ipam:
     clusterPoolIPv4MaskSize: 24
 operator:
   rollOutPods: true
-  replicas: 1
+  replicas: 2
 rollOutCiliumPods: true
 localRedirectPolicy: true
 bgpControlPlane:
