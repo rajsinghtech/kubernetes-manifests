@@ -61,23 +61,3 @@ spec:
   interval: 30m
   retryInterval: 1m
   timeout: 5m 
----
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: &app keiretsu-clustermesh
-  namespace: flux-system
-spec:
-  targetNamespace: keiretsu
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
-  path: ./clusters/common/apps/keiretsu/clustermesh
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: home-kubernetes
-  wait: true
-  interval: 30m
-  retryInterval: 1m
-  timeout: 5m 
