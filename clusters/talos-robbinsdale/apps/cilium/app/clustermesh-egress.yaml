@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    # tailscale.com/tailnet-fqdn: ottawa.keiretsu.ts.net
+    tailscale.com/tailnet-fqdn: ottawa.keiretsu.ts.net
     tailscale.com/proxy-group: common-egress-proxy
   name: ottawa
 spec:
@@ -17,7 +17,7 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    # tailscale.com/tailnet-fqdn: robbinsdale.keiretsu.ts.net
+    tailscale.com/tailnet-fqdn: robbinsdale.keiretsu.ts.net
     tailscale.com/proxy-group: common-egress-proxy
   name: robbinsdale
 spec:
