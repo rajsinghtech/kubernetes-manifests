@@ -6,9 +6,6 @@ metadata:
   labels:
     external-dns: unifi
 spec:
-  addresses:
-    - type: IPAddress
-      value: 10.69.10.15
   gatewayClassName: public
   listeners:
     - name: raj-wildcard-https

@@ -9,3 +9,5 @@ spec:
     kubernetes:
       envoyDeployment:
         replicas: 3
+        envoyService:
+          loadBalancerIP: 10.69.10.15
