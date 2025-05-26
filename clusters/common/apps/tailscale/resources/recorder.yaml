@@ -10,8 +10,8 @@ spec:
     - "tag:${LOCATION}"
   storage:
     s3:
-      endpoint: https://keiretsu.nyc3.cdn.digitaloceanspaces.com
-      bucket: tailscale/sshrecorder
+      endpoint: ${COMMON_S3_ENDPOINT}
+      bucket: tailscale-ssh-recorder
       credentials:
         secret:
           name: s3-auth
