@@ -161,6 +161,14 @@
 			"ip":  ["*"],
 		},
 		
+		// Allow members to use k8s nodes as exit nodes
+		{
+			"src": ["autogroup:member"],
+			"dst": ["autogroup:internet"],
+			"ip":  ["*"],
+			"via": ["tag:k8s"],
+		},
+		
 		// ------------------------------------------------------------------------
 		// SUBNET ROUTE ACCESS VIA K8S NODES
 		// ------------------------------------------------------------------------
