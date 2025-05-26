@@ -36,7 +36,7 @@ spec:
     extraArgs:
       - --ignore-ingress-tls-spec
       - --pihole-server=http://pihole-web.home
-      - --gateway-label-filter=external-dns==home
+      - --gateway-label-filter=external-dns==home-ts
       - --pihole-api-version=6
     policy: sync
     sources:
