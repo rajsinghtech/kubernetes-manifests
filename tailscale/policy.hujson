@@ -1,10 +1,13 @@
 // This tailnet's ACLs are maintained in https://github.com/rajsinghtech/kubernetes-manifests
 {
-	"randomizeClientPort": true, //OPN Sense
+	// Network configuration
+	"randomizeClientPort": true, //OPN Sense compatibility
+	
+	// Legacy ACL rules (deprecated - using grants instead)
 	"acls": [
-		// Allow SSH access to ssh-enabled devices (handled by SSH section below)
-		{"action": "accept", "src": ["autogroup:member"], "dst": ["tag:ssh-enabled:22"]},
 	],
+	
+	// SSH access configuration - defines who can SSH to which devices
 	"ssh": [
 		{
 			"action":          "check",
@@ -15,6 +18,8 @@
 			"enforceRecorder": false,
 		},
 	],
+	
+	// Tag ownership - defines who can assign and manage each tag
 	"tagOwners": {
 		"tag:k8s-operator": [],
 		"tag:k8s":          ["tag:k8s-operator", "autogroup:admin"],
@@ -27,48 +32,75 @@
 		"tag:ssh-enabled":  ["tag:ssh-enabled", "autogroup:admin"],
 		"tag:site-to-site": ["tag:site-to-site", "autogroup:admin"],
 	},
+	
+	// Auto-approval rules - automatically approve certain requests without manual intervention
 	"autoApprovers": {
+		// Allow k8s nodes to act as exit nodes
 		"exitNode": ["tag:k8s"],
+		// Auto-approve subnet routes
 		"routes": {
 			"0.0.0.0/0": ["tag:k8s"],
 			"::/0":      ["tag:k8s"],
 			"192.168.50.0/24": ["tag:robbinsdale"],
 			"192.168.169.0/24": ["tag:ottawa"],
 		},
+		// Auto-approve service exposure
 		"services": {
 			"tag:hello": ["tag:ingress"],
 		},
 	},
+	
+	// Access grants - modern way to define network access and application capabilities
 	"grants": [
+		// === BASIC NETWORK ACCESS ===
+		
+		// SSH access to devices with ssh-enabled tag
+		{
+			"src": ["autogroup:member"],
+			"dst": ["tag:ssh-enabled"],
+			"ip":  ["*:22"],
+		},
+		
+		// Site-to-site VPN connectivity
 		{
 			"src": ["tag:site-to-site"],
 			"dst": ["tag:site-to-site"],
 			"ip":  ["*:*"],
 		},
-		// Allow all k8s nodes to reach each other
+		
+		// Kubernetes cluster internal networking
 		{
 			"src": ["tag:k8s"],
 			"dst": ["tag:k8s"],
 			"ip":  ["*"],
 		},
+		
 		// Allow members to reach k8s nodes
 		{
 			"src": ["autogroup:member"],
 			"dst": ["tag:k8s"],
 			"ip":  ["*"],
 		},
-		// Allow admins and k8s nodes network access to k8s-operator
+		
+		// === KUBERNETES OPERATOR ACCESS ===
+		
+		// Network access to k8s-operator for admins and k8s nodes
 		{
 			"src": ["autogroup:admin", "tag:k8s"],
 			"dst": ["tag:k8s-operator"],
 			"ip":  ["*"],
 		},
-		// Allow members network access to k8s-operator
+		
+		// Network access to k8s-operator for members
 		{
 			"src": ["autogroup:member"],
 			"dst": ["tag:k8s-operator"],
 			"ip":  ["*"],
 		},
+		
+		// === KUBERNETES APPLICATION CAPABILITIES ===
+		
+		// Admin access to Kubernetes API with system:masters privileges
 		{
 			"src": ["autogroup:admin", "tag:k8s"],
 			"dst": ["tag:k8s-operator"],
@@ -84,6 +116,8 @@
 				],
 			},
 		},
+		
+		// Member access to Kubernetes API with read-only privileges
 		{
 			"src": ["autogroup:member"],
 			"dst": ["tag:k8s-operator"],
@@ -100,13 +134,18 @@
 			},
 		},
 	],
+	
+	// Node attributes - define capabilities and features for specific nodes
 	"nodeAttrs": [
+		// Enable app connectors for all nodes
 		{
 			"target": ["*"],
 			"app": {
 				"tailscale.com/app-connectors": [],
 			},
 		},
+		
+		// Enable Tailscale Funnel for k8s nodes (public internet access)
 		{
 			"target": ["tag:k8s"],
 			"attr":   ["funnel"],
