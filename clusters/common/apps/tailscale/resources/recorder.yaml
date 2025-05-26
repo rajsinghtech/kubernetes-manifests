@@ -1,7 +1,7 @@
 apiVersion: tailscale.com/v1alpha1
 kind: Recorder
 metadata:
-  name: recorder
+  name: ${LOCATION}-recorder
 spec:
   enableUI: true
   tags:
