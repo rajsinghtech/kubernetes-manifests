@@ -1,17 +1,17 @@
-apiVersion: tailscale.com/v1alpha1
-kind: Recorder
-metadata:
-  name: recorder
-spec:
-  enableUI: true
-  tags:
-    - "tag:k8s"
-    - "tag:k8s-recorder"
-    - "tag:${LOCATION}"
-  storage:
-    s3:
-      endpoint: ${COMMON_S3_ENDPOINT}
-      bucket: tailscale-ssh-recorder
-      credentials:
-        secret:
-          name: s3-auth
+# apiVersion: tailscale.com/v1alpha1
+# kind: Recorder
+# metadata:
+#   name: recorder
+# spec:
+#   enableUI: true
+#   tags:
+#     - "tag:k8s"
+#     - "tag:k8s-recorder"
+#     - "tag:${LOCATION}"
+#   storage:
+#     s3:
+#       endpoint: ${COMMON_S3_ENDPOINT}
+#       bucket: tailscale-ssh-recorder
+#       credentials:
+#         secret:
+#           name: s3-auth
