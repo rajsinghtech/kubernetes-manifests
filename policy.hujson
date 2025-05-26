@@ -2,7 +2,8 @@
 {
 	"randomizeClientPort": true, //OPN Sense
 	"acls": [
-		{"action": "accept", "src": ["*"], "dst": ["*:*"]},
+		// Allow SSH access to ssh-enabled devices (handled by SSH section below)
+		{"action": "accept", "src": ["autogroup:member"], "dst": ["tag:ssh-enabled:22"]},
 	],
 	"ssh": [
 		{
@@ -37,6 +38,11 @@
 		},
 	},
 	"grants": [
+		{
+			"src": ["tag:site-to-site"],
+			"dst": ["tag:site-to-site"],
+			"ip":  ["*:*"],
+		},
 		{
 			"src": ["autogroup:admin", "tag:k8s"],
 			"dst": ["tag:k8s-operator"],
