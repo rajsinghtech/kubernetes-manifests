@@ -88,8 +88,15 @@
 		// Site-to-site VPN connectivity
 		{
 			"src": ["tag:site-to-site"],
-			"dst": ["tag:site-to-site", "ipset:site-to-site-networks"],
+			"dst": ["tag:site-to-site"],
 			"ip":  ["*"],
+		},
+
+		{
+			"src": ["tag:site-to-site"],
+			"dst": ["ipset:site-to-site-networks"],
+			"ip":  ["*"],
+      "via": ["tag:site-to-site"],
 		},
 		
 		// Kubernetes cluster internal networking
