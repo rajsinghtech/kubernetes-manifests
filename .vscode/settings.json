@@ -1,0 +1,22 @@
+{
+  // Associate .hujson files with JSON with Comments language mode
+  "files.associations": {
+    "*.hujson": "jsonc"
+  },
+  // Configure JSON with Comments formatting and behavior
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features",
+    "editor.formatOnSave": true,
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.detectIndentation": false,
+    "editor.wordWrap": "on"
+  },
+  // JSON formatting settings
+  "json.format.enable": true,
+  "json.format.keepLines": false,
+  // Validate JSON with comments
+  "jsonc.validate.enable": true,
+  // Show whitespace for better formatting visibility
+  "editor.renderWhitespace": "boundary"
+}
