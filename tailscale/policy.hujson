@@ -132,6 +132,13 @@
 			"dst": ["tag:k8s"],
 			"ip":  ["*"],
 		},
+
+		// Kubernetes operator internal networking
+		{
+			"src": ["tag:k8s-operator"],
+			"dst": ["tag:k8s"],
+			"ip":  ["*"],
+		},
 		
 		// Allow members to reach k8s nodes directly
 		{
