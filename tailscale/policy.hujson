@@ -119,14 +119,14 @@
 			"ip":  ["*:22"],
 		},
 		
-		// Site-to-site VPN connectivity (consolidated rule)
+		// Site-to-site VPN connectivity
 		{
 			"src": ["tag:site-to-site"],
 			"dst": ["tag:site-to-site"],
 			"ip":  ["*"],
 		},
 
-    // Site-to-site VPN connectivity (consolidated rule)
+    // Site-to-site VPN connectivity subnets
 		{
 			"src": ["tag:site-to-site"],
 			"dst": ["ipset:site-to-site-networks"],
