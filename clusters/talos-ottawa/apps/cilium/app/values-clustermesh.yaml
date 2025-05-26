@@ -1,43 +1,43 @@
-cluster:
-  name: ${LOCATION}
-  id: ${SITE_ID}
-clustermesh:
-  enabled: true
-  maxConnectedClusters: 255
-  enableEndpointSliceSynchronization: true
-  enableMCSAPISupport: true
-  useAPIServer: true
-  apiserver:
-    replicas: 3
-    service:
-      annotations:
-        tailscale.com/hostname: ${LOCATION}
-      type: LoadBalancer
-      loadBalancerClass: tailscale
-    tls:
-      authMode: cluster
-      server:
-        extraDnsNames:
-        - ${LOCATION}.keiretsu.ts.net
-        - ${LOCATION}.kube-system
-      auto:
-        method: certmanager
-        certManagerIssuerRef:
-          group: cert-manager.io
-          kind: ClusterIssuer
-          name: internal
-  config:
-    enabled: true
-    domain: kube-system
-    clusters:
-    - name: robbinsdale
-      address: robbinsdale.kube-system
-      port: 2379
-hubble:
-  tls:
-    auto:
-      method: certmanager
-      certManagerIssuerRef:
-        group: cert-manager.io
-        kind: ClusterIssuer
-        name: internal
+# cluster:
+#   name: ${LOCATION}
+#   id: ${SITE_ID}
+# clustermesh:
+#   enabled: true
+#   maxConnectedClusters: 255
+#   enableEndpointSliceSynchronization: true
+#   enableMCSAPISupport: true
+#   useAPIServer: true
+#   apiserver:
+#     replicas: 3
+#     service:
+#       annotations:
+#         tailscale.com/hostname: ${LOCATION}
+#       type: LoadBalancer
+#       loadBalancerClass: tailscale
+#     tls:
+#       authMode: cluster
+#       server:
+#         extraDnsNames:
+#         - ${LOCATION}.keiretsu.ts.net
+#         - ${LOCATION}.kube-system
+#       auto:
+#         method: certmanager
+#         certManagerIssuerRef:
+#           group: cert-manager.io
+#           kind: ClusterIssuer
+#           name: internal
+#   config:
+#     enabled: true
+#     domain: kube-system
+#     clusters:
+#     - name: robbinsdale
+#       address: robbinsdale.kube-system
+#       port: 2379
+# hubble:
+#   tls:
+#     auto:
+#       method: certmanager
+#       certManagerIssuerRef:
+#         group: cert-manager.io
+#         kind: ClusterIssuer
+#         name: internal
