@@ -32,6 +32,8 @@
 		"routes": {
 			"0.0.0.0/0": ["tag:k8s"],
 			"::/0":      ["tag:k8s"],
+			"192.168.50.0/24:: ["tag:robbinsdale"],
+			"192.168.169.0/24:: ["tag:ottawa"],
 		},
 		"services": {
 			"tag:hello": ["tag:ingress"],
@@ -42,6 +44,18 @@
 			"src": ["tag:site-to-site"],
 			"dst": ["tag:site-to-site"],
 			"ip":  ["*:*"],
+		},
+		// Allow all k8s nodes to reach each other
+		{
+			"src": ["tag:k8s"],
+			"dst": ["tag:k8s"],
+			"ip":  ["*"],
+		},
+		// Allow members to reach k8s nodes
+		{
+			"src": ["autogroup:member"],
+			"dst": ["tag:k8s"],
+			"ip":  ["*"],
 		},
 		{
 			"src": ["autogroup:admin", "tag:k8s"],
