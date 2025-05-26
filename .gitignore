@@ -1,5 +1,4 @@
 .terraform*
-.vscode/
 terraform.tfstate*
 terraform.tfvars
 tf/**/alpo-*.yaml
