@@ -7,6 +7,30 @@
 	"acls": [
 	],
 	
+	// IP sets for subnet routing
+	"ipsets": {
+		"robbinsdale-subnets": [
+			"192.168.50.0/24",
+			"10.69.1.0/24", 
+			"10.0.0.0/16",
+			"10.1.0.0/16"
+		],
+		"ottawa-subnets": [
+			"192.168.169.0/24",
+			"10.69.2.0/24",
+			"10.2.0.0/16", 
+			"10.3.0.0/16"
+		],
+		"shared-subnets": [
+			"10.69.10.0/24",
+			"10.69.69.0/24"
+		],
+		"site-to-site-networks": [
+			"192.168.169.0/24",
+			"192.168.50.0/24"
+		]
+	},
+	
 	// SSH access configuration - defines who can SSH to which devices
 	"ssh": [
 		{
@@ -64,8 +88,8 @@
 		// Site-to-site VPN connectivity
 		{
 			"src": ["tag:site-to-site"],
-			"dst": ["tag:site-to-site"],
-			"ip":  ["*:*"],
+			"dst": ["tag:site-to-site", "ipset:site-to-site-networks"],
+			"ip":  ["*"],
 		},
 		
 		// Kubernetes cluster internal networking
@@ -80,6 +104,29 @@
 			"src": ["autogroup:member"],
 			"dst": ["tag:k8s"],
 			"ip":  ["*"],
+		},
+		
+		// === SUBNET ROUTE ACCESS ===
+		
+		// Allow members to access Robbinsdale subnets via k8s nodes
+		{
+			"src": ["autogroup:member"],
+			"dst": ["ipset:robbinsdale-subnets"],
+			"via": ["tag:k8s"],
+		},
+		
+		// Allow members to access Ottawa subnets via k8s nodes
+		{
+			"src": ["autogroup:member"],
+			"dst": ["ipset:ottawa-subnets"],
+			"via": ["tag:k8s"],
+		},
+		
+		// Allow members to access shared subnets via k8s nodes
+		{
+			"src": ["autogroup:member"],
+			"dst": ["ipset:shared-subnets"],
+			"via": ["tag:k8s"],
 		},
 		
 		// === KUBERNETES OPERATOR ACCESS ===
