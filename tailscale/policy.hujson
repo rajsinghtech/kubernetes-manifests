@@ -133,6 +133,14 @@
 			"ip":  ["*"],
 			"via": ["tag:site-to-site"],
 		},
+
+    // Site-to-site VPN connectivity subnets
+		{
+			"src": ["ipset:site-to-site-networks"],
+			"dst": ["ipset:site-to-site-networks"],
+			"ip":  ["*"],
+			"via": ["tag:site-to-site"],
+		},
 		
 		// Kubernetes cluster internal networking
 		{
