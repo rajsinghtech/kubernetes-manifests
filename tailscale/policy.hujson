@@ -128,7 +128,7 @@
 
     // Site-to-site VPN connectivity subnets
 		{
-			"src": ["tag:site-to-site"],
+			"src": ["tag:site-to-site", "ipset:site-to-site-networks"],
 			"dst": ["ipset:site-to-site-networks"],
 			"ip":  ["*"],
 			"via": ["tag:site-to-site"],
