@@ -7,3 +7,4 @@ resources:
   - proxyclass.yaml 
   - dnsconfig.yaml
   - proxygroup.yaml
+  - recorder.yaml
