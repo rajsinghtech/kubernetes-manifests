@@ -1,0 +1,52 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: external-dns-pihole-home
+spec:
+  interval: 5m
+  releaseName: external-dns-pihole-home
+  chart:
+    spec:
+      chart: external-dns
+      version: "*" 
+      sourceRef:
+        kind: HelmRepository
+        name: external-dns
+        namespace: flux-system 
+      interval: 1h
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  values:
+    image:
+      tag: v0.17.0
+    fullnameOverride: external-dns-pihole-home
+    logLevel: &logLevel debug
+    provider: pihole
+    env:
+      - name: &name EXTERNAL_DNS_PIHOLE_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: pihole
+            key: "password"
+    extraArgs:
+      - --ignore-ingress-tls-spec
+      - --pihole-server=http://pihole-web.home
+      - --gateway-label-filter=external-dns==home
+      - --pihole-api-version=6
+    policy: sync
+    sources:
+      - gateway-httproute
+      - gateway-tlsroute
+      - gateway-tcproute
+      - gateway-udproute
+      - service
+    domainFilters: 
+      - rajsingh.info
+      - lukehouge.com
+    txtOwnerId: home
+    txtPrefix: k8s.${LOCATION}.
