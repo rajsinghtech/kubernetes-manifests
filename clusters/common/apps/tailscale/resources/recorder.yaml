@@ -1,17 +1,18 @@
-apiVersion: tailscale.com/v1alpha1
-kind: Recorder
-metadata:
-  name: recorder
-spec:
-  enableUI: true
-  tags:
-    - "tag:k8s"
-    - "tag:k8s-recorder"
-    - "tag:${LOCATION}"
-  storage:
-    s3:
-      endpoint: s3://keiretsu.nyc3.digitaloceanspaces.com
-      bucket: tailscale-ssh-recorder
-      credentials:
-        secret:
-          name: s3-auth
+# apiVersion: tailscale.com/v1alpha1
+# kind: Recorder
+# metadata:
+#   name: recorder
+#   namespace: tailscale
+# spec:
+#   enableUI: true
+#   storage:
+#     s3:
+#       bucket: keiretsu
+#       credentials:
+#         secret:
+#           name: s3-auth
+#       endpoint: nyc3.digitaloceanspaces.com
+#   tags:
+#   - tag:k8s
+#   - tag:k8s-recorder
+#   - tag:robbinsdale
