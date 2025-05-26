@@ -1,37 +1,97 @@
 // This tailnet's ACLs are maintained in https://github.com/rajsinghtech/kubernetes-manifests
 {
-	// Network configuration
-	"randomizeClientPort": true, //OPN Sense compatibility
+	// ============================================================================
+	// NETWORK CONFIGURATION
+	// ============================================================================
 	
-	// Legacy ACL rules (deprecated - using grants instead)
-	"acls": [
-	],
+	"randomizeClientPort": true, // OPN Sense compatibility
 	
-	// IP sets for subnet routing
+	// ============================================================================
+	// NETWORK DEFINITIONS
+	// ============================================================================
+	
+	// IP sets for subnet routing and network segmentation
 	"ipsets": {
+		// Robbinsdale site networks
 		"ipset:robbinsdale-subnets": [
-			"192.168.50.0/24",
-			"10.69.1.0/24", 
-			"10.0.0.0/16",
-			"10.1.0.0/16"
+			"192.168.50.0/24",  // Main LAN
+			"10.69.1.0/24",     // Management network
+			"10.0.0.0/16",      // Extended network range
+			"10.1.0.0/16"       // Additional network range
 		],
+		
+		// Ottawa site networks
 		"ipset:ottawa-subnets": [
-			"192.168.169.0/24",
-			"10.69.2.0/24",
-			"10.2.0.0/16", 
-			"10.3.0.0/16"
+			"192.168.169.0/24", // Main LAN
+			"10.69.2.0/24",     // Management network
+			"10.2.0.0/16",      // Extended network range
+			"10.3.0.0/16"       // Additional network range
 		],
+		
+		// Shared infrastructure networks
 		"ipset:shared-subnets": [
-			"10.69.10.0/24",
-			"10.69.69.0/24"
+			"10.69.10.0/24",    // Shared services
+			"10.69.69.0/24"     // Shared infrastructure
 		],
+		
+		// Site-to-site connectivity networks
 		"ipset:site-to-site-networks": [
-			"192.168.169.0/24",
-			"192.168.50.0/24"
+			"192.168.169.0/24", // Ottawa main LAN
+			"192.168.50.0/24"   // Robbinsdale main LAN
 		]
 	},
 	
-	// SSH access configuration - defines who can SSH to which devices
+	// ============================================================================
+	// TAG OWNERSHIP & MANAGEMENT
+	// ============================================================================
+	
+	// Define who can assign and manage each tag
+	"tagOwners": {
+		// Core infrastructure tags
+		"tag:k8s-operator": [],                                    // Bootstrap tag
+		"tag:k8s":          ["tag:k8s-operator", "autogroup:admin"],
+		"tag:k8s-recorder": ["tag:k8s-operator", "autogroup:admin"],
+		
+		// Site-specific tags
+		"tag:robbinsdale":  ["tag:k8s-operator", "autogroup:admin"],
+		"tag:ottawa":       ["tag:k8s-operator", "autogroup:admin"],
+		"tag:stpetersburg": ["tag:k8s-operator", "autogroup:admin"],
+		
+		// Service and connectivity tags
+		"tag:hello":        ["tag:k8s-operator", "autogroup:admin"],
+		"tag:ingress":      ["tag:k8s-operator", "autogroup:admin"],
+		"tag:ssh-enabled":  ["tag:ssh-enabled", "autogroup:admin"],
+		"tag:site-to-site": ["tag:site-to-site", "autogroup:admin"],
+	},
+	
+	// ============================================================================
+	// AUTO-APPROVAL RULES
+	// ============================================================================
+	
+	// Automatically approve certain requests without manual intervention
+	"autoApprovers": {
+		// Exit node approvals
+		"exitNode": ["tag:k8s"],
+		
+		// Subnet route approvals
+		"routes": {
+			"0.0.0.0/0":           ["tag:k8s"],        // Default route (exit node)
+			"::/0":                ["tag:k8s"],        // IPv6 default route
+			"192.168.50.0/24":     ["tag:robbinsdale"], // Robbinsdale LAN
+			"192.168.169.0/24":    ["tag:ottawa"],     // Ottawa LAN
+		},
+		
+		// Service exposure approvals
+		"services": {
+			"tag:hello": ["tag:ingress"],
+		},
+	},
+	
+	// ============================================================================
+	// SSH ACCESS CONFIGURATION
+	// ============================================================================
+	
+	// Define SSH access policies
 	"ssh": [
 		{
 			"action":          "check",
@@ -43,40 +103,14 @@
 		},
 	],
 	
-	// Tag ownership - defines who can assign and manage each tag
-	"tagOwners": {
-		"tag:k8s-operator": [],
-		"tag:k8s":          ["tag:k8s-operator", "autogroup:admin"],
-		"tag:k8s-recorder": ["tag:k8s-operator", "autogroup:admin"],
-		"tag:robbinsdale":  ["tag:k8s-operator", "autogroup:admin"],
-		"tag:ottawa":       ["tag:k8s-operator", "autogroup:admin"],
-		"tag:stpetersburg": ["tag:k8s-operator", "autogroup:admin"],
-		"tag:hello":        ["tag:k8s-operator", "autogroup:admin"],
-		"tag:ingress":      ["tag:k8s-operator", "autogroup:admin"],
-		"tag:ssh-enabled":  ["tag:ssh-enabled", "autogroup:admin"],
-		"tag:site-to-site": ["tag:site-to-site", "autogroup:admin"],
-	},
+	// ============================================================================
+	// ACCESS GRANTS (NETWORK & APPLICATION POLICIES)
+	// ============================================================================
 	
-	// Auto-approval rules - automatically approve certain requests without manual intervention
-	"autoApprovers": {
-		// Allow k8s nodes to act as exit nodes
-		"exitNode": ["tag:k8s"],
-		// Auto-approve subnet routes
-		"routes": {
-			"0.0.0.0/0": ["tag:k8s"],
-			"::/0":      ["tag:k8s"],
-			"192.168.50.0/24": ["tag:robbinsdale"],
-			"192.168.169.0/24": ["tag:ottawa"],
-		},
-		// Auto-approve service exposure
-		"services": {
-			"tag:hello": ["tag:ingress"],
-		},
-	},
-	
-	// Access grants - modern way to define network access and application capabilities
 	"grants": [
-		// === BASIC NETWORK ACCESS ===
+		// ------------------------------------------------------------------------
+		// BASIC NETWORK ACCESS
+		// ------------------------------------------------------------------------
 		
 		// SSH access to devices with ssh-enabled tag
 		{
@@ -85,18 +119,11 @@
 			"ip":  ["*:22"],
 		},
 		
-		// Site-to-site VPN connectivity
+		// Site-to-site VPN connectivity (consolidated rule)
 		{
 			"src": ["tag:site-to-site"],
-			"dst": ["tag:site-to-site"],
+			"dst": ["tag:site-to-site", "ipset:site-to-site-networks"],
 			"ip":  ["*"],
-		},
-
-		{
-			"src": ["tag:site-to-site"],
-			"dst": ["ipset:site-to-site-networks"],
-			"ip":  ["*"],
-      "via": ["tag:site-to-site"],
 		},
 		
 		// Kubernetes cluster internal networking
@@ -106,16 +133,18 @@
 			"ip":  ["*"],
 		},
 		
-		// Allow members to reach k8s nodes
+		// Allow members to reach k8s nodes directly
 		{
 			"src": ["autogroup:member"],
 			"dst": ["tag:k8s"],
 			"ip":  ["*"],
 		},
 		
-		// === SUBNET ROUTE ACCESS ===
+		// ------------------------------------------------------------------------
+		// SUBNET ROUTE ACCESS VIA K8S NODES
+		// ------------------------------------------------------------------------
 		
-		// Allow members to access Robbinsdale subnets via k8s nodes
+		// Access to Robbinsdale subnets via k8s subnet routers
 		{
 			"src": ["autogroup:member"],
 			"dst": ["ipset:robbinsdale-subnets"],
@@ -123,7 +152,7 @@
 			"via": ["tag:k8s"],
 		},
 		
-		// Allow members to access Ottawa subnets via k8s nodes
+		// Access to Ottawa subnets via k8s subnet routers
 		{
 			"src": ["autogroup:member"],
 			"dst": ["ipset:ottawa-subnets"],
@@ -131,7 +160,7 @@
 			"via": ["tag:k8s"],
 		},
 		
-		// Allow members to access shared subnets via k8s nodes
+		// Access to shared infrastructure subnets via k8s subnet routers
 		{
 			"src": ["autogroup:member"],
 			"dst": ["ipset:shared-subnets"],
@@ -139,7 +168,9 @@
 			"via": ["tag:k8s"],
 		},
 		
-		// === KUBERNETES OPERATOR ACCESS ===
+		// ------------------------------------------------------------------------
+		// KUBERNETES OPERATOR ACCESS
+		// ------------------------------------------------------------------------
 		
 		// Network access to k8s-operator for admins and k8s nodes
 		{
@@ -155,7 +186,9 @@
 			"ip":  ["*"],
 		},
 		
-		// === KUBERNETES APPLICATION CAPABILITIES ===
+		// ------------------------------------------------------------------------
+		// KUBERNETES APPLICATION CAPABILITIES
+		// ------------------------------------------------------------------------
 		
 		// Admin access to Kubernetes API with system:masters privileges
 		{
@@ -192,7 +225,11 @@
 		},
 	],
 	
-	// Node attributes - define capabilities and features for specific nodes
+	// ============================================================================
+	// NODE ATTRIBUTES & CAPABILITIES
+	// ============================================================================
+	
+	// Define capabilities and features for specific nodes
 	"nodeAttrs": [
 		// Enable app connectors for all nodes
 		{
@@ -208,4 +245,11 @@
 			"attr":   ["funnel"],
 		},
 	],
+	
+	// ============================================================================
+	// LEGACY CONFIGURATION (DEPRECATED)
+	// ============================================================================
+	
+	// Legacy ACL rules (deprecated - using grants instead)
+	"acls": [],
 }
