@@ -82,13 +82,6 @@
 			"ip":  ["*"],
 		},
 		
-		// Allow members to access subnet routes via k8s nodes
-		{
-			"src": ["autogroup:member"],
-			"dst": ["0.0.0.0/0", "::/0"],
-			"via": ["tag:k8s"],
-		},
-		
 		// === KUBERNETES OPERATOR ACCESS ===
 		
 		// Network access to k8s-operator for admins and k8s nodes
