@@ -112,6 +112,7 @@
 		{
 			"src": ["autogroup:member"],
 			"dst": ["ipset:robbinsdale-subnets"],
+			"ip":  ["*"],
 			"via": ["tag:k8s"],
 		},
 		
@@ -119,6 +120,7 @@
 		{
 			"src": ["autogroup:member"],
 			"dst": ["ipset:ottawa-subnets"],
+			"ip":  ["*"],
 			"via": ["tag:k8s"],
 		},
 		
@@ -126,6 +128,7 @@
 		{
 			"src": ["autogroup:member"],
 			"dst": ["ipset:shared-subnets"],
+			"ip":  ["*"],
 			"via": ["tag:k8s"],
 		},
 		
