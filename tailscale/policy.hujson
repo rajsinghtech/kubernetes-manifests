@@ -134,6 +134,12 @@
 			"via": ["tag:site-to-site"],
 		},
 
+		{
+			"src": ["ipset:site-to-site-networks"],
+			"dst": ["ipset:site-to-site-networks"],
+			"ip":  ["*"],
+		},
+
 		// Kubernetes cluster internal networking
 		{
 			"src": ["tag:k8s"],
