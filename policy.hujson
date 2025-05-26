@@ -1,0 +1,83 @@
+// This tailnet's ACLs are maintained in https://github.com/rajsinghtech/kubernetes-manifests
+{
+	"randomizeClientPort": true, //OPN Sense
+	"acls": [
+		{"action": "accept", "src": ["*"], "dst": ["*:*"]},
+	],
+	"ssh": [
+		{
+			"action":          "check",
+			"src":             ["autogroup:member"],
+			"dst":             ["tag:ssh-enabled"],
+			"users":           ["root", "autogroup:nonroot"],
+			"recorder":        ["tag:k8s-recorder"],
+			"enforceRecorder": false,
+		},
+	],
+	"tagOwners": {
+		"tag:k8s-operator": [],
+		"tag:k8s":          ["tag:k8s-operator", "autogroup:admin"],
+		"tag:k8s-recorder": ["tag:k8s-operator", "autogroup:admin"],
+		"tag:robbinsdale":  ["tag:k8s-operator", "autogroup:admin"],
+		"tag:ottawa":       ["tag:k8s-operator", "autogroup:admin"],
+		"tag:stpetersburg": ["tag:k8s-operator", "autogroup:admin"],
+		"tag:hello":        ["tag:k8s-operator", "autogroup:admin"],
+		"tag:ingress":      ["tag:k8s-operator", "autogroup:admin"],
+		"tag:ssh-enabled":  ["tag:ssh-enabled", "autogroup:admin"],
+		"tag:site-to-site": ["tag:site-to-site", "autogroup:admin"],
+	},
+	"autoApprovers": {
+		"exitNode": ["tag:k8s"],
+		"routes": {
+			"0.0.0.0/0": ["tag:k8s"],
+			"::/0":      ["tag:k8s"],
+		},
+		"services": {
+			"tag:hello": ["tag:ingress"],
+		},
+	},
+	"grants": [
+		{
+			"src": ["autogroup:admin", "tag:k8s"],
+			"dst": ["tag:k8s-operator"],
+			"app": {
+				"tailscale.com/cap/kubernetes": [
+					{
+						"impersonate": {
+							"groups": ["system:masters"],
+						},
+						// "recorder":        ["tag:k8s-recorder"],
+						// "enforceRecorder": false,
+					},
+				],
+			},
+		},
+		{
+			"src": ["autogroup:member"],
+			"dst": ["tag:k8s-operator"],
+			"app": {
+				"tailscale.com/cap/kubernetes": [
+					{
+						"impersonate": {
+							"groups": ["tailnet-readers"],
+						},
+						// "recorder":        ["tag:k8s-recorder"],
+						// "enforceRecorder": false,
+					},
+				],
+			},
+		},
+	],
+	"nodeAttrs": [
+		{
+			"target": ["*"],
+			"app": {
+				"tailscale.com/app-connectors": [],
+			},
+		},
+		{
+			"target": ["tag:k8s"],
+			"attr":   ["funnel"],
+		},
+	],
+}
