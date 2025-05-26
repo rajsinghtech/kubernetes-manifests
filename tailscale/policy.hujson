@@ -37,9 +37,7 @@
 		// Site-to-site connectivity networks
 		"ipset:site-to-site-networks": [
 			"192.168.169.0/24", // Ottawa main LAN
-			"192.168.50.0/24",   // Robbinsdale main LAN
-			"10.3.0.0/16",       // Pod network range
-			"10.1.0.0/16"        // Pod network range
+			"192.168.50.0/24"   // Robbinsdale main LAN
 		]
 	},
 	
