@@ -159,7 +159,7 @@
 		// Allow members to reach k8s nodes directly
 		{
 			"src": ["autogroup:member"],
-			"dst": ["tag:k8s"],
+			"dst": ["tag:k8s", "tag:ingress"],
 			"ip":  ["*"],
 		},
 		
