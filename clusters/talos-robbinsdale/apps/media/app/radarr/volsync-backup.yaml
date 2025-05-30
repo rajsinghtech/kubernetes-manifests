@@ -1,13 +1,3 @@
-apiVersion: volsync.backube/v1alpha1
-kind: ReplicationDestination
-metadata:
-  name: radarr-config-unas
-spec:
-  trigger:
-    schedule: "0 */7 * * *"
-  rsync:
-    copyMethod: Direct
-    destinationPVC: radarr-config-unas
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
@@ -16,8 +6,14 @@ metadata:
 spec:
   sourcePVC: radarr-config-ceph
   trigger:
-    schedule: "0 */7 * * *"
-  rsync:
-    sshKeys: volsync-rsync-dst-src-radarr-config-unas
-    address: volsync-rsync-dst-radarr-config-unas
+    schedule: "0 0 * * *"
+  restic:
+    pruneIntervalDays: 14
+    repository: restic-config
+    retain:
+      hourly: 1
+      daily: 1
+      weekly: 5
+      monthly: 2
+      yearly: 1
     copyMethod: Direct
