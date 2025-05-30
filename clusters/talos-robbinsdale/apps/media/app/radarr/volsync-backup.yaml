@@ -2,18 +2,18 @@
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
-  name: radarr-config-ceph
+  name: media-radarr-config-ceph
 spec:
   sourcePVC: radarr-config-ceph
   trigger:
-    schedule: "0 0 * * *"
+    schedule: "0 2 * * *"
   restic:
     pruneIntervalDays: 14
-    repository: restic-radarr-config-ceph
+    repository: restic-media-radarr-config-ceph
     retain:
       hourly: 1
-      daily: 1
-      weekly: 5
+      daily: 3
+      weekly: 4
       monthly: 2
       yearly: 1
     copyMethod: Direct
@@ -21,7 +21,7 @@ spec:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: restic-radarr-config-ceph
+  name: restic-media-radarr-config-ceph
 type: Opaque
 stringData:
   RESTIC_REPOSITORY: s3:https://${COMMON_S3_ENDPOINT}/keiretsu/${LOCATION}/media/radarr-config
