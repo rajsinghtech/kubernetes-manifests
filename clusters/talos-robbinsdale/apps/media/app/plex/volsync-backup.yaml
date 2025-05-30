@@ -1,29 +1,23 @@
 apiVersion: volsync.backube/v1alpha1
+kind: ReplicationDestination
+metadata:
+  name: plex-config-unas
+spec:
+  trigger:
+    schedule: "0 */5 * * *"
+  rsync:
+    copyMethod: Direct
+    destinationPVC: plex-config-unas
+---
+apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
-  name: media-plex-config-ceph
+  name: plex-config-ceph
 spec:
   sourcePVC: plex-config-ceph
   trigger:
-    schedule: "0 3 * * *"
-  restic:
-    pruneIntervalDays: 14
-    repository: restic-media-plex-config-ceph
-    retain:
-      hourly: 1
-      daily: 3
-      weekly: 4
-      monthly: 2
-      yearly: 1
+    schedule: "0 */5 * * *"
+  rsync:
+    sshKeys: volsync-rsync-dst-src-plex-config-unas
+    address: volsync-rsync-dst-plex-config-unas
     copyMethod: Direct
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: restic-media-plex-config-ceph
-type: Opaque
-stringData:
-  RESTIC_REPOSITORY: s3:https://${COMMON_S3_ENDPOINT}/keiretsu/${LOCATION}/media/plex-config
-  RESTIC_PASSWORD: ${COMMON_RESTIC_SECRET}
-  AWS_ACCESS_KEY_ID: ${COMMON_S3_ACCESS_KEY}
-  AWS_SECRET_ACCESS_KEY: ${COMMON_S3_SECRET_KEY}
