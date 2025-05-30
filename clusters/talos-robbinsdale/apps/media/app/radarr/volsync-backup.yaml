@@ -1,22 +1,22 @@
-# ---
-# apiVersion: volsync.backube/v1alpha1
-# kind: ReplicationSource
-# metadata:
-#   name: radarr-config-ceph
-# spec:
-#   sourcePVC: radarr-config-ceph
-#   trigger:
-#     schedule: "0 0 * * *"
-#   restic:
-#     pruneIntervalDays: 14
-#     repository: restic-radarr-config-ceph
-#     retain:
-#       hourly: 1
-#       daily: 1
-#       weekly: 5
-#       monthly: 2
-#       yearly: 1
-#     copyMethod: Direct
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: radarr-config-ceph
+spec:
+  sourcePVC: radarr-config-ceph
+  trigger:
+    schedule: "0 0 * * *"
+  restic:
+    pruneIntervalDays: 14
+    repository: restic-radarr-config-ceph
+    retain:
+      hourly: 1
+      daily: 1
+      weekly: 5
+      monthly: 2
+      yearly: 1
+    copyMethod: Direct
 ---
 apiVersion: v1
 kind: Secret
