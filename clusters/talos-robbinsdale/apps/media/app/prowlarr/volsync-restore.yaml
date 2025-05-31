@@ -5,19 +5,9 @@ metadata:
 spec:
   trigger:
     manual: first
-  rsync:
-    copyMethod: Direct
+  paused: true
+  restic:
+    repository: restic-media-prowlarr-config-ceph
     destinationPVC: prowlarr-config-ceph
----
-apiVersion: volsync.backube/v1alpha1
-kind: ReplicationSource
-metadata:
-  name: prowlarr-config-unas
-spec:
-  sourcePVC: prowlarr-config-unas
-  trigger:
-    manual: first
-  rsync:
-    sshKeys: volsync-rsync-dst-src-prowlarr-config-ceph
-    address: volsync-rsync-dst-prowlarr-config-ceph
     copyMethod: Direct
+    restoreAsOf: "2025-05-31T10:00:00Z"

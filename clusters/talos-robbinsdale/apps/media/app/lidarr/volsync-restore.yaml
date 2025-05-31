@@ -5,19 +5,9 @@ metadata:
 spec:
   trigger:
     manual: first
-  rsync:
-    copyMethod: Direct
+  paused: true
+  restic:
+    repository: restic-media-lidarr-config-ceph
     destinationPVC: lidarr-config-ceph
----
-apiVersion: volsync.backube/v1alpha1
-kind: ReplicationSource
-metadata:
-  name: lidarr-config-unas
-spec:
-  sourcePVC: lidarr-config-unas
-  trigger:
-    manual: first
-  rsync:
-    sshKeys: volsync-rsync-dst-src-lidarr-config-ceph
-    address: volsync-rsync-dst-lidarr-config-ceph
     copyMethod: Direct
+    restoreAsOf: "2025-05-31T10:00:00Z"

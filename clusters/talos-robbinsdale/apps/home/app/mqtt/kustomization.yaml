@@ -5,10 +5,7 @@ namespace: home
 resources:
   - deployment.yaml
   - service.yaml
-  - unas.yaml
   - ceph.yaml
-  # - volsync-backup.yaml
-  # - volsync-restore.yaml   
 configMapGenerator:
   - name: mqtt-config
     files:

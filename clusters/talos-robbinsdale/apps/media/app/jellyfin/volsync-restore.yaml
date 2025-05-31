@@ -5,19 +5,9 @@ metadata:
 spec:
   trigger:
     manual: first
-  rsync:
-    copyMethod: Direct
+  paused: true
+  restic:
+    repository: restic-media-jellyfin-config-ceph
     destinationPVC: jellyfin-config-ceph
----
-apiVersion: volsync.backube/v1alpha1
-kind: ReplicationSource
-metadata:
-  name: jellyfin-config-unas
-spec:
-  sourcePVC: jellyfin-config-unas
-  trigger:
-    manual: first
-  rsync:
-    sshKeys: volsync-rsync-dst-src-jellyfin-config-ceph
-    address: volsync-rsync-dst-jellyfin-config-ceph
     copyMethod: Direct
+    restoreAsOf: "2025-05-31T10:00:00Z"

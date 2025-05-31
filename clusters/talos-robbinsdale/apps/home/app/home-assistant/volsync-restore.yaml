@@ -5,19 +5,9 @@ metadata:
 spec:
   trigger:
     manual: first
-  rsync:
-    copyMethod: Direct
+  paused: true
+  restic:
+    repository: restic-home-homeassistant-config-ceph
     destinationPVC: homeassistant-config-ceph
----
-apiVersion: volsync.backube/v1alpha1
-kind: ReplicationSource
-metadata:
-  name: homeassistant-config-unas
-spec:
-  sourcePVC: homeassistant-config-unas
-  trigger:
-    manual: first
-  rsync:
-    sshKeys: volsync-rsync-dst-src-homeassistant-config-ceph
-    address: volsync-rsync-dst-homeassistant-config-ceph
     copyMethod: Direct
+    restoreAsOf: "2025-05-31T10:00:00Z"

@@ -9,4 +9,4 @@ resources:
   - ceph.yaml
   - httproute.yaml
   - volsync-backup.yaml
-  # - volsync-restore.yaml
+  - volsync-restore.yaml

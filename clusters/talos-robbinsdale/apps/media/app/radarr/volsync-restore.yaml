@@ -5,19 +5,9 @@ metadata:
 spec:
   trigger:
     manual: first
-  rsync:
-    copyMethod: Direct
+  paused: true
+  restic:
+    repository: restic-media-radarr-config-ceph
     destinationPVC: radarr-config-ceph
----
-apiVersion: volsync.backube/v1alpha1
-kind: ReplicationSource
-metadata:
-  name: radarr-config-unas
-spec:
-  sourcePVC: radarr-config-unas
-  trigger:
-    manual: first
-  rsync:
-    sshKeys: volsync-rsync-dst-src-radarr-config-ceph
-    address: volsync-rsync-dst-radarr-config-ceph
     copyMethod: Direct
+    restoreAsOf: "2025-05-31T10:00:00Z"
