@@ -3,10 +3,9 @@ kind: ReplicationDestination
 metadata:
   name: audioarr-config-ceph
 spec:
-  sourcePVC: audioarr-config-ceph
   trigger:
     manual: first
-  paused: false
+  paused: true
   restic:
     repository: restic-media-audioarr-config-ceph
     destinationPVC: audioarr-config-ceph
