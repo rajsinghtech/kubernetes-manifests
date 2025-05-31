@@ -1,12 +1,12 @@
 apiVersion: volsync.backube/v1alpha1
-kind: ReplicationSource
+kind: ReplicationDestination
 metadata:
   name: audioarr-config-ceph
 spec:
   sourcePVC: audioarr-config-ceph
   trigger:
     manual: first
-  pause: false
+  paused: false
   restic:
     repository: restic-media-audioarr-config-ceph
     destinationPVC: audioarr-config-ceph
