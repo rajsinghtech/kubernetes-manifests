@@ -17,6 +17,7 @@ spec:
       containers:
         - name: tsflow
           image: ghcr.io/rajsinghtech/tsflow:latest
+          imagePullPolicy: Always
           ports:
             - name: http
               containerPort: 8080 
