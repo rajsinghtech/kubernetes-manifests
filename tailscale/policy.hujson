@@ -62,6 +62,7 @@
 		// Service and connectivity tags
 		"tag:hello":        ["tag:k8s-operator", "autogroup:admin"],
 		"tag:ingress":      ["tag:k8s-operator", "autogroup:admin"],
+		"tag:egress":       ["tag:k8s-operator", "autogroup:admin"],
 		"tag:ssh-enabled":  ["tag:ssh-enabled", "autogroup:admin"],
 		"tag:site-to-site": ["tag:site-to-site", "autogroup:admin"],
 	},

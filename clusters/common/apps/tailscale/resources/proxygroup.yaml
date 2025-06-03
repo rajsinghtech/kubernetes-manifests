@@ -5,6 +5,7 @@ metadata:
 spec:
   hostnamePrefix: common-${LOCATION}-egress-proxy
   tags:
+    - tag:k8s
     - tag:egress
   proxyClass: common
   type: egress
@@ -17,6 +18,7 @@ metadata:
 spec:
   hostnamePrefix: common-${LOCATION}-ingress-proxy
   tags:
+    - tag:k8s
     - tag:ingress
   proxyClass: common
   type: ingress
