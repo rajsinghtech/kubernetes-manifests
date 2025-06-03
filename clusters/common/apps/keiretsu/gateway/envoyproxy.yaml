@@ -2,7 +2,7 @@
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: EnvoyProxy
 metadata:
-  name: ts
+  name: local-ts
 spec:
   provider:
     type: Kubernetes
@@ -11,7 +11,7 @@ spec:
         replicas: 3 
       envoyService:
         annotations:
-          tailscale.com/hostname: common-envoy-ts
-          # tailscale.com/proxy-group: common-ingress-proxy
+          tailscale.com/hostname: ${LOCATION}-envoy-gateway
+          tailscale.com/proxy-group: common-ingress
         type: LoadBalancer
         loadBalancerClass: tailscale

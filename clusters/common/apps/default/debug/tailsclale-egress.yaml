@@ -4,7 +4,7 @@ metadata:
   name: goldpinger-ottawa
   annotations:
     tailscale.com/tailnet-fqdn: goldpinger-ottawa.keiretsu.ts.net
-    # tailscale.com/proxy-group: common-egress-proxy
+    # tailscale.com/proxy-group: common-egress
 spec:
   externalName: placeholder   # any value - will be overwritten by operator
   type: ExternalName 
@@ -19,7 +19,7 @@ metadata:
   name: goldpinger-robbinsdale
   annotations:
     tailscale.com/tailnet-fqdn: goldpinger-robbinsdale.keiretsu.ts.net
-    # tailscale.com/proxy-group: common-egress-proxy
+    # tailscale.com/proxy-group: common-egress
 spec:
   externalName: placeholder   # any value - will be overwritten by operator
   type: ExternalName 

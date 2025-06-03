@@ -96,8 +96,12 @@
 		
 		// Service exposure approvals
 		"services": {
-			"tag:hello": ["tag:ingress"],
-			"svc:test": ["tag:test"],
+			"tag:hello":                      ["tag:ingress"],
+			"svc:robbinsdale-envoy-gateway":  ["tag:ingress"],
+			"svc:ottawa-envoy-gateway":       ["tag:ingress"],
+			"svc:stpetersburg-envoy-gateway": ["tag:ingress"],
+			"svc:${LOCATION}-envoy-gateway":  ["tag:ingress"],
+			"svc:test":                       ["tag:test"],
 		},
 	},
 	

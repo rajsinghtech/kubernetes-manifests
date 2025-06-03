@@ -3,7 +3,7 @@ kind: Service
 metadata:
   annotations:
     tailscale.com/tailnet-fqdn: ottawa.keiretsu.ts.net
-    # tailscale.com/proxy-group: common-egress-proxy
+    # tailscale.com/proxy-group: common-egress
   name: ottawa
 spec:
   externalName: placeholder   # any value - will be overwritten by operator

@@ -122,7 +122,7 @@ spec:
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
-      name: ts
+      name: local-ts
       namespace: keiretsu
   hostnames:
     - "goldpinger.${LOCATION}.${RAJSINGH_INFO_DOMAIN}"

@@ -1,9 +1,9 @@
 apiVersion: tailscale.com/v1alpha1
 kind: ProxyGroup
 metadata:
-  name: common-egress-proxy
+  name: common-egress
 spec:
-  hostnamePrefix: common-${LOCATION}-egress-proxy
+  hostnamePrefix: ${LOCATION}-common-egress
   tags:
     - tag:k8s
     - tag:egress
@@ -14,9 +14,9 @@ spec:
 apiVersion: tailscale.com/v1alpha1
 kind: ProxyGroup
 metadata:
-  name: common-ingress-proxy
+  name: common-ingress
 spec:
-  hostnamePrefix: common-${LOCATION}-ingress-proxy
+  hostnamePrefix: ${LOCATION}-common-ingress
   tags:
     - tag:k8s
     - tag:ingress
