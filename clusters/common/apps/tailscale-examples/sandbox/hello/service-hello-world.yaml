@@ -18,9 +18,9 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: hello-world-shared
+  name: shared-hello-world
   annotations:
-    tailscale.com/hostname: ${LOCATION}-tailscale-examples-hello-world-shared
+    tailscale.com/hostname: shared-tailscale-examples-hello-world
     tailscale.com/proxy-group: common-ingress
     tailscale.com/tags: "tag:hello"
 spec:
