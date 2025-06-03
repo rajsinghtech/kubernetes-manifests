@@ -14,3 +14,21 @@ spec:
       targetPort: 80
   type: LoadBalancer
   loadBalancerClass: tailscale
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-world-shared
+  annotations:
+    tailscale.com/hostname: hello-world-shared-tailscale-examples
+    tailscale.com/proxy-group: common-ingress-proxy
+    tailscale.com/tags: "tag:hello"
+spec:
+  selector:
+    app: hello-world
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer
+  loadBalancerClass: tailscale
