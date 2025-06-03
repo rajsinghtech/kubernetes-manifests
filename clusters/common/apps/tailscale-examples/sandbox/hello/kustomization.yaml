@@ -7,4 +7,5 @@ resources:
   - service-hello-world.yaml
   - deployment-curl-hello-world-robbinsdale.yaml
   - deployment-curl-hello-world-ottawa.yaml
+  - deployment-curl-hello-world-shared.yaml
   - egress.yaml
