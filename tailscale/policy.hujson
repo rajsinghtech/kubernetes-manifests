@@ -154,7 +154,14 @@
 
 		// Kubernetes cluster internal networking
 		{
-			"src": ["tag:k8s-operator", "tag:k8s"],
+			"src": ["tag:k8s"],
+			"dst": ["tag:k8s"],
+			"ip":  ["*"],
+		},
+
+		// Kubernetes operator internal networking
+		{
+			"src": ["tag:k8s-operator"],
 			"dst": ["tag:k8s"],
 			"ip":  ["*"],
 		},
@@ -178,12 +185,54 @@
 		// SUBNET ROUTE ACCESS VIA K8S NODES
 		// ------------------------------------------------------------------------
 		
-		// Access to all subnets via k8s subnet routers
+		// Access to Robbinsdale subnets via k8s subnet routers
 		{
 			"src": ["autogroup:member"],
-			"dst": ["ipset:robbinsdale-subnets", "ipset:ottawa-subnets", "ipset:stpetersburg-subnets", "ipset:shared-subnets"],
+			"dst": ["ipset:robbinsdale-subnets"],
 			"ip":  ["*"],
 			"via": ["tag:k8s"],
+		},
+		
+		// Access to Ottawa subnets via k8s subnet routers
+		{
+			"src": ["autogroup:member"],
+			"dst": ["ipset:ottawa-subnets"],
+			"ip":  ["*"],
+			"via": ["tag:k8s"],
+		},
+
+    // Access to St Petersburg subnets via k8s subnet routers
+		{
+			"src": ["autogroup:member"],
+			"dst": ["ipset:stpetersburg-subnets"],
+			"ip":  ["*"],
+			"via": ["tag:k8s"],
+		},
+		
+		// Access to shared infrastructure subnets via k8s subnet routers
+		{
+			"src": ["autogroup:member"],
+			"dst": ["ipset:shared-subnets"],
+			"ip":  ["*"],
+			"via": ["tag:k8s"],
+		},
+		
+		// ------------------------------------------------------------------------
+		// KUBERNETES OPERATOR ACCESS
+		// ------------------------------------------------------------------------
+		
+		// Network access to k8s-operator for admins and k8s nodes
+		{
+			"src": ["autogroup:admin", "tag:k8s"],
+			"dst": ["tag:k8s-operator"],
+			"ip":  ["*"],
+		},
+		
+		// Network access to k8s-operator for members
+		{
+			"src": ["autogroup:member"],
+			"dst": ["tag:k8s-operator"],
+			"ip":  ["*"],
 		},
 		
 		// ------------------------------------------------------------------------
