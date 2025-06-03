@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-world-robbinsdale
+  annotations:
+    tailscale.com/tailnet-fqdn: hello-world-robbinsdale.tailscale-examples.ts.net
+    tailscale.com/proxy-group: common-egress-proxy
+spec:
+  externalName: placeholder
+  type: ExternalName
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-world-ottawa
+  annotations:
+    tailscale.com/tailnet-fqdn: hello-world-ottawa.tailscale-examples.ts.net
+    tailscale.com/proxy-group: common-egress-proxy
+spec:
+  externalName: placeholder
+  type: ExternalName
+  ports:
+  - name: http
+    port: 80 
+    protocol: TCP
