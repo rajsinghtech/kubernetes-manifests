@@ -4,7 +4,7 @@ metadata:
   name: hello-world-robbinsdale
   annotations:
     tailscale.com/tailnet-fqdn: hello-world-robbinsdale-tailscale-examples.keiretsu.ts.net
-    tailscale.com/proxy-group: common-egress-proxy
+    tailscale.com/proxy-group: common-egress
 spec:
   externalName: placeholder
   type: ExternalName
@@ -19,7 +19,7 @@ metadata:
   name: hello-world-ottawa
   annotations:
     tailscale.com/tailnet-fqdn: hello-world-ottawa-tailscale-examples.keiretsu.ts.net
-    tailscale.com/proxy-group: common-egress-proxy
+    tailscale.com/proxy-group: common-egress
 spec:
   externalName: placeholder
   type: ExternalName
@@ -34,7 +34,7 @@ metadata:
   name: hello-world-shared-egress
   annotations:
     tailscale.com/tailnet-fqdn: hello-world-shared-tailscale-examples.keiretsu.ts.net
-    tailscale.com/proxy-group: common-egress-proxy
+    tailscale.com/proxy-group: common-egress
 spec:
   externalName: placeholder
   type: ExternalName

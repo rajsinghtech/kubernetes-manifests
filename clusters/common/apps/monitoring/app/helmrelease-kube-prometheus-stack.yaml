@@ -260,7 +260,7 @@ spec:
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
-      name: ts
+      name: local-ts
       namespace: keiretsu
   hostnames:
     - "prometheus.${LOCATION}.${RAJSINGH_INFO_DOMAIN}"
@@ -284,7 +284,7 @@ spec:
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
-      name: ts
+      name: local-ts
       namespace: keiretsu
   hostnames:
     - "grafana.${LOCATION}.${RAJSINGH_INFO_DOMAIN}"

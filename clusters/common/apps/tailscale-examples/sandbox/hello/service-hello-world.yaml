@@ -4,7 +4,7 @@ kind: Service
 metadata:
   name: hello-world
   annotations:
-    tailscale.com/hostname: hello-world-${LOCATION}-tailscale-examples
+    tailscale.com/hostname: ${LOCATION}-tailscale-examples-hello-world
 spec:
   selector:
     app: hello-world
@@ -20,8 +20,8 @@ kind: Service
 metadata:
   name: hello-world-shared
   annotations:
-    tailscale.com/hostname: hello-world-shared-tailscale-examples
-    tailscale.com/proxy-group: common-ingress-proxy
+    tailscale.com/hostname: ${LOCATION}-tailscale-examples-hello-world-shared
+    tailscale.com/proxy-group: common-ingress
     tailscale.com/tags: "tag:hello"
 spec:
   selector:
