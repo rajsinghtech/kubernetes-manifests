@@ -27,6 +27,14 @@
 			"10.2.0.0/16",      // Service network range
 			"10.3.0.0/16"       // Pod network range
 		],
+
+  		// St Petersburg site networks
+      "ipset:stpetersburg-subnets": [
+        "192.168.73.0/24", // Main LAN
+        "10.69.3.0/24",     // LB network range
+        "10.4.0.0/16",      // Service network range
+        "10.5.0.0/16"       // Pod network range
+      ],
 		
 		// Shared infrastructure networks
 		"ipset:shared-subnets": [
