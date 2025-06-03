@@ -2,10 +2,10 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: external-dns-pihole-keiretsu
+  name: external-dns-pihole-local-ts
 spec:
   interval: 5m
-  releaseName: external-dns-pihole-keiretsu
+  releaseName: external-dns-pihole-local-ts
   chart:
     spec:
       chart: external-dns
@@ -24,7 +24,6 @@ spec:
   values:
     image:
       tag: v0.17.0
-    fullnameOverride: external-dns-pihole-keiretsu
     provider: pihole
     env:
       - name: EXTERNAL_DNS_PIHOLE_PASSWORD
@@ -34,8 +33,8 @@ spec:
             key: "password"
     extraArgs:
       - --ignore-ingress-tls-spec
-      - --pihole-server=http://pihole-web.keiretsu
-      - --gateway-label-filter=external-dns==keiretsu
+      - --pihole-server=http://pihole-ts-web.keiretsu
+      - --gateway-label-filter=external-dns==local-ts
       - --pihole-api-version=6
     policy: sync
     sources:
@@ -46,6 +45,5 @@ spec:
       - service
     domainFilters: 
       - ${LOCATION}.${RAJSINGH_INFO_DOMAIN}
-      - keiretsu.${RAJSINGH_INFO_DOMAIN}
-    txtOwnerId: keiretsu
+    txtOwnerId: local-ts
     txtPrefix: k8s.${LOCATION}.

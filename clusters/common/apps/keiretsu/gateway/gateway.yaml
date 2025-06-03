@@ -4,13 +4,13 @@ kind: Gateway
 metadata:
   name: local-ts
   labels:
-    external-dns: keiretsu
+    external-dns: local-ts
   annotations:
-    cert-manager.io/cluster-issuer: common-issuer
+    cert-manager.io/cluster-issuer: raj-issuer
 spec:
   gatewayClassName: local-ts
   listeners:
-    - name: wildcard-${LOCATION}-common-https
+    - name: wildcard-${LOCATION}-raj-https
       protocol: HTTPS
       port: 443
       hostname: "*.${LOCATION}.${RAJSINGH_INFO_DOMAIN}"
@@ -22,17 +22,4 @@ spec:
         certificateRefs:
         - group: ''
           kind: Secret
-          name: wildcard-${LOCATION}-common-https
-    - name: wildcard-keiretsu-common-https
-      protocol: HTTPS
-      port: 443
-      hostname: "*.keiretsu.${RAJSINGH_INFO_DOMAIN}"
-      allowedRoutes:
-        namespaces:
-          from: All
-      tls:
-        mode: Terminate
-        certificateRefs:
-        - group: ''
-          kind: Secret
-          name: wildcard-keiretsu-common-https
+          name: wildcard-${LOCATION}-raj-https
