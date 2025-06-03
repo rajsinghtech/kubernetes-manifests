@@ -1,14 +1,14 @@
-apiVersion: tailscale.com/v1alpha1
-kind: ProxyGroup
-metadata:
-  name: common-egress-proxy
-spec:
-  hostnamePrefix: common-egress-proxy
-  tags:
-    - tag:egress
-  proxyClass: common
-  type: egress
-  replicas: 3
+# apiVersion: tailscale.com/v1alpha1
+# kind: ProxyGroup
+# metadata:
+#   name: common-egress-proxy
+# spec:
+#   hostnamePrefix: common-${LOCATION}-egress-proxy
+#   tags:
+#     - tag:egress
+#   proxyClass: common
+#   type: egress
+#   replicas: 3
 ---
 apiVersion: tailscale.com/v1alpha1
 kind: ProxyGroup
