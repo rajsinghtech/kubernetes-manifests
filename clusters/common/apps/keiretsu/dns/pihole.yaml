@@ -29,7 +29,7 @@ spec:
     strategyType: RollingUpdate
     serviceWeb:
       type: ClusterIP
-    hostname: "pihole-keiretsu-ts"
+    hostname: "pihole-local-ts"
     serviceDns:
       annotations:
         tailscale.com/hostname: pihole-${LOCATION}

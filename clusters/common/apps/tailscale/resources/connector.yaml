@@ -1,7 +1,7 @@
 apiVersion: tailscale.com/v1alpha1
 kind: Connector
 metadata:
-  name: &name k8s-${LOCATION}-sr
+  name: &name ${LOCATION}-connector
 spec:
   proxyClass: common
   tags:
