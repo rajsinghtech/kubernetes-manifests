@@ -3,6 +3,9 @@ kind: Recorder
 metadata:
   name: ${LOCATION}-recorder
 spec:
+  image:
+    repo: docker.io/tailscale/tsrecorder
+    tag: latest
   enableUI: true
   tags:
     - "tag:k8s"
