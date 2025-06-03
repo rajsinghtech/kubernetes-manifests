@@ -97,7 +97,6 @@
 		// Service exposure approvals
 		"services": {
 			"tag:hello":                       ["tag:ingress"],
-			"tag:k8s":                         ["tag:ingress"],
 			"svc:test":                        ["tag:test"],
 		},
 	},
