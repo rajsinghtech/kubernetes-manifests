@@ -12,7 +12,7 @@ spec:
       envoyService:
         annotations:
           tailscale.com/hostname: ${LOCATION}-envoy-gateway
-          tailscale.com/proxy-group: common-ingress
-          tailscale.com/tags: "tag:hello"
+          # tailscale.com/proxy-group: common-ingress
+          # tailscale.com/tags: "tag:hello"
         type: LoadBalancer
         loadBalancerClass: tailscale
