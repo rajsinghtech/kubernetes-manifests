@@ -5,9 +5,9 @@ metadata:
   name: pihole-ts
 spec:
   interval: 30m
+  releaseName: pihole-ts
   chart:
     spec:
-      releaseName: pihole-ts
       chart: pihole
       version: 2.31.0
       sourceRef:
