@@ -31,7 +31,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: hello-world-shared
+  name: hello-world-shared-egress
   annotations:
     tailscale.com/tailnet-fqdn: hello-world-shared-tailscale-examples.keiretsu.ts.net
     tailscale.com/proxy-group: common-egress-proxy
