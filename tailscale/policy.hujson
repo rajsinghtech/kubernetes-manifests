@@ -90,6 +90,7 @@
 			"::/0":                ["tag:k8s"],        // IPv6 default route
 			"192.168.50.0/24":     ["tag:robbinsdale"], // Robbinsdale LAN
 			"192.168.169.0/24":    ["tag:ottawa"],     // Ottawa LAN
+			"192.168.73.0/24":     ["tag:stpetersburg"], // St Petersburg LAN
 		},
 		
 		// Service exposure approvals
