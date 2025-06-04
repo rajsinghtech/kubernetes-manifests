@@ -3,6 +3,7 @@ kind: Service
 metadata:
   annotations:
     tailscale.com/tailnet-fqdn: idp.keiretsu.ts.net
+    tailscale.com/proxy-group: common-egress
   name: idp-egress
 spec:
   externalName: placeholder   # any value - will be overwritten by operator
