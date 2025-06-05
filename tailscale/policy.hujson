@@ -40,14 +40,6 @@
 		"ipset:shared-subnets": [
 			"10.69.10.0/24",    // Shared services
 			"10.69.69.0/24"     // Shared services
-		],
-		
-		// Site-to-site connectivity networks
-		"ipset:site-to-site-networks": [
-			"192.168.169.0/24", // Ottawa main LAN
-			"192.168.50.0/24",   // Robbinsdale main LAN
-			"10.1.0.0/16",       // LB network range
-			"10.3.0.0/16"        // LB network range
 		]
 	},
 	
@@ -73,7 +65,6 @@
 		"tag:egress":       ["tag:k8s-operator", "autogroup:admin"],
 		"tag:test":         ["tag:k8s-operator", "autogroup:admin"],
 		"tag:ssh-enabled":  ["tag:ssh-enabled", "autogroup:admin"],
-		"tag:site-to-site": ["tag:site-to-site", "autogroup:admin"],
 		
 		// App connector tags
 		"tag:github-connector": ["tag:k8s-operator","autogroup:admin"],
@@ -136,27 +127,6 @@
 			"ip":  ["*:22"],
 		},
 		
-		// Site-to-site VPN connectivity
-		{
-			"src": ["tag:site-to-site"],
-			"dst": ["tag:site-to-site"],
-			"ip":  ["*"],
-		},
-
-    // Site-to-site VPN connectivity subnets
-		{
-			"src": ["tag:site-to-site"],
-			"dst": ["ipset:site-to-site-networks"],
-			"ip":  ["*"],
-			"via": ["tag:site-to-site"],
-		},
-
-		{
-			"src": ["ipset:site-to-site-networks"],
-			"dst": ["ipset:site-to-site-networks"],
-			"ip":  ["*"],
-		},
-
 		// Kubernetes cluster internal networking
 		{
 			"src": ["tag:k8s"],
