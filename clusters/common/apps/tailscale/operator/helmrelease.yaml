@@ -27,7 +27,7 @@ spec:
     operatorConfig:
       image:
         repo: ghcr.io/rajsinghtech/k8s-operator
-        tag: v0.0.3
+        tag: v0.0.4
       hostname: "${LOCATION}-k8s-operator" 
       logging: "info" # info, debug, dev
       defaultTags:
