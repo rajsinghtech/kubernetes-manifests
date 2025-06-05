@@ -7,4 +7,3 @@ resources:
  - ./tsidp
  - ./golink
  - ./secret.yaml
- - ./tsflow
