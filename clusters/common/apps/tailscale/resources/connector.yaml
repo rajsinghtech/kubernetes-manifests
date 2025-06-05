@@ -1,7 +1,7 @@
 apiVersion: tailscale.com/v1alpha1
 kind: Connector
 metadata:
-  name: &name ${LOCATION}-connector
+  name: &name ${LOCATION}-sr-connector
 spec:
   proxyClass: common
   tags:
@@ -18,3 +18,16 @@ spec:
       - "10.69.69.0/24" # K8s Load Balancer
       - "10.69.10.0/24" # K8s Load Balancer
       - fd7a:115c:a1e0:b1a:0:${SITE_ID}::/96 # 4via6
+---
+apiVersion: tailscale.com/v1alpha1
+kind: Connector
+metadata:
+  name: &name ${LOCATION}-github-connector
+spec:
+  proxyClass: common
+  tags:
+    - tag:k8s
+    - tag:${LOCATION}
+    - tag:github-connector
+  hostname: *name
+  appConnector: {}

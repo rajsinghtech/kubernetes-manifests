@@ -74,6 +74,9 @@
 		"tag:test":         ["tag:k8s-operator", "autogroup:admin"],
 		"tag:ssh-enabled":  ["tag:ssh-enabled", "autogroup:admin"],
 		"tag:site-to-site": ["tag:site-to-site", "autogroup:admin"],
+		
+		// App connector tags
+		"tag:github-connector": ["tag:k8s-operator","autogroup:admin"],
 	},
 	
 	// ============================================================================
@@ -87,8 +90,8 @@
 		
 		// Subnet route approvals
 		"routes": {
-			"0.0.0.0/0":           ["tag:k8s"],        // Default route (exit node)
-			"::/0":                ["tag:k8s"],        // IPv6 default route
+			"0.0.0.0/0":           ["tag:k8s", "tag:github-connector"],        // Default route (exit node)
+			"::/0":                ["tag:k8s", "tag:github-connector"],        // IPv6 default route
 			"192.168.50.0/24":     ["tag:robbinsdale"], // Robbinsdale LAN
 			"192.168.169.0/24":    ["tag:ottawa"],     // Ottawa LAN
 			"192.168.73.0/24":     ["tag:stpetersburg"], // St Petersburg LAN
@@ -282,11 +285,17 @@
 	
 	// Define capabilities and features for specific nodes
 	"nodeAttrs": [
-		// Enable app connectors for all nodes
+		// Enable GitHub app connector
 		{
 			"target": ["*"],
 			"app": {
-				"tailscale.com/app-connectors": [],
+				"tailscale.com/app-connectors": [
+					{
+						"name": "github-app",
+						"connectors": ["tag:github-connector"],
+						"domains": ["github.com", "*.github.com", "api.github.com", "raw.githubusercontent.com"]
+					}
+				],
 			},
 		},
 		
