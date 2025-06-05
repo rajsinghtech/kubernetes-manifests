@@ -29,7 +29,7 @@ spec:
         repo: ghcr.io/rajsinghtech/k8s-operator
         tag: v0.0.6
       hostname: "${LOCATION}-k8s-operator" 
-      logging: "info" # info, debug, dev
+      logging: "debug" # info, debug, dev
       defaultTags:
         - "tag:${LOCATION}"
         - "tag:k8s-operator"
