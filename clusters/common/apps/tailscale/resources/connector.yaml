@@ -11,9 +11,9 @@ spec:
   exitNode: true
   subnetRouter:
     advertiseRoutes:
-      # - "${LAN_CIDR}" # LAN
+      - "${LAN_CIDR}" # LAN
       - "${CLUSTER_SERVICE_CIDR}" # K8s Services
-      # - "${CLUSTER_POD_CIDR}" # K8s Pods
+      - "${CLUSTER_POD_CIDR}" # K8s Pods
       - "10.69.${SITE_ID}.0/24" # Tailscale
       - "10.69.69.0/24" # K8s Load Balancer
       - "10.69.10.0/24" # K8s Load Balancer
