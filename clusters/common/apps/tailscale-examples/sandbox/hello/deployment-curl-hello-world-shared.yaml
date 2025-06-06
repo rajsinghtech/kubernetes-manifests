@@ -1,48 +1,48 @@
-# ---
-# apiVersion: v1
-# kind: ConfigMap
-# metadata:
-#   name: curl-hello-world-shared
-#   namespace: default
-#   labels:
-#     app: curl-hello-world
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: curl-hello-world-shared
+  namespace: default
+  labels:
+    app: curl-hello-world
   
-# data:
-#   curl-loop.sh: |
-#     #!/bin/bash
+data:
+  curl-loop.sh: |
+    #!/bin/bash
 
-#     URL="http://hello-world-shared-egress.tailscale-examples"
-#     INTERVAL=1
-#     echo "Starting infinite curl loop to $URL every $INTERVAL second(s)..."
-#     while true; do
-#         echo -e "\n[$(date)] Sending request to $URL"
-#         curl -s $URL || echo "[$(date)] ❌ Failed to connect"
-#         sleep $INTERVAL
-#     done
-# ---
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   name: curl-hello-world-shared
-# spec:
-#   replicas: 1
-#   selector:
-#     matchLabels:
-#       app: curl-hello-world-shared
-#   template:
-#     metadata:
-#       labels:
-#         app: curl-hello-world-shared
-#     spec:
-#       containers:
-#       - name: curl
-#         image: nicolaka/netshoot:latest
-#         command: ["/bin/sh", "/curl-loop.sh"]
-#         volumeMounts:
-#         - name: script
-#           mountPath: /curl-loop.sh
-#           subPath: curl-loop.sh
-#       volumes:
-#       - name: script
-#         configMap:
-#           name: curl-hello-world-shared 
+    URL="http://hello-world-shared-egress.tailscale-examples"
+    INTERVAL=1
+    echo "Starting infinite curl loop to $URL every $INTERVAL second(s)..."
+    while true; do
+        echo -e "\n[$(date)] Sending request to $URL"
+        curl -s $URL || echo "[$(date)] ❌ Failed to connect"
+        sleep $INTERVAL
+    done
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: curl-hello-world-shared
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: curl-hello-world-shared
+  template:
+    metadata:
+      labels:
+        app: curl-hello-world-shared
+    spec:
+      containers:
+      - name: curl
+        image: nicolaka/netshoot:latest
+        command: ["/bin/sh", "/curl-loop.sh"]
+        volumeMounts:
+        - name: script
+          mountPath: /curl-loop.sh
+          subPath: curl-loop.sh
+      volumes:
+      - name: script
+        configMap:
+          name: curl-hello-world-shared 
