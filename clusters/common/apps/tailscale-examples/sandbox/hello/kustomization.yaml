@@ -2,10 +2,10 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - deployment-hello-world.yaml
+  # - deployment-hello-world.yaml
   - configmap-nginx.yaml
-  - service-hello-world.yaml
-  - deployment-curl-hello-world-robbinsdale.yaml
-  - deployment-curl-hello-world-ottawa.yaml
-  - deployment-curl-hello-world-shared.yaml
-  - egress.yaml
+  # - service-hello-world.yaml
+  # - deployment-curl-hello-world-robbinsdale.yaml
+  # - deployment-curl-hello-world-ottawa.yaml
+  # - deployment-curl-hello-world-shared.yaml
+  # - egress.yaml
