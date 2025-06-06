@@ -33,7 +33,8 @@ kind: Service
 metadata:
   name: hello-world-shared-egress
   annotations:
-    tailscale.com/tailnet-fqdn: shared-tailscale-examples-hello-world.keiretsu.ts.net
+    # tailscale.com/tailnet-fqdn: shared-tailscale-examples-hello-world.keiretsu.ts.net
+    tailscale.com/tailnet-ip: 100.121.96.64
     tailscale.com/proxy-group: common-egress
 spec:
   externalName: placeholder
