@@ -23,12 +23,12 @@ spec:
               containerPort: 3000 
               protocol: TCP
           env:
-            - name: TAILSCALE_ACCESS_TOKEN
+            - name: VITE_TAILSCALE_API_KEY
               valueFrom:
                 secretKeyRef:
                   name: tsflow
                   key: TAILSCALE_ACCESS_TOKEN
-            - name: TAILSCALE_TAILNET
+            - name: VITE_TAILSCALE_TAILNET
               valueFrom:
                 secretKeyRef:
                   name: tsflow
