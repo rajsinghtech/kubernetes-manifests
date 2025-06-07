@@ -7,11 +7,7 @@ spec:
     app: tsflow
   ports:
   - name: http
-    port: 3000
+    port: 8080
     protocol: TCP
-    targetPort: 3000
-  - name: proxy
-    port: 3001
-    protocol: TCP
-    targetPort: 3001
+    targetPort: 8080
   type: ClusterIP
