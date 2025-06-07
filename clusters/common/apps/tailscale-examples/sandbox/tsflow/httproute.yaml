@@ -21,3 +21,27 @@ spec:
         - path:
             type: PathPrefix
             value: /
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: tsflow-proxy
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: local-ts
+      namespace: keiretsu
+  hostnames:
+    - "tsflow-proxy.${LOCATION}.${RAJSINGH_INFO_DOMAIN}"
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: tsflow
+          port: 3001
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
