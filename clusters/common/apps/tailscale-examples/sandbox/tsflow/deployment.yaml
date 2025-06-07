@@ -22,6 +22,9 @@ spec:
             - name: http
               containerPort: 3000 
               protocol: TCP
+            - name: proxy
+              containerPort: 3001 
+              protocol: TCP
           env:
             - name: VITE_TAILSCALE_API_KEY
               valueFrom:
@@ -33,3 +36,5 @@ spec:
                 secretKeyRef:
                   name: tsflow
                   key: TAILSCALE_TAILNET
+            - name: VITE_TAILSCALE_BASE_URL
+              value: https://tsflow-proxy.${LOCATION}.${RAJSINGH_INFO_DOMAIN}
