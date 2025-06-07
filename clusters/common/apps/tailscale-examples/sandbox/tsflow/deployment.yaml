@@ -20,7 +20,7 @@ spec:
           imagePullPolicy: Always
           ports:
             - name: http
-              containerPort: 8080 
+              containerPort: 3000 
               protocol: TCP
           env:
             - name: TAILSCALE_ACCESS_TOKEN
