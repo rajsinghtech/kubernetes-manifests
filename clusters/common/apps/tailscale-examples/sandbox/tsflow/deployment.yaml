@@ -20,18 +20,15 @@ spec:
           imagePullPolicy: Always
           ports:
             - name: http
-              containerPort: 3000 
-              protocol: TCP
-            - name: proxy
-              containerPort: 3001 
+              containerPort: 8080 
               protocol: TCP
           env:
-            - name: VITE_TAILSCALE_API_KEY
+            - name: TAILSCALE_API_KEY
               valueFrom:
                 secretKeyRef:
                   name: tsflow
-                  key: TAILSCALE_ACCESS_TOKEN
-            - name: VITE_TAILSCALE_TAILNET
+                  key: TAILSCALE_API_KEY
+            - name: TAILSCALE_TAILNET
               valueFrom:
                 secretKeyRef:
                   name: tsflow
