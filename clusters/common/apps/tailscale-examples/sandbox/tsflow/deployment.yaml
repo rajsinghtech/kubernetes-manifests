@@ -33,5 +33,5 @@ spec:
                 secretKeyRef:
                   name: tsflow
                   key: TAILSCALE_TAILNET
-            - name: VITE_TAILSCALE_BASE_URL
-              value: https://tsflow-proxy.${LOCATION}.${RAJSINGH_INFO_DOMAIN}
+            - name: ENVIRONMENT
+              value: production
