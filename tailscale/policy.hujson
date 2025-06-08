@@ -156,6 +156,13 @@
 			"ip":  ["*"],
 		},
 		
+		// Allow k8s-operator to access service tags
+		{
+			"src": ["tag:k8s-operator"],
+			"dst": ["tag:ingress", "tag:egress", "tag:hello"],
+			"ip":  ["*"],
+		},
+		
 		// Allow k8s nodes to access service tags
 		{
 			"src": ["tag:k8s"],
@@ -319,7 +326,17 @@
       ]
     },
     {
-      // Member user test ACLs
+      // K8s operator user test ACLs
+      "src": "tag:k8s-operator",
+      "accept": [
+        "tag:k8s:443",
+        "tag:ingress:443",
+        "tag:egress:443",
+        "tag:hello:443",
+      ]
+    },
+    {
+      // K8s user test ACLs
       "src": "tag:k8s",
       "accept": [
         "tag:k8s-operator:443",
