@@ -118,7 +118,7 @@
 	"ssh": [
 		{
 			"action":          "accept",
-			"src":             ["autogroup:member"],
+			"src":             ["group:superuser"],
 			"dst":             ["tag:ssh-enabled"],
 			"users":           ["root", "autogroup:nonroot"],
 			"recorder":        ["tag:k8s-recorder"],
@@ -137,7 +137,7 @@
 		
 		// SSH access to devices with ssh-enabled tag
 		{
-			"src": ["autogroup:member"],
+			"src": ["group:superuser"],
 			"dst": ["tag:ssh-enabled"],
 			"ip":  ["*:22"],
 		},
@@ -158,14 +158,14 @@
 		
 		// Allow members to reach k8s nodes directly
 		{
-			"src": ["autogroup:member"],
+			"src": ["group:superuser"],
 			"dst": ["tag:k8s", "tag:ingress", "tag:hello"],
 			"ip":  ["*"],
 		},
 		
 		// Allow members to use k8s nodes as exit nodes
 		{
-			"src": ["autogroup:member"],
+			"src": ["group:superuser"],
 			"dst": ["autogroup:internet"],
 			"ip":  ["*"],
 			"via": ["tag:robbinsdale", "tag:ottawa", "tag:stpetersburg"],
@@ -177,7 +177,7 @@
 		
 		// Access to Robbinsdale subnets via k8s subnet routers
 		{
-			"src": ["autogroup:member"],
+			"src": ["group:superuser"],
 			"dst": ["ipset:robbinsdale-subnets"],
 			"ip":  ["*"],
 			"via": ["tag:robbinsdale"],
@@ -185,7 +185,7 @@
 		
 		// Access to Ottawa subnets via k8s subnet routers
 		{
-			"src": ["autogroup:member"],
+			"src": ["group:superuser"],
 			"dst": ["ipset:ottawa-subnets"],
 			"ip":  ["*"],
 			"via": ["tag:ottawa"],
@@ -193,7 +193,7 @@
 
     // Access to St Petersburg subnets via k8s subnet routers
 		{
-			"src": ["autogroup:member"],
+			"src": ["group:superuser"],
 			"dst": ["ipset:stpetersburg-subnets"],
 			"ip":  ["*"],
 			"via": ["tag:stpetersburg"],
@@ -201,7 +201,7 @@
 		
 		// Access to shared infrastructure subnets via k8s subnet routers
 		{
-			"src": ["autogroup:member"],
+			"src": ["group:superuser"],
 			"dst": ["ipset:shared-subnets"],
 			"ip":  ["*"],
 			"via": ["tag:k8s"],
@@ -220,7 +220,7 @@
 		
 		// Network access to k8s-operator for members
 		{
-			"src": ["autogroup:member"],
+			"src": ["group:superuser"],
 			"dst": ["tag:k8s-operator"],
 			"ip":  ["*"],
 		},
@@ -248,7 +248,7 @@
 		
 		// Member access to Kubernetes API with read-only privileges
 		{
-			"src": ["autogroup:member"],
+			"src": ["group:superuser"],
 			"dst": ["tag:k8s-operator"],
 			"app": {
 				"tailscale.com/cap/kubernetes": [
