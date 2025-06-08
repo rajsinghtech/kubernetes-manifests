@@ -64,6 +64,8 @@
 		"tag:ingress":      ["tag:k8s-operator", "autogroup:admin"],
 		"tag:egress":       ["tag:k8s-operator", "autogroup:admin"],
 		"tag:test":         ["tag:k8s-operator", "autogroup:admin"],
+
+    // SSH access tags
 		"tag:ssh-enabled":  ["tag:ssh-enabled", "autogroup:admin"],
 		
 		// App connector tags
@@ -90,8 +92,8 @@
 		
 		// Service exposure approvals
 		"services": {
-			"tag:hello":                       ["tag:ingress"],
-			"svc:test":                        ["tag:test"],
+			"tag:hello": ["tag:ingress"],
+			"svc:test":  ["tag:test"],
 		},
 	},
 	
@@ -165,7 +167,7 @@
 			"src": ["autogroup:member"],
 			"dst": ["ipset:robbinsdale-subnets"],
 			"ip":  ["*"],
-			"via": ["tag:k8s"],
+			"via": ["tag:robbinsdale"],
 		},
 		
 		// Access to Ottawa subnets via k8s subnet routers
@@ -173,7 +175,7 @@
 			"src": ["autogroup:member"],
 			"dst": ["ipset:ottawa-subnets"],
 			"ip":  ["*"],
-			"via": ["tag:k8s"],
+			"via": ["tag:ottawa"],
 		},
 
     // Access to St Petersburg subnets via k8s subnet routers
@@ -181,7 +183,7 @@
 			"src": ["autogroup:member"],
 			"dst": ["ipset:stpetersburg-subnets"],
 			"ip":  ["*"],
-			"via": ["tag:k8s"],
+			"via": ["tag:stpetersburg"],
 		},
 		
 		// Access to shared infrastructure subnets via k8s subnet routers
