@@ -156,6 +156,13 @@
 			"ip":  ["*"],
 		},
 		
+		// Allow k8s nodes to access service tags
+		{
+			"src": ["tag:k8s"],
+			"dst": ["tag:ingress", "tag:egress", "tag:hello"],
+			"ip":  ["*"],
+		},
+		
 		// Allow members to reach k8s nodes directly
 		{
 			"src": ["group:superuser"],
@@ -211,9 +218,9 @@
 		// KUBERNETES OPERATOR ACCESS
 		// ------------------------------------------------------------------------
 		
-		// Network access to k8s-operator for admins and k8s nodes
+		// Network access to k8s-operator for k8s nodes
 		{
-			"src": ["group:superuser", "tag:k8s"],
+			"src": ["tag:k8s"],
 			"dst": ["tag:k8s-operator"],
 			"ip":  ["*"],
 		},
@@ -248,7 +255,7 @@
 		
 		// Member access to Kubernetes API with read-only privileges
 		{
-			"src": ["group:superuser"],
+			"src": ["autogroup:admin"],
 			"dst": ["tag:k8s-operator"],
 			"app": {
 				"tailscale.com/cap/kubernetes": [
@@ -309,6 +316,17 @@
         "tag:ingress:443",
         "tag:hello:443",
         "tag:ssh-enabled:22",
+      ]
+    },
+    {
+      // Member user test ACLs
+      "src": "tag:k8s",
+      "accept": [
+        "tag:k8s-operator:443",
+        "tag:k8s:443",
+        "tag:ingress:443",
+        "tag:egress:443",
+        "tag:hello:443",
       ]
     }
   ],
