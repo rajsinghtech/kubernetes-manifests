@@ -22,7 +22,7 @@ spec:
 apiVersion: tailscale.com/v1alpha1
 kind: Connector
 metadata:
-  name: &name ${LOCATION}-github-connector
+  name: &name ${LOCATION}-github-app-connector
 spec:
   proxyClass: common
   tags:
