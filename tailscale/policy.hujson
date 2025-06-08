@@ -44,6 +44,19 @@
 	},
 	
 	// ============================================================================
+	// GROUPS
+	// ============================================================================
+	
+	// Define user groups for access control
+	"groups": {
+		"group:superuser": [
+			"kbpersonal@github",
+			"LukeHouge@github", 
+			"rajsinghtech@github"
+		]
+	},
+	
+	// ============================================================================
 	// TAG OWNERSHIP & MANAGEMENT
 	// ============================================================================
 	
@@ -51,25 +64,25 @@
 	"tagOwners": {
 		// Core infrastructure tags
 		"tag:k8s-operator": [],
-		"tag:k8s":          ["tag:k8s-operator", "autogroup:admin"],
-		"tag:k8s-recorder": ["tag:k8s-operator", "autogroup:admin"],
+		"tag:k8s":          ["tag:k8s-operator", "group:superuser"],
+		"tag:k8s-recorder": ["tag:k8s-operator", "group:superuser"],
 		
 		// Site-specific tags
-		"tag:robbinsdale":  ["tag:k8s-operator", "autogroup:admin"],
-		"tag:ottawa":       ["tag:k8s-operator", "autogroup:admin"],
-		"tag:stpetersburg": ["tag:k8s-operator", "autogroup:admin"],
+		"tag:robbinsdale":  ["tag:k8s-operator", "group:superuser"],
+		"tag:ottawa":       ["tag:k8s-operator", "group:superuser"],
+		"tag:stpetersburg": ["tag:k8s-operator", "group:superuser"],
 		
 		// Service and connectivity tags
-		"tag:hello":        ["tag:k8s-operator", "autogroup:admin"],
-		"tag:ingress":      ["tag:k8s-operator", "autogroup:admin"],
-		"tag:egress":       ["tag:k8s-operator", "autogroup:admin"],
-		"tag:test":         ["tag:k8s-operator", "autogroup:admin"],
+		"tag:hello":        ["tag:k8s-operator", "group:superuser"],
+		"tag:ingress":      ["tag:k8s-operator", "group:superuser"],
+		"tag:egress":       ["tag:k8s-operator", "group:superuser"],
+		"tag:test":         ["tag:k8s-operator", "group:superuser"],
 
     // SSH access tags
-		"tag:ssh-enabled":  ["tag:ssh-enabled", "autogroup:admin"],
+		"tag:ssh-enabled":  ["tag:ssh-enabled", "group:superuser"],
 		
 		// App connector tags
-		"tag:github-connector": ["tag:k8s-operator","autogroup:admin"],
+		"tag:github-connector": ["tag:k8s-operator","group:superuser"],
 	},
 	
 	// ============================================================================
@@ -200,7 +213,7 @@
 		
 		// Network access to k8s-operator for admins and k8s nodes
 		{
-			"src": ["autogroup:admin", "tag:k8s"],
+			"src": ["group:superuser", "tag:k8s"],
 			"dst": ["tag:k8s-operator"],
 			"ip":  ["*"],
 		},
@@ -218,7 +231,7 @@
 		
 		// Admin access to Kubernetes API with system:masters privileges
 		{
-			"src": ["autogroup:admin", "tag:k8s"],
+			"src": ["group:superuser", "tag:k8s"],
 			"dst": ["tag:k8s-operator"],
 			"app": {
 				"tailscale.com/cap/kubernetes": [
@@ -277,11 +290,34 @@
 			"attr":   ["funnel"],
 		},
 	],
+  
+  // ============================================================================
+  // Test ACLs
+  // ============================================================================
+  
+  // Define test ACLs
+  "tests": [
+    {
+      // Admin user test ACLs
+      "src": "rajsinghtech@github",
+      "accept": [
+        "192.168.50.1:443", 
+        "192.168.169.1:443", 
+        "192.168.73.1:443", 
+        "tag:k8s-operator:443",
+        "tag:k8s:443",
+        "tag:ingress:443",
+        "tag:hello:443",
+        "tag:ssh-enabled:22",
+      ]
+    }
+  ],
+    
 	
 	// ============================================================================
 	// LEGACY CONFIGURATION (DEPRECATED)
 	// ============================================================================
 	
 	// Legacy ACL rules (deprecated - using grants instead)
-	"acls": [],
+	"acls": []
 }
