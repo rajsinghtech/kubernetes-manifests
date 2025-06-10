@@ -25,7 +25,7 @@ spec:
       name: cilium-values
       valuesKey: values.yaml
       optional: false
-    - kind: ConfigMap
-      name: cilium-clustermesh-values
-      valuesKey: values-clustermesh.yaml
-      optional: false
+    # - kind: ConfigMap
+    #   name: cilium-clustermesh-values
+    #   valuesKey: values-clustermesh.yaml
+    #   optional: false
