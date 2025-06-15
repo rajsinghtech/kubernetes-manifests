@@ -57,3 +57,4 @@ resources:
   - ./twin.yaml
   - ./weave-gitops.yaml
   - ./wger.yaml
+  - ./istio.yaml
