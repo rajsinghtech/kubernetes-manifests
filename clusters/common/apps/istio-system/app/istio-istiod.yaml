@@ -26,6 +26,7 @@ spec:
     global:
       meshID: primary
       multiCluster:
+        enabled: true
         clusterName: ${LOCATION}
       network: tailscale
 
