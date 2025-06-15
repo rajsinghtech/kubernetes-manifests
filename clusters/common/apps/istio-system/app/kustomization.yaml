@@ -5,3 +5,4 @@ namespace: istio-system
 resources:
   - istio-base.yaml
   - istio-istiod.yaml
+  - secret.yaml
