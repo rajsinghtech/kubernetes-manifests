@@ -23,3 +23,9 @@ spec:
   dependsOn:
     - name: istio-base
   values:
+    global:
+      meshID: primary
+      multiCluster:
+        clusterName: primary
+      network: tailscale
+
