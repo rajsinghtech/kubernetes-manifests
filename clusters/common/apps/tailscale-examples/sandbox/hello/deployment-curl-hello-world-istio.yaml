@@ -10,8 +10,7 @@ metadata:
 data:
   curl-loop.sh: |
     #!/bin/bash
-
-    URL="http://hello-world-istio-egress.tailscale-examples"
+    URL="http://hello-world-istio.tailscale-examples"
     INTERVAL=1
     echo "Starting infinite curl loop to $URL every $INTERVAL second(s)..."
     while true; do
