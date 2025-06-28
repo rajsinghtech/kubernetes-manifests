@@ -66,10 +66,6 @@ spec:
       primary:
         persistence:
           storageClass: ceph-block-replicated-nvme
-          size: 50Gi
-      readReplicas:
-        persistence:
-          storageClass: ceph-block-replicated-nvme
-          size: 50Gi
+          size: 20Gi
     redis:
       enabled: false
