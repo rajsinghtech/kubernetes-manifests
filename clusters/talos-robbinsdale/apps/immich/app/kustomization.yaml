@@ -7,5 +7,5 @@ resources:
   - unas.yaml
   - httproute.yaml
   - secret.yaml
-  - pg.yaml
+  # - pg.yaml
   - redis.yaml
