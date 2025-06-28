@@ -49,9 +49,11 @@ spec:
           value: '--data-checksums'
         - name: DB_STORAGE_TYPE
           value: 'SSD'
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata
         volumeMounts:
         - name: postgres-data
-          mountPath: /var/lib/postgresql/data
+          mountPath: /var/lib/postgresql/data/pgdata
         - name: init-script
           mountPath: /docker-entrypoint-initdb.d
         resources:
@@ -64,7 +66,7 @@ spec:
       volumes:
       - name: postgres-data
         persistentVolumeClaim:
-          claimName: immich-postgres-data
+          claimName: immich-db
       - name: init-script
         configMap:
           name: immich-postgres-init
@@ -87,7 +89,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: immich-postgres-data
+  name: immich-db
   namespace: immich
 spec:
   accessModes:
