@@ -29,9 +29,9 @@ spec:
       - secretRef:
           name: gatus-postgres-app
     config:
-      storage:
-        type: postgres
-        path: "$${uri}"
+      #storage:
+        #type: postgres
+        #path: "$${uri}"
       alerting:
         discord:
           webhook-url: "$${discord-webhook-url}"
