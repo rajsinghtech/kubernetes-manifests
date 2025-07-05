@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: immich
-      version: 0.9.0
+      version: 0.9.3
       sourceRef:
         kind: HelmRepository
         name: immich
@@ -22,17 +22,25 @@ spec:
       retries: 3
   values:
     image:
-      tag: v1.132.3
-    envFrom:
-      - secretRef:
-          name: immich-postgres-user
+      tag: v1.135.3
     env:
+      DB_DATABASE_NAME: immich
+      DB_HOSTNAME: immich-postgres
+      DB_USERNAME:
+        valueFrom:
+          secretKeyRef:
+            name: immich-postgres-user
+            key: username
       DB_PASSWORD:
         valueFrom:
           secretKeyRef:
             name: immich-postgres-user
             key: password
-      DB_HOSTNAME: immich-postgres-ceph-rw
+      DB_PORT: "5432"
+      DISABLE_REVERSE_GEOCODING: "false"
+      REVERSE_GEOCODING_PRECISION: "2"
+      LOG_LEVEL: verbose
+      OAUTH_ENABLED: "false"
       REDIS_HOSTNAME: dragonfly-immich
       REDIS_PASSWORD:
         valueFrom:
@@ -57,7 +65,7 @@ spec:
           enabled: true
           existingClaim: immich-unas-pics
           readOnly: true
-    postgresql:
+    postgres:
       enabled: false
     redis:
       enabled: false
