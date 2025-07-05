@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: homer-operator
-      version: v0.0.0-latest
+      version: 0.0.0-latest
       sourceRef:
         kind: HelmRepository
         name: homer-operator
