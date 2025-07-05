@@ -16,11 +16,9 @@ spec:
         namespace: homer-operator 
       interval: 1m
   releaseName: homer-operator
-  values: 
-    operator:
-      enableGatewayAPI: true
-      metrics:
-        enabled: true
-    serviceMonitor:
-      create: true
+  valuesFrom:
+    - kind: ConfigMap
+      name: homer-operator-values
+      valuesKey: values.yaml
+      optional: false
 
