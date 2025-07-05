@@ -1,0 +1,26 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: homer-operator
+  namespace: homer-operator 
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: homer-operator
+      version: v0.0.0-latest
+      sourceRef:
+        kind: HelmRepository
+        name: homer-operator
+        namespace: flux-system 
+      interval: 1m
+  releaseName: homer-operator
+  values: 
+    operator:
+      enableGatewayAPI: true
+      metrics:
+        enabled: true
+    serviceMonitor:
+      create: true
+
