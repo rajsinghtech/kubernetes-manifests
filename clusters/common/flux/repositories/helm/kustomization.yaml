@@ -58,3 +58,4 @@ resources:
   - ./weave-gitops.yaml
   - ./wger.yaml
   - ./istio.yaml
+  - ./homer-operator.yaml
