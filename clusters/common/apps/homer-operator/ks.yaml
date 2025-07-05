@@ -15,6 +15,6 @@ spec:
     kind: GitRepository
     name: home-kubernetes
   wait: true
-  interval: 30m
+  interval: 1m
   retryInterval: 1m
-  timeout: 5m 
+  timeout: 1m 
