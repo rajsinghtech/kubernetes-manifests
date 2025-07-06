@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: gatus
-      version: 1.2.0 # Pinned version from original kustomization
+      version: 1.3.0 # Pinned version from original kustomization
       sourceRef:
         kind: HelmRepository
         name: twin
@@ -29,9 +29,9 @@ spec:
       - secretRef:
           name: gatus-postgres-app
     config:
-      storage:
-        type: postgres
-        path: "$${uri}"
+      #storage:
+        #type: postgres
+        #path: "$${uri}"
       alerting:
         discord:
           webhook-url: "$${discord-webhook-url}"

@@ -6,5 +6,5 @@ resources:
   - helmrelease.yaml
   - httproute.yaml
   - secret.yaml
-  - bucket.yaml
-  - postgres.yaml 
+  # - bucket.yaml
+  # - postgres.yaml 
