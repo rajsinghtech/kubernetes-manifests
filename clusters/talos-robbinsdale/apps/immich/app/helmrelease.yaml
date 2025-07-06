@@ -35,7 +35,7 @@ spec:
           secretKeyRef:
             name: immich-postgres-user
             key: password
-      DB_HOSTNAME: immich-postgres-ceph-rw
+      DB_HOSTNAME: immich-postgresql-ceph-rw
       REDIS_HOSTNAME: dragonfly-immich
       REDIS_PASSWORD:
         valueFrom:
