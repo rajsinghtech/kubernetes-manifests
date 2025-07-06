@@ -1,0 +1,73 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "dependencyDashboard": true,
+  "dependencyDashboardTitle": "Renovate Dashboard 🤖",
+  "suppressNotifications": ["prEditedNotification", "prIgnoreNotification"],
+  "rebaseWhen": "conflicted",
+  "schedule": ["at any time"],
+  "kubernetes": {
+    "fileMatch": [
+      "clusters/.+\\.ya?ml$",
+      ".*\\.k8s\\.ya?ml$"
+    ]
+  },
+  "flux": {
+    "fileMatch": [
+      "clusters/.+\\.ya?ml$",
+      ".*helmrelease.*\\.ya?ml$"
+    ]
+  },
+  "helm-values": {
+    "fileMatch": [
+      "clusters/.+\\.ya?ml$",
+      ".*helmrelease.*\\.ya?ml$"
+    ]
+  },
+  "regexManagers": [
+    {
+      "fileMatch": [".+\\.ya?ml$"],
+      "matchStrings": [
+        "registryUrl=(?<registryUrl>.*?)\\s+tag:\\s*(?<currentValue>.*)",
+        "image:\\s*(?<depName>[^:]+):(?<currentValue>.*)"
+      ],
+      "datasourceTemplate": "docker"
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "Require approval for all updates",
+      "matchUpdateTypes": ["major", "minor", "patch"],
+      "dependencyDashboardApproval": true
+    },
+    {
+      "description": "Group Flux system updates",
+      "matchManagers": ["flux"],
+      "matchDatasources": ["github-releases"],
+      "matchPackageNames": ["fluxcd/flux2"],
+      "groupName": "Flux system updates"
+    },
+    {
+      "description": "Group Helm chart updates by application",
+      "matchManagers": ["flux"],
+      "matchDatasources": ["helm"],
+      "groupName": "{{depName}} helm chart",
+      "groupSlug": "{{depName}}-helm"
+    },
+    {
+      "description": "Auto-merge patch updates for trusted sources",
+      "matchUpdateTypes": ["patch"],
+      "matchManagers": ["flux"],
+      "matchDatasources": ["helm"],
+      "matchPackageNames": [
+        "cert-manager",
+        "ingress-nginx",
+        "prometheus-community/kube-prometheus-stack"
+      ],
+      "dependencyDashboardApproval": false,
+      "automerge": true
+    }
+  ]
+}
