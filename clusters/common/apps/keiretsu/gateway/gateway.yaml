@@ -5,6 +5,7 @@ metadata:
   name: local-ts
   labels:
     external-dns: local-ts
+    gateway: local-ts
   annotations:
     cert-manager.io/cluster-issuer: raj-issuer
 spec:

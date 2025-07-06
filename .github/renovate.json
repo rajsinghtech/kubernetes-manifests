@@ -2,173 +2,32 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended",
-    "docker:enableMajor",
-    ":disableRateLimiting",
-    ":dependencyDashboard",
-    ":semanticCommits",
-    ":automergeBranch"
+    ":dependencyDashboard"
   ],
   "dependencyDashboard": true,
   "dependencyDashboardTitle": "Renovate Dashboard 🤖",
-  "suppressNotifications": [
-    "prEditedNotification",
-    "prIgnoreNotification"
-  ],
-  "rebaseWhen": "conflicted",
-  "schedule": [
-    "every weekend"
-  ],
-  "ignorePaths": [
-    "**/*.sops.*"
-  ],
+  "schedule": ["every weekend"],
+  "ignorePaths": ["**/*.sops.*"],
   "flux": {
-    "fileMatch": [
-      "(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$"
-    ]
+    "managerFilePatterns": ["/clusters/.+\\.ya?ml$/"]
   },
   "helm-values": {
-    "fileMatch": [
-      "(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$"
-    ]
-  },
-  "helmfile": {
-    "fileMatch": [
-      "(^|/)helmfile\\.ya?ml(?:\\.j2)?$"
-    ]
+    "managerFilePatterns": ["/clusters/.+\\.ya?ml$/"]
   },
   "kubernetes": {
-    "fileMatch": [
-      "(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$"
-    ]
+    "managerFilePatterns": ["/clusters/.+\\.ya?ml$/"]
   },
-  "kustomize": {
-    "fileMatch": [
-      "(^|/)kustomization\\.ya?ml(?:\\.j2)?$"
-    ]
-  },
-  "pip_requirements": {
-    "fileMatch": [
-      "(^|/)[\\w-]*requirements(-\\w+)?\\.(txt|pip)(?:\\.j2)?$"
-    ]
-  },
-  "commitMessageTopic": "{{depName}}",
-  "commitMessageExtra": "to {{newVersion}}",
-  "commitMessageSuffix": "",
   "packageRules": [
     {
-      "description": [
-        "Auto merge Github Actions"
-      ],
-      "matchManagers": [
-        "github-actions"
-      ],
-      "automerge": true,
-      "automergeType": "branch",
-      "ignoreTests": true,
-      "matchUpdateTypes": [
-        "minor",
-        "patch"
-      ]
+      "description": "Require approval for all Helm chart updates",
+      "matchDatasources": ["helm"],
+      "dependencyDashboardApproval": true
     },
     {
-      "matchUpdateTypes": [
-        "minor",
-        "patch"
-      ],
-      "matchCurrentVersion": "!/^0/",
+      "description": "Auto merge GitHub Actions minor/patch",
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["minor", "patch"],
       "automerge": true
-    },
-    {
-      "matchUpdateTypes": [
-        "digest"
-      ],
-      "automerge": true
-    },
-    {
-      "description": [
-        "Flux Group"
-      ],
-      "groupName": "Flux",
-      "matchDatasources": [
-        "docker",
-        "github-tags"
-      ],
-      "versioning": "semver",
-      "group": {
-        "commitMessageTopic": "{{{groupName}}} group"
-      },
-      "separateMinorPatch": true,
-      "matchPackageNames": [
-        "/fluxcd/"
-      ]
-    },
-    {
-      "description": [
-        "Talos Group"
-      ],
-      "groupName": "Talos",
-      "matchDatasources": [
-        "docker"
-      ],
-      "group": {
-        "commitMessageTopic": "{{{groupName}}} group"
-      },
-      "separateMinorPatch": true,
-      "matchPackageNames": [
-        "/siderolabs/talosctl/",
-        "/siderolabs/installer/"
-      ]
-    },
-    {
-      "matchDatasources": [
-        "helm"
-      ],
-      "commitMessageTopic": "chart {{depName}}"
-    },
-    {
-      "matchDatasources": [
-        "docker"
-      ],
-      "commitMessageTopic": "image {{depName}}"
-    },
-    {
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchUpdateTypes": [
-        "major"
-      ],
-      "commitMessagePrefix": "feat(container)!: "
-    },
-    {
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchUpdateTypes": [
-        "minor"
-      ],
-      "semanticCommitType": "feat",
-      "semanticCommitScope": "container"
-    },
-    {
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchUpdateTypes": [
-        "patch"
-      ],
-      "semanticCommitType": "fix",
-      "semanticCommitScope": "container"
-    },
-    {
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchUpdateTypes": [
-        "digest"
-      ],
-      "semanticCommitType": "chore",
-      "semanticCommitScope": "container"
     }
   ]
 }

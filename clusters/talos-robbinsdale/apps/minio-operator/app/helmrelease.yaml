@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: operator # Use original chart name
-      version: 7.1.0
+      version: 7.1.1
       sourceRef:
         kind: HelmRepository
         name: minio-operator # Assuming repo name is minio, need to verify or create this HelmRepository

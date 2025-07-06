@@ -5,6 +5,7 @@ metadata:
   name: public
   labels:
     external-dns: unifi
+    gateway: public
 spec:
   gatewayClassName: public
   listeners:
