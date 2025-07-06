@@ -34,4 +34,5 @@ spec:
         internal:
           enabled: true
           serviceName: kube-prometheus-stack-prometheus
+          namespaceName: monitoring
           port: 9090 
