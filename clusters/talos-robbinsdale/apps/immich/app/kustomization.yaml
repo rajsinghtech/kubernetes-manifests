@@ -7,6 +7,5 @@ resources:
   - unas.yaml
   - httproute.yaml
   - secret.yaml
-  - postgres-deployment.yaml
-  # - pg.yaml
+  - pg.yaml
   - redis.yaml
