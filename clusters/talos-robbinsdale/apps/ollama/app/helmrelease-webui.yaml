@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: open-webui
-      version: 6.4.0
+      version: 6.22.0
       sourceRef:
         kind: HelmRepository
         name: open-webui # Need to add this HelmRepository definition
