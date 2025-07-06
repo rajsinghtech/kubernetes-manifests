@@ -1,41 +1,33 @@
+---
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: immich-postgres-ceph
+  name: immich-postgresql-ceph
 spec:
-  inheritedMetadata:
-    labels:
-      app: immich-pg
-  # At the time of writing, immich is only compatible with pgvecto.rs <0.4. Latest postgres image with that version is 16.5.
-  imageName: ghcr.io/tensorchord/cloudnative-pgvecto.rs:16.5-v0.3.0
-  instances: 3
-
+  instances: 1
+  imageName: ghcr.io/tensorchord/cloudnative-vectorchord:15-0.3.0
   postgresql:
     shared_preload_libraries:
-      - "vectors.so"
-    enableAlterSystem: true
-
-  managed:
-    roles:
-      - name: immich
-        superuser: true
-        login: true
-
+      - "vchord.so"
   bootstrap:
     initdb:
       database: immich
       owner: immich
       secret:
         name: immich-postgres-user
-      postInitSQL:
-        - ALTER SYSTEM SET search_path TO "$user", public, vectors;
-        - SET search_path TO "$user", public, vectors;
-        - CREATE EXTENSION IF NOT EXISTS "vectors";
-        - ALTER SCHEMA vectors OWNER TO "immich";
-        - GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA vectors TO "immich";
-        - GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO "immich";
-        - CREATE EXTENSION IF NOT EXISTS cube WITH SCHEMA pg_catalog;
-        - CREATE EXTENSION IF NOT EXISTS earthdistance WITH SCHEMA pg_catalog;
+      dataChecksums: true
+      postInitApplicationSQL:
+        - ALTER USER immich WITH SUPERUSER;
+        - CREATE EXTENSION IF NOT EXISTS vchord CASCADE;
+        - CREATE EXTENSION IF NOT EXISTS "cube";
+        - CREATE EXTENSION IF NOT EXISTS "earthdistance";
+  # resources:
+  #   limits:
+  #     cpu: 2
+  #     memory: 1024Mi
+  #   requests:
+  #     cpu: 50m
+  #     memory: 512Mi
   monitoring:
     enablePodMonitor: true
   storage:
