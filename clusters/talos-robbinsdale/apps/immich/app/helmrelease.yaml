@@ -25,7 +25,6 @@ spec:
       tag: v1.135.3
     env:
       DB_DATABASE_NAME: immich
-      DB_HOSTNAME: immich-postgres
       DB_USERNAME:
         valueFrom:
           secretKeyRef:
