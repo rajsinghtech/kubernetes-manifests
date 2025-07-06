@@ -3,15 +3,6 @@
   "extends": [
     "config:recommended"
   ],
-  "enabledManagers": [
-    "flux", 
-    "helm-values", 
-    "kubernetes", 
-    "github-actions", 
-    "pip_requirements",
-    "kustomize",
-    "regex"
-  ],
   "dependencyDashboard": true,
   "dependencyDashboardTitle": "Renovate Dashboard 🤖",
   "suppressNotifications": ["prEditedNotification", "prIgnoreNotification"],
@@ -25,7 +16,7 @@
     ]
   },
   "flux": {
-    "managerFilePatterns": [
+    "fileMatch": [
       "clusters/**/*.yaml",
       "**/*helmrelease*.yaml",
       "**/*helmrepository*.yaml"
