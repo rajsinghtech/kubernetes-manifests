@@ -9,13 +9,13 @@
   "schedule": ["every weekend"],
   "ignorePaths": ["**/*.sops.*"],
   "flux": {
-    "managerFilePatterns": ["clusters/.+\\.ya?ml$"]
+    "fileMatch": ["clusters/**/*.yaml", "clusters/**/*.yml"]
   },
   "helm-values": {
-    "managerFilePatterns": ["clusters/.+\\.ya?ml$"]
+    "fileMatch": ["clusters/**/*.yaml", "clusters/**/*.yml"]
   },
   "kubernetes": {
-    "managerFilePatterns": ["clusters/.+\\.ya?ml$"]
+    "fileMatch": ["clusters/**/*.yaml", "clusters/**/*.yml"]
   },
   "packageRules": [
     {
