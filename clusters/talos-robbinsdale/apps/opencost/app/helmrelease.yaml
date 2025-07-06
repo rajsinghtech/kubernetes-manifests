@@ -33,5 +33,5 @@ spec:
       prometheus:
         internal:
           enabled: true
-          serviceName: kube-prometheus-stack-prometheus.monitoring.svc.cluster.local
+          serviceName: kube-prometheus-stack-prometheus
           port: 9090 
