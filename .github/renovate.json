@@ -22,13 +22,13 @@
     "**/*.sops.*"
   ],
   "flux": {
-    "managerFilePatterns": [
-      "/(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$/"
+    "fileMatch": [
+      "clusters/**/*.yaml"
     ]
   },
   "helm-values": {
-    "managerFilePatterns": [
-      "/(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$/"
+    "fileMatch": [
+      "clusters/**/*.yaml"
     ]
   },
   "helmfile": {
@@ -37,8 +37,8 @@
     ]
   },
   "kubernetes": {
-    "managerFilePatterns": [
-      "/(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$/"
+    "fileMatch": [
+      "clusters/**/*.yaml"
     ]
   },
   "kustomize": {
@@ -55,6 +55,11 @@
   "commitMessageExtra": "to {{newVersion}}",
   "commitMessageSuffix": "",
   "packageRules": [
+    {
+      "description": "Require approval for all Helm chart updates",
+      "matchDatasources": ["helm"],
+      "dependencyDashboardApproval": true
+    },
     {
       "description": [
         "Auto merge Github Actions"
