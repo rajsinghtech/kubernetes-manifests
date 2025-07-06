@@ -17,7 +17,8 @@
   "flux": {
     "fileMatch": [
       "clusters/.+\\.ya?ml$",
-      ".*helmrelease.*\\.ya?ml$"
+      ".*helmrelease.*\\.ya?ml$",
+      ".*helmrepository.*\\.ya?ml$"
     ]
   },
   "helm-values": {
@@ -31,7 +32,8 @@
       "fileMatch": [".+\\.ya?ml$"],
       "matchStrings": [
         "registryUrl=(?<registryUrl>.*?)\\s+tag:\\s*(?<currentValue>.*)",
-        "image:\\s*(?<depName>[^:]+):(?<currentValue>.*)"
+        "image:\\s*(?<depName>[^:]+):(?<currentValue>.*)",
+        "tag:\\s*(?<currentValue>.*?)\\s+#\\s*renovate:\\s*datasource=(?<datasource>.*?)\\s+depName=(?<depName>.*)"
       ],
       "datasourceTemplate": "docker"
     }
