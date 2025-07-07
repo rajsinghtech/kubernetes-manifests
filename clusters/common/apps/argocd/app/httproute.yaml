@@ -2,6 +2,16 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: argocd
+  namespace: argocd
+  annotations:
+    item.homer.rajsingh.info/name: "ArgoCD"
+    item.homer.rajsingh.info/subtitle: "GitOps Deployment"
+    item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/svg/argocd.svg"
+    item.homer.rajsingh.info/tag: "infrastructure"
+    item.homer.rajsingh.info/keywords: "gitops, kubernetes, deployment"
+
+    service.homer.rajsingh.info/name: "Infrastructure"
+    service.homer.rajsingh.info/icon: "fas fa-server"
 spec:
   parentRefs:
     - group: gateway.networking.k8s.io

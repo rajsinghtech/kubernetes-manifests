@@ -2,6 +2,16 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: alertmanager
+  namespace: monitoring
+  annotations:
+    item.homer.rajsingh.info/name: "Alertmanager"
+    item.homer.rajsingh.info/subtitle: "Alert Management"
+    item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/svg/alertmanager.svg"
+    item.homer.rajsingh.info/tag: "monitoring"
+    item.homer.rajsingh.info/keywords: "alerts, notifications, monitoring"
+
+    service.homer.rajsingh.info/name: "Monitoring"
+    service.homer.rajsingh.info/icon: "fas fa-chart-line"
 spec:
   parentRefs:
     - group: gateway.networking.k8s.io

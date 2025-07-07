@@ -2,6 +2,16 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: media
+  namespace: media
+  annotations:
+    item.homer.rajsingh.info/name: "Media Hub"
+    item.homer.rajsingh.info/subtitle: "All-in-One Media Management"
+    item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/svg/media.svg"
+    item.homer.rajsingh.info/tag: "media"
+    item.homer.rajsingh.info/keywords: "media, management, hub"
+
+    service.homer.rajsingh.info/name: "Media"
+    service.homer.rajsingh.info/icon: "fas fa-tv"
 spec:
   parentRefs:
     - group: gateway.networking.k8s.io

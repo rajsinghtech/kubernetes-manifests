@@ -2,6 +2,16 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: tsflow
+  namespace: tailscale-examples
+  annotations:
+    item.homer.rajsingh.info/name: "TSFlow"
+    item.homer.rajsingh.info/subtitle: "Tailscale Flow Logs"
+    item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/svg/tailscale.svg"
+    item.homer.rajsingh.info/tag: "utilities"
+    item.homer.rajsingh.info/keywords: "tailscale, network, logs"
+
+    service.homer.rajsingh.info/name: "Utilities"
+    service.homer.rajsingh.info/icon: "fas fa-tools"
 spec:
   parentRefs:
     - group: gateway.networking.k8s.io
