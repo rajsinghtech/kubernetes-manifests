@@ -205,17 +205,20 @@ spec:
           alerts:
             - type: discord
               send-on-resolved: true
-        - name: PiHole Primary DNS
+        - name: PiHole Home DNS
           group: network
-          url: "10.69.10.69"
+          url: "pihole-dns.home"
           dns:
             query-name: "google.com"
             query-type: "A"
           conditions:
             - "[DNS_RCODE] == NOERROR"
-        - name: PiHole Secondary DNS
+          alerts:
+            - type: discord
+              send-on-resolved: true
+        - name: PiHole Tailscale DNS
           group: network
-          url: "10.69.69.10"
+          url: "pihole-ts-dns.keiretsu"
           dns:
             query-name: "google.com"
             query-type: "A"
