@@ -2,6 +2,16 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: hubble
+  namespace: hubble-ui
+  annotations:
+    item.homer.rajsingh.info/name: "Hubble UI"
+    item.homer.rajsingh.info/subtitle: "Network Observability"
+    item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/svg/cilium-hubble.svg"
+    item.homer.rajsingh.info/tag: "infrastructure"
+    item.homer.rajsingh.info/keywords: "network, observability, cilium"
+
+    service.homer.rajsingh.info/name: "Infrastructure"
+    service.homer.rajsingh.info/icon: "fas fa-server"
 spec:
   parentRefs:
     - group: gateway.networking.k8s.io

@@ -3,6 +3,15 @@ kind: HTTPRoute
 metadata:
   name: homer
   namespace: homer
+  annotations:
+    item.homer.rajsingh.info/name: "Homer"
+    item.homer.rajsingh.info/subtitle: "Application Dashboard"
+    item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/svg/homer.svg"
+    item.homer.rajsingh.info/tag: "home"
+    item.homer.rajsingh.info/keywords: "dashboard, home, apps"
+
+    service.homer.rajsingh.info/name: "Home"
+    service.homer.rajsingh.info/icon: "fas fa-home"
 spec:
   parentRefs:
     - group: gateway.networking.k8s.io

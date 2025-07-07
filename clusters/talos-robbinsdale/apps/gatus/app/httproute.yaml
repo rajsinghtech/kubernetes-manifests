@@ -2,6 +2,16 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: gatus
+  namespace: gatus
+  annotations:
+    item.homer.rajsingh.info/name: "Gatus"
+    item.homer.rajsingh.info/subtitle: "Service Monitoring"
+    item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/svg/gatus.svg"
+    item.homer.rajsingh.info/tag: "infrastructure"
+    item.homer.rajsingh.info/keywords: "monitoring, uptime, status"
+
+    service.homer.rajsingh.info/name: "Infrastructure"
+    service.homer.rajsingh.info/icon: "fas fa-server"
 spec:
   parentRefs:
     - group: gateway.networking.k8s.io
