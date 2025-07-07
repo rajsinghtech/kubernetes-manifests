@@ -26,8 +26,8 @@ spec:
     envFrom:
       - secretRef:
           name: gatus
-      - secretRef:
-          name: gatus-postgres-app
+      # - secretRef:
+      #     name: gatus-postgres-app
     config:
       #storage:
         #type: postgres
