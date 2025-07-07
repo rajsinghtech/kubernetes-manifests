@@ -36,14 +36,6 @@ spec:
         discord:
           webhook-url: "$${discord-webhook-url}"
       endpoints:
-        - name: ollama-mac-mini
-          group: tailscale
-          url: http://tailscale-mac-mini.ollama:11434
-          interval: 600s
-          client:
-            timeout: 60s
-          conditions:
-            - "[STATUS] == 200"
         - name: Silver
           group: servers
           url: tcp://silver.local:6443
@@ -162,7 +154,7 @@ spec:
           group: network
           url: https://gatus.ts.rajsingh.info
           client:
-            dns-resolver: "tcp://10.69.10.69:53"
+            dns-resolver: "tcp://pihole-ts-dns.keiretsu:53"
           interval: 60s
           conditions:
             - "[STATUS] == 200"
