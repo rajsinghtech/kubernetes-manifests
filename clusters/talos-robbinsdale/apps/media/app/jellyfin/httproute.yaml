@@ -3,6 +3,15 @@ kind: HTTPRoute
 metadata:
   name: jellyfin
   namespace: media
+  annotations:
+    item.homer.rajsingh.info/name: "Jellyfin"
+    item.homer.rajsingh.info/subtitle: "TV, Movies, Music, and more"
+    item.homer.rajsingh.info/logo: "https://jellyfin.org/images/logo.svg"
+    item.homer.rajsingh.info/tag: "media"
+    item.homer.rajsingh.info/keywords: "media, server, streaming"
+
+    service.homer.rajsingh.info/name: "Media"
+    service.homer.rajsingh.info/icon: "fas fa-tv"
 spec:
   parentRefs:
     - group: gateway.networking.k8s.io
