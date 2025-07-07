@@ -46,32 +46,26 @@ spec:
         buttons:
           - name: "GitOps Repository"
             link: "https://github.com/rajsinghtech/kubernetes-manifests"
-          - name: "ArgoCD"
-            link: "https://argocd.rajsingh.info"
-          - name: "Grafana"
-            link: "https://grafana.lukehouge.com"
-          - name: "Prometheus"
-            link: "https://prometheus.lukehouge.com"
           - name: "Portfolio"
             link: "https://www.rajsingh.info"
         custom-css: |
           body {
-            background-color: #f5f5dc;
+            background-color: #f5f5dc !important;
           }
-          .header {
+          header, .header, [class*="header"], .top-bar {
             background: linear-gradient(135deg, #d2b48c 0%, #daa520 100%) !important;
           }
-          .navbar {
+          nav, .nav, .navbar {
             background: linear-gradient(135deg, #d2b48c 0%, #daa520 100%) !important;
           }
-          .btn {
+          button, .btn, .button, [class*="btn"], a[class*="btn"] {
             background: linear-gradient(135deg, #d2b48c 0%, #daa520 100%) !important;
             border: none !important;
             border-radius: 6px !important;
             margin: 0 5px !important;
             color: white !important;
           }
-          .btn:hover {
+          button:hover, .btn:hover, .button:hover, [class*="btn"]:hover, a[class*="btn"]:hover {
             background: linear-gradient(135deg, #daa520 0%, #d2b48c 100%) !important;
             transform: translateY(-2px);
             transition: all 0.3s ease;
@@ -79,6 +73,9 @@ spec:
           .logo img {
             border-radius: 8px;
             max-height: 40px;
+          }
+          div[class*="container"] {
+            background-color: #f5f5dc !important;
           }
       endpoints:
         - name: Silver
