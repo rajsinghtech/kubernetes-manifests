@@ -55,23 +55,30 @@ spec:
           - name: "Portfolio"
             link: "https://www.rajsingh.info"
         custom-css: |
+          body {
+            background-color: #f5f5dc;
+          }
           .header {
-            background: linear-gradient(135deg, #d2b48c 0%, #daa520 100%);
+            background: linear-gradient(135deg, #d2b48c 0%, #daa520 100%) !important;
+          }
+          .navbar {
+            background: linear-gradient(135deg, #d2b48c 0%, #daa520 100%) !important;
+          }
+          .btn {
+            background: linear-gradient(135deg, #d2b48c 0%, #daa520 100%) !important;
+            border: none !important;
+            border-radius: 6px !important;
+            margin: 0 5px !important;
+            color: white !important;
+          }
+          .btn:hover {
+            background: linear-gradient(135deg, #daa520 0%, #d2b48c 100%) !important;
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
           }
           .logo img {
             border-radius: 8px;
             max-height: 40px;
-          }
-          .btn-primary {
-            background: linear-gradient(135deg, #d2b48c 0%, #daa520 100%);
-            border: none;
-            border-radius: 6px;
-            margin: 0 5px;
-          }
-          .btn-primary:hover {
-            background: linear-gradient(135deg, #daa520 0%, #d2b48c 100%);
-            transform: translateY(-2px);
-            transition: all 0.3s ease;
           }
       endpoints:
         - name: Silver
