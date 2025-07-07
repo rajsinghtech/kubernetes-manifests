@@ -154,7 +154,7 @@ spec:
           group: network
           url: https://gatus.ts.rajsingh.info
           client:
-            dns-resolver: "tcp://pihole-ts-dns.keiretsu:53"
+            dns-resolver: "tcp://pihole-home-robbinsdale.keiretsu.ts.net:53"
           interval: 60s
           conditions:
             - "[STATUS] == 200"
