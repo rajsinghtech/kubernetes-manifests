@@ -168,7 +168,6 @@ spec:
           conditions:
             - "[STATUS] == 200"
             - "[RESPONSE_TIME] < 3000"
-            - "[BODY] =~ .*pong.*"
           alerts:
             - type: discord
               send-on-resolved: true
