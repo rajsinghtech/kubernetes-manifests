@@ -35,6 +35,44 @@ spec:
       alerting:
         discord:
           webhook-url: "$${discord-webhook-url}"
+          failure-threshold: 3
+          success-threshold: 2
+      ui:
+        title: "K8s-Robbinsdale Cluster Status"
+        description: "GitOps-managed Kubernetes cluster monitoring - Single source of truth for infrastructure health"
+        header: "K8s-Robbinsdale Infrastructure Dashboard"
+        logo: "https://raw.githubusercontent.com/kubernetes/kubernetes/master/logo/logo.png"
+        link: "https://github.com/rajsinghtech/kubernetes-manifests"
+        buttons:
+          - name: "GitOps Repository"
+            link: "https://github.com/rajsinghtech/kubernetes-manifests"
+          - name: "ArgoCD"
+            link: "https://argocd.rajsingh.info"
+          - name: "Grafana"
+            link: "https://grafana.lukehouge.com"
+          - name: "Prometheus"
+            link: "https://prometheus.lukehouge.com"
+          - name: "Portfolio"
+            link: "https://www.rajsingh.info"
+        custom-css: |
+          .header {
+            background: linear-gradient(135deg, #d2b48c 0%, #daa520 100%);
+          }
+          .logo img {
+            border-radius: 8px;
+            max-height: 40px;
+          }
+          .btn-primary {
+            background: linear-gradient(135deg, #d2b48c 0%, #daa520 100%);
+            border: none;
+            border-radius: 6px;
+            margin: 0 5px;
+          }
+          .btn-primary:hover {
+            background: linear-gradient(135deg, #daa520 0%, #d2b48c 100%);
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
+          }
       endpoints:
         - name: Silver
           group: servers
@@ -42,6 +80,7 @@ spec:
           interval: 60s
           conditions:
             - "[CONNECTED] == true"
+            - "[RESPONSE_TIME] < 1000"
           alerts:
             - type: discord
               send-on-resolved: true
@@ -53,6 +92,8 @@ spec:
             insecure: true
           conditions:
             - "[STATUS] == 401"
+            - "[RESPONSE_TIME] < 2000"
+            - "[CERTIFICATE_EXPIRATION] > 168h"
           alerts:
             - type: discord
               send-on-resolved: true
@@ -62,6 +103,7 @@ spec:
           interval: 60s
           conditions:
             - "[CONNECTED] == true"
+            - "[RESPONSE_TIME] < 1000"
           alerts:
             - type: discord
               send-on-resolved: true
@@ -71,6 +113,7 @@ spec:
           interval: 60s
           conditions:
             - "[CONNECTED] == true"
+            - "[RESPONSE_TIME] < 1000"
           alerts:
             - type: discord
               send-on-resolved: true
@@ -80,6 +123,7 @@ spec:
           interval: 60s
           conditions:
             - "[CONNECTED] == true"
+            - "[RESPONSE_TIME] < 1000"
           alerts:
             - type: discord
               send-on-resolved: true
@@ -89,6 +133,7 @@ spec:
           interval: 60s
           conditions:
             - "[CONNECTED] == true"
+            - "[RESPONSE_TIME] < 1000"
           alerts:
             - type: discord
               send-on-resolved: true
@@ -100,6 +145,8 @@ spec:
             insecure: true
           conditions:
             - "[STATUS] == 200"
+            - "[RESPONSE_TIME] < 3000"
+            - "[CERTIFICATE_EXPIRATION] > 168h"
           alerts:
             - type: discord
               send-on-resolved: true
@@ -109,6 +156,8 @@ spec:
           interval: 60s
           conditions:
             - "[STATUS] == 200"
+            - "[RESPONSE_TIME] < 2000"
+            - "[CERTIFICATE_EXPIRATION] > 168h"
           alerts:
             - type: discord
               send-on-resolved: true
@@ -118,6 +167,8 @@ spec:
           interval: 60s
           conditions:
             - "[STATUS] == 200"
+            - "[RESPONSE_TIME] < 3000"
+            - "[BODY] =~ .*pong.*"
           alerts:
             - type: discord
               send-on-resolved: true
@@ -129,6 +180,8 @@ spec:
           interval: 60s
           conditions:
             - "[STATUS] == 200"
+            - "[RESPONSE_TIME] < 2000"
+            - "[CERTIFICATE_EXPIRATION] > 168h"
           alerts:
             - type: discord
               send-on-resolved: true
@@ -138,6 +191,8 @@ spec:
           interval: 60s
           conditions:
             - "[STATUS] == 200"
+            - "[RESPONSE_TIME] < 2000"
+            - "[CERTIFICATE_EXPIRATION] > 168h"
           alerts:
             - type: discord
               send-on-resolved: true
@@ -147,6 +202,8 @@ spec:
           interval: 60s
           conditions:
             - "[STATUS] == 200"
+            - "[RESPONSE_TIME] < 2000"
+            - "[CERTIFICATE_EXPIRATION] > 168h"
           alerts:
             - type: discord
               send-on-resolved: true
@@ -158,6 +215,8 @@ spec:
           interval: 60s
           conditions:
             - "[STATUS] == 200"
+            - "[RESPONSE_TIME] < 2000"
+            - "[CERTIFICATE_EXPIRATION] > 168h"
           alerts:
             - type: discord
               send-on-resolved: true
@@ -167,6 +226,8 @@ spec:
           interval: 60s
           conditions:
             - "[STATUS] == 200"
+            - "[RESPONSE_TIME] < 2000"
+            - "[CERTIFICATE_EXPIRATION] > 168h"
           alerts:
             - type: discord
               send-on-resolved: true
@@ -176,6 +237,7 @@ spec:
           interval: 60s
           conditions:
             - "[STATUS] == 200"
+            - "[RESPONSE_TIME] < 3000"
           alerts:
             - type: discord
               send-on-resolved: true
@@ -185,6 +247,7 @@ spec:
           interval: 60s
           conditions:
             - "[STATUS] == 200"
+            - "[RESPONSE_TIME] < 3000"
           alerts:
             - type: discord
               send-on-resolved: true
@@ -194,6 +257,7 @@ spec:
           interval: 60s
           conditions:
             - "[STATUS] == 200"
+            - "[RESPONSE_TIME] < 3000"
           alerts:
             - type: discord
               send-on-resolved: true
@@ -205,6 +269,7 @@ spec:
             query-type: "A"
           conditions:
             - "[DNS_RCODE] == NOERROR"
+            - "[RESPONSE_TIME] < 1000"
           alerts:
             - type: discord
               send-on-resolved: true
@@ -216,12 +281,18 @@ spec:
             query-type: "A"
           conditions:
             - "[DNS_RCODE] == NOERROR"
+            - "[RESPONSE_TIME] < 1000"
+          alerts:
+            - type: discord
+              send-on-resolved: true
         - name: Frigate
           group: home
           url: https://frigate.lukehouge.com
           interval: 60s
           conditions:
             - "[STATUS] == 200"
+            - "[RESPONSE_TIME] < 3000"
+            - "[CERTIFICATE_EXPIRATION] > 168h"
           alerts:
             - type: discord
               send-on-resolved: true
@@ -231,6 +302,8 @@ spec:
           interval: 60s
           conditions:
             - "[STATUS] == 200"
+            - "[RESPONSE_TIME] < 3000"
+            - "[CERTIFICATE_EXPIRATION] > 168h"
           alerts:
             - type: discord
               send-on-resolved: true 
