@@ -6,7 +6,7 @@ metadata:
   annotations:
     item.homer.rajsingh.info/name: "Hubble UI"
     item.homer.rajsingh.info/subtitle: "Network Observability"
-    item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/svg/cilium-hubble.svg"
+    item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/cilium.png"
     item.homer.rajsingh.info/tag: "infrastructure"
     item.homer.rajsingh.info/keywords: "network, observability, cilium"
 
