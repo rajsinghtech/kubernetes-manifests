@@ -1,0 +1,25 @@
+---
+# Example Pod using S3 storage via Mountpoint CSI driver
+apiVersion: v1
+kind: Pod
+metadata:
+  name: s3-pod-example
+  namespace: default
+spec:
+  containers:
+    - name: app
+      image: alpine:latest
+      command: ["sleep", "3600"]
+      volumeMounts:
+        - name: s3-storage
+          mountPath: /mnt/s3
+      # Optional: Configure environment for S3 access
+      # env:
+      #   - name: AWS_REGION
+      #     value: us-east-1
+  volumes:
+    - name: s3-storage
+      persistentVolumeClaim:
+        claimName: s3-pvc-example
+  # Optional: For pod-level authentication, specify service account
+  # serviceAccountName: s3-service-account

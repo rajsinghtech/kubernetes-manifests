@@ -1,0 +1,8 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mountpoint-s3-csi
+  labels:
+    name: mountpoint-s3-csi
+    pod-security.kubernetes.io/enforce: privileged

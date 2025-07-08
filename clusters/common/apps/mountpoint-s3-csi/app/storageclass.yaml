@@ -1,0 +1,14 @@
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: mountpoint-s3-csi
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "false"
+provisioner: s3.csi.aws.com
+parameters:
+  # Static provisioning - no parameters needed for dynamic provisioning
+  # as this CSI driver only supports static provisioning
+volumeBindingMode: Immediate
+allowVolumeExpansion: false
+reclaimPolicy: Retain

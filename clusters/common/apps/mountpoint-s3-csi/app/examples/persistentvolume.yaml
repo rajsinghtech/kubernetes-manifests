@@ -1,0 +1,33 @@
+---
+# Example PersistentVolume for static provisioning of S3 bucket
+# Replace placeholders with your actual values:
+# - BUCKET_NAME: Your S3 bucket name
+# - REGION: Your AWS region (e.g., us-east-1)
+# - VOLUME_NAME: Unique name for this volume
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: s3-pv-example
+spec:
+  capacity:
+    storage: 1Ti  # Arbitrary value for S3 - not enforced
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: mountpoint-s3-csi
+  csi:
+    driver: s3.csi.aws.com
+    volumeHandle: s3-pv-example  # Must be unique across all PVs
+    volumeAttributes:
+      bucketName: BUCKET_NAME
+      region: REGION
+      # Optional: Use pod-level authentication instead of driver-level
+      # authenticationSource: pod
+      # Optional: Additional mount options
+      # uid: "1000"
+      # gid: "1000"
+      # allowOther: "true"
+  # Optional: Bind to specific PVC
+  # claimRef:
+  #   namespace: default
+  #   name: s3-pvc-example
