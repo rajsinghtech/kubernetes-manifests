@@ -1,0 +1,17 @@
+---
+# Example PersistentVolumeClaim for S3 storage
+# This should match the corresponding PersistentVolume
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: s3-pvc-example
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Ti  # Should match PV capacity
+  storageClassName: mountpoint-s3-csi
+  # Optional: Bind to specific PV
+  # volumeName: s3-pv-example

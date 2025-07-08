@@ -1,0 +1,20 @@
+---
+# ServiceMonitor for Prometheus monitoring of the CSI driver
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: aws-mountpoint-s3-csi-driver
+  namespace: mountpoint-s3-csi
+  labels:
+    app.kubernetes.io/name: aws-mountpoint-s3-csi-driver
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: aws-mountpoint-s3-csi-driver
+  endpoints:
+    - port: metrics
+      interval: 30s
+      path: /metrics
+  namespaceSelector:
+    matchNames:
+      - mountpoint-s3-csi

@@ -1,0 +1,20 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: mountpoint-s3-csi
+  namespace: flux-system
+spec:
+  targetNamespace: mountpoint-s3-csi
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: aws-mountpoint-s3-csi-driver
+  path: ./clusters/common/apps/mountpoint-s3-csi/app
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: home-kubernetes
+  wait: false
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m

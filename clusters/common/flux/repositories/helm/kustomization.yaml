@@ -59,3 +59,4 @@ resources:
   - ./wger.yaml
   - ./istio.yaml
   - ./homer-operator.yaml
+  - ./aws-mountpoint-s3-csi.yaml
