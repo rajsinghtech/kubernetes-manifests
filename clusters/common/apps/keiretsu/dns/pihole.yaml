@@ -15,9 +15,11 @@ spec:
         name: pihole
         namespace: flux-system
   install:
+    timeout: 15m
     remediation:
       retries: 3
   upgrade:
+    timeout: 15m
     cleanupOnFail: true
     remediation:
       retries: 3
