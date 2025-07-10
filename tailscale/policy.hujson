@@ -111,6 +111,8 @@
 		"services": {
 			"tag:hello": ["tag:ingress"],
 			"svc:test":  ["tag:test"],
+      "tag:k8s": ["tag:k8s"],
+      "svc:keiretsu": ["tag:k8s"],
 		},
 	},
 	
