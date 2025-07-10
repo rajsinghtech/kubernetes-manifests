@@ -11,8 +11,8 @@ spec:
         replicas: 2
       envoyService:
         annotations:
-          tailscale.com/hostname: ${LOCATION}-envoy-gateway
-          # tailscale.com/proxy-group: common-ingress
-          # tailscale.com/tags: "tag:hello"
+          tailscale.com/hostname: keiretsu-${LOCATION}-envoy-gateway
+          tailscale.com/proxy-group: common-ingress
+          tailscale.com/tags: "tag:k8s"
         type: LoadBalancer
         loadBalancerClass: tailscale
