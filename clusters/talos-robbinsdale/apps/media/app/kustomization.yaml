@@ -4,7 +4,6 @@ kind: Kustomization
 namespace: media
 resources:
   - secret.yaml
-  - httproute.yaml
   - ./jellyfin 
   - ./prowlarr 
   - ./radarr 
