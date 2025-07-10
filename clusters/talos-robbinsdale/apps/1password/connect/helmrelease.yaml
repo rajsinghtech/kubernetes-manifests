@@ -23,10 +23,11 @@ spec:
   values:
     connect:
       create: true
-      credentials:
-        existingSecret: onepassword-token
+      credentialsName: op-credentials
+      credentialsKey: 1password-credentials.json
     operator:
       create: true
       pollingInterval: 60
       token:
         name: onepassword-token
+        key: token

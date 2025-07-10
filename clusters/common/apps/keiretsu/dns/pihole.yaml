@@ -35,7 +35,7 @@ spec:
       annotations:
         tailscale.com/hostname: ${LOCATION}-pihole
         tailscale.com/proxy-group: common-ingress
-        tailscale.com/tags: "svc:keiretsu"
+        tailscale.com/tags: "tag:k8s"
       externalTrafficPolicy: Cluster
       loadBalancerClass: tailscale
       mixedService: true
