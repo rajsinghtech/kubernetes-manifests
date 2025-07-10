@@ -40,6 +40,10 @@ spec:
       tolerations:
         - operator: Exists
       
+      # Enable pod mounter for Talos Linux compatibility
+      podMounter:
+        enabled: true
+      
     # Configure resource limits
     resources:
       limits:
