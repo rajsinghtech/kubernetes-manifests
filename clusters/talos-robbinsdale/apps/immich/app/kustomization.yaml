@@ -9,3 +9,4 @@ resources:
   - secret.yaml
   - pg.yaml
   - redis.yaml
+  - s3-backup.yaml
