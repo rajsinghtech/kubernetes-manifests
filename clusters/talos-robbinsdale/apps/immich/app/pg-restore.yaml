@@ -1,0 +1,46 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: immich-postgresql-restore
+  namespace: immich
+spec:
+  instances: 1
+  imageName: ghcr.io/tensorchord/cloudnative-vectorchord:15-0.3.0
+  postgresql:
+    shared_preload_libraries:
+      - "vchord.so"
+  
+  # Bootstrap from S3 backup
+  bootstrap:
+    recovery:
+      source: immich-restore-source
+      database: immich
+      owner: immich
+      secret:
+        name: immich-postgres-user
+  
+  # Enable Barman Cloud plugin for S3 backups
+  plugins:
+    - name: barman-cloud.cloudnative-pg.io
+      isWALArchiver: true
+      parameters:
+        barmanObjectName: immich-s3-store
+
+  monitoring:
+    enablePodMonitor: true
+  storage:
+    size: 8Gi
+    storageClass: ceph-block-replicated-nvme
+
+  backup:
+    retentionPolicy: "30d"
+
+  # External cluster definition for restore
+  externalClusters:
+    - name: immich-restore-source
+      plugin:
+        name: barman-cloud.cloudnative-pg.io
+        parameters:
+          barmanObjectName: immich-s3-store
+          serverName: immich-postgresql-ceph
