@@ -33,7 +33,7 @@ spec:
   #     cpu: "100m"
   #     memory: "128Mi"
   homerConfig:
-    title: "Raj Singh's"
+    title: "Raj Singh's Keiretsu"
     subtitle: "Infrastructure Dashboard"
     logo: "https://raw.githubusercontent.com/rajsinghtech/homer-operator/main/homer/Homer-Operator.png"
     header: true
@@ -69,7 +69,7 @@ spec:
     
     # Default layout settings
     defaults:
-      layout: "columns"
+      layout: "grid"
       colorTheme: "auto"
     
     # Enhanced links with targets
@@ -112,14 +112,6 @@ spec:
           tag: "git"
           tagstyle: "is-primary"
           url: "https://github.com/rajsinghtech/kubernetes-manifests"
-          target: "_blank"
-      - parameters:
-          name: "ArgoCD"
-          logo: "https://raw.githubusercontent.com/argoproj/argo-cd/master/ui/src/assets/images/argo.png"
-          subtitle: "GitOps Controller"
-          tag: "git"
-          tagstyle: "is-primary"
-          url: "https://argocd.rajsingh.info"
           target: "_blank"
   
   # Custom assets and PWA configuration

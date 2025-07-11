@@ -6,12 +6,12 @@ metadata:
   annotations:
     item.homer.rajsingh.info/name: "Alertmanager"
     item.homer.rajsingh.info/subtitle: "Alert Management"
-    item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/svg/alertmanager.svg"
-    item.homer.rajsingh.info/tag: "monitoring"
-    item.homer.rajsingh.info/keywords: "alerts, notifications, monitoring"
+    item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/alertmanager.png"
+    item.homer.rajsingh.info/tag: "infrastructure"
+    item.homer.rajsingh.info/keywords: "alerts, notifications, monitoring, prometheus"
 
-    service.homer.rajsingh.info/name: "Monitoring"
-    service.homer.rajsingh.info/icon: "fas fa-chart-line"
+    service.homer.rajsingh.info/name: "Infrastructure"
+    service.homer.rajsingh.info/icon: "fas fa-server"
 spec:
   parentRefs:
     - group: gateway.networking.k8s.io
