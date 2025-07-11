@@ -25,9 +25,9 @@ spec:
     apiServerProxyConfig:
       mode: "true"
     operatorConfig:
-      # image:
-      #   repo: ghcr.io/rajsinghtech/k8s-operator
-      #   tag: v0.0.7
+      image:
+        repo: ghcr.io/rajsinghtech/k8s-operator
+        tag: v0.0.8
       hostname: "${LOCATION}-k8s-operator" 
       logging: "debug" # info, debug, dev
       defaultTags:
