@@ -69,7 +69,7 @@ spec:
     
     # Default layout settings
     defaults:
-      layout: "grid"
+      layout: "list"
       colorTheme: "auto"
     
     # Enhanced links with targets
