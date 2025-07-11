@@ -4,6 +4,3 @@ kind: Kustomization
 namespace: minio-operator # Namespace for the operator itself
 resources:
   - helmrelease.yaml
-  # The tenant and its secret are deployed to the 'home' namespace via the tenant.yaml
-  # - tenant.yaml
-  - secret.yaml 
