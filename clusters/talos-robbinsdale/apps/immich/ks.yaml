@@ -12,7 +12,6 @@ spec:
   dependsOn:
     - name: cnpg-system
     - name: dragonfly-operator-system
-    - name: rook-ceph-cluster-config
     - name: volsync
   path: ./clusters/${CLUSTER_NAME}/apps/immich/app
   prune: true
