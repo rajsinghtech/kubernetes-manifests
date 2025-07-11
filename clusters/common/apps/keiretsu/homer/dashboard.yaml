@@ -1,0 +1,265 @@
+---
+apiVersion: homer.rajsingh.info/v1alpha1
+kind: Dashboard
+metadata:
+  name: dashboard-keiretsu
+  namespace: keiretsu
+  labels:
+    app: homer-dashboard
+    tier: frontend
+spec:
+  replicas: 2
+  
+  # DNS Configuration (optional)
+  # Controls DNS policy and configuration for dashboard pods
+  # dnsPolicy: "ClusterFirst"  # ClusterFirst, ClusterFirstWithHostNet, Default, None
+  # dnsConfig: |
+  #   {
+  #     "nameservers": ["8.8.8.8", "8.8.4.4"],
+  #     "searches": ["example.com", "svc.cluster.local"],
+  #     "options": [
+  #       {"name": "ndots", "value": "2"},
+  #       {"name": "timeout", "value": "5"}
+  #     ]
+  #   }
+  
+  # Resource Requirements (optional)
+  # Define CPU and memory limits/requests for the Homer container
+  # resources:
+  #   limits:
+  #     cpu: "500m"
+  #     memory: "512Mi"
+  #   requests:
+  #     cpu: "100m"
+  #     memory: "128Mi"
+  homerConfig:
+    title: "Raj Singh's"
+    subtitle: "Infrastructure Dashboard"
+    logo: "https://raw.githubusercontent.com/rajsinghtech/homer-operator/main/homer/Homer-Operator.png"
+    header: true
+    footer: '<p>Powered by <strong>Homer-Operator</strong> | <a href="https://github.com/rajsinghtech/homer-operator">GitHub</a></p>'
+    colors:
+      light:
+        highlight-primary: "#d2b48c"
+        highlight-secondary: "#c8a974"
+        highlight-hover: "#b8956e"
+        background: "#fefcf9"
+        card-background: "#f6f0e8"
+        text: "#3b2f2f"
+        text-header: "#3b2f2f"
+        text-title: "#2f2626"
+        text-subtitle: "#6e5c5c"
+        card-shadow: rgba(120, 100, 80, 0.1)
+        link: "#a86c3f"            # Warm medium brown
+        link-hover: "#6b3e1d"      # Darker brown for hover contrast
+
+      dark:
+        highlight-primary: "#d2b48c"
+        highlight-secondary: "#a98e69"
+        highlight-hover: "#917555"
+        background: "#1b1a17"
+        card-background: "#2a2824"
+        text: "#e9e1d8"
+        text-header: "#e9e1d8"
+        text-title: "#f5f0e6"
+        text-subtitle: "#cbb9a8"
+        card-shadow: none
+        link: "#e2b185"            # Light warm tan (for contrast in dark mode)
+        link-hover: "#f5cda3"      # Brighter hover tan
+    
+    # Default layout settings
+    defaults:
+      layout: "columns"
+      colorTheme: "auto"
+    
+    # Enhanced links with targets
+    links:
+    - name: "Homer-Operator GitHub"
+      icon: "fab fa-github"
+      url: "https://github.com/rajsinghtech/homer-operator"
+      target: "_blank"
+    - name: "Homer Documentation"
+      icon: "fas fa-book"
+      url: "https://github.com/bastienwirtz/homer"
+      target: "_blank"
+    - name: "Kubernetes Dashboard"
+      icon: "fas fa-dharmachakra"
+      url: "https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/"
+      target: "_blank"
+    
+    # Comprehensive service catalog
+    services:
+    - parameters:
+        name: "Infrastructure"
+        icon: "fas fa-server"
+      items:
+      - parameters:
+          name: "Tailscale"
+          logo: "https://raw.githubusercontent.com/tailscale/tailscale/refs/heads/main/client/web/src/assets/icons/tailscale-icon.svg"
+          subtitle: "Private Mesh Network"
+          tag: "network"
+          tagstyle: "is-info"
+          url: "https://login.tailscale.com/admin/machines"
+    
+    - parameters:
+        name: "Development Tools"
+        icon: "fas fa-code"
+      items:
+      - parameters:
+          name: "Kubernetes Manifests"
+          logo: "https://raw.githubusercontent.com/kubernetes/community/master/icons/png/resources/labeled/deploy-128.png"
+          subtitle: "GitOps Repository"
+          tag: "git"
+          tagstyle: "is-primary"
+          url: "https://github.com/rajsinghtech/kubernetes-manifests"
+          target: "_blank"
+      - parameters:
+          name: "ArgoCD"
+          logo: "https://raw.githubusercontent.com/argoproj/argo-cd/master/ui/src/assets/images/argo.png"
+          subtitle: "GitOps Controller"
+          tag: "git"
+          tagstyle: "is-primary"
+          url: "https://argocd.rajsingh.info"
+          target: "_blank"
+  
+  # Custom assets and PWA configuration
+  # Enables custom branding, icons, and Progressive Web App features
+  # assets:
+  #   configMapRef:
+  #     name: "dashboard-assets"
+  #     namespace: "public"  # Optional: defaults to Dashboard namespace
+  #   icons:
+  #     favicon: "favicon.ico"                    # Custom favicon
+  #     appleTouchIcon: "apple-touch-icon.png"   # iOS home screen icon
+  #     pwaIcon192: "pwa-192x192.png"            # PWA icon 192x192
+  #     pwaIcon512: "pwa-512x512.png"            # PWA icon 512x512
+  #   pwa:
+  #     enabled: true
+  #     name: "Homer Dashboard"                   # Full PWA name
+  #     shortName: "Homer"                       # Short name for home screen
+  #     description: "Homer Dashboard powered by Homer-Operator"
+  #     themeColor: "#3367d6"                    # Theme color for browser UI
+  #     backgroundColor: "#ffffff"               # Background color for splash screen
+  #     display: "standalone"                    # Display mode: standalone, fullscreen, minimal-ui, browser
+  #     startUrl: "/"                            # Starting URL when launched from home screen
+  
+  # Secret references for smart cards and authentication
+  # Enables secure storage of sensitive data for Homer smart cards
+  # secrets:
+  #   apiKey:
+  #     name: "dashboard-secrets"
+  #     key: "api-key"
+  #     namespace: "public"  # Optional: defaults to Dashboard namespace
+  #   token:
+  #     name: "dashboard-secrets"
+  #     key: "auth-token"
+  #   password:
+  #     name: "dashboard-secrets"
+  #     key: "password"
+  #   username:
+  #     name: "dashboard-secrets"
+  #     key: "username"
+  #   headers:  # Custom authentication headers from secrets
+  #     Authorization:
+  #       name: "dashboard-secrets"
+  #       key: "bearer-token"
+  #     X-API-Key:
+  #       name: "dashboard-secrets"
+  #       key: "api-key"
+  
+  # Optional selectors and filters for controlling which resources are included
+  
+  # Gateway selector for filtering HTTPRoutes by Gateway labels (optional)
+  # If not specified, all HTTPRoutes matching annotation criteria are included
+  gatewaySelector:
+    matchLabels:
+      # external-dns: unifi
+      gateway: local-ts
+  #   matchExpressions:
+  #   - key: "app.kubernetes.io/name"
+  #     operator: In
+  #     values: ["istio", "envoy-gateway", "nginx-gateway"]
+
+  # HTTPRoute selector for filtering HTTPRoutes by their own labels (optional)
+  # Fine-grained control over which HTTPRoutes are included in the dashboard
+  # httpRouteSelector:
+  #   matchLabels:
+  #     environment: "production"    # Only include production HTTPRoutes
+  #     team: "platform"             # Only include platform team HTTPRoutes
+  #     tier: "frontend"             # Only include frontend HTTPRoutes
+  #   matchExpressions:
+  #   - key: "app.kubernetes.io/component"
+  #     operator: In
+  #     values: ["api", "frontend", "service"]
+  #   - key: "app.kubernetes.io/version"
+  #     operator: NotIn
+  #     values: ["v1.0.0", "legacy"]
+  #   - key: "monitoring.enabled"
+  #     operator: Exists                # Include only HTTPRoutes with monitoring enabled
+  #   - key: "deprecated"
+  #     operator: DoesNotExist          # Exclude deprecated HTTPRoutes
+
+  # Ingress selector for filtering Ingresses by labels (optional)
+  ingressSelector:
+    matchLabels:
+      noexist: "true"
+
+  # Domain filters for filtering by hostname/domain (optional)
+  # Only resources with hostnames matching these domains will be included
+  # Supports exact match (example.com) and subdomain match (*.example.com)
+  domainFilters:
+    - "rajsingh.info"
+  #   - "mycompany.com"
+  #   - "internal.local"
+  
+  # Service Grouping Configuration (optional)
+  # Controls how discovered services are organized into groups
+  # serviceGrouping:
+  #   strategy: "namespace"  # namespace, label, custom
+  #   # For label strategy - specify which label to use for grouping
+  #   labelKey: "app.kubernetes.io/component"
+  #   # For custom strategy - define custom grouping rules
+  #   customRules:
+  #   - name: "Frontend Services"
+  #     condition:
+  #       "app.kubernetes.io/component": "frontend"
+  #       "tier": "web"
+  #     priority: 10
+  #   - name: "API Services"
+  #     condition:
+  #       "app.kubernetes.io/component": "api"
+  #     priority: 5
+  #   - name: "Database Services"
+  #     condition:
+  #       "app.kubernetes.io/component": "database"
+  #     priority: 1
+  
+  # Validation Level (optional)
+  # Controls strictness of annotation validation
+  # validationLevel: "warn"  # strict, warn, none
+  
+  # Health Check Configuration (optional)
+  # Enables automatic health checking of discovered services
+  # healthCheck:
+  #   enabled: true
+  #   interval: "30s"        # Check interval
+  #   timeout: "10s"         # Request timeout
+  #   healthPath: "/health"  # Path to append for health checks
+  #   expectedCode: 200      # Expected HTTP status code
+  #   headers:               # Custom headers for health requests
+  #     Authorization: "Bearer token"
+  #     X-Health-Check: "true"
+  
+  # Advanced Features Configuration (optional)
+  # Enables advanced dashboard features and optimizations
+  # advanced:
+  #   enableDependencyAnalysis: true    # Auto-detect service dependencies
+  #   enableMetricsAggregation: true    # Collect and display service metrics
+  #   enableLayoutOptimization: true    # Auto-optimize service layout
+  #   maxServicesPerGroup: 20           # Limit services per group (0 = unlimited)
+  #   maxItemsPerService: 10            # Limit items per service (0 = unlimited)
+
+  # ConfigMap for Homer configuration
+  # configMap:
+  #   name: "dashboard-sample-homer-config"
+  #   key: "config.yml" 
