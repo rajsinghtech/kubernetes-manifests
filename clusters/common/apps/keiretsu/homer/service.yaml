@@ -38,7 +38,7 @@ kind: Service
 metadata:
   name: dashboard-robbinsdale-egress
   annotations:
-    tailscale.com/tailnet-fqdn: dashboard-robbinsdale.keiretsu.ts.net
+    tailscale.com/tailnet-ip: 100.127.109.36
     tailscale.com/proxy-group: common-egress
 spec:
   externalName: placeholder   # any value - will be overwritten by operator
