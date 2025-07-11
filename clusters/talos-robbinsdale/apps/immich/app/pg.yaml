@@ -3,6 +3,7 @@ apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
   name: immich-postgresql-ceph
+  namespace: immich
 spec:
   instances: 1
   imageName: ghcr.io/tensorchord/cloudnative-vectorchord:15-0.3.0
@@ -34,19 +35,25 @@ spec:
     size: 8Gi
     storageClass: ceph-block-replicated-nvme
 
+  # Enable Barman Cloud plugin for S3 backups
+  plugins:
+    - name: barman-cloud.cloudnative-pg.io
+      isWALArchiver: true
+      parameters:
+        barmanObjectName: immich-s3-store
+
   backup:
     retentionPolicy: "30d"
-    # Volume snapshot backups
-    volumeSnapshot:
-       className: csi-rbdplugin-snapclass
 ---
+# S3 backup schedule using Barman Cloud
 apiVersion: postgresql.cnpg.io/v1
 kind: ScheduledBackup
 metadata:
-  name: immich-postgres-ceph
+  name: immich-postgres-s3
+  namespace: immich
 spec:
-  schedule: "0 0 11 * * *"
+  schedule: "0 0 23 * * *"  # Daily at 11 PM
   backupOwnerReference: self
-  method: volumeSnapshot
+  method: barmanObjectStore
   cluster:
-    name: immich-postgres-ceph 
+    name: immich-postgres-ceph
