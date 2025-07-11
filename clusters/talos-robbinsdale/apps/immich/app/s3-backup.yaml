@@ -26,4 +26,4 @@ spec:
       secretAccessKey:
         name: immich-s3-backup
         key: AWS_SECRET_ACCESS_KEY
-    retention: "30d"
+  retentionPolicy: "30d"
