@@ -20,13 +20,37 @@ spec:
   hostnames:
     - "pihole.${LOCATION}.${RAJSINGH_INFO_DOMAIN}"
   rules:
-    - backendRefs:
+    # Redirect from / to /admin
+    - matches:
+        - path:
+            type: Exact
+            value: /
+      filters:
+        - type: RequestRedirect
+          requestRedirect:
+            path:
+              type: ReplaceFullPath
+              replaceFullPath: /admin
+            statusCode: 301
+    # Serve /admin and all subpaths
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /admin
+      backendRefs:
         - group: ""
           kind: Service
           name: pihole-ts-web
           port: 80
           weight: 1
-      matches:
+    # Serve other paths (API, etc)
+    - matches:
         - path:
             type: PathPrefix
             value: /
+      backendRefs:
+        - group: ""
+          kind: Service
+          name: pihole-ts-web
+          port: 80
+          weight: 1
