@@ -2,7 +2,7 @@
 apiVersion: homer.rajsingh.info/v1alpha1
 kind: Dashboard
 metadata:
-  name: dashboard-keiretsu
+  name: dashboard
   namespace: keiretsu
   labels:
     app: homer-dashboard
