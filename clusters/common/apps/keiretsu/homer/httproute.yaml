@@ -4,12 +4,11 @@ metadata:
   name: homer
   namespace: keiretsu
   annotations:
-    item.homer.rajsingh.info/name: "Homer Operator"
+    item.homer.rajsingh.info/name: "Homer Operator (Global)"
     item.homer.rajsingh.info/subtitle: "Dashboard Operator"
     item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/svg/homer.svg"
     item.homer.rajsingh.info/tag: "utilities"
     item.homer.rajsingh.info/keywords: "homer, operator, dashboard"
-
     service.homer.rajsingh.info/name: "Utilities"
     service.homer.rajsingh.info/icon: "fas fa-tools"
 spec:
@@ -20,6 +19,44 @@ spec:
       namespace: keiretsu
   hostnames:
     - "keiretsu.rajsingh.info"
+  rules:
+    - backendRefs:
+        - group: gateway.envoyproxy.io
+          kind: Backend
+          name: dashboard-ottawa
+          namespace: keiretsu
+          port: 80
+        - group: gateway.envoyproxy.io
+          kind: Backend
+          name: dashboard-robbinsdale
+          namespace: keiretsu
+          port: 80
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: homer-${LOCATION}
+  namespace: keiretsu
+  annotations:
+    item.homer.rajsingh.info/name: "Homer Operator (${LOCATION})"
+    item.homer.rajsingh.info/subtitle: "Dashboard Operator"
+    item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/svg/homer.svg"
+    item.homer.rajsingh.info/tag: "utilities"
+    item.homer.rajsingh.info/keywords: "homer, operator, dashboard"
+    service.homer.rajsingh.info/name: "Utilities"
+    service.homer.rajsingh.info/icon: "fas fa-tools"
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: local-ts
+      namespace: keiretsu
+  hostnames:
+    - "homer.${LOCATION}.rajsingh.info"
   rules:
     - backendRefs:
         - group: ""

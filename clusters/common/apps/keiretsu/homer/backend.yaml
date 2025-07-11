@@ -1,0 +1,22 @@
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: Backend
+metadata:
+  name: dashboard-ottawa
+  namespace: keiretsu
+spec:
+  endpoints:
+    - fqdn:
+        hostname: dashboard-ottawa-egress.keiretsu.ts.net
+        port: 80
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: Backend
+metadata:
+  name: dashboard-robbinsdale
+  namespace: keiretsu
+spec:
+  endpoints:
+    - fqdn:
+        hostname: dashboard-robbinsdale-egress.keiretsu.ts.net
+        port: 80
