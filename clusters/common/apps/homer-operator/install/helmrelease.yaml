@@ -13,7 +13,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: homer-operator
-        namespace: homer-operator 
+        namespace: flux-system 
       interval: 1m
   releaseName: homer-operator
   valuesFrom:
