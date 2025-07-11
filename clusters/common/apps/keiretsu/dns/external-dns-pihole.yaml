@@ -45,5 +45,6 @@ spec:
       - service
     domainFilters: 
       - ${LOCATION}.${RAJSINGH_INFO_DOMAIN}
+      - keiretsu.${RAJSINGH_INFO_DOMAIN}
     txtOwnerId: local-ts
     txtPrefix: k8s.${LOCATION}.
