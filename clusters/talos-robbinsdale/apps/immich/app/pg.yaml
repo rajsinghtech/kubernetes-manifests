@@ -54,6 +54,8 @@ metadata:
 spec:
   schedule: "0 0 23 * * *"  # Daily at 11 PM
   backupOwnerReference: self
-  method: barmanObjectStore
+  method: plugin
+  pluginConfiguration:
+    name: barman-cloud.cloudnative-pg.io
   cluster:
     name: immich-postgres-ceph
