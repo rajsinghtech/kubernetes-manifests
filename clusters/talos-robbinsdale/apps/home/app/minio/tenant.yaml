@@ -15,7 +15,7 @@ spec:
   pools:
     - name: nas-pool
       servers: 1
-      volumesPerServer: 1
+      volumesPerServer: 4
       volumeClaimTemplate:
         spec:
           accessModes:
