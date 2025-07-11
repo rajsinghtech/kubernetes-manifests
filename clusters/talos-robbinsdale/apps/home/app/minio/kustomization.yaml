@@ -5,3 +5,4 @@ namespace: home
 resources:
   - secret.yaml
   - tenant.yaml
+  - httproute.yaml

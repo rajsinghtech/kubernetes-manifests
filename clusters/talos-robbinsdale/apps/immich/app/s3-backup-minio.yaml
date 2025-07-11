@@ -1,0 +1,29 @@
+---
+# S3 credentials secret for Immich backups using MinIO
+apiVersion: v1
+kind: Secret
+metadata:
+  name: immich-s3-backup-minio
+  namespace: immich
+stringData:
+  AWS_ACCESS_KEY_ID: ${MINIO_ACCESS_KEY}
+  AWS_SECRET_ACCESS_KEY: ${MINIO_SECRET_KEY}
+---
+# ObjectStore for Barman Cloud backups using MinIO
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: immich-minio-store
+  namespace: immich
+spec:
+  configuration:
+    destinationPath: s3://immich-postgres-backups/
+    endpointURL: http://minio-api.home.svc.cluster.local:9000
+    s3Credentials:
+      accessKeyId:
+        name: immich-s3-backup-minio
+        key: AWS_ACCESS_KEY_ID
+      secretAccessKey:
+        name: immich-s3-backup-minio
+        key: AWS_SECRET_ACCESS_KEY
+  retentionPolicy: "30d"
