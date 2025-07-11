@@ -74,17 +74,9 @@ spec:
     
     # Enhanced links with targets
     links:
-    - name: "Homer-Operator GitHub"
+    - name: "Kubernetes Manifests"
       icon: "fab fa-github"
-      url: "https://github.com/rajsinghtech/homer-operator"
-      target: "_blank"
-    - name: "Homer Documentation"
-      icon: "fas fa-book"
-      url: "https://github.com/bastienwirtz/homer"
-      target: "_blank"
-    - name: "Kubernetes Dashboard"
-      icon: "fas fa-dharmachakra"
-      url: "https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/"
+      url: "https://github.com/rajsinghtech/kubernetes-manifests"
       target: "_blank"
     
     # Comprehensive service catalog
@@ -101,18 +93,18 @@ spec:
           tagstyle: "is-info"
           url: "https://login.tailscale.com/admin/machines"
     
-    - parameters:
-        name: "Development Tools"
-        icon: "fas fa-code"
-      items:
-      - parameters:
-          name: "Kubernetes Manifests"
-          logo: "https://raw.githubusercontent.com/kubernetes/community/master/icons/png/resources/labeled/deploy-128.png"
-          subtitle: "GitOps Repository"
-          tag: "git"
-          tagstyle: "is-primary"
-          url: "https://github.com/rajsinghtech/kubernetes-manifests"
-          target: "_blank"
+    # - parameters:
+    #     name: "Development Tools"
+    #     icon: "fas fa-code"
+    #   items:
+    #   - parameters:
+    #       name: "Kubernetes Manifests"
+    #       logo: "https://raw.githubusercontent.com/kubernetes/community/master/icons/png/resources/labeled/deploy-128.png"
+    #       subtitle: "GitOps Repository"
+    #       tag: "git"
+    #       tagstyle: "is-primary"
+    #       url: "https://github.com/rajsinghtech/kubernetes-manifests"
+    #       target: "_blank"
   
   # Custom assets and PWA configuration
   # Enables custom branding, icons, and Progressive Web App features
