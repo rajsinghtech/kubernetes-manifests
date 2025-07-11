@@ -17,33 +17,33 @@ spec:
   sessionAffinity: None
   type: LoadBalancer
   loadBalancerClass: tailscale
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: dashboard-ottawa-egress
-#   annotations:
-#     tailscale.com/tailnet-fqdn: dashboard-ottawa.keiretsu.ts.net
-#     tailscale.com/proxy-group: common-egress
-# spec:
-#   externalName: placeholder   # any value - will be overwritten by operator
-#   type: ExternalName 
-#   ports:
-#   - name: http # any value
-#     port: 80
-#     protocol: TCP
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: dashboard-robbinsdale-egress
-#   annotations:
-#     tailscale.com/tailnet-fqdn: dashboard-robbinsdale.keiretsu.ts.net
-#     tailscale.com/proxy-group: common-egress
-# spec:
-#   externalName: placeholder   # any value - will be overwritten by operator
-#   type: ExternalName 
-#   ports:
-#   - name: http # any value
-#     port: 80
-#     protocol: TCP 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dashboard-ottawa-egress
+  annotations:
+    tailscale.com/tailnet-fqdn: dashboard-ottawa.keiretsu.ts.net
+    tailscale.com/proxy-group: common-egress
+spec:
+  externalName: placeholder   # any value - will be overwritten by operator
+  type: ExternalName 
+  ports:
+  - name: http # any value
+    port: 80
+    protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dashboard-robbinsdale-egress
+  annotations:
+    tailscale.com/tailnet-fqdn: dashboard-robbinsdale.keiretsu.ts.net
+    tailscale.com/proxy-group: common-egress
+spec:
+  externalName: placeholder   # any value - will be overwritten by operator
+  type: ExternalName 
+  ports:
+  - name: http # any value
+    port: 80
+    protocol: TCP 
