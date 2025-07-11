@@ -18,7 +18,7 @@ metadata:
 spec:
   configuration:
     destinationPath: s3://immich-postgres-backups/
-    endpointURL: http://minio-api.home.svc.cluster.local:9000
+    endpointURL: http://minio-hl.home.svc.cluster.local:9000
     s3Credentials:
       accessKeyId:
         name: immich-s3-backup-minio
