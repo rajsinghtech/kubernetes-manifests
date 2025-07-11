@@ -26,13 +26,37 @@ spec:
     - "pihole.rajsingh.info"
     - "pihole.lukehouge.com"
   rules:
-    - backendRefs:
+    # Redirect from / to /admin
+    - matches:
+        - path:
+            type: Exact
+            value: /
+      filters:
+        - type: RequestRedirect
+          requestRedirect:
+            path:
+              type: ReplaceFullPath
+              replaceFullPath: /admin
+            statusCode: 301
+    # Serve /admin and all subpaths
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /admin
+      backendRefs:
         - group: ""
           kind: Service
           name: pihole-web
           port: 80
           weight: 1
-      matches:
+    # Serve other paths (API, etc)
+    - matches:
         - path:
             type: PathPrefix
             value: /
+      backendRefs:
+        - group: ""
+          kind: Service
+          name: pihole-web
+          port: 80
+          weight: 1
