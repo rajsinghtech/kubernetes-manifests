@@ -36,7 +36,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-    name: dashboard-robbinsdale-egress
+  name: dashboard-robbinsdale-egress
   annotations:
     tailscale.com/tailnet-fqdn: dashboard-robbinsdale.keiretsu.ts.net
     tailscale.com/proxy-group: common-egress
