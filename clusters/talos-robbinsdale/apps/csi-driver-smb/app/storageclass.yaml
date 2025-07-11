@@ -9,8 +9,8 @@ parameters:
   # with PV name under source
   csi.storage.k8s.io/provisioner-secret-name: csi-smbcreds
   csi.storage.k8s.io/node-stage-secret-name: csi-smbcreds
-reclaimPolicy: Delete  # available values: Delete, Retain
-volumeBindingMode: Immediate
+reclaimPolicy: Retain  # available values: Delete, Retain
+volumeBindingMode: WaitForFirstConsumer
 allowVolumeExpansion: true
 mountOptions:
   - dir_mode=0777

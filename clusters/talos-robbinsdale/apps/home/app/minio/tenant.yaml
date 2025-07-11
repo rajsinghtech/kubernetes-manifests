@@ -1,8 +1,9 @@
+---
 apiVersion: minio.min.io/v2
 kind: Tenant
 metadata:
   name: minio
-  namespace: home # Keep original namespace for tenant
+  namespace: home
 spec:
   features:
     bucketDNS: true
@@ -10,16 +11,16 @@ spec:
     labels:
       app: minio
   configuration:
-    name: minio-config # This likely references a secret created elsewhere
+    name: minio-config
   pools:
-    - name: ceph-nvme
-      servers: 4
+    - name: nas-pool
+      servers: 1
       volumesPerServer: 1
       volumeClaimTemplate:
         spec:
           accessModes:
             - ReadWriteOnce
-          storageClassName: ceph-block-replicated-nvme
+          storageClassName: unas-smb
           resources:
             requests:
-              storage: 20Gi 
+              storage: 100Gi

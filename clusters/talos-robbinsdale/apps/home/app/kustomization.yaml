@@ -8,3 +8,4 @@ resources:
   - ./home-assistant 
   - ./code-server 
   - ./homer
+  - ./minio

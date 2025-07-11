@@ -1,0 +1,78 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: minio-console
+  namespace: home
+  annotations:
+    item.homer.rajsingh.info/name: "MinIO Console"
+    item.homer.rajsingh.info/subtitle: "S3 Storage Management"
+    item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/minio-light.svg"
+    item.homer.rajsingh.info/tag: "storage"
+    item.homer.rajsingh.info/keywords: "s3, storage, backup"
+    
+    service.homer.rajsingh.info/name: "Storage"
+    service.homer.rajsingh.info/icon: "fas fa-database"
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: private
+      namespace: home
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: ts
+      namespace: home
+  hostnames:
+    - "minio-console.rajsingh.info"
+    - "minio-console.lukehouge.com"
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: minio-console
+          port: 9001
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: minio-api
+  namespace: home
+  annotations:
+    item.homer.rajsingh.info/name: "MinIO API"
+    item.homer.rajsingh.info/subtitle: "S3 Compatible API"
+    item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/minio.svg"
+    item.homer.rajsingh.info/tag: "storage"
+    item.homer.rajsingh.info/keywords: "s3, api, storage"
+    
+    service.homer.rajsingh.info/name: "Storage"
+    service.homer.rajsingh.info/icon: "fas fa-database"
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: private
+      namespace: home
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: ts
+      namespace: home
+  hostnames:
+    - "minio-api.rajsingh.info"
+    - "minio-api.lukehouge.com"
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: minio-api
+          port: 9000
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
