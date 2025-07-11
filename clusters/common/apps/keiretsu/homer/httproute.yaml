@@ -24,7 +24,7 @@ spec:
     - backendRefs:
         - group: ""
           kind: Service
-          name: dashboard-keiretsu-homer
+          name: dashboard-homer
           port: 80
           weight: 1
       matches:
