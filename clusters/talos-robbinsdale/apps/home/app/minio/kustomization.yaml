@@ -7,4 +7,3 @@ resources:
   - tenant.yaml
   - certificate-luke-minio.yaml
   - tlsroute.yaml
-  - httproute.yaml
