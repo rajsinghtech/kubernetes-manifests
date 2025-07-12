@@ -7,3 +7,4 @@ resources:
   - httproute.yaml 
   - pihole.yaml
   - external-dns-pihole.yaml
+  - external-dns-unifi.yaml
