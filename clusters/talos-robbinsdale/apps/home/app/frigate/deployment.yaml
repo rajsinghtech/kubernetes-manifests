@@ -74,13 +74,13 @@ spec:
         - name: cache
           emptyDir:
             sizeLimit: 50Gi
-        - name: secret-volume
-          secret:
-            secretName: frigate-luke-tls
-            items:
-            - key: tls.crt
-              path: fullchain.pem
-            - key: tls.key
-              path: privkey.pem
+        # - name: secret-volume
+        #   secret:
+        #     secretName: frigate-luke-tls
+        #     items:
+        #     - key: tls.crt
+        #       path: fullchain.pem
+        #     - key: tls.key
+        #       path: privkey.pem
       restartPolicy: Always
       terminationGracePeriodSeconds: 120

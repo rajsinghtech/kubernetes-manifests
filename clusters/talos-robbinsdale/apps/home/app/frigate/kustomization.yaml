@@ -6,7 +6,8 @@ resources:
   - deployment.yaml
   - service.yaml
   - unas.yaml
-  - certificate.yaml
+  # - certificate.yaml
   - ceph.yaml
   - volsync-backup.yaml
-  - volsync-restore.yaml   
+  # - volsync-restore.yaml
+  - httproute.yaml
