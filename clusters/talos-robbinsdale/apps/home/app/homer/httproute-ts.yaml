@@ -14,7 +14,7 @@ spec:
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
-      name: gateway
+      name: ts
       namespace: home
   hostnames:
     - "home.rajsingh.info"
