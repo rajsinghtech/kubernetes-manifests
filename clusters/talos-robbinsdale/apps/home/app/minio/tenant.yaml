@@ -18,7 +18,7 @@ spec:
   pools:
     - name: nas-pool
       servers: 1
-      volumesPerServer: 1
+      volumesPerServer: 4
       securityContext:
         runAsUser: 1001
         runAsGroup: 1001
