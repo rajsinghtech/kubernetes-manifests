@@ -23,6 +23,7 @@ spec:
       retries: 3
   values:
     fullnameOverride: external-dns-unifi
+    logLevel: debug
     provider:
       name: webhook
       webhook:
@@ -62,7 +63,6 @@ spec:
     extraArgs:
       - --ignore-ingress-tls-spec
       - --gateway-label-filter=external-dns==unifi
-      - --log-level=debug
       - --log-format=text
       - --interval=1m
     policy: sync
