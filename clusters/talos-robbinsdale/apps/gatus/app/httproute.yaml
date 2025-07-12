@@ -18,27 +18,10 @@ spec:
       kind: Gateway
       name: public
       namespace: home
-  hostnames:
-    - "gatus.rajsingh.info"
-    - "gatus.lukehouge.com"
-  rules:
-    - backendRefs:
-        - group: ""
-          kind: Service
-          name: gatus
-          port: 80
-          weight: 1
-      matches:
-        - path:
-            type: PathPrefix
-            value: / 
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: HTTPRoute
-metadata:
-  name: status
-spec:
-  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: ts
+      namespace: home
     - group: gateway.networking.k8s.io
       kind: Gateway
       name: private
@@ -46,31 +29,6 @@ spec:
   hostnames:
     - "status.rajsingh.info"
     - "status.lukehouge.com"
-  rules:
-    - backendRefs:
-        - group: ""
-          kind: Service
-          name: gatus
-          port: 80
-          weight: 1
-      matches:
-        - path:
-            type: PathPrefix
-            value: / 
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: HTTPRoute
-metadata:
-  name: gatus-ts
-spec:
-  parentRefs:
-    - group: gateway.networking.k8s.io
-      kind: Gateway
-      name: ts
-      namespace: home
-  hostnames:
-    - "gatus.ts.rajsingh.info"
-    - "gatus.ts.lukehouge.com"
   rules:
     - backendRefs:
         - group: ""
