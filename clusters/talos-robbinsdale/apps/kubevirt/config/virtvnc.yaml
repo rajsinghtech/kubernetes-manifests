@@ -94,7 +94,7 @@ metadata:
   annotations:
     item.homer.rajsingh.info/name: "KubeVirt"
     item.homer.rajsingh.info/subtitle: "VM Management Console"
-    item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/svg/kubevirt.svg"
+    item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/vmware-vcenter.png"
     item.homer.rajsingh.info/tag: "infrastructure"
     item.homer.rajsingh.info/keywords: "vm, virtualization, console"
 
