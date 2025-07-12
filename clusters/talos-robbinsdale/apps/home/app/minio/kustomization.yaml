@@ -4,7 +4,6 @@ kind: Kustomization
 namespace: home
 resources:
   - secret.yaml
-  - minio-root-credentials.yaml
   - tenant.yaml
   - certificate-luke-minio.yaml
   - tlsroute.yaml

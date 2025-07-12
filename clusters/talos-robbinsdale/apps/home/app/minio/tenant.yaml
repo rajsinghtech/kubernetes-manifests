@@ -17,6 +17,8 @@ spec:
   externalCertSecret:
     - name: minio-luke-tls
       type: kubernetes.io/tls
+  users:
+    - name: minio-user-0
   pools:
     - name: nas-pool
       servers: 1
