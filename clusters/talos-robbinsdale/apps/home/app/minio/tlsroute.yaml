@@ -4,6 +4,16 @@ kind: TLSRoute
 metadata:
   name: minio-console-tls
   namespace: home
+  annotations:
+    item.homer.rajsingh.info/name: "MinIO Console"
+    item.homer.rajsingh.info/subtitle: "Object Storage Management"
+    item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/svg/minio.svg"
+    item.homer.rajsingh.info/tag: "storage"
+    item.homer.rajsingh.info/keywords: "minio, s3, storage, object"
+    item.homer.rajsingh.info/url: "https://console.minio.lukehouge.com"
+    
+    service.homer.rajsingh.info/name: "Storage"
+    service.homer.rajsingh.info/icon: "fas fa-database"
 spec:
   parentRefs:
     - group: gateway.networking.k8s.io
@@ -31,6 +41,16 @@ kind: TLSRoute
 metadata:
   name: minio-api-tls
   namespace: home
+  annotations:
+    item.homer.rajsingh.info/name: "MinIO API"
+    item.homer.rajsingh.info/subtitle: "S3-Compatible Object Storage"
+    item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/svg/minio.svg"
+    item.homer.rajsingh.info/tag: "api"
+    item.homer.rajsingh.info/keywords: "minio, s3, api, storage"
+    item.homer.rajsingh.info/url: "https://api.minio.lukehouge.com"
+    
+    service.homer.rajsingh.info/name: "APIs"
+    service.homer.rajsingh.info/icon: "fas fa-code"
 spec:
   parentRefs:
     - group: gateway.networking.k8s.io
