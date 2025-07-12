@@ -1,0 +1,5 @@
+"features": {
+  "ghcr.io/tailscale/codespace/tailscale": {
+    "version": "latest"
+  }
+}
