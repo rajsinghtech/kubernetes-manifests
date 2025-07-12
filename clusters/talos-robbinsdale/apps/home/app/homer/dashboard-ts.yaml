@@ -2,14 +2,14 @@
 apiVersion: homer.rajsingh.info/v1alpha1
 kind: Dashboard
 metadata:
-  name: dashboard-private
+  name: dashboard-ts
   labels:
     app: homer-dashboard
     tier: frontend
 spec:
   replicas: 2
   homerConfig:
-    title: "${LOCATION} cloud private" 
+    title: "${LOCATION} cloud ts" 
     subtitle: "Infrastructure Dashboard"
     logo: "https://raw.githubusercontent.com/rajsinghtech/homer-operator/main/homer/Homer-Operator.png"
     header: true
@@ -65,7 +65,7 @@ spec:
           url: "https://login.tailscale.com/admin/machines"
   gatewaySelector:
     matchLabels:
-      gateway: private
+      gateway: ts
   ingressSelector:
     matchLabels:
       noexist: "true"
