@@ -67,3 +67,21 @@ spec:
         - group: ''
           kind: Secret
           name: luke-wildcard-tls
+    - name: luke-minio-console-passthrough
+      protocol: TLS
+      port: 443
+      hostname: "console.minio.lukehouge.com"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        mode: Passthrough
+    - name: luke-minio-api-passthrough
+      protocol: TLS
+      port: 443
+      hostname: "api.minio.lukehouge.com"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        mode: Passthrough

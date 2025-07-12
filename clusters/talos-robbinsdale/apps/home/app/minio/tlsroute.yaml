@@ -11,6 +11,11 @@ spec:
       name: private
       namespace: home
       sectionName: luke-minio-console-passthrough
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: ts
+      namespace: home
+      sectionName: luke-minio-console-passthrough
   hostnames:
     - "console.minio.lukehouge.com"
   rules:
@@ -31,6 +36,11 @@ spec:
     - group: gateway.networking.k8s.io
       kind: Gateway
       name: private
+      namespace: home
+      sectionName: luke-minio-api-passthrough
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: ts
       namespace: home
       sectionName: luke-minio-api-passthrough
   hostnames:
