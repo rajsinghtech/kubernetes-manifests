@@ -2,6 +2,15 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: speedtest
+  annotations:
+    item.homer.rajsingh.info/name: "SpeedTest"
+    item.homer.rajsingh.info/subtitle: "Network Speed Test"
+    item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/speedtest-tracker.png"
+    item.homer.rajsingh.info/tag: "utilities"
+    item.homer.rajsingh.info/keywords: "network, speed, test"
+
+    service.homer.rajsingh.info/name: "Utilities"
+    service.homer.rajsingh.info/icon: "fas fa-tools"
 spec:
   parentRefs:
     - group: gateway.networking.k8s.io
