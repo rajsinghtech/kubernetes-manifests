@@ -12,8 +12,6 @@ spec:
       app: minio
   configuration:
     name: minio-config
-  users:
-    - name: minio-root-credentials
   externalCertSecret:
     - name: minio-luke-tls
       type: kubernetes.io/tls
