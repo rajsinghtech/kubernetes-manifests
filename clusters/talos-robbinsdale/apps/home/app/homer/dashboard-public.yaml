@@ -69,3 +69,5 @@ spec:
   ingressSelector:
     matchLabels:
       noexist: "true"
+  domainFilters:
+    - "rajsingh.info"
