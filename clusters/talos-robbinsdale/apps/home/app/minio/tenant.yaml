@@ -12,6 +12,9 @@ spec:
       app: minio
   configuration:
     name: minio-config
+  externalCertSecret:
+    - name: minio-luke-tls
+      type: kubernetes.io/tls
   pools:
     - name: nas-pool
       servers: 1
