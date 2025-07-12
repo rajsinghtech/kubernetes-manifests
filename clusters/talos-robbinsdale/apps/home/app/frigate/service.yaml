@@ -2,8 +2,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: frigate
-  annotations:
-    external-dns.alpha.kubernetes.io/hostname: frigate.lukehouge.com
+  # annotations:
+  #   external-dns.alpha.kubernetes.io/hostname: frigate.lukehouge.com
   labels:
     app: frigate
 spec:
@@ -27,5 +27,4 @@ spec:
     - name: internal
       port: 5000
       targetPort: 5000
-  type: LoadBalancer
-  loadBalancerIP: 10.69.10.12
+  type: ClusterIP
