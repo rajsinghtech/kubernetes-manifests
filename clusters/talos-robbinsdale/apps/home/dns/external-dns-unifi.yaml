@@ -25,6 +25,7 @@ spec:
     fullnameOverride: external-dns-unifi
     provider:
       name: webhook
+      logLevel: &logLevel debug
       webhook:
         image:
           repository: ghcr.io/kashalls/external-dns-unifi-webhook
@@ -40,30 +41,22 @@ spec:
                 name: external-dns-unifi-secret
                 key: api-key
           - name: LOG_LEVEL
-            value: debug
-        livenessProbe:
-          httpGet:
-            path: /healthz
-            port: http-webhook
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          timeoutSeconds: 5
-          successThreshold: 1
-          failureThreshold: 2
-        readinessProbe:
-          httpGet:
-            path: /readyz
-            port: http-webhook
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          timeoutSeconds: 5
-          successThreshold: 1
-          failureThreshold: 6
+            value: *logLevel
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: http-webhook
+      initialDelaySeconds: 10
+      timeoutSeconds: 5
+    readinessProbe:
+      httpGet:
+        path: /readyz
+        port: http-webhook
+      initialDelaySeconds: 10
+      timeoutSeconds: 5
     extraArgs:
       - --ignore-ingress-tls-spec
       - --gateway-label-filter=external-dns==unifi
-      - --log-format=text
-      - --interval=1m
     policy: sync
     sources:
       - gateway-httproute
@@ -71,7 +64,7 @@ spec:
       - gateway-tcproute
       - gateway-udproute
       - service
-      - ingress
+      # - ingress
     domainFilters: 
       - rajsingh.info
       - lukehouge.com
