@@ -22,8 +22,6 @@ spec:
     remediation:
       retries: 3
   values:
-    image:
-      tag: v0.17.0
     provider: pihole
     env:
       - name: EXTERNAL_DNS_PIHOLE_PASSWORD
