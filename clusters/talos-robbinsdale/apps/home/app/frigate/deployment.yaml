@@ -49,8 +49,8 @@ spec:
               mountPath: /config
             - mountPath: /dev/shm
               name: dshm
-            - name: secret-volume
-              mountPath: /etc/letsencrypt/live/frigate/
+            # - name: secret-volume
+            #   mountPath: /etc/letsencrypt/live/frigate/
             - name: cache
               mountPath: /tmp/cache/
           resources:
