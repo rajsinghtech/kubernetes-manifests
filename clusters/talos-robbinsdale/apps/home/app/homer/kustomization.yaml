@@ -5,5 +5,7 @@ namespace: home
 resources:
   - ./dashboard-private.yaml
   - ./dashboard-public.yaml
+  - ./dashboard-ts.yaml
   - ./httproute-private.yaml
   - ./httproute-public.yaml
+  - ./httproute-ts.yaml
