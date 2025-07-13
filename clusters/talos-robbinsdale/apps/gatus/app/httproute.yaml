@@ -9,6 +9,8 @@ metadata:
     item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/svg/gatus.svg"
     item.homer.rajsingh.info/tag: "infrastructure"
     item.homer.rajsingh.info/keywords: "monitoring, uptime, status"
+    item.homer.rajsingh.info/type: "Ping"
+    item.homer.rajsingh.info/endpoint: "http://gatus.gatus.svc.cluster.local:80"
 
     service.homer.rajsingh.info/name: "Infrastructure"
     service.homer.rajsingh.info/icon: "fas fa-server"
