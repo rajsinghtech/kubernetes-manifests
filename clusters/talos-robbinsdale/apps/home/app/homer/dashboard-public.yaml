@@ -53,16 +53,27 @@ spec:
       target: "_blank"
     services:
     - parameters:
-        name: "Infrastructure"
-        icon: "fas fa-server"
+        name: "Media"
+        icon: "fas fa-tv"
       items:
       - parameters:
-          name: "Tailscale"
-          logo: "https://raw.githubusercontent.com/tailscale/tailscale/refs/heads/main/client/web/src/assets/icons/tailscale-icon.svg"
-          subtitle: "Private Mesh Network"
-          tag: "network"
+          name: "Request Media"
+          subtitle: "View the status of your request"
+          tag: "requests"
           tagstyle: "is-info"
-          url: "https://login.tailscale.com/admin/machines"
+          url: "https://jellyseerr.rajsingh.info/"
+      - parameters:
+          name: "Jellyfin Client Desktop"
+          subtitle: "macOS/Windows"
+          tag: "download"
+          tagstyle: "is-warning"
+          url: "https://github.com/jellyfin/jellyfin-media-player/releases"
+      - parameters:
+          name: "Jellyfin Client Mobile"
+          subtitle: "iOS/Android"
+          tag: "download"
+          tagstyle: "is-warning"
+          url: "https://streamyfin.app/"
   gatewaySelector:
     matchLabels:
       gateway: public
