@@ -13,6 +13,11 @@ spec:
     subtitle: "Infrastructure Dashboard"
     logo: "https://raw.githubusercontent.com/rajsinghtech/homer-operator/main/homer/Homer-Operator.png"
     header: true
+    message:
+      style: "is-info"
+      title: "Welcome to Robbinsdale Cloud"
+      icon: "fa fa-info-circle"
+      content: "Server Hosted in Robbinsdale MN."
     footer: '<p>Powered by <strong>Homer-Operator</strong> | <a href="https://github.com/rajsinghtech/homer-operator">GitHub</a></p>'
     colors:
       light:
@@ -57,23 +62,26 @@ spec:
         icon: "fas fa-tv"
       items:
       - parameters:
-          name: "Request Media"
-          subtitle: "View the status of your request"
+          name: "Jellyseerr"
+          subtitle: "Request Media"
           tag: "requests"
           tagstyle: "is-info"
           url: "https://jellyseerr.rajsingh.info/"
+          logo: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/jellyseerr.svg"
       - parameters:
           name: "Jellyfin Client Desktop"
           subtitle: "macOS/Windows"
           tag: "download"
           tagstyle: "is-warning"
           url: "https://github.com/jellyfin/jellyfin-media-player/releases"
+          logo: "https://raw.githubusercontent.com/jellyfin/jellyfin-media-player/main/public/images/logo.png"
       - parameters:
           name: "Jellyfin Client Mobile"
           subtitle: "iOS/Android"
           tag: "download"
           tagstyle: "is-warning"
           url: "https://streamyfin.app/"
+          logo: "https://raw.githubusercontent.com/streamyfin/streamyfin/refs/heads/develop/assets/icons/jellyseerr-logo.svg"
   gatewaySelector:
     matchLabels:
       gateway: public
