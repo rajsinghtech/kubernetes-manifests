@@ -190,6 +190,13 @@
 			"ip":  ["*"],
 		},
 		
+		// Allow members to access their own devices
+		{
+			"src": ["autogroup:member"],
+			"dst": ["autogroup:self"],
+			"ip":  ["*"],
+		},
+		
 		// Allow members to use k8s nodes as exit nodes
 		{
 			"src": ["group:superuser"],
@@ -336,6 +343,7 @@
         "tag:ingress:443",
         "tag:hello:443",
         "tag:ssh-enabled:22",
+        "rajsinghtech@github:53",
       ]
     },
     {
