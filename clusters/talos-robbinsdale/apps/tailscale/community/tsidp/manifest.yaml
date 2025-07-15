@@ -56,8 +56,8 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: tsidp
-        image: quay.io/rajsinghcpre/tsidp:rajsinghtech_tsidp-kubestore
-        imagePullPolicy: IfNotPresent
+        image: ghcr.io/rajsinghtech/tsidp:unstable
+        imagePullPolicy: Always
         ports:
         - containerPort: 443
           name: https
