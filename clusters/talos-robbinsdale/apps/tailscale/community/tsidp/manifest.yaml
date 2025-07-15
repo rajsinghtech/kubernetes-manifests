@@ -71,13 +71,14 @@ spec:
           value: "1"
         - name: TS_STATE # Using environment variable to set state
           value: "kube:tsidp-state"
-        args:
-        - "-hostname=tsidp" # Or your desired MagicDNS hostname
-        - "-port=443"
-        - "-dir=/data"      # Directory for oidc-key.json, oidc-funnel-clients.json
-        # - "-state=kube:tsidp-state" # Alternatively, use flag; env var above takes precedence
-        # - "-funnel" # Uncomment if you want to enable Funnel
-        # - "-verbose" # Uncomment for more logs
+        command: 
+        - /usr/local/bin/tsidp
+        - --hostname=tsidp  # Or your desired MagicDNS hostname
+        - --port=443
+        - --dir=/data       # Directory for oidc-key.json, oidc-funnel-clients.json
+        # - --state=kube:tsidp-state # Alternatively, use flag; env var above takes precedence
+        # - --funnel # Uncomment if you want to enable Funnel
+        # - --verbose # Uncomment for more logs
         volumeMounts:
         - name: tsidp-data
           mountPath: /data
