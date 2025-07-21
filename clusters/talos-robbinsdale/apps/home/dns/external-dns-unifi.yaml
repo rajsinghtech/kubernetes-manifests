@@ -45,25 +45,25 @@ spec:
         livenessProbe:
           httpGet:
             path: /healthz
-            port: "8080"
+            port: http-webhook
           initialDelaySeconds: 10
           timeoutSeconds: 5
         readinessProbe:
           httpGet:
             path: /healthz
-            port: "8080"
+            port: http-webhook
           initialDelaySeconds: 5
           timeoutSeconds: 5
     livenessProbe:
       httpGet:
         path: /healthz
-        port: "7979"
+        port: http
       initialDelaySeconds: 10
       timeoutSeconds: 5
     readinessProbe:
       httpGet:
         path: /readyz
-        port: "7979"
+        port: http
       initialDelaySeconds: 10
       timeoutSeconds: 5
     extraArgs:
