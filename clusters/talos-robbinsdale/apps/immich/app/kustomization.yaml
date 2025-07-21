@@ -10,4 +10,4 @@ resources:
   - pg.yaml
   - redis.yaml
   - s3-backup.yaml
-  # - pg-restore.yaml
+  - pg-restore.yaml
