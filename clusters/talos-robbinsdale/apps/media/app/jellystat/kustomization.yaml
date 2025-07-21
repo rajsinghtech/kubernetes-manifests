@@ -7,6 +7,5 @@ resources:
   - service.yaml
   - httproute.yaml
   - unas.yaml
-  - bucket.yaml
   - postgres.yaml
   - s3-backup.yaml
