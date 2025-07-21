@@ -12,43 +12,30 @@ spec:
     storageClass: ceph-block-replicated-nvme
   monitoring:
     enablePodMonitor: true
+  
+  # Enable Barman Cloud plugin for S3 backups
+  plugins:
+    - name: barman-cloud.cloudnative-pg.io
+      isWALArchiver: true
+      parameters:
+        barmanObjectName: jellystat-s3-store
+  
   backup:
     retentionPolicy: "30d"
-    barmanObjectStore:
-      destinationPath: s3://jellystat-postgres
-      endpointURL: http://rook-ceph-rgw-object-store.rook-ceph.svc.cluster.local:80
-      serverName: jellystat-postgres
-      s3Credentials:
-        accessKeyId:
-          name: jellystat-postgres-ceph-bucket
-          key: AWS_ACCESS_KEY_ID
-        secretAccessKey:
-          name: jellystat-postgres-ceph-bucket
-          key: AWS_SECRET_ACCESS_KEY
   # bootstrap:
   #   recovery:
   #     source: jellystat-db
-  externalClusters:
-  - name: jellystat-db
-    barmanObjectStore: 
-      destinationPath: s3://jellystat-postgres
-      endpointURL: http://rook-ceph-rgw-object-store.rook-ceph.svc.cluster.local:80
-      serverName: jellystat-db
-      s3Credentials:
-        accessKeyId:
-          name: jellystat-postgres-ceph-bucket
-          key: AWS_ACCESS_KEY_ID
-        secretAccessKey:
-          name: jellystat-postgres-ceph-bucket
-          key: AWS_SECRET_ACCESS_KEY
 ---
+# S3 backup schedule using Barman Cloud
 apiVersion: postgresql.cnpg.io/v1
 kind: ScheduledBackup
 metadata:
-  name: jellystat-postgres
+  name: jellystat-postgres-s3
 spec:
-  schedule: "@weekly"
-  immediate: true
+  schedule: "0 0 23 * * *"  # Daily at 11 PM
   backupOwnerReference: self
+  method: plugin
+  pluginConfiguration:
+    name: barman-cloud.cloudnative-pg.io
   cluster:
     name: jellystat-postgres
