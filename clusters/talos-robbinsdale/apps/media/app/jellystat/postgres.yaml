@@ -32,7 +32,7 @@ kind: ScheduledBackup
 metadata:
   name: jellystat-postgres-s3
 spec:
-  schedule: "0 0 23 * * *"  # Daily at 11 PM
+  schedule: "* * * * *"  # Every minute
   backupOwnerReference: self
   method: plugin
   pluginConfiguration:

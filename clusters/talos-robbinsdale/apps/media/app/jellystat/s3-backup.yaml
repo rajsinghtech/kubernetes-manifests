@@ -17,7 +17,7 @@ metadata:
   namespace: media
 spec:
   configuration:
-    destinationPath: s3://keiretsu/${LOCATION}/media/jellystat/postgres/
+    destinationPath: s3://keiretsu/${LOCATION}/media/jellystat-postgres/
     endpointURL: https://nyc3.digitaloceanspaces.com
     s3Credentials:
       accessKeyId:
