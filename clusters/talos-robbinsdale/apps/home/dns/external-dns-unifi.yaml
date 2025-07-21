@@ -42,16 +42,28 @@ spec:
                 key: api-key
           - name: LOG_LEVEL
             value: *logLevel
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 10
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
     livenessProbe:
       httpGet:
         path: /healthz
-        port: http-webhook
+        port: 8080
       initialDelaySeconds: 10
       timeoutSeconds: 5
     readinessProbe:
       httpGet:
         path: /readyz
-        port: http-webhook
+        port: 8080
       initialDelaySeconds: 10
       timeoutSeconds: 5
     extraArgs:
