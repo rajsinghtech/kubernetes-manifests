@@ -34,8 +34,8 @@ iso:
 	@SCHEMATIC_ID=$$(curl -s -X POST --data-binary @patch/schematic.yaml https://factory.talos.dev/schematics | jq -r '.id'); \
 	echo "Schematic ID: $$SCHEMATIC_ID"; \
 	echo "Downloading ISO..."; \
-	echo "curl -O https://factory.talos.dev/image/$${SCHEMATIC_ID}/v1.9.4/metal-amd64.iso"
-	curl -O "https://factory.talos.dev/image/$${SCHEMATIC_ID}/v1.9.4/metal-amd64.iso"
+	echo "curl -O https://factory.talos.dev/image/$${SCHEMATIC_ID}/v1.10.5/metal-amd64.iso"
+	curl -O "https://factory.talos.dev/image/$${SCHEMATIC_ID}/v1.10.5/metal-amd64.iso"
 
 kubeconfig:
 	cp talosconfig ~/.talos/config.yaml
@@ -92,9 +92,9 @@ service:
 	talosctl service --talosconfig=./talosconfig -n stone.local -e k8s.robbinsdale.local
 
 upgrade:
-	talosctl upgrade --nodes tank.local --image ghcr.io/siderolabs/installer:v1.9.3 -e tank.local --wait --debug
-	talosctl upgrade --nodes titan.local --image ghcr.io/siderolabs/installer:v1.9.3 -e titan.local --wait --debug
-	talosctl upgrade --nodes stone.local --image ghcr.io/siderolabs/installer:v1.9.3 -e stone.local --wait --debug
+	talosctl upgrade --nodes tank.local --image ghcr.io/siderolabs/installer:v1.10.5 -e tank.local --wait --debug
+	talosctl upgrade --nodes titan.local --image ghcr.io/siderolabs/installer:v1.10.5 -e titan.local --wait --debug
+	talosctl upgrade --nodes stone.local --image ghcr.io/siderolabs/installer:v1.10.5 -e stone.local --wait --debug
 
 standalone:
 	talosctl machineconfig patch controlplane.yaml --patch @patch/vault.patch --output vault.yaml
