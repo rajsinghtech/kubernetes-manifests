@@ -352,6 +352,12 @@
 			"target": ["tag:k8s"],
 			"attr":   ["funnel"],
 		},
+		
+		// Restricted outbound configuration
+		// {
+		// 	"target": ["tag:restricted-outbound"],
+		// 	"attr":   ["only-tcp-443"],
+		// },
 	],
   
   // ============================================================================
