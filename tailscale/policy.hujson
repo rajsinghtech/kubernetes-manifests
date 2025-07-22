@@ -302,8 +302,8 @@
 		
 		// DNS proxy configuration for Robbinsdale cluster
 		{
-			"src": ["group:superuser"],
-			"dst": ["tag:robbinsdale"],
+			"src": ["rajsinghtech@github"],
+			"dst": ["rajsinghtech@github"],
 			"app": {
 				"rajsingh.info/cap/tsdnsproxy": [
 					{
