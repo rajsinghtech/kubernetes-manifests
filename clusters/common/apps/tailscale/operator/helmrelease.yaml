@@ -36,5 +36,5 @@ spec:
     proxyConfig:
       defaultTags: "tag:k8s,tag:${LOCATION}"
       image:
-        repo: ghcr.io/rajsinghtech/k8s-operator
+        repo: ghcr.io/rajsinghtech/tailscale
         tag: unstable
