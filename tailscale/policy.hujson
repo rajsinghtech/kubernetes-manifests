@@ -197,6 +197,9 @@
 			"src": ["group:superuser"],
 			"dst": ["tag:k8s", "tag:ingress", "tag:hello"],
 			"ip":  ["*"],
+      "app": {
+        "tailscale.com/cap/relay": [],
+      },
 		},
 		
 		// Allow members to access their own devices
