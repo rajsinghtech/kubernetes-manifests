@@ -309,7 +309,7 @@
 					{
 						"cluster1.local": {
 							"dns": ["10.0.0.10:53"],
-							"reflect": "cluster.local",
+							"rewrite": "cluster.local",
 							"translateid": 1
 						}
 					}
