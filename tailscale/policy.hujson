@@ -299,6 +299,23 @@
 				],
 			},
 		},
+		
+		// DNS proxy configuration for Robbinsdale cluster
+		{
+			"src": ["group:superuser"],
+			"dst": ["tag:robbinsdale"],
+			"app": {
+				"rajsingh.info/cap/tsdnsproxy": [
+					{
+						"cluster1.local": {
+							"dns": ["10.0.0.10:53"],
+							"reflect": "cluster.local",
+							"translateid": 1
+						}
+					}
+				],
+			},
+		},
 	],
 	
 	// ============================================================================
