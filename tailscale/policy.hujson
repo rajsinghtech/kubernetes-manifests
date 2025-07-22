@@ -164,7 +164,13 @@
 			"dst": ["tag:k8s"],
 			"ip":  ["*"],
 		},
-
+    {
+      "src": ["tag:k8s"],
+			"dst": ["tag:k8s"],
+      "app": {
+        "tailscale.com/cap/relay": [],
+      },
+    },
 		// Kubernetes operator internal networking
 		{
 			"src": ["tag:k8s-operator"],
