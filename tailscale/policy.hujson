@@ -193,13 +193,6 @@
 			"ip":  ["*"],
 		},
 		
-		// Allow superusers to access DNS services in Robbinsdale
-		{
-			"src": ["group:superuser"],
-			"dst": ["10.0.0.10"],
-			"ip":  ["*:53"],
-		},
-		
 		// Allow members to access their own devices
 		{
 			"src": ["autogroup:member"],
