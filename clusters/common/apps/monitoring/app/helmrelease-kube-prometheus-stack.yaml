@@ -143,6 +143,14 @@ spec:
               editable: true
               options:
                 path: /var/lib/grafana/dashboards/logs
+            - name: "flux"
+              orgId: 1
+              folder: "flux"
+              type: file
+              disableDeletion: false
+              editable: true
+              options:
+                path: /var/lib/grafana/dashboards/flux        
       sidecar:
         dashboards:
           enabled: true
@@ -200,7 +208,28 @@ spec:
           volsync-overview:
             gnetId: 21356
             revision: 3
-            datasource: prometheus   
+            datasource:
+              - name: DS_PROMETHEUS
+                value: Prometheus
+              - name: VAR_REPLICATIONDESTNAME
+                value: ".*-bootstrap"
+        flux:
+          flux-cluster:
+            url: https://raw.githubusercontent.com/fluxcd/flux2-monitoring-example/main/monitoring/configs/dashboards/cluster.json
+            datasource: Prometheus
+          flux-control-plane:
+            url: https://raw.githubusercontent.com/fluxcd/flux2-monitoring-example/main/monitoring/configs/dashboards/control-plane.json
+            datasource: Prometheus
+          flux-logs:
+            url: https://raw.githubusercontent.com/fluxcd/flux2-monitoring-example/main/monitoring/configs/dashboards/logs.json
+            datasource: Prometheus
+        default:
+          external-dns:
+            # renovate: dashboardName="External-DNS"
+            gnetId: 15038
+            revision: 3
+            datasource: Prometheus
+
     prometheusOperator:
       fullnameOverride: prometheus
       admissionWebhooks:
