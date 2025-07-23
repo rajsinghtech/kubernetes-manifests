@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: unmanic
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: unmanic
+  template:
+    metadata:
+      labels:
+        app: unmanic
+    spec:
+      hostname: unmanic-robbinsdale
+      containers:
+        - name: unmanic
+          image: josh5/unmanic:latest
+          ports:
+            - name: http
+              containerPort: 8888
+              protocol: TCP
+          volumeMounts:
+            - name: tv-volume
+              mountPath: /library/tvshows
+            - name: movies-volume
+              mountPath: /library/movies
+            - name: config-volume
+              mountPath: /config
+            - name: cache-volume
+              mountPath: /tmp/unmanic
+          env:
+            - name: PUID
+              value: "0"
+            - name: PGID
+              value: "0"
+            - name: TZ
+              value: America/Chicago
+      volumes:
+        - name: tv-volume
+          persistentVolumeClaim:
+            claimName: sonarr-tv-unas
+        - name: movies-volume
+          persistentVolumeClaim:
+            claimName: radarr-movies-unas
+        - name: config-volume
+          persistentVolumeClaim:
+            claimName: unmanic-config-ceph
+        - name: cache-volume
+          emptyDir:
+            sizeLimit: 100Gi
