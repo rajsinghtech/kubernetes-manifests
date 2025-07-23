@@ -8,11 +8,11 @@ spec:
   chart:
     spec:
       chart: tailscale-operator
-      version: 1.85.214
+      version: 1.84.2
       sourceRef:
         kind: HelmRepository
-        # name: tailscale
-        name: tailscale-unstable
+        name: tailscale
+        # name: tailscale-unstable
         namespace: flux-system
   install:
     remediation:
@@ -35,6 +35,6 @@ spec:
         - "tag:k8s-operator"
     proxyConfig:
       defaultTags: "tag:k8s,tag:${LOCATION}"
-      image: 
-        repo: ghcr.io/rajsinghtech/tailscale
-        tag: unstable
+      # image: 
+      #   repo: ghcr.io/rajsinghtech/tailscale
+      #   tag: unstable
