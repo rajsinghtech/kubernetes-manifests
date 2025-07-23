@@ -14,7 +14,15 @@ spec:
     spec:
       hostname: unmanic-robbinsdale
       containers:
+
         - name: unmanic
+          resources:
+            requests:
+              memory: "5Gi"
+              cpu: "3"
+            limits:
+              memory: "5Gi"
+              cpu: "5"
           image: josh5/unmanic:latest
           ports:
             - name: http

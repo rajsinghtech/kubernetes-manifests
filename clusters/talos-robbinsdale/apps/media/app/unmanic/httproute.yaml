@@ -24,6 +24,7 @@ spec:
       namespace: home
   hostnames:
     - "unmanic.rajsingh.info"
+    - "unmanic.lukehouge.com"
   rules:
     - backendRefs:
         - group: ""
