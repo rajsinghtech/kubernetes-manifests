@@ -18,11 +18,11 @@ spec:
         - name: unmanic
           resources:
             requests:
-              memory: "5Gi"
-              cpu: "3"
+              memory: "8Gi"
+              cpu: "4"
             limits:
-              memory: "5Gi"
-              cpu: "5"
+              memory: "16Gi"
+              cpu: "8"
           image: josh5/unmanic:latest
           ports:
             - name: http
@@ -55,5 +55,4 @@ spec:
           persistentVolumeClaim:
             claimName: unmanic-config-ceph
         - name: cache-volume
-          emptyDir:
-            sizeLimit: 100Gi
+          emptyDir: {}
