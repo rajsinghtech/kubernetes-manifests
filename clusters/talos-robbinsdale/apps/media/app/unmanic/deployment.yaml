@@ -19,10 +19,10 @@ spec:
           resources:
             requests:
               memory: "8Gi"
-              cpu: "4"
+              cpu: "5"
             limits:
               memory: "16Gi"
-              cpu: "8"
+              cpu: "9"
           image: josh5/unmanic:latest
           ports:
             - name: http
