@@ -654,8 +654,8 @@ resource "null_resource" "flux_cluster_config" {
       kubectl wait --for condition=established --timeout=60s crd/gitrepositories.source.toolkit.fluxcd.io
       kubectl wait --for condition=established --timeout=60s crd/kustomizations.kustomize.toolkit.fluxcd.io
       
-      # Apply cluster-specific configuration
-      kubectl apply -f ${path.root}/../clusters/${var.cluster_name}/flux/config/cluster.yaml
+      # Apply cluster-specific configuration - use eks-use1 cluster config
+      kubectl apply -f ${path.root}/../clusters/eks-use1/flux/config/cluster.yaml
     EOT
   }
 
@@ -666,7 +666,7 @@ resource "null_resource" "flux_cluster_config" {
   }
 
   triggers = {
-    cluster_config = filesha256("${path.root}/../clusters/${var.cluster_name}/flux/config/cluster.yaml")
+    cluster_config = filesha256("${path.root}/../clusters/eks-use1/flux/config/cluster.yaml")
     cluster_name = var.cluster_name
   }
 
