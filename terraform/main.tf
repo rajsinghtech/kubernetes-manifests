@@ -401,17 +401,6 @@ module "eks" {
 ################################################################################
 
 
-# Kubernetes namespace for DERP server
-resource "kubernetes_namespace" "derp" {
-  metadata {
-    name = "derp"
-    labels = {
-      "pod-security.kubernetes.io/enforce" = "privileged"
-    }
-  }
-
-  depends_on = [module.eks]
-}
 
 
 
@@ -542,7 +531,7 @@ resource "kubernetes_secret" "sops_gpg" {
   }
 
   data = {
-    "sops.asc" = base64encode(file("${path.root}/${var.sops_gpg_key_path}"))
+    "sops.asc" = file("${path.root}/${var.sops_gpg_key_path}")
   }
 
   type = "Opaque"
