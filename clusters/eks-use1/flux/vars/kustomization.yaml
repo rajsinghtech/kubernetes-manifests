@@ -3,3 +3,5 @@ kind: Kustomization
 resources:
   - ./cluster-settings.yaml
   - ./cluster-secrets.sops.yaml
+  - ../../../common/flux/vars/
+  - ../../../common/flux/repositories/

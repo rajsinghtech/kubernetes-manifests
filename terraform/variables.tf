@@ -84,4 +84,15 @@ variable "tailscale_oauth_client_secret" {
     condition     = length(var.tailscale_oauth_client_secret) > 0
     error_message = "Tailscale OAuth client secret must not be empty."
   }
+}
+
+variable "sops_gpg_key" {
+  description = "Base64 encoded SOPS GPG private key for Flux secret decryption"
+  type        = string
+  sensitive   = true
+
+  validation {
+    condition     = length(var.sops_gpg_key) > 0
+    error_message = "SOPS GPG key must not be empty."
+  }
 } 

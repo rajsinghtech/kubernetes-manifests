@@ -576,4 +576,72 @@ resource "kubernetes_manifest" "storage_class_gp3_retain" {
   }
   
   depends_on = [module.eks]
+}
+
+################################################################################
+# Flux Bootstrap                                                               #
+################################################################################
+
+# Create flux-system namespace
+resource "kubernetes_namespace" "flux_system" {
+  metadata {
+    name = "flux-system"
+  }
+
+  lifecycle {
+    ignore_changes = [metadata]
+  }
+
+  depends_on = [module.eks]
+}
+
+# Apply Flux bootstrap kustomization
+resource "null_resource" "flux_bootstrap" {
+  provisioner "local-exec" {
+    command = <<-EOT
+      aws eks update-kubeconfig --name ${module.eks.cluster_name} --region ${var.region}
+      kubectl kustomize ${path.root}/../clusters/common/bootstrap/flux | kubectl apply -f -
+    EOT
+  }
+
+  provisioner "local-exec" {
+    when    = destroy
+    command = "echo 'Flux resources will be cleaned up with cluster deletion'"
+    on_failure = continue
+  }
+
+  triggers = {
+    cluster_endpoint = module.eks.cluster_endpoint
+    cluster_id = module.eks.cluster_id
+  }
+
+  depends_on = [
+    kubernetes_namespace.flux_system,
+    module.eks,
+    helm_release.cert_manager,
+    helm_release.tailscale_operator
+  ]
+}
+
+# Create SOPS GPG secret for Flux
+resource "kubernetes_secret" "sops_gpg" {
+  metadata {
+    name      = "sops-gpg"
+    namespace = "flux-system"
+  }
+
+  data = {
+    "sops.asc" = var.sops_gpg_key
+  }
+
+  type = "Opaque"
+
+  depends_on = [
+    kubernetes_namespace.flux_system,
+    null_resource.flux_bootstrap
+  ]
+
+  lifecycle {
+    ignore_changes = [metadata[0].annotations, metadata[0].labels]
+  }
 } 
