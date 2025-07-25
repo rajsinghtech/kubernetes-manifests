@@ -1,0 +1,30 @@
+apiVersion: tailscale.com/v1alpha1
+kind: DNSConfig
+metadata:
+  name: ts-dns
+spec:
+  nameserver:
+    image:
+      repo: ghcr.io/rajsinghtech/k8s-nameserver
+      tag: v0.0.2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ts-dns
+  namespace: tailscale
+spec:
+  ports:
+  - name: udp
+    port: 53
+    protocol: UDP
+    targetPort: 1053
+  - name: tcp
+    port: 53
+    protocol: TCP
+    targetPort: 1053
+  selector:
+    app: nameserver
+  sessionAffinity: None
+  type: LoadBalancer
+  loadBalancerIP: 10.69.69.50
