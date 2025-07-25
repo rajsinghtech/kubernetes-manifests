@@ -2,7 +2,7 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: GitRepository
 metadata:
-  name: home-kubernetes
+  name: kubernetes-manifests
   namespace: flux-system
 spec:
   interval: 30m
@@ -14,7 +14,7 @@ spec:
     /*
     # include kubernetes directory
     !/clusters/common
-    !/clusters/kind-stpetersburg
+    !/clusters/eks-use1
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
@@ -23,12 +23,12 @@ metadata:
   namespace: flux-system
 spec:
   interval: 30m
-  path: ./clusters/kind-stpetersburg/flux
+  path: ./clusters/eks-use1/flux
   prune: true
   wait: false
   sourceRef:
     kind: GitRepository
-    name: home-kubernetes
+    name: kubernetes-manifests
   decryption:
     provider: sops
     secretRef:
@@ -46,7 +46,7 @@ spec:
   wait: false
   sourceRef:
     kind: GitRepository
-    name: home-kubernetes
+    name: kubernetes-manifests
   decryption:
     provider: sops
     secretRef:
