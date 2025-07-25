@@ -7,7 +7,7 @@ variable "region" {
 variable "cluster_name" {
   description = "Name of the EKS cluster"
   type        = string
-  default     = "eks-use1"
+  default     = "customderp"
 }
 
 variable "cluster_version" {
