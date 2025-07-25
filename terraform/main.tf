@@ -14,10 +14,6 @@ locals {
   desired_size       = var.desired_capacity
   max_size           = var.max_size
   min_size           = var.min_size
-
-  # Tailscale configuration
-  tailscale_oauth_client_id     = var.tailscale_oauth_client_id
-  tailscale_oauth_client_secret = var.tailscale_oauth_client_secret
 }
 
 ################################################################################
@@ -404,17 +400,6 @@ module "eks" {
 # Kubernetes Resources                                                         #
 ################################################################################
 
-# Kubernetes namespace for Tailscale operator
-resource "kubernetes_namespace" "tailscale_operator" {
-  metadata {
-    name = "tailscale"
-    labels = {
-      "pod-security.kubernetes.io/enforce" = "privileged"
-    }
-  }
-
-  depends_on = [module.eks]
-}
 
 # Kubernetes namespace for DERP server
 resource "kubernetes_namespace" "derp" {
@@ -429,51 +414,6 @@ resource "kubernetes_namespace" "derp" {
 }
 
 
-# Deploy Tailscale Operator using Helm
-resource "helm_release" "tailscale_operator" {
-  name       = "tailscale-operator"
-  repository = "https://pkgs.tailscale.com/helmcharts"
-  chart      = "tailscale-operator"
-  version    = "1.84.0"
-  namespace  = kubernetes_namespace.tailscale_operator.metadata[0].name
-
-  values = [
-    yamlencode({
-      operatorConfig = {
-        image = {
-          repo = "tailscale/k8s-operator"
-          tag  = "v1.84.0"
-        }
-        hostname = "${local.name}-k8s-operator"
-      }
-      apiServerProxyConfig = {
-        mode = "true"
-        tags = "tag:k8s-operator,tag:k8s-api-server"
-      }
-      oauth = {
-        clientId     = local.tailscale_oauth_client_id
-        clientSecret = local.tailscale_oauth_client_secret
-        hostname     = "${local.name}-operator"
-        tags         = "tag:k8s-operator"
-      }
-    })
-  ]
-
-  set_sensitive {
-    name  = "oauth.clientId"
-    value = local.tailscale_oauth_client_id
-  }
-
-  set_sensitive {
-    name  = "oauth.clientSecret"
-    value = local.tailscale_oauth_client_secret
-  }
-
-  depends_on = [
-    kubernetes_namespace.tailscale_operator,
-    module.eks,
-  ]
-}
 
 ################################################################################
 # EBS CSI Driver IAM Role                                                     #
@@ -590,8 +530,7 @@ resource "null_resource" "flux_bootstrap" {
 
   depends_on = [
     kubernetes_namespace.flux_system,
-    module.eks,
-    helm_release.tailscale_operator
+    module.eks
   ]
 }
 
@@ -603,7 +542,7 @@ resource "kubernetes_secret" "sops_gpg" {
   }
 
   data = {
-    "sops.asc" = var.sops_gpg_key
+    "sops.asc" = base64encode(file("${path.root}/${var.sops_gpg_key_path}"))
   }
 
   type = "Opaque"
