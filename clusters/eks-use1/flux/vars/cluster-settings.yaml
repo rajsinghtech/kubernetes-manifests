@@ -6,7 +6,7 @@ metadata:
   namespace: flux-system
 data:
   LOCATION: use1
-  SITE_ID: ""
+  SITE_ID: "1001"
   TIMEZONE: America/New_York
   CLUSTER_NAME: eks-use1
 

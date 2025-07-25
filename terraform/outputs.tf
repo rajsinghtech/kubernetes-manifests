@@ -80,9 +80,4 @@ output "egress_only_internet_gateway_id" {
 output "tailscale_operator_namespace" {
   description = "Kubernetes namespace where Tailscale operator is deployed"
   value       = kubernetes_namespace.tailscale_operator.metadata[0].name
-}
-
-output "cert_manager_namespace" {
-  description = "Kubernetes namespace where cert-manager is deployed"
-  value       = kubernetes_namespace.cert_manager.metadata[0].name
 } 
