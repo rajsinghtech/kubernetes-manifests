@@ -75,9 +75,4 @@ output "internet_gateway_id" {
 output "egress_only_internet_gateway_id" {
   description = "ID of the Egress-only Internet Gateway for IPv6"
   value       = aws_egress_only_internet_gateway.main.id
-}
-
-output "tailscale_operator_namespace" {
-  description = "Kubernetes namespace where Tailscale operator is deployed"
-  value       = kubernetes_namespace.tailscale_operator.metadata[0].name
 } 

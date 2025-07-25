@@ -21,5 +21,5 @@ tailscale_oauth_client_id     = "your-oauth-client-id"
 tailscale_oauth_client_secret = "your-oauth-client-secret"
 
 # SOPS GPG Key for Flux secret decryption
-# This should be the base64 encoded GPG private key
-sops_gpg_key = "your-base64-encoded-gpg-private-key" 
+# Path to the GPG private key file (relative to terraform directory)
+sops_gpg_key_path = "../clusters/common/.sops.pub.asc" 

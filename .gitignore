@@ -13,3 +13,7 @@ charts
 **/talos/.DS_Store
 
 next
+
+# SOPS private keys - NEVER commit these
+*.private.asc
+.sops.private.asc
