@@ -428,39 +428,6 @@ resource "kubernetes_namespace" "derp" {
   depends_on = [module.eks]
 }
 
-# Kubernetes namespace for cert-manager
-resource "kubernetes_namespace" "cert_manager" {
-  metadata {
-    name = "cert-manager"
-  }
-
-  depends_on = [module.eks]
-}
-
-# Deploy cert-manager using Helm
-resource "helm_release" "cert_manager" {
-  name       = "cert-manager"
-  repository = "https://charts.jetstack.io"
-  chart      = "cert-manager"
-  version    = "v1.18.0"
-  namespace  = kubernetes_namespace.cert_manager.metadata[0].name
-
-  values = [
-    yamlencode({
-      installCRDs = true
-      dns01RecursiveNameserversOnly = true
-      extraArgs = [
-        "--dns01-recursive-nameservers=1.1.1.1:53,8.8.8.8:53",
-        "--dns01-recursive-nameservers-only"
-      ]
-    })
-  ]
-
-  depends_on = [
-    kubernetes_namespace.cert_manager,
-    module.eks,
-  ]
-}
 
 # Deploy Tailscale Operator using Helm
 resource "helm_release" "tailscale_operator" {
@@ -534,8 +501,8 @@ module "ebs_csi_irsa_role" {
 ################################################################################
 
 # Apply storage classes for EBS volumes
-resource "kubernetes_manifest" "storage_class_gp3" {
-  manifest = {
+resource "kubectl_manifest" "storage_class_gp3" {
+  yaml_body = yamlencode({
     apiVersion = "storage.k8s.io/v1"
     kind       = "StorageClass"
     metadata = {
@@ -552,13 +519,16 @@ resource "kubernetes_manifest" "storage_class_gp3" {
     }
     volumeBindingMode    = "WaitForFirstConsumer"
     allowVolumeExpansion = true
-  }
+  })
   
-  depends_on = [module.eks]
+  depends_on = [
+    module.eks,
+    module.eks.aws_eks_addon
+  ]
 }
 
-resource "kubernetes_manifest" "storage_class_gp3_retain" {
-  manifest = {
+resource "kubectl_manifest" "storage_class_gp3_retain" {
+  yaml_body = yamlencode({
     apiVersion = "storage.k8s.io/v1"
     kind       = "StorageClass"
     metadata = {
@@ -573,9 +543,12 @@ resource "kubernetes_manifest" "storage_class_gp3_retain" {
     reclaimPolicy        = "Retain"
     volumeBindingMode    = "WaitForFirstConsumer"
     allowVolumeExpansion = true
-  }
+  })
   
-  depends_on = [module.eks]
+  depends_on = [
+    module.eks,
+    module.eks.aws_eks_addon
+  ]
 }
 
 ################################################################################
@@ -618,7 +591,6 @@ resource "null_resource" "flux_bootstrap" {
   depends_on = [
     kubernetes_namespace.flux_system,
     module.eks,
-    helm_release.cert_manager,
     helm_release.tailscale_operator
   ]
 }
@@ -654,8 +626,8 @@ resource "null_resource" "flux_cluster_config" {
       kubectl wait --for condition=established --timeout=60s crd/gitrepositories.source.toolkit.fluxcd.io
       kubectl wait --for condition=established --timeout=60s crd/kustomizations.kustomize.toolkit.fluxcd.io
       
-      # Apply cluster-specific configuration - use eks-use1 cluster config
-      kubectl apply -f ${path.root}/../clusters/eks-use1/flux/config/cluster.yaml
+      # Apply cluster-specific configuration
+      kubectl apply -f ${path.root}/../clusters/${var.cluster_name}/flux/config/cluster.yaml
     EOT
   }
 
@@ -666,7 +638,7 @@ resource "null_resource" "flux_cluster_config" {
   }
 
   triggers = {
-    cluster_config = filesha256("${path.root}/../clusters/eks-use1/flux/config/cluster.yaml")
+    cluster_config = filesha256("${path.root}/../clusters/${var.cluster_name}/flux/config/cluster.yaml")
     cluster_name = var.cluster_name
   }
 
