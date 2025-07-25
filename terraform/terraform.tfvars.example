@@ -18,4 +18,8 @@ derp_stun_port  = 3478
 # Tailscale OAuth Configuration
 # Get these from https://login.tailscale.com/admin/settings/oauth
 tailscale_oauth_client_id     = "your-oauth-client-id"
-tailscale_oauth_client_secret = "your-oauth-client-secret" 
+tailscale_oauth_client_secret = "your-oauth-client-secret"
+
+# SOPS GPG Key for Flux secret decryption
+# This should be the base64 encoded GPG private key
+sops_gpg_key = "your-base64-encoded-gpg-private-key" 
