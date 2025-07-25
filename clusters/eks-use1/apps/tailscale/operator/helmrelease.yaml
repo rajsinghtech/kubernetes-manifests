@@ -1,0 +1,40 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: tailscale-operator
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: tailscale-operator
+      version: 1.84.2
+      sourceRef:
+        kind: HelmRepository
+        name: tailscale
+        # name: tailscale-unstable
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    apiServerProxyConfig:
+      mode: "true"
+    # operatorConfig:
+    #   image:
+    #     repo: ghcr.io/rajsinghtech/k8s-operator
+    #     tag: v0.0.8
+      hostname: "${LOCATION}-k8s-operator" 
+      logging: "debug" # info, debug, dev
+      defaultTags:
+        - "tag:${LOCATION}"
+        - "tag:k8s-operator"
+    proxyConfig:
+      defaultTags: "tag:k8s,tag:${LOCATION}"
+      # image: 
+      #   repo: ghcr.io/rajsinghtech/tailscale
+      #   tag: unstable
