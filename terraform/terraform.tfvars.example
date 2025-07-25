@@ -1,6 +1,6 @@
 # EKS Cluster Configuration
 region          = "us-east-1"
-cluster_name    = "customderp"
+cluster_name    = "eks-use1"
 cluster_version = "1.33"
 
 # Node Group Configuration

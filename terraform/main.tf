@@ -644,4 +644,34 @@ resource "kubernetes_secret" "sops_gpg" {
   lifecycle {
     ignore_changes = [metadata[0].annotations, metadata[0].labels]
   }
+}
+
+# Apply cluster-specific Flux configuration
+resource "null_resource" "flux_cluster_config" {
+  provisioner "local-exec" {
+    command = <<-EOT
+      # Wait for Flux CRDs to be available
+      kubectl wait --for condition=established --timeout=60s crd/gitrepositories.source.toolkit.fluxcd.io
+      kubectl wait --for condition=established --timeout=60s crd/kustomizations.kustomize.toolkit.fluxcd.io
+      
+      # Apply cluster-specific configuration
+      kubectl apply -f ${path.root}/../clusters/${var.cluster_name}/flux/config/cluster.yaml
+    EOT
+  }
+
+  provisioner "local-exec" {
+    when    = destroy
+    command = "echo 'Cluster-specific Flux resources will be cleaned up with cluster deletion'"
+    on_failure = continue
+  }
+
+  triggers = {
+    cluster_config = filesha256("${path.root}/../clusters/${var.cluster_name}/flux/config/cluster.yaml")
+    cluster_name = var.cluster_name
+  }
+
+  depends_on = [
+    kubernetes_secret.sops_gpg,
+    null_resource.flux_bootstrap
+  ]
 } 
