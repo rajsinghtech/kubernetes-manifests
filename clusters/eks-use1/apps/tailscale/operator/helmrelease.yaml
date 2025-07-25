@@ -24,7 +24,7 @@ spec:
   values:
     apiServerProxyConfig:
       mode: "true"
-    # operatorConfig:
+    operatorConfig:
     #   image:
     #     repo: ghcr.io/rajsinghtech/k8s-operator
     #     tag: v0.0.8
