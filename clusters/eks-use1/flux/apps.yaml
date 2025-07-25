@@ -6,11 +6,11 @@ metadata:
   namespace: flux-system
 spec:
   interval: 30m
-  path: ./clusters/kind-stpetersburg/apps
+  path: ./clusters/eks-use1/apps
   prune: true
   sourceRef:
     kind: GitRepository
-    name: home-kubernetes
+    name: kubernetes-manifests
   decryption:
     provider: sops
     secretRef:

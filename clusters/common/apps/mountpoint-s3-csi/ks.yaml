@@ -13,7 +13,7 @@
 #   prune: true
 #   sourceRef:
 #     kind: GitRepository
-#     name: home-kubernetes
+#     name: kubernetes-manifests
 #   wait: false
 #   interval: 30m
 #   retryInterval: 1m
