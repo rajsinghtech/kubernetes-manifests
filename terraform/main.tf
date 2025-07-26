@@ -351,6 +351,26 @@ module "eks" {
       ipv6_cidr_blocks = ["::/0"]
     }
 
+    # Peer Relay UDP - IPv4
+    ingress_peer_relay_udp = {
+      description = "Peer relay UDP traffic IPv4"
+      protocol    = "udp"
+      from_port   = var.peer_relay_port
+      to_port     = var.peer_relay_port
+      type        = "ingress"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    # Peer Relay UDP - IPv6
+    ingress_peer_relay_udp_ipv6 = {
+      description      = "Peer relay UDP traffic IPv6"
+      protocol         = "udp"
+      from_port        = var.peer_relay_port
+      to_port          = var.peer_relay_port
+      type             = "ingress"
+      ipv6_cidr_blocks = ["::/0"]
+    }
+
     # Tailscale specific port
     ingress_tailscale = {
       description      = "Tailscale UDP traffic"

@@ -64,6 +64,12 @@ variable "derp_stun_port" {
   default     = 3478
 }
 
+variable "peer_relay_port" {
+  description = "Peer relay UDP port"
+  type        = number
+  default     = 41641
+}
+
 
 variable "sops_gpg_key_path" {
   description = "Path to the SOPS GPG private key file for Flux secret decryption"
