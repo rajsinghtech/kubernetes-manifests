@@ -14,6 +14,7 @@ key_name         = "raj_macbook"
 derp_http_port  = 80
 derp_https_port = 443
 derp_stun_port  = 3478
+peer_relay_port = 1001
 
 # Tailscale OAuth Configuration
 # Get these from https://login.tailscale.com/admin/settings/oauth

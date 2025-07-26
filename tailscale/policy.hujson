@@ -76,6 +76,7 @@
 		"tag:stpetersburg": ["tag:k8s-operator", "group:superuser"],
 		"tag:pittsburgh":   ["tag:k8s-operator", "group:superuser"],
 		"tag:use1":         ["tag:k8s-operator", "group:superuser"],
+		"tag:kind":         ["tag:k8s-operator", "group:superuser"],
 
 		// Site-specific infrastructure tags
 		"tag:ottawa-infra": ["tag:ottawa-infra", "group:superuser"],
@@ -215,7 +216,7 @@
 			"src": ["group:superuser"],
 			"dst": ["autogroup:internet"],
 			"ip":  ["*"],
-			"via": ["tag:robbinsdale", "tag:ottawa", "tag:stpetersburg", "tag:use1"],
+			"via": ["tag:robbinsdale", "tag:ottawa", "tag:stpetersburg", "tag:use1", "tag:kind"],
 		},
 		
 		// ------------------------------------------------------------------------
