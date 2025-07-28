@@ -225,7 +225,7 @@
 			"src": ["group:superuser"],
 			"dst": ["autogroup:internet"],
 			"ip":  ["*"],
-			"via": ["tag:robbinsdale", "tag:ottawa", "tag:stpetersburg", "tag:use1", "tag:usw2", "tag:kind"],
+			"via": ["tag:robbinsdale", "tag:ottawa", "tag:stpetersburg", "tag:use1", "tag:kind"],
 		},
 		
 		// ------------------------------------------------------------------------
@@ -235,10 +235,40 @@
 		// Access to subnets via subnet routers
 		{
 			"src": ["group:superuser"],
-			"dst": ["ipset:robbinsdale-subnets", "ipset:ottawa-subnets", "ipset:stpetersburg-subnets", "ipset:usw2-subnets", "ipset:shared-subnets"],
+			"dst": ["ipset:robbinsdale-subnets"],
 			"ip":  ["*"],
 			"via": ["tag:robbinsdale"],
 		},
+    {
+      "src": ["group:superuser", "tag:ottawa"],
+      "dst": ["ipset:usw2-subnets"],
+      "ip":  ["*"],
+      "via": ["tag:usw2"],
+    },
+    {
+      "src": ["group:superuser"],
+      "dst": ["ipset:ottawa-subnets"],
+      "ip":  ["*"],
+      "via": ["tag:ottawa"],
+    },
+    {
+      "src": ["tag:usw2"],
+      "dst": ["ipset:ottawa-subnets"],
+      "ip":  ["*"],
+      "via": ["tag:ottawa-infra"],
+    },
+    {
+      "src": ["group:superuser"],
+      "dst": ["ipset:stpetersburg-subnets"],
+      "ip":  ["*"],
+      "via": ["tag:stpetersburg"],
+    },
+    {
+      "src": ["group:superuser"],
+      "dst": ["ipset:shared-subnets"],
+      "ip":  ["*"],
+      "via": ["tag:k8s"],
+    },
 		
 		// ------------------------------------------------------------------------
 		// KUBERNETES
