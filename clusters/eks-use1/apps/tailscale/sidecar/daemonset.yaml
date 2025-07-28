@@ -56,7 +56,7 @@ spec:
           mountPath: /config
       containers:
       - name: derper
-        image: ghcr.io/rajsinghtech/derper:v0.0.1
+        image: ghcr.io/rajsinghtech/tailscale/derper:1
         imagePullPolicy: Always
         command:
         - /bin/sh

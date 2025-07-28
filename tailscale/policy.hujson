@@ -162,8 +162,8 @@
 
 		// Allow Ottawa infra nodes to access each other directly
 		{
-			"src": ["tag:ottawa-infra"],
-			"dst": ["tag:ottawa-infra"],
+			"src": ["tag:ottawa-infra", "tag:usw2"],
+			"dst": ["tag:ottawa-infra", "tag:usw2"],
 			"ip": ["*"]
 		},
 		// Kubernetes operator internal networking
@@ -385,6 +385,7 @@
       // US West 2 user
       "src": "tag:usw2", 
       "accept": [
+        "tag:ottawa-infra:443", // Ottawa infra
         "192.168.169.1:443", // Ottawa LAN
       ]
     },
@@ -392,6 +393,7 @@
       // Ottawa infra 
       "src": "tag:ottawa-infra",
       "accept": [
+        "tag:usw2:443", // US West 2
         "10.226.0.1:443", // US West 2 VPC CIDR
       ]
     },
