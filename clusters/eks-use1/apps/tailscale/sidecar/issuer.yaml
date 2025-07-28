@@ -1,0 +1,17 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: issuer
+spec:
+  acme:
+    email: rajsinghcpre@gmail.com
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: letsencrypt-key
+    solvers:
+    - dns01:
+        cloudflare:
+          email: rajsinghcpre@gmail.com
+          apiTokenSecretRef:
+            name: derp-secret
+            key: CLOUDFLARE_API_TOKEN

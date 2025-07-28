@@ -1,0 +1,163 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: derper
+  labels:
+    app: derper
+spec:
+  selector:
+    matchLabels:
+      app: derper
+  template:
+    metadata:
+      labels:
+        app: derper
+    spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      dnsConfig:
+        nameservers:
+        - "1.1.1.1"
+        - "1.0.0.1"
+      initContainers:
+      - args:
+        - sysctl -w net.ipv4.ip_forward=1 && if sysctl net.ipv6.conf.all.forwarding; then
+          sysctl -w net.ipv6.conf.all.forwarding=1; fi
+        command:
+        - /bin/sh
+        - -c
+        image: tailscale/tailscale:v1.82.0
+        imagePullPolicy: Always
+        name: sysctler
+        resources: {}
+        securityContext:
+          privileged: true
+      - name: derper-config-init
+        image: busybox
+        command:
+        - /bin/sh
+        - -c
+        - |
+          mkdir -p /config/$(TS_DERP_HOSTNAME)
+          cp /secrets/tls.crt /config/$(TS_DERP_HOSTNAME)/$(TS_DERP_HOSTNAME).crt
+          cp /secrets/tls.key /config/$(TS_DERP_HOSTNAME)/$(TS_DERP_HOSTNAME).key
+        env:
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: TS_DERP_HOSTNAME
+          value: "$(NODE_NAME).derp.rajsingh.info"
+        volumeMounts:
+        - name: derper-tls
+          mountPath: /secrets
+          readOnly: true
+        - name: derper-config
+          mountPath: /config
+      containers:
+      - name: derper
+        image: ghcr.io/rajsinghtech/derper:v0.0.1
+        imagePullPolicy: Always
+        command:
+        - /bin/sh
+        - -c
+        - |
+          /usr/local/bin/containerboot &
+          exec /usr/local/bin/derper --hostname $(TS_DERP_HOSTNAME) --bootstrap-dns-names $(TS_DERP_HOSTNAME) -certmode $(TS_DERP_CERTMODE) -certdir /root/derper/$(TS_DERP_HOSTNAME) --stun --verify-clients=$(TS_DERP_VERIFY_CLIENTS) --http-port=$(TS_DERP_HTTP_PORT) -a :$(TS_DERP_LISTEN_PORT) --stun-port=$(TS_DERP_STUN_PORT) $(TS_DERP_EXTRA_ARGS)
+        env:
+        - name: TS_RUN_TAILSCALE
+          value: "true"
+        - name: TS_KUBE_SECRET
+          value: ""
+        - name: TS_USERSPACE
+          value: "false"
+        - name: TS_EXTRA_ARGS
+          value: "--reset"
+        - name: TS_STATE_DIR
+          value: /tsstate
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: TS_DERP_HOSTNAME
+          value: "$(NODE_NAME).derp.rajsingh.info"
+        - name: TS_DERP_HTTP_PORT
+          value: "80"
+        - name: TS_DERP_LISTEN_PORT
+          value: "443"
+        - name: TS_DERP_STUN_PORT
+          value: "3478"
+        - name: TS_DERP_CERTMODE
+          value: "manual"
+        - name: TS_DERP_VERIFY_CLIENTS
+          value: "false"
+        - name: TS_AUTHKEY
+          valueFrom:
+            secretKeyRef:
+              name: derp-secret
+              key: TS_AUTHKEY
+        - name: TS_ACCEPT_DNS
+          value: "true"
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: TS_DEBUG_KEY_PATH
+          value: "/etc/debug-key/key"
+        securityContext:
+          privileged: true
+          capabilities:
+            add:
+            - NET_ADMIN
+            - NET_RAW
+        volumeMounts:
+        - name: derper-tls
+          mountPath: /secrets
+          readOnly: true
+        - name: tailscale-state
+          mountPath: /tsstate
+        - name: derper-config
+          mountPath: /root/derper
+        - name: debug-key
+          mountPath: /etc/debug-key
+          readOnly: true
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        - containerPort: 443
+          name: https
+          protocol: TCP
+        - containerPort: 3478
+          name: stun
+          protocol: UDP
+      volumes:
+      - name: derper-tls
+        secret:
+          secretName: derper-tls
+      - name: tailscale-state
+        emptyDir: {}
+      - name: derper-config
+        emptyDir: {}
+      - name: debug-key
+        secret:
+          secretName: derp-secret
+---
+# Fixed: Changed to PodMonitor with correct port and path
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: derper
+  labels:
+    app: derper
+spec:
+  selector:
+    matchLabels:
+      app: derper
+  podMetricsEndpoints:
+  - port: http
+    path: /debug/varz
+    params:
+      debugkey: ["customderp"]
+    interval: 30s
+    scheme: http
