@@ -202,7 +202,7 @@
 			"src": ["group:superuser"],
 			"dst": ["autogroup:internet"],
 			"ip":  ["*"],
-			"via": ["tag:robbinsdale", "tag:ottawa"],
+			"via": ["tag:robbinsdale", "tag:ottawa", "tag:github-connector"],
 		},
 		
 		// ------------------------------------------------------------------------
