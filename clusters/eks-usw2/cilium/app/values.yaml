@@ -4,7 +4,7 @@ ipam:
   mode: eni
 operator:
   replicas: 1
-routingMode: vxlan
+routingMode: tunnel
 
 affinity:
   nodeAffinity:
