@@ -41,8 +41,9 @@
 
     // US West 2 site networks
     "ipset:usw2-subnets": [
-      "10.80.0.0/16",      // Service network range
-      "10.81.0.0/16",      // Pod network range
+	  "10.226.0.0/16",      // Main VPC CIDR
+      "10.80.0.0/16",      // Pod network range
+      "10.81.0.0/16",      // Service network range
       "fd7a:115c:a1e0:b1a:0:4::/96"  // 4via6 subnet
     ],
 		
@@ -118,7 +119,9 @@
 			"192.168.50.0/24":     ["tag:robbinsdale"], // Robbinsdale LAN
 			"192.168.169.0/24":    ["tag:ottawa"],     // Ottawa LAN
 			"192.168.73.0/24":     ["tag:stpetersburg"], // St Petersburg LAN
-      "10.80.0.0/16":        ["tag:usw2"], // US West 2 LAN
+      		"10.80.0.0/16":        ["tag:usw2"], // US West 2 pod cidr
+      		"10.81.0.0/16":        ["tag:usw2"], // US West 2 service cidr			
+			"10.226.0.0/16":       ["tag:usw2"], // US West 2 VPC cidr		
 		},
 		
 		// Service exposure approvals
