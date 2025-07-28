@@ -1,3 +1,4 @@
+---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
@@ -8,7 +9,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./clusters/common/apps/cert-manager/app
+  path: ./clusters/${CLUSTER_NAME}/apps/cert-manager/app
   prune: true
   sourceRef:
     kind: GitRepository
@@ -39,10 +40,3 @@ spec:
   interval: 30m
   retryInterval: 1m
   timeout: 5m
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: cert-manager
-  labels:
-    kustomize.toolkit.fluxcd.io/prune: disabled 
