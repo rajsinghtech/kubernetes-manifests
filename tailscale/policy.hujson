@@ -41,7 +41,7 @@
 
     // US West 2 site networks
     "ipset:usw2-subnets": [
-	  "10.226.0.0/16",      // Main VPC CIDR
+      "10.226.0.0/16",      // Main VPC CIDR
       "10.80.0.0/16",      // Pod network range
       "10.81.0.0/16",      // Service network range
       "fd7a:115c:a1e0:b1a:0:4::/96"  // 4via6 subnet
@@ -109,22 +109,17 @@
 	
 	// Automatically approve certain requests without manual intervention
 	"autoApprovers": {
-		// Exit node approvals
 		"exitNode": ["tag:k8s"],
-		
-		// Subnet route approvals
 		"routes": {
-			"0.0.0.0/0":           ["tag:k8s", "tag:github-connector"],        // Default route (exit node)
-			"::/0":                ["tag:k8s", "tag:github-connector"],        // IPv6 default route
+			"0.0.0.0/0":           ["tag:k8s", "tag:github-connector"], // Default route (exit node)
+			"::/0":                ["tag:k8s", "tag:github-connector"], // IPv6 default route
 			"192.168.50.0/24":     ["tag:robbinsdale"], // Robbinsdale LAN
-			"192.168.169.0/24":    ["tag:ottawa"],     // Ottawa LAN
+			"192.168.169.0/24":    ["tag:ottawa", "tag:ottawa-infra"], // Ottawa LAN
 			"192.168.73.0/24":     ["tag:stpetersburg"], // St Petersburg LAN
-      		"10.80.0.0/16":        ["tag:ottawa"], // US West 2 EKS Hybrid cluster control plane/Ottawa worker node pod cidr
-      		"10.81.0.0/16":        ["tag:ottawa"], // US West 2 EKS Hybrid cluster control plane/Ottawa worker node pod cidr			
+      "10.80.0.0/16":        ["tag:ottawa-infra"], // US West 2 EKS Hybrid cluster control plane/Ottawa worker node pod cidr
+      "10.81.0.0/16":        ["tag:ottawa-infra"], // US West 2 EKS Hybrid cluster control plane/Ottawa worker node pod cidr			
 			"10.226.0.0/16":       ["tag:usw2"], // US West 2 VPC cidr		
 		},
-		
-		// Service exposure approvals
 		"services": {
 			"tag:hello": ["tag:ingress"],
 			"svc:test":  ["tag:test"],
@@ -170,21 +165,7 @@
 			"src": ["tag:ottawa-infra"],
 			"dst": ["tag:ottawa-infra"],
 			"ip": ["*"]
-		},		
-		
-		// Kubernetes cluster internal networking
-		{
-			"src": ["tag:k8s"],
-			"dst": ["tag:k8s"],
-			"ip":  ["*"],
 		},
-    {
-      "src": ["tag:k8s"],
-			"dst": ["tag:k8s"],
-      "app": {
-        "tailscale.com/cap/relay": [],
-      },
-    },
 		// Kubernetes operator internal networking
 		{
 			"src": ["tag:k8s-operator"],
@@ -194,21 +175,14 @@
 		
 		// Allow k8s-operator to access service tags
 		{
-			"src": ["tag:k8s-operator"],
-			"dst": ["tag:ingress", "tag:egress", "tag:hello"],
-			"ip":  ["*"],
-		},
-		
-		// Allow k8s nodes to access service tags
-		{
-			"src": ["tag:k8s"],
+			"src": ["tag:k8s-operator", "tag:k8s"],
 			"dst": ["tag:ingress", "tag:egress", "tag:hello"],
 			"ip":  ["*"],
 		},
 		
 		// Allow members to reach k8s nodes directly
 		{
-			"src": ["group:superuser"],
+			"src": ["group:superuser", "tag:k8s", "tag:k8s-operator"],
 			"dst": ["tag:k8s", "tag:ingress", "tag:hello"],
 			"ip":  ["*"],
       "app": {
@@ -228,7 +202,7 @@
 			"src": ["group:superuser"],
 			"dst": ["autogroup:internet"],
 			"ip":  ["*"],
-			"via": ["tag:robbinsdale", "tag:ottawa", "tag:stpetersburg", "tag:use1", "tag:kind"],
+			"via": ["tag:robbinsdale", "tag:ottawa"],
 		},
 		
 		// ------------------------------------------------------------------------
@@ -409,16 +383,16 @@
     },
     {
       // US West 2 user
-      "src": "tag:usw2",
+      "src": "tag:usw2", 
       "accept": [
-        "192.168.169.1:443",
+        "192.168.169.1:443", // Ottawa LAN
       ]
     },
     {
       // Ottawa infra 
       "src": "tag:ottawa-infra",
       "accept": [
-        "10.226.0.1:443",
+        "10.226.0.1:443", // US West 2 VPC CIDR
       ]
     },
   ],
