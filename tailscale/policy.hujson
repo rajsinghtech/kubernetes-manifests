@@ -119,8 +119,8 @@
 			"192.168.50.0/24":     ["tag:robbinsdale"], // Robbinsdale LAN
 			"192.168.169.0/24":    ["tag:ottawa"],     // Ottawa LAN
 			"192.168.73.0/24":     ["tag:stpetersburg"], // St Petersburg LAN
-      		"10.80.0.0/16":        ["tag:usw2"], // US West 2 pod cidr
-      		"10.81.0.0/16":        ["tag:usw2"], // US West 2 service cidr			
+      		"10.80.0.0/16":        ["tag:ottawa"], // US West 2 pod cidr
+      		"10.81.0.0/16":        ["tag:ottawa"], // US West 2 service cidr			
 			"10.226.0.0/16":       ["tag:usw2"], // US West 2 VPC cidr		
 		},
 		
