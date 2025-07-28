@@ -131,6 +131,22 @@ spec:
         - containerPort: 3478
           name: stun
           protocol: UDP
+      - name: cloudflare-ddns
+        image: favonia/cloudflare-ddns:latest
+        env:
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: CLOUDFLARE_API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: derp-secret
+              key: CLOUDFLARE_API_TOKEN
+        - name: DOMAINS
+          value: "$(NODE_NAME).derp.rajsingh.info"
+        - name: PROXIED
+          value: "false"
       volumes:
       - name: derper-tls
         secret:
@@ -142,22 +158,3 @@ spec:
       - name: debug-key
         secret:
           secretName: derp-secret
----
-# Fixed: Changed to PodMonitor with correct port and path
-apiVersion: monitoring.coreos.com/v1
-kind: PodMonitor
-metadata:
-  name: derper
-  labels:
-    app: derper
-spec:
-  selector:
-    matchLabels:
-      app: derper
-  podMetricsEndpoints:
-  - port: http
-    path: /debug/varz
-    params:
-      debugkey: ["customderp"]
-    interval: 30s
-    scheme: http

@@ -4,11 +4,11 @@ metadata:
   name: derper
 spec:
   dnsNames:
-    - "*.use1.derp.rajsingh.info"
+    - "*.derp.rajsingh.info"
   issuerRef:
     group: cert-manager.io
-    kind: Issuer
-    name: issuer
+    kind: ClusterIssuer
+    name: raj-issuer
   secretName: derper-tls
   usages:
     - digital signature
