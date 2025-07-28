@@ -243,7 +243,7 @@
 			"via": ["tag:robbinsdale"],
 		},
     {
-      "src": ["group:superuser", "tag:ottawa"],
+      "src": ["tag:ottawa-infra"],
       "dst": ["ipset:usw2-subnets"],
       "ip":  ["*"],
       "via": ["tag:usw2"],
@@ -397,7 +397,7 @@
       ]
     },
     {
-      // K8s user test ACLs
+      // K8s user
       "src": "tag:k8s",
       "accept": [
         "tag:k8s-operator:443",
@@ -406,7 +406,21 @@
         "tag:egress:443",
         "tag:hello:443",
       ]
-    }
+    },
+    {
+      // US West 2 user
+      "src": "tag:usw2",
+      "accept": [
+        "192.168.169.1:443",
+      ]
+    },
+    {
+      // Ottawa infra 
+      "src": "tag:ottawa-infra",
+      "accept": [
+        "10.226.0.1:443",
+      ]
+    },
   ],
     
 	
