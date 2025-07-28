@@ -62,19 +62,10 @@ spec:
         - /bin/sh
         - -c
         - |
-          /usr/local/bin/containerboot &
           exec /usr/local/bin/derper --hostname $(TS_DERP_HOSTNAME) --bootstrap-dns-names $(TS_DERP_HOSTNAME) -certmode $(TS_DERP_CERTMODE) -certdir /root/derper/$(TS_DERP_HOSTNAME) --stun --verify-clients=$(TS_DERP_VERIFY_CLIENTS) --http-port=$(TS_DERP_HTTP_PORT) -a :$(TS_DERP_LISTEN_PORT) --stun-port=$(TS_DERP_STUN_PORT) $(TS_DERP_EXTRA_ARGS)
         env:
-        - name: TS_RUN_TAILSCALE
-          value: "true"
-        - name: TS_KUBE_SECRET
-          value: ""
-        - name: TS_USERSPACE
-          value: "false"
-        - name: TS_EXTRA_ARGS
-          value: "--reset"
-        - name: TS_STATE_DIR
-          value: /tsstate
+        - name: TS_SOCKET
+          value: /var/run/tailscale/tailscaled.sock
         - name: NODE_NAME
           valueFrom:
             fieldRef:
@@ -91,19 +82,6 @@ spec:
           value: "manual"
         - name: TS_DERP_VERIFY_CLIENTS
           value: "false"
-        - name: TS_AUTHKEY
-          valueFrom:
-            secretKeyRef:
-              name: derp-secret
-              key: TS_AUTHKEY
-        - name: TS_ACCEPT_DNS
-          value: "true"
-        - name: POD_IP
-          valueFrom:
-            fieldRef:
-              fieldPath: status.podIP
-        - name: TS_DEBUG_KEY_PATH
-          value: "/etc/debug-key/key"
         securityContext:
           privileged: true
           capabilities:
@@ -114,8 +92,8 @@ spec:
         - name: derper-tls
           mountPath: /secrets
           readOnly: true
-        - name: tailscale-state
-          mountPath: /tsstate
+        - name: tailscale-socket
+          mountPath: /var/run/tailscale
         - name: derper-config
           mountPath: /root/derper
         - name: debug-key
@@ -131,6 +109,42 @@ spec:
         - containerPort: 3478
           name: stun
           protocol: UDP
+      - name: tailscale
+        image: tailscale/tailscale:unstable
+        imagePullPolicy: Always
+        env:
+        - name: TS_USERSPACE
+          value: "false"
+        - name: TS_ACCEPT_DNS
+          value: "true"
+        - name: TS_SOCKET
+          value: /var/run/tailscale/tailscaled.sock
+        - name: TS_STATE_DIR
+          value: /var/lib/tailscale
+        - name: TS_TAILSCALED_EXTRA_ARGS
+          value: '--state=mem:'
+        - name: TS_EXTRA_ARGS
+          value: --reset
+        - name: TS_AUTHKEY
+          valueFrom:
+            secretKeyRef:
+              name: derp-secret
+              key: TS_AUTHKEY
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        securityContext:
+          privileged: true
+          capabilities:
+            add:
+            - NET_ADMIN
+            - NET_RAW
+        volumeMounts:
+        - name: tailscale-socket
+          mountPath: /var/run/tailscale
+        - name: tailscale-lib-state
+          mountPath: /var/lib/tailscale
       - name: cloudflare-ddns
         image: favonia/cloudflare-ddns:latest
         env:
@@ -158,3 +172,7 @@ spec:
       - name: debug-key
         secret:
           secretName: derp-secret
+      - name: tailscale-socket
+        emptyDir: {}
+      - name: tailscale-lib-state
+        emptyDir: {}
