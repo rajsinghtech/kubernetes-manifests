@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: network-debug
+  labels:
+    app: network-debug
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: network-debug
+  template:
+    metadata:
+      labels:
+        app: network-debug
+    spec:
+      containers:
+      - name: network-debug
+        image: nicolaka/netshoot:latest
+        command: ["/bin/sh", "-c", "while true; do sleep 3600; done"]
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "200m" 
