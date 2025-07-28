@@ -4,9 +4,5 @@ kind: Kustomization
 namespace: derp
 resources:
 - certificate.yaml
-- derper.yaml
-- issuer.yaml
-- ddns.yaml
-- derpprobe.yaml
+- daemonset.yaml
 - secret.yaml
-- debug.yaml
