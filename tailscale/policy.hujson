@@ -313,18 +313,18 @@
 	// Define capabilities and features for specific nodes
 	"nodeAttrs": [
 		// Enable GitHub app connector
-		{
-			"target": ["*"],
-			"app": {
-				"tailscale.com/app-connectors": [
-					{
-						"name": "github-app",
-						"connectors": ["tag:github-connector"],
-						"domains": ["github.com", "*.github.com", "api.github.com", "raw.githubusercontent.com"]
-					}
-				],
-			},
-		},
+		// {
+		// 	"target": ["*"],
+		// 	"app": {
+		// 		"tailscale.com/app-connectors": [
+		// 			{
+		// 				"name": "github-app",
+		// 				"connectors": ["tag:github-connector"],
+		// 				"domains": ["github.com", "*.github.com", "api.github.com", "raw.githubusercontent.com"]
+		// 			}
+		// 		],
+		// 	},
+		// },
 		
 		// Enable Tailscale Funnel for k8s nodes (public internet access)
 		{
