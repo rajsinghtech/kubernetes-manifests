@@ -152,7 +152,18 @@
 		// ------------------------------------------------------------------------
 		// BASIC NETWORK ACCESS
 		// ------------------------------------------------------------------------
-		
+		{
+      "src": ["ipset:ottawa-subnets"],
+      "dst": ["ipset:usw2-subnets"],
+      "ip": ["*"],
+      "via": ["tag:usw2"],
+    },
+		{
+      "src": ["ipset:usw2-subnets"],
+      "dst": ["ipset:ottawa-subnets"],
+      "ip": ["*"],
+      "via": ["tag:ottawa-infra"],
+    },
 		// SSH access to devices with ssh-enabled tag
 		{
 			"src": ["group:superuser"],
