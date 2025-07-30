@@ -119,8 +119,12 @@ spec:
           value: "true"
         - name: TS_SOCKET
           value: /var/run/tailscale/tailscaled.sock
-        - name: TS_STATE_DIR
-          value: /var/lib/tailscale
+        # - name: TS_STATE_DIR
+        #   value: /var/lib/tailscale
+        - name: TS_KUBE_SECRET
+          value: $(NODE_NAME)    
+        - name: TS_STATE
+          value: kube:$(NODE_NAME)  
         - name: TS_TAILSCALED_EXTRA_ARGS
           value: '--state=mem:'
         - name: TS_EXTRA_ARGS
@@ -134,6 +138,8 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: spec.nodeName
+        - name: TS_ENABLE_METRICS
+          value: "true"   
         securityContext:
           privileged: true
           capabilities:
