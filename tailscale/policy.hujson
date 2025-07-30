@@ -96,11 +96,12 @@
 		"tag:egress":       ["tag:k8s-operator", "group:superuser"],
 		"tag:test":         ["tag:k8s-operator", "group:superuser"],
 
-    // SSH access tags
+		// SSH access tags
 		"tag:ssh-enabled":  ["tag:ssh-enabled", "group:superuser"],
 		
 		// App connector tags
 		"tag:github-connector": ["tag:k8s-operator","group:superuser"],
+		"tag:ipinfo-connector": ["tag:k8s-operator","group:superuser"],
 	},
 	
 	// ============================================================================
@@ -111,13 +112,13 @@
 	"autoApprovers": {
 		"exitNode": ["tag:k8s"],
 		"routes": {
-			"0.0.0.0/0":           ["tag:k8s", "tag:github-connector"], // Default route (exit node)
-			"::/0":                ["tag:k8s", "tag:github-connector"], // IPv6 default route
+			"0.0.0.0/0":           ["tag:k8s", "tag:github-connector", "tag:ipinfo-connector"], // Default route (exit node)
+			"::/0":                ["tag:k8s", "tag:github-connector", "tag:ipinfo-connector"], // IPv6 default route
 			"192.168.50.0/24":     ["tag:robbinsdale"], // Robbinsdale LAN
 			"192.168.169.0/24":    ["tag:ottawa", "tag:ottawa-infra"], // Ottawa LAN
 			"192.168.73.0/24":     ["tag:stpetersburg"], // St Petersburg LAN
-      "10.80.0.0/16":        ["tag:ottawa-infra"], // US West 2 EKS Hybrid cluster control plane/Ottawa worker node pod cidr
-      "10.81.0.0/16":        ["tag:ottawa-infra"], // US West 2 EKS Hybrid cluster control plane/Ottawa worker node pod cidr			
+      		"10.80.0.0/16":        ["tag:ottawa-infra"], // US West 2 EKS Hybrid cluster control plane/Ottawa worker node pod cidr
+      		"10.81.0.0/16":        ["tag:ottawa-infra"], // US West 2 EKS Hybrid cluster control plane/Ottawa worker node pod cidr			
 			"10.226.0.0/16":       ["tag:usw2"], // US West 2 VPC cidr		
 		},
 		"services": {
@@ -201,7 +202,7 @@
 			"src": ["group:superuser"],
 			"dst": ["autogroup:internet"],
 			"ip":  ["*"],
-			"via": ["tag:robbinsdale", "tag:ottawa", "tag:github-connector"],
+			"via": ["tag:robbinsdale", "tag:ottawa", "tag:github-connector", "tag:ipinfo-connector"],
 		},
 		
 		// ------------------------------------------------------------------------
@@ -312,18 +313,23 @@
 	// Define capabilities and features for specific nodes
 	"nodeAttrs": [
 		// Enable GitHub app connector
-		// {
-		// 	"target": ["*"],
-		// 	"app": {
-		// 		"tailscale.com/app-connectors": [
-		// 			{
-		// 				"name": "github-app",
-		// 				"connectors": ["tag:github-connector"],
-		// 				"domains": ["github.com", "*.github.com", "api.github.com", "raw.githubusercontent.com"]
-		// 			}
-		// 		],
-		// 	},
-		// },
+		{
+			"target": ["*"],
+			"app": {
+				"tailscale.com/app-connectors": [
+					{
+						"name": "github-app",
+						"connectors": ["tag:github-connector"],
+						"domains": ["github.com", "*.github.com", "api.github.com", "raw.githubusercontent.com"]
+					},
+					{
+						"name": "ipinfo-app",
+						"connectors": ["tag:ipinfo-connector"],
+						"domains": ["ipinfo.io"]
+					}
+				],
+			},
+		},
 		
 		// Enable Tailscale Funnel for k8s nodes (public internet access)
 		{
