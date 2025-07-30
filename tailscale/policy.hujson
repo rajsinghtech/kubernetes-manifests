@@ -215,12 +215,12 @@
 			"ip":  ["*"],
 			"via": ["tag:robbinsdale"],
 		},
-    {
-      "src": ["tag:ottawa-infra", "ipset:ottawa-subnets"],
-      "dst": ["ipset:usw2-subnets"],
-      "ip":  ["*"],
-      "via": ["tag:usw2"],
-    },
+    // {
+    //   "src": ["tag:ottawa-infra", "ipset:ottawa-subnets"],
+    //   "dst": ["ipset:usw2-subnets"],
+    //   "ip":  ["*"],
+    //   "via": ["tag:usw2"],
+    // },
     {
       "src": ["group:superuser"],
       "dst": ["ipset:ottawa-subnets"],
