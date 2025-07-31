@@ -102,6 +102,9 @@
 		// App connector tags
 		"tag:github-connector": ["tag:k8s-operator","group:superuser"],
 		"tag:ipinfo-connector": ["tag:k8s-operator","group:superuser"],
+
+		// TCP-443-only tag
+		"tag:restricted-outbound": ["tag:k8s-operator", "group:superuser"],
 	},
 	
 	// ============================================================================
@@ -180,14 +183,21 @@
 			"ip":  ["*"],
 		},
 		
-		// Allow members to reach k8s nodes directly
+		// Allow members and k8s-operator to access tcp-443-only nodes
+		{
+			"src": ["group:superuser", "tag:k8s-operator", "tag:k8s"],
+			"dst": ["tag:restricted-outbound"],
+			"ip":  ["*"],
+		},
+		
+		// Allow members to reach k8s nodes and directly
 		{
 			"src": ["group:superuser", "tag:k8s", "tag:k8s-operator"],
 			"dst": ["tag:k8s", "tag:ingress", "tag:hello"],
 			"ip":  ["*"],
-      "app": {
-        "tailscale.com/cap/relay": [],
-      },
+		"app": {
+			"tailscale.com/cap/relay": [],
+		},
 		},
 		
 		// Allow members to access their own devices
@@ -197,7 +207,7 @@
 			"ip":  ["*"],
 		},
 		
-		// Allow members to use k8s nodes as exit nodes
+		// Allow members to use nodes as exit nodes and app connector
 		{
 			"src": ["group:superuser"],
 			"dst": ["autogroup:internet"],
@@ -216,36 +226,36 @@
 			"ip":  ["*"],
 			"via": ["tag:robbinsdale"],
 		},
-    {
-      "src": ["tag:ottawa-infra", "ipset:ottawa-subnets"],
-      "dst": ["ipset:usw2-subnets"],
-      "ip":  ["*"],
-      "via": ["tag:usw2"],
-    },
-    {
-      "src": ["group:superuser"],
-      "dst": ["ipset:ottawa-subnets"],
-      "ip":  ["*"],
-      "via": ["tag:ottawa"],
-    },
-    {
-      "src": ["tag:usw2", "ipset:usw2-subnets"],
-      "dst": ["ipset:ottawa-subnets"],
-      "ip":  ["*"],
-      "via": ["tag:ottawa-infra"],
-    },
-    {
-      "src": ["group:superuser"],
-      "dst": ["ipset:stpetersburg-subnets"],
-      "ip":  ["*"],
-      "via": ["tag:stpetersburg"],
-    },
-    {
-      "src": ["group:superuser"],
-      "dst": ["ipset:shared-subnets"],
-      "ip":  ["*"],
-      "via": ["tag:k8s"],
-    },
+		{
+		"src": ["tag:ottawa-infra", "ipset:ottawa-subnets"],
+		"dst": ["ipset:usw2-subnets"],
+		"ip":  ["*"],
+		"via": ["tag:usw2"],
+		},
+		{
+		"src": ["group:superuser"],
+		"dst": ["ipset:ottawa-subnets"],
+		"ip":  ["*"],
+		"via": ["tag:ottawa"],
+		},
+		{
+		"src": ["tag:usw2", "ipset:usw2-subnets"],
+		"dst": ["ipset:ottawa-subnets"],
+		"ip":  ["*"],
+		"via": ["tag:ottawa-infra"],
+		},
+		{
+		"src": ["group:superuser"],
+		"dst": ["ipset:stpetersburg-subnets"],
+		"ip":  ["*"],
+		"via": ["tag:stpetersburg"],
+		},
+		{
+		"src": ["group:superuser"],
+		"dst": ["ipset:shared-subnets"],
+		"ip":  ["*"],
+		"via": ["tag:k8s"],
+		},
 		
 		// ------------------------------------------------------------------------
 		// KUBERNETES
@@ -338,10 +348,10 @@
 		},
 		
 		// Restricted outbound configuration
-		// {
-		// 	"target": ["tag:restricted-outbound"],
-		// 	"attr":   ["only-tcp-443"],
-		// },
+		{
+			"target": ["tag:restricted-outbound"],
+			"attr":   ["only-tcp-443"],
+		},
 	],
   
   // ============================================================================
