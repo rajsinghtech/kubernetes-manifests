@@ -10,4 +10,4 @@ spec:
     repository: restic-home-frigate-config-ceph
     destinationPVC: frigate-config-ceph
     copyMethod: Direct
-    restoreAsOf: "2025-05-31T10:00:00Z"
+    restoreAsOf: "2025-04-28T10:00:00Z"
