@@ -15,7 +15,8 @@ spec:
       weekly: 4
       monthly: 2
       yearly: 1
-    copyMethod: Direct
+    copyMethod: Snapshot
+    volumeSnapshotClassName: csi-rbdplugin-snapclass
 ---
 apiVersion: v1
 kind: Secret
