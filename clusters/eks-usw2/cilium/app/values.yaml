@@ -1,9 +1,3 @@
-eni:
-  enabled: true
-ipam:
-  mode: eni
-operator:
-  replicas: 1
 routingMode: tunnel
 
 affinity:
@@ -18,13 +12,14 @@ affinity:
 
 ipam:
   mode: cluster-pool
-  operator:
+  operator: 
     clusterPoolIPv4MaskSize: 25
     clusterPoolIPv4PodCIDRList:
     - 10.80.0.0/16
 loadBalancer:
   serviceTopology: true
 operator:
+  replicas: 1
   affinity:
     nodeAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:

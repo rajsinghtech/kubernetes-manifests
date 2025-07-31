@@ -4,7 +4,8 @@ metadata:
   name: derper
 spec:
   dnsNames:
-    - "*.derp.rajsingh.info"
+    - "*.ec2.internal.derp.rajsingh.info"
+
   issuerRef:
     group: cert-manager.io
     kind: ClusterIssuer
