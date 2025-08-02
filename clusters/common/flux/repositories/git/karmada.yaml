@@ -8,4 +8,4 @@ spec:
   interval: 30m
   url: https://github.com/karmada-io/karmada
   ref:
-    tag: v1.14.1
+    tag: v1.14.2
