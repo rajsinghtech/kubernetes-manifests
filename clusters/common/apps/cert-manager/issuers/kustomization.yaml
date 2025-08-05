@@ -3,4 +3,5 @@ kind: Kustomization
 resources:
   - internal-issuer.yaml
   - raj-clusterissuer.yaml
-  - secret.yaml 
+  - killinit-clusterissuer.yaml
+  - secret.yaml
