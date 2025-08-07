@@ -15,7 +15,7 @@ spec:
       hostname: jellyfin-robbinsdale
       containers:
         - name: jellyfin
-          image: jellyfin/jellyfin:unstable
+          image: jellyfin/jellyfin:preview
           ports:
             - name: http
               containerPort: 8096
