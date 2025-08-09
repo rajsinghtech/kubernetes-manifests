@@ -1,0 +1,45 @@
+[tools]
+task = "3"
+talhelper = "latest"
+talosctl = "latest"
+sops = "latest"
+age = "latest"
+kubectl = "latest"
+helmfile = "latest"
+
+[env]
+KUBECONFIG = "{{config_root}}/kubeconfig"
+TALOSCONFIG = "{{config_root}}/bootstrap/talos/clusterconfig/talosconfig"
+# Using PGP instead of Age - key should be in GPG keyring
+
+[tasks.bootstrap]
+run = "task -d bootstrap/talos bootstrap"
+description = "Bootstrap the Talos cluster"
+
+[tasks.genconfig]
+run = "task -d bootstrap/talos genconfig"
+description = "Generate Talos configuration"
+
+[tasks.apply]
+run = "task -d bootstrap/talos apply"
+description = "Apply Talos configuration to nodes"
+
+[tasks.kubeconfig]
+run = "task -d bootstrap/talos fetch-kubeconfig"
+description = "Fetch kubeconfig from cluster"
+
+[tasks.health]
+run = "task -d bootstrap/talos health"
+description = "Check cluster health"
+
+[tasks.dashboard]
+run = "task -d bootstrap/talos dashboard"
+description = "Open Talos dashboard"
+
+[tasks.test-thunderbolt]
+run = "task -d bootstrap/talos test-thunderbolt"
+description = "Test Thunderbolt connectivity"
+
+[tasks.reset]
+run = "task -d bootstrap/talos reset"
+description = "Reset cluster (DESTRUCTIVE)"

@@ -1,0 +1,8 @@
+machine:
+  kubelet:
+    nodeIP:
+      validSubnets:
+        - 192.168.169.0/24
+    extraArgs:
+      rotate-server-certificates: true
+      feature-gates: GracefulNodeShutdown=true,NewVolumeManagerReconstruction=false
