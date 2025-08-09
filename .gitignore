@@ -18,3 +18,17 @@ next
 *.private.asc
 .sops.private.asc
 .kuberlr/darwin-arm64/kubectl1.33.3
+
+# Talos generated files (contain unencrypted secrets)
+**/bootstrap/talos/clusterconfig/
+**/bootstrap/talos/talsecret.yaml
+**/bootstrap/talos/hardware-info/
+
+# Decrypted files
+*.dec
+*.decrypted
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
