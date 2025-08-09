@@ -18,7 +18,7 @@ spec:
       hostNetwork: true
       containers:
       - name: homeassistant
-        image: homeassistant/home-assistant:2025.7
+        image: homeassistant/home-assistant:2025.8
         lifecycle:
           postStart:
             exec:
