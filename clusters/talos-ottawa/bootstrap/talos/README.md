@@ -23,16 +23,14 @@ This setup uses `mise` and `talhelper` to manage a 3-node Talos Kubernetes clust
 
 ### Network Topology
 
-```bash
-rei (169.254.255.101)
-  Port 1 -------- Port 2 kaji (169.254.255.103)
-  Port 2 -------- Port 2 asuka (169.254.255.102)
-                     |
-                   Port 1
-                     |
-                   Port 1
-                     |
-                   kaji
+```
+        rei (169.254.255.101)
+        Port 1          Port 2
+          |               |
+          |               |
+        Port 2          Port 2
+    kaji (169.254.255.103)  asuka (169.254.255.102)
+        Port 1----------Port 1
 
 Cable connections:
 - rei Port 1 <--> kaji Port 2
@@ -62,7 +60,7 @@ Cable connections:
 
 ```bash
 # 1. Navigate to cluster directory
-cd /Users/kartik/workspace/kubernetes-manifests/clusters/talos-ottawa
+cd clusters/talos-ottawa
 
 # 2. Install required tools
 brew install mise gpg
@@ -86,7 +84,6 @@ echo "FAC8E7C3A2BC7DEE58A01C5928E1AB8AF0CF07A5:6:" | gpg --import-ownertrust
 export GPG_TTY=$(tty)
 
 # Test that you can decrypt existing secrets
-cd /Users/kartik/workspace/kubernetes-manifests/clusters/talos-ottawa
 sops -d --ignore-mac flux/vars/cluster-secrets.sops.yaml > /dev/null && echo "✅ PGP key working" || echo "❌ Cannot decrypt - check PGP key"
 
 # 4. Generate and encrypt Talos cluster secrets
@@ -163,8 +160,8 @@ done
 **Critical: Do this for ALL nodes before generating configs**
 
 ```bash
-# WORKING DIRECTORY: /Users/kartik/workspace/kubernetes-manifests/clusters/talos-ottawa
-cd /Users/kartik/workspace/kubernetes-manifests/clusters/talos-ottawa
+# WORKING DIRECTORY: clusters/talos-ottawa
+cd clusters/talos-ottawa
 
 # Create directory for hardware info
 mkdir -p hardware-info
@@ -291,7 +288,7 @@ mise run bootstrap
 # 9. Get kubeconfig
 echo "📥 Fetching kubeconfig..."
 mise run kubeconfig
-export KUBECONFIG=/Users/kartik/workspace/kubernetes-manifests/clusters/talos-ottawa/kubeconfig
+export KUBECONFIG=$(pwd)/kubeconfig
 
 # 10. Verify cluster is up
 echo "✅ Checking cluster status..."
@@ -447,19 +444,21 @@ flux get sources git
 flux get ks -A
 ```
 
-### Performance Testing (Optional)
+### Performance Testing
 
 ```bash
-# Test Thunderbolt bandwidth between nodes
-kubectl run iperf-server --image=networkstatic/iperf3 \
-  --overrides='{"spec":{"nodeSelector":{"kubernetes.io/hostname":"rei"},"hostNetwork":true}}' \
-  -- -s -B 169.254.255.101
+# Run comprehensive Thunderbolt performance tests
+./scripts/thunderbolt-test.sh
 
-kubectl run iperf-client --image=networkstatic/iperf3 --rm -it \
-  --overrides='{"spec":{"nodeSelector":{"kubernetes.io/hostname":"asuka"},"hostNetwork":true}}' \
-  -- -c 169.254.255.101 -t 10
+# This script will:
+# - Test ping connectivity between all node pairs (6 tests)
+# - Run iperf3 speed tests for all connections (6 tests)
+# - Output results with color coding to console
+# - Save detailed results to a timestamped file
 
-# Expected: 20-40 Gbps depending on Thunderbolt generation
+# Expected speeds:
+# - Most connections: ~26-27 Gbps
+# - rei ↔ kaji connection: ~18-19 Gbps (known hardware limitation)
 ```
 
 ## Common Operations
@@ -596,8 +595,8 @@ clusters/talos-ottawa/
 ### Environment Variables
 
 ```bash
-export TALOSCONFIG=/Users/kartik/workspace/kubernetes-manifests/clusters/talos-ottawa/bootstrap/talos/clusterconfig/talosconfig
-export KUBECONFIG=/Users/kartik/workspace/kubernetes-manifests/clusters/talos-ottawa/kubeconfig
+export TALOSCONFIG=$(pwd)/bootstrap/talos/clusterconfig/talosconfig
+export KUBECONFIG=$(pwd)/kubeconfig
 ```
 
 ### Mise Commands
