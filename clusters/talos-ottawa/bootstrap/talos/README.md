@@ -624,17 +624,6 @@ Before starting fresh install, backup:
 - Any custom app configurations
 - Any important data from PVCs
 
-### Expected Timeline
-
-- **10 min** - Workstation prep
-- **15 min** - USB creation
-- **20 min** - Install Talos on 3 nodes
-- **10 min** - Gather hardware info
-- **5 min** - Update configs
-- **15 min** - Deploy and bootstrap
-- **10 min** - Verify and install apps
-- **Total: ~85 minutes**
-
 ## Security Notes
 
 ### Using PGP Instead of Age
