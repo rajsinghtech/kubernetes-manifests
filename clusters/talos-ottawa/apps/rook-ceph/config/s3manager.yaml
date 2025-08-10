@@ -1,0 +1,93 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: s3manager
+  labels:
+    app: s3manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: s3manager
+  template:
+    metadata:
+      labels:
+        app: s3manager
+    spec:
+      containers:
+        - name: s3manager
+          image: cloudlena/s3manager:latest 
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ENDPOINT
+              value: "rook-ceph-rgw-object-store.rook-ceph.svc.cluster.local:80"
+            - name: USE_SSL
+              value: "false"
+            - name: ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: ceph-bucket-admin-credentials
+                  key: AWS_ACCESS_KEY_ID
+            - name: SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ceph-bucket-admin-credentials
+                  key: AWS_SECRET_ACCESS_KEY
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: s3manager
+  namespace: rook-ceph 
+  labels:
+    app: s3manager
+spec:
+  selector:
+    app: s3manager
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: bktui
+  namespace: rook-ceph
+  annotations:
+    item.homer.rajsingh.info/name: "S3 Manager"
+    item.homer.rajsingh.info/subtitle: "S3 Storage Manager"
+    item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/svg/s3.svg"
+    item.homer.rajsingh.info/tag: "infrastructure"
+    item.homer.rajsingh.info/keywords: "s3, storage, manager"
+
+    service.homer.rajsingh.info/name: "Infrastructure"
+    service.homer.rajsingh.info/icon: "fas fa-server"
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: private
+      namespace: home
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: ts
+      namespace: home
+  hostnames:
+    - "s3ui.rajsingh.info"
+    - "s3ui.lukehouge.com"
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: s3manager
+          port: 8080
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
