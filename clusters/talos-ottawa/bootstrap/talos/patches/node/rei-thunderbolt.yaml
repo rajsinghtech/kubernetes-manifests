@@ -1,0 +1,26 @@
+# Thunderbolt network configuration for rei (Node 1) 
+# Based on dmesg: 0-1 connects to asuka, 1-1 connects to kaji
+machine:
+  network:
+    interfaces:
+      # Thunderbolt to asuka (busPath 0-1.0)
+      - deviceSelector:
+          busPath: "0-1.0"
+        dhcp: false
+        mtu: 65520
+        addresses:
+          - "169.254.255.101/32"
+        routes:
+          - network: "169.254.255.102/32"
+            metric: 2048
+      
+      # Thunderbolt to kaji (busPath 1-1.0)
+      - deviceSelector:
+          busPath: "1-1.0"
+        dhcp: false
+        mtu: 65520
+        addresses:
+          - "169.254.255.101/32"
+        routes:
+          - network: "169.254.255.103/32"
+            metric: 2048

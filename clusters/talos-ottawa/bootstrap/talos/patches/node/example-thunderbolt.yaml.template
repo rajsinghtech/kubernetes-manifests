@@ -1,0 +1,44 @@
+# Example Thunderbolt patch for a node
+# Copy this file to NODE-thunderbolt.yaml and update with discovered bus paths
+#
+# IMPORTANT: Bus paths must be discovered AFTER cluster creation using:
+#   mise run discover-thunderbolt
+# OR
+#   mise run deploy-thunderbolt-discovery
+#
+# Thunderbolt bus paths look like: "0-1.0", "0-3.0"
+# PCIe bus paths look like: "0000:02:00.0" (NOT Thunderbolt)
+
+machine:
+  network:
+    interfaces:
+      # Thunderbolt connection to first peer node
+      - deviceSelector:
+          busPath: "REPLACE_WITH_ACTUAL_BUS_PATH"  # e.g., "0-1.0"
+        dhcp: false
+        mtu: 65520
+        addresses:
+          - "169.254.255.XXX/32"  # Use node's TB IP (101/102/103)
+        routes:
+          - network: "169.254.255.YYY/32"  # Peer node's TB IP
+            metric: 2048
+
+      # Thunderbolt connection to second peer node
+      - deviceSelector:
+          busPath: "REPLACE_WITH_ACTUAL_BUS_PATH"  # e.g., "0-3.0"
+        dhcp: false
+        mtu: 65520
+        addresses:
+          - "169.254.255.XXX/32"  # Same node TB IP
+        routes:
+          - network: "169.254.255.ZZZ/32"  # Other peer node's TB IP
+            metric: 2048
+
+# IP Assignment:
+# rei:   169.254.255.101
+# asuka: 169.254.255.102
+# kaji:  169.254.255.103
+
+# Example for rei:
+# - First interface (to asuka): 169.254.255.101/32, route to 169.254.255.102/32
+# - Second interface (to kaji): 169.254.255.101/32, route to 169.254.255.103/32

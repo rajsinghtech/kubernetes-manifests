@@ -1,0 +1,5 @@
+# Load thunderbolt_net module for Thunderbolt networking
+machine:
+  kernel:
+    modules:
+      - name: thunderbolt_net

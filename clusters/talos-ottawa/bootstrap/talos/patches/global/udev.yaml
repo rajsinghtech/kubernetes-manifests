@@ -1,0 +1,7 @@
+machine:
+  udev:
+    rules:
+      # Thunderbolt - automatically authorize devices when added
+      - ACTION=="add", SUBSYSTEM=="thunderbolt", ATTR{authorized}=="0", ATTR{authorized}="1"
+      # Intel GPU - set permissions for render devices
+      - SUBSYSTEM=="drm", KERNEL=="renderD*", GROUP="44", MODE="0660"

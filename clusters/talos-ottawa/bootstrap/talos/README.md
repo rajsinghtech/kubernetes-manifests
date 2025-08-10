@@ -24,27 +24,35 @@ This setup uses `mise` and `talhelper` to manage a 3-node Talos Kubernetes clust
 ### Network Topology
 
 ```bash
-ms01-1 (169.254.255.101) <--TB--> ms01-2 (169.254.255.102)
-   |                                    |
-   TB                                   TB
-   |                                    |
-   v                                    v
-ms01-3 (169.254.255.103) <-----TB-------+
+rei (169.254.255.101)
+  Port 1 -------- Port 2 kaji (169.254.255.103)
+  Port 2 -------- Port 2 asuka (169.254.255.102)
+                     |
+                   Port 1
+                     |
+                   Port 1
+                     |
+                   kaji
+
+Cable connections:
+- rei Port 1 <--> kaji Port 2
+- rei Port 2 <--> asuka Port 2  
+- asuka Port 1 <--> kaji Port 1
 ```
 
 ### Expected Network Configuration
 
-- **ms01-1**:
-  - Primary: 192.168.169.113 (Static DHCP on enp89s0)
-  - Secondary: 192.168.249.113/24 (Static on enp2s0f0np0)
+- **rei**:
+  - Primary: 192.168.169.113 (Static DHCP on eth1)
+  - Secondary: 192.168.249.113/24 (Static on eth2)
   - Thunderbolt: 169.254.255.101/32
-- **ms01-2**:
-  - Primary: 192.168.169.114 (Static DHCP on enp89s0)
-  - Secondary: 192.168.249.114/24 (Static on enp2s0f0np0)
+- **asuka**:
+  - Primary: 192.168.169.114 (Static DHCP on eth1)
+  - Secondary: 192.168.249.114/24 (Static on eth2)
   - Thunderbolt: 169.254.255.102/32
-- **ms01-3**:
-  - Primary: 192.168.169.115 (Static DHCP on enp89s0)
-  - Secondary: 192.168.249.115/24 (Static on enp2s0f0np0)
+- **kaji**:
+  - Primary: 192.168.169.115 (Static DHCP on eth1)
+  - Secondary: 192.168.249.115/24 (Static on eth2)
   - Thunderbolt: 169.254.255.103/32
 - **VIP**: 192.168.169.25 (shared between control planes)
 
@@ -57,8 +65,8 @@ ms01-3 (169.254.255.103) <-----TB-------+
 cd /Users/kartik/workspace/kubernetes-manifests/clusters/talos-ottawa
 
 # 2. Install required tools
-brew install mise
-mise install  # Installs: talhelper, talosctl, sops, age, kubectl, task
+brew install mise gpg
+mise install  # Installs: talhelper, talosctl, sops, kubectl, task
 
 # 3. Setup SOPS with existing PGP key
 # Copy existing SOPS configuration (we're using PGP, not Age)
@@ -77,17 +85,19 @@ echo "FAC8E7C3A2BC7DEE58A01C5928E1AB8AF0CF07A5:6:" | gpg --import-ownertrust
 # Set GPG_TTY for terminal PIN entry (if needed)
 export GPG_TTY=$(tty)
 
-# Test that you can decrypt existing secrets (this is the real test)
+# Test that you can decrypt existing secrets
 cd /Users/kartik/workspace/kubernetes-manifests/clusters/talos-ottawa
-sops -d flux/vars/cluster-secrets.sops.yaml > /dev/null && echo "✅ PGP key working" || echo "❌ Cannot decrypt - check PGP key"
+sops -d --ignore-mac flux/vars/cluster-secrets.sops.yaml > /dev/null && echo "✅ PGP key working" || echo "❌ Cannot decrypt - check PGP key"
 
 # 4. Generate and encrypt Talos cluster secrets
-# This is handled automatically by mise!
+# IMPORTANT: This MUST be run for fresh cluster installs!
+# Even though you're using the same PGP key, you need NEW Talos secrets 
+# (cluster CA, etcd certs, node tokens) for the fresh installation.
 mise run init
 
 # This command will:
-# - Generate new Talos secrets
-# - Automatically encrypt them with your PGP key (FAC8E7C3A2BC7DEE58A01C5928E1AB8AF0CF07A5)
+# - Generate NEW Talos secrets (required for fresh install)
+# - Automatically encrypt them with your EXISTING PGP key (FAC8E7C3A2BC7DEE58A01C5928E1AB8AF0CF07A5)
 # - Save to bootstrap/talos/talsecret.sops.yaml
 # - Remove unencrypted temporary files
 
@@ -100,8 +110,8 @@ sops -d bootstrap/talos/talsecret.sops.yaml | head -5  # Should show decrypted c
 ```bash
 # 1. Download Talos ISO with required extensions
 # This schematic includes: thunderbolt, intel-ucode, amd-ucode, util-linux-tools, zfs
-SCHEMATIC_ID="ce4c980550dd2ab1b17bbf2b08801c7eb59418eafe8f279833297925d67c7515"
-TALOS_VERSION="v1.9.3"  # Or check for newer version
+SCHEMATIC_ID="d07283f5e88e9fedac14ee45b711b7d4f6e036363f1c31bb61b5194a0ff0519f"
+TALOS_VERSION="v1.10.6"
 curl -O "https://factory.talos.dev/image/${SCHEMATIC_ID}/${TALOS_VERSION}/metal-amd64.iso"
 
 # 2. Create bootable USB (macOS)
@@ -119,17 +129,24 @@ diskutil eject /dev/diskX
    - [ ] Connect Thunderbolt cables between all nodes (full mesh)
    - [ ] Connect network cables
    - [ ] Ensure static DHCP mappings are configured for:
-     - ms01-1: 192.168.169.113
-     - ms01-2: 192.168.169.114
-     - ms01-3: 192.168.169.115
+     - rei: 192.168.169.113
+     - asuka: 192.168.169.114
+     - kaji: 192.168.169.115
    - [ ] Have IPMI/console access ready
 
-2. **Install Talos on all 3 nodes:**
-   - Boot each node from USB
-   - Talos installer will auto-detect disks
-   - Install to disk (typically auto-selects appropriate disk)
-   - Remove USB and let node reboot
-   - Node will boot into **maintenance mode**
+2. **Boot all 3 nodes from USB:**
+   - Boot each node from the Talos USB
+   - Nodes will run entirely in RAM (no disk changes yet)
+   - Note the IP addresses shown on console
+   - Verify you can reach each node:
+     ```bash
+     # Check if node is accessible
+     talosctl -n <node-ip> -e <node-ip> version --insecure
+     ```
+   - If DHCP reservation was added after boot, force renewal:
+     ```bash
+     talosctl -n <old-ip> --insecure reboot  # Simplest way
+     ```
    - Verify each node gets its expected IP via static DHCP
 
 3. **Verify all nodes are in maintenance mode:**
@@ -137,7 +154,7 @@ diskutil eject /dev/diskX
 # Should see all 3 nodes responding
 for ip in 192.168.169.113 192.168.169.114 192.168.169.115; do
   echo -n "Node $ip: "
-  talosctl -n $ip --insecure version | grep Tag || echo "❌ Not responding"
+  talosctl -n $ip -e $ip version --insecure | grep Tag || echo "❌ Not responding"
 done
 ```
 
@@ -146,48 +163,66 @@ done
 **Critical: Do this for ALL nodes before generating configs**
 
 ```bash
+# WORKING DIRECTORY: /Users/kartik/workspace/kubernetes-manifests/clusters/talos-ottawa
+cd /Users/kartik/workspace/kubernetes-manifests/clusters/talos-ottawa
+
 # Create directory for hardware info
 mkdir -p hardware-info
-cd hardware-info
 
 # Gather info from all nodes
 echo "📡 Gathering hardware info from all nodes..."
 
-# ms01-1
-echo "Getting info from ms01-1..."
-talosctl -n 192.168.169.113 --insecure get disks -o yaml > ms01-1-disks.yaml
-talosctl -n 192.168.169.113 --insecure get links -o yaml > ms01-1-links.yaml
+# rei
+echo "Getting info from rei..."
+talosctl -n 192.168.169.113 -e 192.168.169.113 get disks --insecure -o yaml > hardware-info/rei-disks.yaml
+talosctl -n 192.168.169.113 -e 192.168.169.113 get links --insecure -o yaml > hardware-info/rei-links.yaml
 
-# ms01-2
-echo "Getting info from ms01-2..."
-talosctl -n 192.168.169.114 --insecure get disks -o yaml > ms01-2-disks.yaml
-talosctl -n 192.168.169.114 --insecure get links -o yaml > ms01-2-links.yaml
+# asuka
+echo "Getting info from asuka..."
+talosctl -n 192.168.169.114 -e 192.168.169.114 get disks --insecure -o yaml > hardware-info/asuka-disks.yaml
+talosctl -n 192.168.169.114 -e 192.168.169.114 get links --insecure -o yaml > hardware-info/asuka-links.yaml
 
-# ms01-3
-echo "Getting info from ms01-3..."
-talosctl -n 192.168.169.115 --insecure get disks -o yaml > ms01-3-disks.yaml
-talosctl -n 192.168.169.115 --insecure get links -o yaml > ms01-3-links.yaml
+# kaji
+echo "Getting info from kaji..."
+talosctl -n 192.168.169.115 -e 192.168.169.115 get disks --insecure -o yaml > hardware-info/kaji-disks.yaml
+talosctl -n 192.168.169.115 -e 192.168.169.115 get links --insecure -o yaml > hardware-info/kaji-links.yaml
 
 # Extract critical information
 echo ""
-echo "=== 🔍 NVMe Serial Numbers (for /dev/nvme1n1) ==="
-for node in ms01-1 ms01-2 ms01-3; do
+echo "=== 🔍 Disk Information ==="
+echo "Looking for SanDisk 1TB NVMe drives to use as system disks..."
+echo ""
+for node in rei asuka kaji; do
+  echo "$node disks:"
+  # Show all NVMe drives with model, size, and serial
+  for disk in /dev/nvme0n1 /dev/nvme1n1 /dev/nvme2n1; do
+    if grep -q "dev_path: $disk" hardware-info/${node}-disks.yaml 2>/dev/null; then
+      echo "  $disk:"
+      grep -A15 "dev_path: $disk" hardware-info/${node}-disks.yaml | grep -E "model:|size:|serial:" | sed 's/^/    /'
+    fi
+  done
+  echo ""
+done
+
+echo "=== 📝 Serial Numbers for talconfig.yaml ==="
+echo "Copy these serials for your SanDisk 1TB drives:"
+for node in rei asuka kaji; do
   echo -n "$node: "
-  grep -A5 "device_name: /dev/nvme1n1" ${node}-disks.yaml | grep "serial:" | awk '{print $2}'
+  # Find the SanDisk drive serial (adjust grep pattern if needed)
+  grep -B5 -A10 "model:.*SanDisk" hardware-info/${node}-disks.yaml 2>/dev/null | grep "serial:" | head -1 | awk '{print $2}' || echo "No SanDisk found - check manually"
 done
 
 echo ""
 echo "=== 🔍 Network Interfaces ==="
-for node in ms01-1 ms01-2 ms01-3; do
+for node in rei asuka kaji; do
   echo "$node:"
-  grep "linkName:" ${node}-links.yaml | grep -v "lo" | awk '{print "  - " $2}'
+  grep "linkName:" hardware-info/${node}-links.yaml 2>/dev/null | grep -v "lo" | awk '{print "  - " $2}'
 done
 
 echo ""
-echo "=== 🔍 Thunderbolt Bus Paths (should see thunderbolt interfaces) ==="
-grep -h "busPath:" *-links.yaml | sort -u
-
-cd ..
+echo "=== 🔍 Thunderbolt Bus Paths (for future reference) ==="
+echo "These will be needed AFTER cluster creation:"
+grep -h "busPath:" hardware-info/*-links.yaml 2>/dev/null | grep -v "0000:" | sort -u || echo "No Thunderbolt interfaces detected yet"
 ```
 
 ### Phase 5: Update Configuration with Actual Hardware Info
@@ -199,11 +234,12 @@ vim bootstrap/talos/talconfig.yaml
 # For each node, replace REPLACE_WITH_ACTUAL_SERIAL with the actual serial
 # Example:
 # nodes:
-#   - hostname: "ms01-1"
+#   - hostname: "rei"
 #     installDiskSelector:
 #       serial: "S4J4NF0NA12345X"  # <-- Put actual serial here
 
-# 2. Verify network interface names match (should be enp89s0 and enp2s0f0np0)
+# 2. Verify network interface names match (should be eth1 and eth2)
+# Check with: talosctl -n <node-ip> -e <node-ip> get links --insecure
 # If different, update the interface names in talconfig.yaml
 
 # 3. Save and exit
@@ -221,30 +257,29 @@ mise run genconfig
 
 # 3. Verify generated configs exist
 ls -la bootstrap/talos/clusterconfig/
-# Should see: ms01-1.yaml, ms01-2.yaml, ms01-3.yaml, talosconfig
+# Should see: k8s.ottawa.local-rei.yaml, k8s.ottawa.local-asuka.yaml, k8s.ottawa.local-kaji.yaml, talosconfig
 
 # 4. Optional: Verify disk configuration in generated files
-for node in ms01-1 ms01-2 ms01-3; do
-  echo "Checking $node disk config:"
-  grep -A3 "install:" bootstrap/talos/clusterconfig/${node}.yaml | grep -E "disk:|diskSelector:"
-done
+chmod +x bootstrap/talos/verify-disks.sh
+./bootstrap/talos/verify-disks.sh
 
-# 5. Apply configurations to all nodes (they're in maintenance mode)
+# 5. Apply configurations to all nodes
 echo "📤 Applying configurations to all nodes..."
 mise run apply
 
 # This will:
-# - Apply ms01-1.yaml to 192.168.169.113
-# - Apply ms01-2.yaml to 192.168.169.114  
-# - Apply ms01-3.yaml to 192.168.169.115
-# - Nodes will reboot with their configurations
+# - Apply k8s.ottawa.local-rei.yaml to 192.168.169.113
+# - Apply k8s.ottawa.local-asuka.yaml to 192.168.169.114  
+# - Apply k8s.ottawa.local-kaji.yaml to 192.168.169.115
+# - INSTALLS TALOS TO DISK (as specified in config)
+# - Nodes will reboot from disk with their configurations
 
 # 6. Wait for nodes to reboot and settle
 echo "⏳ Waiting for nodes to reboot with new configuration..."
 sleep 90
 
 # 7. Verify nodes are back online with configs
-for node in ms01-1 ms01-2 ms01-3; do
+for node in rei asuka kaji; do
   echo -n "Checking $node: "
   talosctl -n $node -e $node version --short || echo "Still booting..."
 done
@@ -263,27 +298,63 @@ echo "✅ Checking cluster status..."
 kubectl get nodes
 ```
 
-### Phase 7: Verify Thunderbolt & Install Core Components
+### Phase 7: Discover and Configure Thunderbolt Interfaces
+
+**IMPORTANT**: Thunderbolt interfaces can only be properly discovered AFTER the cluster is created. The gist clearly states this requirement.
 
 ```bash
-# 1. Verify Thunderbolt connectivity
-echo "🔌 Testing Thunderbolt networking..."
+# 1. First verify cluster is running
+kubectl get nodes
+# All nodes should show Ready
+
+# 2. Install kubectl-node-shell if not already installed
+kubectl krew install node-shell
+
+# 3. Discover Thunderbolt interfaces using one of these methods:
+
+# Method A: Using kubectl-node-shell (recommended)
+mise run discover-thunderbolt
+
+# Method B: Using privileged DaemonSet
+mise run deploy-thunderbolt-discovery
+# View results, then clean up:
+mise run cleanup-thunderbolt-discovery
+
+# 4. Note the bus paths for each Thunderbolt interface
+# They will look like "0-1.0", "0-3.0" etc (NOT like "0000:xx:xx.x" which are PCIe)
+
+# 5. Create node-specific Thunderbolt patches
+mkdir -p bootstrap/talos/patches/node
+
+# Create patches/node/rei-thunderbolt.yaml with discovered bus paths
+# Create patches/node/asuka-thunderbolt.yaml with discovered bus paths  
+# Create patches/node/kaji-thunderbolt.yaml with discovered bus paths
+
+# 6. Update talconfig.yaml to include node-specific patches
+# Add under each node section:
+# patches:
+#   - "@./patches/node/rei-thunderbolt.yaml"
+
+# 7. Regenerate and apply configuration
+mise run genconfig
+mise run apply
+
+# 8. After nodes reboot, verify Thunderbolt is working
 mise run test-thunderbolt
 
-# Check each node has Thunderbolt interfaces
-for node in ms01-1 ms01-2 ms01-3; do
-  echo "Thunderbolt on $node:"
-  talosctl -n $node get links | grep -E "thunderbolt|169.254" || echo "  No Thunderbolt found!"
-done
+# Test connectivity between nodes
+echo "Testing rei -> asuka connectivity:"
+talosctl -n rei -e rei shell -- ping -c 3 169.254.255.102
 
-# 2. Test Thunderbolt connectivity between nodes
-echo "Testing ms01-1 -> ms01-2 connectivity:"
-talosctl -n ms01-1 -e ms01-1 shell -- ping -c 3 169.254.255.102
+echo "Testing rei -> kaji connectivity:"
+talosctl -n rei -e rei shell -- ping -c 3 169.254.255.103
 
-echo "Testing ms01-1 -> ms01-3 connectivity:"
-talosctl -n ms01-1 -e ms01-1 shell -- ping -c 3 169.254.255.103
+```
 
-# 3. Install Flux GitOps and CNI
+### Phase 8: Install Core Components
+
+```bash  
+# 1. Install Flux GitOps and CNI
 echo "🔧 Installing Flux GitOps..."
 
 # Create flux-system namespace
@@ -299,17 +370,17 @@ kubectl apply -f flux/config/cluster.yaml
 echo "⏳ Waiting for Flux controllers..."
 kubectl -n flux-system wait deployment --all --for=condition=Available --timeout=300s
 
-# 4. Verify Flux is syncing
+# 2. Verify Flux is syncing
 echo "🔄 Checking Flux sync status..."
 kubectl get kustomizations -n flux-system
 kubectl get gitrepositories -n flux-system
 kubectl get helmreleases -A
 
-# 5. Wait for nodes to be fully ready
+# 3. Wait for nodes to be fully ready
 echo "⏳ Waiting for nodes to be Ready..."
 kubectl wait --for=condition=Ready nodes --all --timeout=600s
 
-# 6. Final cluster health check
+# 4. Final cluster health check
 echo "🏥 Final health check..."
 mise run health
 kubectl get nodes -o wide
@@ -330,7 +401,7 @@ kubectl get pods -n kube-system
 kubectl get pods -n flux-system
 
 # 3. Thunderbolt network should be functional
-for node in ms01-1 ms01-2 ms01-3; do
+for node in rei asuka kaji; do
   echo "$node Thunderbolt IPs:"
   talosctl -n $node get addresses | grep 169.254
 done
@@ -345,11 +416,11 @@ flux get ks -A
 ```bash
 # Test Thunderbolt bandwidth between nodes
 kubectl run iperf-server --image=networkstatic/iperf3 \
-  --overrides='{"spec":{"nodeSelector":{"kubernetes.io/hostname":"ms01-1"},"hostNetwork":true}}' \
+  --overrides='{"spec":{"nodeSelector":{"kubernetes.io/hostname":"rei"},"hostNetwork":true}}' \
   -- -s -B 169.254.255.101
 
 kubectl run iperf-client --image=networkstatic/iperf3 --rm -it \
-  --overrides='{"spec":{"nodeSelector":{"kubernetes.io/hostname":"ms01-2"},"hostNetwork":true}}' \
+  --overrides='{"spec":{"nodeSelector":{"kubernetes.io/hostname":"asuka"},"hostNetwork":true}}' \
   -- -c 169.254.255.101 -t 10
 
 # Expected: 20-40 Gbps depending on Thunderbolt generation
@@ -367,7 +438,7 @@ mise run health
 mise run dashboard
 
 # View logs from a node
-talosctl -n ms01-1 logs kubelet
+talosctl -n rei logs kubelet
 
 # Update configuration (edit talconfig.yaml first)
 mise run genconfig
@@ -381,10 +452,10 @@ mise run test-thunderbolt
 
 ```bash
 # Upgrade Talos on a node
-task -d bootstrap/talos upgrade node=ms01-1 image=ghcr.io/siderolabs/installer:v1.9.4
+task -d bootstrap/talos upgrade node=rei image=ghcr.io/siderolabs/installer:v1.10.7
 
 # Upgrade Kubernetes
-task -d bootstrap/talos upgrade-k8s controller=ms01-1 to=v1.31.1
+task -d bootstrap/talos upgrade-k8s controller=rei to=v1.33.1
 ```
 
 ## Troubleshooting
@@ -394,7 +465,7 @@ task -d bootstrap/talos upgrade-k8s controller=ms01-1 to=v1.31.1
 ```bash
 # Check console/IPMI for errors
 # Try applying with insecure flag directly
-talosctl apply-config --insecure -n 192.168.169.113 --file bootstrap/talos/clusterconfig/ms01-1.yaml
+talosctl -n 192.168.169.113 -e 192.168.169.113 apply-config --insecure --file bootstrap/talos/clusterconfig/k8s.ottawa.local-rei.yaml
 ```
 
 ### Wrong Disk Selected
@@ -402,7 +473,15 @@ talosctl apply-config --insecure -n 192.168.169.113 --file bootstrap/talos/clust
 ```bash
 # Verify disk serial in config matches actual
 grep serial bootstrap/talos/talconfig.yaml
-talosctl -n NODE_IP --insecure get disks -o yaml | grep -B2 -A3 nvme1n1
+talosctl -n NODE_IP -e NODE_IP get disks --insecure -o yaml | grep -B2 -A3 nvme1n1
+```
+
+### Wrong Config File Applied
+
+```bash
+# Config files are named: k8s.ottawa.local-NODENAME.yaml
+# Example for rei:
+talosctl -n 192.168.169.113 -e 192.168.169.113 apply-config --insecure --file bootstrap/talos/clusterconfig/k8s.ottawa.local-rei.yaml
 ```
 
 ### Thunderbolt Not Working
@@ -410,14 +489,14 @@ talosctl -n NODE_IP --insecure get disks -o yaml | grep -B2 -A3 nvme1n1
 ```bash
 # 1. Verify cables are connected
 # 2. Check kernel module loaded
-talosctl -n ms01-1 get kernelmodulespecs | grep thunder
+talosctl -n rei get kernelmodulespecs | grep thunder
 
 # 3. Check for Thunderbolt devices
-talosctl -n ms01-1 shell
+talosctl -n rei shell
 ls /sys/bus/thunderbolt/devices/
 
 # 4. Check dmesg for errors
-talosctl -n ms01-1 dmesg | grep -i thunder
+talosctl -n rei dmesg | grep -i thunder
 ```
 
 ### PGP/SOPS Issues - Finding Your Key

@@ -22,7 +22,18 @@ next
 # Talos generated files (contain unencrypted secrets)
 **/bootstrap/talos/clusterconfig/
 **/bootstrap/talos/talsecret.yaml
-**/bootstrap/talos/hardware-info/
+
+# Hardware discovery info
+**/hardware-info/
+
+# Kubeconfig files (contain cluster access credentials)
+**/kubeconfig
+
+# Test results (may contain sensitive network info)
+**/thunderbolt-results*.txt
+
+# Claude documentation
+CLAUDE.md
 
 # Decrypted files
 *.dec
