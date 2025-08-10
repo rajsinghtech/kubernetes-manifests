@@ -298,63 +298,99 @@ echo "✅ Checking cluster status..."
 kubectl get nodes
 ```
 
-### Phase 7: Discover and Configure Thunderbolt Interfaces
+### Phase 7: Install Cilium CNI
 
-**IMPORTANT**: Thunderbolt interfaces can only be properly discovered AFTER the cluster is created. The gist clearly states this requirement.
+**IMPORTANT**: Cilium must be installed before configuring Thunderbolt networking and before Flux.
 
 ```bash
-# 1. First verify cluster is running
+# 1. Verify cluster is running
 kubectl get nodes
-# All nodes should show Ready
+# All nodes should show Ready (even though networking isn't fully configured)
 
-# 2. Install kubectl-node-shell if not already installed
-kubectl krew install node-shell
+# 2. Add Cilium Helm repository
+helm repo add cilium https://helm.cilium.io/
+helm repo update
 
-# 3. Discover Thunderbolt interfaces using one of these methods:
+# 3. Install Cilium using our custom values
+echo "🔧 Installing Cilium CNI..."
+helm install cilium cilium/cilium \
+  --version 1.16.5 \
+  --namespace kube-system \
+  --values apps/cilium/app/values.yaml
 
-# Method A: Using kubectl-node-shell (recommended)
-mise run discover-thunderbolt
+# 4. Wait for Cilium to be ready
+echo "⏳ Waiting for Cilium to initialize..."
+cilium status --wait
 
-# Method B: Using privileged DaemonSet
-mise run deploy-thunderbolt-discovery
-# View results, then clean up:
-mise run cleanup-thunderbolt-discovery
+# Alternative: Check with kubectl
+kubectl -n kube-system rollout status daemonset/cilium
+kubectl -n kube-system rollout status deployment/cilium-operator
 
-# 4. Note the bus paths for each Thunderbolt interface
-# They will look like "0-1.0", "0-3.0" etc (NOT like "0000:xx:xx.x" which are PCIe)
+# 5. Verify all nodes are Ready with networking
+kubectl get nodes -o wide
+```
 
-# 5. Create node-specific Thunderbolt patches
-mkdir -p bootstrap/talos/patches/node
+### Phase 8: Configure Thunderbolt Networking
 
-# Create patches/node/rei-thunderbolt.yaml with discovered bus paths
-# Create patches/node/asuka-thunderbolt.yaml with discovered bus paths  
-# Create patches/node/kaji-thunderbolt.yaml with discovered bus paths
+**Reference**: Based on https://gist.github.com/gavinmcfall/ea6cb1233d3a300e9f44caf65a32d519
 
-# 6. Update talconfig.yaml to include node-specific patches
-# Add under each node section:
+**IMPORTANT**: Thunderbolt interfaces can only be properly discovered AFTER the cluster and CNI are running.
+
+```bash
+# 1. Deploy Thunderbolt debug DaemonSet for discovery
+kubectl apply -f bootstrap/talos/thunderbolt-debug.yaml
+
+# 2. Discover Thunderbolt interfaces on each node
+echo "🔍 Discovering Thunderbolt interfaces..."
+
+# For each node, find the Thunderbolt bus paths
+for node in rei asuka kaji; do
+  echo "Checking $node..."
+  pod=$(kubectl get pods -n kube-system -l app=thunderbolt-debug -o jsonpath="{.items[?(@.spec.nodeName==\"$node\")].metadata.name}")
+  
+  # Check dmesg for Thunderbolt connections
+  kubectl exec -n kube-system $pod -c debug -- dmesg | grep -i "Intel Corp"
+  
+  # List network interfaces with bus paths
+  kubectl exec -n kube-system $pod -c debug -- ls -la /sys/class/net/
+done
+
+# 3. Identify bus paths (they look like "0-1.0", "1-1.0" NOT "0000:xx:xx.x")
+# The patches are already created in patches/node/ directory with correct bus paths
+
+# 4. Verify the node patches are included in talconfig.yaml
+# Each node should have:
 # patches:
 #   - "@./patches/node/rei-thunderbolt.yaml"
 
-# 7. Regenerate and apply configuration
+# 5. Apply the Thunderbolt configuration
+echo "📤 Applying Thunderbolt configuration..."
 mise run genconfig
 mise run apply
 
-# 8. After nodes reboot, verify Thunderbolt is working
-mise run test-thunderbolt
+# 6. Wait for nodes to reboot
+echo "⏳ Waiting for nodes to apply Thunderbolt config..."
+sleep 90
 
-# Test connectivity between nodes
-echo "Testing rei -> asuka connectivity:"
-talosctl -n rei -e rei shell -- ping -c 3 169.254.255.102
+# 7. Verify Thunderbolt is working
+echo "✅ Testing Thunderbolt connectivity..."
 
-echo "Testing rei -> kaji connectivity:"
-talosctl -n rei -e rei shell -- ping -c 3 169.254.255.103
+# Use the test script for comprehensive testing
+./scripts/thunderbolt-test.sh
 
+# Or test manually
+for node in rei asuka kaji; do
+  echo "Testing from $node..."
+  talosctl -n $node shell -- ping -c 3 169.254.255.101
+  talosctl -n $node shell -- ping -c 3 169.254.255.102
+  talosctl -n $node shell -- ping -c 3 169.254.255.103
+done
 ```
 
-### Phase 8: Install Core Components
+### Phase 9: Install Flux GitOps
 
 ```bash  
-# 1. Install Flux GitOps and CNI
+# 1. Install Flux GitOps
 echo "🔧 Installing Flux GitOps..."
 
 # Create flux-system namespace
