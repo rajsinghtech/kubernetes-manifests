@@ -1,0 +1,6 @@
+# Fix registry discovery RBAC errors
+# https://github.com/siderolabs/talos/issues/9980#issuecomment-2645930681
+cluster:
+  apiServer:
+    extraArgs:
+      feature-gates: AuthorizeNodeWithSelectors=false

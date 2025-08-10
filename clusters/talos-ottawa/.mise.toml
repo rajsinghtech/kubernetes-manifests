@@ -3,7 +3,6 @@ task = "3"
 talhelper = "latest"
 talosctl = "latest"
 sops = "latest"
-age = "latest"
 kubectl = "latest"
 helmfile = "latest"
 
@@ -11,6 +10,10 @@ helmfile = "latest"
 KUBECONFIG = "{{config_root}}/kubeconfig"
 TALOSCONFIG = "{{config_root}}/bootstrap/talos/clusterconfig/talosconfig"
 # Using PGP instead of Age - key should be in GPG keyring
+
+[tasks.init]
+run = "task -d bootstrap/talos init"
+description = "Initialize Talos secrets (generates and encrypts talsecret.sops.yaml)"
 
 [tasks.bootstrap]
 run = "task -d bootstrap/talos bootstrap"
@@ -24,8 +27,12 @@ description = "Generate Talos configuration"
 run = "task -d bootstrap/talos apply"
 description = "Apply Talos configuration to nodes"
 
+[tasks.apply-insecure]
+run = "task -d bootstrap/talos apply-insecure"
+description = "Apply Talos configuration to nodes in maintenance mode (initial install)"
+
 [tasks.kubeconfig]
-run = "task -d bootstrap/talos fetch-kubeconfig"
+run = "task -d bootstrap/talos kubeconfig"
 description = "Fetch kubeconfig from cluster"
 
 [tasks.health]
@@ -40,6 +47,14 @@ description = "Open Talos dashboard"
 run = "task -d bootstrap/talos test-thunderbolt"
 description = "Test Thunderbolt connectivity"
 
+[tasks.deploy-thunderbolt-debug]
+run = "task -d bootstrap/talos deploy-thunderbolt-debug"
+description = "Deploy privileged DaemonSet for Thunderbolt debugging"
+
 [tasks.reset]
 run = "task -d bootstrap/talos reset"
 description = "Reset cluster (DESTRUCTIVE)"
+
+[tasks.cleanup-thunderbolt-debug]
+run = "task -d bootstrap/talos cleanup-thunderbolt-debug"
+description = "Remove Thunderbolt debug DaemonSet"
