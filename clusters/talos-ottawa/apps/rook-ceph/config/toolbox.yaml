@@ -42,7 +42,7 @@ spec:
 
                 DATE=$(date)
                 echo "$DATE writing mon endpoints to ${CEPH_CONFIG}: ${endpoints}"
-                cat <<EOF > ${CEPH_CONFIG}
+                  cat <<EOF > ${CEPH_CONFIG}
               [global]
               mon_host = ${mon_endpoints}
 
