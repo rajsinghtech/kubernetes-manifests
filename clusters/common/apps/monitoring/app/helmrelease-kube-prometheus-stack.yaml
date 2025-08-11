@@ -233,7 +233,7 @@ spec:
     prometheusOperator:
       fullnameOverride: prometheus
       admissionWebhooks:
-        enabled: false
+        enabled: true
     prometheus:
       prometheusSpec:
         serviceMonitorSelector: {}
