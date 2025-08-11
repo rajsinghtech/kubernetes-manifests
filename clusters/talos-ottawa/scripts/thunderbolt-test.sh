@@ -8,6 +8,9 @@ CLUSTER_DIR="$(dirname "$SCRIPT_DIR")"
 export KUBECONFIG="$CLUSTER_DIR/kubeconfig"
 OUTPUT_FILE="$CLUSTER_DIR/thunderbolt-results-$(date +%Y%m%d-%H%M%S).txt"
 
+# Configurable iperf test duration (in seconds)
+IPERF_DURATION="${IPERF_DURATION:-5}"
+
 # Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -82,37 +85,37 @@ echo "" | tee -a "$OUTPUT_FILE"
 # Full speed test matrix - all 6 combinations
 header "${BOLD}${YELLOW}--- rei -> asuka ---${NC}" "--- rei -> asuka ---"
 kubectl exec -n kube-system $ASUKA_POD -c debug -- sh -c "pkill iperf3 2>/dev/null; iperf3 -s -B 169.254.255.102 -1 -D" > /dev/null 2>&1 && sleep 2
-run_test $REI_POD -c debug -- iperf3 -c 169.254.255.102 -t 5
+run_test $REI_POD -c debug -- iperf3 -c 169.254.255.102 -t $IPERF_DURATION
 kubectl exec -n kube-system $ASUKA_POD -c debug -- pkill iperf3 2>/dev/null || true
 echo "" | tee -a "$OUTPUT_FILE"
 
 header "${BOLD}${YELLOW}--- asuka -> rei ---${NC}" "--- asuka -> rei ---"
 kubectl exec -n kube-system $REI_POD -c debug -- sh -c "pkill iperf3 2>/dev/null; iperf3 -s -B 169.254.255.101 -1 -D" > /dev/null 2>&1 && sleep 2
-run_test $ASUKA_POD -c debug -- iperf3 -c 169.254.255.101 -t 5
+run_test $ASUKA_POD -c debug -- iperf3 -c 169.254.255.101 -t $IPERF_DURATION
 kubectl exec -n kube-system $REI_POD -c debug -- pkill iperf3 2>/dev/null || true
 echo "" | tee -a "$OUTPUT_FILE"
 
 header "${BOLD}${YELLOW}--- rei -> kaji ---${NC}" "--- rei -> kaji ---"
 kubectl exec -n kube-system $KAJI_POD -c debug -- sh -c "pkill iperf3 2>/dev/null; iperf3 -s -B 169.254.255.103 -1 -D" > /dev/null 2>&1 && sleep 2
-run_test $REI_POD -c debug -- iperf3 -c 169.254.255.103 -t 5
+run_test $REI_POD -c debug -- iperf3 -c 169.254.255.103 -t $IPERF_DURATION
 kubectl exec -n kube-system $KAJI_POD -c debug -- pkill iperf3 2>/dev/null || true
 echo "" | tee -a "$OUTPUT_FILE"
 
 header "${BOLD}${YELLOW}--- kaji -> rei ---${NC}" "--- kaji -> rei ---"
 kubectl exec -n kube-system $REI_POD -c debug -- sh -c "pkill iperf3 2>/dev/null; iperf3 -s -B 169.254.255.101 -1 -D" > /dev/null 2>&1 && sleep 2
-run_test $KAJI_POD -c debug -- iperf3 -c 169.254.255.101 -t 5
+run_test $KAJI_POD -c debug -- iperf3 -c 169.254.255.101 -t $IPERF_DURATION
 kubectl exec -n kube-system $REI_POD -c debug -- pkill iperf3 2>/dev/null || true
 echo "" | tee -a "$OUTPUT_FILE"
 
 header "${BOLD}${YELLOW}--- asuka -> kaji ---${NC}" "--- asuka -> kaji ---"
 kubectl exec -n kube-system $KAJI_POD -c debug -- sh -c "pkill iperf3 2>/dev/null; iperf3 -s -B 169.254.255.103 -1 -D" > /dev/null 2>&1 && sleep 2
-run_test $ASUKA_POD -c debug -- iperf3 -c 169.254.255.103 -t 5
+run_test $ASUKA_POD -c debug -- iperf3 -c 169.254.255.103 -t $IPERF_DURATION
 kubectl exec -n kube-system $KAJI_POD -c debug -- pkill iperf3 2>/dev/null || true
 echo "" | tee -a "$OUTPUT_FILE"
 
 header "${BOLD}${YELLOW}--- kaji -> asuka ---${NC}" "--- kaji -> asuka ---"
 kubectl exec -n kube-system $ASUKA_POD -c debug -- sh -c "pkill iperf3 2>/dev/null; iperf3 -s -B 169.254.255.102 -1 -D" > /dev/null 2>&1 && sleep 2
-run_test $KAJI_POD -c debug -- iperf3 -c 169.254.255.102 -t 5
+run_test $KAJI_POD -c debug -- iperf3 -c 169.254.255.102 -t $IPERF_DURATION
 kubectl exec -n kube-system $ASUKA_POD -c debug -- pkill iperf3 2>/dev/null || true
 echo "" | tee -a "$OUTPUT_FILE"
 
