@@ -29,7 +29,7 @@ spec:
       enabled: false
     prometheusOperator:
       admissionWebhooks:
-        enabled: false
+        enabled: true
     prometheus:
       prometheusSpec:
         serviceMonitorSelector: {}
