@@ -16,8 +16,8 @@ spec:
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
-      name: local-ts
-      namespace: keiretsu
+      name: ts
+      namespace: home
   hostnames:
     - "keiretsu.rajsingh.info"
   rules:
@@ -55,8 +55,8 @@ spec:
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
-      name: local-ts
-      namespace: keiretsu
+      name: ts
+      namespace: home
   hostnames:
     - "homer.${LOCATION}.rajsingh.info"
   rules:

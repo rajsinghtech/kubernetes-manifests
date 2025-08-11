@@ -16,10 +16,10 @@ spec:
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
-      name: local-ts
-      namespace: keiretsu
+      name: ts
+      namespace: home
   hostnames:
-    - "capacitor.${LOCATION}.${RAJSINGH_INFO_DOMAIN}"
+    - "capacitor.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""

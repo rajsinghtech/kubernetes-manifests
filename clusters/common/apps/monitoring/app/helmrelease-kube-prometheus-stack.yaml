@@ -82,7 +82,7 @@ spec:
               kind: Gateway
               namespace: keiretsu
           hostnames:
-            - "grafana.${LOCATION}.${RAJSINGH_INFO_DOMAIN}"
+            - "grafana.${CLUSTER_DOMAIN}"
       dashboardProviders:
         dashboardproviders.yaml:
           apiVersion: 1
@@ -307,10 +307,10 @@ spec:
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
-      name: local-ts
-      namespace: keiretsu
+      name: ts
+      namespace: home
   hostnames:
-    - "prometheus.${LOCATION}.${RAJSINGH_INFO_DOMAIN}"
+    - "prometheus.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""
@@ -331,10 +331,10 @@ spec:
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
-      name: local-ts
-      namespace: keiretsu
+      name: ts
+      namespace: home
   hostnames:
-    - "grafana.${LOCATION}.${RAJSINGH_INFO_DOMAIN}"
+    - "grafana.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""
