@@ -1,7 +1,7 @@
 apiVersion: tailscale.com/v1alpha1
 kind: Connector
 metadata:
-  name: &name ${LOCATION}-k8s-subnet-router-1
+  name: &name ${LOCATION}-k8s-subnet-router
 spec:
   proxyClass: common
   tags:
@@ -14,41 +14,5 @@ spec:
       # - "${LAN_CIDR}" # LAN
       - "${CLUSTER_SERVICE_CIDR}" # K8s Services
       - "${CLUSTER_POD_CIDR}" # K8s Pods
-      - "10.69.${SITE_ID}.0/24" # Tailscale
-      - "10.69.69.0/24" # K8s Load Balancer
-      - "10.69.10.0/24" # K8s Load Balancer
+      - "${CLUSTER_LOAD_BALANCER_CIDR}" # Tailscale
       - fd7a:115c:a1e0:b1a:0:${SITE_ID}::/96 # 4via6
----
-apiVersion: tailscale.com/v1alpha1
-kind: Connector
-metadata:
-  name: &name ${LOCATION}-k8s-subnet-router-2
-spec:
-  proxyClass: common
-  tags:
-    - tag:k8s
-    - tag:${LOCATION}
-  hostname: *name
-  exitNode: true
-  subnetRouter:
-    advertiseRoutes:
-      # - "${LAN_CIDR}" # LAN
-      - "${CLUSTER_SERVICE_CIDR}" # K8s Services
-      - "${CLUSTER_POD_CIDR}" # K8s Pods
-      - "10.69.${SITE_ID}.0/24" # Tailscale
-      - "10.69.69.0/24" # K8s Load Balancer
-      - "10.69.10.0/24" # K8s Load Balancer
-      - fd7a:115c:a1e0:b1a:0:${SITE_ID}::/96 # 4via6
-# ---
-# apiVersion: tailscale.com/v1alpha1
-# kind: Connector
-# metadata:
-#   name: &name ${LOCATION}-github-app-connector
-# spec:
-#   proxyClass: common
-#   tags:
-#     - tag:k8s
-#     - tag:${LOCATION}
-#     - tag:github-connector
-#   hostname: *name
-#   appConnector: {}
