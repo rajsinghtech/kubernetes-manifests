@@ -70,4 +70,4 @@ spec:
     matchLabels:
       noexist: "true"
   domainFilters:
-    - "rajsingh.info"
+    - "${CLUSTER_DOMAIN}"
