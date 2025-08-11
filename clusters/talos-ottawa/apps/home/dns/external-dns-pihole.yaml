@@ -43,7 +43,6 @@ spec:
       - gateway-udproute
       - service
     domainFilters: 
-      - rajsingh.info
-      - lukehouge.com
+      - killinit.cc
     txtOwnerId: home
     txtPrefix: k8s.${LOCATION}.
