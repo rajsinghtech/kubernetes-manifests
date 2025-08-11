@@ -15,7 +15,7 @@
 		// Robbinsdale site networks
 		"ipset:robbinsdale-subnets": [
 			"192.168.50.0/24",  // Main LAN
-			"10.69.1.0/24",     // LB network range
+			"10.69.0.0/16",     // LB network range
 			"10.0.0.0/16",      // Service network range
 			"10.1.0.0/16",      // Pod network range
 			"fd7a:115c:a1e0:b1a:0:1::/96"  // 4via6 subnet
@@ -24,7 +24,7 @@
 		// Ottawa site networks
 		"ipset:ottawa-subnets": [
 			"192.168.169.0/24", // Main LAN
-			"10.69.2.0/24",     // LB network range
+			"10.169.0.0/16",     // LB network range
 			"10.2.0.0/16",      // Service network range
 			"10.3.0.0/16",      // Pod network range
 			"fd7a:115c:a1e0:b1a:0:2::/96"  // 4via6 subnet
@@ -120,8 +120,8 @@
 			"192.168.50.0/24":     ["tag:robbinsdale"], // Robbinsdale LAN
 			"192.168.169.0/24":    ["tag:ottawa", "tag:ottawa-infra"], // Ottawa LAN
 			"192.168.73.0/24":     ["tag:stpetersburg"], // St Petersburg LAN
-      		"10.80.0.0/16":        ["tag:ottawa-infra"], // US West 2 EKS Hybrid cluster control plane/Ottawa worker node pod cidr
-      		"10.81.0.0/16":        ["tag:ottawa-infra"], // US West 2 EKS Hybrid cluster control plane/Ottawa worker node pod cidr			
+      "10.80.0.0/16":        ["tag:ottawa-infra"], // US West 2 EKS Hybrid cluster control plane/Ottawa worker node pod cidr
+      "10.81.0.0/16":        ["tag:ottawa-infra"], // US West 2 EKS Hybrid cluster control plane/Ottawa worker node pod cidr			
 			"10.226.0.0/16":       ["tag:usw2"], // US West 2 VPC cidr		
 		},
 		"services": {
@@ -366,7 +366,11 @@
       "accept": [
         "192.168.50.1:443", 
         "192.168.169.1:443", 
-        "192.168.73.1:443", 
+        "10.0.0.1:443",
+        "10.1.0.1:443",
+        "10.2.0.1:443",
+        "10.69.0.1:443",
+        "10.169.0.1:443",
         "tag:k8s-operator:443",
         "tag:k8s:443",
         "tag:ingress:443",

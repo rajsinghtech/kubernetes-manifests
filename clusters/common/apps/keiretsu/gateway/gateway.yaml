@@ -6,8 +6,6 @@ metadata:
   labels:
     external-dns: local-ts
     gateway: local-ts
-  annotations:
-    cert-manager.io/cluster-issuer: raj-issuer
 spec:
   gatewayClassName: local-ts
   listeners:
@@ -24,10 +22,10 @@ spec:
         - group: ''
           kind: Secret
           name: wildcard-${LOCATION}-raj-https
-    - name: keiretsu-raj-https
+    - name: wildcard-killinit-https
       protocol: HTTPS
       port: 443
-      hostname: "keiretsu.${RAJSINGH_INFO_DOMAIN}"
+      hostname: "*.${KILLINIT_DOMAIN}"
       allowedRoutes:
         namespaces:
           from: All
@@ -36,4 +34,4 @@ spec:
         certificateRefs:
         - group: ''
           kind: Secret
-          name: keiretsu-raj-https
+          name: wildcard-killinit-https
