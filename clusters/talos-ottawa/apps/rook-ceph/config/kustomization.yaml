@@ -4,10 +4,10 @@ kind: Kustomization
 resources:
   - cluster.yaml
   - httproute.yaml
-  # - filesystem.yaml
+  - filesystem.yaml
   - toolbox.yaml
-  # - storageclass.yaml
-  # - volumesnapshot.yaml
-  # - blockpool.yaml
+  - storageclass.yaml
+  - volumesnapshot.yaml
+  - blockpool.yaml
   # - s3.yaml
   # - s3manager.yaml
