@@ -58,7 +58,7 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "homer.${LOCATION}.rajsingh.info"
+    - "homer.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""
