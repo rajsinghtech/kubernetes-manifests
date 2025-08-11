@@ -20,7 +20,7 @@ spec:
         image: ghcr.io/erisa/ts-derper:latest
         env:
         - name: TS_DERP_HOSTNAME
-          value: "derp.${LOCATION}.${RAJSINGH_INFO_DOMAIN}"
+          value: "derp.${CLUSTER_DOMAIN}"
         - name: TS_DERP_VERIFY_CLIENTS
           value: "true"
         - name: TS_DERP_CERTMODE

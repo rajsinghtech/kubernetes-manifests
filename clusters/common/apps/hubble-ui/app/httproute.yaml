@@ -16,10 +16,10 @@ spec:
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
-      name: local-ts
-      namespace: keiretsu
+      name: ts
+      namespace: home
   hostnames:
-    - "hubble.${LOCATION}.${RAJSINGH_INFO_DOMAIN}"
+    - "hubble.${LOCATION}.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""

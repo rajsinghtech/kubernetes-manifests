@@ -42,7 +42,7 @@ spec:
       - gateway-udproute
       - service
     domainFilters: 
-      - ${LOCATION}.${RAJSINGH_INFO_DOMAIN}
+      - ${CLUSTER_DOMAIN}
       - keiretsu.${RAJSINGH_INFO_DOMAIN}
       - ${KILLINIT_DOMAIN}
     txtOwnerId: local-ts
