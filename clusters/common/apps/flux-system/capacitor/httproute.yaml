@@ -20,7 +20,6 @@ spec:
       namespace: keiretsu
   hostnames:
     - "capacitor.${LOCATION}.${RAJSINGH_INFO_DOMAIN}"
-    - "capacitor.${KILLINIT_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""
