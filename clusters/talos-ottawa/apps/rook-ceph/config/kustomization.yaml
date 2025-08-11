@@ -2,12 +2,12 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  # - cluster.yaml
+  - cluster.yaml
   - httproute.yaml
-  # - filesystem.yaml
-  # - toolbox.yaml
-  # - storageclass.yaml
-  # - volumesnapshot.yaml
-  # - blockpool.yaml
+  - filesystem.yaml
+  - toolbox.yaml
+  - storageclass.yaml
+  - volumesnapshot.yaml
+  - blockpool.yaml
   # - s3.yaml
   # - s3manager.yaml
