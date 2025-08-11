@@ -44,5 +44,6 @@ spec:
     domainFilters: 
       - ${LOCATION}.${RAJSINGH_INFO_DOMAIN}
       - keiretsu.${RAJSINGH_INFO_DOMAIN}
+      - ${KILLINIT_DOMAIN}
     txtOwnerId: local-ts
     txtPrefix: k8s.${LOCATION}.
