@@ -6,3 +6,7 @@ machine:
       - mitigations=off
       - net.ifnames=0
       - talos.platform=metal
+      - security=none
+      - cpufreq.default_governor=performance
+      - intel_idle.max_cstate=0
+      - -selinux
