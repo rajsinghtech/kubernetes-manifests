@@ -12,7 +12,7 @@ spec:
     - name: wildcard-${LOCATION}-raj-https
       protocol: HTTPS
       port: 443
-      hostname: "*.${CLUSTER_DOMAIN}"
+      hostname: "*.${RAJSINGH_INFO_DOMAIN}"
       allowedRoutes:
         namespaces:
           from: All
