@@ -65,24 +65,6 @@ spec:
         enabled: false
       serviceMonitor:
         enabled: true
-      route:
-        main:
-          enabled: true
-          annotations:
-            item.homer.rajsingh.info/name: "Grafana"
-            item.homer.rajsingh.info/subtitle: "Analytics & Monitoring"
-            item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/grafana.png"
-            item.homer.rajsingh.info/tag: "infrastructure"
-            item.homer.rajsingh.info/keywords: "monitoring, metrics, dashboard, visualization"
-
-            service.homer.rajsingh.info/name: "Infrastructure"
-            service.homer.rajsingh.info/icon: "fas fa-server"
-          parentRefs:
-            - name: ts
-              kind: Gateway
-              namespace: keiretsu
-          hostnames:
-            - "grafana.${CLUSTER_DOMAIN}"
       dashboardProviders:
         dashboardproviders.yaml:
           apiVersion: 1
@@ -327,6 +309,15 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: grafana
+  annotations:
+    item.homer.rajsingh.info/name: "Grafana"
+    item.homer.rajsingh.info/subtitle: "Analytics & Monitoring"
+    item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/grafana.png"
+    item.homer.rajsingh.info/tag: "infrastructure"
+    item.homer.rajsingh.info/keywords: "monitoring, metrics, dashboard, visualization"
+
+    service.homer.rajsingh.info/name: "Infrastructure"
+    service.homer.rajsingh.info/icon: "fas fa-server"
 spec:
   parentRefs:
     - group: gateway.networking.k8s.io
