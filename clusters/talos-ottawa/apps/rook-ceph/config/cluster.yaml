@@ -14,20 +14,6 @@ metadata:
   name: rook-ceph
   namespace: rook-ceph # namespace:cluster
 spec:
-  configOverride: |
-    [global]
-    bdev_enable_discard = true
-    bdev_async_discard = true
-    osd_class_update_on_start = false
-    # Samsung NVMe specific optimizations
-    bluestore_min_alloc_size = 4096
-    bluestore_compression_algorithm = none
-    # Force more aggressive space reclamation
-    bluestore_prefer_deferred_size = 0
-    bluestore_deferred_batch_ops = 16
-    bluestore_deferred_batch_ops_per_txn = 32
-    # Force trim operations
-    bdev_flock_retry = 3
   cephVersion:
     # The container image used to launch the Ceph daemon pods (mon, mgr, osd, mds, rgw).
     # v18 is Reef, v19 is Squid
