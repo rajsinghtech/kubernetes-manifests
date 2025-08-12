@@ -10,7 +10,7 @@ metadata:
     item.homer.rajsingh.info/tag: "monitoring"
     item.homer.rajsingh.info/keywords: "alerts, dashboard, monitoring"
 
-    service.homer.rajsingh.info/name: "Monitoring"
+    service.homer.rajsingh.info/name: "Infrastructure"
     service.homer.rajsingh.info/icon: "fas fa-chart-line"
 spec:
   parentRefs:
