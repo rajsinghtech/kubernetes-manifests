@@ -1,20 +1,20 @@
-# ---
-# apiVersion: kustomize.toolkit.fluxcd.io/v1
-# kind: Kustomization
-# metadata:
-#   name: &app tailscale-examples-sandbox
-#   namespace: flux-system
-# spec:
-#   targetNamespace: tailscale-examples
-#   commonMetadata:
-#     labels:
-#       app.kubernetes.io/name: *app
-#   path: ./clusters/common/apps/tailscale-examples/sandbox
-#   prune: true
-#   sourceRef:
-#     kind: GitRepository
-#     name: kubernetes-manifests
-#   wait: true
-#   interval: 30m
-#   retryInterval: 1m
-#   timeout: 5m 
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app tailscale-examples-sandbox
+  namespace: flux-system
+spec:
+  targetNamespace: tailscale-examples
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  path: ./clusters/common/apps/tailscale-examples/sandbox
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: kubernetes-manifests
+  wait: true
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m 
