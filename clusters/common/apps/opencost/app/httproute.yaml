@@ -23,7 +23,7 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "opencost.rajsingh.info"
+    - "opencost.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""
