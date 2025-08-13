@@ -8,11 +8,11 @@ on:
       audience:
         description: "Audience for the OIDC token"
         required: true
-        default: "api.tailscale.com/kSKXZuvWGU11CNTRL"
+        default: "api.tailscale.com/kxF3d4zoso11CNTRL"
       client_id:
         description: "Client ID for the Tailscale OIDC JWT exchange"
         required: true
-        default: "TbqNGJkY5611CNTRL/kSKXZuvWGU11CNTRL"
+        default: "TbqNGJkY5611CNTRL/kxF3d4zoso11CNTRL"
       tailnet:
         description: "Tailnet name for the demo API request"
         required: true
