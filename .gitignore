@@ -11,7 +11,6 @@ charts
 **/talos/talosconfig
 !**/talos/talconfig.yaml
 **/talos/talsecret.yaml
-**/talos/talsecret.sops.yaml
 **/talos/aurora
 **/talos/.DS_Store
 
