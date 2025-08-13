@@ -6,9 +6,11 @@ tf/**/alpo-*.yaml
 tf/**/kubeconfig_*
 tfplan
 charts
-**/talos/*.yaml
+**/talos/clusterconfig/
 **/talos/*.iso
 **/talos/talosconfig
+!**/talos/talconfig.yaml
+**/talos/talsecret.yaml
 **/talos/aurora
 **/talos/.DS_Store
 

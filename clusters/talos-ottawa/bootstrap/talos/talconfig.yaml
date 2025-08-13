@@ -1,0 +1,181 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/budimanjojo/talhelper/master/pkg/config/schemas/talconfig.json
+---
+# renovate: datasource=docker depName=ghcr.io/siderolabs/installer
+talosVersion: v1.10.6
+# renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
+kubernetesVersion: v1.33.1
+clusterName: "k8s.ottawa.local"
+endpoint: https://k8s.ottawa.local:6443
+clusterPodNets:
+  - "10.3.0.0/16"
+clusterSvcNets:
+  - "10.2.0.0/16"
+
+additionalApiServerCertSans:
+  - "192.168.169.25"
+  - "default-kubernetes-ottawa-ingress.keiretsu.ts.net"
+  - "kubernetes-ottawa.keiretsu.ts.net"
+  - "kubernetes.ottawa.rajsingh.info"
+  - "kubernetes-ottawa.default.svc.cluster.local"
+  - 127.0.0.1 # KubePrism
+
+additionalMachineCertSans:
+  - "192.168.169.25"
+  - "k8s.ottawa.local"  # Needed for talosctl -e k8s.ottawa.local
+  - "default-kubernetes-ottawa-ingress.keiretsu.ts.net"
+  - "kubernetes-ottawa.keiretsu.ts.net"
+  - "kubernetes.ottawa.rajsingh.info"
+  - "kubernetes-ottawa.default.svc.cluster.local"
+  - 127.0.0.1 # KubePrism
+
+# Disable built-in Flannel to use Cilium
+cniConfig:
+  name: none
+
+# Per-node specific configuration
+nodes:
+  ###################################################################
+  ###################################################################
+  - hostname: "rei"
+    ipAddress: "192.168.169.113"
+    # Use disk selector with serial number 
+    installDiskSelector:
+      serial: "50026B7686F78587" # Kingston 1TB 
+    # Alternative methods:
+    # installDisk: "/dev/nvme1n1"  
+    # installDiskSelector:
+    #   size: ">= 500GB"
+    #   model: "Samsung SSD 970*"
+    controlPlane: true
+    networkInterfaces:
+      - interface: eth1
+        dhcp: true
+        vip:
+          ip: "192.168.169.25"
+      - interface: eth2
+        dhcp: false
+        addresses:
+          - "192.168.249.113/24"
+      - interface: eth3
+        dhcp: false
+        addresses:
+          - "192.168.139.113/24"
+
+    # Node-specific patches for Thunderbolt networking:
+    patches:
+      - "@./patches/node/rei-thunderbolt.yaml"
+  ###################################################################
+  ###################################################################
+  - hostname: "asuka"
+    ipAddress: "192.168.169.114"
+    installDiskSelector:
+      serial: "50026B7686F79D0F"
+    controlPlane: true
+    networkInterfaces:
+      - interface: eth1
+        dhcp: true
+        vip:
+          ip: "192.168.169.25"
+      - interface: eth2
+        dhcp: false
+        addresses:
+          - "192.168.249.114/24"
+      - interface: eth3
+        dhcp: false
+        addresses:
+          - "192.168.139.114/24"
+
+    # Node-specific patches for Thunderbolt networking:
+    patches:
+      - "@./patches/node/asuka-thunderbolt.yaml"
+  ###################################################################
+  ###################################################################
+  - hostname: "kaji"
+    ipAddress: "192.168.169.115"
+    installDiskSelector:
+      serial: "50026B7686F78574"
+    controlPlane: true
+    networkInterfaces:
+      - interface: eth1
+        dhcp: true
+        vip:
+          ip: "192.168.169.25"
+      - interface: eth2
+        dhcp: false
+        addresses:
+          - "192.168.249.115/24"
+      - interface: eth3
+        dhcp: false
+        addresses:
+          - "192.168.139.115/24"
+
+    # Node-specific patches for Thunderbolt networking:
+    patches:
+      - "@./patches/node/kaji-thunderbolt.yaml"
+  ###################################################################
+  ###################################################################
+
+# Global patches
+patches:
+  - "@./patches/global/cluster-discovery.yaml"
+  - "@./patches/global/containerd.yaml"
+  - "@./patches/global/disable-search-domain.yaml"
+  - "@./patches/global/cpu-performance.yaml"
+  - "@./patches/global/hostdns.yaml"
+  - "@./patches/global/kubelet.yaml"
+  - "@./patches/global/local-path-provisioner.yaml"
+  - "@./patches/global/metrics-server.yaml"
+  - "@./patches/global/udev.yaml"
+  - "@./patches/global/sysctls.yaml"
+  
+# Control plane nodes config
+controlPlane:
+  extensionServices:
+    - name: nut-client
+      configFiles:
+        - content: |
+            # Placeholder configuration - update when NUT server is available
+            # MONITOR format: MONITOR <system> <powervalue> <username> <password> <type>
+            # Example: MONITOR ups@192.168.1.100 1 monuser secret slave
+            
+            # Using localhost as placeholder to allow service to start
+            MONITOR ups@localhost 1 monuser pass slave
+            SHUTDOWNCMD "/sbin/poweroff"
+            
+            # Set high warning time to avoid spam until server is configured
+            NOCOMMWARNTIME 86400
+          mountPath: /usr/local/etc/nut/upsmon.conf
+  schematic:
+    customization:
+      systemExtensions:
+        officialExtensions:
+          - siderolabs/i915
+          - siderolabs/intel-ucode
+          - siderolabs/nut-client
+          - siderolabs/thunderbolt
+          - siderolabs/util-linux-tools
+      extraKernelArgs:
+        - apparmor=0
+        - init_on_alloc=0
+        - init_on_free=0
+        - intel_idle.max_cstate=0
+        - intel_iommu=on
+        - iommu=pt
+        - mitigations=off
+        - security=none
+        - talos.auditd.disabled=1
+        - net.ifnames=0
+        - cpufreq.default_governor=performance
+
+# Controller patches
+  patches:
+    - "@./patches/controller/api-access.yaml"
+    - "@./patches/controller/cluster.yaml"
+    - "@./patches/controller/disable-proxy.yaml"
+    - "@./patches/controller/disable-registry-discovery.yaml"
+    - "@./patches/controller/kubelet-certs.yaml"
+
+
+# Worker nodes configs (if you add workers later)
+# worker:
+#   patches: []
