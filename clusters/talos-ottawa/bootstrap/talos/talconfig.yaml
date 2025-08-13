@@ -10,14 +10,22 @@ clusterPodNets:
   - "10.3.0.0/16"
 clusterSvcNets:
   - "10.2.0.0/16"
-additionalApiServerCertSans: &sans
+additionalApiServerCertSans:
   - "192.168.169.25"
   - "default-kubernetes-ottawa-ingress.keiretsu.ts.net"
   - "kubernetes-ottawa.keiretsu.ts.net"
   - "kubernetes.ottawa.rajsingh.info"
   - "kubernetes-ottawa.default.svc.cluster.local"
   - 127.0.0.1 # KubePrism
-additionalMachineCertSans: *sans
+
+additionalMachineCertSans:
+  - "192.168.169.25"
+  - "k8s.ottawa.local"  # Needed for talosctl -e k8s.ottawa.local
+  - "default-kubernetes-ottawa-ingress.keiretsu.ts.net"
+  - "kubernetes-ottawa.keiretsu.ts.net"
+  - "kubernetes.ottawa.rajsingh.info"
+  - "kubernetes-ottawa.default.svc.cluster.local"
+  - 127.0.0.1 # KubePrism
 
 # Disable built-in Flannel to use Cilium
 cniConfig:
