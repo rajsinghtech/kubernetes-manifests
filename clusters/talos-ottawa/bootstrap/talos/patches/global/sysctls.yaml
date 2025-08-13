@@ -1,0 +1,20 @@
+# Network and system optimizations via sysctls
+machine:
+  sysctls:
+    # Network optimizations for 10Gb/s and low latency
+    net.core.default_qdisc: fq
+    net.core.rmem_max: "67108864"  # 64MB for QUIC/Cloudflared
+    net.core.wmem_max: "67108864"  # 64MB for QUIC/Cloudflared
+    net.ipv4.tcp_congestion_control: bbr
+    net.ipv4.tcp_fastopen: "3"  # Enable TCP Fast Open
+    net.ipv4.tcp_mtu_probing: "1"  # Enable MTU probing for jumbo frames
+    net.ipv4.tcp_rmem: "4096 87380 33554432"  # Min, default, max receive buffer
+    net.ipv4.tcp_wmem: "4096 65536 33554432"  # Min, default, max send buffer
+    net.ipv4.tcp_window_scaling: "1"  # Enable window scaling
+    
+    # Filesystem watchers (for monitoring tools)
+    fs.inotify.max_user_watches: "1048576"
+    fs.inotify.max_user_instances: "8192"
+    
+    # Huge pages for databases (2GB allocation)
+    vm.nr_hugepages: "1024"

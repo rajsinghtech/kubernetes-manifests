@@ -57,5 +57,6 @@ spec:
       volumes:
       - name: vol
         persistentVolumeClaim:
-          claimName: kbench-pvc-ceph-block-replicated
+          # claimName: kbench-pvc-ceph-block-replicated
+          claimName: kbench-pvc-ceph-block-optimized
   backoffLimit: 0
