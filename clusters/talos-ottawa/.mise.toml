@@ -58,3 +58,140 @@ description = "Reset cluster (DESTRUCTIVE)"
 [tasks.cleanup-thunderbolt-debug]
 run = "task -d bootstrap/talos cleanup-thunderbolt-debug"
 description = "Remove Thunderbolt debug DaemonSet"
+
+# Additional Talos management tasks (converted from Makefile)
+
+[tasks.disk]
+run = """
+for node in rei asuka kaji; do
+  echo "=== Discovered volumes on $node ==="
+  talosctl -e $node -n $node get discoveredvolumes
+done
+"""
+description = "Show discovered volumes on all nodes"
+
+[tasks.etcd]
+run = "talosctl service etcd -n rei -e rei"
+description = "Check etcd service status"
+
+[tasks.static]
+run = "talosctl get staticpods -n rei -e rei"
+description = "List static pods"
+
+[tasks.link]
+run = """
+for node in rei asuka kaji; do
+  echo "=== Link status on $node ==="
+  talosctl get linkstatus -n $node -e $node
+done
+"""
+description = "Show network link status on all nodes"
+
+[tasks.addresses]
+run = """
+for node in rei asuka kaji; do
+  echo "=== Addresses on $node ==="
+  talosctl get addresses -n $node -e $node
+done
+"""
+description = "Show IP addresses on all nodes"
+
+[tasks.service]
+run = """
+for node in rei asuka kaji; do
+  echo "=== Services on $node ==="
+  talosctl service -n $node -e $node
+done
+"""
+description = "List services on all nodes"
+
+[tasks.reboot]
+run = """
+echo "WARNING: This will reboot nodes! Press Ctrl+C to cancel..."
+sleep 5
+for node in rei asuka kaji; do
+  echo "Rebooting $node..."
+  talosctl -e $node -n $node reboot --debug
+  echo "Waiting 30 seconds before next node..."
+  sleep 30
+done
+"""
+description = "Reboot all nodes (DISRUPTIVE)"
+
+[tasks.reset-node]
+run = """
+echo "WARNING: This will reset a node! Usage: mise run reset-node <nodename>"
+echo "Example: mise run reset-node rei"
+echo ""
+if [ -z "$1" ]; then
+  echo "Error: Node name required"
+  exit 1
+fi
+echo "Resetting node $1 in 5 seconds... Press Ctrl+C to cancel"
+sleep 5
+talosctl -e $1 -n $1 reset --system-labels-to-wipe EPHEMERAL,STATE --graceful=false --reboot
+"""
+description = "Reset a single node to maintenance mode (DESTRUCTIVE)"
+
+[tasks.upgrade]
+run = """
+TALOS_VERSION="${1:-v1.10.6}"
+echo "Upgrading cluster to Talos $TALOS_VERSION"
+for node in rei asuka kaji; do
+  echo "Upgrading $node..."
+  talosctl upgrade --nodes $node --image ghcr.io/siderolabs/installer:${TALOS_VERSION} -e $node --wait --debug
+  echo "Waiting for node to be ready..."
+  sleep 60
+done
+"""
+description = "Upgrade Talos version on all nodes"
+
+[tasks.k9s]
+run = "k9s --context admin@k8s.ottawa.local"
+description = "Launch k9s with cluster context"
+
+[tasks.iso]
+run = """
+echo "Generating ISO from talconfig schematic..."
+SCHEMATIC_ID=$(talhelper genurl installer --config-file bootstrap/talos/talconfig.yaml | grep -oE 'factory.talos.dev/installer/[^:]+' | cut -d'/' -f3)
+TALOS_VERSION=$(grep talosVersion bootstrap/talos/talconfig.yaml | awk '{print $2}')
+echo "Schematic ID: $SCHEMATIC_ID"
+echo "Talos Version: $TALOS_VERSION"
+echo "Downloading ISO..."
+curl -O "https://factory.talos.dev/image/${SCHEMATIC_ID}/${TALOS_VERSION}/metal-amd64.iso"
+echo "ISO downloaded: metal-amd64.iso"
+"""
+description = "Download custom ISO with extensions from talconfig"
+
+[tasks.nodes]
+run = "kubectl get nodes -o wide"
+description = "Show cluster nodes"
+
+[tasks.pods]
+run = "kubectl get pods -A"
+description = "Show all pods in cluster"
+
+[tasks.talos-shell]
+run = """
+NODE="${1:-rei}"
+echo "Opening shell on node: $NODE"
+talosctl -n $NODE -e $NODE shell
+"""
+description = "Open shell on a node (default: rei, or specify: mise run talos-shell asuka)"
+
+[tasks.logs]
+run = """
+SERVICE="${1:-kubelet}"
+NODE="${2:-rei}"
+echo "Showing logs for $SERVICE on $NODE"
+talosctl -n $NODE -e $NODE logs $SERVICE
+"""
+description = "Show service logs (usage: mise run logs [service] [node])"
+
+[tasks.dmesg]
+run = """
+NODE="${1:-rei}"
+echo "Showing kernel logs on $NODE"
+talosctl -n $NODE -e $NODE dmesg
+"""
+description = "Show kernel logs from a node (default: rei)"

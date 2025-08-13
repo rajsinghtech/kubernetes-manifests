@@ -1,0 +1,48 @@
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: irqbalance
+  namespace: kube-system
+  labels:
+    app: irqbalance
+spec:
+  selector:
+    matchLabels:
+      app: irqbalance
+  template:
+    metadata:
+      labels:
+        app: irqbalance
+    spec:
+      hostNetwork: true
+      hostPID: true
+      hostIPC: true
+      containers:
+      - name: irqbalance
+        image: ghcr.io/home-operations/irqbalance:1.9.4@sha256:86f83ccf82033339f19981697f947d96194539d6b130fa5a4336e887461fe7dc
+        command: ["/usr/sbin/irqbalance"]
+        args: ["--foreground", "--journal"]
+        env:
+        - name: IRQBALANCE_BANNED_CPULIST
+          value: "12-19"
+        resources:
+          requests:
+            cpu: 25m
+            memory: 64Mi
+          limits:
+            memory: 128Mi
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: run
+          mountPath: /run/irqbalance
+      volumes:
+      - name: run
+        emptyDir: {}
+      tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+        effect: NoSchedule
+      nodeSelector:
+        node-role.kubernetes.io/control-plane: ""
