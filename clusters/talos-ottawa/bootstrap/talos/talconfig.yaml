@@ -10,6 +10,7 @@ clusterPodNets:
   - "10.3.0.0/16"
 clusterSvcNets:
   - "10.2.0.0/16"
+
 additionalApiServerCertSans:
   - "192.168.169.25"
   - "default-kubernetes-ottawa-ingress.keiretsu.ts.net"
@@ -55,6 +56,11 @@ nodes:
         dhcp: false
         addresses:
           - "192.168.249.113/24"
+      - interface: eth3
+        dhcp: false
+        addresses:
+          - "192.168.139.113/24"
+
     # Node-specific patches for Thunderbolt networking:
     patches:
       - "@./patches/node/rei-thunderbolt.yaml"
@@ -74,6 +80,11 @@ nodes:
         dhcp: false
         addresses:
           - "192.168.249.114/24"
+      - interface: eth3
+        dhcp: false
+        addresses:
+          - "192.168.139.114/24"
+
     # Node-specific patches for Thunderbolt networking:
     patches:
       - "@./patches/node/asuka-thunderbolt.yaml"
@@ -93,6 +104,11 @@ nodes:
         dhcp: false
         addresses:
           - "192.168.249.115/24"
+      - interface: eth3
+        dhcp: false
+        addresses:
+          - "192.168.139.115/24"
+
     # Node-specific patches for Thunderbolt networking:
     patches:
       - "@./patches/node/kaji-thunderbolt.yaml"
