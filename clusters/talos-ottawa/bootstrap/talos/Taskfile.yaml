@@ -1,0 +1,173 @@
+---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: "3"
+
+tasks:
+  init:
+    desc: Generate and encrypt Talos secrets
+    cmds:
+      - |
+        if [ ! -f "talsecret.sops.yaml" ]; then
+            echo "Generating new Talos secrets..."
+            talhelper gensecret > talsecret.yaml
+            echo "Encrypting secrets with PGP key..."
+            sops --encrypt --pgp FAC8E7C3A2BC7DEE58A01C5928E1AB8AF0CF07A5 talsecret.yaml > talsecret.sops.yaml
+            rm talsecret.yaml
+            echo "✅ Secrets generated and encrypted"
+        else
+            echo "Secrets file already exists"
+        fi
+
+  genconfig:
+    desc: Generate Talos configuration files
+    cmds:
+      - talhelper genconfig
+    preconditions:
+      - sh: test -f talconfig.yaml
+        msg: Missing talconfig.yaml
+      - sh: test -f talsecret.sops.yaml
+        msg: Missing talsecret.sops.yaml - run 'mise run init' first
+
+  apply:
+    desc: Apply Talos configuration to nodes
+    cmds:
+      - talhelper gencommand apply | bash
+    preconditions:
+      - sh: test -d clusterconfig
+        msg: Missing clusterconfig directory - run 'mise run genconfig' first
+  
+  apply-insecure:
+    desc: Apply Talos configuration to nodes in maintenance mode (initial install)
+    cmds:
+      - talhelper gencommand apply --extra-flags="--insecure" | bash
+    preconditions:
+      - sh: test -d clusterconfig
+        msg: Missing clusterconfig directory - run 'mise run genconfig' first
+
+  bootstrap:
+    desc: Bootstrap the etcd cluster on first node
+    cmds:
+      - talhelper gencommand bootstrap | bash
+    preconditions:
+      - sh: test -d clusterconfig
+        msg: Missing clusterconfig directory - run 'mise run genconfig' first
+
+  kubeconfig:
+    desc: Fetch kubeconfig from Talos cluster  
+    cmds:
+      - talhelper gencommand kubeconfig --extra-flags="../../ --force" | bash
+      - chmod 600 ../../kubeconfig
+    preconditions:
+      - sh: test -d clusterconfig
+        msg: Missing clusterconfig directory
+
+  test-thunderbolt:
+    desc: Test Thunderbolt network connectivity
+    cmds:
+      - echo "Testing Thunderbolt interfaces..."
+      - talosctl --nodes rei get links | grep -E "thunderbolt|169.254" || echo "No Thunderbolt on rei"
+      - talosctl --nodes asuka get links | grep -E "thunderbolt|169.254" || echo "No Thunderbolt on asuka"
+      - talosctl --nodes kaji get links | grep -E "thunderbolt|169.254" || echo "No Thunderbolt on kaji"
+
+  discover-thunderbolt:
+    desc: Discover Thunderbolt interfaces using kubectl-node-shell (requires running cluster)
+    cmds:
+      - |
+        echo "=== Discovering Thunderbolt interfaces on all nodes ==="
+        echo "Note: This requires kubectl-node-shell to be installed"
+        echo ""
+        for node in rei asuka kaji; do
+          echo "=== Node: $node ==="
+          kubectl node-shell $node -- sh -c 'ls -la /sys/bus/thunderbolt/devices/ 2>/dev/null || echo "No Thunderbolt devices found"'
+          echo ""
+          echo "Network interfaces with bus paths:"
+          kubectl node-shell $node -- sh -c 'for iface in $(ls /sys/class/net/); do if [ "$iface" != "lo" ]; then echo -n "$iface: "; readlink /sys/class/net/$iface | grep -oE "[0-9]+-[0-9]+\.[0-9]+" || echo "Not Thunderbolt"; fi; done'
+          echo ""
+        done
+    preconditions:
+      - sh: kubectl get nodes
+        msg: Cluster must be running
+      - sh: which kubectl-node-shell
+        msg: kubectl-node-shell must be installed (kubectl krew install node-shell)
+
+  deploy-thunderbolt-debug:
+    desc: Deploy privileged DaemonSet for Thunderbolt debugging
+    cmds:
+      - kubectl apply -f thunderbolt-debug.yaml
+      - echo "Waiting for pods to start..."
+      - kubectl -n kube-system wait --for=condition=Ready pod -l app=thunderbolt-debug --timeout=60s
+      - echo ""
+      - echo "=== Thunderbolt Debug Pods Running ==="
+      - kubectl -n kube-system get pods -l app=thunderbolt-debug -o wide
+    preconditions:
+      - sh: test -f thunderbolt-debug.yaml
+        msg: thunderbolt-debug.yaml not found
+      - sh: kubectl get nodes
+        msg: Cluster must be running
+
+  cleanup-thunderbolt-debug:
+    desc: Remove Thunderbolt debug DaemonSet
+    cmd: kubectl delete -f thunderbolt-debug.yaml --ignore-not-found=true
+
+  generate-thunderbolt-patch:
+    desc: Generate Thunderbolt patch file based on discovered interfaces
+    cmds:
+      - |
+        echo "After discovering Thunderbolt interfaces, create patches/node/NODE-thunderbolt.yaml"
+        echo "Example patch structure:"
+        echo ""
+        cat <<'EOF'
+        # patches/node/rei-thunderbolt.yaml
+        machine:
+          network:
+            interfaces:
+              - deviceSelector:
+                  busPath: "0-1.0"  # Replace with actual discovered bus path
+                dhcp: false
+                mtu: 65520
+                addresses:
+                  - 169.254.255.101/32
+                routes:
+                  - network: 169.254.255.102/32
+                    metric: 2048
+              - deviceSelector:
+                  busPath: "0-3.0"  # Replace with actual discovered bus path
+                dhcp: false
+                mtu: 65520
+                addresses:
+                  - 169.254.255.101/32
+                routes:
+                  - network: 169.254.255.103/32
+                    metric: 2048
+        EOF
+
+  dashboard:
+    desc: Open Talos dashboard
+    cmd: talosctl dashboard --nodes rei,asuka,kaji
+
+  health:
+    desc: Check cluster health
+    cmd: talosctl health --server=false
+
+  reset:
+    desc: Reset nodes back to maintenance mode (DESTRUCTIVE)
+    prompt: This will destroy your cluster! Continue?
+    cmd: talhelper gencommand reset --extra-flags="--reboot --system-labels-to-wipe STATE --system-labels-to-wipe EPHEMERAL --graceful=false --wait=false" | bash
+
+  upgrade:
+    desc: Upgrade Talos on a node
+    cmd: talosctl --nodes {{.node}} upgrade --image {{.image}} --wait=true --timeout=10m --preserve=true
+    requires:
+      vars: ["node", "image"]
+    preconditions:
+      - msg: Unable to connect to node
+        sh: talosctl --nodes {{.node}} version
+
+  upgrade-k8s:
+    desc: Upgrade Kubernetes across the cluster
+    cmd: talosctl --nodes {{.controller}} upgrade-k8s --to {{.to}}
+    requires:
+      vars: ["controller", "to"]
+    preconditions:
+      - msg: Unable to connect to controller
+        sh: talosctl --nodes {{.controller}} version

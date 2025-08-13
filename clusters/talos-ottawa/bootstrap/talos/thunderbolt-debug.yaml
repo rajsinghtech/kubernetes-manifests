@@ -1,0 +1,44 @@
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: thunderbolt-debug
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      app: thunderbolt-debug
+  template:
+    metadata:
+      labels:
+        app: thunderbolt-debug
+    spec:
+      containers:
+        - name: debug
+          image: nicolaka/netshoot:latest
+          command: ["/bin/sleep", "infinity"]
+          securityContext:
+            allowPrivilegeEscalation: true
+            privileged: true
+          volumeMounts:
+            - mountPath: /rootfs
+              name: rootfs
+            - mountPath: /sys/firmware/efi/efivars
+              name: efivars
+            - mountPath: /run/containerd
+              name: containerd
+      dnsPolicy: ClusterFirstWithHostNet
+      hostIPC: true
+      hostNetwork: true
+      hostPID: true
+      restartPolicy: Always
+      volumes:
+        - name: rootfs
+          hostPath:
+            path: /
+        - name: efivars
+          hostPath:
+            path: /sys/firmware/efi/efivars
+        - name: containerd
+          hostPath:
+            path: /run/containerd
