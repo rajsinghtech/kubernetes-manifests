@@ -23,6 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: get OIDC token from GitHub Actions
+        id: get_oidc_token
         run: |
           JWT=$(curl -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=${{ inputs.audience }}" | jq -r '.value')
           echo "::add-mask::$JWT" # Mask the JWT in the logs
@@ -30,12 +31,39 @@ jobs:
       - name: perform OIDC token exchange
         run: |
           # Perform the OIDC token exchange with Tailscale
-          RESPONSE=$(curl -X POST https://api.tailscale.com/api/v2/oauth/token-exchange \
+          echo "Exchanging OIDC token with Tailscale..."
+          RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}" -X POST https://api.tailscale.com/api/v2/oauth/token-exchange \
             -H "Content-Type: application/x-www-form-urlencoded" \
             -d "client_id=${{ inputs.client_id}}" \
             -d "jwt=${{ steps.get_oidc_token.outputs.jwt }}")
-          # make API request to demonstrate access token
-          export ACCESS_TOKEN=$(echo $RESPONSE | jq -r '.access_token')
+          
+          # Extract HTTP status and response body
+          HTTP_STATUS=$(echo "$RESPONSE" | tail -n 1 | cut -d: -f2)
+          RESPONSE_BODY=$(echo "$RESPONSE" | sed '$d')
+          
+          echo "HTTP Status: $HTTP_STATUS"
+          echo "Response body: $RESPONSE_BODY"
+          
+          # Check if the request was successful
+          if [ "$HTTP_STATUS" != "200" ]; then
+            echo "Error: Token exchange failed with status $HTTP_STATUS"
+            echo "Full response: $RESPONSE_BODY"
+            exit 1
+          fi
+          
+          # Extract access token
+          ACCESS_TOKEN=$(echo "$RESPONSE_BODY" | jq -r '.access_token')
+          
+          if [ "$ACCESS_TOKEN" == "null" ] || [ -z "$ACCESS_TOKEN" ]; then
+            echo "Error: No access token in response"
+            echo "Full response: $RESPONSE_BODY"
+            exit 1
+          fi
+          
           echo "::add-mask::$ACCESS_TOKEN" # Mask the access token in the logs
-          curl https://api.tailscale.com/api/v2/tailnet/${{ inputs.tailnet }}/devices \
+          echo "Successfully obtained access token"
+          
+          # Make API request to demonstrate access token
+          echo "Testing API access..."
+          curl -s https://api.tailscale.com/api/v2/tailnet/${{ inputs.tailnet }}/devices \
             --header "Authorization: Bearer ${ACCESS_TOKEN}"
