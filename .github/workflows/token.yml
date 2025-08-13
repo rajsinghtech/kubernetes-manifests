@@ -26,7 +26,7 @@ jobs:
         run: |
           JWT=$(curl -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=${{ inputs.audience }}" | jq -r '.value')
           echo "::add-mask::$JWT" # Mask the JWT in the logs
-          echo "jwt=$JWT" >> $GITHUB_OUTPUTS
+          echo "jwt=$JWT" >> $GITHUBOUTPUTS
       - name: perform OIDC token exchange
         run: |
           # Perform the OIDC token exchange with Tailscale
