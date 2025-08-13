@@ -1,0 +1,41 @@
+permissions:
+  id-token: write # This is required for requesting the JWT
+  contents: read # This is required for actions/checkout
+
+on:
+  workflow_dispatch:
+    inputs:
+      audience:
+        description: "Audience for the OIDC token"
+        required: true
+        default: "api.tailscale.com/kSKXZuvWGU11CNTRL"
+      client_id:
+        description: "Client ID for the Tailscale OIDC JWT exchange"
+        required: true
+        default: "TbqNGJkY5611CNTRL/kSKXZuvWGU11CNTRL"
+      tailnet:
+        description: "Tailnet name for the demo API request"
+        required: true
+        default: "keiretsu-labs.org.github"
+
+jobs:
+  echo-token:
+    runs-on: ubuntu-latest
+    steps:
+      - name: get OIDC token from GitHub Actions
+        run: |
+          JWT=$(curl -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=${{ inputs.audience }}" | jq -r '.value')
+          echo "::add-mask::$JWT" # Mask the JWT in the logs
+          echo "jwt=$JWT" >> $GITHUB_OUTPUTS
+      - name: perform OIDC token exchange
+        run: |
+          # Perform the OIDC token exchange with Tailscale
+          RESPONSE=$(curl -X POST https://api.tailscale.com/api/v2/oauth/token-exchange \
+            -H "Content-Type: application/x-www-form-urlencoded" \
+            -d "client_id=${{ inputs.client_id}}" \
+            -d "jwt=${{ steps.get_oidc_token.outputs.jwt }}")
+          # make API request to demonstrate access token
+          export ACCESS_TOKEN=$(echo $RESPONSE | jq -r '.access_token')
+          echo "::add-mask::$ACCESS_TOKEN" # Mask the access token in the logs
+          curl https://api.tailscale.com/api/v2/tailnet/${{ inputs.tailnet }}/devices \
+            --header "Authorization: Bearer ${ACCESS_TOKEN}"
