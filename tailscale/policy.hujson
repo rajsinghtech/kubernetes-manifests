@@ -163,6 +163,25 @@
 			"ip":  ["*:22"],
 		},
 
+    // Allow Superuser to access all robbinsdale nodes
+    {
+      "src": ["group:superuser"],
+      "dst": ["tag:robbinsdale"],
+      "ip": ["*"],
+      "app": {
+        "rajsingh.info/cap/tsdnsproxy": [
+          {
+            "robbinsdale": {
+              "dns": ["10.0.0.10:53"],
+              "rewrite": "svc.cluster.local",
+              "translateid": 1
+            },
+          }
+        ]
+      }
+    },
+    
+
 		// Allow Ottawa infra nodes to access each other directly
 		{
 			"src": ["tag:ottawa-infra", "tag:usw2"],
@@ -195,9 +214,9 @@
 			"src": ["group:superuser", "tag:k8s", "tag:k8s-operator"],
 			"dst": ["tag:k8s", "tag:ingress", "tag:hello"],
 			"ip":  ["*"],
-		"app": {
-			"tailscale.com/cap/relay": [],
-		},
+      "app": {
+        "tailscale.com/cap/relay": [],
+      },
 		},
 		
 		// Allow members to access their own devices
@@ -376,6 +395,7 @@
         "tag:ingress:443",
         "tag:hello:443",
         "tag:ssh-enabled:22",
+        "tag:robbinsdale:443",
         "rajsinghtech@github:53",
       ]
     },
