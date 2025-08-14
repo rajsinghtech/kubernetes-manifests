@@ -171,9 +171,9 @@
       "app": {
         "rajsingh.info/cap/tsdnsproxy": [
           {
-            "robbinsdale.local": {
+            "robbinsdale.k8s": {
               "dns": ["10.0.0.10:53"],
-              "rewrite": "cluster.local",
+              "rewrite": "svc.cluster.local",
               "translateid": 1
             }
           }
@@ -189,9 +189,9 @@
       "app": {
         "rajsingh.info/cap/tsdnsproxy": [
           {
-            "ottawa.local": {
+            "ottawa.k8s": {
               "dns": ["10.2.0.10:53"],
-              "rewrite": "cluster.local",
+              "rewrite": "svc.cluster.local",
               "translateid": 2
             }
           }
