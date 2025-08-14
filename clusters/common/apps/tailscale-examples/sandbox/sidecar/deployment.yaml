@@ -35,6 +35,8 @@ spec:
               name: ts-oauth
               key: TS_AUTHKEY_EPHEMERAL
               optional: true
+        - name: TS_EXTRA_ARGS
+          value: "--advertise-tags=tag:k8s"
         - name: POD_NAME
           valueFrom:
             fieldRef:
