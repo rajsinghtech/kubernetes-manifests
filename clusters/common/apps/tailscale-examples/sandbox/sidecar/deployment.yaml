@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: netshoot-ts-sidecar
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: netshoot
+  template:
+    metadata:
+      labels:
+        app: netshoot
+    spec:
+      serviceAccountName: "tailscale"
+      containers:
+      - name: netshoot
+        image: nicolaka/netshoot:latest
+        command: ["/bin/sh", "-c", "while true; do sleep 3600; done"]
+      - name: ts-sidecar
+        imagePullPolicy: Always
+        image: "ghcr.io/tailscale/tailscale:latest"
+        env:
+          # Store the state in a k8s secret
+        - name: TS_KUBE_SECRET
+          value: "" # Empty secret to force state to not store in kube secret
+          # value: "tailscale" # Use this to store state in kube secret
+        - name: TS_USERSPACE
+          value: "false"
+        - name: TS_DEBUG_FIREWALL_MODE
+          value: auto
+        - name: TS_AUTHKEY
+          valueFrom:
+            secretKeyRef:
+              name: ts-oauth
+              key: TS_AUTHKEY_EPHEMERAL
+              optional: true
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_UID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.uid
+        securityContext:
+          privileged: true
