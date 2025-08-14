@@ -80,7 +80,7 @@ spec:
         - name: TS_AUTHKEY
           valueFrom:
             secretKeyRef:
-              name: tsdnsproxy-auth
+              name: ts-authkey
               key: TS_AUTHKEY
         resources:
           requests:
