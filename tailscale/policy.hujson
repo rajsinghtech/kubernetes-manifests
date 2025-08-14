@@ -171,9 +171,9 @@
       "app": {
         "rajsingh.info/cap/tsdnsproxy": [
           {
-            "robbinsdale": {
+            "robbinsdale.local": {
               "dns": ["10.0.0.10:53"],
-              "rewrite": "svc.cluster.local",
+              "rewrite": "cluster.local",
               "translateid": 1
             }
           }
