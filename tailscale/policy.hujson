@@ -180,7 +180,24 @@
         ]
       }
     },
-    
+
+    // Allow Superuser to access all ottawa nodes
+    {
+      "src": ["group:superuser"],
+      "dst": ["tag:ottawa"],
+      "ip": ["*"],
+      "app": {
+        "rajsingh.info/cap/tsdnsproxy": [
+          {
+            "ottawa.local": {
+              "dns": ["10.2.0.10:53"],
+              "rewrite": "cluster.local",
+              "translateid": 2
+            }
+          }
+        ]
+      }
+    },
 
 		// Allow Ottawa infra nodes to access each other directly
 		{
