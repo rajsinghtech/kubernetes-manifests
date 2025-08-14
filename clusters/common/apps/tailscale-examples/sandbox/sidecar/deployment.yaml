@@ -38,7 +38,7 @@ spec:
         - name: TS_ACCEPT_DNS
           value: "true"
         - name: TS_EXTRA_ARGS
-          value: "--advertise-tags=tag:k8s"
+          value: "--advertise-tags=tag:k8s --accept-routes"
         - name: POD_NAME
           valueFrom:
             fieldRef:
