@@ -7,3 +7,4 @@ resources:
   # - ./hello
   - ./tsflow
   - ./tsdnsproxy
+  - ./secret.yaml
