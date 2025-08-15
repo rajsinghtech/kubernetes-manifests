@@ -140,7 +140,7 @@ spec:
     provider: host
     addressRanges:
       public: ["192.168.169.0/24"]
-      cluster: ["192.168.169.0/24"]
+      cluster: ["169.254.255.0/24"]
     # enable the Multus network provider
     # provider: multus
     # selectors:
