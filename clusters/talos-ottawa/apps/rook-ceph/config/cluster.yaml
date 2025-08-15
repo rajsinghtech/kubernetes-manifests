@@ -137,10 +137,10 @@ spec:
       # Requires a kernel that supports msgr v2 (kernel 5.11 or CentOS 8.4 or newer).
       requireMsgr2: true
     # enable host networking
-    provider: host
-    addressRanges:
-      public: ["192.168.169.0/24"]
-      cluster: ["192.168.169.0/24"]
+    # provider: host
+    # addressRanges:
+    #   public: ["192.168.169.0/24"]
+    #   cluster: ["192.168.169.0/24"]
     # enable the Multus network provider
     # provider: multus
     # selectors:
