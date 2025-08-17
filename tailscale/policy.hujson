@@ -161,7 +161,7 @@
 
     // Allow Superuser to access all robbinsdale nodes
     {
-      "src": ["group:superuser"],
+      "src": ["group:superuser", "ipset:robbinsdale-subnets"],
       "dst": ["tag:robbinsdale"],
       "ip": ["*"],
       "app": {
@@ -179,7 +179,7 @@
 
     // Allow Superuser to access all ottawa nodes
     {
-      "src": ["group:superuser"],
+      "src": ["group:superuser", "ipset:ottawa-subnets"],
       "dst": ["tag:ottawa"],
       "ip": ["*"],
       "app": {
