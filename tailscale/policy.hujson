@@ -248,7 +248,7 @@
 			"src": ["group:superuser"],
 			"dst": ["autogroup:internet"],
 			"ip":  ["*"],
-			"via": ["tag:robbinsdale", "tag:ottawa", "tag:github-connector", "tag:ipinfo-connector"],
+			"via": ["tag:robbinsdale", "tag:ottawa"],
 		},
 		
 		// ------------------------------------------------------------------------
@@ -338,28 +338,26 @@
 	// NODE ATTRIBUTES & CAPABILITIES
 	// ============================================================================
 	
-	// Define capabilities and features for specific nodes
 	"nodeAttrs": [
-		// Enable GitHub app connector
-		{
-			"target": ["*"],
-			"app": {
-				"tailscale.com/app-connectors": [
-					{
-						"name": "github-app",
-						"connectors": ["tag:github-connector"],
-						"domains": ["github.com", "*.github.com", "api.github.com", "raw.githubusercontent.com"]
-					},
-					{
-						"name": "ipinfo-app",
-						"connectors": ["tag:ipinfo-connector"],
-						"domains": ["ipinfo.io"]
-					}
-				],
-			},
-		},
-		
-		// Enable Tailscale Funnel for k8s nodes (public internet access)
+    { 
+      "target": ["*"],
+      "app": {
+        "tailscale.com/app-connectors": [
+          {"name":"google-com","connectors":["tag:k8s"],"domains":["docs.google.com"]},
+          {"name":"ipinfo-io","connectors":["tag:robbinsdale"],"domains":["ipinfo.io"]},
+          {"name":"ipchicken-com","connectors":["tag:ottawa"],"domains":["ipchicken.com"]}
+        ]
+      }
+    },
+    {
+      "target": ["group:superuser"],
+      "attr": [
+        // "experimental:exit-node-steering", // FF traffic-steering
+        // "only-tcp-443", // FF allow-only-tcp-443
+        // "custom:test" // FF metadata-node-set-attrs node-attributes-api
+      ],
+    },
+    
 		{
 			"target": ["tag:k8s"],
 			"attr":   ["funnel"],
