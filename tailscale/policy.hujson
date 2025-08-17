@@ -13,7 +13,7 @@
 	// IP sets for subnet routing and network segmentation
 	"ipsets": {
 		// Robbinsdale site networks
-		"ipset:robbinsdale-subnets": [
+		"ipset:robbinsdale": [
 			"192.168.50.0/24",  // Main LAN
 			"10.69.0.0/16",     // LB network range
 			"10.0.0.0/16",      // Service network range
@@ -22,7 +22,7 @@
 		],
 		
 		// Ottawa site networks
-		"ipset:ottawa-subnets": [
+		"ipset:ottawa": [
 			"192.168.169.0/24", // Main LAN
 			"10.169.0.0/16",     // LB network range
 			"10.2.0.0/16",      // Service network range
@@ -31,7 +31,7 @@
 		],
 
     // St Petersburg site networks
-    "ipset:stpetersburg-subnets": [
+    "ipset:stpetersburg": [
       "192.168.73.0/24", // Main LAN
       "10.69.3.0/24",     // LB network range
       "10.4.0.0/16",      // Service network range
@@ -40,7 +40,7 @@
     ],
 
     // US West 2 site networks
-    "ipset:usw2-subnets": [
+    "ipset:usw2": [
       "10.226.0.0/16",      // Main VPC CIDR
       "10.80.0.0/16",      // Pod network range
       "10.81.0.0/16",      // Service network range
@@ -48,7 +48,7 @@
     ],
 		
 		// Shared infrastructure networks
-		"ipset:shared-subnets": [
+		"ipset:shared": [
 			"10.69.10.0/24",    // Shared services
 			"10.69.69.0/24"     // Shared services
 		]
@@ -161,7 +161,7 @@
 
     // Allow Superuser to access all robbinsdale nodes
     {
-      "src": ["group:superuser", "ipset:robbinsdale-subnets"],
+      "src": ["group:superuser", "ipset:robbinsdale", "tag:robbinsdale"],
       "dst": ["tag:robbinsdale"],
       "ip": ["*"],
       "app": {
@@ -179,7 +179,7 @@
 
     // Allow Superuser to access all ottawa nodes
     {
-      "src": ["group:superuser", "ipset:ottawa-subnets"],
+      "src": ["group:superuser", "ipset:ottawa", "tag:ottawa"],
       "dst": ["tag:ottawa"],
       "ip": ["*"],
       "app": {
@@ -254,37 +254,37 @@
 		// Access to subnets via subnet routers
 		{
 			"src": ["group:superuser", "tag:k8s"],
-			"dst": ["ipset:robbinsdale-subnets"],
+			"dst": ["ipset:robbinsdale"],
 			"ip":  ["*"],
 			"via": ["tag:robbinsdale"],
 		},
 		{
-		"src": ["tag:ottawa-infra", "ipset:ottawa-subnets"],
-		"dst": ["ipset:usw2-subnets"],
+		"src": ["tag:ottawa-infra", "ipset:ottawa"],
+		"dst": ["ipset:usw2"],
 		"ip":  ["*"],
 		"via": ["tag:usw2"],
 		},
 		{
 		"src": ["group:superuser", "tag:k8s"],
-		"dst": ["ipset:ottawa-subnets"],
+		"dst": ["ipset:ottawa"],
 		"ip":  ["*"],
 		"via": ["tag:ottawa"],
 		},
 		{
-		"src": ["tag:usw2", "ipset:usw2-subnets"],
-		"dst": ["ipset:ottawa-subnets"],
+		"src": ["tag:usw2", "ipset:usw2"],
+		"dst": ["ipset:ottawa"],
 		"ip":  ["*"],
 		"via": ["tag:ottawa-infra"],
 		},
 		{
 		"src": ["group:superuser"],
-		"dst": ["ipset:stpetersburg-subnets"],
+		"dst": ["ipset:stpetersburg"],
 		"ip":  ["*"],
 		"via": ["tag:stpetersburg"],
 		},
 		{
 		"src": ["group:superuser"],
-		"dst": ["ipset:shared-subnets"],
+		"dst": ["ipset:shared"],
 		"ip":  ["*"],
 		"via": ["tag:k8s"],
 		},
