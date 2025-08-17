@@ -36,3 +36,8 @@ data:
       cache 30
       forward . 10.69.69.50
     }
+    &{LOCATION}.k8s:53 {
+      errors
+      cache 30
+      forward . 10.69.69.51
+    }
