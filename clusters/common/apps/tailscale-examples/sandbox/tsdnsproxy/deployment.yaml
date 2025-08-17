@@ -75,8 +75,10 @@ spec:
           value: "tsdnsproxy-${LOCATION}"
         - name: TSDNSPROXY_VERBOSE
           value: "true"
-        - name: TSDNSPROXY_DEFAULT_DNS
-          value: "8.8.8.8:53,8.8.4.4:53"  # Configure your default DNS
+        # - name: TSDNSPROXY_DEFAULT_DNS
+        #   value: "8.8.8.8:53,8.8.4.4:53"  # Configure your default DNS
+        - name: TSDNSPROXY_LISTEN_ADDRS
+          value: "tailscale,0.0.0.0:53"  # Listen on both Tailscale and LAN
         - name: TS_AUTHKEY
           valueFrom:
             secretKeyRef:
@@ -120,8 +122,13 @@ metadata:
   namespace: tsdnsproxy
   labels:
     app: tsdnsproxy
+  annotations:
+    tailscale.com/hostname: ${LOCATION}-tsdnsproxy
+    tailscale.com/proxy-group: common-ingress
+    tailscale.com/tags: "tag:k8s"
 spec:
-  type: ClusterIP
+  type: LoadBalancer
+  loadBalancerClass: tailscale
   selector:
     app: tsdnsproxy
   ports:
