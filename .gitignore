@@ -45,3 +45,4 @@ CLAUDE.md
 *.tmp
 *.bak
 *.swp
+tailscale/validate.sh
