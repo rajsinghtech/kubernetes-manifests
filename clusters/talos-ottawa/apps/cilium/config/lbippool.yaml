@@ -5,6 +5,7 @@ metadata:
 spec:
   blocks:
     - cidr: "${CLUSTER_LOAD_BALANCER_CIDR}"
+    - cidr: "10.69.0.0/16"
   serviceSelector:
     matchExpressions:
       - { key: somekey, operator: NotIn, values: ["never-used-value"] }
