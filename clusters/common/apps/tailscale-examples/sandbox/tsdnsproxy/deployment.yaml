@@ -114,33 +114,33 @@ spec:
             - ALL
             add:
             - NET_BIND_SERVICE  # Required for binding to port 53
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: tsdnsproxy
-  namespace: tsdnsproxy
-  labels:
-    app: tsdnsproxy
-  annotations:
-    tailscale.com/hostname: ${LOCATION}-tsdnsproxy
-    tailscale.com/proxy-group: common-ingress
-    tailscale.com/tags: "tag:k8s"
-spec:
-  type: LoadBalancer
-  loadBalancerClass: tailscale
-  selector:
-    app: tsdnsproxy
-  ports:
-  - name: dns-udp
-    port: 53
-    targetPort: dns-udp
-    protocol: UDP
-  - name: dns-tcp
-    port: 53
-    targetPort: dns-tcp
-    protocol: TCP
-  - name: health
-    port: 8080
-    targetPort: health
-    protocol: TCP
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: tsdnsproxy
+#   namespace: tsdnsproxy
+#   labels:
+#     app: tsdnsproxy
+#   annotations:
+#     tailscale.com/hostname: ${LOCATION}-tsdnsproxy
+#     tailscale.com/proxy-group: common-ingress
+#     tailscale.com/tags: "tag:k8s"
+# spec:
+#   type: LoadBalancer
+#   loadBalancerClass: tailscale
+#   selector:
+#     app: tsdnsproxy
+#   ports:
+#   - name: dns-udp
+#     port: 53
+#     targetPort: dns-udp
+#     protocol: UDP
+#   - name: dns-tcp
+#     port: 53
+#     targetPort: dns-tcp
+#     protocol: TCP
+#   - name: health
+#     port: 8080
+#     targetPort: health
+#     protocol: TCP
