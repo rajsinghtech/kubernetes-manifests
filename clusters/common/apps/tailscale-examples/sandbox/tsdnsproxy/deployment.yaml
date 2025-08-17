@@ -144,3 +144,24 @@ spec:
     port: 8080
     targetPort: health
     protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tsdnsproxy-cilium
+  namespace: tsdnsproxy
+spec:
+  ports:
+  - name: udp
+    port: 53
+    protocol: UDP
+    targetPort: 1053
+  - name: tcp
+    port: 53
+    protocol: TCP
+    targetPort: 1053
+  selector:
+    app: tsdnsproxy
+  sessionAffinity: None
+  type: LoadBalancer
+  loadBalancerIP: 10.69.69.51
