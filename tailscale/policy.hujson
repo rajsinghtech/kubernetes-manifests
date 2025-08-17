@@ -342,7 +342,7 @@
           {"name":"google-com","connectors":["tag:k8s"],"domains":["docs.google.com"]},
           {"name":"ipinfo-io","connectors":["tag:robbinsdale"],"domains":["ipinfo.io"]},
           {"name":"ipchicken-com","connectors":["tag:ottawa"],"domains":["ipchicken.com"]},
-          {"name":"robbinsdale.k8s","connectors":["tag:robbinsdale"],"domains":["robbinsdale.k8s"]}
+          {"name":"robbinsdale-k8s","connectors":["tag:robbinsdale"],"domains":["robbinsdale.k8s"]}
         ]
       }
     },
