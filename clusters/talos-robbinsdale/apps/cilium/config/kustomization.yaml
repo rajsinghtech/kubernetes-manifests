@@ -4,5 +4,6 @@ kind: Kustomization
 resources:
   - lbippool.yaml
   - localredirects.yaml
-  - bgp.yaml
   - coredns.yaml
+  - nodelocaldns.yaml
+  - bgp.yaml

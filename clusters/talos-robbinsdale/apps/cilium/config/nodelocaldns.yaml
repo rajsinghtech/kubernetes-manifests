@@ -78,7 +78,7 @@ data:
       forward . 10.69.69.50
       prometheus :9253
     }
-    &{LOCATION}.k8s:53 {
+    robbinsdale.k8s:53 {
       errors
       cache 30
       reload
