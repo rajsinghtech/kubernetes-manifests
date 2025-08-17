@@ -98,10 +98,6 @@
 
 		// SSH access tags
 		"tag:ssh-enabled":  ["tag:ssh-enabled", "group:superuser"],
-		
-		// App connector tags
-		"tag:github-connector": ["tag:k8s-operator","group:superuser"],
-		"tag:ipinfo-connector": ["tag:k8s-operator","group:superuser"],
 
 		// TCP-443-only tag
 		"tag:restricted-outbound": ["tag:k8s-operator", "group:superuser"],
@@ -115,8 +111,8 @@
 	"autoApprovers": {
 		"exitNode": ["tag:k8s"],
 		"routes": {
-			"0.0.0.0/0":           ["tag:k8s", "tag:github-connector", "tag:ipinfo-connector"], // Default route (exit node)
-			"::/0":                ["tag:k8s", "tag:github-connector", "tag:ipinfo-connector"], // IPv6 default route
+			"0.0.0.0/0":           ["tag:k8s"], // Default route (exit node)
+			"::/0":                ["tag:k8s"], // IPv6 default route
 			"192.168.50.0/24":     ["tag:robbinsdale"], // Robbinsdale LAN
 			"192.168.169.0/24":    ["tag:ottawa", "tag:ottawa-infra"], // Ottawa LAN
 			"192.168.73.0/24":     ["tag:stpetersburg"], // St Petersburg LAN
