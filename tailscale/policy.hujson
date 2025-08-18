@@ -76,7 +76,6 @@
 		// Core infrastructure tags
 		"tag:k8s-operator": [],
 		"tag:k8s":          ["tag:k8s-operator", "group:superuser"],
-		"tag:k8s-recorder": ["tag:k8s-operator", "group:superuser"],
 		
 		// Site-specific tags
 		"tag:robbinsdale":  ["tag:k8s-operator", "group:superuser"],
@@ -139,7 +138,7 @@
 			"src":             ["group:superuser"],
 			"dst":             ["tag:ssh-enabled"],
 			"users":           ["root", "autogroup:nonroot"],
-			"recorder":        ["tag:k8s-recorder"],
+			"recorder":        ["tag:k8s"],
 			"enforceRecorder": true,
 		},
 	],
@@ -304,7 +303,7 @@
 						"impersonate": {
 							"groups": ["system:masters"],
 						},
-						"recorder":        ["tag:k8s-recorder"],
+						"recorder":        ["tag:k8s"],
 						"enforceRecorder": true,
 					},
 				],
@@ -322,7 +321,7 @@
 						"impersonate": {
 							"groups": ["tailnet-readers"],
 						},
-						"recorder":        ["tag:k8s-recorder"],
+						"recorder":        ["tag:k8s"],
 						"enforceRecorder": true,
 					},
 				],
