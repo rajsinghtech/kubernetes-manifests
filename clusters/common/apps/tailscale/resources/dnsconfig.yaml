@@ -5,7 +5,7 @@ metadata:
 spec:
   nameserver:
     image:
-      repo: ghcr.io/rajsinghtech/k8s-nameserver
+      # repo: ghcr.io/rajsinghtech/k8s-nameserver
       tag: unstable
 ---
 apiVersion: v1
