@@ -11,7 +11,6 @@ spec:
   enableUI: true
   tags:
     - "tag:k8s"
-    - "tag:k8s-recorder"
     - "tag:${LOCATION}"
   storage:
     s3:
