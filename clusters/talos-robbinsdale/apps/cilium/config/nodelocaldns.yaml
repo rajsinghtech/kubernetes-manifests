@@ -78,6 +78,15 @@ data:
       forward . 10.69.69.50
       prometheus :9253
     }
+    robbinsdale.k8s:53 {
+      errors
+      cache 30
+      reload
+      loop
+      bind 0.0.0.0
+      forward . 10.69.69.51
+      prometheus :9253
+    }
     .:53 {
         errors
         cache 30

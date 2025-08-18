@@ -22,7 +22,7 @@ spec:
       retries: 3
   values:
     image:
-      tag: v1.137.3
+      tag: v1.138.0
     env:
       DB_DATABASE_NAME: immich
       DB_USERNAME:
