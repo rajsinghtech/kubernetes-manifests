@@ -50,16 +50,22 @@ nodes:
     networkInterfaces:
       - interface: eth1
         dhcp: true
+        # vip:
+        #   ip: "192.168.169.25"
+      - interface: bond0
+        bond:
+          deviceSelectors: [{ hardwareAddr: "58:47:ca:7c:*", driver: i40e }]
+          mode: 802.3ad
+          xmitHashPolicy: layer2
+          lacpRate: fast
+          miimon: 1000
+          adSelect: bandwidth
+          minLinks: 2
+        dhcp: true
         vip:
           ip: "192.168.169.25"
-      - interface: eth2
-        dhcp: false
-        addresses:
-          - "192.168.249.113/24"
-      - interface: eth3
-        dhcp: false
-        addresses:
-          - "192.168.139.113/24"
+        # mtu: 9000
+
 
     # Node-specific patches for Thunderbolt networking:
     patches:
@@ -74,16 +80,22 @@ nodes:
     networkInterfaces:
       - interface: eth1
         dhcp: true
+        # vip:
+        #   ip: "192.168.169.25"
+      - interface: bond0
+        bond:
+          deviceSelectors: [{ hardwareAddr: "58:47:ca:7c:*", driver: i40e }]
+          mode: 802.3ad
+          xmitHashPolicy: layer2
+          lacpRate: fast
+          miimon: 1000
+          adSelect: bandwidth
+          minLinks: 2
+        dhcp: true
         vip:
           ip: "192.168.169.25"
-      - interface: eth2
-        dhcp: false
-        addresses:
-          - "192.168.249.114/24"
-      - interface: eth3
-        dhcp: false
-        addresses:
-          - "192.168.139.114/24"
+        # mtu: 9000
+
 
     # Node-specific patches for Thunderbolt networking:
     patches:
@@ -98,16 +110,19 @@ nodes:
     networkInterfaces:
       - interface: eth1
         dhcp: true
+        # vip:
+        #   ip: "192.168.169.25"
+      - interface: bond0
+        bond:
+          deviceSelectors: [{ hardwareAddr: "58:47:ca:7f:*", driver: i40e }]
+          mode: 802.3ad
+          xmitHashPolicy: layer2
+          lacpRate: fast
+          miimon: 1000
+        dhcp: true
         vip:
           ip: "192.168.169.25"
-      - interface: eth2
-        dhcp: false
-        addresses:
-          - "192.168.249.115/24"
-      - interface: eth3
-        dhcp: false
-        addresses:
-          - "192.168.139.115/24"
+        # mtu: 9000
 
     # Node-specific patches for Thunderbolt networking:
     patches:
