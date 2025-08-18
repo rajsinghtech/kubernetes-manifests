@@ -7,7 +7,7 @@ spec:
   tags:
     - tag:k8s
     - tag:egress
-  proxyClass: common
+  proxyClass: common-egress
   type: egress
   replicas: 3
 ---
