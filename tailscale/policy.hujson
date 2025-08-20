@@ -406,6 +406,7 @@
         "10.169.0.1:443",
         "tag:k8s-operator:443",
         "tag:k8s:443",
+		"tag:k8s:80",
         "tag:ingress:443",
         "tag:hello:443",
         "tag:ssh-enabled:22",
