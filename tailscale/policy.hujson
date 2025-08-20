@@ -297,7 +297,7 @@
 		// Admin access to Kubernetes API with system:masters privileges
 		{
 			"src": ["group:superuser", "tag:k8s"],
-			"dst": ["tag:k8s-operator"],
+			"dst": ["tag:k8s","tag:k8s-operator"],
 			"ip":  ["*"],
 			"app": {
 				"tailscale.com/cap/kubernetes": [
@@ -315,7 +315,7 @@
 		// Member access to Kubernetes API with read-only privileges
 		{
 			"src": ["autogroup:member"],
-			"dst": ["tag:k8s-operator"],
+			"dst": ["tag:k8s","tag:k8s-operator"],
 			"ip":  ["*"],
 			"app": {
 				"tailscale.com/cap/kubernetes": [
