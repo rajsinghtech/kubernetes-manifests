@@ -1,5 +1,5 @@
 # Thunderbolt network configuration for kaji (Node 3)
-# Based on dmesg: 0-1 connects to rei, 1-1 connects to asuka
+# Based on current dmesg: 0-1 connects to rei, 1-1 connects to asuka
 machine:
   network:
     interfaces:
