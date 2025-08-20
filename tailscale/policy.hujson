@@ -297,7 +297,7 @@
 		// Admin access to Kubernetes API with system:masters privileges
 		{
 			"src": ["group:superuser", "tag:k8s"],
-			"dst": ["tag:k8s","tag:k8s-operator"],
+			"dst": ["tag:k8s","tag:k8s-operator", "svc:k8sapi-ottawa", "svc:k8sapi-robbinsdale"],
 			"ip":  ["*"],
 			"app": {
 				"tailscale.com/cap/kubernetes": [
@@ -406,7 +406,7 @@
         "10.169.0.1:443",
         "tag:k8s-operator:443",
         "tag:k8s:443",
-		"tag:k8s:80",
+		    "tag:k8s:80",
         "tag:ingress:443",
         "tag:hello:443",
         "tag:ssh-enabled:22",
