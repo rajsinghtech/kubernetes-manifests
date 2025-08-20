@@ -23,16 +23,3 @@ spec:
   proxyClass: common
   type: ingress
   replicas: 3
----
-apiVersion: tailscale.com/v1alpha1
-kind: ProxyGroup
-metadata:
-  name: k8sapi-${LOCATION}
-spec:
-  type: kube-apiserver
-  replicas: 2
-  tags:
-    - tag:k8s
-    - tag:${LOCATION}
-  kubeAPIServer:
-    mode: auth
