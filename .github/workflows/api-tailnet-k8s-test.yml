@@ -43,7 +43,7 @@ jobs:
         id: get_access_token
         run: |
           echo "Exchanging OIDC token with Tailscale..."
-          ACCESS_TOKEN=$(./tailscale/scripts/get-access-token.sh "${{ inputs.client_id }}" "${{ steps.get_oidc_token.outputs.jwt }}")
+          ACCESS_TOKEN=$(./tailscale/scripts/exchange-oidc-token.sh "${{ inputs.client_id }}" "${{ steps.get_oidc_token.outputs.jwt }}")
           echo "::add-mask::$ACCESS_TOKEN"
           echo "access_token=$ACCESS_TOKEN" >> $GITHUB_OUTPUT
           echo "Successfully obtained access token"
