@@ -65,5 +65,4 @@ jobs:
           
           # Make API request to demonstrate access token
           echo "Testing API access..."
-          curl -s https://api.tailscale.com/api/v2/tailnet/${{ inputs.tailnet }}/devices \
-            --header "Authorization: Bearer ${ACCESS_TOKEN}"
+          ./tailscale/scripts/get-devices.sh "${ACCESS_TOKEN}" "${{ inputs.tailnet }}"
