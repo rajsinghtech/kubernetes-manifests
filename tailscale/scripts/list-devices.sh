@@ -38,5 +38,5 @@ fi
 if [ "$FORMAT" == "json" ]; then
     echo "$RESPONSE_BODY" | jq .
 elif [ "$FORMAT" == "table" ]; then
-    echo "$RESPONSE_BODY" | jq -r '.devices[] | [.name, .addresses[0], .os, .tags // [], (.online // false)] | @tsv' | column -t -s $'\t' -N "NAME,IP,OS,TAGS,ONLINE"
+    echo "$RESPONSE_BODY" | jq -r '.devices[] | [.name, .addresses[0], .os, (.tags // [] | join(",")), (.online // false)] | @tsv' | column -t -s $'\t' -N "NAME,IP,OS,TAGS,ONLINE"
 fi
