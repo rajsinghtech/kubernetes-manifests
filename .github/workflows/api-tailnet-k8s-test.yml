@@ -1,0 +1,210 @@
+name: API-Only Tailnet with Kubernetes Operator Test
+
+permissions:
+  id-token: write # Required for OIDC token
+  contents: read # Required for checkout
+
+on:
+  workflow_dispatch:
+    inputs:
+      audience:
+        description: "Audience for the OIDC token"
+        required: true
+        default: "api.tailscale.com/kxF3d4zoso11CNTRL"
+      client_id:
+        description: "Client ID for the Tailscale OIDC JWT exchange"
+        required: true
+        default: "TbqNGJkY5611CNTRL/kxF3d4zoso11CNTRL"
+      cleanup:
+        description: "Clean up resources after test"
+        type: boolean
+        default: true
+
+jobs:
+  api-tailnet-k8s-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq curl
+
+      - name: Get OIDC token from GitHub Actions
+        id: get_oidc_token
+        run: |
+          JWT=$(curl -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=${{ inputs.audience }}" | jq -r '.value')
+          echo "::add-mask::$JWT"
+          echo "jwt=$JWT" >> $GITHUB_OUTPUT
+
+      - name: Exchange OIDC token for access token
+        id: get_access_token
+        run: |
+          echo "Exchanging OIDC token with Tailscale..."
+          ACCESS_TOKEN=$(./tailscale/scripts/get-access-token.sh "${{ inputs.client_id }}" "${{ steps.get_oidc_token.outputs.jwt }}")
+          echo "::add-mask::$ACCESS_TOKEN"
+          echo "access_token=$ACCESS_TOKEN" >> $GITHUB_OUTPUT
+          echo "Successfully obtained access token"
+
+      - name: Create API-only tailnet
+        id: create_tailnet
+        run: |
+          TAILNET_NAME="ci-test-$(date +%s)-$(echo $GITHUB_SHA | cut -c1-8)"
+          echo "Creating tailnet: $TAILNET_NAME"
+          
+          RESPONSE=$(./tailscale/scripts/create-tailnet.sh "${{ steps.get_access_token.outputs.access_token }}" "$TAILNET_NAME")
+          echo "$RESPONSE"
+          
+          FULL_TAILNET_NAME=$(echo "$RESPONSE" | jq -r '.tailnetName')
+          TAILNET_OAUTH_CLIENT_ID=$(echo "$RESPONSE" | jq -r '.oauthClient.oauthClientID')
+          TAILNET_OAUTH_CLIENT_SECRET=$(echo "$RESPONSE" | jq -r '.oauthClient.oauthClientSecret')
+          
+          echo "::add-mask::$TAILNET_OAUTH_CLIENT_SECRET"
+          echo "full_tailnet_name=$FULL_TAILNET_NAME" >> $GITHUB_OUTPUT
+          echo "tailnet_oauth_client_id=$TAILNET_OAUTH_CLIENT_ID" >> $GITHUB_OUTPUT
+          echo "tailnet_oauth_client_secret=$TAILNET_OAUTH_CLIENT_SECRET" >> $GITHUB_OUTPUT
+
+      - name: Get new tailnet access token
+        id: get_tailnet_token
+        run: |
+          echo "Getting access token for new tailnet..."
+          TAILNET_ACCESS_TOKEN=$(./tailscale/scripts/get-access-token.sh "${{ steps.create_tailnet.outputs.tailnet_oauth_client_id }}" "${{ steps.create_tailnet.outputs.tailnet_oauth_client_secret }}")
+          echo "::add-mask::$TAILNET_ACCESS_TOKEN"
+          echo "tailnet_access_token=$TAILNET_ACCESS_TOKEN" >> $GITHUB_OUTPUT
+
+      - name: Convert and apply ACL policy
+        run: |
+          echo "Converting HuJSON policy to JSON..."
+          ./tailscale/scripts/convert-hujson.sh ./tailscale/cicd/policy.hujson /tmp/policy.json
+          
+          echo "Applying ACL policy to tailnet..."
+          ./tailscale/scripts/update-acl.sh "${{ steps.get_tailnet_token.outputs.tailnet_access_token }}" "${{ steps.create_tailnet.outputs.full_tailnet_name }}" /tmp/policy.json
+
+      - name: Create OAuth client for K8s operator
+        id: create_k8s_oauth
+        run: |
+          echo "Creating OAuth client for Kubernetes operator..."
+          RESPONSE=$(./tailscale/scripts/create-oauth-client.sh "${{ steps.get_tailnet_token.outputs.tailnet_access_token }}" "${{ steps.create_tailnet.outputs.full_tailnet_name }}" "k8s-operator" "CI test K8s operator")
+          echo "$RESPONSE"
+          
+          K8S_OAUTH_CLIENT_ID=$(echo "$RESPONSE" | jq -r '.id')
+          K8S_OAUTH_CLIENT_SECRET=$(echo "$RESPONSE" | jq -r '.key')
+          
+          echo "::add-mask::$K8S_OAUTH_CLIENT_SECRET"
+          echo "k8s_oauth_client_id=$K8S_OAUTH_CLIENT_ID" >> $GITHUB_OUTPUT
+          echo "k8s_oauth_client_secret=$K8S_OAUTH_CLIENT_SECRET" >> $GITHUB_OUTPUT
+
+      - name: Install Kind
+        run: |
+          # Install Kind
+          curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.20.0/kind-linux-amd64
+          chmod +x ./kind
+          sudo mv ./kind /usr/local/bin/kind
+          
+          # Install kubectl
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x kubectl
+          sudo mv kubectl /usr/local/bin/kubectl
+
+      - name: Create Kind cluster
+        run: |
+          echo "Creating Kind cluster..."
+          kind create cluster --config ./tailscale/cicd/kind-config.yaml
+          
+          echo "Cluster created, waiting for it to be ready..."
+          kubectl cluster-info --context kind-tailscale-test
+          kubectl wait --for=condition=Ready nodes --all --timeout=300s
+
+      - name: Install Helm
+        run: |
+          curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+
+      - name: Install Tailscale Kubernetes Operator
+        run: |
+          echo "Adding Tailscale Helm repository..."
+          helm repo add tailscale https://pkgs.tailscale.com/helmcharts
+          helm repo update
+          
+          echo "Installing Tailscale operator..."
+          helm upgrade --install tailscale-operator tailscale/tailscale-operator \
+            --namespace=tailscale \
+            --create-namespace \
+            --set-string oauth.clientId="${{ steps.create_k8s_oauth.outputs.k8s_oauth_client_id }}" \
+            --set-string oauth.clientSecret="${{ steps.create_k8s_oauth.outputs.k8s_oauth_client_secret }}" \
+            --set operatorConfig.hostname=ci-test-k8s-operator \
+            --wait \
+            --timeout=300s
+
+      - name: Verify operator installation
+        run: |
+          echo "Checking operator pod status..."
+          kubectl get pods -n tailscale
+          kubectl wait --for=condition=Ready pods -l app.kubernetes.io/name=tailscale-operator -n tailscale --timeout=120s
+          
+          echo "Checking operator logs..."
+          kubectl logs -l app.kubernetes.io/name=tailscale-operator -n tailscale --tail=50
+
+      - name: Verify device appears in tailnet
+        run: |
+          echo "Waiting for operator to register with tailnet..."
+          sleep 30
+          
+          echo "Listing devices in tailnet..."
+          ./tailscale/scripts/list-devices.sh "${{ steps.get_tailnet_token.outputs.tailnet_access_token }}" "${{ steps.create_tailnet.outputs.full_tailnet_name }}" table
+          
+          echo "Checking for operator device..."
+          DEVICES=$(./tailscale/scripts/list-devices.sh "${{ steps.get_tailnet_token.outputs.tailnet_access_token }}" "${{ steps.create_tailnet.outputs.full_tailnet_name }}" json)
+          echo "$DEVICES" | jq '.devices[] | select(.name | contains("ci-test-k8s-operator")) | {name, addresses, online, tags}'
+          
+          OPERATOR_COUNT=$(echo "$DEVICES" | jq '.devices[] | select(.name | contains("ci-test-k8s-operator")) | length' | wc -l)
+          if [ "$OPERATOR_COUNT" -eq 0 ]; then
+            echo "Error: Operator device not found in tailnet"
+            exit 1
+          fi
+          
+          echo "✅ Success! Operator device found in tailnet"
+
+      - name: Test basic connectivity
+        run: |
+          echo "Creating test service..."
+          kubectl create deployment nginx --image=nginx:alpine
+          kubectl expose deployment nginx --port=80 --target-port=80
+          
+          echo "Creating Tailscale Service..."
+          kubectl apply -f - <<EOF
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: nginx-tailscale
+            annotations:
+              tailscale.com/expose: "true"
+              tailscale.com/hostname: "ci-test-nginx"
+              tailscale.com/tags: "tag:k8s"
+          spec:
+            type: LoadBalancer
+            loadBalancerClass: tailscale
+            ports:
+            - port: 80
+              targetPort: 80
+              protocol: TCP
+            selector:
+              app: nginx
+          EOF
+          
+          echo "Waiting for service to be ready..."
+          kubectl wait --for=condition=Ready pods -l app=nginx --timeout=120s
+          
+          sleep 60
+          echo "Final device list:"
+          ./tailscale/scripts/list-devices.sh "${{ steps.get_tailnet_token.outputs.tailnet_access_token }}" "${{ steps.create_tailnet.outputs.full_tailnet_name }}" table
+
+      - name: Cleanup resources
+        if: inputs.cleanup && always()
+        run: |
+          echo "Cleaning up Kind cluster..."
+          kind delete cluster --name tailscale-test || true
+          
+          echo "Note: API-only tailnet cleanup would require additional API endpoints not yet implemented"
+          echo "Created tailnet: ${{ steps.create_tailnet.outputs.full_tailnet_name }}"
