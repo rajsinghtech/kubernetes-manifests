@@ -141,10 +141,15 @@ jobs:
         run: |
           echo "Checking operator pod status..."
           kubectl get pods -n tailscale
-          kubectl wait --for=condition=Ready pods -l app.kubernetes.io/name=tailscale-operator -n tailscale --timeout=120s
+          
+          echo "Getting operator deployment..."
+          kubectl get deployment -n tailscale
+          
+          echo "Waiting for operator deployment to be ready..."
+          kubectl wait --for=condition=Available deployment/operator -n tailscale --timeout=120s
           
           echo "Checking operator logs..."
-          kubectl logs -l app.kubernetes.io/name=tailscale-operator -n tailscale --tail=50
+          kubectl logs deployment/operator -n tailscale --tail=50
 
       - name: Verify device appears in tailnet
         run: |
