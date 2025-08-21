@@ -29,7 +29,7 @@ if [[ ! "$TAG_NAME" =~ ^[a-zA-Z0-9_-]+$ ]]; then
     exit 1
 fi
 
-echo "Creating OAuth client for tag:$TAG_NAME in tailnet: $TAILNET_NAME"
+echo "Creating OAuth client for tag:$TAG_NAME in tailnet: $TAILNET_NAME" >&2
 
 CLIENT_JSON=$(cat <<EOF
 {
@@ -55,5 +55,5 @@ if [ "$HTTP_STATUS" != "200" ]; then
     exit 1
 fi
 
-echo "OAuth client created successfully:"
+echo "OAuth client created successfully:" >&2
 echo "$RESPONSE_BODY" | jq .
