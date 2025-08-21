@@ -20,7 +20,7 @@ if ! echo "$TAILNET_NAME" | grep -E '^[a-zA-Z0-9_]+$' > /dev/null; then
     exit 1
 fi
 
-echo "Creating API-only tailnet: $TAILNET_NAME"
+echo "Creating API-only tailnet: $TAILNET_NAME" >&2
 
 RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}" -X POST https://api.tailscale.com/api/v2/organizations/-/tailnets \
   --header "Authorization: Bearer $ACCESS_TOKEN" \
@@ -36,5 +36,5 @@ if [ "$HTTP_STATUS" != "200" ]; then
     exit 1
 fi
 
-echo "Tailnet created successfully:"
+echo "Tailnet created successfully:" >&2
 echo "$RESPONSE_BODY" | jq .
