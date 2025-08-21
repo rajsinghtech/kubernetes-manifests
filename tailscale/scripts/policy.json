@@ -1,0 +1,17 @@
+{
+  "tagOwners": {
+    "tag:k8s-operator": ["autogroup:admin"],
+    "tag:k8s": ["autogroup:admin"]
+  },
+  "grants": [
+    {"src": ["*"], "dst": ["*"], "ip": ["*"]}
+  ],
+  "ssh": [
+    {
+      "action": "check",
+      "src": ["autogroup:member"],
+      "dst": ["autogroup:self"],
+      "users": ["autogroup:nonroot", "root"]
+    }
+  ]
+}
