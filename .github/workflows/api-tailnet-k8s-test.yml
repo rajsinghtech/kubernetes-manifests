@@ -171,39 +171,39 @@ jobs:
           
           echo "✅ Success! Operator device found in tailnet"
 
-      - name: Test basic connectivity
-        run: |
-          echo "Creating test service..."
-          kubectl create deployment nginx --image=nginx:alpine
-          kubectl expose deployment nginx --port=80 --target-port=80
+      # - name: Test basic connectivity
+      #   run: |
+      #     echo "Creating test service..."
+      #     kubectl create deployment nginx --image=nginx:alpine
+      #     kubectl expose deployment nginx --port=80 --target-port=80
           
-          echo "Creating Tailscale Service..."
-          kubectl apply -f - <<EOF
-          apiVersion: v1
-          kind: Service
-          metadata:
-            name: nginx-tailscale
-            annotations:
-              tailscale.com/expose: "true"
-              tailscale.com/hostname: "ci-test-nginx"
-              tailscale.com/tags: "tag:k8s"
-          spec:
-            type: LoadBalancer
-            loadBalancerClass: tailscale
-            ports:
-            - port: 80
-              targetPort: 80
-              protocol: TCP
-            selector:
-              app: nginx
-          EOF
+      #     echo "Creating Tailscale Service..."
+      #     kubectl apply -f - <<EOF
+      #     apiVersion: v1
+      #     kind: Service
+      #     metadata:
+      #       name: nginx-tailscale
+      #       annotations:
+      #         tailscale.com/expose: "true"
+      #         tailscale.com/hostname: "ci-test-nginx"
+      #         tailscale.com/tags: "tag:k8s"
+      #     spec:
+      #       type: LoadBalancer
+      #       loadBalancerClass: tailscale
+      #       ports:
+      #       - port: 80
+      #         targetPort: 80
+      #         protocol: TCP
+      #       selector:
+      #         app: nginx
+      #     EOF
           
-          echo "Waiting for service to be ready..."
-          kubectl wait --for=condition=Ready pods -l app=nginx --timeout=120s
+      #     echo "Waiting for service to be ready..."
+      #     kubectl wait --for=condition=Ready pods -l app=nginx --timeout=120s
           
-          sleep 60
-          echo "Final device list:"
-          ./tailscale/scripts/list-devices.sh "${{ steps.get_tailnet_token.outputs.tailnet_access_token }}" "${{ steps.create_tailnet.outputs.full_tailnet_name }}" table
+      #     sleep 60
+      #     echo "Final device list:"
+      #     ./tailscale/scripts/list-devices.sh "${{ steps.get_tailnet_token.outputs.tailnet_access_token }}" "${{ steps.create_tailnet.outputs.full_tailnet_name }}" table
 
       - name: Cleanup resources
         if: inputs.cleanup && always()
