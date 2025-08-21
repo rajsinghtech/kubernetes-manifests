@@ -58,5 +58,5 @@ if [ "$HTTP_STATUS" != "200" ]; then
     exit 1
 fi
 
-echo "ACL updated successfully with tag:$TAG_NAME:"
+echo "ACL updated successfully with tag:$TAG_NAME:" >&2
 echo "$RESPONSE_BODY" | jq .

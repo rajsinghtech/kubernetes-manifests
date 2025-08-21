@@ -47,5 +47,5 @@ if [ "$HTTP_STATUS" != "200" ]; then
     exit 1
 fi
 
-echo "ACL updated successfully:"
+echo "ACL updated successfully:" >&2
 echo "$RESPONSE_BODY" | jq .
