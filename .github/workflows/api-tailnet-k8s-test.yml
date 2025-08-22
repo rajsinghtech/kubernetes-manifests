@@ -211,5 +211,9 @@ jobs:
           echo "Cleaning up Kind cluster..."
           kind delete cluster --name tailscale-test || true
           
-          echo "Note: API-only tailnet cleanup would require additional API endpoints not yet implemented"
-          echo "Created tailnet: ${{ steps.create_tailnet.outputs.full_tailnet_name }}"
+          if [ -n "${{ steps.get_tailnet_token.outputs.tailnet_access_token }}" ] && [ -n "${{ steps.create_tailnet.outputs.full_tailnet_name }}" ]; then
+            echo "Deleting API-only tailnet: ${{ steps.create_tailnet.outputs.full_tailnet_name }}"
+            ./tailscale/scripts/delete-tailnet.sh "${{ steps.get_tailnet_token.outputs.tailnet_access_token }}" "${{ steps.create_tailnet.outputs.full_tailnet_name }}" || echo "Failed to delete tailnet (may have already been deleted)"
+          else
+            echo "Skipping tailnet deletion - missing access token or tailnet name"
+          fi
