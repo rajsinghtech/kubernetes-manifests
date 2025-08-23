@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: tailscale-csi-provider
+  namespace: tailscale
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: tailscale-csi-provider
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: tailscale-csi-provider
+    spec:
+      containers:
+        - name: tailscale-csi-provider
+          image: ghcr.io/tailscale/tailscale-csi-provider:dev
+          args:
+            - --socket=/var/run/secrets-store-csi-providers/tailscale.sock
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - mountPath: "/var/run/secrets-store-csi-providers"
+              name: provider
+              mountPropagation: None
+              readOnly: false
+          env:
+            - name: TS_TAILNET
+              value: "-"
+          envFrom:
+            - secretRef:
+                name: tailscale-csi-provider
+      volumes:
+        - name: provider
+          hostPath:
+            path: /var/run/secrets-store-csi-providers
+      nodeSelector:
+        kubernetes.io/os: linux

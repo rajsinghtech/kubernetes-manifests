@@ -1,0 +1,20 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app tailscale-csi-provider
+  namespace: flux-system
+spec:
+  targetNamespace: tailscale-csi-provider
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  path: ./clusters/common/apps/tailscale-csi-provider/manifests
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: kubernetes-manifests
+  wait: true
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m
