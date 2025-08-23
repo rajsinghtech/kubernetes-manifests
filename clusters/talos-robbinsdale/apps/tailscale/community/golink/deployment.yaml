@@ -14,6 +14,7 @@ spec:
       labels:
         app: golink
     spec:
+      serviceAccountName: "golink-tailscale"
       containers:
         - name: golink
           image: ghcr.io/tailscale/golink:main
@@ -21,30 +22,26 @@ spec:
             - containerPort: 80
           env:
             - name: TS_AUTHKEY
-              valueFrom:
-                secretKeyRef:
-                  name: tailscale-authkeys
-                  key: TS_AUTHKEY
-            - name: TS_HOSTNAME
-              value: "go"
-          args:
-            - "-sqlitedb"
-            - "/home/nonroot/golink.db"
+              value: "$(cat /var/run/tailscale/authkey 2>/dev/null || echo '')"
+          command: 
+            - "sh"
+            - "-c"
+            - "export TS_AUTHKEY=$(cat /var/run/tailscale/authkey) && exec /usr/local/bin/golink -sqlitedb /home/nonroot/golink.db -config-dir /home/nonroot/tsnet-golink -hostname go"
           volumeMounts:
             - mountPath: /home/nonroot
               name: data-volume
+            - name: authkey
+              mountPath: "/var/run/tailscale"
+              readOnly: true
           securityContext:
             runAsUser: 0
       volumes:
         - name: data-volume
           persistentVolumeClaim:
             claimName: golink-data-ceph
-      initContainers:
-        - name: volume-permissions
-          image: busybox
-          command: ["sh", "-c", "chown -R 65532:65532 /home/nonroot"]
-          volumeMounts:
-            - mountPath: /home/nonroot
-              name: data-volume
-          securityContext:
-            runAsUser: 0 
+        - name: authkey
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: tailscale

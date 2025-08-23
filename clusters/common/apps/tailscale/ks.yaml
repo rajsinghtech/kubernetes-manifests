@@ -54,6 +54,7 @@ spec:
   path: ./clusters/common/apps/tailscale/tailscale-csi-provider
   dependsOn:
     - name: tailscale-operator
+    - name: csi-secrets-store-install
   prune: true
   sourceRef:
     kind: GitRepository
