@@ -8,11 +8,11 @@ spec:
   interval: 1m
   chart:
     spec:
-      chart: csi-secrets-store
+      chart: secrets-store-csi-driver
       version: "*"
       sourceRef:
         kind: HelmRepository
-        name: csi-secrets-store
+        name: secrets-store-csi-driver
         namespace: csi-secrets-store
       interval: 1m
   releaseName: csi-secrets-store
