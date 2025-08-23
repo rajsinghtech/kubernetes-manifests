@@ -75,31 +75,31 @@
 	"tagOwners": {
 		// Core infrastructure tags
 		"tag:k8s-operator": [],
-		"tag:k8s":          ["tag:k8s-operator", "group:superuser"],
+		"tag:k8s":          ["tag:k8s-operator", "autogroup:admin"],
 		
 		// Site-specific tags
-		"tag:robbinsdale":  ["tag:k8s-operator", "group:superuser"],
-		"tag:ottawa":       ["tag:k8s-operator", "group:superuser"],
-		"tag:stpetersburg": ["tag:k8s-operator", "group:superuser"],
-		"tag:pittsburgh":   ["tag:k8s-operator", "group:superuser"],
-		"tag:use1":         ["tag:k8s-operator", "group:superuser"],
-		"tag:usw2":         ["tag:k8s-operator", "group:superuser"],
-		"tag:kind":         ["tag:k8s-operator", "group:superuser"],
+		"tag:robbinsdale":  ["tag:k8s-operator", "autogroup:admin"],
+		"tag:ottawa":       ["tag:k8s-operator", "autogroup:admin"],
+		"tag:stpetersburg": ["tag:k8s-operator", "autogroup:admin"],
+		"tag:pittsburgh":   ["tag:k8s-operator", "autogroup:admin"],
+		"tag:use1":         ["tag:k8s-operator", "autogroup:admin"],
+		"tag:usw2":         ["tag:k8s-operator", "autogroup:admin"],
+		"tag:kind":         ["tag:k8s-operator", "autogroup:admin"],
 
 		// Site-specific infrastructure tags
-		"tag:ottawa-infra": ["tag:ottawa-infra", "group:superuser"],
+		"tag:ottawa-infra": ["tag:ottawa-infra", "autogroup:admin"],
 		
 		// Service and connectivity tags
-		"tag:hello":        ["tag:k8s-operator", "group:superuser"],
-		"tag:ingress":      ["tag:k8s-operator", "group:superuser"],
-		"tag:egress":       ["tag:k8s-operator", "group:superuser"],
-		"tag:test":         ["tag:k8s-operator", "group:superuser"],
+		"tag:hello":        ["tag:k8s-operator", "autogroup:admin"],
+		"tag:ingress":      ["tag:k8s-operator", "autogroup:admin"],
+		"tag:egress":       ["tag:k8s-operator", "autogroup:admin"],
+		"tag:test":         ["tag:k8s-operator", "autogroup:admin"],
 
 		// SSH access tags
-		"tag:ssh-enabled":  ["tag:ssh-enabled", "group:superuser"],
+		"tag:ssh-enabled":  ["tag:ssh-enabled", "autogroup:admin"],
 
 		// TCP-443-only tag
-		"tag:restricted-outbound": ["tag:k8s-operator", "group:superuser"],
+		"tag:restricted-outbound": ["tag:k8s-operator", "autogroup:admin"],
 	},
 	
 	// ============================================================================
