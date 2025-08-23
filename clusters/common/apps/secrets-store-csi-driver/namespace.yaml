@@ -6,3 +6,4 @@ metadata:
   labels:
     name: secrets-store-csi-driver
     kustomize.toolkit.fluxcd.io/prune: disabled
+    pod-security.kubernetes.io/enforce: privileged
