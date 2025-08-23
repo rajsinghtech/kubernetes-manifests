@@ -4,9 +4,4 @@ kind: Kustomization
 resources:
   - secretproviderclass.yaml
   - daemonset.yaml
-
-secretGenerator:
-  - name: tailscale-csi-provider
-    namespace: tailscale
-    envs:
-      - secrets/provider.env
+  - secret.yaml
