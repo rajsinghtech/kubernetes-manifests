@@ -2,14 +2,14 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app secrets-store-csi-driver-install
+  name: &app csi-secrets-store-install
   namespace: flux-system
 spec:
-  targetNamespace: secrets-store-csi-driver
+  targetNamespace: csi-secrets-store
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./clusters/common/apps/secrets-store-csi-driver/install
+  path: ./clusters/common/apps/csi-secrets-store/install
   prune: true
   sourceRef:
     kind: GitRepository
