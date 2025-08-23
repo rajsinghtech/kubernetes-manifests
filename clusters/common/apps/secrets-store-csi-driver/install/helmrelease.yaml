@@ -1,0 +1,28 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: secrets-store-csi-driver
+  namespace: secrets-store-csi-driver
+spec:
+  interval: 1m
+  chart:
+    spec:
+      chart: secrets-store-csi-driver
+      version: "*"
+      sourceRef:
+        kind: HelmRepository
+        name: secrets-store-csi-driver
+        namespace: flux-system
+      interval: 1m
+  releaseName: secrets-store-csi-driver
+  values:
+    linux:
+      enabled: true
+    windows:
+      enabled: false
+    syncSecret:
+      enabled: false
+    enableSecretRotation: false
+    rotationPollInterval: "2m"
+    logVerbosity: 0
