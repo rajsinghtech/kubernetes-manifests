@@ -2,7 +2,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app csi-secrets-store-install
+  name: &app csi-secrets-store
   namespace: flux-system
 spec:
   targetNamespace: csi-secrets-store
