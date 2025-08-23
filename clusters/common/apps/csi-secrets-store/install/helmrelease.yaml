@@ -15,5 +15,5 @@ spec:
         name: secrets-store-csi-driver
         namespace: kube-system
       interval: 1m
-  releaseName: csi-secrets-store
+  # releaseName: csi-secrets-store
   values:
