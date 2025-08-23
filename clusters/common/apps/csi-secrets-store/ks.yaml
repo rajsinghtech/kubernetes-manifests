@@ -5,7 +5,7 @@ metadata:
   name: &app csi-secrets-store-install
   namespace: flux-system
 spec:
-  targetNamespace: csi-secrets-store
+  targetNamespace: kube-system
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
