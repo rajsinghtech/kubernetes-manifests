@@ -2,8 +2,8 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: secrets-store-csi-driver
+  name: csi-secrets-store
   labels:
-    name: secrets-store-csi-driver
+    name: csi-secrets-store
     kustomize.toolkit.fluxcd.io/prune: disabled
     pod-security.kubernetes.io/enforce: privileged
