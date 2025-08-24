@@ -21,13 +21,8 @@ spec:
       enabled: false
     ollamaUrls:
       - "http://kirito.ai:11434"
-    github:
-      # -- Enable GitHub OAuth
-      # @section -- GitHub OAuth configuration
-      enabled: true
-      # -- GitHub OAuth client ID
-      # @section -- GitHub OAuth configuration
-      clientId: "${GITHUB_OPENWEBUI_CLIENT_ID}"
-      # -- GitHub OAuth client secret (ignored if clientExistingSecret is set)
-      # @section -- GitHub OAuth configuration
-      clientSecret: "${GITHUB_OPENWEBUI_CLIENT_SECRET}"
+    sso:
+      github:
+        enabled: true
+        clientId: "${GITHUB_OPENWEBUI_CLIENT_ID}"
+        clientSecret: "${GITHUB_OPENWEBUI_CLIENT_SECRET}"
