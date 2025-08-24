@@ -16,3 +16,7 @@ spec:
         namespace: ai
       interval: 1m
   releaseName: open-webui
+  values:
+    ollama:
+      enabled: false
+      
