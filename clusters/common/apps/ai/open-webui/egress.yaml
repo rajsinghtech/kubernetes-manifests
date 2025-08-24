@@ -23,17 +23,17 @@ spec:
   # - name: http
   #   port: 11434
   #   protocol: TCP
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: kirito
-  annotations:
-    tailscale.com/tailnet-fdqn: kirito.keiretsu.ts.net
-    tailscale.com/proxy-group: common-egress
-spec:
-  externalName: placeholder
-  type: ExternalName
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: kirito
+#   annotations:
+#     tailscale.com/tailnet-fdqn: kirito.keiretsu.ts.net
+#     tailscale.com/proxy-class: common-egress
+# spec:
+#   externalName: placeholder
+#   type: ExternalName
 ---
 apiVersion: v1
 kind: Service
