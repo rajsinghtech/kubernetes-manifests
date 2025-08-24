@@ -77,6 +77,14 @@ spec:
               editable: true
               options:
                 path: /var/lib/grafana/dashboards/default
+            - name: "nvidia"
+              orgId: 1
+              folder: "nvidia"
+              type: file
+              disableDeletion: false
+              editable: true
+              options:
+                path: /var/lib/grafana/dashboards/nvidia
             - name: "argocd"
               orgId: 1
               folder: "argocd"
@@ -173,6 +181,11 @@ spec:
             gnetId: 16970
             revision: 1
             datasource: loki
+        nvidia:
+          nvidia-dashboard:
+            gnetId: 14574
+            revision: 11
+            datasource: prometheus
         ceph:
           ceph-cluster:
             gnetId: 2842
