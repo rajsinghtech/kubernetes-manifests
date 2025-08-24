@@ -22,6 +22,7 @@ spec:
     ollamaUrls:
       - "http://kirito.ai:11434"
     sso:
+      enabled: true
       github:
         enabled: true
         clientId: "${GITHUB_OPENWEBUI_CLIENT_ID}"
