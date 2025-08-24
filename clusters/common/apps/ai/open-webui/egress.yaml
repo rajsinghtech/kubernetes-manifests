@@ -4,6 +4,17 @@ metadata:
   name: ottawa-windows-desktop
   annotations:
     tailscale.com/tailnet-ip: 192.168.169.112
+    tailscale.com/proxy-class: common-egress
+spec:
+  externalName: placeholder
+  type: ExternalName
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ottawa-windows-desktop-pg
+  annotations:
+    tailscale.com/tailnet-ip: 192.168.169.112
     tailscale.com/proxy-group: common-egress
 spec:
   externalName: placeholder
