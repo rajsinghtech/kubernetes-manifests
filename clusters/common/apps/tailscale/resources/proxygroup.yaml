@@ -9,7 +9,7 @@ spec:
     - tag:egress
   proxyClass: common-egress
   type: egress
-  replicas: 3
+  replicas: 1
 ---
 apiVersion: tailscale.com/v1alpha1
 kind: ProxyGroup
