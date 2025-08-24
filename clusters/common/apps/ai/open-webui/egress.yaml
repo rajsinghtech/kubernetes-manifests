@@ -8,7 +8,7 @@ metadata:
 spec:
   externalName: placeholder
   type: ExternalName
-  ports:
-  - name: http
-    port: 11434
-    protocol: TCP
+  # ports:
+  # - name: http
+  #   port: 11434
+  #   protocol: TCP
