@@ -2,17 +2,22 @@
 apiVersion: homer.rajsingh.info/v1alpha1
 kind: Dashboard
 metadata:
-  name: dashboard-ts
+  name: dashboard-public
   labels:
     app: homer-dashboard
     tier: frontend
 spec:
   replicas: 2
   homerConfig:
-    title: "${LOCATION} cloud ts" 
+    title: "${LOCATION} cloud" 
     subtitle: "Infrastructure Dashboard"
     logo: "https://raw.githubusercontent.com/rajsinghtech/homer-operator/main/homer/Homer-Operator.png"
     header: true
+    message:
+      style: "is-info"
+      title: "Welcome to Robbinsdale Cloud"
+      icon: "fa fa-info-circle"
+      content: "Server Hosted in Robbinsdale MN."
     footer: '<p>Powered by <strong>Homer-Operator</strong> | <a href="https://github.com/rajsinghtech/homer-operator">GitHub</a></p>'
     colors:
       light:
@@ -53,21 +58,35 @@ spec:
       target: "_blank"
     services:
     - parameters:
-        name: "Infrastructure"
-        icon: "fas fa-server"
+        name: "Media"
+        icon: "fas fa-tv"
       items:
       - parameters:
-          name: "Tailscale"
-          logo: "https://raw.githubusercontent.com/tailscale/tailscale/refs/heads/main/client/web/src/assets/icons/tailscale-icon.svg"
-          subtitle: "Private Mesh Network"
-          tag: "network"
+          name: "Jellyseerr"
+          subtitle: "Request Media"
+          tag: "requests"
           tagstyle: "is-info"
-          url: "https://login.tailscale.com/admin/machines"
+          url: "https://jellyseerr.rajsingh.info/"
+          logo: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/jellyseerr.svg"
+      - parameters:
+          name: "Jellyfin Client Desktop"
+          subtitle: "macOS/Windows"
+          tag: "download"
+          tagstyle: "is-warning"
+          url: "https://github.com/jellyfin/jellyfin-media-player/releases"
+          logo: "https://raw.githubusercontent.com/jellyfin/jellyfin-media-player/main/public/images/logo.png"
+      - parameters:
+          name: "Jellyfin Client Mobile"
+          subtitle: "iOS/Android"
+          tag: "download"
+          tagstyle: "is-warning"
+          url: "https://streamyfin.app/"
+          logo: "https://raw.githubusercontent.com/streamyfin/streamyfin/refs/heads/develop/assets/icons/jellyseerr-logo.svg"
   gatewaySelector:
     matchLabels:
-      gateway: ts
+      gateway: public
   ingressSelector:
     matchLabels:
       noexist: "true"
   domainFilters:
-    - "rajsingh.info"
+    - "${CLUSTER_DOMAIN}"

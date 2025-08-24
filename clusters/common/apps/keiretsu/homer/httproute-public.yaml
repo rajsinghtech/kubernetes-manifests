@@ -18,8 +18,7 @@ spec:
       name: private
       namespace: home
   hostnames:
-    - "home.rajsingh.info"
-    - "home.lukehouge.com"
+    - "home.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""
