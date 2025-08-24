@@ -19,3 +19,5 @@ spec:
   values:
     ollama:
       enabled: false
+    ollamaUrls:
+      - "http://kirito.ai:11434"
