@@ -76,6 +76,7 @@
 		// Core infrastructure tags
 		"tag:k8s-operator": [],
 		"tag:k8s":          ["tag:k8s-operator", "autogroup:admin"],
+		"tag:k8s-recorder": ["tag:k8s-operator", "autogroup:admin"],
 		
 		// Site-specific tags
 		"tag:robbinsdale":  ["tag:k8s-operator", "autogroup:admin"],
@@ -94,9 +95,6 @@
 		"tag:ingress":      ["tag:k8s-operator", "autogroup:admin"],
 		"tag:egress":       ["tag:k8s-operator", "autogroup:admin"],
 		"tag:test":         ["tag:k8s-operator", "autogroup:admin"],
-
-		// SSH access tags
-		"tag:ssh-enabled":  ["tag:ssh-enabled", "autogroup:admin"],
 
 		// TCP-443-only tag
 		"tag:restricted-outbound": ["tag:k8s-operator", "autogroup:admin"],
@@ -136,9 +134,9 @@
 		{
 			"action":          "accept",
 			"src":             ["group:superuser"],
-			"dst":             ["tag:ssh-enabled"],
+			"dst":             ["tag:ottawa", "tag:ottawa-infra", "tag:robbinsdale"],
 			"users":           ["root", "autogroup:nonroot"],
-			"recorder":        ["tag:k8s"],
+			"recorder":        ["tag:k8s-recorder"],
 			"enforceRecorder": true,
 		},
 	],
@@ -151,12 +149,6 @@
 		// ------------------------------------------------------------------------
 		// BASIC NETWORK ACCESS
 		// ------------------------------------------------------------------------
-		// SSH access to devices with ssh-enabled tag
-		{
-			"src": ["group:superuser"],
-			"dst": ["tag:ssh-enabled"],
-			"ip":  ["*:22"],
-		},
 
     // Allow Superuser to access all robbinsdale nodes
     {
@@ -303,8 +295,8 @@
 						"impersonate": {
 							"groups": ["system:masters"],
 						},
-						// "recorder":        ["tag:k8s"],
-						// "enforceRecorder": true,
+						"recorder":        ["tag:k8s-recorder"],
+						"enforceRecorder": true,
 					},
 				],
 			},
@@ -321,8 +313,8 @@
 						"impersonate": {
 							"groups": ["tailnet-readers"],
 						},
-						// "recorder":        ["tag:k8s"],
-						// "enforceRecorder": true,
+						"recorder":        ["tag:k8s-recorder"],
+						"enforceRecorder": true,
 					},
 				],
 			},
