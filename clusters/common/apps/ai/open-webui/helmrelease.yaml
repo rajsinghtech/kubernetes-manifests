@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: open-webui
-      version: *
+      version: "*"
       sourceRef:
         kind: HelmRepository
         name: open-webui
@@ -19,4 +19,3 @@ spec:
   values:
     ollama:
       enabled: false
-      
