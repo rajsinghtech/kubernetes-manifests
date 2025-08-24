@@ -89,12 +89,6 @@
 
 		// Site-specific infrastructure tags
 		"tag:ottawa-infra": ["tag:ottawa-infra", "autogroup:admin"],
-		
-		// Service and connectivity tags
-		"tag:hello":        ["tag:k8s-operator", "autogroup:admin"],
-		"tag:ingress":      ["tag:k8s-operator", "autogroup:admin"],
-		"tag:egress":       ["tag:k8s-operator", "autogroup:admin"],
-		"tag:test":         ["tag:k8s-operator", "autogroup:admin"],
 
 		// TCP-443-only tag
 		"tag:restricted-outbound": ["tag:k8s-operator", "autogroup:admin"],
@@ -118,8 +112,6 @@
 			"10.226.0.0/16":       ["tag:usw2"], // US West 2 VPC cidr		
 		},
 		"services": {
-			"tag:hello": ["tag:ingress"],
-			"svc:test":  ["tag:test"],
       "tag:k8s": ["tag:k8s"],
       "svc:keiretsu": ["tag:k8s"],
 		},
@@ -199,13 +191,6 @@
 			"ip":  ["*"],
 		},
 		
-		// Allow k8s-operator to access service tags
-		{
-			"src": ["tag:k8s-operator", "tag:k8s"],
-			"dst": ["tag:ingress", "tag:egress", "tag:hello"],
-			"ip":  ["*"],
-		},
-		
 		// Allow members and k8s-operator to access tcp-443-only nodes
 		{
 			"src": ["group:superuser", "tag:k8s-operator", "tag:k8s"],
@@ -216,7 +201,7 @@
 		// Allow members to reach k8s nodes and directly
 		{
 			"src": ["group:superuser", "tag:k8s", "tag:k8s-operator"],
-			"dst": ["tag:k8s", "tag:ingress", "tag:hello"],
+			"dst": ["tag:k8s",],
 			"ip":  ["*"],
       "app": {
         "tailscale.com/cap/relay": [],
@@ -397,9 +382,6 @@
         "tag:k8s-operator:443",
         "tag:k8s:443",
 		    "tag:k8s:80",
-        "tag:ingress:443",
-        "tag:hello:443",
-        "tag:ssh-enabled:22",
         "tag:robbinsdale:443",
         "rajsinghtech@github:53",
       ]
@@ -409,9 +391,6 @@
       "src": "tag:k8s-operator",
       "accept": [
         "tag:k8s:443",
-        "tag:ingress:443",
-        "tag:egress:443",
-        "tag:hello:443",
       ]
     },
     {
@@ -420,9 +399,6 @@
       "accept": [
         "tag:k8s-operator:443",
         "tag:k8s:443",
-        "tag:ingress:443",
-        "tag:egress:443",
-        "tag:hello:443",
         "192.168.169.1:443",
       ]
     },
