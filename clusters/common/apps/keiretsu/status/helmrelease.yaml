@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: gatus
-      version: 1.3.0 # Pinned version from original kustomization
+      version: 1.3.0 
       sourceRef:
         kind: HelmRepository
         name: twin
@@ -31,20 +31,9 @@ spec:
         discord:
           webhook-url: "$${discord-webhook-url}"
       endpoints:
-        - name: ottawa
-          group: karmada
-          url: https://keiretsu-karmada-ottawa-apiserver.keiretsu.ts.net:5443/readyz
-          interval: 60s
-          client:
-            insecure: true
-          conditions:
-            - "[STATUS] == 401"
-          alerts:
-            - type: discord
-              send-on-resolved: true
-        - name: robbinsdale
-          group: karmada
-          url: https://keiretsu-karmada-robbinsdale-apiserver.keiretsu.ts.net:5443/readyz
+        - name: kirito
+          group: tailscale
+          url: https://kirito.ai:11434
           interval: 60s
           client:
             insecure: true
