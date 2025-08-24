@@ -27,10 +27,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: kirito
+  name: kirito-single
   annotations:
     tailscale.com/tailnet-fqdn: kirito.keiretsu.ts.net
-    tailscale.com/proxy-class: common-egress
+    # tailscale.com/proxy-class: common-egress
 spec:
   externalName: placeholder
   type: ExternalName
