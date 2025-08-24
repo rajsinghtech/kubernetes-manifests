@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: kirito-sr
   annotations:
-    tailscale.com/tailnet-ip: 192.168.169.112
+    tailscale.com/tailnet-ip: "192.168.169.112"
     tailscale.com/proxy-class: common-accept-routes
     # tailscale.com/proxy-group: common-egress
 spec:
