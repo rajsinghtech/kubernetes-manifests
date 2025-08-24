@@ -303,8 +303,8 @@
 						"impersonate": {
 							"groups": ["system:masters"],
 						},
-						"recorder":        ["tag:k8s"],
-						"enforceRecorder": true,
+						// "recorder":        ["tag:k8s"],
+						// "enforceRecorder": true,
 					},
 				],
 			},
@@ -431,6 +431,7 @@
         "tag:ingress:443",
         "tag:egress:443",
         "tag:hello:443",
+        "192.168.169.1:443",
       ]
     },
     {
