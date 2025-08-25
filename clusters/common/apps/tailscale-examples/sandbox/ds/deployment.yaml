@@ -30,6 +30,8 @@ spec:
           # value: "tailscale" # Use this to store state in kube secret
         - name: TS_USERSPACE
           value: "true"
+        - name: TS_OUTBOUND_HTTP_PROXY_LISTEN
+          value: "0.0.0.0:1055"
         - name: TS_DEBUG_FIREWALL_MODE
           value: auto
         - name: TS_AUTHKEY
