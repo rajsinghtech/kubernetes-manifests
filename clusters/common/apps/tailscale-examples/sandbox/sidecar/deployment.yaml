@@ -47,5 +47,3 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.uid
-        securityContext:
-          privileged: true
