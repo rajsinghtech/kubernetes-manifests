@@ -12,6 +12,7 @@ spec:
         app: netshoot
     spec:
       serviceAccountName: "tailscale"
+      hostNetwork: true
       containers:
       - name: netshoot
         image: nicolaka/netshoot:latest
@@ -54,9 +55,3 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.uid
-        securityContext:
-          capabilities:
-            add:
-            - NET_ADMIN
-          runAsUser: 1000
-          runAsGroup: 1000
