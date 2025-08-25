@@ -39,11 +39,11 @@ spec:
         - name: TS_ACCEPT_DNS
           value: "true"
         - name: TS_EXTRA_ARGS
-          value: "--advertise-tags=tag:k8s --accept-routes"
+          value: "--advertise-tags=tag:k8s,tag:${LOCATION} --accept-routes"
         - name: POD_NAME
           valueFrom:
             fieldRef:
-              fieldPath: metadata.name
+              fieldPath: spec.nodeName
         - name: POD_UID
           valueFrom:
             fieldRef:
