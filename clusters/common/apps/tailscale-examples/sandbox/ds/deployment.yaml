@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: ts-userspace-ds
+  name: ts-sidecar
 spec:
   selector:
     matchLabels:
@@ -44,7 +44,7 @@ spec:
         - name: POD_NAME
           valueFrom:
             fieldRef:
-              fieldPath: spec.nodeName
+              fieldPath: metadata.name
         - name: POD_UID
           valueFrom:
             fieldRef:
