@@ -8,7 +8,7 @@ metadata:
     gateway: keiretsu-ts
 spec:
   gatewayClassName: keiretsu-ts
-  listeners:
+  listeners: 
     - name: wildcard-raj-https
       protocol: HTTPS
       port: 443
