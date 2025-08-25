@@ -5,5 +5,4 @@ resources:
   - gatewayclass.yaml
   - gateway.yaml
   - envoyproxy.yaml
-  - certificate-killinit-wildcard-tls.yaml
   - certificate-raj-wildcard-tls.yaml

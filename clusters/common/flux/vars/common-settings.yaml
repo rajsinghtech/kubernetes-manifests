@@ -5,5 +5,4 @@ metadata:
   name: common-settings
   namespace: flux-system
 data:
-  RAJSINGH_INFO_DOMAIN: rajsingh.info
-  KILLINIT_DOMAIN: killinit.cc
+  COMMON_DOMAIN: rajsingh.info
