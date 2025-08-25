@@ -13,7 +13,6 @@ spec:
         app: netshoot
     spec:
       serviceAccountName: "tailscale"
-      hostNetwork: true
       containers:
       - name: netshoot
         image: nicolaka/netshoot:latest
