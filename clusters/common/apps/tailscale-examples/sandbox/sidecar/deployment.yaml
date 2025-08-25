@@ -26,7 +26,7 @@ spec:
           value: "" # Empty secret to force state to not store in kube secret
           # value: "tailscale" # Use this to store state in kube secret
         - name: TS_USERSPACE
-          value: "false"
+          value: "true"
         - name: TS_DEBUG_FIREWALL_MODE
           value: auto
         - name: TS_AUTHKEY
