@@ -47,6 +47,8 @@ spec:
         #       fieldPath: spec.nodeName
         - name: POD_NAME
           value: "${LOCATION}-sidecar"
+        - name: TS_HOSTNAME
+          value: "${LOCATION}-sidecar"
         - name: POD_UID
           valueFrom:
             fieldRef:
