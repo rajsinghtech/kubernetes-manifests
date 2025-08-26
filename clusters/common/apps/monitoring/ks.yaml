@@ -30,7 +30,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: kube-prometheus-stack
+    - name: monitoring
   path: ./clusters/common/apps/monitoring/config
   prune: true
   sourceRef:
