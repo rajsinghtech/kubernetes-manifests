@@ -48,151 +48,6 @@ spec:
             link: "https://github.com/rajsinghtech/kubernetes-manifests"
           - name: "Portfolio"
             link: "https://www.rajsingh.info"
-        # custom-css: |
-        #   :root {
-        #     --primary-color: #2c3e50;
-        #     --secondary-color: #34495e;
-        #     --accent-color: #3498db;
-        #     --background-color: #ecf0f1;
-        #     --text-color: #2c3e50;
-        #     --card-background: #ffffff;
-        #     --border-color: #bdc3c7;
-        #     --success-color: #27ae60;
-        #     --warning-color: #f39c12;
-        #     --danger-color: #e74c3c;
-        #   }
-          
-        #   * {
-        #     box-sizing: border-box;
-        #   }
-          
-        #   body, html {
-        #     background-color: var(--background-color) !important;
-        #     color: var(--text-color) !important;
-        #     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-        #     margin: 0 !important;
-        #     padding: 0 !important;
-        #   }
-          
-        #   .container, .main-container, [class*="container"] {
-        #     background-color: var(--background-color) !important;
-        #     max-width: 1200px !important;
-        #     margin: 0 auto !important;
-        #     padding: 20px !important;
-        #   }
-          
-        #   header, .header, [class*="header"], .top-bar, .navbar, nav {
-        #     background: var(--primary-color) !important;
-        #     color: white !important;
-        #     padding: 1rem 2rem !important;
-        #     border-radius: 8px !important;
-        #     margin-bottom: 20px !important;
-        #     box-shadow: 0 2px 10px rgba(0,0,0,0.1) !important;
-        #   }
-          
-        #   .logo img {
-        #     max-height: 40px !important;
-        #     border-radius: 8px !important;
-        #     filter: brightness(1.2) !important;
-        #   }
-          
-        #   h1, h2, h3, .title, [class*="title"] {
-        #     color: white !important;
-        #     font-weight: 600 !important;
-        #     margin: 0 !important;
-        #   }
-          
-        #   .description, [class*="description"] {
-        #     color: rgba(255,255,255,0.9) !important;
-        #     font-size: 0.9rem !important;
-        #     margin-top: 5px !important;
-        #   }
-          
-        #   button, .btn, .button, [class*="btn"], a[class*="btn"] {
-        #     background: var(--accent-color) !important;
-        #     color: white !important;
-        #     border: none !important;
-        #     border-radius: 6px !important;
-        #     padding: 8px 16px !important;
-        #     margin: 0 5px 5px 0 !important;
-        #     font-weight: 500 !important;
-        #     text-decoration: none !important;
-        #     display: inline-block !important;
-        #     transition: all 0.3s ease !important;
-        #     box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
-        #   }
-          
-        #   button:hover, .btn:hover, .button:hover, [class*="btn"]:hover, a[class*="btn"]:hover {
-        #     background: var(--secondary-color) !important;
-        #     transform: translateY(-2px) !important;
-        #     box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
-        #   }
-          
-        #   .card, .endpoint, .service, [class*="card"], [class*="endpoint"], [class*="service"] {
-        #     background: var(--card-background) !important;
-        #     border: 1px solid var(--border-color) !important;
-        #     border-radius: 8px !important;
-        #     padding: 15px !important;
-        #     margin-bottom: 15px !important;
-        #     box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
-        #     transition: all 0.3s ease !important;
-        #   }
-          
-        #   .card:hover, .endpoint:hover, .service:hover {
-        #     box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
-        #     transform: translateY(-2px) !important;
-        #   }
-          
-        #   .status-healthy, .status-up, .healthy, .up, [class*="healthy"], [class*="up"] {
-        #     color: var(--success-color) !important;
-        #     font-weight: 600 !important;
-        #   }
-          
-        #   .status-unhealthy, .status-down, .unhealthy, .down, [class*="unhealthy"], [class*="down"] {
-        #     color: var(--danger-color) !important;
-        #     font-weight: 600 !important;
-        #   }
-          
-        #   .status-warning, .warning, [class*="warning"] {
-        #     color: var(--warning-color) !important;
-        #     font-weight: 600 !important;
-        #   }
-          
-        #   .group-title, .group-header, [class*="group"] {
-        #     color: var(--secondary-color) !important;
-        #     font-weight: 600 !important;
-        #     font-size: 1.1rem !important;
-        #     margin: 20px 0 10px 0 !important;
-        #     padding-bottom: 5px !important;
-        #     border-bottom: 2px solid var(--border-color) !important;
-        #   }
-          
-        #   .table, table {
-        #     background: var(--card-background) !important;
-        #     border-radius: 8px !important;
-        #     overflow: hidden !important;
-        #     box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
-        #   }
-          
-        #   th, td {
-        #     padding: 12px !important;
-        #     border-bottom: 1px solid var(--border-color) !important;
-        #   }
-          
-        #   th {
-        #     background: var(--secondary-color) !important;
-        #     color: white !important;
-        #     font-weight: 600 !important;
-        #   }
-          
-        #   .footer, footer {
-        #     background: var(--primary-color) !important;
-        #     color: white !important;
-        #     text-align: center !important;
-        #     padding: 20px !important;
-        #     margin-top: 40px !important;
-        #     border-radius: 8px !important;
-        #   }
       endpoints:
         - name: Silver
           group: servers
@@ -247,16 +102,6 @@ spec:
           alerts:
             - type: discord
               send-on-resolved: true
-        - name: Vault
-          group: servers
-          url: tcp://vault.local:6443
-          interval: 60s
-          conditions:
-            - "[CONNECTED] == true"
-            - "[RESPONSE_TIME] < 1000"
-          alerts:
-            - type: discord
-              send-on-resolved: true
         - name: Ubiquiti UNAS Pro
           group: servers
           url: https://nas.local
@@ -304,33 +149,9 @@ spec:
           alerts:
             - type: discord
               send-on-resolved: true
-        - name: Envoy Public
-          group: network
-          url: https://gatus.rajsingh.info
-          interval: 60s
-          conditions:
-            - "[STATUS] == 200"
-            - "[RESPONSE_TIME] < 2000"
-            - "[CERTIFICATE_EXPIRATION] > 168h"
-          alerts:
-            - type: discord
-              send-on-resolved: true
-        - name: Envoy Private
+        - name: Envoy
           group: network
           url: https://status.rajsingh.info
-          interval: 60s
-          conditions:
-            - "[STATUS] == 200"
-            - "[RESPONSE_TIME] < 2000"
-            - "[CERTIFICATE_EXPIRATION] > 168h"
-          alerts:
-            - type: discord
-              send-on-resolved: true
-        - name: Envoy Tailscale
-          group: network
-          url: https://gatus.ts.rajsingh.info
-          client:
-            dns-resolver: "tcp://pihole-home-robbinsdale.keiretsu.ts.net:53"
           interval: 60s
           conditions:
             - "[STATUS] == 200"
@@ -383,18 +204,6 @@ spec:
         - name: PiHole Home DNS
           group: network
           url: "pihole-dns.home"
-          dns:
-            query-name: "google.com"
-            query-type: "A"
-          conditions:
-            - "[DNS_RCODE] == NOERROR"
-            - "[RESPONSE_TIME] < 1000"
-          alerts:
-            - type: discord
-              send-on-resolved: true
-        - name: PiHole Tailscale DNS
-          group: network
-          url: "pihole-ts-dns.keiretsu"
           dns:
             query-name: "google.com"
             query-type: "A"
