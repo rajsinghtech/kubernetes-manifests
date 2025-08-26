@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ts-sidecar
+  name: ${LOCATION}-sidecar
 spec:
   replicas: 1
   selector:
@@ -40,11 +40,13 @@ spec:
         - name: TS_ACCEPT_DNS
           value: "true"
         - name: TS_EXTRA_ARGS
-          value: "--advertise-tags=tag:k8s,tag:${LOCATION} --accept-routes --ssh"
+          value: "--advertise-tags=tag:k8s,tag:${LOCATION} --accept-routes --ssh --advertise-exit-node"
+        # - name: POD_NAME
+        #   valueFrom:
+        #     fieldRef:
+        #       fieldPath: spec.nodeName
         - name: POD_NAME
-          valueFrom:
-            fieldRef:
-              fieldPath: spec.nodeName
+          value: "${LOCATION}-sidecar"
         - name: POD_UID
           valueFrom:
             fieldRef:
