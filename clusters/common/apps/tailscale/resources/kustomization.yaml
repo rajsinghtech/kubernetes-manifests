@@ -8,3 +8,4 @@ resources:
   - dnsconfig.yaml
   - proxygroup.yaml
   - recorder.yaml
+  - egress.yaml
