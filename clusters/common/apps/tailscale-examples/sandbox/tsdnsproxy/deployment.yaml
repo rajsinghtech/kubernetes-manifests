@@ -72,7 +72,7 @@ spec:
         - name: TSDNSPROXY_STATE
           value: "kube:tsdnsproxy-state"
         - name: TSDNSPROXY_HOSTNAME
-          value: "tsdnsproxy-${LOCATION}"
+          value: "${LOCATION}-tsdnsproxy"
         - name: TSDNSPROXY_VERBOSE
           value: "true"
         # - name: TSDNSPROXY_DEFAULT_DNS
@@ -82,7 +82,7 @@ spec:
         - name: TS_AUTHKEY
           valueFrom:
             secretKeyRef:
-              name: ts-authkey
+              name: ts-oauth
               key: TS_AUTHKEY
         resources:
           requests:
@@ -122,13 +122,13 @@ metadata:
   namespace: tsdnsproxy
   labels:
     app: tsdnsproxy
-  annotations:
-    tailscale.com/hostname: ${LOCATION}-tsdnsproxy
+  # annotations:
+    # tailscale.com/hostname: ${LOCATION}-tsdnsproxy
     # tailscale.com/proxy-group: common-ingress
     # tailscale.com/tags: "tag:k8s"
 spec:
-  type: LoadBalancer
-  loadBalancerClass: tailscale
+  type: ClusterIP
+  # loadBalancerClass: tailscale
   selector:
     app: tsdnsproxy
   ports:

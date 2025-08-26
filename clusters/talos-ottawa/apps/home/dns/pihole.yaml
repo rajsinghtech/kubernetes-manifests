@@ -32,7 +32,7 @@ spec:
     hostname: "pihole-home-ts"
     serviceDns:
       annotations:
-        tailscale.com/hostname: pihole-home-${LOCATION}
+        tailscale.com/hostname: ${LOCATION}-pihole-home
       externalTrafficPolicy: Cluster
       loadBalancerClass: tailscale
       mixedService: true
