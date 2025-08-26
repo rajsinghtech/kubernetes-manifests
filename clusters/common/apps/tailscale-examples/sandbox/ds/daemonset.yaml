@@ -27,8 +27,7 @@ spec:
         env:
           # Store the state in a k8s secret
         - name: TS_KUBE_SECRET
-          value: "" # Empty secret to force state to not store in kube secret
-          # value: "tailscale" # Use this to store state in kube secret
+          value: $(POD_NAME)
         - name: TS_USERSPACE
           value: "true"
         - name: TS_OUTBOUND_HTTP_PROXY_LISTEN
@@ -46,7 +45,7 @@ spec:
         - name: TS_ACCEPT_DNS
           value: "true"
         - name: TS_EXTRA_ARGS
-          value: "--advertise-tags=tag:k8s --accept-routes"
+          value: "--advertise-tags=tag:k8s,tag:${LOCATION} --accept-routes --ssh"
         - name: POD_NAME
           valueFrom:
             fieldRef:
