@@ -8,6 +8,7 @@ spec:
     - tag:k8s
     - tag:${LOCATION}
   hostname: *name
+  exitNode: true
   subnetRouter:
     advertiseRoutes:
       - "${LAN_CIDR}" # LAN
@@ -29,15 +30,3 @@ spec:
   appConnector: 
     routes:
       - "fd7a:115c:a1e0:b1a:0:${SITE_ID}::/96"
----
-apiVersion: tailscale.com/v1alpha1
-kind: Connector
-metadata:
-  name: &name ${LOCATION}-exit-node
-spec:
-  proxyClass: common
-  tags:
-    - tag:k8s
-    - tag:${LOCATION}
-  hostname: *name
-  exitNode: true
