@@ -20,9 +20,9 @@ spec:
   - name: discord
     discordConfigs:
       - sendResolved: true
-        apiURL:
-          name: alertmanager-secrets
-          key: discord-webhook-url
+        # apiURL:
+        #   name: alertmanager-secrets
+        #   key: discord-webhook-url
         title: >-
           {{ .GroupLabels.alertname }} - {{ .GroupLabels.namespace }}
           {{- if ne .CommonLabels.severity "" }} ({{ .CommonLabels.severity}}){{- end }}
