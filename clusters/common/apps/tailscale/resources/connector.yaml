@@ -1,7 +1,7 @@
 apiVersion: tailscale.com/v1alpha1
 kind: Connector
 metadata:
-  name: &name ${LOCATION}-subnet-router
+  name: &name ${LOCATION}-subnetrouter
 spec:
   proxyClass: common
   tags:
@@ -20,7 +20,7 @@ spec:
 apiVersion: tailscale.com/v1alpha1
 kind: Connector
 metadata:
-  name: &name ${LOCATION}-app-connector
+  name: &name ${LOCATION}-appconnector
 spec:
   proxyClass: common
   tags:
