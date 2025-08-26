@@ -2,7 +2,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: ingress-nginx
+  name: ts-ingress-nginx
 spec:
   interval: 30m
   chart:
@@ -26,6 +26,8 @@ spec:
       service:
         type: LoadBalancer
         loadBalancerClass: tailscale
+        annotations:
+          tailscale.com/hostname: ${LOCATION}-ingress-nginx
       config:
         enable-access-log-for-default-backend: "true"
       metrics:
