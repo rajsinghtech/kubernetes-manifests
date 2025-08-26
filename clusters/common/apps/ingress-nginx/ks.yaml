@@ -9,7 +9,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./clusters/${CLUSTER_NAME}/apps/ingress-nginx/app
+  path: ./clusters/common/apps/ingress-nginx/app
   prune: true
   sourceRef:
     kind: GitRepository

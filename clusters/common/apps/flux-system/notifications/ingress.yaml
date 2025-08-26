@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: flux-webhook-${LOCATION}
+  name: ${LOCATION}-flux-webhook
   annotations:
     tailscale.com/funnel: "true"
 spec:
@@ -13,4 +13,4 @@ spec:
   ingressClassName: tailscale
   tls:
     - hosts:
-        - flux-webhook-${LOCATION}
+        - ${LOCATION}-flux-webhook
