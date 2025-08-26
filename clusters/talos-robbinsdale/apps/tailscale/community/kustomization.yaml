@@ -4,6 +4,6 @@ kind: Kustomization
 
 resources:
 #  - ./tclip
- - ./tsidp
+#  - ./tsidp
 #  - ./golink
  - ./secret.yaml
