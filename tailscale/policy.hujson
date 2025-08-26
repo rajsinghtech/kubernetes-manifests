@@ -324,7 +324,7 @@
             "name":"robbinsdale",
             "connectors":["tag:robbinsdale"],
             "domains":[
-              "ipinfo.io",
+              "lukehouge.com",
               "robbinsdale.k8s"
             ],
             "routes":["fd7a:115c:a1e0:b1a:0:1::/96"]
@@ -333,7 +333,7 @@
             "name":"ottawa",
             "connectors":["tag:ottawa"],
             "domains":[
-              "ipchicken.com",
+              "rajsingh.info",
               "ottawa.k8s"
             ],
             "routes":["fd7a:115c:a1e0:b1a:0:2::/96"]
