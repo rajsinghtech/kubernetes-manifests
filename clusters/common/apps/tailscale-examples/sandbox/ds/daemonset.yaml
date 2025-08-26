@@ -27,7 +27,7 @@ spec:
         env:
           # Store the state in a k8s secret
         - name: TS_KUBE_SECRET
-          value: $(POD_NAME)
+          value: ""
         - name: TS_USERSPACE
           value: "true"
         - name: TS_OUTBOUND_HTTP_PROXY_LISTEN
