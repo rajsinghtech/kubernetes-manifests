@@ -12,6 +12,8 @@ spec:
       labels:
         app: ts-sidecar
     spec:
+      strategy:
+        type: Recreate
       serviceAccountName: "tailscale"
       containers:
       - name: netshoot
