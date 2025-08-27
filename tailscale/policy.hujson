@@ -217,7 +217,7 @@
 		
 		// Allow members to use nodes as exit nodes and app connector
 		{
-			"src": ["group:superuser"],
+			"src": ["group:superuser", "tag:k8s"],
 			"dst": ["autogroup:internet"],
 			"ip":  ["*"],
 			"via": ["tag:robbinsdale", "tag:ottawa"],
