@@ -36,6 +36,10 @@ spec:
         image: "ghcr.io/tailscale/tailscale:latest"
         securityContext:
           privileged: true
+          capabilities:
+            add:
+            - NET_ADMIN
+            - NET_RAW
         lifecycle:
           postStart:
             exec:
