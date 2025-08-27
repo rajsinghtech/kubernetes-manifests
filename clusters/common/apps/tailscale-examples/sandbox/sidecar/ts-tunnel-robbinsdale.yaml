@@ -25,7 +25,7 @@ spec:
         lifecycle:
           postStart:
             exec:
-              command: ["/bin/sh", "-c", "sleep 10 && tailscale set --exit-node=robbinsdale-sidecar"]
+              command: ["/bin/sh", "-c", "sleep 10 && tailscale set --exit-node=robbinsdale-exit-node"]
         env:
         - name: TS_KUBE_SECRET
           value: ""
