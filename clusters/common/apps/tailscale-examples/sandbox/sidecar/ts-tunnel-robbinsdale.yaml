@@ -42,7 +42,7 @@ spec:
         - name: TS_ACCEPT_DNS
           value: "true"
         - name: TS_EXTRA_ARGS
-          value: "--advertise-tags=tag:k8s,tag:${LOCATION} --accept-routes --ssh --exit-node robbinsdale-sidecar"
+          value: "--advertise-tags=tag:k8s,tag:${LOCATION} --accept-routes --ssh --exit-node robbinsdale-sidecar.keiretsu.ts.net"
         - name: POD_NAME
           valueFrom:
             fieldRef:
