@@ -40,10 +40,6 @@ spec:
             add:
             - NET_ADMIN
             - NET_RAW
-        lifecycle:
-          postStart:
-            exec:
-              command: ["/bin/sh", "-c", "sleep 10 && tailscale set --exit-node=ottawa-exit-node"]
         env:
         - name: TS_KUBE_SECRET
           value: ""
@@ -58,7 +54,9 @@ spec:
         - name: TS_ACCEPT_DNS
           value: "true"
         - name: TS_EXTRA_ARGS
-          value: "--advertise-tags=tag:k8s,tag:${LOCATION} --accept-routes --ssh"
+          value: "--advertise-tags=tag:k8s,tag:${LOCATION} --accept-routes --ssh --exit-node=ottawa-exit-node"
+        - name: TS_TAILSCALED_EXTRA_ARGS
+          value: "--tun=tailscale1"
         - name: POD_NAME
           valueFrom:
             fieldRef:
