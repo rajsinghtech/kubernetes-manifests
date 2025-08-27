@@ -53,6 +53,8 @@ spec:
           value: "true"
         - name: TS_EXTRA_ARGS
           value: "--advertise-tags=tag:k8s,tag:${LOCATION} --accept-routes --ssh"
+        - name: TS_HOSTNAME
+          value: "${LOCATION}-sidecar"
         - name: POD_NAME
           valueFrom:
             fieldRef:
