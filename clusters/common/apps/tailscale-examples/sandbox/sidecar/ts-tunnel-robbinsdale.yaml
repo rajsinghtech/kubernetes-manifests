@@ -15,6 +15,18 @@ spec:
       strategy:
         type: Recreate
       serviceAccountName: "tailscale"
+      initContainers:
+      - args:
+        - sysctl -w net.ipv4.ip_forward=1 && if sysctl net.ipv6.conf.all.forwarding;
+          then sysctl -w net.ipv6.conf.all.forwarding=1; fi
+        command:
+        - /bin/sh
+        - -c
+        image: "ghcr.io/tailscale/tailscale:latest"
+        imagePullPolicy: Always
+        name: sysctler
+        securityContext:
+          privileged: true
       containers:
       - name: netshoot
         image: nicolaka/netshoot:latest
@@ -22,6 +34,8 @@ spec:
       - name: ${LOCATION}-tunnel-robbinsdale
         imagePullPolicy: Always
         image: "ghcr.io/tailscale/tailscale:latest"
+        securityContext:
+          privileged: true
         lifecycle:
           postStart:
             exec:
