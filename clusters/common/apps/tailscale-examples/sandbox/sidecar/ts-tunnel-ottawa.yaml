@@ -43,6 +43,8 @@ spec:
         env:
         - name: TS_KUBE_SECRET
           value: ""
+        - name: TS_USERSPACE
+          value: "false"
         - name: TS_DEBUG_FIREWALL_MODE
           value: auto
         - name: TS_AUTHKEY
@@ -54,7 +56,7 @@ spec:
         - name: TS_ACCEPT_DNS
           value: "true"
         - name: TS_EXTRA_ARGS
-          value: "--advertise-tags=tag:k8s,tag:${LOCATION} --accept-routes --ssh --exit-node=ottawa-exit-node"
+          value: "--advertise-tags=tag:k8s,tag:${LOCATION} --accept-routes --ssh --exit-node ottawa-exit-node"
         - name: TS_TAILSCALED_EXTRA_ARGS
           value: "--tun=tailscale1"
         - name: POD_NAME
