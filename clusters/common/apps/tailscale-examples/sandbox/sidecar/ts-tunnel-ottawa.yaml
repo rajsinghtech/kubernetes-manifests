@@ -25,7 +25,7 @@ spec:
         lifecycle:
           postStart:
             exec:
-              command: ["/bin/sh", "-c", "sleep 10 && tailscale set --exit-node=ottawa-sidecar"]
+              command: ["/bin/sh", "-c", "sleep 10 && tailscale set --exit-node=ottawa-exit-node"]
         env:
         - name: TS_KUBE_SECRET
           value: ""
