@@ -4,6 +4,8 @@ metadata:
   name: ${LOCATION}-tunnel-robbinsdale
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: ${LOCATION}-tunnel-robbinsdale
@@ -12,8 +14,6 @@ spec:
       labels:
         app: ${LOCATION}-tunnel-robbinsdale
     spec:
-      strategy:
-        type: Recreate
       serviceAccountName: "tailscale"
       initContainers:
       - args:
@@ -36,10 +36,6 @@ spec:
         image: "ghcr.io/tailscale/tailscale:latest"
         securityContext:
           privileged: true
-          capabilities:
-            add:
-            - NET_ADMIN
-            - NET_RAW
         lifecycle:
           postStart:
             exec:
@@ -47,6 +43,8 @@ spec:
         env:
         - name: TS_KUBE_SECRET
           value: ""
+        - name: TS_USERSPACE
+          value: "false"
         - name: TS_DEBUG_FIREWALL_MODE
           value: auto
         - name: TS_AUTHKEY

@@ -4,6 +4,8 @@ metadata:
   name: ${LOCATION}-tunnel-ottawa
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: ${LOCATION}-tunnel-ottawa
@@ -12,8 +14,6 @@ spec:
       labels:
         app: ${LOCATION}-tunnel-ottawa
     spec:
-      strategy:
-        type: Recreate
       serviceAccountName: "tailscale"
       initContainers:
       - args:
@@ -36,10 +36,10 @@ spec:
         image: "ghcr.io/tailscale/tailscale:latest"
         securityContext:
           privileged: true
-          capabilities:
-            add:
-            - NET_ADMIN
-            - NET_RAW
+        lifecycle:
+          postStart:
+            exec:
+              command: ["/bin/sh", "-c", "sleep 10 && tailscale set --exit-node=ottawa-exit-node"]
         env:
         - name: TS_KUBE_SECRET
           value: ""
@@ -56,9 +56,7 @@ spec:
         - name: TS_ACCEPT_DNS
           value: "true"
         - name: TS_EXTRA_ARGS
-          value: "--advertise-tags=tag:k8s,tag:${LOCATION} --accept-routes --ssh --exit-node ottawa-exit-node"
-        - name: TS_TAILSCALED_EXTRA_ARGS
-          value: "--tun=tailscale1"
+          value: "--advertise-tags=tag:k8s,tag:${LOCATION} --accept-routes --ssh"
         - name: POD_NAME
           valueFrom:
             fieldRef:

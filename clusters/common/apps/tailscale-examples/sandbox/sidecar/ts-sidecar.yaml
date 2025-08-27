@@ -4,6 +4,8 @@ metadata:
   name: ${LOCATION}-sidecar
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: ts-sidecar
@@ -12,8 +14,6 @@ spec:
       labels:
         app: ts-sidecar
     spec:
-      strategy:
-        type: Recreate
       serviceAccountName: "tailscale"
       containers:
       - name: netshoot
