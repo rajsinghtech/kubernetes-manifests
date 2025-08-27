@@ -36,7 +36,7 @@ spec:
         - name: TS_ACCEPT_DNS
           value: "true"
         - name: TS_EXTRA_ARGS
-          value: "--advertise-tags=tag:k8s,tag:${LOCATION} --accept-routes --ssh --exit-node=robbinsdale-sidecar"
+          value: "--advertise-tags=tag:k8s,tag:${LOCATION} --accept-routes --ssh"
         - name: POD_NAME
           valueFrom:
             fieldRef:
@@ -45,3 +45,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.uid
+      lifecycle:
+        postStart:
+          exec:
+            command: ["/bin/sh", "-c", "sleep 10 && tailscale set --exit-node=robbinsdale-sidecar"]
