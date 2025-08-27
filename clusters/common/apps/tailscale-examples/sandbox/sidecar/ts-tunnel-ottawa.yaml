@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ${LOCATION}-sidecar
+  name: ${LOCATION}-tunnel-ottawa
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ts-sidecar
+      app: ${LOCATION}-tunnel-ottawa
   template:
     metadata:
       labels:
-        app: ts-sidecar
+        app: ${LOCATION}-tunnel-ottawa
     spec:
       strategy:
         type: Recreate
@@ -19,7 +19,7 @@ spec:
       - name: netshoot
         image: nicolaka/netshoot:latest
         command: ["/bin/sh", "-c", "while true; do sleep 3600; done"]
-      - name: ts-sidecar
+      - name: ${LOCATION}-tunnel-ottawa
         imagePullPolicy: Always
         image: "ghcr.io/tailscale/tailscale:latest"
         env:
@@ -42,15 +42,11 @@ spec:
         - name: TS_ACCEPT_DNS
           value: "true"
         - name: TS_EXTRA_ARGS
-          value: "--advertise-tags=tag:k8s,tag:${LOCATION} --accept-routes --ssh --advertise-exit-node"
-        # - name: POD_NAME
-        #   valueFrom:
-        #     fieldRef:
-        #       fieldPath: spec.nodeName
+          value: "--advertise-tags=tag:k8s,tag:${LOCATION} --accept-routes --ssh --exit-node ottawa-sidecar"
         - name: POD_NAME
-          value: "${LOCATION}-sidecar"
-        - name: TS_HOSTNAME
-          value: "${LOCATION}-sidecar"
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
         - name: POD_UID
           valueFrom:
             fieldRef:

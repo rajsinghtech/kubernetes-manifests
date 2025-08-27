@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${LOCATION}-tunnel-robbinsdale
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ${LOCATION}-tunnel-robbinsdale
+  template:
+    metadata:
+      labels:
+        app: ${LOCATION}-tunnel-robbinsdale
+    spec:
+      strategy:
+        type: Recreate
+      serviceAccountName: "tailscale"
+      containers:
+      - name: netshoot
+        image: nicolaka/netshoot:latest
+        command: ["/bin/sh", "-c", "while true; do sleep 3600; done"]
+      - name: ${LOCATION}-tunnel-robbinsdale
+        imagePullPolicy: Always
+        image: "ghcr.io/tailscale/tailscale:latest"
+        env:
+        - name: TS_KUBE_SECRET
+          value: ""
+        - name: TS_USERSPACE
+          value: "true"
+        - name: TS_SOCKS5_SERVER
+          value: ":1055"
+        - name: TS_OUTBOUND_HTTP_PROXY_LISTEN
+          value: ":1055"
+        - name: TS_DEBUG_FIREWALL_MODE
+          value: auto
+        - name: TS_AUTHKEY
+          valueFrom:
+            secretKeyRef:
+              name: ts-oauth
+              key: TS_AUTHKEY_EPHEMERAL
+              optional: true
+        - name: TS_ACCEPT_DNS
+          value: "true"
+        - name: TS_EXTRA_ARGS
+          value: "--advertise-tags=tag:k8s,tag:${LOCATION} --accept-routes --ssh --exit-node robbinsdale-sidecar"
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_UID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.uid
