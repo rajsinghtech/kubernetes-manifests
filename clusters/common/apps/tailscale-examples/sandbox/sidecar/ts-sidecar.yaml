@@ -8,29 +8,39 @@ spec:
     type: Recreate
   selector:
     matchLabels:
-      app: ts-sidecar
+      app: ${LOCATION}-sidecar
   template:
     metadata:
       labels:
-        app: ts-sidecar
+        app: ${LOCATION}-sidecar
     spec:
       serviceAccountName: "tailscale"
+      initContainers:
+      - args:
+        - sysctl -w net.ipv4.ip_forward=1 && if sysctl net.ipv6.conf.all.forwarding;
+          then sysctl -w net.ipv6.conf.all.forwarding=1; fi
+        command:
+        - /bin/sh
+        - -c
+        image: "ghcr.io/tailscale/tailscale:latest"
+        imagePullPolicy: Always
+        name: sysctler
+        securityContext:
+          privileged: true
       containers:
       - name: netshoot
         image: nicolaka/netshoot:latest
         command: ["/bin/sh", "-c", "while true; do sleep 3600; done"]
-      - name: ts-sidecar
+      - name: tailscale
         imagePullPolicy: Always
         image: "ghcr.io/tailscale/tailscale:latest"
+        securityContext:
+          privileged: true
         env:
         - name: TS_KUBE_SECRET
           value: ""
         - name: TS_USERSPACE
-          value: "true"
-        - name: TS_SOCKS5_SERVER
-          value: ":1055"
-        - name: TS_OUTBOUND_HTTP_PROXY_LISTEN
-          value: ":1055"
+          value: "false"
         - name: TS_DEBUG_FIREWALL_MODE
           value: auto
         - name: TS_AUTHKEY
@@ -44,9 +54,9 @@ spec:
         - name: TS_EXTRA_ARGS
           value: "--advertise-tags=tag:k8s,tag:${LOCATION} --accept-routes --ssh"
         - name: POD_NAME
-          value: "${LOCATION}-sidecar"
-        - name: TS_HOSTNAME
-          value: "${LOCATION}-sidecar"
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
         - name: POD_UID
           valueFrom:
             fieldRef:

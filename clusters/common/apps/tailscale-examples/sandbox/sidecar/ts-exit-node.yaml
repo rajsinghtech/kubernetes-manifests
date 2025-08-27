@@ -28,7 +28,7 @@ spec:
         securityContext:
           privileged: true
       containers:
-      - name: ${LOCATION}-exit-node
+      - name: tailscale
         imagePullPolicy: Always
         image: "ghcr.io/tailscale/tailscale:latest"
         securityContext:

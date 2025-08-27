@@ -4,6 +4,7 @@ kind: Kustomization
 namespace: tailscale-examples
 resources:
   - ./ts-sidecar.yaml
+  - ./ts-sidecar-userspace.yaml
   - ./ts-tunnel-robbinsdale.yaml
   - ./ts-tunnel-ottawa.yaml
   - ./ts-exit-node.yaml
