@@ -22,6 +22,10 @@ spec:
       - name: ${LOCATION}-tunnel-ottawa
         imagePullPolicy: Always
         image: "ghcr.io/tailscale/tailscale:latest"
+        lifecycle:
+          postStart:
+            exec:
+              command: ["/bin/sh", "-c", "sleep 10 && tailscale set --exit-node=ottawa-sidecar"]
         env:
         - name: TS_KUBE_SECRET
           value: ""
@@ -36,7 +40,7 @@ spec:
         - name: TS_ACCEPT_DNS
           value: "true"
         - name: TS_EXTRA_ARGS
-          value: "--advertise-tags=tag:k8s,tag:${LOCATION} --accept-routes --ssh --exit-node=ottawa-sidecar"
+          value: "--advertise-tags=tag:k8s,tag:${LOCATION} --accept-routes --ssh"
         - name: POD_NAME
           valueFrom:
             fieldRef:
