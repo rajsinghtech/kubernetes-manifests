@@ -31,7 +31,7 @@ spec:
       - name: netshoot
         image: nicolaka/netshoot:latest
         command: ["/bin/sh", "-c", "while true; do sleep 3600; done"]
-      - name: ${LOCATION}-tunnel-robbinsdale
+      - name: tailscale
         imagePullPolicy: Always
         image: "ghcr.io/tailscale/tailscale:latest"
         securityContext:
@@ -57,6 +57,8 @@ spec:
           value: "true"
         - name: TS_EXTRA_ARGS
           value: "--advertise-tags=tag:k8s,tag:${LOCATION} --accept-routes --ssh"
+        - name: TS_HOSTNAME
+          value: "${LOCATION}-tunnel-robbinsdale"
         - name: POD_NAME
           valueFrom:
             fieldRef:

@@ -1,32 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ${LOCATION}-tunnel-ottawa
+  name: ${LOCATION}-sidecar-userspace
 spec:
   replicas: 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: ${LOCATION}-tunnel-ottawa
+      app: ${LOCATION}-sidecar-userspace
   template:
     metadata:
       labels:
-        app: ${LOCATION}-tunnel-ottawa
+        app: ${LOCATION}-sidecar-userspace
     spec:
       serviceAccountName: "tailscale"
-      initContainers:
-      - args:
-        - sysctl -w net.ipv4.ip_forward=1 && if sysctl net.ipv6.conf.all.forwarding;
-          then sysctl -w net.ipv6.conf.all.forwarding=1; fi
-        command:
-        - /bin/sh
-        - -c
-        image: "ghcr.io/tailscale/tailscale:latest"
-        imagePullPolicy: Always
-        name: sysctler
-        securityContext:
-          privileged: true
       containers:
       - name: netshoot
         image: nicolaka/netshoot:latest
@@ -34,17 +22,15 @@ spec:
       - name: tailscale
         imagePullPolicy: Always
         image: "ghcr.io/tailscale/tailscale:latest"
-        securityContext:
-          privileged: true
-        lifecycle:
-          postStart:
-            exec:
-              command: ["/bin/sh", "-c", "sleep 10 && tailscale set --exit-node=ottawa-exit-node"]
         env:
         - name: TS_KUBE_SECRET
           value: ""
         - name: TS_USERSPACE
-          value: "false"
+          value: "true"
+        - name: TS_SOCKS5_SERVER
+          value: ":1055"
+        - name: TS_OUTBOUND_HTTP_PROXY_LISTEN
+          value: ":1055"
         - name: TS_DEBUG_FIREWALL_MODE
           value: auto
         - name: TS_AUTHKEY
@@ -57,12 +43,10 @@ spec:
           value: "true"
         - name: TS_EXTRA_ARGS
           value: "--advertise-tags=tag:k8s,tag:${LOCATION} --accept-routes --ssh"
-        - name: TS_HOSTNAME
-          value: "${LOCATION}-tunnel-ottawa"
         - name: POD_NAME
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.name
+          value: "${LOCATION}-sidecar-userspace"
+        - name: TS_HOSTNAME
+          value: "${LOCATION}-sidecar-userspace"
         - name: POD_UID
           valueFrom:
             fieldRef:
