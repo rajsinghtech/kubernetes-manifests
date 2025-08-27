@@ -22,6 +22,10 @@ spec:
       - name: ${LOCATION}-tunnel-robbinsdale
         imagePullPolicy: Always
         image: "ghcr.io/tailscale/tailscale:latest"
+        lifecycle:
+          postStart:
+            exec:
+              command: ["/bin/sh", "-c", "sleep 10 && tailscale set --exit-node=ottawa-sidecar"]
         env:
         - name: TS_KUBE_SECRET
           value: ""
@@ -45,7 +49,3 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.uid
-      lifecycle:
-        postStart:
-          exec:
-            command: ["/bin/sh", "-c", "sleep 10 && tailscale set --exit-node=robbinsdale-sidecar"]
