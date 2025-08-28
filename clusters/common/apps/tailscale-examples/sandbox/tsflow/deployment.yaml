@@ -35,5 +35,3 @@ spec:
               key: client_secret
         - name: TAILSCALE_TAILNET
           value: "-"
-        - name: ENVIRONMENT
-          value: production
