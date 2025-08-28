@@ -15,23 +15,23 @@ spec:
         app: tsflow
     spec:
       containers:
-        - name: tsflow
-          image: ghcr.io/rajsinghtech/tsflow:latest
-          imagePullPolicy: Always
-          ports:
-            - name: http
-              containerPort: 8080 
-              protocol: TCP
-          env:
-            - name: TAILSCALE_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: tsflow
-                  key: TAILSCALE_API_KEY
-            - name: TAILSCALE_TAILNET
-              valueFrom:
-                secretKeyRef:
-                  name: tsflow
-                  key: TAILSCALE_TAILNET
-            - name: ENVIRONMENT
-              value: production
+      - name: tsflow
+        image: ghcr.io/rajsinghtech/tsflow:latest
+        imagePullPolicy: Always
+        ports:
+        - name: http
+          containerPort: 8080 
+          protocol: TCP
+        env:
+        - name: TAILSCALE_OAUTH_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: ts-oauth
+              key: client_id
+        - name: TAILSCALE_OAUTH_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: ts-oauth
+              key: client_secret
+        - name: TAILSCALE_TAILNET
+          value: "-"
