@@ -23,8 +23,7 @@ spec:
       name: public
       namespace: home
   hostnames:
-    - "unmanic.rajsingh.info"
-    - "unmanic.lukehouge.com"
+    - "unmanic.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""
