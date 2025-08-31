@@ -22,14 +22,14 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app tailscale-sidecar
+  name: &app tailscale-operator-resources
   namespace: flux-system
 spec:
   targetNamespace: tailscale
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./clusters/${CLUSTER_NAME}/apps/tailscale/sidecar
+  path: ./clusters/common/apps/tailscale/resources
   dependsOn:
     - name: tailscale-operator
   prune: true

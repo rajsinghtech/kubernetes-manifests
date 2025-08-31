@@ -6,7 +6,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 30m
-  path: ./clusters/eks-use1/apps
+  path: ./clusters/eks-usw2/apps
   prune: true
   sourceRef:
     kind: GitRepository
