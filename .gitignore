@@ -46,3 +46,4 @@ CLAUDE.md
 *.bak
 *.swp
 tailscale/validate.sh
+clusters/common/bootstrap/flux/secret.yaml
