@@ -7,27 +7,18 @@ metadata:
   version: "1.33"
 
 kubernetesNetworkConfig:
-  serviceIPv4CIDR: "10.227.0.0/16"
+  serviceIPv4CIDR: "10.81.0.0/16"
 vpc:
-  cidr: "10.226.0.0/16" 
-  subnets:
-    private:
-      us-west-2a:
-        id: subnet-083eea59371c1ed49
-      us-west-2b:
-        id: subnet-05443fd0e4860a089
-remoteNetworkConfig:
-  remoteNodeNetworks:
-  - cidrs: 
-    - 192.168.169.0/24
-  remotePodNetworks:
-  - cidrs:
-    - 10.80.0.0/16
-iam:
-  withOIDC: true
+  cidr: "10.80.0.0/16"
 
-addonsConfig:
-  disableDefaultAddons: true
-addons:
-  - name: coredns
-  - name: kube-proxy
+managedNodeGroups:
+  - name: ng-cluster
+    instanceType: t4g.xlarge
+    desiredCapacity: 2
+    minSize: 1
+    maxSize: 3
+    ssh:
+      allow: true 
+      publicKeyPath: ~/.ssh/id_rsa.pub
+    updateConfig:
+      maxUnavailable: 2
