@@ -23,7 +23,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 30m
-  path: ./clusters/eks-use1/flux
+  path: ./clusters/eks-usw2/flux
   prune: true
   wait: false
   sourceRef:
