@@ -6,7 +6,7 @@ metadata:
   namespace: flux-system
 data:
   LOCATION: usw2
-  SITE_ID: "1002"
+  SITE_ID: "5"
   TIMEZONE: America/New_York
   CLUSTER_NAME: eks-usw2
 
@@ -15,5 +15,4 @@ data:
   CLUSTER_SERVICE_CIDR: 10.81.0.0/16
 
   # Networking
-  LAN_CIDR: 192.168.169.0/24 
-  LAN_GATEWAY_IP: "192.168.169.1"
+  LAN_CIDR: fd7a:115c:a1e0:b1a:0:5::/96
