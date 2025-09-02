@@ -4,7 +4,7 @@ kind: Kustomization
 namespace: dns
 resources:
   - secret.yaml
-  # - pihole.yaml
+  - pihole.yaml
   - external-dns-pihole.yaml
   - httproute.yaml 
   - tcproute.yaml
