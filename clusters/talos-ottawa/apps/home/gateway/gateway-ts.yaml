@@ -5,7 +5,6 @@ metadata:
   name: ts
   labels:
     external-dns: home-ts
-    gateway: ts
 spec:
   gatewayClassName: ts
   listeners:
