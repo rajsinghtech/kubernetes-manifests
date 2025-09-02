@@ -1,0 +1,11 @@
+kind: UDPRoute
+metadata:
+  name: pihole-udp
+spec:
+  parentRefs:
+    - name: keiretsu-ts
+      sectionName: pihole-udp
+  rules:
+    - backendRefs:
+        - name: pihole-dns
+          port: 53

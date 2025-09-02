@@ -2,10 +2,10 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: ${COMMON_DOMAIN//./-}-pihole
+  name: pihole
 spec:
   interval: 30m
-  releaseName: ${COMMON_DOMAIN//./-}-pihole
+  releaseName: pihole
   chart:
     spec:
       chart: pihole
@@ -32,17 +32,17 @@ spec:
     strategyType: RollingUpdate
     serviceWeb:
       type: ClusterIP
-    hostname: "${COMMON_DOMAIN//./-}-pihole"
+    hostname: "keiretsu-pihole"
     serviceDns:
       annotations:
-        tailscale.com/hostname: ${LOCATION}-${COMMON_DOMAIN//./-}-pihole
+        tailscale.com/hostname: ${LOCATION}-keiretsu-pihole
         tailscale.com/proxy-group: common-ingress
         tailscale.com/tags: "tag:k8s"
       externalTrafficPolicy: Cluster
       loadBalancerClass: tailscale
       mixedService: true
       port: 53
-      type: LoadBalancer
+      # type: LoadBalancer
     ingress:
       enabled: false 
     podDnsConfig:

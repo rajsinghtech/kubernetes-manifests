@@ -1,0 +1,11 @@
+kind: TCPRoute
+metadata:
+  name: pihole-tcp
+spec:
+  parentRefs:
+    - name: keiretsu-ts
+      sectionName: pihole-tcp
+  rules:
+    - backendRefs:
+        - name: pihole-dns
+          port: 53
