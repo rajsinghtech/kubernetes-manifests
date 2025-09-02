@@ -30,7 +30,7 @@ metadata:
   name: ${LOCATION}-k8s
 spec:
   type: kube-apiserver
-  replicas: 2
+  replicas: 3
   tags:
     - tag:k8s
     - tag:${LOCATION}
