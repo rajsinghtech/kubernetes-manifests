@@ -31,8 +31,8 @@ spec:
             key: "password"
     extraArgs:
       - --ignore-ingress-tls-spec
-      - --pihole-server=http://${COMMON_DOMAIN//./-}-pihole-web.keiretsu
-      - --gateway-label-filter=external-dns==keiretsu-ts
+      - --pihole-server=http://pihole-web.keiretsu
+      - --gateway-label-filter=external-dns==keiretsu
       - --pihole-api-version=6
     policy: sync
     sources:
