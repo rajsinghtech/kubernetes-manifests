@@ -24,7 +24,7 @@ spec:
       namespace: home
   hostnames:
     - "homarr.rajsingh.info"
-    - "homarr.lukehouge.com"
+    - "homarr.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""

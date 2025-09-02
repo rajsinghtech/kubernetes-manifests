@@ -24,7 +24,7 @@ spec:
       namespace: home
   hostnames:
     - "tclip.rajsingh.info"
-    - "tclip.lukehouge.com"
+    - "tclip.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""

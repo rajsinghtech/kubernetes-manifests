@@ -23,7 +23,7 @@ spec:
       namespace: home
   hostnames:
     - "speedtest.rajsingh.info"
-    - "speedtest.lukehouge.com"
+    - "speedtest.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""

@@ -24,7 +24,7 @@ spec:
       namespace: home
   hostnames:
     - "lidarr.rajsingh.info"
-    - "lidarr.lukehouge.com"
+    - "lidarr.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""

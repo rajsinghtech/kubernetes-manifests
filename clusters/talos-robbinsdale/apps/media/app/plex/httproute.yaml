@@ -24,7 +24,7 @@ spec:
       namespace: home
   hostnames:
     - "plex.rajsingh.info"
-    - "plex.lukehouge.com"
+    - "plex.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""

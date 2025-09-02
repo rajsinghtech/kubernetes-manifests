@@ -24,7 +24,7 @@ spec:
       namespace: home
   hostnames:
     - "pihole.rajsingh.info"
-    - "pihole.lukehouge.com"
+    - "pihole.${CLUSTER_DOMAIN}"
   rules:
     # Redirect from / to /admin
     - matches:

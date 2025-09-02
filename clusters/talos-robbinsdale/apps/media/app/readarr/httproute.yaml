@@ -24,7 +24,7 @@ spec:
       namespace: home
   hostnames:
     - "readarr.rajsingh.info"
-    - "readarr.lukehouge.com"
+    - "readarr.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""

@@ -24,7 +24,7 @@ spec:
       namespace: home
   hostnames:
     - "transmission-music.rajsingh.info"
-    - "transmission-music.lukehouge.com"
+    - "transmission-music.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""

@@ -24,7 +24,7 @@ spec:
       namespace: home
   hostnames:
     - "homeassistant.rajsingh.info"
-    - "homeassistant.lukehouge.com"
+    - "homeassistant.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""

@@ -24,7 +24,7 @@ spec:
       namespace: home
   hostnames:
     - "immich.rajsingh.info"
-    - "immich.lukehouge.com"
+    - "immich.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""

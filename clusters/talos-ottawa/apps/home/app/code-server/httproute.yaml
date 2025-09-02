@@ -23,7 +23,7 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "code.killinit.cc"
+    - "code.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""

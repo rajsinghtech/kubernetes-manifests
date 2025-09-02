@@ -24,7 +24,7 @@ spec:
       namespace: home
   hostnames:
     - "jellyseerr.rajsingh.info"
-    - "jellyseerr.lukehouge.com"
+    - "jellyseerr.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""

@@ -5,7 +5,7 @@ metadata:
   name: killinit-wildcard-tls
 spec:
   dnsNames:
-    - '*.killinit.cc'
+    - '*.${CLUSTER_DOMAIN}'
   issuerRef:
     group: cert-manager.io
     kind: ClusterIssuer

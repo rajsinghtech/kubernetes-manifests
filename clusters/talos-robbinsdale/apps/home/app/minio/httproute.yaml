@@ -10,7 +10,7 @@ metadata:
     item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/svg/minio.svg"
     item.homer.rajsingh.info/tag: "storage"
     item.homer.rajsingh.info/keywords: "minio, s3, storage, object"
-    item.homer.rajsingh.info/url: "https://console.minio.lukehouge.com"
+    item.homer.rajsingh.info/url: "https://console.minio.${CLUSTER_DOMAIN}"
     
     service.homer.rajsingh.info/name: "Storage"
     service.homer.rajsingh.info/icon: "fas fa-database"
@@ -25,7 +25,7 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "console.minio.lukehouge.com"
+    - "console.minio.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""
@@ -49,7 +49,7 @@ metadata:
     item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/svg/minio.svg"
     item.homer.rajsingh.info/tag: "api"
     item.homer.rajsingh.info/keywords: "minio, s3, api, storage"
-    item.homer.rajsingh.info/url: "https://api.minio.lukehouge.com"
+    item.homer.rajsingh.info/url: "https://api.minio.${CLUSTER_DOMAIN}"
     
     service.homer.rajsingh.info/name: "APIs"
     service.homer.rajsingh.info/icon: "fas fa-code"
@@ -64,7 +64,7 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "api.minio.lukehouge.com"
+    - "api.minio.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""

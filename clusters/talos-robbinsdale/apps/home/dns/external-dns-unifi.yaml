@@ -79,6 +79,6 @@ spec:
       # - ingress
     domainFilters: 
       - rajsingh.info
-      - lukehouge.com
+      - ${CLUSTER_DOMAIN}
     txtOwnerId: default
     txtPrefix: k8s.
