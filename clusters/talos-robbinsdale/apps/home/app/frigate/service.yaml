@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: frigate
   # annotations:
-  #   external-dns.alpha.kubernetes.io/hostname: frigate.lukehouge.com
+  #   external-dns.alpha.kubernetes.io/hostname: frigate.${CLUSTER_DOMAIN}
   labels:
     app: frigate
 spec:

@@ -24,7 +24,7 @@ spec:
       namespace: home
   hostnames:
     - "prowlarr.rajsingh.info"
-    - "prowlarr.lukehouge.com"
+    - "prowlarr.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""

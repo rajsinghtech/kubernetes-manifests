@@ -24,7 +24,7 @@ spec:
       namespace: home
   hostnames:
     - "jellyfin.rajsingh.info"
-    - "jellyfin.lukehouge.com"
+    - "jellyfin.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""

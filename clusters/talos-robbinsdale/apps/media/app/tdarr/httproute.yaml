@@ -24,7 +24,7 @@ spec:
       namespace: home
   hostnames:
     - "tdarr.rajsingh.info"
-    - "tdarr.lukehouge.com"
+    - "tdarr.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""

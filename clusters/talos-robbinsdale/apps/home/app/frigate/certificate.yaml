@@ -5,8 +5,8 @@ metadata:
   namespace: home
 spec:
   dnsNames:
-    - frigate.lukehouge.com
-    - frigate-tunnel.lukehouge.com
+    - frigate.${CLUSTER_DOMAIN}
+    - frigate-tunnel.${CLUSTER_DOMAIN}
   issuerRef:
     group: cert-manager.io
     kind: ClusterIssuer

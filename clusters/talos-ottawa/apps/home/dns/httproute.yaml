@@ -23,7 +23,7 @@ spec:
       name: private
       namespace: home
   hostnames:
-    - "pihole.killinit.cc"
+    - "pihole.${CLUSTER_DOMAIN}"
   rules:
     # Redirect from / to /admin
     - matches:

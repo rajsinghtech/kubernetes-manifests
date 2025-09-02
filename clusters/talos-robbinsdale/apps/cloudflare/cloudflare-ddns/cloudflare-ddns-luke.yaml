@@ -24,7 +24,7 @@ spec:
                   name: cloudflare
                   key: cloudflare-k8s-token-lukehouge-com
             - name: DOMAINS
-              value: "jellyfin.lukehouge.com,immich.lukehouge.com,gatus.lukehouge.com,home.lukehouge.com"
+              value: "jellyfin.${CLUSTER_DOMAIN},immich.${CLUSTER_DOMAIN},gatus.${CLUSTER_DOMAIN},home.${CLUSTER_DOMAIN}"
             - name: PROXIED
               value: "true"
             - name: IP6_PROVIDER

@@ -24,7 +24,7 @@ spec:
       namespace: home
   hostnames:
     - "transmission-books.rajsingh.info"
-    - "transmission-books.lukehouge.com"
+    - "transmission-books.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""

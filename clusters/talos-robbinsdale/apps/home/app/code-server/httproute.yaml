@@ -24,7 +24,7 @@ spec:
       namespace: home
   hostnames:
     - "code.rajsingh.info"
-    - "code.lukehouge.com"
+    - "code.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""

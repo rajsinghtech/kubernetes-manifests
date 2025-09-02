@@ -32,7 +32,7 @@ spec:
       namespace: home
   hostnames:
     - "status.rajsingh.info"
-    - "status.lukehouge.com"
+    - "status.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""

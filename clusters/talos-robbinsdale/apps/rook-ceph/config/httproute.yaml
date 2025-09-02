@@ -24,7 +24,7 @@ spec:
       namespace: home
   hostnames:
     - "rook.rajsingh.info"
-    - "rook.lukehouge.com"
+    - "rook.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""

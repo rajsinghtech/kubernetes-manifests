@@ -43,6 +43,6 @@ spec:
       - gateway-udproute
       - service
     domainFilters: 
-      - killinit.cc
+      - ${CLUSTER_DOMAIN}
     txtOwnerId: home
     txtPrefix: k8s.${LOCATION}.

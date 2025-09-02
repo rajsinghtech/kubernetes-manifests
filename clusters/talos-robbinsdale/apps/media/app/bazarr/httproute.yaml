@@ -24,7 +24,7 @@ spec:
       namespace: home
   hostnames:
     - "bazarr.rajsingh.info"
-    - "bazarr.lukehouge.com"
+    - "bazarr.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""

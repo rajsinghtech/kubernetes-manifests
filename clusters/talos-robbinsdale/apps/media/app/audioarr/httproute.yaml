@@ -24,7 +24,7 @@ spec:
       namespace: home
   hostnames:
     - "audioarr.rajsingh.info"
-    - "audioarr.lukehouge.com"
+    - "audioarr.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""

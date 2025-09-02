@@ -28,7 +28,7 @@ spec:
       namespace: home
   hostnames:
     - "jellystat.rajsingh.info"
-    - "jellystat.lukehouge.com"
+    - "jellystat.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""

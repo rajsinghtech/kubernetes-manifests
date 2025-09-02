@@ -5,7 +5,7 @@ metadata:
   name: luke-wildcard-ts-tls
 spec:
   dnsNames:
-    - '*.ts.lukehouge.com'
+    - '*.ts.${CLUSTER_DOMAIN}'
   issuerRef:
     group: cert-manager.io
     kind: ClusterIssuer

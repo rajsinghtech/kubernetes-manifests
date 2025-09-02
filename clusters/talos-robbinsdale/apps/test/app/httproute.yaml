@@ -23,7 +23,7 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "test.lukehouge.com"
+    - "test.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""

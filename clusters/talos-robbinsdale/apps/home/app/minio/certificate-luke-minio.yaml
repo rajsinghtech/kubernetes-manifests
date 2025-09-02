@@ -6,8 +6,8 @@ metadata:
   namespace: home
 spec:
   dnsNames:
-    - "*.minio.lukehouge.com"
-    - minio.lukehouge.com
+    - "*.minio.${CLUSTER_DOMAIN}"
+    - minio.${CLUSTER_DOMAIN}
   issuerRef:
     group: cert-manager.io
     kind: ClusterIssuer

@@ -44,6 +44,6 @@ spec:
       - service
     domainFilters: 
       - rajsingh.info
-      - lukehouge.com
+      - ${CLUSTER_DOMAIN}
     txtOwnerId: home
     txtPrefix: k8s.${LOCATION}.

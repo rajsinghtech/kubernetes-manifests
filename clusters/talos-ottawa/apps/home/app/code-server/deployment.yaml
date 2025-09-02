@@ -36,7 +36,7 @@ spec:
             # - name: SUDO_PASSWORD_HASH
             #   value: ""  # Optional: Leave empty if not using hashed sudo password
             # - name: PROXY_DOMAIN
-            #   value: "code.lukehouge.com" # Optional: Specify your domain
+            #   value: "code.${CLUSTER_DOMAIN}" # Optional: Specify your domain
             - name: DEFAULT_WORKSPACE
               value: /mnt # Optional: Specify default workspace path
           # volumeMounts:

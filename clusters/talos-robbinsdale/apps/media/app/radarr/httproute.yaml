@@ -24,7 +24,7 @@ spec:
       namespace: home
   hostnames:
     - "radarr.rajsingh.info"
-    - "radarr.lukehouge.com"
+    - "radarr.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""

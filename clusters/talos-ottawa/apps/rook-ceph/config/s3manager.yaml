@@ -79,7 +79,7 @@ spec:
       namespace: home
   hostnames:
     - "s3ui.rajsingh.info"
-    - "s3ui.lukehouge.com"
+    - "s3ui.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""

@@ -24,7 +24,7 @@ spec:
       namespace: home
   hostnames:
     - "sonarr.rajsingh.info"
-    - "sonarr.lukehouge.com"
+    - "sonarr.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""
