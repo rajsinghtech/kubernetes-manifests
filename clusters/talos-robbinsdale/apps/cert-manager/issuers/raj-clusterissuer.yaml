@@ -1,7 +1,7 @@
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: raj-issuer
+  name: rajsingh-info
 spec:
   acme:
     email: rajsinghcpre@gmail.com
