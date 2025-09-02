@@ -2,7 +2,6 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: pihole-web
-  namespace: home
   annotations:
     item.homer.rajsingh.info/name: "Pi-hole"
     item.homer.rajsingh.info/subtitle: "DNS Ad Blocker"
@@ -18,12 +17,8 @@ spec:
       kind: Gateway
       name: ts
       namespace: home
-    - group: gateway.networking.k8s.io
-      kind: Gateway
-      name: private
-      namespace: home
   hostnames:
-    - "pihole.${CLUSTER_DOMAIN}"
+    - "pihole.≈"
   rules:
     # Redirect from / to /admin
     - matches:

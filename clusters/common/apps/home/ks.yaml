@@ -1,8 +1,7 @@
----
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app home-apps
+  name: &app home-gateway
   namespace: flux-system
 spec:
   targetNamespace: home
@@ -10,10 +9,8 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: dragonfly-operator-system # MQTT depends on this
-    - name: rook-ceph-cluster-config
-    - name: volsync
-  path: ./clusters/${CLUSTER_NAME}/apps/home/app
+    - name: envoy-gateway-system-install
+  path: ./clusters/common/apps/home/tailscale-gateway
   prune: true
   sourceRef:
     kind: GitRepository
@@ -21,4 +18,4 @@ spec:
   wait: false # Allow individual components to manage wait status
   interval: 30m
   retryInterval: 1m
-  timeout: 5m
+  timeout: 5m 

@@ -5,6 +5,7 @@ metadata:
   name: pihole
 spec:
   interval: 30m
+  releaseName: pihole
   chart:
     spec:
       chart: pihole
@@ -14,9 +15,11 @@ spec:
         name: pihole
         namespace: flux-system
   install:
+    timeout: 15m
     remediation:
       retries: 3
   upgrade:
+    timeout: 15m
     cleanupOnFail: true
     remediation:
       retries: 3
@@ -29,15 +32,16 @@ spec:
     strategyType: RollingUpdate
     serviceWeb:
       type: ClusterIP
-    hostname: "pihole-home-ts"
+    hostname: "home-pihole"
     serviceDns:
       annotations:
-        tailscale.com/hostname: ${LOCATION}-pihole-home
+        tailscale.com/hostname: ${LOCATION}-home-pihole
+        tailscale.com/proxy-group: common-ingress
       externalTrafficPolicy: Cluster
       loadBalancerClass: tailscale
       mixedService: true
       port: 53
-      type: LoadBalancer
+      # type: LoadBalancer
     ingress:
       enabled: false 
     podDnsConfig:

@@ -1,0 +1,35 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: ts
+  labels:
+    external-dns: home
+spec:
+  gatewayClassName: home
+  listeners: 
+    - name: wildcard-${CLUSTER_DOMAIN//./-}-https
+      protocol: HTTPS
+      port: 443
+      hostname: "*.${CLUSTER_DOMAIN}"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        mode: Terminate
+        certificateRefs:
+        - group: ''
+          kind: Secret
+          name: wildcard-${CLUSTER_DOMAIN//./-}-https
+    - name: pihole-udp
+      protocol: UDP
+      port: 53
+      allowedRoutes:
+        kinds:
+        - kind: UDPRoute
+    - name: pihole-tcp
+      protocol: TCP
+      port: 53
+      allowedRoutes:
+        kinds:
+        - kind: TCPRoute
