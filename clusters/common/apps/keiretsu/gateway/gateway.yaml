@@ -22,13 +22,13 @@ spec:
         - group: ''
           kind: Secret
           name: wildcard-${LOCATION}-raj-https
-    - name: pihole
+    - name: pihole-udp
       protocol: UDP
       port: 53
       allowedRoutes:
         kinds:
         - kind: UDPRoute
-    - name: pihole
+    - name: pihole-tcp
       protocol: TCP
       port: 53
       allowedRoutes:
