@@ -40,7 +40,7 @@ spec:
       backendRefs:
         - group: ""
           kind: Service
-          name: pihole-ts-web
+          name: pihole-web
           port: 80
           weight: 1
     # Serve other paths (API, etc)
@@ -51,6 +51,6 @@ spec:
       backendRefs:
         - group: ""
           kind: Service
-          name: pihole-ts-web
+          name: pihole-web
           port: 80
           weight: 1
