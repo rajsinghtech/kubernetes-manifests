@@ -3,7 +3,7 @@ metadata:
   name: pihole-udp
 spec:
   parentRefs:
-    - name: keiretsu-ts
+    - name: ts
       sectionName: pihole-udp
   rules:
     - backendRefs:
