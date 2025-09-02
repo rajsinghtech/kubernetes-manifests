@@ -16,9 +16,9 @@ spec:
     - group: gateway.networking.k8s.io
       kind: Gateway
       name: ts
-      namespace: home
+      namespace: keiretsu
   hostnames:
-    - "pihole.${CLUSTER_DOMAIN}"
+    - "pihole.${LOCATION}.${COMMON_DOMAIN}"
   rules:
     # Redirect from / to /admin
     - matches:
