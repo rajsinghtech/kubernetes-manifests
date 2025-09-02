@@ -2,15 +2,15 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: wildcard-${LOCATION}-raj-https
+  name: wildcard-${COMMON_DOMAIN//./-}
 spec:
   dnsNames:
-    - '*.${LOCATION}.rajsingh.info'
+    - '*.${COMMON_DOMAIN}'
   issuerRef:
     group: cert-manager.io
     kind: ClusterIssuer
-    name: raj-issuer
-  secretName: wildcard-${LOCATION}-raj-https
+    name: ${COMMON_DOMAIN//./-}
+  secretName: wildcard-${COMMON_DOMAIN//./-}
   usages:
     - digital signature
     - key encipherment 

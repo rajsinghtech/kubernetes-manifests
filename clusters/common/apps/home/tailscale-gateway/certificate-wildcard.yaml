@@ -2,15 +2,15 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: wildcard-${CLUSTER_DOMAIN//./-}-https
+  name: wildcard-${CLUSTER_DOMAIN//./-}
 spec:
   dnsNames:
     - '*.${CLUSTER_DOMAIN}'
   issuerRef:
     group: cert-manager.io
     kind: ClusterIssuer
-    name: raj-issuer
-  secretName: wildcard-${CLUSTER_DOMAIN//./-}-https
+    name: ${CLUSTER_DOMAIN//./-}
+  secretName: wildcard-${CLUSTER_DOMAIN//./-}
   usages:
     - digital signature
     - key encipherment 

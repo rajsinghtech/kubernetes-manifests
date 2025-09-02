@@ -20,7 +20,7 @@ spec:
         certificateRefs:
         - group: ''
           kind: Secret
-          name: wildcard-${CLUSTER_DOMAIN//./-}-https
+          name: wildcard-${CLUSTER_DOMAIN//./-}
     - name: pihole-udp
       protocol: UDP
       port: 53
