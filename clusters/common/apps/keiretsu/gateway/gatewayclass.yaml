@@ -2,7 +2,7 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: GatewayClass
 metadata:
-  name: keiretsu-ts
+  name: keiretsu
 spec:
   controllerName: gateway.envoyproxy.io/gatewayclass-controller
   parametersRef:

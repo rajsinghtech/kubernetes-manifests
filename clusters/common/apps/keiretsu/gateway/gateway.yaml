@@ -4,10 +4,10 @@ kind: Gateway
 metadata:
   name: ts
   labels:
-    external-dns: keiretsu-ts
-    gateway: keiretsu-ts
+    external-dns: keiretsu
+    gateway: keiretsu
 spec:
-  gatewayClassName: keiretsu-ts
+  gatewayClassName: keiretsu
   listeners: 
     - name: wildcard-raj-https
       protocol: HTTPS

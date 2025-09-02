@@ -3,7 +3,7 @@ metadata:
   name: pihole-tcp
 spec:
   parentRefs:
-    - name: keiretsu-ts
+    - name: ts
       sectionName: pihole-tcp
   rules:
     - backendRefs:
