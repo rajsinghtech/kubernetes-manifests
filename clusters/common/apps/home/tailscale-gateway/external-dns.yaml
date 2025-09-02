@@ -2,10 +2,10 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: external-dns-pihole-home
+  name: external-dns
 spec:
   interval: 5m
-  releaseName: external-dns-pihole-home
+  releaseName: external-dns
   chart:
     spec:
       chart: external-dns
@@ -22,7 +22,6 @@ spec:
     remediation:
       retries: 3
   values:
-    fullnameOverride: external-dns-pihole-home
     provider: pihole
     env:
       - name: EXTERNAL_DNS_PIHOLE_PASSWORD
@@ -33,7 +32,7 @@ spec:
     extraArgs:
       - --ignore-ingress-tls-spec
       - --pihole-server=http://pihole-web.home
-      - --gateway-label-filter=external-dns==home-ts
+      - --gateway-label-filter=external-dns==home
       - --pihole-api-version=6
     policy: sync
     sources:
@@ -43,7 +42,6 @@ spec:
       - gateway-udproute
       - service
     domainFilters: 
-      - rajsingh.info
       - ${CLUSTER_DOMAIN}
-    txtOwnerId: home
+    txtOwnerId: ${LOCATION}-${CLUSTER_DOMAIN//./-}
     txtPrefix: k8s.${LOCATION}.

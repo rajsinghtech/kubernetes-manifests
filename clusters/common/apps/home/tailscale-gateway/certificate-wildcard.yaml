@@ -2,15 +2,15 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: luke-wildcard-ts-tls
+  name: wildcard-${CLUSTER_DOMAIN//./-}-https
 spec:
   dnsNames:
-    - '*.ts.${CLUSTER_DOMAIN}'
+    - '*.${CLUSTER_DOMAIN}'
   issuerRef:
     group: cert-manager.io
     kind: ClusterIssuer
-    name: luke-issuer
-  secretName: luke-wildcard-ts-tls
+    name: raj-issuer
+  secretName: wildcard-${CLUSTER_DOMAIN//./-}-https
   usages:
     - digital signature
     - key encipherment 
