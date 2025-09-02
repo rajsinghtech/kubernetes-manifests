@@ -186,8 +186,7 @@ jobs:
       #       annotations:
       #         tailscale.com/expose: "true"
       #         tailscale.com/hostname: "ci-test-nginx"
-      #         tailscale.com/tags: "tag:k8s"
-      #     spec:
+      #       #     spec:
       #       type: LoadBalancer
       #       loadBalancerClass: tailscale
       #       ports:

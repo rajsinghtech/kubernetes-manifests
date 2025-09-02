@@ -79,6 +79,7 @@
 		"tag:k8s-recorder": ["tag:k8s-operator", "autogroup:admin"],
 		
 		// Site-specific tags
+		"tag:keiretsu":     ["tag:k8s-operator", "autogroup:admin"],
 		"tag:robbinsdale":  ["tag:k8s-operator", "autogroup:admin"],
 		"tag:ottawa":       ["tag:k8s-operator", "autogroup:admin"],
 		"tag:stpetersburg": ["tag:k8s-operator", "autogroup:admin"],
@@ -112,8 +113,8 @@
 			"10.226.0.0/16":       ["tag:usw2"], // US West 2 VPC cidr		
 		},
 		"services": {
+      "tag:keiretsu": ["tag:k8s"],
       "tag:k8s": ["tag:k8s"],
-      "svc:keiretsu": ["tag:k8s"],
 		},
 	},
 	

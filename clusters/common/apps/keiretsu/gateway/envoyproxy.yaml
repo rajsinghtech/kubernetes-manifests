@@ -13,6 +13,5 @@ spec:
         annotations:
           tailscale.com/hostname: ${LOCATION}-${COMMON_DOMAIN//./-}-envoy-gateway
           tailscale.com/proxy-group: common-ingress
-          tailscale.com/tags: "tag:k8s"
-        type: LoadBalancer
+          type: LoadBalancer
         loadBalancerClass: tailscale
