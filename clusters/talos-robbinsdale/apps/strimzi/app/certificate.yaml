@@ -15,5 +15,5 @@ spec:
   dnsNames:
   - '*.kafka.k8s.rajsingh.info'
   issuerRef:
-    name: raj-issuer
+    name: rajsingh-info
     kind: ClusterIssuer 

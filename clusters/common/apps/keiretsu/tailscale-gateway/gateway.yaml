@@ -8,7 +8,7 @@ metadata:
 spec:
   gatewayClassName: keiretsu
   listeners: 
-    - name: wildcard-raj-https
+    - name: wildcard-${COMMON_DOMAIN//./-}-https
       protocol: HTTPS
       port: 443
       hostname: "*.${LOCATION}.${COMMON_DOMAIN}"
@@ -20,7 +20,7 @@ spec:
         certificateRefs:
         - group: ''
           kind: Secret
-          name: wildcard-${LOCATION}-raj-https
+          name: wildcard-${COMMON_DOMAIN//./-}
     - name: pihole-udp
       protocol: UDP
       port: 53
