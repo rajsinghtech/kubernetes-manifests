@@ -175,6 +175,7 @@ echo Running tailscale up with OAuth credentials >> "%LOG_FILE%"
 REM Use OAuth client secret as auth key with ephemeral and preauthorized flags
 "C:\Program Files\Tailscale\tailscale.exe" up ^
     --authkey="%TS_OAUTH_CLIENT_SECRET%?ephemeral=true&preauthorized=true" ^
+    --advertise-tags=tag:k8s ^
     --accept-routes ^
     --accept-dns >> "%LOG_FILE%" 2>&1
 
