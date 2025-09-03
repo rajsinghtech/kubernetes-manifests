@@ -1,27 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment 
 metadata:
-  name: windows-2022
+  name: windows-11e
   labels:
-    name: windows-2022
+    name: windows-11e
 spec:
   strategy:
     type: Recreate
   replicas: 1
   selector:
     matchLabels:
-      app: windows-2022
+      app: windows-11e
   template:
     metadata:
       labels:
-        app: windows-2022
+        app: windows-11e
     spec:
       containers:
       - name: windows
         image: dockurr/windows
         env:
         - name: VERSION
-          value: "2022"
+          value: "11e"
         - name: DISK_SIZE
           value: "64G"
         ports:
@@ -78,9 +78,9 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: windows-2022
+  name: windows-11e
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: windows-2022-lan.${CLUSTER_DOMAIN}
+    external-dns.alpha.kubernetes.io/hostname: windows-11e-lan.${CLUSTER_DOMAIN}
 spec:
   internalTrafficPolicy: Cluster
   ports:
@@ -107,7 +107,7 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: windows-2022
+  name: windows-11e
   namespace: windows
   annotations:
     item.homer.rajsingh.info/name: "Windows Server"
@@ -129,13 +129,13 @@ spec:
       name: ts
       namespace: keiretsu
   hostnames:
-    - "windows-2022.${CLUSTER_DOMAIN}"
-    - "windows-2022.${LOCATION}.${COMMON_DOMAIN}"
+    - "windows-11e.${CLUSTER_DOMAIN}"
+    - "windows-11e.${LOCATION}.${COMMON_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""
           kind: Service
-          name: windows-2022
+          name: windows-11e
           port: 8006
           weight: 1
       matches:

@@ -3,6 +3,8 @@ kind: Kustomization
 resources:
   - windows-server.yaml
   - windows-2022.yaml
+  - windows-11.yaml
+  - windows-11e.yaml
   - secret.yaml
 configMapGenerator:
   - name: install-script
