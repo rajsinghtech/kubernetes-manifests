@@ -109,18 +109,35 @@ echo.
 echo Configuring Tailscale with OAuth authentication...
 
 REM Read OAuth credentials from mounted Kubernetes secret files
-REM The secret files are mounted from Kubernetes Secret to C:\OEM\secrets
-set SECRETS_DIR=%INSTALL_DIR%\secrets
+REM The secret files are mounted to /data/secrets and accessible via network share
+set SECRETS_DIR=\\host.lan\Data\secrets
 set CLIENT_ID_FILE=%SECRETS_DIR%\client_id
 set CLIENT_SECRET_FILE=%SECRETS_DIR%\client_secret
 
+REM Wait for network share to be available
+echo Waiting for network share to be available... >> "%LOG_FILE%"
+timeout /t 5 /nobreak > nul
+
+REM Try to access the network share
+net use \\host.lan\Data 2>> "%LOG_FILE%" > nul
+
 if not exist "%SECRETS_DIR%" (
     echo WARNING: Secrets directory not found at %SECRETS_DIR% >> "%LOG_FILE%"
-    echo WARNING: OAuth secrets not mounted. Manual authentication will be required.
-    echo.
-    echo To manually authenticate later, run:
-    echo "C:\Program Files\Tailscale\tailscale.exe" up
-    goto skip_auth
+    echo Attempting to map network share... >> "%LOG_FILE%"
+    
+    REM Try to establish connection to the network share
+    ping -n 2 host.lan > nul 2>&1
+    net use \\host.lan\Data /persistent:no 2>> "%LOG_FILE%"
+    timeout /t 3 /nobreak > nul
+    
+    if not exist "%SECRETS_DIR%" (
+        echo WARNING: OAuth secrets not accessible via network share. Manual authentication will be required. >> "%LOG_FILE%"
+        echo WARNING: OAuth secrets not mounted. Manual authentication will be required.
+        echo.
+        echo To manually authenticate later, run:
+        echo "C:\Program Files\Tailscale\tailscale.exe" up
+        goto skip_auth
+    )
 )
 
 echo Reading OAuth credentials from %SECRETS_DIR% >> "%LOG_FILE%"
@@ -158,7 +175,6 @@ echo Running tailscale up with OAuth credentials >> "%LOG_FILE%"
 REM Use OAuth client secret as auth key with ephemeral and preauthorized flags
 "C:\Program Files\Tailscale\tailscale.exe" up ^
     --authkey="%TS_OAUTH_CLIENT_SECRET%?ephemeral=true&preauthorized=true" ^
-    @REM --hostname="%COMPUTERNAME%-windows" ^
     --accept-routes ^
     --accept-dns >> "%LOG_FILE%" 2>&1
 
@@ -193,19 +209,6 @@ if %errorLevel% equ 0 (
 )
 
 :skip_auth
-
-REM Optional: Additional Tailscale configuration
-REM echo.
-REM echo Applying additional Tailscale settings...
-REM 
-REM REM Example: Set exit node preference (uncomment and set your exit node IP)
-REM REM "C:\Program Files\Tailscale\tailscale.exe" set --exit-node=100.x.x.x
-REM 
-REM REM Example: Enable subnet routes (uncomment and set your subnets)
-REM REM "C:\Program Files\Tailscale\tailscale.exe" set --advertise-routes=10.0.0.0/24
-REM 
-REM REM Example: Add tags (if OAuth client has permission for specific tags)
-REM REM "C:\Program Files\Tailscale\tailscale.exe" up --advertise-tags=tag:windows,tag:server
 
 echo.
 echo ==========================================

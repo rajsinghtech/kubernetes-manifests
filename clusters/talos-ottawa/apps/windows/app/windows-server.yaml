@@ -17,6 +17,8 @@ metadata:
   labels:
     name: windows
 spec:
+  strategy:
+    type: Recreate
   replicas: 1
   selector:
     matchLabels:
@@ -56,7 +58,7 @@ spec:
         - name: install-script
           mountPath: /oem
         - name: ts-oauth-secret
-          mountPath: /oem/secrets
+          mountPath: /data/secrets
           readOnly: true
         - name: storage
           mountPath: /storage
