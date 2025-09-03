@@ -82,6 +82,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: windows
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: windows.${CLUSTER_DOMAIN}
 spec:
   internalTrafficPolicy: Cluster
   ports:
