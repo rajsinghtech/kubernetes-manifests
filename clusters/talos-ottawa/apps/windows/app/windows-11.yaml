@@ -101,7 +101,7 @@ spec:
       protocol: TCP
       targetPort: 5900
   selector:
-    app: 2022
+    app: windows-11
   type: ClusterIP
 ---
 apiVersion: gateway.networking.k8s.io/v1
