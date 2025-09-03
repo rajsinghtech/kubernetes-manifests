@@ -83,7 +83,7 @@ kind: Service
 metadata:
   name: windows
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: windows.${CLUSTER_DOMAIN}
+    external-dns.alpha.kubernetes.io/hostname: windows-lan.${CLUSTER_DOMAIN}
 spec:
   internalTrafficPolicy: Cluster
   ports:
