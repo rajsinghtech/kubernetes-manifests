@@ -11,7 +11,7 @@ spec:
       storage: 64Gi
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: Deployment 
 metadata:
   name: windows
   labels:
