@@ -57,7 +57,6 @@ echo Running MSI installation... >> "%LOG_FILE%"
 
 REM MSI installation with parameters for unattended installation
 msiexec /i "%INSTALL_DIR%\%TAILSCALE_MSI%" /quiet /norestart /log "%INSTALL_DIR%\tailscale_msi.log" ^
-    REM TS_NOLAUNCH=no ^
     TS_INSTALLUPDATES=always ^
     TS_ALLOWINCOMINGCONNECTIONS=always ^
     TS_UNATTENDEDMODE=always
