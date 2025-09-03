@@ -53,14 +53,20 @@ spec:
             - NET_ADMIN
           privileged: true
         volumeMounts:
-        - mountPath: /storage
-          name: storage
+        - name: install-script
+          mountPath: /oem
+        - name: storage
+          mountPath: /storage
         - mountPath: /dev/kvm
           name: dev-kvm
         - mountPath: /dev/net/tun
           name: dev-tun
       terminationGracePeriodSeconds: 120
       volumes:
+      - name: install-script
+        configMap:
+          name: install-script
+          defaultMode: 0755 # Set the permissions for the files in the ConfigMap
       - name: storage
         persistentVolumeClaim:
           claimName: windows-pvc
