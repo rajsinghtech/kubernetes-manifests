@@ -8,19 +8,6 @@ metadata:
 spec:
   gatewayClassName: keiretsu
   listeners: 
-    - name: wildcard-${LOCATION}-${COMMON_DOMAIN//./-}-https
-      protocol: HTTPS
-      port: 443
-      hostname: "*.${LOCATION}.${COMMON_DOMAIN}"
-      allowedRoutes:
-        namespaces:
-          from: All
-      tls:
-        mode: Terminate
-        certificateRefs:
-        - group: ''
-          kind: Secret
-          name: wildcard-${LOCATION}-${COMMON_DOMAIN//./-}
     - name: wildcard-${COMMON_DOMAIN//./-}-https
       protocol: HTTPS
       port: 443
