@@ -108,15 +108,43 @@ REM Configure Tailscale with OAuth credentials
 echo.
 echo Configuring Tailscale with OAuth authentication...
 
-REM Set OAuth credentials (these should be injected as environment variables or secrets)
-REM For Kubernetes deployment, these would come from the mounted secret
-set TS_OAUTH_CLIENT_ID=%TS_OAUTH_CLIENT_ID%
-set TS_OAUTH_CLIENT_SECRET=%TS_OAUTH_CLIENT_SECRET%
+REM Read OAuth credentials from mounted Kubernetes secret files
+REM The secret files are mounted from Kubernetes Secret to C:\OEM\secrets
+set SECRETS_DIR=%INSTALL_DIR%\secrets
+set CLIENT_ID_FILE=%SECRETS_DIR%\client_id
+set CLIENT_SECRET_FILE=%SECRETS_DIR%\client_secret
+
+if not exist "%SECRETS_DIR%" (
+    echo WARNING: Secrets directory not found at %SECRETS_DIR% >> "%LOG_FILE%"
+    echo WARNING: OAuth secrets not mounted. Manual authentication will be required.
+    echo.
+    echo To manually authenticate later, run:
+    echo "C:\Program Files\Tailscale\tailscale.exe" up
+    goto skip_auth
+)
+
+echo Reading OAuth credentials from %SECRETS_DIR% >> "%LOG_FILE%"
+
+REM Read OAuth Client ID
+if exist "%CLIENT_ID_FILE%" (
+    set /p TS_OAUTH_CLIENT_ID=<"%CLIENT_ID_FILE%"
+    echo OAuth Client ID loaded >> "%LOG_FILE%"
+) else (
+    echo WARNING: client_id file not found >> "%LOG_FILE%"
+)
+
+REM Read OAuth Client Secret
+if exist "%CLIENT_SECRET_FILE%" (
+    set /p TS_OAUTH_CLIENT_SECRET=<"%CLIENT_SECRET_FILE%"
+    echo OAuth Client Secret loaded >> "%LOG_FILE%"
+) else (
+    echo WARNING: client_secret file not found >> "%LOG_FILE%"
+)
 
 REM Check if OAuth credentials are available
 if "%TS_OAUTH_CLIENT_SECRET%"=="" (
-    echo WARNING: TS_OAUTH_CLIENT_SECRET not set. Skipping automatic authentication. >> "%LOG_FILE%"
-    echo WARNING: OAuth credentials not found. Manual authentication will be required.
+    echo WARNING: TS_OAUTH_CLIENT_SECRET not loaded from secret. >> "%LOG_FILE%"
+    echo WARNING: OAuth client secret not found. Manual authentication will be required.
     echo.
     echo To manually authenticate later, run:
     echo "C:\Program Files\Tailscale\tailscale.exe" up
@@ -155,7 +183,6 @@ if %errorLevel% equ 0 (
     echo Attempting non-ephemeral authentication as fallback... >> "%LOG_FILE%"
     "C:\Program Files\Tailscale\tailscale.exe" up ^
         --authkey="%TS_OAUTH_CLIENT_SECRET%?ephemeral=false&preauthorized=true" ^
-        --hostname="%COMPUTERNAME%-windows" ^
         --accept-routes ^
         --accept-dns >> "%LOG_FILE%" 2>&1
     

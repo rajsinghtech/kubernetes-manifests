@@ -34,16 +34,6 @@ spec:
           value: "2022"
         - name: DISK_SIZE
           value: "64G"
-        - name: TS_OAUTH_CLIENT_ID
-          valueFrom:
-            secretKeyRef:
-              name: ts-oauth
-              key: client_id
-        - name: TS_OAUTH_CLIENT_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: ts-oauth
-              key: client_secret
         ports:
           - containerPort: 8006
             name: http
@@ -65,6 +55,9 @@ spec:
         volumeMounts:
         - name: install-script
           mountPath: /oem
+        - name: ts-oauth-secret
+          mountPath: /oem/secrets
+          readOnly: true
         - name: storage
           mountPath: /storage
         - mountPath: /dev/kvm
@@ -77,6 +70,10 @@ spec:
         configMap:
           name: install-script
           defaultMode: 0755 # Set the permissions for the files in the ConfigMap
+      - name: ts-oauth-secret
+        secret:
+          secretName: ts-oauth
+          defaultMode: 0755
       - name: storage
         persistentVolumeClaim:
           claimName: windows-pvc
