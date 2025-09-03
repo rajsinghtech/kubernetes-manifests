@@ -104,18 +104,81 @@ if %errorLevel% equ 0 (
 REM Clean up installer file (optional - comment out if you want to keep it)
 REM del "%INSTALL_DIR%\%TAILSCALE_MSI%" 2>> "%LOG_FILE%"
 
-REM Optional: Configure Tailscale (uncomment and modify as needed)
+REM Configure Tailscale with OAuth credentials
+echo.
+echo Configuring Tailscale with OAuth authentication...
+
+REM Set OAuth credentials (these should be injected as environment variables or secrets)
+REM For Kubernetes deployment, these would come from the mounted secret
+set TS_OAUTH_CLIENT_ID=%TS_OAUTH_CLIENT_ID%
+set TS_OAUTH_CLIENT_SECRET=%TS_OAUTH_CLIENT_SECRET%
+
+REM Check if OAuth credentials are available
+if "%TS_OAUTH_CLIENT_SECRET%"=="" (
+    echo WARNING: TS_OAUTH_CLIENT_SECRET not set. Skipping automatic authentication. >> "%LOG_FILE%"
+    echo WARNING: OAuth credentials not found. Manual authentication will be required.
+    echo.
+    echo To manually authenticate later, run:
+    echo "C:\Program Files\Tailscale\tailscale.exe" up
+    goto skip_auth
+)
+
+REM Authenticate with Tailscale using OAuth credentials for ephemeral node
+echo Authenticating with Tailscale as ephemeral node...
+echo Running tailscale up with OAuth credentials >> "%LOG_FILE%"
+
+REM Use OAuth client secret as auth key with ephemeral and preauthorized flags
+"C:\Program Files\Tailscale\tailscale.exe" up ^
+    --authkey="%TS_OAUTH_CLIENT_SECRET%?ephemeral=true&preauthorized=true" ^
+    @REM --hostname="%COMPUTERNAME%-windows" ^
+    --accept-routes ^
+    --accept-dns >> "%LOG_FILE%" 2>&1
+
+if %errorLevel% equ 0 (
+    echo Tailscale authenticated successfully as ephemeral node! >> "%LOG_FILE%"
+    echo Tailscale authenticated successfully!
+    
+    REM Wait a moment for connection to establish
+    timeout /t 5 /nobreak > nul
+    
+    REM Check Tailscale status
+    echo.
+    echo Checking Tailscale connection status...
+    "C:\Program Files\Tailscale\tailscale.exe" status >> "%LOG_FILE%" 2>&1
+    "C:\Program Files\Tailscale\tailscale.exe" status
+) else (
+    echo ERROR: Failed to authenticate with Tailscale. Error code: %errorLevel% >> "%LOG_FILE%"
+    echo ERROR: Failed to authenticate with Tailscale
+    echo Check the log file for details: %LOG_FILE%
+    
+    REM Try non-ephemeral as fallback
+    echo Attempting non-ephemeral authentication as fallback... >> "%LOG_FILE%"
+    "C:\Program Files\Tailscale\tailscale.exe" up ^
+        --authkey="%TS_OAUTH_CLIENT_SECRET%?ephemeral=false&preauthorized=true" ^
+        --hostname="%COMPUTERNAME%-windows" ^
+        --accept-routes ^
+        --accept-dns >> "%LOG_FILE%" 2>&1
+    
+    if %errorLevel% equ 0 (
+        echo Fallback authentication successful (non-ephemeral) >> "%LOG_FILE%"
+        echo Authenticated successfully with fallback method
+    )
+)
+
+:skip_auth
+
+REM Optional: Additional Tailscale configuration
 REM echo.
-REM echo Configuring Tailscale...
+REM echo Applying additional Tailscale settings...
 REM 
-REM REM Example: Set auth key for automatic connection (replace YOUR_AUTH_KEY)
-REM REM "C:\Program Files\Tailscale\tailscale.exe" up --authkey=YOUR_AUTH_KEY --hostname=%COMPUTERNAME%
-REM 
-REM REM Example: Set exit node preference
+REM REM Example: Set exit node preference (uncomment and set your exit node IP)
 REM REM "C:\Program Files\Tailscale\tailscale.exe" set --exit-node=100.x.x.x
 REM 
-REM REM Example: Enable subnet routes
+REM REM Example: Enable subnet routes (uncomment and set your subnets)
 REM REM "C:\Program Files\Tailscale\tailscale.exe" set --advertise-routes=10.0.0.0/24
+REM 
+REM REM Example: Add tags (if OAuth client has permission for specific tags)
+REM REM "C:\Program Files\Tailscale\tailscale.exe" up --advertise-tags=tag:windows,tag:server
 
 echo.
 echo ==========================================
