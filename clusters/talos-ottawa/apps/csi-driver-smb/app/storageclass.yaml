@@ -1,10 +1,10 @@
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: unas-smb
+  name: nagato-smb
 provisioner: smb.csi.k8s.io
 parameters:
-  source: //192.168.249.111/mnt/Media
+  source: //192.168.169.111/media-share
   # if csi.storage.k8s.io/provisioner-secret is provided, will create a sub directory
   # with PV name under source
   csi.storage.k8s.io/provisioner-secret-name: csi-smbcreds
