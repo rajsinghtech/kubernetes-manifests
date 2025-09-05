@@ -183,7 +183,8 @@ spec:
             datasource: loki
         nvidia:
           nvidia-dcgm:
-            url: https://raw.githubusercontent.com/NVIDIA/dcgm-exporter/main/grafana/dcgm-exporter-dashboard.json
+            gnetId: 23382
+            revision: 1
             datasource: prometheus
         ceph:
           ceph-cluster:
