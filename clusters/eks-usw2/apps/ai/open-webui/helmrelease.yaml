@@ -21,10 +21,10 @@ spec:
       enabled: false
     # ollamaUrls:
     #   - "http://kirito.ai:11434"
-    sso:
-      enabled: true
-      enableSignup: true
-      github:
-        enabled: true
-        clientId: "${GITHUB_OPENWEBUI_CLIENT_ID}"
-        clientSecret: "${GITHUB_OPENWEBUI_CLIENT_SECRET}"
+    # sso:
+    #   enabled: true
+    #   enableSignup: true
+    #   github:
+    #     enabled: true
+    #     clientId: "${GITHUB_OPENWEBUI_CLIENT_ID}"
+    #     clientSecret: "${GITHUB_OPENWEBUI_CLIENT_SECRET}"
