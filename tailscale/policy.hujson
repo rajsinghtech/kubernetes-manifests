@@ -223,7 +223,7 @@
 		// Access to subnets via subnet routers
 		{
 			"src": ["group:superuser", "tag:ottawa", "tag:usw2"],
-			"dst": ["ipset:robbinsdale", "ipset:robbinsdale-k8s", "ipset:ottawa"],
+			"dst": ["ipset:robbinsdale", "ipset:robbinsdale-k8s"],
 			"ip":  ["*"],
 			"via": ["tag:robbinsdale"],
 		},
@@ -235,7 +235,7 @@
 		},
 		{
 		"src": ["group:superuser", "tag:robbinsdale", "tag:usw2"],
-		"dst": ["ipset:ottawa", "ipset:ottawa-k8s", "ipset:robbinsdale"],
+		"dst": ["ipset:ottawa", "ipset:ottawa-k8s"],
 		"ip":  ["*"],
 		"via": ["tag:ottawa"],
 		},
