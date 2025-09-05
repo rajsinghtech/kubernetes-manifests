@@ -230,7 +230,7 @@
 		
 		// Access to subnets via subnet routers
 		{
-			"src": ["group:superuser", "tag:k8s"],
+			"src": ["group:superuser", "tag:ottawa", "tag:usw2"],
 			"dst": ["ipset:robbinsdale"],
 			"ip":  ["*"],
 			"via": ["tag:robbinsdale"],
@@ -242,16 +242,10 @@
 		"via": ["tag:usw2"],
 		},
 		{
-		"src": ["group:superuser", "tag:k8s"],
+		"src": ["group:superuser", "tag:robbinsdale", "tag:usw2"],
 		"dst": ["ipset:ottawa"],
 		"ip":  ["*"],
 		"via": ["tag:ottawa"],
-		},
-		{
-		"src": ["tag:usw2", "ipset:usw2"],
-		"dst": ["ipset:ottawa"],
-		"ip":  ["*"],
-		"via": ["tag:ottawa-infra"],
 		},
 		{
 		"src": ["group:superuser"],
@@ -398,23 +392,26 @@
       "accept": [
         "tag:k8s-operator:443",
         "tag:k8s:443",
+      ]
+    },
+    {
+      // Robbinsdale cannot reach it's own LAN
+      "src": "tag:robbinsdale",
+      "accept": [
         "192.168.169.1:443",
+      ],
+      "deny": [
+        "192.168.50.1:443",
       ]
     },
     {
-      // US West 2 user
-      "src": "tag:usw2", 
+      // Ottawa cannot reach it's own LAN
+      "src": "tag:ottawa",
       "accept": [
-        "tag:ottawa-infra:443", // Ottawa infra
-        "192.168.169.1:443", // Ottawa LAN
-      ]
-    },
-    {
-      // Ottawa infra 
-      "src": "tag:ottawa-infra",
-      "accept": [
-        "tag:usw2:443", // US West 2
-        "10.226.0.1:443", // US West 2 VPC CIDR
+        "192.168.50.1:443",
+      ],
+      "deny": [
+        "192.168.169.1:443",
       ]
     },
   ],

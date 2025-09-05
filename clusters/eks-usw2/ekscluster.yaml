@@ -13,14 +13,30 @@ vpc:
 
 iam:
   withOIDC: true
+  serviceAccounts:
+    - metadata:
+        name: ebs-csi-controller-sa
+        namespace: kube-system
+      wellKnownPolicies:
+        ebsCSIController: true
+    - metadata:
+        name: efs-csi-controller-sa
+        namespace: kube-system
+      wellKnownPolicies:
+        efsCSIController: true
 
 addons:
   - name: aws-ebs-csi-driver
     version: latest
-    serviceAccountRoleARN: arn:aws:iam::797495827785:role/AmazonEKS_EBS_CSI_DriverRole
+    attachPolicyARNs:
+      - arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy
+  - name: aws-efs-csi-driver
+    version: latest
+    attachPolicyARNs:
+      - arn:aws:iam::aws:policy/service-role/AmazonEFSCSIDriverPolicy
 
 managedNodeGroups:
-  - name: ng-cluster
+  - name: ng-gpu
     instanceType: g5g.2xlarge # t4g.xlarge
     desiredCapacity: 2
     minSize: 1
