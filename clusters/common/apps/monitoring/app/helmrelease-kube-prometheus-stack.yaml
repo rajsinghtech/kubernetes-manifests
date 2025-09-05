@@ -182,13 +182,13 @@ spec:
             revision: 1
             datasource: loki
         nvidia:
-          # nvidia-dcgm:
-          #   gnetId: 12239
-          #   revision: 2
-          #   datasource: prometheus
-          nvidia-dcgm:
-            gnetId: 15117
+          nvidia-dcgm-original:
+            gnetId: 12239
             revision: 2
+            datasource: prometheus
+          nvidia-dcgm:
+            gnetId: 22515
+            revision: 1
             datasource: prometheus
         ceph:
           ceph-cluster:
