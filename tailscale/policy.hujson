@@ -222,7 +222,7 @@
 		
 		// Access to subnets via subnet routers
 		{
-			"src": ["group:superuser", "tag:ottawa", "tag:usw2"],
+			"src": ["group:superuser", "tag:ottawa", "tag:usw2", "tag:robbinsdale"],
 			"dst": ["ipset:robbinsdale", "ipset:robbinsdale-k8s"],
 			"ip":  ["*"],
 			"via": ["tag:robbinsdale"],
@@ -234,7 +234,7 @@
 		"via": ["tag:usw2"],
 		},
 		{
-		"src": ["group:superuser", "tag:robbinsdale", "tag:usw2"],
+		"src": ["group:superuser", "tag:robbinsdale", "tag:usw2", "tag:ottawa"],
 		"dst": ["ipset:ottawa", "ipset:ottawa-k8s"],
 		"ip":  ["*"],
 		"via": ["tag:ottawa"],
@@ -387,9 +387,6 @@
         "192.168.169.1:443",
         "192.168.50.1:443",
       ],
-      "deny": [
-        "10.0.0.1:443",
-      ]
     },
     {
       // Ottawa cannot reach it's own LAN
@@ -399,9 +396,6 @@
         "192.168.169.1:443",
         "192.168.169.114:6443",
       ],
-      "deny": [
-        "10.2.0.1:443",
-      ]
     },
   ],
     
