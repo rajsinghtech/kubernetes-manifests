@@ -5,7 +5,7 @@ metadata:
   name: wildcard-${COMMON_DOMAIN//./-}
 spec:
   dnsNames:
-    - '*.${LOCATION}.${COMMON_DOMAIN}'
+    - '*.${LOCATION}.${COMMON_DOMAIN}' 
     - '*.${COMMON_DOMAIN}'
   issuerRef:
     group: cert-manager.io
