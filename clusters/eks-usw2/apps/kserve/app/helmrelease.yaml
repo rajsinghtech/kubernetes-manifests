@@ -8,11 +8,11 @@ spec:
   interval: 30m
   chart:
     spec:
-      chart: kserve
+      chart: kserve-crd
       version: "v0.15.0"
       sourceRef:
         kind: HelmRepository
-        name: kserve
+        name: kserve-crd
         namespace: flux-system
   install:
     remediation:
@@ -28,6 +28,8 @@ metadata:
   name: kserve
   namespace: kserve
 spec:
+  dependsOn:
+    - name: kserve-crd
   interval: 30m
   chart:
     spec:
