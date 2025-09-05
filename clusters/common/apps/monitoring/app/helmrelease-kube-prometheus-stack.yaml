@@ -187,8 +187,7 @@ spec:
             revision: 2
             datasource: prometheus
           nvidia-dcgm:
-            gnetId: 22515
-            revision: 1
+            url: https://raw.githubusercontent.com/NVIDIA/dcgm-exporter/main/grafana/dcgm-exporter-dashboard.json
             datasource: prometheus
         ceph:
           ceph-cluster:
