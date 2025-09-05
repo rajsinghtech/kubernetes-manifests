@@ -182,10 +182,6 @@ spec:
             revision: 1
             datasource: loki
         nvidia:
-          nvidia-dcgm-original:
-            gnetId: 12239
-            revision: 2
-            datasource: prometheus
           nvidia-dcgm:
             url: https://raw.githubusercontent.com/NVIDIA/dcgm-exporter/main/grafana/dcgm-exporter-dashboard.json
             datasource: prometheus
