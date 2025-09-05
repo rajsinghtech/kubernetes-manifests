@@ -7,4 +7,4 @@ metadata:
 spec:
   interval: 1h
   type: oci
-  url: oci://ghcr.io/kserve/charts
+  url: oci://ghcr.io/kserve/charts/kserve-crd
