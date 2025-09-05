@@ -41,6 +41,7 @@ managedNodeGroups:
     desiredCapacity: 2
     minSize: 1
     maxSize: 3
+    volumeType: gp3
     ssh:
       allow: true 
       publicKeyPath: ~/.ssh/id_rsa.pub
