@@ -13,8 +13,8 @@ spec:
       storageUri: "hf://Qwen/Qwen2.5-0.5B-Instruct"
       resources:
         limits:
-          cpu: "2"
-          memory: 6Gi
+          # cpu: "2"
+          # memory: 6Gi
           nvidia.com/gpu: "1"
         requests:
           cpu: "1"

@@ -12,5 +12,12 @@ spec:
           name: hf-secret
           key: HF_TOKEN
           optional: false
+    resources:
+      requests:
+        memory: 2Gi
+        cpu: "1"
+      limits:
+        memory: 4Gi
+        cpu: "1"
   supportedUriFormats:
     - prefix: hf://
