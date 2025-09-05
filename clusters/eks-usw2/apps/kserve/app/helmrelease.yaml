@@ -54,3 +54,4 @@ spec:
           ingressGateway:
             enableGatewayApi: true
             kserveGateway: keiretsu/ts
+          domain: ${LOCATION}.${CLUSTER_DOMAIN}

@@ -4,7 +4,6 @@ metadata:
   name: "qwen-llm"
   namespace: ai
 spec:
-  host: ${LOCATION}.${CLUSTER_DOMAIN}
   predictor:
     model:
       modelFormat:
