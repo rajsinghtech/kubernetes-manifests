@@ -18,6 +18,7 @@ resources:
   - ./envoy-gateway.yaml
   - ./external-dns.yaml
   - ./external-secrets.yaml
+  - ./nvidia.yaml
   - ./fluent.yaml
   - ./grafana.yaml
   - ./harbor.yaml
