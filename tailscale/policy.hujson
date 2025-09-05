@@ -76,7 +76,7 @@
 		"tag:k8s-operator": [],
 		"tag:k8s":          ["tag:k8s-operator", "autogroup:admin"],
 		"tag:k8s-recorder": ["tag:k8s-operator", "autogroup:admin"],
-		"tag:infra":        ["autogroup:admin"],
+		"tag:infra":        ["autogroup:admin", "tag:infra"],
 		
 		// Site-specific tags
 		"tag:keiretsu":     ["tag:k8s-operator", "autogroup:admin", "tag:infra"],
