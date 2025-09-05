@@ -1,7 +1,7 @@
 apiVersion: "serving.kserve.io/v1beta1"
 kind: "InferenceService"
 metadata:
-  name: "gpt2"
+  name: "qwen-llm"
   namespace: ai
 spec:
   predictor:
@@ -9,14 +9,14 @@ spec:
       modelFormat:
         name: huggingface
       args:
-        - --model_name=openai-community
-      storageUri: "hf://openai-community/gpt2"
+        - --model_name=qwen
+      storageUri: "hf://Qwen/Qwen2.5-0.5B-Instruct"
       resources:
         limits:
-          # cpu: "2"
-          # memory: 6Gi
+          cpu: "2"
+          memory: 6Gi
           nvidia.com/gpu: "1"
         requests:
-          # cpu: "1"
-          # memory: 4Gi
+          cpu: "1"
+          memory: 4Gi
           nvidia.com/gpu: "1"
