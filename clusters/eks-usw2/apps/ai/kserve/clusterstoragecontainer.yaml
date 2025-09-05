@@ -5,7 +5,6 @@ metadata:
 spec:
   container:
     name: storage-initializer
-    image: kserve/storage-initializer:v0.12.1
     env:
     - name: HF_TOKEN
       valueFrom:
