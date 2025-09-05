@@ -1,0 +1,54 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kserve-crd
+  namespace: kserve
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: kserve
+      version: "*"
+      sourceRef:
+        kind: HelmRepository
+        name: kserve
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3 
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kserve
+  namespace: kserve
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: kserve
+      version: "*"
+      sourceRef:
+        kind: HelmRepository
+        name: kserve
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3 
+  values:
+    kserve:
+      controller:
+        deploymentMode: RawDeployment
+        gateway:
+          ingressGateway:
+            enableGatewayApi: true
+            kserveGateway: kserve/kserve-ingress-gateway
