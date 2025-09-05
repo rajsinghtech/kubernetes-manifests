@@ -33,3 +33,6 @@ spec:
       allowedRoutes:
         kinds:
         - kind: TCPRoute
+  infrastructure:
+    labels:
+      serving.kserve.io/gateway: ts
