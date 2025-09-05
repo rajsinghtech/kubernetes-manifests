@@ -19,8 +19,8 @@ spec:
   values:
     ollama:
       enabled: false
-    ollamaUrls:
-      - "http://kirito.ai:11434"
+    # ollamaUrls:
+    #   - "http://kirito.ai:11434"
     sso:
       enabled: true
       enableSignup: true
