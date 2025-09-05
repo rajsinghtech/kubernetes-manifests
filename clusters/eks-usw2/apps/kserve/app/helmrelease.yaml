@@ -53,4 +53,4 @@ spec:
         gateway:
           ingressGateway:
             enableGatewayApi: true
-            kserveGateway: kserve/kserve-ingress-gateway
+            kserveGateway: keiretsu/ts
