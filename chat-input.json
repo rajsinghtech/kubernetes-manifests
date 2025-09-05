@@ -1,0 +1,9 @@
+{
+  "model": "qwen",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Tell me something about tailscale"
+    }
+  ]
+}
