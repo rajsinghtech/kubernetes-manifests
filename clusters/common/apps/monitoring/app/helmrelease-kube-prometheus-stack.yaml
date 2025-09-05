@@ -307,7 +307,7 @@ spec:
     - group: gateway.networking.k8s.io
       kind: Gateway
       name: ts
-      namespace: keiretsu
+      namespace: keiretsu 
   hostnames:
     - "prometheus.${CLUSTER_DOMAIN}"
   rules:
