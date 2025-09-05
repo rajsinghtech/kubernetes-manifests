@@ -16,4 +16,4 @@ resources:
   - udproute.yaml
 
 # Tailscale
-  - egress.yaml
+  # - egress.yaml

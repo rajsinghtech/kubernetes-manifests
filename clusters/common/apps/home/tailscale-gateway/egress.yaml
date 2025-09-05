@@ -3,7 +3,8 @@ kind: Service
 metadata:
   name: robbinsdale-envoy-gateway 
   annotations:
-    tailscale.com/tailnet-fqdn: robbinsdale-home-envoy-gateway.keiretsu.ts.net
+    # tailscale.com/tailnet-fqdn: robbinsdale-home-envoy-gateway.keiretsu.ts.net
+    tailscale.com/tailnet-ip: 100.113.17.64
     tailscale.com/proxy-group: common-egress
 spec:
   externalName: placeholder
@@ -21,7 +22,8 @@ kind: Service
 metadata:
   name: ottawa-envoy-gateway
   annotations:
-    tailscale.com/tailnet-fqdn: ottawa-home-envoy-gateway.keiretsu.ts.net
+    # tailscale.com/tailnet-fqdn: ottawa-home-envoy-gateway.keiretsu.ts.net
+    tailscale.com/tailnet-ip: 100.112.58.163
     tailscale.com/proxy-group: common-egress
 spec:
   externalName: placeholder
