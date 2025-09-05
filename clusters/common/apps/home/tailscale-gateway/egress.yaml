@@ -18,7 +18,7 @@ spec:
     protocol: TCP
   - name: dns-udp
     port: 53
-    protocol: TCP
+    protocol: UDP
 ---
 apiVersion: v1  
 kind: Service
@@ -35,6 +35,9 @@ spec:
   - name: https
     port: 443
     protocol: TCP
-  - name: dns
+  - name: dns-tcp
     port: 53
     protocol: TCP
+  - name: dns-udp
+    port: 53
+    protocol: UDP
