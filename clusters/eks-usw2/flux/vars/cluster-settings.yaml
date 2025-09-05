@@ -9,6 +9,7 @@ data:
   SITE_ID: "5"
   TIMEZONE: America/New_York
   CLUSTER_NAME: eks-usw2
+  CLUSTER_DOMAIN: usw2.rajsingh.info
 
   # K8s
   CLUSTER_POD_CIDR: 10.80.0.0/16
