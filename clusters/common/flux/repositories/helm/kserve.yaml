@@ -2,9 +2,19 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
-  name: kserve
+  name: kserve-crd
   namespace: flux-system
 spec:
   interval: 1h
   type: oci
   url: oci://ghcr.io/kserve/charts/kserve-crd
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: kserve
+  namespace: flux-system
+spec:
+  interval: 1h
+  type: oci
+  url: oci://ghcr.io/kserve/charts/kserve
