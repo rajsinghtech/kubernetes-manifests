@@ -12,9 +12,6 @@ spec:
   - name: https
     port: 443
     protocol: TCP
-  - name: pihole-udp
-    port: 53
-    protocol: UDP
   - name: pihole-tcp
     port: 53
     protocol: TCP
@@ -32,9 +29,6 @@ spec:
   ports:
   - name: https
     port: 443
-    protocol: TCP
-  - name: pihole-udp
-    port: 53
     protocol: TCP
   - name: pihole-tcp
     port: 53
