@@ -76,19 +76,20 @@
 		"tag:k8s-operator": [],
 		"tag:k8s":          ["tag:k8s-operator", "autogroup:admin"],
 		"tag:k8s-recorder": ["tag:k8s-operator", "autogroup:admin"],
+		"tag:infra":        ["autogroup:admin"],
 		
 		// Site-specific tags
-		"tag:keiretsu":     ["tag:k8s-operator", "autogroup:admin"],
-		"tag:robbinsdale":  ["tag:k8s-operator", "autogroup:admin"],
-		"tag:ottawa":       ["tag:k8s-operator", "autogroup:admin"],
-		"tag:stpetersburg": ["tag:k8s-operator", "autogroup:admin"],
-		"tag:pittsburgh":   ["tag:k8s-operator", "autogroup:admin"],
-		"tag:use1":         ["tag:k8s-operator", "autogroup:admin"],
-		"tag:usw2":         ["tag:k8s-operator", "autogroup:admin"],
-		"tag:kind":         ["tag:k8s-operator", "autogroup:admin"],
+		"tag:keiretsu":     ["tag:k8s-operator", "autogroup:admin", "tag:infra"],
+		"tag:robbinsdale":  ["tag:k8s-operator", "autogroup:admin", "tag:infra"],
+		"tag:ottawa":       ["tag:k8s-operator", "autogroup:admin", "tag:infra"],
+		"tag:stpetersburg": ["tag:k8s-operator", "autogroup:admin", "tag:infra"],
+		"tag:pittsburgh":   ["tag:k8s-operator", "autogroup:admin", "tag:infra"],
+		"tag:use1":         ["tag:k8s-operator", "autogroup:admin", "tag:infra"],
+		"tag:usw2":         ["tag:k8s-operator", "autogroup:admin", "tag:infra"],
+		"tag:kind":         ["tag:k8s-operator", "autogroup:admin", "tag:infra"],
 
 		// Site-specific infrastructure tags
-		"tag:ottawa-infra": ["tag:ottawa-infra", "autogroup:admin"],
+		"tag:ottawa-infra": ["autogroup:admin", "tag:infra"],
 
 		// TCP-443-only tag
 		"tag:restricted-outbound": ["tag:k8s-operator", "autogroup:admin"],
