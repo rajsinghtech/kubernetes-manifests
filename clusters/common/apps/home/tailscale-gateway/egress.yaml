@@ -13,11 +13,14 @@ spec:
   - name: https
     port: 443
     protocol: TCP
-  - name: pihole-tcp
+  - name: dns-tcp
+    port: 53
+    protocol: TCP
+  - name: dns-udp
     port: 53
     protocol: TCP
 ---
-apiVersion: v1
+apiVersion: v1  
 kind: Service
 metadata:
   name: ottawa-envoy-gateway
@@ -32,6 +35,6 @@ spec:
   - name: https
     port: 443
     protocol: TCP
-  - name: pihole-tcp
+  - name: dns
     port: 53
     protocol: TCP
