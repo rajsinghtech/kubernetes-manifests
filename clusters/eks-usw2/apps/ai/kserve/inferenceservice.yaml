@@ -20,3 +20,22 @@ spec:
           cpu: "1"
           memory: 4Gi
           nvidia.com/gpu: "1"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: qwen-llm-predictor-ts
+  namespace: ai
+  annotations:
+    tailscale.com/hostname: ${LOCATION}-ai-kserve-qwen-llm-predictor
+    tailscale.com/proxy-group: common-ingress
+spec:
+  ports:
+  - name: qwen-llm-predictor
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: isvc.qwen-llm-predictor
+  type: LoadBalancer
+  loadBalancerClass: tailscale
