@@ -27,7 +27,7 @@ metadata:
   name: qwen-llm-predictor-ts
   namespace: ai
   annotations:
-    tailscale.com/hostname: ${LOCATION}-ai-kserve-qwen-llm-predictor
+    tailscale.com/hostname: usw2-ai-kserve-qwen-llm-predictor
     tailscale.com/proxy-group: common-ingress
 spec:
   ports:
