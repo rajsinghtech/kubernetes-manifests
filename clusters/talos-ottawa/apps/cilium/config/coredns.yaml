@@ -36,9 +36,8 @@ data:
       cache 30
       forward . 10.69.69.51
     }
----
-    # ts.net {
-    #   errors
-    #   cache 30
-    #   forward . 10.69.69.50
-    # }
+    ts.net {
+      errors
+      cache 30
+      forward . 10.69.69.50
+    }
