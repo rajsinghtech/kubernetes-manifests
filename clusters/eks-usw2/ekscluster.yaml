@@ -37,7 +37,7 @@ addons:
 
 managedNodeGroups:
   - name: ng-gpu
-    instanceType: g5g.2xlarge # t4g.xlarge
+    instanceType: g5.2xlarge # t4g.xlarge
     desiredCapacity: 2
     minSize: 1
     maxSize: 3
