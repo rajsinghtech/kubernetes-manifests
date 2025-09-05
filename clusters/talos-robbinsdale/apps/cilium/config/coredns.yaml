@@ -31,13 +31,14 @@ data:
         reload
         loadbalance
     }
-    ts.net {
-      errors
-      cache 30
-      forward . 10.69.69.50
-    }
     robbinsdale.k8s:53 {
       errors
       cache 30
       forward . 10.69.69.51
     }
+---
+    # ts.net {
+    #   errors
+    #   cache 30
+    #   forward . 10.69.69.50
+    # }
