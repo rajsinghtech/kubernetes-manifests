@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: robbinsdale-envoy-gateway
+  annotations:
+    tailscale.com/tailnet-fqdn: robbinsdale-home-envoy-gateway.keiretsu.ts.net
+    tailscale.com/proxy-group: common-egress
+spec:
+  externalName: placeholder
+  type: ExternalName
+  ports:
+  - name: http
+    port: 11434
+    protocol: TCP
+  - name: metrics
+    port: 9835
+    protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ottawa-envoy-gateway
+  annotations:
+    tailscale.com/tailnet-fqdn: ottawa-home-envoy-gateway.keiretsu.ts.net
+    tailscale.com/proxy-group: common-egress
+spec:
+  externalName: placeholder
+  type: ExternalName
+  ports:
+  - name: http
+    port: 11434
+    protocol: TCP
+  - name: metrics
+    port: 9835
+    protocol: TCP
