@@ -1,0 +1,41 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: jellystat-postgres
+spec:
+  inheritedMetadata:
+    labels:
+      app: jellystat-postgres
+  instances: 3
+  storage:
+    size: 10Gi
+    storageClass: ceph-block-replicated-nvme
+  monitoring:
+    enablePodMonitor: true
+  
+  # Enable Barman Cloud plugin for S3 backups
+  plugins:
+    - name: barman-cloud.cloudnative-pg.io
+      isWALArchiver: true
+      parameters:
+        barmanObjectName: jellystat-s3-store
+  
+  backup:
+    retentionPolicy: "30d"
+  # bootstrap:
+  #   recovery:
+  #     source: jellystat-db
+---
+# S3 backup schedule using Barman Cloud
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: jellystat-postgres-s3
+spec:
+  schedule: "0 0 23 * * *"  # Daily at 11 PM
+  backupOwnerReference: self
+  method: plugin
+  pluginConfiguration:
+    name: barman-cloud.cloudnative-pg.io
+  cluster:
+    name: jellystat-postgres

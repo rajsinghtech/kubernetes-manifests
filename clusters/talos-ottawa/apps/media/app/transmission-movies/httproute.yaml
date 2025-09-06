@@ -1,0 +1,38 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: transmission-movies
+  namespace: media
+  annotations:
+    item.homer.rajsingh.info/name: "Transmission Movies"
+    item.homer.rajsingh.info/subtitle: "Movie Downloader"
+    item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/svg/transmission.svg"
+    item.homer.rajsingh.info/tag: "media"
+    item.homer.rajsingh.info/keywords: "torrent, movies, download"
+
+    service.homer.rajsingh.info/name: "Media"
+    service.homer.rajsingh.info/icon: "fas fa-tv"
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: private
+      namespace: home
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: ts
+      namespace: home
+  hostnames:
+    - "transmission-movies.rajsingh.info"
+    - "transmission-movies.${CLUSTER_DOMAIN}"
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: transmission-movies
+          port: 9091
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
