@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: rook
+  name: rook-ceph
   labels:
     pod-security.kubernetes.io/enforce: privileged
     kustomize.toolkit.fluxcd.io/prune: disabled

@@ -2,14 +2,14 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app rook-operator
+  name: &app rook-ceph-operator
   namespace: flux-system
 spec:
-  targetNamespace: rook
+  targetNamespace: rook-ceph
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./clusters/${CLUSTER_NAME}/apps/rook/app
+  path: ./clusters/${CLUSTER_NAME}/apps/rook-ceph/app
   prune: true
   sourceRef:
     kind: GitRepository
@@ -22,17 +22,17 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app rook-cluster-config
+  name: &app rook-ceph-cluster-config
   namespace: flux-system
 spec:
-  targetNamespace: rook
+  targetNamespace: rook-ceph
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: rook-operator
+    - name: rook-ceph-operator
     - name: snapshot-controller # Dependency for volume snapshots
-  path: ./clusters/${CLUSTER_NAME}/apps/rook/config
+  path: ./clusters/${CLUSTER_NAME}/apps/rook-ceph/config
   prune: true
   sourceRef:
     kind: GitRepository

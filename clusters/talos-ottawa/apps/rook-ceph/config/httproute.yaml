@@ -2,7 +2,7 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: rook
-  namespace: rook
+  namespace: rook-ceph
   annotations:
     item.homer.rajsingh.info/name: "Rook Ceph"
     item.homer.rajsingh.info/subtitle: "Storage Dashboard"
@@ -24,7 +24,7 @@ spec:
     - backendRefs:
         - group: ""
           kind: Service
-          name: rook-mgr-dashboard
+          name: rook-ceph-mgr-dashboard
           port: 7000
           weight: 1
       matches:

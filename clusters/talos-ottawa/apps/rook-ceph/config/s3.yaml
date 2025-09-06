@@ -2,7 +2,7 @@ apiVersion: ceph.rook.io/v1
 kind: CephObjectStore
 metadata:
   name: object-store
-  namespace: rook
+  namespace: rook-ceph
 spec:
   metadataPool:
     failureDomain: osd
@@ -23,18 +23,18 @@ spec:
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-   name: rook-bucket
-provisioner: rook.ceph.rook.io/bucket
+   name: rook-ceph-bucket
+provisioner: rook-ceph.ceph.rook.io/bucket
 reclaimPolicy: Delete
 parameters:
   objectStoreName: object-store
-  objectStoreNamespace: rook
+  objectStoreNamespace: rook-ceph
 ---
 apiVersion: ceph.rook.io/v1
 kind: CephObjectStoreUser
 metadata:
   name: admin-user
-  namespace: rook
+  namespace: rook-ceph
 spec:
   store: object-store
   displayName: "Admin User"
