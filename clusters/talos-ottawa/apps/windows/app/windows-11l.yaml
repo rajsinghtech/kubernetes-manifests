@@ -20,6 +20,10 @@ spec:
       - name: windows
         image: dockurr/windows
         env:
+        - name: RAM_SIZE
+          RAM_SIZE: "8G"
+        - name: CPU_CORES
+          value: "4"
         - name: VERSION
           value: "11l"
         - name: DISK_SIZE
