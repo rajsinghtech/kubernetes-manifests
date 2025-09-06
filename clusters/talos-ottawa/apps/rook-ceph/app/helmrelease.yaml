@@ -2,16 +2,16 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: rook
+  name: rook-ceph
 spec:
   interval: 30m
   chart:
     spec:
-      chart: rook
+      chart: rook-ceph
       version: v1.17.5
       sourceRef:
         kind: HelmRepository
-        name: rook-charts
+        name: rook-ceph-charts
         namespace: flux-system
   install:
     remediation:

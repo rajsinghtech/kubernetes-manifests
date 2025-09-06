@@ -2,7 +2,7 @@ apiVersion: ceph.rook.io/v1
 kind: CephBlockPool
 metadata:
   name: ceph-blockpool-replicated
-  namespace: rook
+  namespace: rook-ceph
 spec:
   failureDomain: osd
   replicated:

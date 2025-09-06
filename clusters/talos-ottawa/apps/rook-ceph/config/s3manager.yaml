@@ -22,7 +22,7 @@ spec:
             - containerPort: 8080
           env:
             - name: ENDPOINT
-              value: "rook-rgw-object-store.rook.svc.cluster.local:80"
+              value: "rook-ceph-rgw-object-store.rook-ceph.svc.cluster.local:80"
             - name: USE_SSL
               value: "false"
             - name: ACCESS_KEY_ID
@@ -40,7 +40,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: s3manager
-  namespace: rook 
+  namespace: rook-ceph 
   labels:
     app: s3manager
 spec:
@@ -57,7 +57,7 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: bktui
-  namespace: rook
+  namespace: rook-ceph
   annotations:
     item.homer.rajsingh.info/name: "S3 Manager"
     item.homer.rajsingh.info/subtitle: "S3 Storage Manager"
