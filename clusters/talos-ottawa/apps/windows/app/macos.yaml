@@ -1,0 +1,125 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: macos-pvc
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 64Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: macos
+  labels:
+    name: macos
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: macos
+  template:
+    metadata:
+      labels:
+        app: macos
+    spec:
+      containers:
+      - name: macos
+        image: dockurr/macos
+        env:
+        - name: VERSION
+          value: "13"
+        - name: DISK_SIZE
+          value: "64G"
+        ports:
+          - containerPort: 8006
+            name: http
+            protocol: TCP
+          - containerPort: 5900
+            name: vnc
+            protocol: TCP
+        securityContext:
+          capabilities:
+            add:
+            - NET_ADMIN
+          privileged: true
+        volumeMounts:
+        - mountPath: /storage
+          name: storage
+        - mountPath: /dev/kvm
+          name: dev-kvm
+        - mountPath: /dev/net/tun
+          name: dev-tun
+      terminationGracePeriodSeconds: 120
+      volumes:
+      - name: storage
+        persistentVolumeClaim:
+          claimName: macos-pvc
+      - hostPath:
+          path: /dev/kvm
+        name: dev-kvm
+      - hostPath:
+          path: /dev/net/tun
+          type: CharDevice
+        name: dev-tun
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: macos
+spec:
+  internalTrafficPolicy: Cluster
+  ports:
+    - name: http
+      port: 8006
+      protocol: TCP
+      targetPort: 8006
+    - name: vnc
+      port: 5900
+      protocol: TCP
+      targetPort: 5900
+  selector:
+    app: macos
+  type: ClusterIP
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: macos
+  namespace: macos
+  annotations:
+    item.homer.rajsingh.info/name: "Mac OS"
+    item.homer.rajsingh.info/subtitle: "Mac OS"
+    item.homer.rajsingh.info/logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/MacOS_logo.svg/68px-MacOS_logo.svg.png?20221222011002"
+    item.homer.rajsingh.info/tag: "infrastructure"
+    item.homer.rajsingh.info/keywords: "mac, os"
+
+    service.homer.rajsingh.info/name: "Infrastructure"
+    service.homer.rajsingh.info/icon: "fas fa-server"
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: ts
+      namespace: home
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: ts
+      namespace: keiretsu
+  hostnames:
+    - "macos.${CLUSTER_DOMAIN}"
+    - "macos.${LOCATION}.${COMMON_DOMAIN}"
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: macos
+          port: 8006
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: / 
