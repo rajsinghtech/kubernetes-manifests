@@ -32,6 +32,10 @@ spec:
       - name: macos
         image: dockurr/macos
         env:
+        - name: RAM_SIZE
+          RAM_SIZE: "8G"
+        - name: CPU_CORES
+          value: "4"
         - name: VERSION
           value: "15"
         - name: DISK_SIZE
