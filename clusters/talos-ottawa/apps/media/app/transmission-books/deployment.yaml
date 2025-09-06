@@ -60,7 +60,7 @@ spec:
       volumes:
       - name: data-volume
         persistentVolumeClaim:
-          claimName: transmission-books-data-unas
+          claimName: transmission-books-data
       - name: config-volume
         persistentVolumeClaim:
-          claimName: transmission-books-config-unas
+          claimName: transmission-books-config

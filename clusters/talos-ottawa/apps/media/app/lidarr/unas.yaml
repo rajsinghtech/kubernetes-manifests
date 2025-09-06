@@ -3,7 +3,7 @@ kind: PersistentVolume
 metadata:
   annotations:
     pv.kubernetes.io/provisioned-by: smb.csi.k8s.io
-  name: lidarr-music-unas
+  name: lidarr-music
 spec:
   capacity:
     storage: 500Gi
@@ -26,14 +26,14 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: lidarr-music-unas
+  name: lidarr-music
 spec:
   accessModes:
     - ReadWriteMany
   resources:
     requests:
       storage: 500Gi
-  volumeName: lidarr-music-unas
+  volumeName: lidarr-music
   storageClassName: smb
 ---
 apiVersion: v1
@@ -41,7 +41,7 @@ kind: PersistentVolume
 metadata:
   annotations:
     pv.kubernetes.io/provisioned-by: smb.csi.k8s.io
-  name: lidarr-config-unas
+  name: lidarr-config
 spec:
   capacity:
     storage: 5Gi
@@ -64,12 +64,12 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: lidarr-config-unas
+  name: lidarr-config
 spec:
   accessModes:
     - ReadWriteMany
   resources:
     requests:
       storage: 5Gi
-  volumeName: lidarr-config-unas
+  volumeName: lidarr-config
   storageClassName: smb 

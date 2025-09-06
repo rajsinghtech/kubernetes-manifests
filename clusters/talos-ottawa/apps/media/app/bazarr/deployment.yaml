@@ -36,10 +36,10 @@ spec:
       volumes:
       - name: movies-volume
         persistentVolumeClaim:
-          claimName: radarr-movies-unas
+          claimName: radarr-movies
       - name: tv-volume
         persistentVolumeClaim:
-          claimName: sonarr-tv-unas
+          claimName: sonarr-tv
       - name: config-volume
         persistentVolumeClaim:
-          claimName: bazarr-config-ceph 
+          claimName: bazarr-config 

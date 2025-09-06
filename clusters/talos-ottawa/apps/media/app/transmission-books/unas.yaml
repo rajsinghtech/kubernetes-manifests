@@ -3,7 +3,7 @@ kind: PersistentVolume
 metadata:
   annotations:
     pv.kubernetes.io/provisioned-by: smb.csi.k8s.io
-  name: transmission-books-data-unas
+  name: transmission-books-data
 spec:
   capacity:
     storage: 2Ti
@@ -26,14 +26,14 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: transmission-books-data-unas
+  name: transmission-books-data
 spec:
   accessModes:
     - ReadWriteMany
   resources:
     requests:
       storage: 2Ti
-  volumeName: transmission-books-data-unas
+  volumeName: transmission-books-data
   storageClassName: smb
 ---
 apiVersion: v1
@@ -41,7 +41,7 @@ kind: PersistentVolume
 metadata:
   annotations:
     pv.kubernetes.io/provisioned-by: smb.csi.k8s.io
-  name: transmission-books-config-unas
+  name: transmission-books-config
 spec:
   capacity:
     storage: 1Gi
@@ -64,12 +64,12 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: transmission-books-config-unas
+  name: transmission-books-config
 spec:
   accessModes:
     - ReadWriteMany
   resources:
     requests:
       storage: 1Gi
-  volumeName: transmission-books-config-unas
+  volumeName: transmission-books-config
   storageClassName: smb 

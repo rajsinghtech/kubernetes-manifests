@@ -1,12 +1,12 @@
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: rook-cephfs
-provisioner: rook-ceph.cephfs.csi.ceph.com # csi-provisioner-name
+  name: rookfs
+provisioner: rook.cephfs.csi.ceph.com # csi-provisioner-name
 parameters:
   # clusterID is the namespace where the rook cluster is running
   # If you change this namespace, also change the namespace below where the secret namespaces are defined
-  clusterID: rook-ceph # namespace:cluster
+  clusterID: rook # namespace:cluster
 
   # CephFS filesystem name into which the volume shall be created
   fsName: filesystem
@@ -17,12 +17,12 @@ parameters:
 
   # The secrets contain Ceph admin credentials. These are generated automatically by the operator
   # in the same namespace as the cluster.
-  csi.storage.k8s.io/provisioner-secret-name: rook-csi-cephfs-provisioner
-  csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph # namespace:cluster
-  csi.storage.k8s.io/controller-expand-secret-name: rook-csi-cephfs-provisioner
-  csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph # namespace:cluster
-  csi.storage.k8s.io/node-stage-secret-name: rook-csi-cephfs-node
-  csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph # namespace:cluster
+  csi.storage.k8s.io/provisioner-secret-name: rook-csifs-provisioner
+  csi.storage.k8s.io/provisioner-secret-namespace: rook # namespace:cluster
+  csi.storage.k8s.io/controller-expand-secret-name: rook-csifs-provisioner
+  csi.storage.k8s.io/controller-expand-secret-namespace: rook # namespace:cluster
+  csi.storage.k8s.io/node-stage-secret-name: rook-csifs-node
+  csi.storage.k8s.io/node-stage-secret-namespace: rook # namespace:cluster
 
   # (optional) Set it to true to encrypt each volume with encryption keys
   # from a key management system (KMS)
@@ -46,22 +46,55 @@ allowVolumeExpansion: true
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  annotations:
-    storageclass.kubernetes.io/is-default-class: "true"
   name: ceph-block-replicated
 parameters:
-  clusterID: rook-ceph
+  clusterID: rook
   csi.storage.k8s.io/controller-expand-secret-name: rook-csi-rbd-provisioner
-  csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph
+  csi.storage.k8s.io/controller-expand-secret-namespace: rook
   csi.storage.k8s.io/fstype: ext4
   csi.storage.k8s.io/node-stage-secret-name: rook-csi-rbd-node
-  csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
+  csi.storage.k8s.io/node-stage-secret-namespace: rook
   csi.storage.k8s.io/provisioner-secret-name: rook-csi-rbd-provisioner
-  csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
+  csi.storage.k8s.io/provisioner-secret-namespace: rook
   imageFeatures: layering
   imageFormat: "2"
   pool: ceph-blockpool-replicated
-provisioner: rook-ceph.rbd.csi.ceph.com
+provisioner: rook.rbd.csi.ceph.com
 allowVolumeExpansion: true
 reclaimPolicy: Delete
 volumeBindingMode: Immediate
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: ceph-block-optimized
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+parameters:
+  clusterID: rook
+  pool: ceph-blockpool-replicated  # Use the same existing pool
+  
+  # Compression for space efficiency (especially good for NVMe)
+  compression_mode: aggressive
+  compression_algorithm: zstd
+  
+  # Image format and features
+  imageFormat: "2"
+  imageFeatures: layering,fast-diff,object-map,deep-flatten,exclusive-lock
+  
+  # CSI secrets
+  csi.storage.k8s.io/controller-expand-secret-name: rook-csi-rbd-provisioner
+  csi.storage.k8s.io/controller-expand-secret-namespace: rook
+  csi.storage.k8s.io/fstype: ext4
+  csi.storage.k8s.io/node-stage-secret-name: rook-csi-rbd-node
+  csi.storage.k8s.io/node-stage-secret-namespace: rook
+  csi.storage.k8s.io/provisioner-secret-name: rook-csi-rbd-provisioner
+  csi.storage.k8s.io/provisioner-secret-namespace: rook
+  
+provisioner: rook.rbd.csi.ceph.com
+allowVolumeExpansion: true
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+# Mount options for TRIM/discard support on NVMe
+mountOptions:
+  - discard

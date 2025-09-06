@@ -1,13 +1,13 @@
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationDestination
 metadata:
-  name: audioarr-config-ceph
+  name: audioarr-config
 spec:
   trigger:
     manual: first
   paused: true
   restic:
-    repository: restic-media-audioarr-config-ceph
-    destinationPVC: audioarr-config-ceph
+    repository: restic-media-audioarr-config
+    destinationPVC: audioarr-config
     copyMethod: Direct
     restoreAsOf: "2025-05-31T10:00:00Z"

@@ -56,4 +56,4 @@ spec:
       volumes:
         - name: jellystat-backup-data
           persistentVolumeClaim:
-            claimName: jellystat-backup-unas 
+            claimName: jellystat-backup 

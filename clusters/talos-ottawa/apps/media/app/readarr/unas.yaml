@@ -3,7 +3,7 @@ kind: PersistentVolume
 metadata:
   annotations:
     pv.kubernetes.io/provisioned-by: smb.csi.k8s.io
-  name: readarr-books-unas
+  name: readarr-books
 spec:
   capacity:
     storage: 100Gi
@@ -26,14 +26,14 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: readarr-books-unas
+  name: readarr-books
 spec:
   accessModes:
     - ReadWriteMany
   resources:
     requests:
       storage: 100Gi
-  volumeName: readarr-books-unas
+  volumeName: readarr-books
   storageClassName: smb
 ---
 apiVersion: v1
@@ -41,7 +41,7 @@ kind: PersistentVolume
 metadata:
   annotations:
     pv.kubernetes.io/provisioned-by: smb.csi.k8s.io
-  name: readarr-config-unas
+  name: readarr-config
 spec:
   capacity:
     storage: 1Gi
@@ -64,12 +64,12 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: readarr-config-unas
+  name: readarr-config
 spec:
   accessModes:
     - ReadWriteMany
   resources:
     requests:
       storage: 1Gi
-  volumeName: readarr-config-unas
+  volumeName: readarr-config
   storageClassName: smb 

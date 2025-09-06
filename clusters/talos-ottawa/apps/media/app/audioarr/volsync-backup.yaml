@@ -1,14 +1,14 @@
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
-  name: media-audioarr-config-ceph
+  name: media-audioarr-config
 spec:
-  sourcePVC: audioarr-config-ceph
+  sourcePVC: audioarr-config
   trigger:
     schedule: "0 10 * * *"
   restic:
     pruneIntervalDays: 14
-    repository: restic-media-audioarr-config-ceph
+    repository: restic-media-audioarr-config
     retain:
       hourly: 1
       daily: 3
@@ -20,7 +20,7 @@ spec:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: restic-media-audioarr-config-ceph
+  name: restic-media-audioarr-config
 type: Opaque
 stringData:
   RESTIC_REPOSITORY: s3:https://${COMMON_S3_ENDPOINT}/keiretsu/${LOCATION}/media/audioarr-config

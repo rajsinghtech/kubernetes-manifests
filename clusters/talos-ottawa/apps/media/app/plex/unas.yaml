@@ -3,7 +3,7 @@ kind: PersistentVolume
 metadata:
   annotations:
     pv.kubernetes.io/provisioned-by: smb.csi.k8s.io
-  name: plex-config-unas
+  name: plex-config
 spec:
   capacity:
     storage: 10Gi
@@ -26,12 +26,12 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: plex-config-unas
+  name: plex-config
 spec:
   accessModes:
     - ReadWriteMany
   resources:
     requests:
       storage: 10Gi
-  volumeName: plex-config-unas
+  volumeName: plex-config
   storageClassName: smb 

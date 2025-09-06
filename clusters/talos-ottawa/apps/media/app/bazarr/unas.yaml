@@ -3,7 +3,7 @@ kind: PersistentVolume
 metadata:
   annotations:
     pv.kubernetes.io/provisioned-by: smb.csi.k8s.io
-  name: bazarr-config-unas
+  name: bazarr-config
 spec:
   capacity:
     storage: 1Gi
@@ -26,12 +26,12 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: bazarr-config-unas
+  name: bazarr-config
 spec:
   accessModes:
     - ReadWriteMany
   resources:
     requests:
       storage: 1Gi
-  volumeName: bazarr-config-unas
+  volumeName: bazarr-config
   storageClassName: smb 

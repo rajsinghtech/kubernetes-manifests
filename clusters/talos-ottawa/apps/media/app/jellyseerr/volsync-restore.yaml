@@ -1,13 +1,13 @@
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationDestination
 metadata:
-  name: jellyseerr-config-ceph
+  name: jellyseerr-config
 spec:
   trigger:
     manual: first
   paused: true
   restic:
-    repository: restic-media-jellyseerr-config-ceph
-    destinationPVC: jellyseerr-config-ceph
+    repository: restic-media-jellyseerr-config
+    destinationPVC: jellyseerr-config
     copyMethod: Direct
     restoreAsOf: "2025-05-31T10:00:00Z"

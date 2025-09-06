@@ -1,13 +1,13 @@
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationDestination
 metadata:
-  name: prowlarr-config-ceph
+  name: prowlarr-config
 spec:
   trigger:
     manual: first
   paused: true
   restic:
-    repository: restic-media-prowlarr-config-ceph
-    destinationPVC: prowlarr-config-ceph
+    repository: restic-media-prowlarr-config
+    destinationPVC: prowlarr-config
     copyMethod: Direct
     restoreAsOf: "2025-05-31T10:00:00Z"

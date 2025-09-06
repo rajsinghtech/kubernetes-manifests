@@ -9,7 +9,7 @@ apiVersion: ceph.rook.io/v1
 kind: CephFilesystem
 metadata:
   name: filesystem
-  namespace: rook-ceph # namespace:cluster
+  namespace: rook # namespace:cluster
 spec:
   # The metadata pool spec. Must use replication.
   metadataPool:
@@ -72,7 +72,7 @@ spec:
                 - key: app
                   operator: In
                   values:
-                    - rook-ceph-mds
+                    - rook-mds
             ## Add this if you want to allow mds daemons for different filesystems to run on one
             ## node. The value in "values" must match .metadata.name.
             #    - key: rook_file_system
@@ -89,7 +89,7 @@ spec:
                   - key: app
                     operator: In
                     values:
-                      - rook-ceph-mds
+                      - rook-mds
               # topologyKey: */zone can be used to spread MDS across different AZ
               # Use <topologyKey: failure-domain.beta.kubernetes.io/zone> in k8s cluster if your cluster is v1.16 or lower
               # Use <topologyKey: topology.kubernetes.io/zone>  in k8s cluster is v1.17 or upper
@@ -141,7 +141,7 @@ apiVersion: ceph.rook.io/v1
 kind: CephFilesystemSubVolumeGroup
 metadata:
   name: filesystem-csi # lets keep the svg crd name same as `filesystem name + csi` for the default csi svg
-  namespace: rook-ceph # namespace:cluster
+  namespace: rook # namespace:cluster
 spec:
   # The name of the subvolume group. If not set, the default is the name of the subvolumeGroup CR.
   name: csi

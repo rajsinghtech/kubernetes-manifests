@@ -3,7 +3,7 @@ kind: PersistentVolume
 metadata:
   annotations:
     pv.kubernetes.io/provisioned-by: smb.csi.k8s.io
-  name: jellystat-backup-unas
+  name: jellystat-backup
 spec:
   capacity:
     storage: 1Gi
@@ -26,12 +26,12 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: jellystat-backup-unas
+  name: jellystat-backup
 spec:
   accessModes:
     - ReadWriteMany
   resources:
     requests:
       storage: 1Gi
-  volumeName: jellystat-backup-unas
+  volumeName: jellystat-backup
   storageClassName: smb 

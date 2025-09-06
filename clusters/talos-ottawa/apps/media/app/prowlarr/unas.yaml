@@ -3,7 +3,7 @@ kind: PersistentVolume
 metadata:
   annotations:
     pv.kubernetes.io/provisioned-by: smb.csi.k8s.io
-  name: prowlarr-config-unas
+  name: prowlarr-config
 spec:
   capacity:
     storage: 1Gi
@@ -26,12 +26,12 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: prowlarr-config-unas
+  name: prowlarr-config
 spec:
   accessModes:
     - ReadWriteMany
   resources:
     requests:
       storage: 1Gi
-  volumeName: prowlarr-config-unas
+  volumeName: prowlarr-config
   storageClassName: smb 

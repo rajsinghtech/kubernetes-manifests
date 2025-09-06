@@ -1,5 +1,5 @@
 #################################################################################################################
-# Define the settings for the rook-ceph cluster with common settings for a production cluster.
+# Define the settings for the rook cluster with common settings for a production cluster.
 # All nodes with available raw devices will be used for the Ceph cluster. At least three nodes are required
 # in this example. See the documentation for more details on storage settings available.
 
@@ -11,8 +11,8 @@
 apiVersion: ceph.rook.io/v1
 kind: CephCluster
 metadata:
-  name: rook-ceph
-  namespace: rook-ceph # namespace:cluster
+  name: rook
+  namespace: rook # namespace:cluster
 spec:
   # Ceph configuration overrides for NVMe optimization
   cephConfig:
@@ -144,8 +144,8 @@ spec:
     # enable the Multus network provider
     # provider: multus
     # selectors:
-    #   public: rook-ceph/rook-public-nw
-      # cluster: rook-ceph/rook-cluster-nw
+    #   public: rook/rook-public-nw
+      # cluster: rook/rook-cluster-nw
     #  The selector keys are required to be `public` and `cluster`.
     #  Based on the configuration, the operator will do the following:
     #    1. if only the `public` selector key is specified both public_network and cluster_network Ceph settings will listen on that interface
@@ -240,7 +240,7 @@ spec:
   #   prepareosd:
   # cmdreporter is for jobs to detect ceph and csi versions, and check network status
   #   cmdreporter:
-  # clusterMetadata annotations will be applied to only `rook-ceph-mon-endpoints` configmap and the `rook-ceph-mon` and `rook-ceph-admin-keyring` secrets.
+  # clusterMetadata annotations will be applied to only `rook-mon-endpoints` configmap and the `rook-mon` and `rook-admin-keyring` secrets.
   # And clusterMetadata annotations will not be merged with `all` annotations.
   #    clusterMetadata:
   #       kubed.appscode.com/sync: "true"
@@ -299,11 +299,11 @@ spec:
   # The option to automatically remove OSDs that are out and are safe to destroy.
   removeOSDsIfOutAndSafeToRemove: true
   priorityClassNames:
-    #all: rook-ceph-default-priority-class
+    #all: rook-default-priority-class
     mon: system-node-critical
     osd: system-node-critical
     mgr: system-cluster-critical
-    #crashcollector: rook-ceph-crashcollector-priority-class
+    #crashcollector: rook-crashcollector-priority-class
   storage: # cluster level storage configuration and selection
     useAllNodes: true
     useAllDevices: true

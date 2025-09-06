@@ -36,6 +36,6 @@ spec:
       volumes:
         - name: config-volume
           persistentVolumeClaim:
-            claimName: jellyseerr-config-ceph 
+            claimName: jellyseerr-config 
         - name: logs-volume
           emptyDir: {} 

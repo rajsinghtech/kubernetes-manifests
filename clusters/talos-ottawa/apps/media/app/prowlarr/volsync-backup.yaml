@@ -1,14 +1,14 @@
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
-  name: media-prowlarr-config-ceph
+  name: media-prowlarr-config
 spec:
-  sourcePVC: prowlarr-config-ceph
+  sourcePVC: prowlarr-config
   trigger:
     schedule: "0 14 * * *"
   restic:
     pruneIntervalDays: 14
-    repository: restic-media-prowlarr-config-ceph
+    repository: restic-media-prowlarr-config
     retain:
       hourly: 1
       daily: 3
@@ -20,7 +20,7 @@ spec:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: restic-media-prowlarr-config-ceph
+  name: restic-media-prowlarr-config
 type: Opaque
 stringData:
   RESTIC_REPOSITORY: s3:https://${COMMON_S3_ENDPOINT}/keiretsu/${LOCATION}/media/prowlarr-config

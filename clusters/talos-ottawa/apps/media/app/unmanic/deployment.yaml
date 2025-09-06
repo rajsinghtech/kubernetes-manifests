@@ -47,12 +47,12 @@ spec:
       volumes:
         - name: tv-volume
           persistentVolumeClaim:
-            claimName: sonarr-tv-unas
+            claimName: sonarr-tv
         - name: movies-volume
           persistentVolumeClaim:
-            claimName: radarr-movies-unas
+            claimName: radarr-movies
         - name: config-volume
           persistentVolumeClaim:
-            claimName: unmanic-config-ceph
+            claimName: unmanic-config
         - name: cache-volume
           emptyDir: {}
