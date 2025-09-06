@@ -1,0 +1,38 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: plex
+  namespace: media
+  annotations:
+    item.homer.rajsingh.info/name: "Plex"
+    item.homer.rajsingh.info/subtitle: "Media Server"
+    item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/svg/plex.svg"
+    item.homer.rajsingh.info/tag: "media"
+    item.homer.rajsingh.info/keywords: "media, server, streaming"
+
+    service.homer.rajsingh.info/name: "Media"
+    service.homer.rajsingh.info/icon: "fas fa-tv"
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: private
+      namespace: home
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: ts
+      namespace: home
+  hostnames:
+    - "plex.rajsingh.info"
+    - "plex.${CLUSTER_DOMAIN}"
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: plex
+          port: 32400
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /

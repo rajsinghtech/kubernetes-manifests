@@ -1,0 +1,29 @@
+---
+# S3 credentials secret for Jellystat backups
+apiVersion: v1
+kind: Secret
+metadata:
+  name: jellystat-s3-backup
+  namespace: media
+stringData:
+  AWS_ACCESS_KEY_ID: ${COMMON_S3_ACCESS_KEY}
+  AWS_SECRET_ACCESS_KEY: ${COMMON_S3_SECRET_KEY}
+---
+# ObjectStore for Barman Cloud backups
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: jellystat-s3-store
+  namespace: media
+spec:
+  configuration:
+    destinationPath: s3://keiretsu/${LOCATION}/media/jellystat-postgres/
+    endpointURL: https://nyc3.digitaloceanspaces.com
+    s3Credentials:
+      accessKeyId:
+        name: jellystat-s3-backup
+        key: AWS_ACCESS_KEY_ID
+      secretAccessKey:
+        name: jellystat-s3-backup
+        key: AWS_SECRET_ACCESS_KEY
+  retentionPolicy: "30d"

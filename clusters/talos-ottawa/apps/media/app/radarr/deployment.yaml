@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: radarr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: radarr
+  template:
+    metadata:
+      labels:
+        app: radarr
+    spec:
+      containers:
+      - name: radarr
+        image: lscr.io/linuxserver/radarr:latest
+        ports:
+        - name: http
+          containerPort: 7878
+          protocol: TCP
+        volumeMounts:
+        - name: movies-volume
+          mountPath: /movies
+        - name: downloads-volume
+          mountPath: /downloads
+        - name: config-volume
+          mountPath: /config
+        env:
+        - name: PUID
+          value: "0"
+        - name: GUID
+          value: "0"
+        - name: TZ
+          value: America/Chicago
+      volumes:
+      - name: movies-volume
+        persistentVolumeClaim:
+          claimName: radarr-movies-unas
+      - name: downloads-volume
+        persistentVolumeClaim:
+          claimName: transmission-movies-data-unas
+      - name: config-volume
+        persistentVolumeClaim:
+          claimName: radarr-config-ceph 
