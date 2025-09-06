@@ -21,14 +21,14 @@ spec:
               containerPort: 8096
               protocol: TCP
           volumeMounts:
-            - name: tv-volume
-              mountPath: /media/tvshows
+            # - name: tv-volume
+            #   mountPath: /media/tvshows
             - name: movies-volume
               mountPath: /media/movies
-            - name: music-volume
-              mountPath: /media/music
-            - name: audiobooks-volume
-              mountPath: /media/audiobooks                            
+            # - name: music-volume
+            #   mountPath: /media/music
+            # - name: audiobooks-volume
+            #   mountPath: /media/audiobooks                            
             - name: config-volume
               mountPath: /config
           env:
