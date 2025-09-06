@@ -16,9 +16,9 @@ spec:
     - file_mode=0777
   csi:
     driver: smb.csi.k8s.io
-    volumeHandle: smb-server.default.svc.cluster.local/k8s_shortsnap/media/transmission-movies-data
+    volumeHandle: smb-server.default.svc.cluster.local/media-share/transmission-movies-data
     volumeAttributes:
-      source: //192.168.50.115/k8s_shortsnap/media/transmission-movies-data
+      source: //192.168.169.111/media-share/transmission-movies-data
     nodeStageSecretRef:
       name: csi-smbcreds
       namespace: kube-system
