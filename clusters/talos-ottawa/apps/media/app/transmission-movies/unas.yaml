@@ -3,7 +3,7 @@ kind: PersistentVolume
 metadata:
   annotations:
     pv.kubernetes.io/provisioned-by: smb.csi.k8s.io
-  name: transmission-movies-data-unas
+  name: transmission-movies-data
 spec:
   capacity:
     storage: 2Ti
@@ -26,14 +26,14 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: transmission-movies-data-unas
+  name: transmission-movies-data
 spec:
   accessModes:
     - ReadWriteMany
   resources:
     requests:
       storage: 2Ti
-  volumeName: transmission-movies-data-unas
+  volumeName: transmission-movies-data
   storageClassName: smb
 ---
 apiVersion: v1
@@ -41,7 +41,7 @@ kind: PersistentVolume
 metadata:
   annotations:
     pv.kubernetes.io/provisioned-by: smb.csi.k8s.io
-  name: transmission-movies-config-unas
+  name: transmission-movies-config
 spec:
   capacity:
     storage: 1Gi
@@ -64,12 +64,12 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: transmission-movies-config-unas
+  name: transmission-movies-config
 spec:
   accessModes:
     - ReadWriteMany
   resources:
     requests:
       storage: 1Gi
-  volumeName: transmission-movies-config-unas
+  volumeName: transmission-movies-config
   storageClassName: smb 

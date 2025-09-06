@@ -1,23 +1,23 @@
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationDestination
 metadata:
-  name: plex-config-ceph
+  name: plex-config
 spec:
   trigger:
     manual: first
   rsync:
     copyMethod: Direct
-    destinationPVC: plex-config-ceph
+    destinationPVC: plex-config
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
-  name: plex-config-unas
+  name: plex-config
 spec:
-  sourcePVC: plex-config-unas
+  sourcePVC: plex-config
   trigger:
     manual: first
   rsync:
-    sshKeys: volsync-rsync-dst-src-plex-config-ceph
-    address: volsync-rsync-dst-plex-config-ceph
+    sshKeys: volsync-rsync-dst-src-plex-config
+    address: volsync-rsync-dst-plex-config
     copyMethod: Direct

@@ -3,7 +3,7 @@ kind: PersistentVolume
 metadata:
   annotations:
     pv.kubernetes.io/provisioned-by: smb.csi.k8s.io
-  name: sonarr-tv-unas
+  name: sonarr-tv
 spec:
   capacity:
     storage: 5Gi
@@ -26,14 +26,14 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: sonarr-tv-unas
+  name: sonarr-tv
 spec:
   accessModes:
     - ReadWriteMany
   resources:
     requests:
       storage: 5Gi
-  volumeName: sonarr-tv-unas
+  volumeName: sonarr-tv
   storageClassName: smb
 ---
 apiVersion: v1
@@ -41,7 +41,7 @@ kind: PersistentVolume
 metadata:
   annotations:
     pv.kubernetes.io/provisioned-by: smb.csi.k8s.io
-  name: sonarr-config-unas
+  name: sonarr-config
 spec:
   capacity:
     storage: 20Ti
@@ -64,12 +64,12 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: sonarr-config-unas
+  name: sonarr-config
 spec:
   accessModes:
     - ReadWriteMany
   resources:
     requests:
       storage: 20Ti
-  volumeName: sonarr-config-unas
+  volumeName: sonarr-config
   storageClassName: smb

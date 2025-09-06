@@ -3,7 +3,7 @@ kind: PersistentVolume
 metadata:
   annotations:
     pv.kubernetes.io/provisioned-by: smb.csi.k8s.io
-  name: transmission-tv-data-unas
+  name: transmission-tv-data
 spec:
   capacity:
     storage: 2Ti
@@ -26,14 +26,14 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: transmission-tv-data-unas
+  name: transmission-tv-data
 spec:
   accessModes:
     - ReadWriteMany
   resources:
     requests:
       storage: 2Ti
-  volumeName: transmission-tv-data-unas
+  volumeName: transmission-tv-data
   storageClassName: smb
 ---
 apiVersion: v1
@@ -41,7 +41,7 @@ kind: PersistentVolume
 metadata:
   annotations:
     pv.kubernetes.io/provisioned-by: smb.csi.k8s.io
-  name: transmission-tv-config-unas
+  name: transmission-tv-config
 spec:
   capacity:
     storage: 1Gi
@@ -64,12 +64,12 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: transmission-tv-config-unas
+  name: transmission-tv-config
 spec:
   accessModes:
     - ReadWriteMany
   resources:
     requests:
       storage: 1Gi
-  volumeName: transmission-tv-config-unas
+  volumeName: transmission-tv-config
   storageClassName: smb 

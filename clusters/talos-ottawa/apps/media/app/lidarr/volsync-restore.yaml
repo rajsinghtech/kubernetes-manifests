@@ -1,13 +1,13 @@
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationDestination
 metadata:
-  name: lidarr-config-ceph
+  name: lidarr-config
 spec:
   trigger:
     manual: first
   paused: true
   restic:
-    repository: restic-media-lidarr-config-ceph
-    destinationPVC: lidarr-config-ceph
+    repository: restic-media-lidarr-config
+    destinationPVC: lidarr-config
     copyMethod: Direct
     restoreAsOf: "2025-05-31T10:00:00Z"

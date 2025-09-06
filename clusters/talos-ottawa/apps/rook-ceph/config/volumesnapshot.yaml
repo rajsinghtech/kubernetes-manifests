@@ -6,14 +6,14 @@ apiVersion: snapshot.storage.k8s.io/v1
 kind: VolumeSnapshotClass
 metadata:
   name: csi-rbdplugin-snapclass
-driver: rook-ceph.rbd.csi.ceph.com # driver:namespace:operator
+driver: rook.rbd.csi.ceph.com # driver:namespace:operator
 parameters:
   # Specify a string that identifies your cluster. Ceph CSI supports any
   # unique string. When Ceph CSI is deployed by Rook use the Rook namespace,
-  # for example "rook-ceph".
-  clusterID: rook-ceph # namespace:cluster
+  # for example "rook".
+  clusterID: rook # namespace:cluster
   csi.storage.k8s.io/snapshotter-secret-name: rook-csi-rbd-provisioner
-  csi.storage.k8s.io/snapshotter-secret-namespace: rook-ceph # namespace:cluster
+  csi.storage.k8s.io/snapshotter-secret-namespace: rook # namespace:cluster
 deletionPolicy: Delete
 ---
 # 1.17 <= K8s <= v1.19
@@ -22,14 +22,14 @@ deletionPolicy: Delete
 apiVersion: snapshot.storage.k8s.io/v1
 kind: VolumeSnapshotClass
 metadata:
-  name: csi-cephfsplugin-snapclass
-driver: rook-ceph.cephfs.csi.ceph.com # driver:namespace:operator
+  name: csifsplugin-snapclass
+driver: rook.cephfs.csi.ceph.com # driver:namespace:operator
 parameters:
   # Specify a string that identifies your cluster. Ceph CSI supports any
   # unique string. When Ceph CSI is deployed by Rook use the Rook namespace,
-  # for example "rook-ceph".
-  clusterID: rook-ceph # namespace:cluster
-  csi.storage.k8s.io/snapshotter-secret-name: rook-csi-cephfs-provisioner
-  csi.storage.k8s.io/snapshotter-secret-namespace: rook-ceph # namespace:cluster
+  # for example "rook".
+  clusterID: rook # namespace:cluster
+  csi.storage.k8s.io/snapshotter-secret-name: rook-csifs-provisioner
+  csi.storage.k8s.io/snapshotter-secret-namespace: rook # namespace:cluster
 deletionPolicy: Delete
 ---

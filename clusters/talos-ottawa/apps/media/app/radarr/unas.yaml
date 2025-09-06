@@ -3,7 +3,7 @@ kind: PersistentVolume
 metadata:
   annotations:
     pv.kubernetes.io/provisioned-by: smb.csi.k8s.io
-  name: radarr-movies-unas
+  name: radarr-movies
 spec:
   capacity:
     storage: 20Ti
@@ -26,14 +26,14 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: radarr-movies-unas
+  name: radarr-movies
 spec:
   accessModes:
     - ReadWriteMany
   resources:
     requests:
       storage: 20Ti
-  volumeName: radarr-movies-unas
+  volumeName: radarr-movies
   storageClassName: smb
 ---
 apiVersion: v1
@@ -41,7 +41,7 @@ kind: PersistentVolume
 metadata:
   annotations:
     pv.kubernetes.io/provisioned-by: smb.csi.k8s.io
-  name: radarr-config-unas
+  name: radarr-config
 spec:
   capacity:
     storage: 5Gi
@@ -64,12 +64,12 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: radarr-config-unas
+  name: radarr-config
 spec:
   accessModes:
     - ReadWriteMany
   resources:
     requests:
       storage: 5Gi
-  volumeName: radarr-config-unas
+  volumeName: radarr-config
   storageClassName: smb

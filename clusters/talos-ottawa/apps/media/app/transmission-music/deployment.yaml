@@ -60,7 +60,7 @@ spec:
       volumes:
       - name: data-volume
         persistentVolumeClaim:
-          claimName: transmission-music-data-unas
+          claimName: transmission-music-data
       - name: config-volume
         persistentVolumeClaim:
-          claimName: transmission-music-config-unas
+          claimName: transmission-music-config

@@ -1,13 +1,13 @@
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationDestination
 metadata:
-  name: radarr-config-ceph
+  name: radarr-config
 spec:
   trigger:
     manual: first
   paused: true
   restic:
-    repository: restic-media-radarr-config-ceph
-    destinationPVC: radarr-config-ceph
+    repository: restic-media-radarr-config
+    destinationPVC: radarr-config
     copyMethod: Direct
     restoreAsOf: "2025-05-31T10:00:00Z"

@@ -41,4 +41,4 @@ spec:
       volumes:
       - name: config-volume
         persistentVolumeClaim:
-          claimName: prowlarr-config-ceph 
+          claimName: prowlarr-config 

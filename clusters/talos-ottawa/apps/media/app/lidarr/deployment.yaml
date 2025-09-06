@@ -36,10 +36,10 @@ spec:
       volumes:
         - name: music-volume
           persistentVolumeClaim:
-            claimName: lidarr-music-unas
+            claimName: lidarr-music
         - name: downloads-volume
           persistentVolumeClaim:
-            claimName: transmission-music-data-unas
+            claimName: transmission-music-data
         - name: config-volume
           persistentVolumeClaim:
-            claimName: lidarr-config-ceph 
+            claimName: lidarr-config 

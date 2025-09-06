@@ -1,14 +1,14 @@
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
-  name: media-plex-config-ceph
+  name: media-plex-config
 spec:
-  sourcePVC: plex-config-ceph
+  sourcePVC: plex-config
   trigger:
     schedule: "0 15 * * *"
   restic:
     pruneIntervalDays: 14
-    repository: restic-media-plex-config-ceph
+    repository: restic-media-plex-config
     retain:
       hourly: 1
       daily: 3
@@ -20,7 +20,7 @@ spec:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: restic-media-plex-config-ceph
+  name: restic-media-plex-config
 type: Opaque
 stringData:
   RESTIC_REPOSITORY: s3:https://${COMMON_S3_ENDPOINT}/keiretsu/${LOCATION}/media/plex-config

@@ -60,7 +60,7 @@ spec:
       volumes:
       - name: data-volume
         persistentVolumeClaim:
-          claimName: transmission-tv-data-unas
+          claimName: transmission-tv-data
       - name: config-volume
         persistentVolumeClaim:
-          claimName: transmission-tv-config-unas
+          claimName: transmission-tv-config

@@ -68,20 +68,20 @@ spec:
       volumes:
         - name: config
           persistentVolumeClaim:
-            claimName: plex-config-ceph  
+            claimName: plex-config  
         - name: transcode
           emptyDir:
             medium: Memory
             sizeLimit: 6Gi
         - name: movies-volume
           persistentVolumeClaim:
-            claimName: radarr-movies-unas
+            claimName: radarr-movies
         - name: tv-volume
           persistentVolumeClaim:
-            claimName: sonarr-tv-unas
+            claimName: sonarr-tv
         - name: audiobooks-volume
           persistentVolumeClaim:
-            claimName: readarr-books-unas
+            claimName: readarr-books
         - name: music-volume
           persistentVolumeClaim:
-            claimName: lidarr-music-unas
+            claimName: lidarr-music
