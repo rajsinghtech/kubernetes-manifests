@@ -3,6 +3,8 @@ kind: CephBlockPool
 metadata:
   name: ceph-blockpool-replicated
   namespace: rook-ceph
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
 spec:
   failureDomain: osd
   replicated:

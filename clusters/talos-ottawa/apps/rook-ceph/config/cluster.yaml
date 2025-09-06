@@ -11,8 +11,10 @@
 apiVersion: ceph.rook.io/v1
 kind: CephCluster
 metadata:
-  name: rook-ceph
+  name: rook
   namespace: rook-ceph # namespace:cluster
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
 spec:
   # Ceph configuration overrides for NVMe optimization
   cephConfig:
