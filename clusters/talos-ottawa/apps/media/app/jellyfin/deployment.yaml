@@ -41,18 +41,18 @@ spec:
             - name: JELLYFIN_PublishedServerUrl
               value: jellyfin.rajsingh.info
       volumes:
-        # - name: tv-volume
-        #   persistentVolumeClaim:
-        #     claimName: sonarr-tv
+        - name: tv-volume
+          persistentVolumeClaim:
+            claimName: sonarr-tv
         - name: movies-volume
           persistentVolumeClaim:
             claimName: radarr-movies
-        # - name: audiobooks-volume
-        #   persistentVolumeClaim:
-        #     claimName: readarr-books
-        # - name: music-volume
-        #   persistentVolumeClaim:
-        #     claimName: lidarr-music
+        - name: audiobooks-volume
+          persistentVolumeClaim:
+            claimName: readarr-books
+        - name: music-volume
+          persistentVolumeClaim:
+            claimName: lidarr-music
         - name: config-volume
           persistentVolumeClaim:
             claimName: jellyfin-config 
