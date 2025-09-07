@@ -37,6 +37,16 @@ spec:
           name: logs
         - mountPath: /media
           name: media
+      securityContext:
+        fsGroup: 0
+        fsGroupChangePolicy: OnRootMismatch
+        runAsGroup: 0
+        runAsNonRoot: false
+        runAsUser: 0
+        seccompProfile:
+          type: RuntimeDefault
+        supplementalGroups:
+        - 10000
       volumes:
       - name: config
         persistentVolumeClaim:
