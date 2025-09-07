@@ -27,7 +27,7 @@ spec:
           env:
             - name: PUID
               value: "0"
-            - name: GUID
+            - name: PGID
               value: "0"
             - name: TZ
               value: ${TIMEZONE}
