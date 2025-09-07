@@ -166,10 +166,10 @@ jobs:
             HTTP_STATUS=$(echo "$RESPONSE" | tail -n 1 | cut -d: -f2)
             
             if [ "$HTTP_STATUS" = "200" ]; then
-              echo " Successfully deleted device: $DEVICE_NAME"
+              echo "Successfully deleted device: $DEVICE_NAME"
               SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
             else
-              echo "L Failed to delete device: $DEVICE_NAME (HTTP Status: $HTTP_STATUS)"
+              echo "Failed to delete device: $DEVICE_NAME (HTTP Status: $HTTP_STATUS)"
               RESPONSE_BODY=$(echo "$RESPONSE" | sed '$d')
               echo "Error response: $RESPONSE_BODY"
               FAILED_COUNT=$((FAILED_COUNT + 1))
