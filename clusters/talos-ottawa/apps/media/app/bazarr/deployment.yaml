@@ -12,6 +12,8 @@ spec:
       labels:
         app: bazarr
     spec:
+      strategy:
+        type: Recreate
       containers:
       - name: bazarr
         image: lscr.io/linuxserver/bazarr:latest

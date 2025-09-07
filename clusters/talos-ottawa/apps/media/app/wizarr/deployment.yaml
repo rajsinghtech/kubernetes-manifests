@@ -12,6 +12,8 @@ spec:
       labels:
         app: wizarr
     spec:
+      strategy:
+        type: Recreate
       containers:
         - name: wizarr
           image: ghcr.io/wizarrrr/wizarr

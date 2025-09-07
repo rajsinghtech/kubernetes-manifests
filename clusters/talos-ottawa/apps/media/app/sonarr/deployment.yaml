@@ -12,6 +12,8 @@ spec:
       labels:
         app: sonarr
     spec:
+      strategy:
+        type: Recreate
       containers:
         - name: sonarr
           image: lscr.io/linuxserver/sonarr:latest

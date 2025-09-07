@@ -12,6 +12,8 @@ spec:
       labels:
         app: jellyseerr
     spec:
+      strategy:
+        type: Recreate
       containers:
         - name: jellyseerr
           image: fallenbagel/jellyseerr:latest

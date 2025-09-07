@@ -12,6 +12,8 @@ spec:
       labels:
         app: prowlarr
     spec:
+      strategy:
+        type: Recreate
       containers:
       - name: flaresolver 
         image: ghcr.io/flaresolverr/flaresolverr:latest
