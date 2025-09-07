@@ -1,0 +1,203 @@
+name: Delete Inactive Tailnet Nodes
+
+permissions:
+  id-token: write # Required for OIDC token
+  contents: read # Required for checkout
+
+on:
+  workflow_dispatch:
+    inputs:
+      tags:
+        description: "Comma-separated list of tags to filter devices (e.g., 'tag:k8s,tag:ottawa')"
+        required: true
+        default: "tag:k8s,tag:ottawa"
+      inactive_days:
+        description: "Number of days of inactivity before deletion"
+        required: true
+        default: "30"
+      dry_run:
+        description: "Dry run mode (only list devices, don't delete)"
+        type: boolean
+        default: true
+      audience:
+        description: "Audience for the OIDC token"
+        required: true
+        default: "api.tailscale.com/kxF3d4zoso11CNTRL"
+      client_id:
+        description: "Client ID for the Tailscale OIDC JWT exchange"
+        required: true
+        default: "TbqNGJkY5611CNTRL/kxF3d4zoso11CNTRL"
+      tailnet_name:
+        description: "Tailnet name to operate on"
+        required: true
+        default: "rajsinghtech.github"
+
+jobs:
+  delete-inactive-nodes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq curl
+
+      - name: Get OIDC token from GitHub Actions
+        id: get_oidc_token
+        run: |
+          JWT=$(curl -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=${{ inputs.audience }}" | jq -r '.value')
+          echo "::add-mask::$JWT"
+          echo "jwt=$JWT" >> $GITHUB_OUTPUT
+
+      - name: Exchange OIDC token for access token
+        id: get_access_token
+        run: |
+          echo "Exchanging OIDC token with Tailscale..."
+          ACCESS_TOKEN=$(./tailscale/scripts/exchange-oidc-token.sh "${{ inputs.client_id }}" "${{ steps.get_oidc_token.outputs.jwt }}")
+          echo "::add-mask::$ACCESS_TOKEN"
+          echo "access_token=$ACCESS_TOKEN" >> $GITHUB_OUTPUT
+          echo "Successfully obtained access token"
+
+      - name: Get all devices in tailnet
+        id: get_devices
+        run: |
+          echo "Fetching devices from tailnet: ${{ inputs.tailnet_name }}"
+          DEVICES=$(curl -s https://api.tailscale.com/api/v2/tailnet/"${{ inputs.tailnet_name }}"/devices?fields=all \
+            --header "Authorization: Bearer ${{ steps.get_access_token.outputs.access_token }}")
+          
+          if [ $? -ne 0 ]; then
+            echo "Error: Failed to fetch devices" >&2
+            exit 1
+          fi
+          
+          echo "$DEVICES" > /tmp/all_devices.json
+          echo "Total devices found: $(echo "$DEVICES" | jq '.devices | length')"
+
+      - name: Filter devices by tags and inactivity
+        id: filter_devices
+        run: |
+          echo "Filtering devices by tags: ${{ inputs.tags }}"
+          echo "Checking for devices inactive for more than ${{ inputs.inactive_days }} days"
+          
+          # Convert tags input to array
+          IFS=',' read -ra TAGS_ARRAY <<< "${{ inputs.tags }}"
+          
+          # Get current date in seconds
+          CURRENT_DATE=$(date +%s)
+          INACTIVE_THRESHOLD=$(( ${{ inputs.inactive_days }} * 86400 ))
+          
+          # Initialize empty array for devices to delete
+          echo "[]" > /tmp/devices_to_delete.json
+          
+          # Process each device
+          while IFS= read -r device; do
+            DEVICE_NAME=$(echo "$device" | jq -r '.name')
+            DEVICE_ID=$(echo "$device" | jq -r '.nodeId')
+            DEVICE_TAGS=$(echo "$device" | jq -r '.tags[]?' 2>/dev/null)
+            LAST_SEEN=$(echo "$device" | jq -r '.lastSeen')
+            
+            # Check if device has any of the specified tags
+            HAS_TAG=false
+            for TAG in "${TAGS_ARRAY[@]}"; do
+              TAG=$(echo "$TAG" | xargs) # Trim whitespace
+              if echo "$DEVICE_TAGS" | grep -q "^$TAG$"; then
+                HAS_TAG=true
+                break
+              fi
+            done
+            
+            if [ "$HAS_TAG" = true ]; then
+              # Check if device is inactive
+              if [ "$LAST_SEEN" != "null" ] && [ -n "$LAST_SEEN" ]; then
+                LAST_SEEN_SECONDS=$(date -d "$LAST_SEEN" +%s 2>/dev/null || echo 0)
+                if [ "$LAST_SEEN_SECONDS" -gt 0 ]; then
+                  INACTIVE_TIME=$(( CURRENT_DATE - LAST_SEEN_SECONDS ))
+                  
+                  if [ "$INACTIVE_TIME" -gt "$INACTIVE_THRESHOLD" ]; then
+                    INACTIVE_DAYS=$(( INACTIVE_TIME / 86400 ))
+                    echo "Device $DEVICE_NAME (ID: $DEVICE_ID) has been inactive for $INACTIVE_DAYS days"
+                    
+                    # Add to deletion list
+                    jq --arg name "$DEVICE_NAME" --arg id "$DEVICE_ID" --arg days "$INACTIVE_DAYS" --arg last "$LAST_SEEN" \
+                      '. += [{"name": $name, "id": $id, "inactive_days": $days, "last_seen": $last}]' \
+                      /tmp/devices_to_delete.json > /tmp/devices_to_delete_tmp.json
+                    mv /tmp/devices_to_delete_tmp.json /tmp/devices_to_delete.json
+                  fi
+                fi
+              else
+                echo "Warning: Device $DEVICE_NAME has no lastSeen timestamp"
+              fi
+            fi
+          done < <(jq -c '.devices[]' /tmp/all_devices.json)
+          
+          DELETION_COUNT=$(jq '. | length' /tmp/devices_to_delete.json)
+          echo "Found $DELETION_COUNT devices to delete"
+          echo "devices_count=$DELETION_COUNT" >> $GITHUB_OUTPUT
+
+      - name: Display devices to delete
+        run: |
+          echo "=== Devices to Delete ==="
+          if [ $(jq '. | length' /tmp/devices_to_delete.json) -eq 0 ]; then
+            echo "No devices found matching the criteria"
+          else
+            jq -r '.[] | "Device: \(.name) | ID: \(.id) | Inactive Days: \(.inactive_days) | Last Seen: \(.last_seen)"' /tmp/devices_to_delete.json
+          fi
+          echo "========================="
+
+      - name: Delete inactive devices
+        if: inputs.dry_run == false && steps.filter_devices.outputs.devices_count != '0'
+        run: |
+          echo "Starting device deletion (NOT a dry run)..."
+          
+          SUCCESS_COUNT=0
+          FAILED_COUNT=0
+          
+          while IFS= read -r device; do
+            DEVICE_NAME=$(echo "$device" | jq -r '.name')
+            DEVICE_ID=$(echo "$device" | jq -r '.id')
+            
+            echo "Deleting device: $DEVICE_NAME (ID: $DEVICE_ID)"
+            
+            RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}" -X DELETE https://api.tailscale.com/api/v2/device/"$DEVICE_ID" \
+              --header "Authorization: Bearer ${{ steps.get_access_token.outputs.access_token }}")
+            
+            HTTP_STATUS=$(echo "$RESPONSE" | tail -n 1 | cut -d: -f2)
+            
+            if [ "$HTTP_STATUS" = "200" ]; then
+              echo " Successfully deleted device: $DEVICE_NAME"
+              SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
+            else
+              echo "L Failed to delete device: $DEVICE_NAME (HTTP Status: $HTTP_STATUS)"
+              RESPONSE_BODY=$(echo "$RESPONSE" | sed '$d')
+              echo "Error response: $RESPONSE_BODY"
+              FAILED_COUNT=$((FAILED_COUNT + 1))
+            fi
+            
+            # Add small delay between deletions to avoid rate limiting
+            sleep 1
+          done < <(jq -c '.[]' /tmp/devices_to_delete.json)
+          
+          echo "=== Deletion Summary ==="
+          echo "Successfully deleted: $SUCCESS_COUNT devices"
+          echo "Failed to delete: $FAILED_COUNT devices"
+          echo "========================"
+          
+          if [ "$FAILED_COUNT" -gt 0 ]; then
+            exit 1
+          fi
+
+      - name: Dry run summary
+        if: inputs.dry_run == true
+        run: |
+          echo "=== DRY RUN MODE ==="
+          echo "No devices were actually deleted."
+          echo "To perform actual deletion, run the workflow with 'dry_run' set to false."
+          echo "===================="
+
+      - name: Final device list
+        if: inputs.dry_run == false && steps.filter_devices.outputs.devices_count != '0'
+        run: |
+          echo "Fetching updated device list..."
+          ./tailscale/scripts/list-devices.sh "${{ steps.get_access_token.outputs.access_token }}" "${{ inputs.tailnet_name }}" table || true
