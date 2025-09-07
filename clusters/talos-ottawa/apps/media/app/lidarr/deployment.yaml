@@ -39,7 +39,7 @@ spec:
             claimName: lidarr-music
         - name: downloads-volume
           persistentVolumeClaim:
-            claimName: transmission-music-data
+            claimName: sabnzbd-media
         - name: config-volume
           persistentVolumeClaim:
             claimName: lidarr-config 

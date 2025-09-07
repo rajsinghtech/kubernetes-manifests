@@ -39,7 +39,7 @@ spec:
             claimName: readarr-books
         - name: downloads-volume
           persistentVolumeClaim:
-            claimName: transmission-books-data
+            claimName: sabnzbd-media
         - name: config-volume
           persistentVolumeClaim:
             claimName: readarr-config 

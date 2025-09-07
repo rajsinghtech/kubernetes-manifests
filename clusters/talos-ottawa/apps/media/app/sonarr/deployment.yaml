@@ -39,7 +39,7 @@ spec:
             claimName: sonarr-tv
         - name: downloads-volume
           persistentVolumeClaim:
-            claimName: transmission-tv-data
+            claimName: sabnzbd-media
         - name: config-volume
           persistentVolumeClaim:
-            claimName: sonarr-config # TODO: move to UNAS
+            claimName: sonarr-config
