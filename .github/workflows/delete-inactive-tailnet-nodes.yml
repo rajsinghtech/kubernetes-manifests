@@ -56,13 +56,36 @@ jobs:
           echo "access_token=$ACCESS_TOKEN" >> $GITHUB_OUTPUT
           echo "Successfully obtained access token"
 
+      - name: Determine tailnet from token
+        id: get_tailnet
+        run: |
+          # Try to get tailnet info using the token
+          echo "Determining tailnet associated with OIDC token..."
+          
+          # First, try to list tailnets or get current tailnet info
+          # The OIDC token should be scoped to a specific tailnet
+          # Try using "-" as tailnet which means "current tailnet"
+          RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}" \
+            https://api.tailscale.com/api/v2/tailnet/-/devices \
+            --header "Authorization: Bearer ${{ steps.get_access_token.outputs.access_token }}")
+          
+          HTTP_STATUS=$(echo "$RESPONSE" | tail -n 1 | cut -d: -f2)
+          
+          if [ "$HTTP_STATUS" = "200" ]; then
+            echo "Using current tailnet (-)..."
+            echo "tailnet=-" >> $GITHUB_OUTPUT
+          else
+            # Fall back to extracting from client_id
+            TAILNET=$(echo "${{ inputs.client_id }}" | cut -d'/' -f2)
+            echo "Using tailnet from client_id: $TAILNET"
+            echo "tailnet=$TAILNET" >> $GITHUB_OUTPUT
+          fi
+          
       - name: Get all devices in tailnet
         id: get_devices
         run: |
-          # Extract tailnet from the client_id (format: clientid/tailnet)
-          TAILNET=$(echo "${{ inputs.client_id }}" | cut -d'/' -f2)
+          TAILNET="${{ steps.get_tailnet.outputs.tailnet }}"
           echo "Fetching devices from tailnet: $TAILNET"
-          echo "tailnet=$TAILNET" >> $GITHUB_OUTPUT
           
           # Make API call with proper error handling
           RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}" \
@@ -243,5 +266,5 @@ jobs:
         if: inputs.dry_run == false && steps.filter_devices.outputs.devices_count != '0'
         run: |
           echo "Fetching updated device list..."
-          TAILNET=$(echo "${{ inputs.client_id }}" | cut -d'/' -f2)
+          TAILNET="${{ steps.get_tailnet.outputs.tailnet }}"
           ./tailscale/scripts/list-devices.sh "${{ steps.get_access_token.outputs.access_token }}" "$TAILNET" table || true
