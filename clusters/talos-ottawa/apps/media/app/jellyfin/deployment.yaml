@@ -12,6 +12,8 @@ spec:
       labels:
         app: jellyfin
     spec:
+      strategy:
+        type: Recreate
       hostname: jellyfin
       containers:
         - name: jellyfin
