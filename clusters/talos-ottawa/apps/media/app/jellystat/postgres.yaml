@@ -9,7 +9,6 @@ spec:
   instances: 3
   storage:
     size: 10Gi
-    storageClass: ceph-block-replicated-nvme
   monitoring:
     enablePodMonitor: true
   

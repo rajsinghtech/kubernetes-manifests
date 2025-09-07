@@ -7,17 +7,12 @@ resources:
   - ./prowlarr 
   - ./radarr
   - ./sabnzbd
-  # - ./bazarr 
-  # - ./sonarr 
-  # - ./transmission-movies 
-  # - ./transmission-tv 
-  # - ./plex 
+  - ./bazarr 
+  - ./sonarr 
+  - ./plex 
   - ./jellyseerr 
-  # - ./jellystat 
-  # - ./lidarr 
-  # - ./transmission-music 
-  # - ./readarr 
-  # - ./transmission-books 
-  # - ./audioarr 
-  # - ./unmanic
-  # - ./tdarr  
+  - ./jellystat 
+  - ./lidarr 
+  - ./readarr 
+  - ./audioarr 
+  - ./unmanic

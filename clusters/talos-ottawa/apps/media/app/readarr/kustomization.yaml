@@ -5,8 +5,8 @@ namespace: media
 resources:
   - deployment.yaml
   - service.yaml
-  - unas.yaml
-  - ceph.yaml
+  - pvc-config.yaml
+  - pvc-books.yaml
   - httproute.yaml
   - volsync-restore.yaml
   - volsync-backup.yaml
