@@ -61,8 +61,6 @@ spec:
               mountPath: /media/tv
             - name: movies-volume
               mountPath: /media/movies
-            - name: audiobooks-volume
-              mountPath: /media/audiobooks
             - name: music-volume
               mountPath: /media/music
       volumes:
@@ -79,9 +77,6 @@ spec:
         - name: tv-volume
           persistentVolumeClaim:
             claimName: sonarr-tv
-        - name: audiobooks-volume
-          persistentVolumeClaim:
-            claimName: readarr-books
         - name: music-volume
           persistentVolumeClaim:
             claimName: lidarr-music

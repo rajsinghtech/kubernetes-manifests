@@ -13,6 +13,4 @@ resources:
   - ./jellyseerr 
   - ./jellystat 
   - ./lidarr 
-  - ./readarr 
-  - ./audioarr 
   - ./unmanic
