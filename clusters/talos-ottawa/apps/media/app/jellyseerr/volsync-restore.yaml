@@ -10,4 +10,4 @@ spec:
     repository: restic-media-jellyseerr-config
     destinationPVC: jellyseerr-config
     copyMethod: Direct
-    restoreAsOf: "2025-05-31T10:00:00Z"
+    # restoreAsOf: "2025-05-31T10:00:00Z"
