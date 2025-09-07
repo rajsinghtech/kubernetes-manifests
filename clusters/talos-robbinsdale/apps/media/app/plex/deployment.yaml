@@ -49,7 +49,7 @@ spec:
               memory: 8Gi
           env:
             - name: TZ
-              value: America/Chicago
+              value: ${TIMEZONE}
             - name: VERSION
               value: docker
           volumeMounts:

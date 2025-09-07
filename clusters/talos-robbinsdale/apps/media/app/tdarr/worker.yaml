@@ -32,7 +32,7 @@ spec:
                 fieldRef:
                   fieldPath: metadata.name
             - name: TZ
-              value: "America/Chicago"
+              value: "${TIMEZONE}"
             - name: PUID
               value: "0"
             - name: PGID

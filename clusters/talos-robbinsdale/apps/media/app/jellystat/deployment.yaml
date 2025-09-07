@@ -49,7 +49,7 @@ spec:
             - name: JWT_SECRET
               value: "my-secret-jwt-key"
             - name: TZ
-              value: "America/Chicago"
+              value: "${TIMEZONE}"
           volumeMounts:
             - name: jellystat-backup-data
               mountPath: /app/backend/backup-data

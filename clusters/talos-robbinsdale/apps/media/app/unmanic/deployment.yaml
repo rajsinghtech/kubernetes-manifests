@@ -43,7 +43,7 @@ spec:
             - name: PGID
               value: "0"
             - name: TZ
-              value: America/Chicago
+              value: ${TIMEZONE}
       volumes:
         - name: tv-volume
           persistentVolumeClaim:

@@ -41,7 +41,7 @@ spec:
         - name: nodeName
           value: "robbinsdale"
         - name: TZ
-          value: "America/Chicago"
+          value: "${TIMEZONE}"
         - name: PUID
           value: "0"
         - name: PGID
