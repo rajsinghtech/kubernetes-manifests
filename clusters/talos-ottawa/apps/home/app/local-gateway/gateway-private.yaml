@@ -1,0 +1,43 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: private
+  labels:
+    external-dns: unbound
+    gateway: private
+spec:
+  gatewayClassName: private
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: wildcard-${CLUSTER_DOMAIN//./-}-https
+      protocol: HTTPS
+      port: 443
+      hostname: "*.${CLUSTER_DOMAIN}"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        mode: Terminate
+        certificateRefs:
+        - group: ''
+          kind: Secret
+          name: wildcard-${CLUSTER_DOMAIN//./-}
+    - name: wildcard-${COMMON_DOMAIN//./-}-https
+      protocol: HTTPS
+      port: 443
+      hostname: "*.${COMMON_DOMAIN}"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        mode: Terminate
+        certificateRefs:
+        - group: ''
+          kind: Secret
+          name: wildcard-${COMMON_DOMAIN//./-}
