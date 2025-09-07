@@ -4,7 +4,7 @@ metadata:
   name: radarr-config
 spec:
   trigger:
-    manual: first111
+    manual: first1
   paused: true
   restic:
     repository: restic-media-radarr-config
