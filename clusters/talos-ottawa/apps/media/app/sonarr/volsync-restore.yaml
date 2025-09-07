@@ -11,6 +11,7 @@ spec:
     # destinationPVC: sonarr-config
     # copyMethod: Direct
     # restoreAsOf: "2025-05-31T10:00:00Z"
+    accessModes: [ReadWriteOnce]
     copyMethod: Snapshot
     capacity: 5Gi
     storageClassName: ceph-block-replicated
