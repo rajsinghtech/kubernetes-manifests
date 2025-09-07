@@ -18,7 +18,7 @@ spec:
     driver: smb.csi.k8s.io
     volumeHandle: smb-server.default.svc.cluster.local/media-share/jellystat-backup
     volumeAttributes:
-      source: //192.168.50.115/media-share/jellystat-backup
+      source: //192.168.169.111/media-share/jellystat-backup
     nodeStageSecretRef:
       name: csi-smbcreds
       namespace: kube-system
