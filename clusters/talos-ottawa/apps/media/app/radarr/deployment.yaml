@@ -39,7 +39,7 @@ spec:
           claimName: radarr-movies
       - name: downloads-volume
         persistentVolumeClaim:
-          claimName: transmission-movies-data
+          claimName: sabnzbd-media
       - name: config-volume
         persistentVolumeClaim:
           claimName: radarr-config 
