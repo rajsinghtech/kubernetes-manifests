@@ -15,7 +15,7 @@ spec:
     kind: GitRepository
     name: kubernetes-manifests
   dependsOn:
-    - name: rook-cluster-config
+    - name: rook-ceph-cluster-config
   wait: false # Allow individual components to manage wait status
   interval: 30m
   retryInterval: 1m

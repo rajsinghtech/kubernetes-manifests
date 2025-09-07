@@ -58,5 +58,5 @@ spec:
       - name: vol
         persistentVolumeClaim:
           # claimName: kbench-pvc-block-replicated
-          claimName: kbench-pvc-block-optimized
+          claimName: kbench-pvc-block-replicated
   backoffLimit: 0
