@@ -1,7 +1,6 @@
 name: Delete Inactive Tailnet Nodes
 
 permissions:
-  id-token: write # Required for OIDC token
   contents: read # Required for checkout
 
 on:
@@ -19,18 +18,18 @@ on:
         description: "Dry run mode (only list devices, don't delete)"
         type: boolean
         default: true
-      audience:
-        description: "Audience for the OIDC token"
+      oauth_client_id:
+        description: "OAuth Client ID for the Tailnet"
         required: true
-        default: "api.tailscale.com/kxF3d4zoso11CNTRL"
-      client_id:
-        description: "Client ID for the Tailscale OIDC JWT exchange"
+        default: ""
+      oauth_client_secret:
+        description: "OAuth Client Secret for the Tailnet"
         required: true
-        default: "TbqNGJkY5611CNTRL/kxF3d4zoso11CNTRL"
+        default: ""
       tailnet_name:
-        description: "Tailnet name to operate on (e.g., 'example.com' or 'user@example.com')"
+        description: "Tailnet name to operate on (e.g., 'example.com')"
         required: true
-        default: "rajsinghtech@gmail.com"
+        default: ""
 
 jobs:
   delete-inactive-nodes:
@@ -44,18 +43,11 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y jq curl
 
-      - name: Get OIDC token from GitHub Actions
-        id: get_oidc_token
-        run: |
-          JWT=$(curl -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=${{ inputs.audience }}" | jq -r '.value')
-          echo "::add-mask::$JWT"
-          echo "jwt=$JWT" >> $GITHUB_OUTPUT
-
-      - name: Exchange OIDC token for access token
+      - name: Get access token using OAuth
         id: get_access_token
         run: |
-          echo "Exchanging OIDC token with Tailscale..."
-          ACCESS_TOKEN=$(./tailscale/scripts/exchange-oidc-token.sh "${{ inputs.client_id }}" "${{ steps.get_oidc_token.outputs.jwt }}")
+          echo "Getting access token for tailnet..."
+          ACCESS_TOKEN=$(./tailscale/scripts/get-access-token.sh "${{ inputs.oauth_client_id }}" "${{ inputs.oauth_client_secret }}")
           echo "::add-mask::$ACCESS_TOKEN"
           echo "access_token=$ACCESS_TOKEN" >> $GITHUB_OUTPUT
           echo "Successfully obtained access token"
