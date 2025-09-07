@@ -47,27 +47,6 @@ apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: ceph-block-replicated
-parameters:
-  clusterID: rook-ceph
-  csi.storage.k8s.io/controller-expand-secret-name: rook-csi-rbd-provisioner
-  csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph
-  csi.storage.k8s.io/fstype: ext4
-  csi.storage.k8s.io/node-stage-secret-name: rook-csi-rbd-node
-  csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
-  csi.storage.k8s.io/provisioner-secret-name: rook-csi-rbd-provisioner
-  csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
-  imageFeatures: layering
-  imageFormat: "2"
-  pool: ceph-blockpool-replicated
-provisioner: rook-ceph.rbd.csi.ceph.com
-allowVolumeExpansion: true
-reclaimPolicy: Delete
-volumeBindingMode: Immediate
----
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: ceph-block-replicated
   annotations:
     storageclass.kubernetes.io/is-default-class: "true"
 parameters:
