@@ -3,11 +3,10 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   # name: kbench-pvc-block-replicated
-  name: kbench-pvc-block-optimized
+  name: kbench-pvc-block-replicated
 spec:
   volumeMode: Filesystem
-  # storageClassName: ceph-block-replicated
-  storageClassName: ceph-block-optimized
+  storageClassName: ceph-block-replicated
   accessModes:
     - ReadWriteOnce
   resources:
