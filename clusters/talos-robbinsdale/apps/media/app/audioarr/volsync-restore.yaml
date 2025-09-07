@@ -10,4 +10,4 @@ spec:
     repository: restic-media-audioarr-config-ceph
     destinationPVC: audioarr-config-ceph
     copyMethod: Direct
-    restoreAsOf: "2025-05-31T10:00:00Z"
+    # restoreAsOf: "2025-05-31T10:00:00Z"
