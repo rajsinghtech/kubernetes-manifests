@@ -9,10 +9,10 @@ resources:
   - ./sabnzbd
   - ./bazarr 
   - ./sonarr 
-  - ./plex 
+  # - ./plex 
   - ./jellyseerr 
-  - ./jellystat 
+  # - ./jellystat 
   - ./lidarr 
-  - ./readarr 
-  - ./audioarr 
+  # - ./readarr 
+  # - ./audioarr 
   - ./unmanic
