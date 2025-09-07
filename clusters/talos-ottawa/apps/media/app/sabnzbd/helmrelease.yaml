@@ -45,9 +45,9 @@ spec:
                 sabnzbd.media.svc.cluster.local,
                 sab.${CLUSTER_DOMAIN},
                 sabnzbd.${CLUSTER_DOMAIN},
-            envFrom:
-              - secretRef:
-                  name: sabnzbd-secret
+            # envFrom:
+            #   - secretRef:
+            #       name: sabnzbd-secret
             probes:
               liveness: &probes
                 enabled: true
