@@ -1,0 +1,62 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: configarr
+spec:
+  schedule: "0 * * * *" # Runs every hour
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: configarr
+              image: ghcr.io/raydak-labs/configarr:latest
+              imagePullPolicy: Always
+              tty: true # for color support
+              env:
+                - name: LOG_LEVEL
+                  value: "info"
+                - name: LOG_STACKTRACE
+                  value: "false"
+                - name: CONFIG_LOCATION
+                  value: "./config/config.yml"
+                - name: SECRETS_LOCATION
+                  value: "./config/secrets.yml"
+                - name: CUSTOM_REPO_ROOT
+                  value: "./repos"
+                - name: ROOT_PATH
+                  value: Current working directory
+                - name: DRY_RUN
+                  value: "false"
+                - name: LOAD_LOCAL_SAMPLES
+                  value: "false"
+                - name: DEBUG_CREATE_FILES
+                  value: "false"
+                - name: TZ
+                  value: ${TIMEZONE}
+                - name: STOP_ON_ERROR
+                  value: "false"
+              volumeMounts:
+                # - mountPath: /app/repos # Cache repositories
+                #   name: app-data
+                #   subPath: configarr-repos
+                - name: config-volume # Mount specific config
+                  mountPath: /app/config/config.yml
+                  subPath: config.yml
+                - name: secret-volume
+                  mountPath: /app/config/secrets.yml # Mount secrets
+                  subPath: secrets.yml
+          volumes:
+            # - name: app-data
+            #   persistentVolumeClaim:
+            #     claimName: media-app-data
+            - name: config-volume
+              configMap:
+                name: configarr
+            - name: secret-volume
+              secret:
+                secretName: configarr
+          restartPolicy: Never

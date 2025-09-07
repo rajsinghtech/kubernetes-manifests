@@ -1,0 +1,23 @@
+trashGuideUrl: https://github.com/TRaSH-Guides/Guides
+recyclarrConfigUrl: https://github.com/recyclarr/config-templates
+
+sonarr:
+  series:
+    base_url: http://sonarr:8989
+    api_key: !secret SONARR_API_KEY
+
+    quality_definition:
+      type: series
+
+    include:
+      # WEB-1080p
+      - template: sonarr-quality-definition-series
+      - template: sonarr-v4-quality-profile-web-1080p
+      - template: sonarr-v4-custom-formats-web-1080p
+
+      # WEB-2160p
+      - template: sonarr-v4-quality-profile-web-2160p
+      - template: sonarr-v4-custom-formats-web-2160p
+
+    custom_formats: []
+radarr: {}
