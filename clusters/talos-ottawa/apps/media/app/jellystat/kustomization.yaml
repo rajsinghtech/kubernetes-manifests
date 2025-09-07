@@ -5,7 +5,7 @@ namespace: media
 resources:
   - deployment.yaml
   - service.yaml
+  - pvc-backup.yaml
   - httproute.yaml
-  - unas.yaml
   - postgres.yaml
   - s3-backup.yaml

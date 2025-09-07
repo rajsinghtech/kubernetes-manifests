@@ -3,7 +3,7 @@ kind: PersistentVolume
 metadata:
   annotations:
     pv.kubernetes.io/provisioned-by: smb.csi.k8s.io
-  name: audioarr-config
+  name: jellystat-backup
 spec:
   capacity:
     storage: 1Gi
@@ -16,9 +16,9 @@ spec:
     - file_mode=0777
   csi:
     driver: smb.csi.k8s.io
-    volumeHandle: smb-server.default.svc.cluster.local/k8s/media/audioarr-config
+    volumeHandle: smb-server.default.svc.cluster.local/media-share/jellystat-backup
     volumeAttributes:
-      source: //192.168.50.115/k8s/media/audioarr-config
+      source: //192.168.50.115/media-share/jellystat-backup
     nodeStageSecretRef:
       name: csi-smbcreds
       namespace: kube-system
@@ -26,12 +26,12 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: audioarr-config
+  name: jellystat-backup
 spec:
   accessModes:
     - ReadWriteMany
   resources:
     requests:
       storage: 1Gi
-  volumeName: audioarr-config
+  volumeName: jellystat-backup
   storageClassName: smb 

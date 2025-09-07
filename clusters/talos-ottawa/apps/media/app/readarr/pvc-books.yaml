@@ -3,10 +3,10 @@ kind: PersistentVolume
 metadata:
   annotations:
     pv.kubernetes.io/provisioned-by: smb.csi.k8s.io
-  name: radarr-movies
+  name: readarr-books
 spec:
   capacity:
-    storage: 20Ti
+    storage: 100Gi
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
@@ -16,9 +16,9 @@ spec:
     - file_mode=0777
   csi:
     driver: smb.csi.k8s.io
-    volumeHandle: smb-server.default.svc.cluster.local/media-share/Movies
+    volumeHandle: smb-server.default.svc.cluster.local/media-share/Books
     volumeAttributes:
-      source: //192.168.169.111/media-share/Movies
+      source: //192.168.50.115/media-share/Books
     nodeStageSecretRef:
       name: csi-smbcreds
       namespace: kube-system
@@ -26,12 +26,12 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: radarr-movies
+  name: readarr-books
 spec:
   accessModes:
     - ReadWriteMany
   resources:
     requests:
-      storage: 20Ti
-  volumeName: radarr-movies
+      storage: 100Gi
+  volumeName: readarr-books
   storageClassName: smb
