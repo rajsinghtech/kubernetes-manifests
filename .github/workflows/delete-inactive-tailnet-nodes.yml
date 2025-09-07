@@ -28,9 +28,9 @@ on:
         required: true
         default: "TbqNGJkY5611CNTRL/kxF3d4zoso11CNTRL"
       tailnet_name:
-        description: "Tailnet name to operate on"
+        description: "Tailnet name to operate on (e.g., 'example.com' or 'user@example.com')"
         required: true
-        default: "rajsinghtech.github"
+        default: "rajsinghtech@gmail.com"
 
 jobs:
   delete-inactive-nodes:
