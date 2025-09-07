@@ -12,7 +12,7 @@ resources:
   # - ./transmission-movies 
   # - ./transmission-tv 
   # - ./plex 
-  # - ./jellyseerr 
+  - ./jellyseerr 
   # - ./jellystat 
   # - ./lidarr 
   # - ./transmission-music 
