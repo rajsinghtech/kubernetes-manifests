@@ -6,6 +6,7 @@ resources:
   - ./jellyfin 
   - ./prowlarr 
   - ./radarr
+  - ./sabnzbd
   # - ./bazarr 
   # - ./sonarr 
   # - ./transmission-movies 
