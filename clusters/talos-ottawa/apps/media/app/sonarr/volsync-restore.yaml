@@ -4,10 +4,14 @@ metadata:
   name: sonarr-config
 spec:
   trigger:
-    manual: first
-  paused: true
+    manual: first1
+  paused: false
   restic:
     repository: restic-media-sonarr-config
-    destinationPVC: sonarr-config
-    copyMethod: Direct
+    # destinationPVC: sonarr-config
+    # copyMethod: Direct
     # restoreAsOf: "2025-05-31T10:00:00Z"
+    copyMethod: Snapshot
+    capacity: 5Gi
+    storageClassName: ceph-block-replicated
+    volumeSnapshotClassName: csi-rbdplugin-snapclass
