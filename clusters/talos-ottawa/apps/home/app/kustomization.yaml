@@ -4,3 +4,4 @@ kind: Kustomization
 namespace: home
 resources:
   - ./code-server
+  - ./local-gateway
