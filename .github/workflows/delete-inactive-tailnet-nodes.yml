@@ -64,16 +64,40 @@ jobs:
         id: get_devices
         run: |
           echo "Fetching devices from tailnet: ${{ inputs.tailnet_name }}"
-          DEVICES=$(curl -s https://api.tailscale.com/api/v2/tailnet/"${{ inputs.tailnet_name }}"/devices?fields=all \
+          
+          # Make API call with proper error handling
+          RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}" \
+            https://api.tailscale.com/api/v2/tailnet/"${{ inputs.tailnet_name }}"/devices \
             --header "Authorization: Bearer ${{ steps.get_access_token.outputs.access_token }}")
           
-          if [ $? -ne 0 ]; then
-            echo "Error: Failed to fetch devices" >&2
+          HTTP_STATUS=$(echo "$RESPONSE" | tail -n 1 | cut -d: -f2)
+          DEVICES=$(echo "$RESPONSE" | sed '$d')
+          
+          echo "API Response HTTP Status: $HTTP_STATUS"
+          
+          if [ "$HTTP_STATUS" != "200" ]; then
+            echo "Error: Failed to fetch devices with status $HTTP_STATUS" >&2
+            echo "Response body: $DEVICES" >&2
+            exit 1
+          fi
+          
+          # Check if response is valid JSON
+          if ! echo "$DEVICES" | jq empty 2>/dev/null; then
+            echo "Error: Invalid JSON response from API" >&2
+            echo "Response: $DEVICES" >&2
             exit 1
           fi
           
           echo "$DEVICES" > /tmp/all_devices.json
-          echo "Total devices found: $(echo "$DEVICES" | jq '.devices | length')"
+          
+          # Debug: show first device if any
+          DEVICE_COUNT=$(echo "$DEVICES" | jq '.devices | length')
+          echo "Total devices found: $DEVICE_COUNT"
+          
+          if [ "$DEVICE_COUNT" -gt 0 ]; then
+            echo "Sample device:"
+            echo "$DEVICES" | jq '.devices[0] | {name, nodeId, tags, lastSeen}'
+          fi
 
       - name: Filter devices by tags and inactivity
         id: filter_devices
@@ -81,8 +105,23 @@ jobs:
           echo "Filtering devices by tags: ${{ inputs.tags }}"
           echo "Checking for devices inactive for more than ${{ inputs.inactive_days }} days"
           
+          # Check if we have devices to process
+          if [ ! -f /tmp/all_devices.json ]; then
+            echo "Error: Device list file not found" >&2
+            exit 1
+          fi
+          
+          DEVICE_COUNT=$(jq '.devices | length' /tmp/all_devices.json)
+          if [ "$DEVICE_COUNT" -eq 0 ]; then
+            echo "No devices found in tailnet to process"
+            echo "[]" > /tmp/devices_to_delete.json
+            echo "devices_count=0" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
           # Convert tags input to array
           IFS=',' read -ra TAGS_ARRAY <<< "${{ inputs.tags }}"
+          echo "Looking for devices with tags: ${TAGS_ARRAY[@]}"
           
           # Get current date in seconds
           CURRENT_DATE=$(date +%s)
@@ -98,11 +137,16 @@ jobs:
             DEVICE_TAGS=$(echo "$device" | jq -r '.tags[]?' 2>/dev/null)
             LAST_SEEN=$(echo "$device" | jq -r '.lastSeen')
             
+            # Debug: show device info
+            echo "Checking device: $DEVICE_NAME (ID: $DEVICE_ID)"
+            echo "  Tags: $(echo "$DEVICE_TAGS" | tr '\n' ' ')"
+            
             # Check if device has any of the specified tags
             HAS_TAG=false
             for TAG in "${TAGS_ARRAY[@]}"; do
               TAG=$(echo "$TAG" | xargs) # Trim whitespace
               if echo "$DEVICE_TAGS" | grep -q "^$TAG$"; then
+                echo "  Matched tag: $TAG"
                 HAS_TAG=true
                 break
               fi

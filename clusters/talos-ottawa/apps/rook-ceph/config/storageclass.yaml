@@ -67,7 +67,7 @@ volumeBindingMode: Immediate
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: ceph-block-optimized
+  name: ceph-block-replicated
   annotations:
     storageclass.kubernetes.io/is-default-class: "true"
 parameters:
