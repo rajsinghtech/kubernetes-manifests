@@ -5,9 +5,8 @@ metadata:
 spec:
   trigger:
     manual: first
-  paused: true
+  paused: false
   restic:
     repository: restic-media-radarr-config
     destinationPVC: radarr-config
     copyMethod: Direct
-    # restoreAsOf: "2025-05-31T10:00:00Z"
