@@ -12,6 +12,8 @@ spec:
       labels:
         app: radarr
     spec:
+      strategy:
+        type: Recreate
       containers:
       - name: radarr
         image: lscr.io/linuxserver/radarr:latest

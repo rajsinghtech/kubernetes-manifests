@@ -12,6 +12,8 @@ spec:
       labels:
         app: lidarr
     spec:
+      strategy:
+        type: Recreate
       containers:
         - name: lidarr
           image: lscr.io/linuxserver/lidarr:latest

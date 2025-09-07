@@ -12,6 +12,8 @@ spec:
       labels:
         app: unmanic
     spec:
+      strategy:
+        type: Recreate
       hostname: unmanic-robbinsdale
       containers:
 
