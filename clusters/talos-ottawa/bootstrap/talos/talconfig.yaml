@@ -4,8 +4,8 @@
 talosVersion: v1.10.6
 # renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
 kubernetesVersion: v1.33.1
-clusterName: "k8s.ottawa.local"
-endpoint: https://k8s.ottawa.local:6443
+clusterName: "k8s.killinit.internal"
+endpoint: https://k8s.killinit.internal:6443
 clusterPodNets:
   - "10.3.0.0/16"
 clusterSvcNets:
@@ -21,7 +21,7 @@ additionalApiServerCertSans:
 
 additionalMachineCertSans:
   - "192.168.169.25"
-  - "k8s.ottawa.local"  # Needed for talosctl -e k8s.ottawa.local
+  - "k8s.killinit.internal"  # Needed for talosctl -e k8s.killinit.internal
   - "default-kubernetes-ottawa-ingress.keiretsu.ts.net"
   - "kubernetes-ottawa.keiretsu.ts.net"
   - "kubernetes.ottawa.rajsingh.info"
@@ -37,7 +37,7 @@ nodes:
   ###################################################################
   ###################################################################
   - hostname: "rei"
-    ipAddress: "192.168.169.113"
+    ipAddress: "rei"
     # Use disk selector with serial number 
     installDiskSelector:
       serial: "50026B7686F78587" # Kingston 1TB 
@@ -73,7 +73,7 @@ nodes:
   ###################################################################
   ###################################################################
   - hostname: "asuka"
-    ipAddress: "192.168.169.114"
+    ipAddress: "asuka"
     installDiskSelector:
       serial: "50026B7686F79D0F"
     controlPlane: true
@@ -103,7 +103,7 @@ nodes:
   ###################################################################
   ###################################################################
   - hostname: "kaji"
-    ipAddress: "192.168.169.115"
+    ipAddress: "kaji"
     installDiskSelector:
       serial: "50026B7686F78574"
     controlPlane: true

@@ -9,6 +9,8 @@ helmfile = "latest"
 [env]
 KUBECONFIG = "{{config_root}}/kubeconfig"
 TALOSCONFIG = "{{config_root}}/bootstrap/talos/clusterconfig/talosconfig"
+# Force Go's native DNS resolver for talosctl hostname resolution
+GODEBUG = "netdns=go"
 # Using PGP instead of Age - key should be in GPG keyring
 
 [tasks.init]
@@ -52,8 +54,62 @@ run = "task -d bootstrap/talos deploy-thunderbolt-debug"
 description = "Deploy privileged DaemonSet for Thunderbolt debugging"
 
 [tasks.reset]
-run = "task -d bootstrap/talos reset"
-description = "Reset cluster (DESTRUCTIVE)"
+run = """
+echo "[Destructive] This will reset nodes and wipe Ceph NVMe drives!"
+echo ""
+
+# Store commands to execute
+commands_file=$(mktemp)
+
+for node in rei asuka kaji; do
+  echo "=== $node ==="
+  
+  # Boot disk serial for each node from talconfig.yaml
+  case $node in
+    rei) boot_serial="50026B7686F78587" ;;
+    asuka) boot_serial="50026B7686F79D0F" ;; 
+    kaji) boot_serial="50026B7686F78574" ;;
+  esac
+  
+  # Find NVMe drives that aren't boot drives
+  echo "  Checking disks..."
+  talosctl -n $node -e $node get disks | grep nvme | while read line; do
+    disk=$(echo "$line" | awk '{print $4}')
+    serial=$(echo "$line" | awk '{print $NF}')
+    echo "    $disk: $serial $([ "$serial" = "$boot_serial" ] && echo '(boot)' || echo '(ceph)')"
+  done
+  
+  wipe_drives=$(talosctl -n $node -e $node get disks | grep nvme | awk -v boot="$boot_serial" '$NF != boot {printf "/dev/%s,", $4}' | sed 's/,$//')
+  
+  if [ -n "$wipe_drives" ]; then
+    cmd="talosctl -n $node -e $node reset --user-disks-to-wipe $wipe_drives --system-labels-to-wipe EPHEMERAL,STATE --graceful=false --reboot --force"
+    echo "  Command: $cmd"
+    echo "$cmd" >> "$commands_file"
+  else
+    cmd="talosctl -n $node -e $node reset --system-labels-to-wipe EPHEMERAL,STATE --graceful=false --reboot --force"
+    echo "  Command: $cmd"
+    echo "$cmd" >> "$commands_file"
+  fi
+done
+
+echo ""
+echo "WARNING: This will DESTROY your cluster and wipe all Ceph data!"
+echo "Are you absolutely sure you want to proceed? (y/N)"
+read -r response
+
+if [ "$response" = "y" ] || [ "$response" = "Y" ]; then
+  echo ""
+  echo "Executing reset commands..."
+  while read -r cmd; do
+    eval "$cmd"
+  done < "$commands_file"
+else
+  echo "Reset cancelled."
+fi
+
+rm -f "$commands_file"
+"""
+description = "Reset cluster and wipe Ceph drives with confirmation (DESTRUCTIVE)"
 
 [tasks.cleanup-thunderbolt-debug]
 run = "task -d bootstrap/talos cleanup-thunderbolt-debug"
