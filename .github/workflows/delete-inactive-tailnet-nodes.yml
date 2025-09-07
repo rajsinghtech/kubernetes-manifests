@@ -1,6 +1,7 @@
 name: Delete Inactive Tailnet Nodes
 
 permissions:
+  id-token: write # Required for OIDC token
   contents: read # Required for checkout
 
 on:
@@ -18,18 +19,14 @@ on:
         description: "Dry run mode (only list devices, don't delete)"
         type: boolean
         default: true
-      oauth_client_id:
-        description: "OAuth Client ID for the Tailnet"
+      audience:
+        description: "Audience for the OIDC token"
         required: true
-        default: ""
-      oauth_client_secret:
-        description: "OAuth Client Secret for the Tailnet"
+        default: "api.tailscale.com/kxF3d4zoso11CNTRL"
+      client_id:
+        description: "Client ID for the Tailscale OIDC JWT exchange"
         required: true
-        default: ""
-      tailnet_name:
-        description: "Tailnet name to operate on (e.g., 'example.com')"
-        required: true
-        default: ""
+        default: "TbqNGJkY5611CNTRL/kxF3d4zoso11CNTRL"
 
 jobs:
   delete-inactive-nodes:
@@ -43,11 +40,18 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y jq curl
 
-      - name: Get access token using OAuth
+      - name: Get OIDC token from GitHub Actions
+        id: get_oidc_token
+        run: |
+          JWT=$(curl -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=${{ inputs.audience }}" | jq -r '.value')
+          echo "::add-mask::$JWT"
+          echo "jwt=$JWT" >> $GITHUB_OUTPUT
+
+      - name: Exchange OIDC token for access token
         id: get_access_token
         run: |
-          echo "Getting access token for tailnet..."
-          ACCESS_TOKEN=$(./tailscale/scripts/get-access-token.sh "${{ inputs.oauth_client_id }}" "${{ inputs.oauth_client_secret }}")
+          echo "Exchanging OIDC token with Tailscale..."
+          ACCESS_TOKEN=$(./tailscale/scripts/exchange-oidc-token.sh "${{ inputs.client_id }}" "${{ steps.get_oidc_token.outputs.jwt }}")
           echo "::add-mask::$ACCESS_TOKEN"
           echo "access_token=$ACCESS_TOKEN" >> $GITHUB_OUTPUT
           echo "Successfully obtained access token"
@@ -55,11 +59,14 @@ jobs:
       - name: Get all devices in tailnet
         id: get_devices
         run: |
-          echo "Fetching devices from tailnet: ${{ inputs.tailnet_name }}"
+          # Extract tailnet from the client_id (format: clientid/tailnet)
+          TAILNET=$(echo "${{ inputs.client_id }}" | cut -d'/' -f2)
+          echo "Fetching devices from tailnet: $TAILNET"
+          echo "tailnet=$TAILNET" >> $GITHUB_OUTPUT
           
           # Make API call with proper error handling
           RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}" \
-            https://api.tailscale.com/api/v2/tailnet/"${{ inputs.tailnet_name }}"/devices \
+            https://api.tailscale.com/api/v2/tailnet/"$TAILNET"/devices \
             --header "Authorization: Bearer ${{ steps.get_access_token.outputs.access_token }}")
           
           HTTP_STATUS=$(echo "$RESPONSE" | tail -n 1 | cut -d: -f2)
@@ -236,4 +243,5 @@ jobs:
         if: inputs.dry_run == false && steps.filter_devices.outputs.devices_count != '0'
         run: |
           echo "Fetching updated device list..."
-          ./tailscale/scripts/list-devices.sh "${{ steps.get_access_token.outputs.access_token }}" "${{ inputs.tailnet_name }}" table || true
+          TAILNET=$(echo "${{ inputs.client_id }}" | cut -d'/' -f2)
+          ./tailscale/scripts/list-devices.sh "${{ steps.get_access_token.outputs.access_token }}" "$TAILNET" table || true
