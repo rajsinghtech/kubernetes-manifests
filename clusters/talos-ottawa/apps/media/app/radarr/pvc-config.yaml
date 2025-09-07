@@ -8,6 +8,6 @@ spec:
   resources:
     requests:
       storage: 5Gi
-  dataSource:
-    name: radarr-config-backup
-    kind: PersistentVolumeClaim
+  # dataSource:
+  #   name: radarr-config
+  #   kind: PersistentVolumeClaim
