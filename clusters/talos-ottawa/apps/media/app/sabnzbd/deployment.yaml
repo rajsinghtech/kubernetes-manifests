@@ -18,7 +18,8 @@ spec:
         app.kubernetes.io/name: sabnzbd
     spec:
       containers:
-      - env:
+      - name: sabnzbd
+        env:
         - name: SABNZBD__HOST_WHITELIST_ENTRIES
           value: sabnzbd, sabnzbd.media, sabnzbd.media.svc, sabnzbd.media.svc.cluster,
             sabnzbd.media.svc.cluster.local, sabnzbd.killinit.internal, sab.killinit.cc,
