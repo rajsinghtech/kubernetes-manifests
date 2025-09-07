@@ -1,29 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: jellyseerr
+  name: wizarr
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: jellyseerr
+      app: wizarr
   template:
     metadata:
       labels:
-        app: jellyseerr
+        app: wizarr
     spec:
       containers:
-        - name: jellyseerr
-          image: fallenbagel/jellyseerr:latest
+        - name: wizarr
+          image: ghcr.io/wizarrrr/wizarr
           ports:
             - name: http
-              containerPort: 5055
+              containerPort: 5690
               protocol: TCP
           volumeMounts:
             - name: config-volume
-              mountPath: /app/config
-            - name: logs-volume
-              mountPath: /app/config/logs
+              mountPath: /data
           env:
             - name: PUID
               value: "0"
@@ -31,11 +29,9 @@ spec:
               value: "0"
             - name: TZ
               value: ${TIMEZONE}
-            - name: LOG_LEVEL
-              value: debug
+            - name: DISABLE_BUILTIN_AUTH
+              value: "false"
       volumes:
         - name: config-volume
           persistentVolumeClaim:
-            claimName: jellyseerr-config-ceph 
-        - name: logs-volume
-          emptyDir: {} 
+            claimName: wizarr-config

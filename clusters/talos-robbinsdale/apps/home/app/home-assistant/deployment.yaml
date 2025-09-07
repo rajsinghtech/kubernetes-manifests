@@ -25,7 +25,7 @@ spec:
               command: ["/bin/sh", "-c", "pip install pyalarmdotcomajax"]
         env:
         - name: TZ
-          value: America/Chicago
+          value: ${TIMEZONE}
         ports:
           - containerPort: 8123
           - containerPort: 5353

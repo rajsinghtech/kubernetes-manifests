@@ -37,7 +37,7 @@ spec:
         - name: GUID
           value: "0"
         - name: TZ
-          value: America/Chicago
+          value: ${TIMEZONE}
       volumes:
       - name: config-volume
         persistentVolumeClaim:
