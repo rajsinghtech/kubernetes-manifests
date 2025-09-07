@@ -4,9 +4,20 @@ metadata:
   name: radarr-config
 spec:
   trigger:
-    manual: first
-  paused: false
+    manual: first111
+  paused: true
   restic:
     repository: restic-media-radarr-config
-    destinationPVC: radarr-config
+    destinationPVC: radarr-config-backup
     copyMethod: Direct
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: radarr-config-backup
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
