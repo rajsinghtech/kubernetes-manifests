@@ -72,7 +72,7 @@ spec:
                 memory: 16Gi
     defaultPodOptions:
       securityContext:
-        runAsNonRoot: true
+        runAsNonRoot: false
         runAsUser: 0
         runAsGroup: 0
         fsGroup: 0
