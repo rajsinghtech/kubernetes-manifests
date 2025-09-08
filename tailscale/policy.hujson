@@ -36,7 +36,7 @@
       "10.69.3.0/24",     // LB network range
       "10.4.0.0/16",      // Service network range
       "10.5.0.0/16",      // Pod network range
-      "fd7a:115c:a1e0:b1a:0:3::/96"  // 4via6 subnet
+      "fd7a:115c:a1e0:b1a:0:3::/96",  // 4via6 subnet
     ],
 
     // US West 2 site networks
