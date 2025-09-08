@@ -163,10 +163,10 @@ radarr:
     api_key: !secret RADARR_1080P_API_KEY
 
     media_naming:
-      folder: default
+      folder: jellyfin-tmdb
       movie:
         rename: true
-        standard: default
+      file: jellyfin-tmdb
     
     include:
       # Comment out any of the following includes to disable them
@@ -216,10 +216,10 @@ radarr:
     api_key: !secret RADARR_4K_API_KEY
 
     media_naming:
-      folder: default
+      folder: jellyfin-tmdb
       movie:
         rename: true
-        standard: default
+      file: jellyfin-tmdb
 
     include:
       # Comment out any of the following includes to disable them
@@ -311,10 +311,10 @@ radarr:
     api_key: !secret RADARR_4KREMUX_API_KEY
 
     media_naming:
-      folder: default
+      folder: jellyfin-tmdb
       movie:
         rename: true
-        standard: default
+      file: jellyfin-tmdb
     
     include:
       # Comment out any of the following includes to disable them
