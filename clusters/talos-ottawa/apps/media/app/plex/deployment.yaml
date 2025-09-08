@@ -59,11 +59,19 @@ spec:
               mountPath: /config
             - name: transcode
               mountPath: /transcode
-            - name: tv-volume
+            - name: tv-4k
+              mountPath: /media/tv/4k
+            - name: tv-1080p
+              mountPath: /media/tv/1080p
+            - name: tv-anime
+              mountPath: /media/tv/anime
+            - name: movies-4k
               mountPath: /media/tv
-            - name: movies-volume
-              mountPath: /media/movies
-            - name: music-volume
+            - name: movies-1080p
+              mountPath: /media/movies/1080p
+            - name: movies-4kremux
+              mountPath: /media/movies/4kremux
+            - name: music
               mountPath: /media/music
       volumes:
         - name: config
@@ -73,12 +81,27 @@ spec:
           emptyDir:
             medium: Memory
             sizeLimit: 6Gi
-        - name: movies-volume
+        - name: movies-4k
           persistentVolumeClaim:
-            claimName: radarr-movies
-        - name: tv-volume
+            claimName: radarr-4k-movies
+        - name: movies-1080p
           persistentVolumeClaim:
-            claimName: sonarr-tv
-        - name: music-volume
+            claimName: radarr-1080p-movies
+        - name: movies-4kremux
+          persistentVolumeClaim:
+            claimName: radarr-4kremux-movies
+        - name: tv-4k
+          persistentVolumeClaim:
+            claimName: sonarr-4k-tv
+        - name: tv-1080p
+          persistentVolumeClaim:
+            claimName: sonarr-1080p-tv
+        - name: tv-anime
+          persistentVolumeClaim:
+            claimName: sonarr-anime-tv
+        - name: tv-4k
+          persistentVolumeClaim:
+            claimName: sonarr-4k-tv
+        - name: music
           persistentVolumeClaim:
             claimName: lidarr-music

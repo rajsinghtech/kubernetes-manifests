@@ -31,13 +31,21 @@ spec:
               containerPort: 8888
               protocol: TCP
           volumeMounts:
-            - name: tv-volume
-              mountPath: /library/tvshows
-            - name: movies-volume
-              mountPath: /library/movies
-            - name: config-volume
+            - name: tv
+              mountPath: /library/tv/4k
+            - name: tv-1080p
+              mountPath: /library/tv/1080p
+            - name: tv-anime
+              mountPath: /library/tv/anime
+            - name: movies-4k
+              mountPath: /library/movies/4k
+            - name: movies
+              mountPath: /library/movies/1080p
+            - name: movies-4kremux
+              mountPath: /library/movies/4kremux
+            - name: config
               mountPath: /config
-            - name: cache-volume
+            - name: cache
               mountPath: /tmp/unmanic
           env:
             - name: PUID
@@ -47,14 +55,26 @@ spec:
             - name: TZ
               value: ${TIMEZONE}
       volumes:
-        - name: tv-volume
+        - name: tv-4k 
           persistentVolumeClaim:
-            claimName: sonarr-tv
-        - name: movies-volume
+            claimName: sonarr-4k-tv
+        - name: tv-1080p
           persistentVolumeClaim:
-            claimName: radarr-movies
-        - name: config-volume
+            claimName: sonarr-1080p-tv
+        - name: tv-anime
+          persistentVolumeClaim:
+            claimName: sonarr-anime-tv
+        - name: movies-4k
+          persistentVolumeClaim:
+            claimName: radarr-4k-movies
+        - name: movies-1080p
+          persistentVolumeClaim:
+            claimName: radarr-1080p-movies
+        - name: movies-4kremux
+          persistentVolumeClaim:
+            claimName: radarr-4kremux-movies
+        - name: config
           persistentVolumeClaim:
             claimName: unmanic-config
-        - name: cache-volume
+        - name: cache
           emptyDir: {}
