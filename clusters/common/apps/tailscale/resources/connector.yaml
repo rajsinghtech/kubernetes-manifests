@@ -1,7 +1,7 @@
 apiVersion: tailscale.com/v1alpha1
 kind: Connector
 metadata:
-  name: &name ${LOCATION}-subnet-router
+  name: &name ${LOCATION}-subnetrouter
 spec:
   proxyClass: common
   tags:
@@ -12,15 +12,15 @@ spec:
   subnetRouter:
     advertiseRoutes:
       - "${LAN_CIDR}" # LAN
-      # - "${CLUSTER_SERVICE_CIDR}" # K8s Services
-      # - "${CLUSTER_POD_CIDR}" # K8s Pods
-      # - "${CLUSTER_LOAD_BALANCER_CIDR}" # Tailscale
+      - "${CLUSTER_SERVICE_CIDR}" # K8s Services
+      - "${CLUSTER_POD_CIDR}" # K8s Pods
+      - "${CLUSTER_LOAD_BALANCER_CIDR}" # Tailscale
       # - fd7a:115c:a1e0:b1a:0:${SITE_ID}::/96 # 4via6
 ---
 apiVersion: tailscale.com/v1alpha1
 kind: Connector
 metadata:
-  name: &name ${LOCATION}-app-connector
+  name: &name ${LOCATION}-appconnector
 spec:
   proxyClass: common
   tags:
