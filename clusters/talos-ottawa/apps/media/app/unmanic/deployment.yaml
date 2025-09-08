@@ -7,16 +7,15 @@ spec:
   selector:
     matchLabels:
       app: unmanic
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
         app: unmanic
     spec:
-      strategy:
-        type: Recreate
       hostname: unmanic
       containers:
-
         - name: unmanic
           resources:
             requests:

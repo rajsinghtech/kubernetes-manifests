@@ -7,13 +7,13 @@ spec:
   selector:
     matchLabels:
       app: radarr-1080p
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
         app: radarr-1080p
     spec:
-      strategy:
-        type: Recreate
       containers:
       - name: radarr-1080p
         image: lscr.io/linuxserver/radarr:latest

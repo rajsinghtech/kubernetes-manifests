@@ -13,13 +13,13 @@ spec:
   selector:
     matchLabels:
       app: plex
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
         app: plex
     spec:
-      strategy:
-        type: Recreate
       containers:
         - name: plex
           image: docker.io/plexinc/pms-docker:plexpass

@@ -7,13 +7,13 @@ spec:
   selector:
     matchLabels:
       app: sonarr-anime
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
         app: sonarr-anime
     spec:
-      strategy:
-        type: Recreate
       containers:
         - name: sonarr-anime
           image: lscr.io/linuxserver/sonarr:latest

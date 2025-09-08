@@ -7,13 +7,13 @@ spec:
   selector:
     matchLabels:
       app: sonarr-1080p
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
         app: sonarr-1080p
     spec:
-      strategy:
-        type: Recreate
       containers:
         - name: sonarr-1080p
           image: lscr.io/linuxserver/sonarr:latest

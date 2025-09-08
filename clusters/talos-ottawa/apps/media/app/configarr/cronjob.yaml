@@ -8,10 +8,10 @@ spec:
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
   jobTemplate:
-    spec:
-      template:
-        spec:
-          containers:
+    spec:      strategy:
+    type: Recreate
+  template:
+        spec:          containers:
             - name: configarr
               image: ghcr.io/raydak-labs/configarr:latest
               imagePullPolicy: Always
