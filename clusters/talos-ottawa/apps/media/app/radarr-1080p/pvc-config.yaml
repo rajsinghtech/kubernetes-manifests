@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: radarr-1080p-config
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  # dataSource:
+  #   name: radarr-1080p-config
+  #   kind: PersistentVolumeClaim
