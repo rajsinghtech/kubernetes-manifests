@@ -99,9 +99,6 @@ spec:
         - name: tv-anime
           persistentVolumeClaim:
             claimName: sonarr-anime-tv
-        - name: tv-4k
-          persistentVolumeClaim:
-            claimName: sonarr-4k-tv
         - name: music
           persistentVolumeClaim:
             claimName: lidarr-music
