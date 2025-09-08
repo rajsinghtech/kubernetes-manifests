@@ -23,7 +23,7 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "lidarr.rajsingh.info"
+    - "lidarr.${COMMON_DOMAIN}"
     - "lidarr.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

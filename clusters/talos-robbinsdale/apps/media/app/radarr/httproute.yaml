@@ -23,7 +23,7 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "radarr.rajsingh.info"
+    - "radarr.${COMMON_DOMAIN}"
     - "radarr.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

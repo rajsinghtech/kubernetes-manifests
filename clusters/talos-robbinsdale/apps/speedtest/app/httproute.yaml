@@ -22,7 +22,7 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "speedtest.rajsingh.info"
+    - "speedtest.${COMMON_DOMAIN}"
     - "speedtest.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

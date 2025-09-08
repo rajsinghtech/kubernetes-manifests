@@ -23,7 +23,7 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "rook.rajsingh.info"
+    - "rook.${COMMON_DOMAIN}"
     - "rook.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

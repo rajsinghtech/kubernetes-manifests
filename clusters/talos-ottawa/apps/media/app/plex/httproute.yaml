@@ -23,7 +23,7 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "plex.rajsingh.info"
+    - "plex.${COMMON_DOMAIN}"
     - "plex.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

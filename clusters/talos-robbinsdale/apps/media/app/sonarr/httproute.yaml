@@ -23,7 +23,7 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "sonarr.rajsingh.info"
+    - "sonarr.${COMMON_DOMAIN}"
     - "sonarr.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

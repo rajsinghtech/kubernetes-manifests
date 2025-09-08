@@ -23,7 +23,7 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "readarr.rajsingh.info"
+    - "readarr.${COMMON_DOMAIN}"
     - "readarr.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

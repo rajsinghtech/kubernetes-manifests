@@ -31,7 +31,7 @@ spec:
       name: private
       namespace: home
   hostnames:
-    - "status.rajsingh.info"
+    - "status.${COMMON_DOMAIN}"
     - "status.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
