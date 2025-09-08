@@ -10,11 +10,11 @@ on:
       audience:
         description: "Audience for the OIDC token"
         required: true
-        default: "api.tailscale.com/kxF3d4zoso11CNTRL"
+        default: "api.tailscale.com/kb8cB2pMCZ11CNTRL"
       client_id:
         description: "Client ID for the Tailscale OIDC JWT exchange"
         required: true
-        default: "TbqNGJkY5611CNTRL/kxF3d4zoso11CNTRL"
+        default: "TbqNGJkY5611CNTRL/kb8cB2pMCZ11CNTRL"
       cleanup:
         description: "Clean up resources after test"
         type: boolean
