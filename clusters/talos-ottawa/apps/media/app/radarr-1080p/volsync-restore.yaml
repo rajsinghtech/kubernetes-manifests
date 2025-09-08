@@ -1,0 +1,15 @@
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationDestination
+metadata:
+  name: radarr-1080p-config
+spec:
+  trigger:
+    manual: first
+  paused: true
+  restic:
+    repository: restic-media-radarr-1080p-config
+    accessModes: [ReadWriteOnce]
+    copyMethod: Snapshot
+    capacity: 5Gi
+    storageClassName: ceph-block-replicated
+    volumeSnapshotClassName: csi-rbdplugin-snapclass
