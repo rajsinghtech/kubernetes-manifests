@@ -13,7 +13,7 @@ resources:
   - ./sonarr-4k
   - ./sonarr-anime
   - ./sonarr-1080p
-  # - ./plex 
+  - ./plex 
   - ./jellyseerr 
   - ./jellystat 
   - ./lidarr 
