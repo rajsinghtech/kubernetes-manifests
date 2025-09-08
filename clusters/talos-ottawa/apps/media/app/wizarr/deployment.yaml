@@ -14,16 +14,6 @@ spec:
       labels:
         app: wizarr
     spec:
-      # securityContext:
-      #   fsGroup: 0
-      #   fsGroupChangePolicy: OnRootMismatch
-      #   runAsGroup: 0
-      #   runAsNonRoot: false
-      #   runAsUser: 0
-      #   seccompProfile:
-      #     type: RuntimeDefault
-      #   supplementalGroups:
-      #   - 10000
       containers:
         - name: wizarr
           image: ghcr.io/wizarrrr/wizarr:latest
@@ -31,9 +21,9 @@ spec:
             - name: http
               containerPort: 5690
               protocol: TCP
-          # volumeMounts:
-          #   - name: config-volume
-          #     mountPath: /data
+          volumeMounts:
+            - name: config-volume
+              mountPath: /data
           env:
             - name: PUID
               value: "1000"
@@ -43,7 +33,7 @@ spec:
               value: ${TIMEZONE}
             - name: DISABLE_BUILTIN_AUTH
               value: "false"
-      # volumes:
-      #   - name: config-volume
-      #     persistentVolumeClaim:
-      #       claimName: wizarr-config
+      volumes:
+        - name: config-volume
+          persistentVolumeClaim:
+            claimName: wizarr-config
