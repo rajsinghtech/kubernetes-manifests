@@ -23,7 +23,7 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "code.rajsingh.info"
+    - "code.${COMMON_DOMAIN}"
     - "code.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

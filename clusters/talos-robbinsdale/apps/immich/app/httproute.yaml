@@ -23,7 +23,7 @@ spec:
       name: public
       namespace: home
   hostnames:
-    - "immich.rajsingh.info"
+    - "immich.${COMMON_DOMAIN}"
     - "immich.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

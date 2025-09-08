@@ -23,7 +23,7 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "wizarr.rajsingh.info"
+    - "wizarr.${COMMON_DOMAIN}"
     - "wizarr.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

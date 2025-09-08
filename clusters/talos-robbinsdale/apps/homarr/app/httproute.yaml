@@ -23,7 +23,7 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "homarr.rajsingh.info"
+    - "homarr.${COMMON_DOMAIN}"
     - "homarr.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

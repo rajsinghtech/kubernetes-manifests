@@ -23,7 +23,7 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "tclip.rajsingh.info"
+    - "tclip.${COMMON_DOMAIN}"
     - "tclip.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

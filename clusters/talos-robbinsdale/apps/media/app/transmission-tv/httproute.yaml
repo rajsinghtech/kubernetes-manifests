@@ -23,7 +23,7 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "transmission-tv.rajsingh.info"
+    - "transmission-tv.${COMMON_DOMAIN}"
     - "transmission-tv.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

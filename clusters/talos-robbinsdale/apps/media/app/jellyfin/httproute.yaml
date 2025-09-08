@@ -23,7 +23,7 @@ spec:
       name: public
       namespace: home
   hostnames:
-    - "jellyfin.rajsingh.info"
+    - "jellyfin.${COMMON_DOMAIN}"
     - "jellyfin.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
