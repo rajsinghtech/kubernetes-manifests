@@ -14,7 +14,7 @@ spec:
     spec:
       strategy:
         type: Recreate
-      hostname: unmanic-robbinsdale
+      hostname: unmanic
       containers:
 
         - name: unmanic
