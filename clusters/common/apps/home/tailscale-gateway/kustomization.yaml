@@ -7,6 +7,7 @@ resources:
   - gateway.yaml
   - envoyproxy.yaml
   - certificate-wildcard.yaml
+  - redirect.yaml
 # DNS
   - secret.yaml
   - pihole.yaml

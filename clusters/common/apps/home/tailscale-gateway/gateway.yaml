@@ -34,6 +34,9 @@ spec:
         - group: ''
           kind: Secret
           name: wildcard-${COMMON_DOMAIN//./-}
+    - name: http
+      port: 80
+      protocol: HTTP
     - name: pihole-udp
       protocol: UDP
       port: 53
