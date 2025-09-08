@@ -5,17 +5,15 @@ namespace: media
 resources:
   - ./jellyfin 
   - ./prowlarr 
-  - ./radarr
   - ./radarr-4k
   - ./radarr-1080p
   - ./radarr-4kremux
   - ./sabnzbd
   - ./bazarr 
-  - ./sonarr 
   - ./sonarr-4k
   - ./sonarr-anime
   - ./sonarr-1080p
-  - ./plex 
+  # - ./plex 
   - ./jellyseerr 
   - ./jellystat 
   - ./lidarr 

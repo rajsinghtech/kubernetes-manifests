@@ -23,13 +23,21 @@ spec:
               containerPort: 8096
               protocol: TCP
           volumeMounts:
-            - name: tv-volume
-              mountPath: /media/tvshows
-            - name: movies-volume
-              mountPath: /media/movies
-            - name: music-volume
+            - name: tv-4k 
+              mountPath: /media/tv/4k
+            - name: tv-1080p
+              mountPath: /media/tv/1080p
+            - name: tv-anime
+              mountPath: /media/tv/anime
+            - name: movies-4k
+              mountPath: /media/movies/4k
+            - name: movies-1080p
+              mountPath: /media/movies/1080p
+            - name: movies-4kremux
+              mountPath: /media/movies/4kremux
+            - name: music
               mountPath: /media/music
-            - name: config-volume
+            - name: config
               mountPath: /config
           env:
             - name: PUID
@@ -41,15 +49,27 @@ spec:
             - name: JELLYFIN_PublishedServerUrl
               value: jellyfin.rajsingh.info
       volumes:
-        - name: tv-volume
+        - name: tv-4k
           persistentVolumeClaim:
-            claimName: sonarr-tv
-        - name: movies-volume
+            claimName: sonarr-4k-tv
+        - name: tv-1080p
           persistentVolumeClaim:
-            claimName: radarr-movies
-        - name: music-volume
+            claimName: sonarr-1080p-tv
+        - name: tv-anime
+          persistentVolumeClaim:
+            claimName: sonarr-anime-tv
+        - name: movies-4k
+          persistentVolumeClaim:
+            claimName: radarr-4k-movies
+        - name: movies-1080p
+          persistentVolumeClaim:
+            claimName: radarr-1080p-movies
+        - name: movies-4kremux
+          persistentVolumeClaim:
+            claimName: radarr-4kremux-movies
+        - name: music
           persistentVolumeClaim:
             claimName: lidarr-music
-        - name: config-volume
+        - name: config
           persistentVolumeClaim:
             claimName: jellyfin-config 
