@@ -15,9 +15,7 @@
 		// Robbinsdale site networks
 		"ipset:robbinsdale": [
 			"192.168.50.0/24",  // Main LAN
-			"fd7a:115c:a1e0:b1a:0:1::/96"  // 4via6 subnet
-		],
-    "ipset:robbinsdale-k8s": [
+			"fd7a:115c:a1e0:b1a:0:1::/96",  // 4via6 subnet
 			"10.69.0.0/16",     // LB network range
 			"10.0.0.0/16",      // Service network range
 			"10.1.0.0/16",      // Pod network range
@@ -26,10 +24,7 @@
 		// Ottawa site networks
 		"ipset:ottawa": [
 			"192.168.169.0/24", // Main LAN
-			"fd7a:115c:a1e0:b1a:0:2::/96"  // 4via6 subnet
-		],
-
-    "ipset:ottawa-k8s": [
+			"fd7a:115c:a1e0:b1a:0:2::/96",  // 4via6 subnet
 			"10.169.0.0/16",     // LB network range
 			"10.2.0.0/16",      // Service network range
 			"10.3.0.0/16",      // Pod network range
@@ -224,7 +219,7 @@
 		// Access to subnets via subnet routers
 		{
 			"src": ["group:superuser", "tag:ottawa", "tag:usw2", "tag:robbinsdale"],
-			"dst": ["ipset:robbinsdale", "ipset:robbinsdale-k8s"],
+			"dst": ["ipset:robbinsdale"],
 			"ip":  ["*"],
 			"via": ["tag:robbinsdale"],
 		},
@@ -236,7 +231,7 @@
 		},
 		{
 		"src": ["group:superuser", "tag:robbinsdale", "tag:usw2", "tag:ottawa"],
-		"dst": ["ipset:ottawa", "ipset:ottawa-k8s"],
+		"dst": ["ipset:ottawa"],
 		"ip":  ["*"],
 		"via": ["tag:ottawa"],
 		},
