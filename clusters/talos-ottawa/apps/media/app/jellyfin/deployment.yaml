@@ -13,7 +13,7 @@ spec:
     metadata:
       labels:
         app: jellyfin
-    spec:      
+    spec:
       hostname: jellyfin
       containers:
         - name: jellyfin

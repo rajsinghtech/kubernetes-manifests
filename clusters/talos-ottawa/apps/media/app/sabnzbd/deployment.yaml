@@ -16,7 +16,8 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: sabnzbd
-    spec:      containers:
+    spec:
+      containers:
       - name: sabnzbd
         env:
         - name: SABNZBD__HOST_WHITELIST_ENTRIES
