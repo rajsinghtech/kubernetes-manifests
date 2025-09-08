@@ -14,16 +14,16 @@ spec:
       labels:
         app: wizarr
     spec:
-      securityContext:
-        fsGroup: 0
-        fsGroupChangePolicy: OnRootMismatch
-        runAsGroup: 0
-        runAsNonRoot: false
-        runAsUser: 0
-        seccompProfile:
-          type: RuntimeDefault
-        supplementalGroups:
-        - 10000
+      # securityContext:
+      #   fsGroup: 0
+      #   fsGroupChangePolicy: OnRootMismatch
+      #   runAsGroup: 0
+      #   runAsNonRoot: false
+      #   runAsUser: 0
+      #   seccompProfile:
+      #     type: RuntimeDefault
+      #   supplementalGroups:
+      #   - 10000
       containers:
         - name: wizarr
           image: ghcr.io/wizarrrr/wizarr
@@ -36,9 +36,9 @@ spec:
           #     mountPath: /data
           env:
             - name: PUID
-              value: "0"
+              value: "1000"
             - name: PGID
-              value: "0"
+              value: "1000"
             - name: TZ
               value: ${TIMEZONE}
             - name: DISABLE_BUILTIN_AUTH
