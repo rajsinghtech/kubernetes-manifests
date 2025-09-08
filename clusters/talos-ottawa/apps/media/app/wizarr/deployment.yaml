@@ -21,9 +21,9 @@ spec:
             - name: http
               containerPort: 5690
               protocol: TCP
-          volumeMounts:
-            - name: config-volume
-              mountPath: /data
+          # volumeMounts:
+          #   - name: config-volume
+          #     mountPath: /data
           env:
             - name: PUID
               value: "0"
@@ -33,7 +33,7 @@ spec:
               value: ${TIMEZONE}
             - name: DISABLE_BUILTIN_AUTH
               value: "false"
-      volumes:
-        - name: config-volume
-          persistentVolumeClaim:
-            claimName: wizarr-config
+      # volumes:
+      #   - name: config-volume
+      #     persistentVolumeClaim:
+      #       claimName: wizarr-config
