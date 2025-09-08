@@ -308,7 +308,7 @@ radarr:
 
   radarr-4kremux:
     base_url: http://radarr-4kremux:7878
-    api_key: !secret RADARR_4KREMXUX_API_KEY
+    api_key: !secret RADARR_4KREMUX_API_KEY
 
     media_naming:
       folder: default
