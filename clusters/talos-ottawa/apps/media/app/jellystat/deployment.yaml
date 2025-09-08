@@ -10,13 +10,13 @@ spec:
   selector:
     matchLabels:
       app: jellystat
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
         app: jellystat
     spec:
-      strategy:
-        type: Recreate
       containers:
         - name: jellystat
           image: cyfershepard/jellystat:latest

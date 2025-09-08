@@ -7,13 +7,13 @@ spec:
   selector:
     matchLabels:
       app: wizarr
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
         app: wizarr
     spec:
-      strategy:
-        type: Recreate
       containers:
         - name: wizarr
           image: ghcr.io/wizarrrr/wizarr

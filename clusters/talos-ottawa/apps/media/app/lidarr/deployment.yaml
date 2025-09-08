@@ -7,13 +7,13 @@ spec:
   selector:
     matchLabels:
       app: lidarr
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
         app: lidarr
     spec:
-      strategy:
-        type: Recreate
       containers:
         - name: lidarr
           image: lscr.io/linuxserver/lidarr:latest

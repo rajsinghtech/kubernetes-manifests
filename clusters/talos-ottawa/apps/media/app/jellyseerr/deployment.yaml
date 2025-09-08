@@ -7,13 +7,13 @@ spec:
   selector:
     matchLabels:
       app: jellyseerr
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
         app: jellyseerr
     spec:
-      strategy:
-        type: Recreate
       containers:
         - name: jellyseerr
           image: fallenbagel/jellyseerr:latest

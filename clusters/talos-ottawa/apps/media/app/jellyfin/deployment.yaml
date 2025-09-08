@@ -7,14 +7,13 @@ spec:
   selector:
     matchLabels:
       app: jellyfin
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
         app: jellyfin
-    spec:
-      strategy:
-        type: Recreate
-      hostname: jellyfin
+    spec:      hostname: jellyfin
       containers:
         - name: jellyfin
           image: jellyfin/jellyfin:preview
