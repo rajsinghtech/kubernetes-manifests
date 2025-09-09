@@ -28,6 +28,24 @@ metadata:
   namespace: ai
   annotations:
     tailscale.com/hostname: usw2-ai-kserve-qwen-llm-predictor
+spec:
+  ports:
+  - name: qwen-llm-predictor
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: isvc.qwen-llm-predictor
+  type: LoadBalancer
+  loadBalancerClass: tailscale
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: qwen-llm-predictor-ts
+  namespace: ai
+  annotations:
+    tailscale.com/hostname: qwen
     tailscale.com/proxy-group: common-ingress
 spec:
   ports:
