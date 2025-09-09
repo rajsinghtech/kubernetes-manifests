@@ -42,7 +42,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: qwen-llm-predictor-ts
+  name: qwen-llm-predictor-ha-ts
   namespace: ai
   annotations:
     tailscale.com/hostname: qwen
