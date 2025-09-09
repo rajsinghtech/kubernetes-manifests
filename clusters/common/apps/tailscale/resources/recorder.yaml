@@ -12,7 +12,7 @@ spec:
   tags:
     - "tag:k8s"
     - "tag:k8s-recorder"
-    - "tag:${LOCATION}"
+    - "tag:${LOCATION}" 
   storage:
     s3:
       endpoint: nyc3.digitaloceanspaces.com
