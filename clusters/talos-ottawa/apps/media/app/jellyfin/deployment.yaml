@@ -17,7 +17,7 @@ spec:
       hostname: jellyfin
       containers:
         - name: jellyfin
-          image: jellyfin/jellyfin:preview
+          image: jellyfin/jellyfin:latest
           ports:
             - name: http
               containerPort: 8096
