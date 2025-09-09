@@ -42,6 +42,8 @@ spec:
               mountPath: /library/movies/1080p
             - name: movies-4kremux
               mountPath: /library/movies/4kremux
+            - name: movies-anime
+              mountPath: /library/movies/anime
             - name: config
               mountPath: /config
             - name: cache
@@ -72,6 +74,9 @@ spec:
         - name: movies-4kremux
           persistentVolumeClaim:
             claimName: radarr-4kremux-movies
+        - name: movies-anime
+          persistentVolumeClaim:
+            claimName: radarr-anime-movies
         - name: config
           persistentVolumeClaim:
             claimName: unmanic-config
