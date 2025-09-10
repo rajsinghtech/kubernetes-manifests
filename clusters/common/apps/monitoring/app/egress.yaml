@@ -21,7 +21,8 @@ kind: Service
 metadata:
   name: ottawa-prometheus
   annotations:
-    tailscale.com/tailnet-fqdn: ottawa-prometheus.keiretsu.ts.net
+    # tailscale.com/tailnet-fqdn: ottawa-prometheus.keiretsu.ts.net
+    tailscale.com/tailnet-ip: 100.113.51.201
     tailscale.com/proxy-group: common-egress
 spec:
   externalName: placeholder
