@@ -1,9 +1,0 @@
----
-apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelmRepository
-metadata:
-  name: open-webui
-  namespace: ai
-spec:
-  interval: 1h
-  url: https://open-webui.github.io/helm-charts
