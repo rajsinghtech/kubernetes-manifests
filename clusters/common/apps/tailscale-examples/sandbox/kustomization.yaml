@@ -6,7 +6,7 @@ resources:
   # - ./derper
   # - ./hello
   - ./tsflow
-  - ./tsdnsproxy
+  # - ./tsdnsproxy
   - ./sidecar
   - ./secret.yaml
   - ./ds
