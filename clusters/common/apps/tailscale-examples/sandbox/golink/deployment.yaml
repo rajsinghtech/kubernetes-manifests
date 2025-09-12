@@ -18,7 +18,7 @@ spec:
       - name: golink
         imagePullPolicy: Always
         image: "ghcr.io/tailscale/golink:main"
-        args: ["--sqlitedb", "/home/nonroot/golink.db", "--verbose", "--config-dir", "/home/nonroot/tsnet-golink", "--hostname", "golink", "--snapshot", "/backups/links.json"]
+        args: ["--sqlitedb", "/home/nonroot/golink.db", "--verbose", "--config-dir", "/home/nonroot/tsnet-golink", "--hostname", "golink", "--snapshot", "/backups/links.json", "--dev-listen", ":80"]
         env:
         - name: TS_AUTHKEY
           valueFrom:
