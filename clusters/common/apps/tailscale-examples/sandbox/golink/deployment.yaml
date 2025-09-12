@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: golink
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: golink
+  template:
+    metadata:
+      labels:
+        app: golink
+    spec:
+      containers:
+      - name: golink
+        imagePullPolicy: Always
+        image: "ghcr.io/tailscale/golink:main"
+        args:
+        - -dev-listen :8080
+        - -snapshot /backups/links.json
+        env:
+        - name: TS_AUTHKEY
+          valueFrom:
+            secretKeyRef:
+              name: ts-oauth
+              key: TS_AUTHKEY_EPHEMERAL
+              optional: true
+        volumeMounts:
+        - name: links
+          mountPath: /backups/links.json
+          subPath: links.json
+      volumes:
+      - name: links
+        configMap:
+          name: golink

@@ -10,3 +10,4 @@ resources:
   - ./sidecar
   - ./secret.yaml
   - ./ds
+  - ./golink
