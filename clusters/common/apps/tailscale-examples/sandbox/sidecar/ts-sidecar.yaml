@@ -63,3 +63,22 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.uid
+        livenessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - 'tailscale status | head -n 1 | grep -q "offline" && exit 1 || exit 0'
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 2
+          failureThreshold: 2
+        readinessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - 'tailscale status | head -n 1 | grep -q "offline" && exit 1 || exit 0'
+          initialDelaySeconds: 5
+          periodSeconds: 2
+          timeoutSeconds: 2
