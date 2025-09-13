@@ -4,4 +4,4 @@ metadata:
   name: keiretsu
   namespace: rook-ceph
 spec:
-  realm: multisite
+  realm: multisite-keiretsu
