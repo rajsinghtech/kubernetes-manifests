@@ -1,0 +1,7 @@
+apiVersion: ceph.rook.io/v1
+kind: CephObjectZoneGroup
+metadata:
+  name: ottawa-zonegroup
+  namespace: rook-ceph
+spec:
+  realm: multisite-realm

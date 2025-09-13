@@ -1,0 +1,17 @@
+apiVersion: ceph.rook.io/v1
+kind: CephObjectZone
+metadata:
+  name: robbinsdale-zone
+  namespace: rook-ceph
+spec:
+  zoneGroup: ottawa-zonegroup
+  metadataPool:
+    failureDomain: osd
+    replicated:
+      size: 3
+      requireSafeReplicaSize: true
+  dataPool:
+    failureDomain: osd
+    erasureCoded:
+      dataChunks: 2
+      codingChunks: 1
