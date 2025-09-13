@@ -1,10 +1,10 @@
 apiVersion: ceph.rook.io/v1
 kind: CephObjectZone
 metadata:
-  name: robbinsdale-zone
+  name: robbinsdale
   namespace: rook-ceph
 spec:
-  zoneGroup: ottawa-zonegroup
+  zoneGroup: keiretsu
   metadataPool:
     failureDomain: osd
     replicated:
