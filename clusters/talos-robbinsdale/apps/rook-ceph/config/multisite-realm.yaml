@@ -5,5 +5,5 @@ metadata:
   namespace: rook-ceph
 spec:
   pull:
-    endpoint: http://rook-ceph-rgw-object-store.rook-ceph.svc.cluster.local:80
-    secretName: realm-a-keys
+    endpoint: http://rook-ceph-rgw-object-store.rook-ceph:80
+    secretName: realm-ottawa-keys
