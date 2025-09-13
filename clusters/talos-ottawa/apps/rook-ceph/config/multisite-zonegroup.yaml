@@ -1,7 +1,7 @@
 apiVersion: ceph.rook.io/v1
 kind: CephObjectZoneGroup
 metadata:
-  name: ottawa-zonegroup
+  name: keiretsu
   namespace: rook-ceph
 spec:
   realm: multisite-realm
