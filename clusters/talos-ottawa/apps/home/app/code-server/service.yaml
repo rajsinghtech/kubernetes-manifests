@@ -3,8 +3,10 @@ kind: Service
 metadata:
   name: code-server
   annotations:
-    tailscale.com/expose: "true"
-    tailscale.com/tailnet-fqdn: code-server.keiretsu.ts.net
+    # tailscale.com/expose: "true"
+    # tailscale.com/tailnet-fqdn: code-server.keiretsu.ts.net
+    tailscale.com/hostname: code-server
+    tailscale.com/proxy-group: common-egress
 spec:
   selector:
     app: code-server  # Match labels with your Deployment
