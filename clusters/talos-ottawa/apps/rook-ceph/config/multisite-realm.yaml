@@ -3,3 +3,7 @@ kind: CephObjectRealm
 metadata:
   name: multisite-keiretsu
   namespace: rook-ceph
+spec:
+  defaultRealm: true
+  pull:
+    endpoint: http://ottawa-rook-ceph-rgw-object-store.rook-ceph:80
