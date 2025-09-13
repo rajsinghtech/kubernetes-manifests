@@ -10,7 +10,7 @@ resources:
   - volumesnapshot.yaml
   - blockpool.yaml
   - multisite-keys-secret.yaml
-  - multisite-realm.yaml
+  # - multisite-realm.yaml
   - multisite-zonegroup.yaml
   - multisite-zone.yaml
   - multisite-service.yaml
