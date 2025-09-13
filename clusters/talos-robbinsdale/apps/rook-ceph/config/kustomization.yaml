@@ -17,4 +17,5 @@ resources:
   - multisite-local-service.yaml  
   - multisite-egress.yaml
   - s3.yaml
-  # - s3manager.yaml
+  - s3bucket.yaml
+  - s3manager.yaml

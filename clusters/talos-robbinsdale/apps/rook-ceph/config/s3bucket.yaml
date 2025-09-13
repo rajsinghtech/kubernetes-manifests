@@ -1,0 +1,47 @@
+---
+# Primary test bucket for Robbinsdale cluster
+apiVersion: objectbucket.io/v1alpha1
+kind: ObjectBucketClaim
+metadata:
+  name: robbinsdale-primary-bucket
+  namespace: rook-ceph
+  labels:
+    cluster: robbinsdale
+    purpose: primary-storage
+spec:
+  generateBucketName: robbinsdale-primary
+  storageClassName: rook-ceph-bucket
+  additionalConfig:
+    maxObjects: "10000"
+    maxSize: "100G"
+---
+# Application backup bucket
+apiVersion: objectbucket.io/v1alpha1
+kind: ObjectBucketClaim
+metadata:
+  name: app-backup-bucket
+  namespace: rook-ceph
+  labels:
+    cluster: robbinsdale
+    purpose: backups
+spec:
+  generateBucketName: app-backups
+  storageClassName: rook-ceph-bucket
+  additionalConfig:
+    maxSize: "50G"
+---
+# Multisite sync test bucket
+apiVersion: objectbucket.io/v1alpha1
+kind: ObjectBucketClaim
+metadata:
+  name: sync-test-bucket
+  namespace: rook-ceph
+  labels:
+    cluster: robbinsdale
+    purpose: sync-testing
+spec:
+  generateBucketName: multisite-sync-test
+  storageClassName: rook-ceph-bucket
+  additionalConfig:
+    maxObjects: "100"
+    maxSize: "1G"
