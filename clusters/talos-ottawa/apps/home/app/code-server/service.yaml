@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: code-server
-  annotations:
+  # annotations:
     # tailscale.com/expose: "true"
     # tailscale.com/tailnet-fqdn: code-server.keiretsu.ts.net
     # tailscale.com/hostname: code-server
