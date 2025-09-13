@@ -12,5 +12,6 @@ resources:
   - multisite-realm.yaml
   - multisite-zonegroup.yaml
   - multisite-zone.yaml
+  - multisite-service.yaml
   - s3.yaml
   # - s3manager.yaml
