@@ -10,9 +10,9 @@ resources:
   - volumesnapshot.yaml
   - blockpool.yaml
   - multisite-egress.yaml
-  # - multisite-keys-secret.yaml
-  # - multisite-realm.yaml
-  # - multisite-zonegroup.yaml
-  # - multisite-zone.yaml
+  - multisite-keys-secret.yaml
+  - multisite-realm.yaml
+  - multisite-zonegroup.yaml
+  - multisite-zone.yaml
   # - s3.yaml
   # - s3manager.yaml
