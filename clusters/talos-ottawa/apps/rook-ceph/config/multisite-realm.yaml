@@ -1,0 +1,5 @@
+apiVersion: ceph.rook.io/v1
+kind: CephObjectRealm
+metadata:
+  name: multisite-realm
+  namespace: rook-ceph

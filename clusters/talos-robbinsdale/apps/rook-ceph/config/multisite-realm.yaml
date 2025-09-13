@@ -1,0 +1,9 @@
+apiVersion: ceph.rook.io/v1
+kind: CephObjectRealm
+metadata:
+  name: multisite-realm
+  namespace: rook-ceph
+spec:
+  pull:
+    endpoint: http://rook-ceph-rgw-object-store.rook-ceph.svc.cluster.local:80
+    secretName: realm-a-keys
