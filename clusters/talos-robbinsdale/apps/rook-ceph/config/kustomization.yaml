@@ -9,7 +9,7 @@ resources:
   - storageclass.yaml
   - volumesnapshot.yaml
   - blockpool.yaml
-  # - multisite-service.yaml
+  - multisite-egress.yaml
   # - multisite-keys-secret.yaml
   # - multisite-realm.yaml
   # - multisite-zonegroup.yaml
