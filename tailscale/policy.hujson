@@ -158,7 +158,7 @@
 
     // Allow Superuser to access all ottawa nodes
     {
-      "src": ["group:superuser", "ipset:ottawa", "tag:ottawa"],
+      "src": ["group:superuser", "tag:ottawa"],
       "dst": ["tag:ottawa"],
       "ip": ["*"],
       "app": {
@@ -173,13 +173,6 @@
         ]
       }
     },
-
-		// Allow Ottawa infra nodes to access each other directly
-		{
-			"src": ["tag:ottawa-infra", "tag:usw2"],
-			"dst": ["tag:ottawa-infra", "tag:usw2"],
-			"ip": ["*"]
-		},
 		// Kubernetes operator internal networking
 		{
 			"src": ["tag:k8s-operator"],
