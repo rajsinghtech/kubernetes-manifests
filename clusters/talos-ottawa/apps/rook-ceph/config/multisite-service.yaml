@@ -18,6 +18,5 @@ spec:
     rgw: object-store
     rook_cluster: rook-ceph
     rook_object_store: object-store
-  sessionAffinity: None
   type: LoadBalancer
   loadBalancerClass: tailscale
