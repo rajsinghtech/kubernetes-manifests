@@ -6,4 +6,3 @@ metadata:
 spec:
   pull:
     endpoint: http://rook-ceph-rgw-object-store.rook-ceph:80
-    secretName: realm-ottawa-keys
