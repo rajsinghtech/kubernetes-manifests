@@ -1,0 +1,50 @@
+---
+# Primary test bucket for Ottawa cluster (HA master)
+apiVersion: objectbucket.io/v1alpha1
+kind: ObjectBucketClaim
+metadata:
+  name: ottawa-primary-bucket
+  namespace: rook-ceph
+  labels:
+    cluster: ottawa
+    purpose: primary-storage
+    ha-role: master
+spec:
+  generateBucketName: ottawa-primary
+  storageClassName: rook-ceph-bucket
+  additionalConfig:
+    maxObjects: "20000"
+    maxSize: "200G"
+---
+# HA backup bucket for critical data
+apiVersion: objectbucket.io/v1alpha1
+kind: ObjectBucketClaim
+metadata:
+  name: ha-backup-bucket
+  namespace: rook-ceph
+  labels:
+    cluster: ottawa
+    purpose: ha-backups
+    ha-role: master
+spec:
+  generateBucketName: ha-backups
+  storageClassName: rook-ceph-bucket
+  additionalConfig:
+    maxSize: "100G"
+---
+# Shared multisite bucket for cross-cluster testing
+apiVersion: objectbucket.io/v1alpha1
+kind: ObjectBucketClaim
+metadata:
+  name: shared-multisite-bucket
+  namespace: rook-ceph
+  labels:
+    cluster: ottawa
+    purpose: multisite-shared
+    ha-role: master
+spec:
+  generateBucketName: shared-multisite
+  storageClassName: rook-ceph-bucket
+  additionalConfig:
+    maxObjects: "500"
+    maxSize: "10G"
