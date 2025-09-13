@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    tailscale.com/tailnet-hostname: rook-ceph-rgw-object-store
+    tailscale.com/proxy-group: common-ingress
+  name: rook-ceph-rgw-object-store-ts
+  namespace: rook-ceph
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: rook-ceph-rgw
+    ceph_daemon_id: object-store
+    rgw: object-store
+    rook_cluster: rook-ceph
+    rook_object_store: object-store
+  type: LoadBalancer
+  loadBalancerClass: tailscale
