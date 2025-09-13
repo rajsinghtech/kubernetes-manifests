@@ -2,6 +2,9 @@ apiVersion: v1
 kind: Service
 metadata:
   name: code-server
+  annotations:
+    tailscale.com/expose: "true"
+    tailscale.com/tailnet-fqdn: code-server.keiretsu.ts.net
 spec:
   selector:
     app: code-server  # Match labels with your Deployment
