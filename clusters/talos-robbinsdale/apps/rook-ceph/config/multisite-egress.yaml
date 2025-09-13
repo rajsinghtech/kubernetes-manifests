@@ -5,6 +5,7 @@ metadata:
   annotations:
     # tailscale.com/tailnet-ip: 100.89.67.122
     tailscale.com/tailnet-fqdn: rook-ceph-rook-ceph-rgw-object-store.keiretsu.ts.net
+    tailscale.com/proxy-class: common-accept-routes
     # tailscale.com/proxy-group: common-egress
 spec:
   externalName: placeholder
