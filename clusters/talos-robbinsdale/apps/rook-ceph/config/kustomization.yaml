@@ -5,7 +5,7 @@ resources:
   - cluster.yaml
   - httproute.yaml
   - filesystem.yaml
-  # - toolbox.yaml
+  - toolbox.yaml
   - storageclass.yaml
   - volumesnapshot.yaml
   - blockpool.yaml
