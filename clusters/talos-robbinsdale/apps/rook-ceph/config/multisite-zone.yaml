@@ -16,4 +16,4 @@ spec:
       dataChunks: 2
       codingChunks: 1
   customEndpoints:
-  - "http://shared-rook-ceph-rgw-object-store.rook-ceph:80"
+  - "http://ottawa-rook-ceph-rgw-object-store.rook-ceph:80"
