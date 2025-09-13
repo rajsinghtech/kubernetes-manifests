@@ -5,4 +5,4 @@ metadata:
   namespace: rook-ceph
 spec:
   pull:
-    endpoint: http://rook-ceph-rgw-object-store.rook-ceph:80
+    endpoint: http://ottawa-rook-ceph-rgw-object-store.rook-ceph:80
