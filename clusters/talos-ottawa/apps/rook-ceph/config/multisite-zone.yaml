@@ -12,8 +12,9 @@ spec:
       requireSafeReplicaSize: true
   dataPool:
     failureDomain: osd
-    erasureCoded:
+    erasureCoded: 
       dataChunks: 2
       codingChunks: 1
   customEndpoints:
+  - "http://robbinsdale-rook-ceph-rgw-object-store.rook-ceph:80"
   - "http://ottawa-rook-ceph-rgw-object-store.rook-ceph:80"
