@@ -281,9 +281,9 @@ spec:
     kubeEtcd:
       enabled: true
       endpoints:
-        - 192.168.169.118:2379
-        - 192.168.169.117:2379
-        - 192.168.169.119:2379
+        - 192.168.169.118
+        - 192.168.169.117
+        - 192.168.169.119
 
     prometheus-node-exporter:
       fullnameOverride: node-exporter
