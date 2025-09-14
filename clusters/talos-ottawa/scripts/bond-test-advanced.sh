@@ -5,11 +5,13 @@
 CLUSTER_DIR="$(dirname "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)")"
 export KUBECONFIG="$CLUSTER_DIR/kubeconfig"
 
-REI_IP="192.168.169.113"
-ASUKA_IP="192.168.169.114"
+REI_IP="192.168.169.118"
+ASUKA_IP="192.168.169.117"
+KAJI_IP="192.168.169.119"
 
 REI_POD=$(kubectl get pods -n kube-system -l app=thunderbolt-debug -o jsonpath='{.items[?(@.spec.nodeName=="rei")].metadata.name}')
 ASUKA_POD=$(kubectl get pods -n kube-system -l app=thunderbolt-debug -o jsonpath='{.items[?(@.spec.nodeName=="asuka")].metadata.name}')
+KAJI_POD=$(kubectl get pods -n kube-system -l app=thunderbolt-debug -o jsonpath='{.items[?(@.spec.nodeName=="kaji")].metadata.name}')
 
 echo "=== Testing bond load balancing ==="
 
