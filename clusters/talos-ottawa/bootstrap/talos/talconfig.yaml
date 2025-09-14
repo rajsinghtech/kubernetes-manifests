@@ -6,6 +6,8 @@ talosVersion: v1.10.6
 kubernetesVersion: v1.33.1
 clusterName: "k8s.killinit.internal"
 endpoint: https://k8s.killinit.internal:6443
+allowSchedulingOnMasters: true
+allowSchedulingOnControlPlanes: true
 clusterPodNets:
   - "10.3.0.0/16"
 clusterSvcNets:
@@ -35,23 +37,14 @@ cniConfig:
 # Per-node specific configuration
 nodes:
   ###################################################################
-  ###################################################################
   - hostname: "rei"
     ipAddress: "rei"
-    # Use disk selector with serial number 
     installDiskSelector:
       serial: "50026B7686F78587" # Kingston 1TB 
-    # Alternative methods:
-    # installDisk: "/dev/nvme1n1"  
-    # installDiskSelector:
-    #   size: ">= 500GB"
-    #   model: "Samsung SSD 970*"
     controlPlane: true
     networkInterfaces:
       - interface: eth1
         dhcp: true
-        # vip:
-        #   ip: "192.168.169.25"
       - interface: bond0
         bond:
           deviceSelectors: [{ hardwareAddr: "58:47:ca:7c:*", driver: i40e }]
@@ -64,13 +57,8 @@ nodes:
         dhcp: true
         vip:
           ip: "192.168.169.25"
-        # mtu: 9000
-
-
-    # Node-specific patches for Thunderbolt networking:
     patches:
       - "@./patches/node/rei-thunderbolt.yaml"
-  ###################################################################
   ###################################################################
   - hostname: "asuka"
     ipAddress: "asuka"
@@ -80,8 +68,6 @@ nodes:
     networkInterfaces:
       - interface: eth1
         dhcp: true
-        # vip:
-        #   ip: "192.168.169.25"
       - interface: bond0
         bond:
           deviceSelectors: [{ hardwareAddr: "58:47:ca:7c:*", driver: i40e }]
@@ -94,13 +80,8 @@ nodes:
         dhcp: true
         vip:
           ip: "192.168.169.25"
-        # mtu: 9000
-
-
-    # Node-specific patches for Thunderbolt networking:
     patches:
       - "@./patches/node/asuka-thunderbolt.yaml"
-  ###################################################################
   ###################################################################
   - hostname: "kaji"
     ipAddress: "kaji"
@@ -110,8 +91,6 @@ nodes:
     networkInterfaces:
       - interface: eth1
         dhcp: true
-        # vip:
-        #   ip: "192.168.169.25"
       - interface: bond0
         bond:
           deviceSelectors: [{ hardwareAddr: "58:47:ca:7f:*", driver: i40e }]
@@ -122,13 +101,8 @@ nodes:
         dhcp: true
         vip:
           ip: "192.168.169.25"
-        # mtu: 9000
-
-    # Node-specific patches for Thunderbolt networking:
     patches:
       - "@./patches/node/kaji-thunderbolt.yaml"
-  ###################################################################
-  ###################################################################
 
 # Global patches
 patches:
@@ -142,7 +116,7 @@ patches:
   - "@./patches/global/metrics-server.yaml"
   - "@./patches/global/udev.yaml"
   - "@./patches/global/sysctls.yaml"
-  
+
 # Control plane nodes config
 controlPlane:
   extensionServices:
@@ -160,6 +134,7 @@ controlPlane:
             # Set high warning time to avoid spam until server is configured
             NOCOMMWARNTIME 86400
           mountPath: /usr/local/etc/nut/upsmon.conf
+
   schematic:
     customization:
       systemExtensions:
@@ -181,15 +156,12 @@ controlPlane:
         - talos.auditd.disabled=1
         - net.ifnames=0
         - cpufreq.default_governor=performance
-
-# Controller patches
   patches:
     - "@./patches/controller/api-access.yaml"
-    - "@./patches/controller/cluster.yaml"
     - "@./patches/controller/disable-proxy.yaml"
     - "@./patches/controller/disable-registry-discovery.yaml"
     - "@./patches/controller/kubelet-certs.yaml"
-
+    - "@./patches/controller/etcd-metrics-patch.yaml"
 
 # Worker nodes configs (if you add workers later)
 # worker:
