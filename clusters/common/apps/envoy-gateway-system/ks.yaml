@@ -18,25 +18,25 @@ spec:
   interval: 30m
   retryInterval: 1m
   timeout: 5m 
----
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: &app envoy-gateway-system-addon
-  namespace: flux-system
-spec:
-  targetNamespace: envoy-gateway-system
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
-  path: ./clusters/common/apps/envoy-gateway-system/addon
-  prune: true
-  dependsOn:
-    - name: envoy-gateway-system-install
-  sourceRef:
-    kind: GitRepository
-    name: kubernetes-manifests
-  wait: true
-  interval: 30m
-  retryInterval: 1m
-  timeout: 5m 
+# ---
+# apiVersion: kustomize.toolkit.fluxcd.io/v1
+# kind: Kustomization
+# metadata:
+#   name: &app envoy-gateway-system-addon
+#   namespace: flux-system
+# spec:
+#   targetNamespace: envoy-gateway-system
+#   commonMetadata:
+#     labels:
+#       app.kubernetes.io/name: *app
+#   path: ./clusters/common/apps/envoy-gateway-system/addon
+#   prune: true
+#   dependsOn:
+#     - name: envoy-gateway-system-install
+#   sourceRef:
+#     kind: GitRepository
+#     name: kubernetes-manifests
+#   wait: true
+#   interval: 30m
+#   retryInterval: 1m
+#   timeout: 5m 

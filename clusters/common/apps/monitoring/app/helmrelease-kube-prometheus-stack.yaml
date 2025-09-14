@@ -50,10 +50,10 @@ spec:
           domain: grafana.robbinsdale.rajsingh.info
       fullnameOverride: grafana
       additionalDataSources:
-        - name: envoy-gateway-prometheus  
-          type: prometheus
-          uid: envoy-gateway-prometheus
-          url: http://prometheus.envoy-gateway-system
+        # - name: envoy-gateway-prometheus  
+        #   type: prometheus
+        #   uid: envoy-gateway-prometheus
+        #   url: http://prometheus.envoy-gateway-system
         - name: Loki
           type: loki
           uid: loki
