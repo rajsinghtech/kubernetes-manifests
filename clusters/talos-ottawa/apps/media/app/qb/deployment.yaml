@@ -30,7 +30,7 @@ spec:
         - name: VPN_INTERFACE
           value: wg0
         - name: VPN_ENDPOINT_PORT
-          value: 51820
+          value: "51820"
         - name: VPN_PORT_FORWARDING
           value: on
         - name: VPN_PORT_FORWARDING_PROVIDER
@@ -38,7 +38,7 @@ spec:
         - name: DOT
           value: off
         - name: FIREWALL_INPUT_PORTS
-          value: 80
+          value: "80"
         - name: FIREWALL_OUTBOUND_SUBNETS
           value: ${CLUSTER_SERVICE_CIDR},${CLUSTER_POD_CIDR}
       - name: gluetun-qb-port-sync
@@ -47,17 +47,17 @@ spec:
         - name: GLUETUN_CONTROL_SERVER_HOST
           value: localhost
         - name: GLUETUN_CONTROL_SERVER_PORT
-          value: 8000
+          value: "8000"
         - name: QBITTORRENT_HOST
           value: localhost
         - name: QBITTORRENT_WEBUI_PORT
-          value: 8080
+          value: "8080"
         - name: CRON_ENABLED
-          value: true
+          value: "true"
         - name: CRON_SCHEDULE
           value: "*/5 * * * *"
         - name: LOG_TIMESTAMP
-          value: false
+          value: "false"
       - name: qbittorrent
         image: lscr.io/linuxserver/qbittorrent:latest
         ports:
