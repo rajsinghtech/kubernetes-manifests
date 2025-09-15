@@ -8,3 +8,5 @@ resources:
   - pvc-config.yaml
   - configmap.yaml
   - secret.yaml
+  - service.yaml
+  - httproute.yaml
