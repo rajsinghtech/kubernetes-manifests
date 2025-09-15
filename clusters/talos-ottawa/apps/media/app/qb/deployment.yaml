@@ -58,9 +58,13 @@ spec:
         - name: DOT
           value: "off"
         - name: FIREWALL_INPUT_PORTS
-          value: "8080,8000"
+          value: "8080,6881,8000"
         - name: FIREWALL_OUTBOUND_SUBNETS
           value: ${CLUSTER_SERVICE_CIDR},${CLUSTER_POD_CIDR}
+        - name: UPDATER_PERIOD
+          value: "24h"
+        - name: HEALTH_VPN_DURATION_INITIAL
+          value: "360s"
         - name: LOG_LEVEL
           value: info
         volumeMounts:
