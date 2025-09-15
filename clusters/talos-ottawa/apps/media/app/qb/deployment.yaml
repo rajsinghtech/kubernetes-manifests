@@ -29,18 +29,38 @@ spec:
           value: wireguard
         - name: VPN_INTERFACE
           value: wg0
-        - name: VPN_ENDPOINT_PORT
+        - name: WIREGUARD_ENDPOINT_IP
+          valueFrom:
+            secretKeyRef:
+              name: qbittorrent-secret
+              key: WIREGUARD_ENDPOINT_IP
+        - name: WIREGUARD_ENDPOINT_PORT
           value: "51820"
+        - name: WIREGUARD_PUBLIC_KEY
+          valueFrom:
+            secretKeyRef:
+              name: qbittorrent-secret
+              key: WIREGUARD_PUBLIC_KEY
+        - name: WIREGUARD_PRIVATE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: qbittorrent-secret
+              key: WIREGUARD_PRIVATE_KEY
         - name: VPN_PORT_FORWARDING
-          value: on
+          value: "on"
         - name: VPN_PORT_FORWARDING_PROVIDER
           value: protonvpn
         - name: DOT
-          value: off
+          value: "off"
         - name: FIREWALL_INPUT_PORTS
-          value: "80"
+          value: "8080,8000"
         - name: FIREWALL_OUTBOUND_SUBNETS
           value: ${CLUSTER_SERVICE_CIDR},${CLUSTER_POD_CIDR}
+        - name: LOG_LEVEL
+          value: info
+        volumeMounts:
+        - name: gluetun-config
+          mountPath: /gluetun
       - name: gluetun-qb-port-sync
         image: ghcr.io/bjw-s-labs/gluetun-qb-port-sync:latest
         env:
@@ -58,6 +78,9 @@ spec:
           value: "*/5 * * * *"
         - name: LOG_TIMESTAMP
           value: "false"
+        volumeMounts:
+        - name: qb-port-sync-config
+          mountPath: /config
       - name: qbittorrent
         image: lscr.io/linuxserver/qbittorrent:latest
         ports:
@@ -77,15 +100,21 @@ spec:
           mountPath: /downloads
         env:
         - name: PUID
-          value: "0"
+          value: "568"
         - name: PGID
-          value: "0"
+          value: "568"
         - name: TZ
           value: ${TIMEZONE}
         - name: WEBUI_PORT
           value: "8080"
         - name: TORRENTING_PORT
           value: "6881"
+        - name: QBITTORRENT__AUTH_SubnetWhitelist
+          value: "${CLUSTER_POD_CIDR},${CLUSTER_SERVICE_CIDR}"
+        - name: QBITTORRENT__AUTH_AuthSubnetWhitelistEnabled
+          value: "true"
+        - name: QBITTORRENT__AUTH_LocalHostAuth
+          value: "false"
       volumes:
       - name: config-volume
         persistentVolumeClaim:
@@ -93,3 +122,9 @@ spec:
       - name: downloads-volume
         persistentVolumeClaim:
           claimName: qbittorrent-downloads
+      - name: gluetun-config
+        emptyDir: {}
+      - name: qb-port-sync-config
+        configMap:
+          name: qb-port-sync-config
+          defaultMode: 0755
