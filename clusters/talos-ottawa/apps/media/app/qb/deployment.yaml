@@ -46,6 +46,11 @@ spec:
             secretKeyRef:
               name: qbittorrent-secret
               key: WIREGUARD_PRIVATE_KEY
+        - name: WIREGUARD_ADDRESSES
+          valueFrom:
+            secretKeyRef:
+              name: qbittorrent-secret
+              key: WIREGUARD_ADDRESSES
         - name: VPN_PORT_FORWARDING
           value: "on"
         - name: VPN_PORT_FORWARDING_PROVIDER
@@ -78,9 +83,13 @@ spec:
           value: "*/5 * * * *"
         - name: LOG_TIMESTAMP
           value: "false"
+        - name: CRON_INIT
+          value: "true"
         volumeMounts:
         - name: qb-port-sync-config
           mountPath: /config
+        command: ["/bin/sh"]
+        args: ["-c", "echo '*/5 * * * * /app/gluetun-qb-port-sync' > /config/crontab && exec /entrypoint.sh"]
       - name: qbittorrent
         image: lscr.io/linuxserver/qbittorrent:latest
         ports:
@@ -125,6 +134,4 @@ spec:
       - name: gluetun-config
         emptyDir: {}
       - name: qb-port-sync-config
-        configMap:
-          name: qb-port-sync-config
-          defaultMode: 0755
+        emptyDir: {}
