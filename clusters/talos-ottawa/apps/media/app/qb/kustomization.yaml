@@ -9,4 +9,4 @@ resources:
   - configmap.yaml
   - secret.yaml
   - service.yaml
-  - httproute.yaml
+  - httproute.yaml 
