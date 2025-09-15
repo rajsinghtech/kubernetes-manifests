@@ -24,8 +24,10 @@ spec:
         volumeMounts:
         - name: movies-volume
           mountPath: /movies
-        - name: downloads-volume
-          mountPath: /downloads
+        - name: downloads-sabnzbd-volume
+          mountPath: /downloads/sabnzbd
+        - name: downloads-qbittorrent-volume
+          mountPath: /downloads/qbittorrent
         - name: config-volume
           mountPath: /config
         env:
@@ -39,9 +41,12 @@ spec:
       - name: movies-volume
         persistentVolumeClaim:
           claimName: radarr-1080p-movies
-      - name: downloads-volume
+      - name: downloads-sabnzbd-volume
         persistentVolumeClaim:
           claimName: sabnzbd-media
+      - name: downloads-qbittorrent-volume
+        persistentVolumeClaim:
+          claimName: qbittorrent-media
       - name: config-volume
         persistentVolumeClaim:
           claimName: radarr-1080p-config 

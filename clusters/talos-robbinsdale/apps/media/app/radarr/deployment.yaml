@@ -22,8 +22,10 @@ spec:
         volumeMounts:
         - name: movies-volume
           mountPath: /movies
-        - name: downloads-volume
-          mountPath: /downloads
+        - name: downloads-sabnzbd-volume
+          mountPath: /downloads/sabnzbd
+        - name: downloads-qbittorrent-volume
+          mountPath: /downloads/qbittorrent
         - name: config-volume
           mountPath: /config
         env:
