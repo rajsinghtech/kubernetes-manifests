@@ -46,7 +46,7 @@ spec:
             claimName: sabnzbd-media
         - name: downloads-qbittorrent-volume
           persistentVolumeClaim:
-            claimName: qbittorrent-media
+            claimName: qbittorrent-downloads
         - name: config-volume
           persistentVolumeClaim:
             claimName: sonarr-4k-config
