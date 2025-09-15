@@ -109,10 +109,8 @@ spec:
         volumeMounts:
         - name: config-volume
           mountPath: /config
-        - name: downloads-sabnzbd-volume
-          mountPath: /downloads/sabnzbd
-        - name: downloads-qbittorrent-volume
-          mountPath: /downloads/qbittorrent
+        - name: downloads-volume
+          mountPath: /downloads
         env:
         - name: PUID
           value: "568"
