@@ -6,3 +6,5 @@ resources:
   - deployment.yaml
   - pvc-downloads.yaml
   - pvc-config.yaml
+  - configmap.yaml
+  - secret.yaml

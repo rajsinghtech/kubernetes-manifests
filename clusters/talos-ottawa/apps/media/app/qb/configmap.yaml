@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: qb-port-sync-config
+data:
+  crontab: |
+    */5 * * * * /app/gluetun-qb-port-sync
