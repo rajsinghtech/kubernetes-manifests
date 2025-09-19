@@ -74,7 +74,7 @@ spec:
           tag: "download"
           tagstyle: "is-warning"
           url: "https://github.com/jellyfin/jellyfin-media-player/releases"
-          logo: "https://raw.githubusercontent.com/jellyfin/jellyfin-media-player/main/public/images/logo.png"
+          logo: "https://github.com/jellyfin/jellyfin-media-player/blob/5ded0bccb38c06d6249bac91d095f358c5824601/native/logo.png"
       - parameters:
           name: "Jellyfin Client Mobile"
           subtitle: "iOS/Android"
