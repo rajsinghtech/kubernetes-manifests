@@ -41,7 +41,7 @@ spec:
       loadBalancerClass: tailscale
       mixedService: true
       port: 53
-      type: LoadBalancer
+      # type: LoadBalancer
     ingress:
       enabled: false 
     podDnsConfig:
