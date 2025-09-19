@@ -313,7 +313,7 @@
       "target": ["group:superuser"],
       "attr": [
         "experimental:exit-node-steering", // FF traffic-steering
-        // "only-tcp-443", // FF allow-only-tcp-443
+        "only-tcp-443", // FF allow-only-tcp-443
         // "custom:test" // FF metadata-node-set-attrs node-attributes-api
       ],
     },
@@ -322,7 +322,7 @@
 			"target": ["tag:k8s"],
 			"attr":   [
         "funnel",
-        // "only-tcp-443",
+        "only-tcp-443",
       ],
 		},
 		
