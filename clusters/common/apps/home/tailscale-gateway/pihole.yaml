@@ -2,10 +2,10 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: pihole
+  name: ts-pihole
 spec:
   interval: 30m
-  releaseName: pihole
+  releaseName: ts-pihole
   chart:
     spec:
       chart: pihole
@@ -32,7 +32,7 @@ spec:
     strategyType: RollingUpdate
     serviceWeb:
       type: ClusterIP
-    hostname: "home-pihole"
+    hostname: "ts-pihole"
     serviceDns:
       annotations:
         tailscale.com/hostname: ${LOCATION}-home-pihole
@@ -41,7 +41,7 @@ spec:
       loadBalancerClass: tailscale
       mixedService: true
       port: 53
-      # type: LoadBalancer
+      type: LoadBalancer
     ingress:
       enabled: false 
     podDnsConfig:

@@ -4,9 +4,9 @@ kind: Gateway
 metadata:
   name: ts
   labels:
-    external-dns: home
+    external-dns: ts
 spec:
-  gatewayClassName: home
+  gatewayClassName: home-ts
   listeners: 
     - name: wildcard-${CLUSTER_DOMAIN//./-}-https
       protocol: HTTPS

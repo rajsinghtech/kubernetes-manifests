@@ -2,10 +2,10 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: home-external-dns
+  name: ts-external-dns
 spec:
   interval: 5m
-  releaseName: home-external-dns
+  releaseName: ts-external-dns
   chart:
     spec:
       chart: external-dns
@@ -31,8 +31,8 @@ spec:
             key: "password"
     extraArgs:
       - --ignore-ingress-tls-spec
-      - --pihole-server=http://pihole-web.home
-      - --gateway-label-filter=external-dns==home
+      - --pihole-server=http://ts-pihole-web.home
+      - --gateway-label-filter=external-dns==ts
       - --pihole-api-version=6
     policy: sync
     sources:

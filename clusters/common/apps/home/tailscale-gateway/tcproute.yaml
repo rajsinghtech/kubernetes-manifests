@@ -1,12 +1,12 @@
 apiVersion: gateway.networking.k8s.io/v1alpha2
 kind: TCPRoute
 metadata:
-  name: pihole-tcp
+  name: ts-pihole-tcp
 spec:
   parentRefs:
   - name: ts
     sectionName: pihole-tcp
   rules:
   - backendRefs:
-    - name: pihole-dns
+    - name: ts-pihole-dns
       port: 53
