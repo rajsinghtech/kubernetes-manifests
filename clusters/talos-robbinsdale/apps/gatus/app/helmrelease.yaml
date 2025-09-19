@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: gatus
-      version: 1.3.0 # Pinned version from original kustomization
+      version: "*"
       sourceRef:
         kind: HelmRepository
         name: twin
@@ -203,7 +203,7 @@ spec:
               send-on-resolved: true
         - name: PiHole Home DNS
           group: network
-          url: "pihole-dns.home"
+          url: "ts-pihole-dns.home"
           dns:
             query-name: "google.com"
             query-type: "A"
