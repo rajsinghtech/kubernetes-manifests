@@ -24,7 +24,7 @@ spec:
                   name: cloudflare
                   key: cloudflare-k8s-token-killinit-cc
             - name: DOMAINS
-              value: "jellyfin.killinit.cc"
+              value: "jellyfin.killinit.cc,jellyseerr.killinit.cc"
             - name: PROXIED
               value: "true"
             - name: IP6_PROVIDER
