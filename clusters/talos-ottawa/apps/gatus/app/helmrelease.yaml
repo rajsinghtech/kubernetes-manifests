@@ -50,7 +50,7 @@ spec:
           #   link: "https://www.${CLUSTER_DOMAIN}"
       endpoints:
         - name: Rei
-          group: servers
+          group: Servers
           url: tcp://rei.killinit.internal:6443
           interval: 60s
           conditions:
@@ -60,7 +60,7 @@ spec:
             - type: discord
               send-on-resolved: true
         - name: Asuka
-          group: servers
+          group: Servers
           url: tcp://asuka.killinit.internal:6443
           interval: 60s
           conditions:
@@ -70,7 +70,7 @@ spec:
             - type: discord
               send-on-resolved: true
         - name: Kaji
-          group: servers
+          group: Servers
           url: tcp://kaji.killinit.internal:6443
           interval: 60s
           conditions:
@@ -80,7 +80,7 @@ spec:
             - type: discord
               send-on-resolved: true
         - name: Nagato (NAS)
-          group: servers
+          group: Servers
           url: tcp://nagato.killinit.internal:445
           interval: 60s
           client:
@@ -92,7 +92,7 @@ spec:
             - type: discord
               send-on-resolved: true
         - name: Kubernetes API
-          group: kubernetes
+          group: Kubernetes
           url: https://k8s.killinit.internal:6443/readyz
           interval: 60s
           client:
@@ -105,7 +105,7 @@ spec:
             - type: discord
               send-on-resolved: true
         - name: Envoy-Public
-          group: network
+          group: Networking
           url: https://status.${CLUSTER_DOMAIN}
           interval: 60s
           client:
@@ -118,7 +118,7 @@ spec:
             - type: discord
               send-on-resolved: true
         - name: Envoy-Tailscale
-          group: network
+          group: Networking
           url: https://status.${CLUSTER_DOMAIN}
           interval: 60s
           client:
@@ -131,7 +131,7 @@ spec:
             - type: discord
               send-on-resolved: true
         - name: Envoy-Private
-          group: network
+          group: Networking
           url: https://status.${CLUSTER_DOMAIN}
           interval: 60s
           conditions:
@@ -142,7 +142,7 @@ spec:
             - type: discord
               send-on-resolved: true
         - name: Jellyfin
-          group: media
+          group: Media
           url: http://jellyfin.media:8096/health
           interval: 60s
           conditions:
@@ -152,7 +152,7 @@ spec:
             - type: discord
               send-on-resolved: true
         - name: Jellystat
-          group: media
+          group: Media
           url: http://jellystat.media:3000
           interval: 60s
           conditions:
@@ -162,7 +162,7 @@ spec:
             - type: discord
               send-on-resolved: true
         - name: Jellyseerr
-          group: media
+          group: Media
           url: http://jellyseerr.media:5055
           interval: 60s
           conditions:
