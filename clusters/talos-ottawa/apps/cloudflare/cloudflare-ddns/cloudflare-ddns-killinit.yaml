@@ -26,7 +26,7 @@ spec:
             - name: DOMAINS
               value: "jellyfin.killinit.cc,jellyseerr.killinit.cc,status.killinit.cc,home.killinit.cc"
             - name: PROXIED
-              value: "true"
+              value: "false"
             - name: IP6_PROVIDER
               value: "none"
       securityContext:
