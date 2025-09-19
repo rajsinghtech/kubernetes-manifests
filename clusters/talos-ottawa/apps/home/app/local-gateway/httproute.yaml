@@ -3,7 +3,7 @@ kind: HTTPRoute
 metadata:
   name: private-pihole-web
   annotations:
-    item.homer.rajsingh.info/name: "Pi-hole"
+    item.homer.rajsingh.info/name: "Private Pi-hole"
     item.homer.rajsingh.info/subtitle: "DNS Ad Blocker"
     item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/pi-hole.png"
     item.homer.rajsingh.info/tag: "home"
