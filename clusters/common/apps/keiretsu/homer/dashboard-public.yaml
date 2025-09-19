@@ -9,15 +9,15 @@ metadata:
 spec:
   replicas: 2
   homerConfig:
-    title: "${LOCATION} cloud" 
+    title: "${LOCATION} Cloud" 
     subtitle: "Infrastructure Dashboard"
     logo: "https://raw.githubusercontent.com/rajsinghtech/homer-operator/main/homer/Homer-Operator.png"
     header: true
     message:
       style: "is-info"
-      title: "Welcome to Robbinsdale Cloud"
+      title: "Welcome to ${LOCATION} Cloud"
       icon: "fa fa-info-circle"
-      content: "Server Hosted in Robbinsdale MN."
+      content: "Server Hosted in ${LOCATION}."
     footer: '<p>Powered by <strong>Homer-Operator</strong> | <a href="https://github.com/rajsinghtech/homer-operator">GitHub</a></p>'
     colors:
       light:
