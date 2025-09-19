@@ -1,0 +1,41 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: gatus-postgres
+spec:
+  inheritedMetadata:
+    labels:
+      app: gatus-postgres
+  instances: 3
+  storage:
+    size: 10Gi
+    storageClass: ceph-block-replicated-nvme
+  monitoring:
+    enablePodMonitor: true
+  backup:
+    retentionPolicy: "30d"
+    barmanObjectStore:
+      destinationPath: s3://postgres
+      endpointURL: http://rook-ceph-rgw-object-store.rook-ceph.svc.cluster.local:80
+      serverName: gatus-postgres
+      s3Credentials:
+        accessKeyId:
+          name: postgres-ceph-bucket
+          key: AWS_ACCESS_KEY_ID
+        secretAccessKey:
+          name: postgres-ceph-bucket
+          key: AWS_SECRET_ACCESS_KEY
+#  bootstrap:
+#    recovery:
+#      source: gatus-postgres
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: gatus-postgres
+spec:
+  schedule: "@weekly"
+  immediate: true
+  backupOwnerReference: self
+  cluster:
+    name: gatus-postgres 
