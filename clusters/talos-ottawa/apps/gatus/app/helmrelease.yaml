@@ -49,7 +49,7 @@ spec:
           # - name: "Portfolio"
           #   link: "https://www.${CLUSTER_DOMAIN}"
       endpoints:
-        - name: Rei
+        - name: Rei (K8s Node)
           group: Servers
           url: tcp://rei.killinit.internal:6443
           interval: 60s
@@ -59,7 +59,7 @@ spec:
           alerts:
             - type: discord
               send-on-resolved: true
-        - name: Asuka
+        - name: Asuka (K8s Node)
           group: Servers
           url: tcp://asuka.killinit.internal:6443
           interval: 60s
@@ -69,7 +69,7 @@ spec:
           alerts:
             - type: discord
               send-on-resolved: true
-        - name: Kaji
+        - name: Kaji (K8s Node)
           group: Servers
           url: tcp://kaji.killinit.internal:6443
           interval: 60s
