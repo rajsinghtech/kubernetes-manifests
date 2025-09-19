@@ -65,7 +65,7 @@ spec:
           url: "https://login.tailscale.com/admin/machines"
   gatewaySelector:
     matchLabels:
-      external-dns: home
+      external-dns: ts
   ingressSelector:
     matchLabels:
       noexist: "true"
