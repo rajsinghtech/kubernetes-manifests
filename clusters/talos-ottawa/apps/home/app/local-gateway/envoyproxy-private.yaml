@@ -8,6 +8,6 @@ spec:
     type: Kubernetes
     kubernetes:
       envoyDeployment:
-        replicas: 1
+        replicas: 3
       envoyService:
         loadBalancerIP: 10.169.10.14
