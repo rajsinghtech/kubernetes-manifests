@@ -7,5 +7,5 @@ resources:
   - ./dashboard-public.yaml
   - ./dashboard-ts.yaml
   - ./httproute-private.yaml
-  # - ./httproute-public.yaml
+  - ./httproute-public.yaml
   - ./httproute-ts.yaml
