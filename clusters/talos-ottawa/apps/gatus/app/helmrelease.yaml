@@ -122,7 +122,7 @@ spec:
           url: https://status.${CLUSTER_DOMAIN}
           interval: 60s
           client:
-            dns-resolver: "tcp://pihole-dns.home:53"
+            dns-resolver: "tcp://ts-pihole-dns.home:53"
           conditions:
             - "[STATUS] == 200"
             - "[RESPONSE_TIME] < 2000"
