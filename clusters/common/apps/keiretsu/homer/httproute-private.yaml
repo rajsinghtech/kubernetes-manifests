@@ -19,6 +19,7 @@ spec:
       namespace: home
   hostnames:
     - "home.${CLUSTER_DOMAIN}"
+    - "home-private.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""
