@@ -320,7 +320,10 @@
     
 		{
 			"target": ["tag:k8s"],
-			"attr":   ["funnel"],
+			"attr":   [
+        "funnel",
+        "only-tcp-443",
+      ],
 		},
 		
 		// Restricted outbound configuration
