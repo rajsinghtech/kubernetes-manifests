@@ -32,11 +32,11 @@ spec:
       #storage:
         #type: postgres
         #path: "$${uri}"
-      # alerting:
-      #   discord:
-      #     webhook-url: "$${discord-webhook-url}"
-      #     failure-threshold: 3
-      #     success-threshold: 2
+      alerting:
+        discord:
+          webhook-url: "${DISCORD_WEBHOOK_URL}"
+          failure-threshold: 3
+          success-threshold: 2
       ui:
         title: "K8s Ottawa Status"
         description: "GitOps-managed Kubernetes cluster monitoring - Single source of truth for infrastructure health"
