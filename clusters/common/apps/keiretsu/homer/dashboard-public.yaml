@@ -74,14 +74,14 @@ spec:
           tag: "download"
           tagstyle: "is-warning"
           url: "https://github.com/jellyfin/jellyfin-media-player/releases"
-          logo: "https://github.com/jellyfin/jellyfin-media-player/blob/5ded0bccb38c06d6249bac91d095f358c5824601/native/logo.png"
+          logo: "https://raw.githubusercontent.com/jellyfin/jellyfin-media-player/refs/heads/master/resources/images/icon.svg"
       - parameters:
           name: "Jellyfin Client Mobile"
           subtitle: "iOS/Android"
           tag: "download"
           tagstyle: "is-warning"
           url: "https://streamyfin.app/"
-          logo: "https://raw.githubusercontent.com/streamyfin/streamyfin/refs/heads/develop/assets/icons/jellyseerr-logo.svg"
+          logo: "https://avatars.githubusercontent.com/u/193271640?s=280&v=4"
   gatewaySelector:
     matchLabels:
       gateway: public
