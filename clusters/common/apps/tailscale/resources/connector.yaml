@@ -8,7 +8,7 @@ spec:
   tags:
     - tag:k8s
     - tag:${LOCATION}
-  hostname: *name
+  hostnamePrefix: *name
   exitNode: true
   subnetRouter:
     advertiseRoutes:
@@ -28,7 +28,7 @@ spec:
   tags:
     - tag:k8s
     - tag:${LOCATION}
-  hostname: *name
+  hostnamePrefix: *name
   appConnector: 
     routes:
       - "fd7a:115c:a1e0:b1a:0:${SITE_ID}::/96"
