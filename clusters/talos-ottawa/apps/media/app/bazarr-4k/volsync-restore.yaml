@@ -1,13 +1,13 @@
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationDestination
 metadata:
-  name: bazarr-config
+  name: bazarr-4k-config
 spec:
   trigger:
     manual: first
   paused: true
   restic:
-    repository: restic-media-bazarr-config
-    destinationPVC: bazarr-config
+    repository: restic-media-bazarr-4k-config
+    destinationPVC: bazarr-4k-config
     copyMethod: Direct
     # restoreAsOf: "2025-05-31T10:00:00Z"

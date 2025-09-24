@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: bazarr-config
+  name: bazarr-4kremux-config
 spec:
   accessModes:
     - ReadWriteOnce
