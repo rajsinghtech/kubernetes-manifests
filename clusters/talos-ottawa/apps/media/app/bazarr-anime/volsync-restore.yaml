@@ -1,0 +1,13 @@
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationDestination
+metadata:
+  name: bazarr-anime-config
+spec:
+  trigger:
+    manual: first
+  paused: true
+  restic:
+    repository: restic-media-bazarr-anime-config
+    destinationPVC: bazarr-anime-config
+    copyMethod: Direct
+    # restoreAsOf: "2025-05-31T10:00:00Z"

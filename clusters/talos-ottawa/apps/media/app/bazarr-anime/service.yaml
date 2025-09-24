@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: bazarr
+  name: bazarr-anime
 spec:
   selector:
-    app: bazarr
+    app: bazarr-anime
   ports:
   - name: http
     port: 6767

@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bazarr-1080p
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bazarr-1080p
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: bazarr-1080p
+    spec:
+      containers:
+      - name: bazarr
+        image: lscr.io/linuxserver/bazarr:latest
+        ports:
+        - name: http
+          containerPort: 6767
+          protocol: TCP
+        volumeMounts:
+        - name: movies-4k
+          mountPath: /movies/4k
+        - name: movies-1080p
+          mountPath: /movies/1080p
+        - name: movies-4kremux
+          mountPath: /movies/4kremux
+        - name: movies-anime
+          mountPath: /movies/anime
+        - name: tv-4k
+          mountPath: /tv/4k
+        - name: tv-1080p
+          mountPath: /tv/1080p
+        - name: tv-anime
+          mountPath: /tv/anime
+        - name: config
+          mountPath: /config
+        env:
+        - name: PUID
+          value: "0"
+        - name: GUID
+          value: "0"
+        - name: TZ
+          value: ${TIMEZONE}
+      volumes:
+      - name: movies-4k
+        persistentVolumeClaim:
+          claimName: radarr-4k-movies
+      - name: movies-1080p
+        persistentVolumeClaim:
+          claimName: radarr-1080p-movies
+      - name: movies-4kremux
+        persistentVolumeClaim:
+          claimName: radarr-4kremux-movies
+      - name: movies-anime
+        persistentVolumeClaim:
+          claimName: radarr-anime-movies
+      - name: tv-4k
+        persistentVolumeClaim:
+          claimName: sonarr-4k-tv
+      - name: tv-1080p
+        persistentVolumeClaim:
+          claimName: sonarr-1080p-tv
+      - name: tv-anime
+        persistentVolumeClaim:
+          claimName: sonarr-anime-tv
+      - name: config
+        persistentVolumeClaim:
+          claimName: bazarr-1080p-config 
