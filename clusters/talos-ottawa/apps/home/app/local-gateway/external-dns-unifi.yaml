@@ -72,7 +72,7 @@ spec:
     policy: sync
     sources:
       - gateway-httproute
-      - gateway-tlsroute
+      - gateway-tlsroute 
       - gateway-tcproute
       - gateway-udproute
       - service
