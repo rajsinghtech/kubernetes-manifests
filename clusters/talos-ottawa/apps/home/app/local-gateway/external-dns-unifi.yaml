@@ -78,6 +78,6 @@ spec:
       - service
     domainFilters: 
       - ${CLUSTER_DOMAIN}
-      - ${COMMON_DOMAIN}
+      # - ${COMMON_DOMAIN}
     txtOwnerId: ${LOCATION}-${CLUSTER_DOMAIN//./-}
     txtPrefix: k8s.${LOCATION}.
