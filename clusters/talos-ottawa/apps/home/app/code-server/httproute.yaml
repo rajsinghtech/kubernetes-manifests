@@ -1,7 +1,7 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: code-private
+  name: code
   namespace: code-server
   annotations:
     item.homer.rajsingh.info/name: "Code Server"
@@ -18,41 +18,12 @@ spec:
       kind: Gateway
       name: private
       namespace: home
-  hostnames:
-    - "code.${CLUSTER_DOMAIN}"
-  rules:
-    - backendRefs:
-        - group: ""
-          kind: Service
-          name: code-server
-          port: 80
-          weight: 1
-      matches:
-        - path:
-            type: PathPrefix
-            value: /
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: HTTPRoute
-metadata:
-  name: code-ts
-  namespace: code-server
-  annotations:
-    item.homer.rajsingh.info/name: "Code Server"
-    item.homer.rajsingh.info/subtitle: "Web-based VS Code"
-    item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/code-server.png"
-    item.homer.rajsingh.info/tag: "home"
-    item.homer.rajsingh.info/keywords: "code, development, editor"
-
-    service.homer.rajsingh.info/name: "Home"
-    service.homer.rajsingh.info/icon: "fas fa-home"
-spec:
-  parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
       name: ts
       namespace: home
   hostnames:
+    - "code.${COMMON_DOMAIN}"
     - "code.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
