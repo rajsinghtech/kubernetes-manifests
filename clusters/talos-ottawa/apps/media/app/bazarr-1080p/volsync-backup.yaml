@@ -1,14 +1,14 @@
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
-  name: media-bazarr-config
+  name: media-bazarr-1080p-config
 spec:
-  sourcePVC: bazarr-config
+  sourcePVC: bazarr-1080p-config
   trigger:
     schedule: "0 7 * * *"
   restic:
     pruneIntervalDays: 14
-    repository: restic-media-bazarr-config
+    repository: restic-media-bazarr-1080p-config
     retain:
       hourly: 1
       daily: 3
@@ -20,10 +20,10 @@ spec:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: restic-media-bazarr-config
+  name: restic-media-bazarr-1080p-config
 type: Opaque
 stringData:
-  RESTIC_REPOSITORY: s3:https://${COMMON_S3_ENDPOINT}/keiretsu/${LOCATION}/media/bazarr-config
+  RESTIC_REPOSITORY: s3:https://${COMMON_S3_ENDPOINT}/keiretsu/${LOCATION}/media/bazarr-1080p-config
   RESTIC_PASSWORD: ${COMMON_RESTIC_SECRET}
   AWS_ACCESS_KEY_ID: ${COMMON_S3_ACCESS_KEY}
   AWS_SECRET_ACCESS_KEY: ${COMMON_S3_SECRET_KEY}

@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: bazarr
+  name: bazarr-4kremux
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: bazarr
+      app: bazarr-4kremux
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: bazarr
+        app: bazarr-4kremux
     spec:
       containers:
       - name: bazarr
@@ -69,4 +69,4 @@ spec:
           claimName: sonarr-anime-tv
       - name: config
         persistentVolumeClaim:
-          claimName: bazarr-config 
+          claimName: bazarr-4kremux-config 
