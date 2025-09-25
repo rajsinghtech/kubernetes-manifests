@@ -9,6 +9,6 @@ resources:
   - gateway-public.yaml
   - envoyproxy-private.yaml
   - envoyproxy-public.yaml
-  - external-dns.yaml
+  - external-dns-unifi.yaml
+  - secret.yaml
   - httproute.yaml
-  - pihole.yaml
