@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: autobrr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: autobrr
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: autobrr
+    spec:
+      containers:
+      - name: autobrr
+        image: ghcr.io/autobrr/autobrr:latest
+        ports:
+        - name: http
+          containerPort: 7474
+          protocol: TCP
+        volumeMounts:
+        - name: config-volume
+          mountPath: /config
+        env:
+        - name: TZ
+          value: ${TIMEZONE}
+      volumes:
+      - name: config-volume
+        persistentVolumeClaim:
+          claimName: autobrr-config 

@@ -4,13 +4,17 @@ kind: Kustomization
 namespace: media
 resources:
   - ./jellyfin  
+  - ./autobrr
   - ./prowlarr 
   - ./radarr-4k
   - ./radarr-1080p
   - ./radarr-4kremux
   - ./radarr-anime
   - ./sabnzbd
-  - ./bazarr 
+  - ./bazarr-4k
+  - ./bazarr-4kremux
+  - ./bazarr-1080p
+  - ./bazarr-anime
   - ./sonarr-4k
   - ./sonarr-anime
   - ./sonarr-1080p
