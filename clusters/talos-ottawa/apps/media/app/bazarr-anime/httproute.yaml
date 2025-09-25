@@ -6,7 +6,7 @@ metadata:
   annotations:
     item.homer.rajsingh.info/name: "bazarr-anime"
     item.homer.rajsingh.info/subtitle: "Subtitle Management"
-    item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/morpheus65535/bazarr-anime/master/frontend/public/images/logo128.png"
+    item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/refs/heads/main/svg/bazarr.svg"
     item.homer.rajsingh.info/tag: "media"
     item.homer.rajsingh.info/keywords: "subtitles, media, management"
 
