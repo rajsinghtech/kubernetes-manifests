@@ -69,6 +69,7 @@ spec:
     extraArgs:
       - --ignore-ingress-tls-spec
       - --gateway-label-filter=external-dns==private
+      - --log-level=debug
     policy: sync
     sources:
       - gateway-httproute
