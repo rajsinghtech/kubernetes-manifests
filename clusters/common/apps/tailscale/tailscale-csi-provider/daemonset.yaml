@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: tailscale-csi-provider
-          image: ghcr.io/tailscale/tailscale-csi-provider:v0.1.1-amd64
+          image: ghcr.io/rajsinghtech/tailscale/tailscale-csi-provider:dev
           args:
             - --socket=/var/run/secrets-store-csi-providers/tailscale.sock
           imagePullPolicy: IfNotPresent
