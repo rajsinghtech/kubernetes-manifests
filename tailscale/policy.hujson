@@ -193,6 +193,9 @@
       "src": ["group:superuser", "tag:udm", "tag:k8s", "tag:k8s-operator"],
       "dst": ["tag:udm"],
       "ip":  ["*"],
+      "app": {
+        "tailscale.com/cap/relay": [],
+      },
     },
 
 		// Allow members to access their own devices
