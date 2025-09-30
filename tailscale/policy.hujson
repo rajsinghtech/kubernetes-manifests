@@ -72,6 +72,7 @@
 		"tag:k8s":          ["tag:k8s-operator", "autogroup:admin"],
 		"tag:k8s-recorder": ["tag:k8s-operator", "autogroup:admin"],
 		"tag:infra":        ["autogroup:admin", "tag:infra"],
+    "tag:udm":          ["autogroup:admin", "tag:infra"],
 		
 		// Site-specific tags
 		"tag:keiretsu":     ["tag:k8s-operator", "autogroup:admin", "tag:infra"],
@@ -185,11 +186,15 @@
 			"src": ["group:superuser", "tag:k8s", "tag:k8s-operator"],
 			"dst": ["tag:k8s",],
 			"ip":  ["*"],
-      "app": {
-        "tailscale.com/cap/relay": [],
-      },
 		},
 		
+    // Allow members to reach udm nodes
+    {
+      "src": ["group:superuser", "tag:udm", "tag:k8s", "tag:k8s-operator"],
+      "dst": ["tag:udm"],
+      "ip":  ["*"],
+    },
+
 		// Allow members to access their own devices
 		{
 			"src": ["autogroup:member"],
