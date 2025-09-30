@@ -17,7 +17,7 @@ spec:
           image: ghcr.io/rajsinghtech/tailscale/tailscale-csi-provider:dev
           args:
             - --socket=/var/run/secrets-store-csi-providers/tailscale.sock
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           volumeMounts:
             - mountPath: "/var/run/secrets-store-csi-providers"
               name: provider
