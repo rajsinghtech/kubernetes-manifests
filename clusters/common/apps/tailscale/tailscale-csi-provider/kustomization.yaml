@@ -5,3 +5,4 @@ resources:
   - secretproviderclass.yaml
   - daemonset.yaml
   - secret.yaml
+  - examples/sidecar.yaml
