@@ -7,4 +7,3 @@ resources:
   - ./mqtt 
   - ./home-assistant 
   - ./code-server 
-  - ./minio
