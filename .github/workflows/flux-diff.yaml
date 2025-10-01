@@ -20,7 +20,7 @@ jobs:
       pull-requests: write
     strategy:
       matrix:
-        paths: ["kubernetes"]
+        paths: ["clusters/talos-ottawa", "clusters/talos-robbinsdale", "clusters/common"]
         resources: ["helmrelease", "kustomization"]
     steps:
       - name: Checkout
