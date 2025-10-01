@@ -6,7 +6,6 @@
   ],
   "dependencyDashboard": true,
   "dependencyDashboardTitle": "Renovate Dashboard 🤖",
-  "schedule": ["every weekend"],
   "ignorePaths": ["**/*.sops.*"],
   "flux": {
     "managerFilePatterns": ["/clusters/.+\\.ya?ml$/"]
@@ -18,11 +17,6 @@
     "managerFilePatterns": ["/clusters/.+\\.ya?ml$/"]
   },
   "packageRules": [
-    {
-      "description": "Require approval for all Helm chart updates",
-      "matchDatasources": ["helm"],
-      "dependencyDashboardApproval": true
-    },
     {
       "description": "Auto merge GitHub Actions minor/patch",
       "matchManagers": ["github-actions"],
