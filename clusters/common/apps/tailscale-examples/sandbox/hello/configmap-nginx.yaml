@@ -15,9 +15,23 @@ data:
 
       server {
         listen 80;
+        root /usr/share/nginx/html;
 
         location / {
           return 200 "Hello, World! I'm from ${LOCATION}!";
         }
+
+        location /10mb {
+          alias /usr/share/nginx/html/10mb.bin;
+        }
+
+        location /100mb {
+          alias /usr/share/nginx/html/100mb.bin;
+        }
       }
-    } 
+    }
+  init.sh: |
+    #!/bin/sh
+    # Create test files for bandwidth testing
+    dd if=/dev/zero of=/usr/share/nginx/html/10mb.bin bs=1M count=10
+    dd if=/dev/zero of=/usr/share/nginx/html/100mb.bin bs=1M count=100 
