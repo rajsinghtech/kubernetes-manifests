@@ -2,16 +2,16 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: curl-hello-world-shared
+  name: curl-hello-world-${LOCATION}
   namespace: default
   labels:
-    app: curl-hello-world
+    app: curl-hello-world-${LOCATION}
   
 data:
   curl-loop.sh: |
     #!/bin/bash
 
-    URL="http://hello-world-shared-egress.tailscale-examples"
+    URL="http://hello-world-${LOCATION}-egress.tailscale-examples"
     INTERVAL=1
     echo "Starting infinite curl loop to $URL every $INTERVAL second(s)..."
     while true; do
@@ -23,16 +23,16 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: curl-hello-world-shared
+  name: curl-hello-world-${LOCATION}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: curl-hello-world-shared
+      app: curl-hello-world-${LOCATION}
   template:
     metadata:
       labels:
-        app: curl-hello-world-shared
+        app: curl-hello-world-${LOCATION}
     spec:
       containers:
       - name: curl
@@ -45,4 +45,4 @@ spec:
       volumes:
       - name: script
         configMap:
-          name: curl-hello-world-shared 
+          name: curl-hello-world-${LOCATION} 
