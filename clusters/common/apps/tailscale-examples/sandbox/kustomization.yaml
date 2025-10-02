@@ -4,7 +4,7 @@ kind: Kustomization
 namespace: tailscale-examples
 resources:
   # - ./derper
-  # - ./hello
+  - ./hello
   - ./tsflow
   # - ./tsdnsproxy
   - ./sidecar

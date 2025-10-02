@@ -5,8 +5,5 @@ resources:
   - deployment-hello-world.yaml
   - configmap-nginx.yaml
   - service-hello-world.yaml
-  - deployment-curl-hello-world-robbinsdale.yaml
-  - deployment-curl-hello-world-ottawa.yaml
-  - deployment-curl-hello-world-shared.yaml
-  - deployment-curl-hello-world-istio.yaml
+  - deployment-curl-hello-world.yaml
   - egress.yaml 

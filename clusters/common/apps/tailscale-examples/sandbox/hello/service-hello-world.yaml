@@ -4,7 +4,7 @@ kind: Service
 metadata:
   name: hello-world
   annotations:
-    tailscale.com/hostname: ${LOCATION}-tailscale-examples-hello-world
+    tailscale.com/hostname: ${LOCATION}-tailscale-examples-hello-world-service
 spec:
   selector:
     app: hello-world
@@ -15,34 +15,17 @@ spec:
   type: LoadBalancer
   loadBalancerClass: tailscale
 ---
-apiVersion: v1
-kind: Service
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
-  name: shared-hello-world
-  annotations:
-    tailscale.com/hostname: shared-tailscale-examples-hello-world
-    tailscale.com/proxy-group: common-ingress
-    tailscale.com/tags: "tag:hello"
+  name: ${LOCATION}-tailscale-examples-hello-world-ingress
 spec:
-  selector:
-    app: hello-world
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
-  type: LoadBalancer
-  loadBalancerClass: tailscale
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: hello-world-istio
-  labels:
-    istio-injection: enabled
-spec:
-  selector:
-    app: hello-world
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
+  defaultBackend:
+    service:
+      name: hello-world
+      port:
+        number: 80
+  ingressClassName: tailscale
+  tls:
+    - hosts:
+        - ${LOCATION}-tailscale-examples-hello-world-ingress
