@@ -1,0 +1,26 @@
+apiVersion: tailcar.rajsingh.info/v1alpha1
+kind: Tailnet
+metadata:
+  name: keiretsu-labs-github
+  namespace: tailcar-system
+spec:
+  tailnetName: "-"
+  oauthSecretRef:
+    name: keiretsu-labs-github-oauth
+    namespace: tailcar-system
+  tailscale:
+    tags:
+      - "tag:k8s"
+      - "${LOCATION}"
+    env:
+      - name: TS_EXTRA_ARGS
+        value: "--accept-routes"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: keiretsu-labs-github-oauth
+type: Opaque
+stringData:
+  client_id: ${TS_OAUTH_CLIENT_ID}
+  client_secret: ${TS_OAUTH_CLIENT_SECRET}

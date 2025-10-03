@@ -1,0 +1,14 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: tailcar-system
+resources:
+  - helmrepository.yaml
+  - helmrelease.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true
+configMapGenerator:
+  - name: tailcar-values
+    files:
+      - values.yaml
