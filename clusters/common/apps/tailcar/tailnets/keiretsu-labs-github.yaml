@@ -11,7 +11,7 @@ spec:
   tailscale:
     tags:
       - "tag:k8s"
-      - "${LOCATION}"
+      - "tag:${LOCATION}"
     env:
       - name: TS_EXTRA_ARGS
         value: "--accept-routes"
