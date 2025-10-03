@@ -25,6 +25,7 @@ metadata:
   name: &app tailcar-tailnets
   namespace: flux-system
 spec:
+  targetNamespace: tailcar-system
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
