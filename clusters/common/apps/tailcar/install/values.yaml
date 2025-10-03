@@ -1,0 +1,14 @@
+# Tailcar Helm Values
+# Add custom values here if needed, otherwise defaults will be used
+
+# Example custom values:
+# replicaCount: 1
+# image:
+#   pullPolicy: IfNotPresent
+# resources:
+#   limits:
+#     cpu: 500m
+#     memory: 256Mi
+#   requests:
+#     cpu: 100m
+#     memory: 128Mi
