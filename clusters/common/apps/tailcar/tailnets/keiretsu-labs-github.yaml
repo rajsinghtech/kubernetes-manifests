@@ -2,7 +2,6 @@ apiVersion: tailcar.rajsingh.info/v1alpha1
 kind: Tailnet
 metadata:
   name: keiretsu-labs-github
-  namespace: tailcar-system
 spec:
   tailnetName: "-"
   oauthSecretRef:
