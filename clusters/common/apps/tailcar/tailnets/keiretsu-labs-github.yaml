@@ -22,5 +22,5 @@ metadata:
   name: keiretsu-labs-github-oauth
 type: Opaque
 stringData:
-  client_id: ${TS_OAUTH_CLIENT_ID}
-  client_secret: ${TS_OAUTH_CLIENT_SECRET}
+  client-id: ${TS_OAUTH_CLIENT_ID}
+  client-secret: ${TS_OAUTH_CLIENT_SECRET}
