@@ -9,6 +9,9 @@ spec:
       app: code-server
   template:
     metadata:
+      annotations:
+        tailcar.rajsingh.info/inject: "true"
+        tailcar.rajsingh.info/tailnet: keiretsu-labs-github
       labels:
         app: code-server
     spec:
