@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: proxyt
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: proxyt
+  template:
+    metadata:
+      labels:
+        app: proxyt
+    spec:
+      containers:
+      - name: proxyt
+        image: ghcr.io/jaxxstorm/proxyt:latest
+        ports:
+        - containerPort: 80
+        command: ["serve"]
+        args:
+        - "--domain"
+        - "proxyt.${CLUSTER_DOMAIN}"
+        - "--http-only"
+        - "--port"
+        - "80"
+        - "--bind"
+        - "0.0.0.0"
