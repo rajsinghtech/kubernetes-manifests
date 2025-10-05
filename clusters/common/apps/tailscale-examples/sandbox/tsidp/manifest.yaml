@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: tsidp
+  namespace: tailscale
+  labels:
+    app: tsidp
+spec:
+  replicas: 1
+  serviceName: tsidp
+  selector:
+    matchLabels:
+      app: tsidp
+  volumeClaimTemplates:
+  - metadata:
+      name: tsidp-data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 1Gi
+  template:
+    metadata:
+      labels:
+        app: tsidp
+    spec:
+      containers:
+      - name: tsidp
+        image: ghcr.io/tailscale/tsidp:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 443
+          name: https
+        env:
+        - name: TAILSCALE_USE_WIP_CODE
+          value: "1"
+        - name: TS_STATE_DIR
+          value: "/data"
+        - name: TS_HOSTNAME
+          value: "${LOCATION}-idp"
+        - name: TSIDP_ENABLE_STS
+          value: "1"
+        - name: TS_AUTHKEY
+          valueFrom:
+            secretKeyRef:
+              name: ts-authkey
+              key: TS_AUTHKEY
+        volumeMounts:
+        - name: tsidp-data
+          mountPath: /data
