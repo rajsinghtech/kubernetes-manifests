@@ -1,0 +1,13 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: BackendTrafficPolicy
+metadata:
+  name: proxyt-upgrade-policy
+  namespace: tailscale-examples
+spec:
+  targetRef:
+    group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: proxyt
+  httpUpgrade:
+    - type: websocket
+    - type: ts2021
