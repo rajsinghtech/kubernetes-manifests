@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: tdarr-worker
-          image: ghcr.io/haveagitgat/tdarr_node:2.45.01
+          image: ghcr.io/haveagitgat/tdarr_node:2.48.01
           ports:
             - containerPort: 8266
           env:
