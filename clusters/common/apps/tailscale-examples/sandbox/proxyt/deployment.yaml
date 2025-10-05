@@ -23,6 +23,7 @@ spec:
         - "--domain"
         - "proxyt.${CLUSTER_DOMAIN}"
         - "--http-only"
+        - "--debug"
         - "--port"
         - "80"
         - "--bind"
