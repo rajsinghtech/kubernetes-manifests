@@ -10,4 +10,4 @@ spec:
     name: proxyt
   httpUpgrade:
     - type: websocket
-    - type: ts2021
+    - type: tailscale-control-protocol
