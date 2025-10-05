@@ -17,8 +17,9 @@ spec:
         image: ghcr.io/jaxxstorm/proxyt:latest
         ports:
         - containerPort: 80
-        command: ["serve"]
+        command: ["proxyt"]
         args:
+        - "serve"
         - "--domain"
         - "proxyt.${CLUSTER_DOMAIN}"
         - "--http-only"
