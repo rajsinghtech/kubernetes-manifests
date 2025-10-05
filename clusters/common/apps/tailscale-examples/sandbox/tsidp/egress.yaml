@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    tailscale.com/tailnet-fqdn: ottawa-idp.keiretsu.ts.net
+    tailscale.com/proxy-group: common-egress
+  name: ottawa-idp-egress
+spec:
+  externalName: placeholder   # any value - will be overwritten by operator
+  type: ExternalName 
+  ports:
+  - name: https # any value
+    port: 443
+    protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    tailscale.com/tailnet-fqdn: robbinsdale-idp.keiretsu.ts.net
+    tailscale.com/proxy-group: common-egress
+  name: robbinsdale-idp-egress
+spec:
+  externalName: placeholder   # any value - will be overwritten by operator
+  type: ExternalName 
+  ports:
+  - name: https # any value
+    port: 443
+    protocol: TCP
