@@ -5,6 +5,7 @@ namespace: tailscale-examples
 resources:
   # - ./derper
   - ./hello
+  - ./proxyt
   - ./tsflow
   # - ./tsdnsproxy
   - ./sidecar
