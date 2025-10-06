@@ -24,7 +24,7 @@ spec:
   #   - kind: ConfigMap
   #     name: flux-kube-state-metrics-config
   #     valuesKey: kube-state-metrics-config.yaml
-  values:
+  values: 
     grafana:
       enabled: true
       admin:
