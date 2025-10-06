@@ -40,7 +40,7 @@ spec:
           allow_sign_up: true
           client_id: "${TS_IDP_GRAFANA_CLIENT_ID}"
           scopes: openid email profile
-          auth_url:  https://${LOCATION}-idp.keiretsu.ts.net/authorize/funnel
+          auth_url:  https://${LOCATION}-idp.keiretsu.ts.net/authorize
           token_url: https://${LOCATION}-idp.keiretsu.ts.net/token
           api_url:   https://${LOCATION}-idp.keiretsu.ts.net/userinfo
           redirect_uri: https://grafana.${CLUSTER_DOMAIN}/login/generic_oauth
