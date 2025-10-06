@@ -87,15 +87,15 @@ data:
         forward . __PILLAR__UPSTREAM__SERVERS__
         prometheus :9253
         }
-# ts.net:53 {
-#   errors
-#   cache 30
-#   reload
-#   loop
-#   bind 0.0.0.0
-#   forward . 10.69.69.50
-#   prometheus :9253
-# }
+    ts.net:53 {
+      errors
+      cache 30
+      reload
+      loop
+      bind 0.0.0.0
+      forward . 10.69.69.50
+      prometheus :9253
+    }
 ---
 apiVersion: apps/v1
 kind: DaemonSet
