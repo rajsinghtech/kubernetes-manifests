@@ -32,22 +32,22 @@ spec:
         userKey: username
         passwordKey: password
       envRenderSecret:
-        GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET: "f9d3edaaee625bd625a6c089f708c43694ae115d25e60003d10308e035219bca"
+        GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET: "${TS_IDP_GRAFANA_CLIENT_SECRET}"
       grafana.ini:
         auth.generic_oauth:
           enabled: true
           name: TailscaleID
           allow_sign_up: true
-          client_id: "463f905aa1e665a2b530614f9e43d401"
+          client_id: "${TS_IDP_GRAFANA_CLIENT_ID}"
           scopes: openid email profile
-          auth_url:  https://idp.keiretsu.ts.net/authorize/funnel
-          token_url: https://idp.keiretsu.ts.net/token
-          api_url:   https://idp.keiretsu.ts.net/userinfo
-          redirect_uri: https://grafana.robbinsdale.rajsingh.info/login/generic_oauth
+          auth_url:  https://${LOCATION}-idp.keiretsu.ts.net/authorize/funnel
+          token_url: https://${LOCATION}-idp.keiretsu.ts.net/token
+          api_url:   https://${LOCATION}-idp.keiretsu.ts.net/userinfo
+          redirect_uri: https://grafana.${CLUSTER_DOMAIN}/login/generic_oauth
           login_attribute: preferred_username
         server:
-          root_url: https://grafana.robbinsdale.rajsingh.info
-          domain: grafana.robbinsdale.rajsingh.info
+          root_url: https://grafana.${CLUSTER_DOMAIN}
+          domain: grafana.${CLUSTER_DOMAIN}
       fullnameOverride: grafana
       additionalDataSources:
         # - name: envoy-gateway-prometheus  
