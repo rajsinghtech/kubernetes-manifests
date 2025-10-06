@@ -263,6 +263,11 @@
 						"enforceRecorder": true,
 					},
 				],
+        "tailscale.com/cap/tsidp": [
+          {
+            "allow_admin_ui": true,
+          },
+        ],
 			},
 		},
 		
