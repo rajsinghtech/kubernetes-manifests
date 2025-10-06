@@ -10,19 +10,19 @@ spec:
   proxyClass: common-accept-routes
   type: egress
   replicas: 3
----
-apiVersion: tailscale.com/v1alpha1
-kind: ProxyGroup
-metadata:
-  name: common-ingress
-spec:
-  hostnamePrefix: ${LOCATION}-common-ingress
-  tags:
-    - tag:k8s
-    - tag:${LOCATION}
-  proxyClass: common
-  type: ingress
-  replicas: 3
+# ---
+# apiVersion: tailscale.com/v1alpha1
+# kind: ProxyGroup
+# metadata:
+#   name: common-ingress
+# spec:
+#   hostnamePrefix: ${LOCATION}-common-ingress
+#   tags:
+#     - tag:k8s
+#     - tag:${LOCATION}
+#   proxyClass: common
+#   type: ingress
+#   replicas: 3
 ---
 apiVersion: tailscale.com/v1alpha1
 kind: ProxyGroup
