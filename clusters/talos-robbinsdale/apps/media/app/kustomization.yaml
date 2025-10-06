@@ -20,4 +20,3 @@ resources:
   - ./transmission-books 
   - ./audioarr 
   - ./unmanic
-  # - ./tdarr  
