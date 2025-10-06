@@ -23,16 +23,16 @@ spec:
   proxyClass: common
   type: ingress
   replicas: 3
-# ---
-# apiVersion: tailscale.com/v1alpha1
-# kind: ProxyGroup
-# metadata:
-#   name: ${LOCATION}-k8s
-# spec:
-#   type: kube-apiserver
-#   replicas: 3
-#   tags:
-#     - tag:k8s
-#     - tag:${LOCATION}
-#   kubeAPIServer:
-#     mode: auth
+---
+apiVersion: tailscale.com/v1alpha1
+kind: ProxyGroup
+metadata:
+  name: ${LOCATION}-k8s
+spec:
+  type: kube-apiserver
+  replicas: 3
+  tags:
+    - tag:k8s
+    - tag:${LOCATION}
+  kubeAPIServer:
+    mode: auth
