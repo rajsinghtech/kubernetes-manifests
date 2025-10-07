@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: bazarr-1080p
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: bazarr-1080p
