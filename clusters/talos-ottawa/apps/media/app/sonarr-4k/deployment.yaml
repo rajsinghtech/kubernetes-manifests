@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: sonarr-4k
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app: sonarr-4k

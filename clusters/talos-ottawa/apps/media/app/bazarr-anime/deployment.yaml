@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: bazarr-anime
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app: bazarr-anime
