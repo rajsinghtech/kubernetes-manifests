@@ -13,13 +13,15 @@ spec:
     enablePodMonitor: true
   
   # Enable Barman Cloud plugin for S3 backups
+  # NOTE: isWALArchiver disabled during initial restore to avoid "Expected empty archive" error
+  # After successful restore, remove the bootstrap section and set isWALArchiver: true
   plugins:
     - name: barman-cloud.cloudnative-pg.io
-      isWALArchiver: true
+      isWALArchiver: false
       parameters:
         barmanObjectName: jellystat-s3-store
-        serverName: jellystat-postgres-v2
-  
+        serverName: jellystat-postgres
+
   backup:
     retentionPolicy: "30d"
   externalClusters:
