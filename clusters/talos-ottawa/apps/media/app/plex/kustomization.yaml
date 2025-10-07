@@ -7,6 +7,5 @@ resources:
   - service.yaml
   - pvc-config.yaml
   - httproute.yaml
-  # - replicationdestination.yaml
   # - volsync-restore.yaml
   # - volsync-backup.yaml
