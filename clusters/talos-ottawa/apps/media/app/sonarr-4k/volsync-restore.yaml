@@ -8,11 +8,7 @@ spec:
   paused: false
   restic:
     repository: restic-media-sonarr-4k-config
-    # destinationPVC: sonarr-4k-config
-    # copyMethod: Direct
-    # restoreAsOf: "2025-05-31T10:00:00Z"
     accessModes: [ReadWriteOnce]
     copyMethod: Snapshot
     capacity: 5Gi
     storageClassName: ceph-block-replicated
-    volumeSnapshotClassName: csi-rbdplugin-snapclass
