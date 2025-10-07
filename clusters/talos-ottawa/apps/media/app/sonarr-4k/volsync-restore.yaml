@@ -12,3 +12,4 @@ spec:
     copyMethod: Snapshot
     capacity: 5Gi
     storageClassName: ceph-block-replicated
+    volumeSnapshotClassName: csi-rbdplugin-snapclass
