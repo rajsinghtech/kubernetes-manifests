@@ -18,6 +18,7 @@ spec:
       isWALArchiver: true
       parameters:
         barmanObjectName: jellystat-s3-store
+        serverName: jellystat-postgres-v2
   
   backup:
     retentionPolicy: "30d"
