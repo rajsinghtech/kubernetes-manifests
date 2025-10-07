@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: bazarr-4k
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: bazarr-4k

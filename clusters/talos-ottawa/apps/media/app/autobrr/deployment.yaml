@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: autobrr
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: autobrr

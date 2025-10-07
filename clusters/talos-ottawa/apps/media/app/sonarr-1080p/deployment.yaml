@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: sonarr-1080p
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: sonarr-1080p
