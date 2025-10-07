@@ -8,6 +8,7 @@ spec:
   resources:
     requests:
       storage: 5Gi
-  # dataSource:
-  #   name: radarr-4kremux-config
-  #   kind: PersistentVolumeClaim
+  dataSourceRef:
+    kind: ReplicationDestination
+    apiGroup: volsync.backube
+    name: radarr-4kremux-config

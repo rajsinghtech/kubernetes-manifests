@@ -21,9 +21,9 @@ spec:
   
   backup:
     retentionPolicy: "30d"
-  # bootstrap:
-  #   recovery:
-  #     source: jellystat-db
+  bootstrap:
+    recovery:
+      source: jellystat-db
 ---
 # S3 backup schedule using Barman Cloud
 apiVersion: postgresql.cnpg.io/v1

@@ -8,7 +8,7 @@ spec:
   resources:
     requests:
       storage: 5Gi
-  # dataSourceRef:
-  #   kind: ReplicationDestination
-  #   apiGroup: volsync.backube
-  #   name: sonarr-4k-config
+  dataSourceRef:
+    kind: ReplicationDestination
+    apiGroup: volsync.backube
+    name: sonarr-4k-config

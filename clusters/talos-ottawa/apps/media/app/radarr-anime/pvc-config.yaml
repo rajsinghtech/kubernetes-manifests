@@ -8,6 +8,7 @@ spec:
   resources:
     requests:
       storage: 5Gi
-  # dataSource:
-  #   name: radarr-anime-config
-  #   kind: PersistentVolumeClaim
+  dataSourceRef:
+    kind: ReplicationDestination
+    apiGroup: volsync.backube
+    name: radarr-anime-config
