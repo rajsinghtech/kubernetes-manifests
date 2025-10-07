@@ -9,4 +9,4 @@ resources:
   - httproute.yaml
   - replicationdestination.yaml
   # - volsync-restore.yaml
-  # - volsync-backup.yaml
+  - volsync-backup.yaml
