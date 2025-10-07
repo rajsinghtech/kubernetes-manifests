@@ -10,3 +10,5 @@ resources:
   - secret.yaml
   - service.yaml
   - httproute.yaml 
+  - volsync-restore.yaml
+  - volsync-backup.yaml
