@@ -8,5 +8,5 @@ resources:
   - pvc-media.yaml
   - pvc-config.yaml
   - httproute.yaml
-  - volsync-backup.yaml
+  # - volsync-backup.yaml
   - volsync-restore.yaml
