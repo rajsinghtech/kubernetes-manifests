@@ -11,7 +11,7 @@ spec:
       version: 0.0.0-latest
       sourceRef:
         kind: HelmRepository
-        name: tailscale-k8s-operator-helper-charts-tailscale-egress
+        name: tailscale-k8s-operator-helper-charts
         namespace: flux-system 
       interval: 1m
   releaseName: tailscale-egress
