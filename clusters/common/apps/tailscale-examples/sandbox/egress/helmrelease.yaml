@@ -37,3 +37,10 @@ spec:
           - port: 80
             name: http
             protocol: TCP
+      - name: robbinsdale-unifi
+        ip: 192.168.50.1
+        ports:
+          - port: 443
+            protocol: TCP
+          - port: 80
+            protocol: TCP
