@@ -4,6 +4,7 @@ metadata:
   name: ${LOCATION}-flux-webhook
   annotations:
     tailscale.com/funnel: "true"
+    tailscale.com/proxy-class: "common"
 spec:
   defaultBackend:
     service:
