@@ -13,3 +13,4 @@ resources:
   - ./secret.yaml
   - ./ds
   - ./golink
+  - ./egress
