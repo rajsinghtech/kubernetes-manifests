@@ -49,6 +49,28 @@ spec:
           # - name: "Portfolio"
           #   link: "https://www.${CLUSTER_DOMAIN}"
       endpoints:
+        - name: Ottawa (K8s Cluster)
+          group: Tailscale
+          url: https://ottawa-k8s-operator.keiretsu.ts.net:443/readyz
+          interval: 60s
+          conditions:
+            - "[STATUS] == 200"
+            - "[RESPONSE_TIME] < 2000"
+            - "[CERTIFICATE_EXPIRATION] > 168h"
+          alerts:
+            - type: discord
+              send-on-resolved: true
+        - name: Robbinsdale (K8s Cluster)
+          group: Tailscale
+          url: https://robbinsdale-k8s-operator.keiretsu.ts.net:443/readyz
+          interval: 60s
+          conditions:
+            - "[STATUS] == 200"
+            - "[RESPONSE_TIME] < 2000"
+            - "[CERTIFICATE_EXPIRATION] > 168h"
+          alerts:
+            - type: discord
+              send-on-resolved: true
         - name: Rei (K8s Node)
           group: Servers
           url: tcp://rei.killinit.internal:6443
