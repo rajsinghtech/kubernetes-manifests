@@ -32,6 +32,8 @@ spec:
         ip: 10.169.10.15
         ports:
           - port: 443
+            name: https
             protocol: TCP
           - port: 80
+            name: http
             protocol: TCP
