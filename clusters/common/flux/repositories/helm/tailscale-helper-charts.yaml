@@ -1,0 +1,10 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: tailscale-k8s-operator-helper-charts-tailscale-egress
+  namespace: flux-system
+spec:
+  interval: 1h
+  type: oci
+  url: oci://ghcr.io/rajsinghtech/tailscale-k8s-operator-helper-charts/tailscale-egress
