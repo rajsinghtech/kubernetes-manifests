@@ -44,3 +44,10 @@ spec:
             protocol: TCP
           - port: 80
             protocol: TCP
+      - name: robbinsdale-unifi-ipv6
+        ip: fd7a:115c:a1e0:b1a:0:1:c0a8:3201
+        ports:
+          - port: 443
+            protocol: TCP
+          - port: 80
+            protocol: TCP
