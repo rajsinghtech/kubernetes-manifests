@@ -8,6 +8,13 @@ spec:
     type: Kubernetes
     kubernetes:
       envoyDeployment:
+        patch:
+          type: StrategicMerge
+          value:
+            spec:
+              template:
+                spec:
+                  automountServiceAccountToken: true
         replicas: 3
         pod:
           annotations:
