@@ -8,7 +8,11 @@ spec:
     type: Kubernetes
     kubernetes:
       envoyDeployment:
-        replicas: 2
+        replicas: 3
+        pod:
+          annotations:
+            tailcar.rajsingh.info/inject: "true"
+            tailcar.rajsingh.info/tailnet: keiretsu-labs-github
       envoyService:
         annotations:
           tailscale.com/hostname: ${LOCATION}-keiretsu-envoy-gateway
