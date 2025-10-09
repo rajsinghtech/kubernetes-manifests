@@ -22,7 +22,7 @@ spec:
       sources:
         splunk_hec:
           type: "splunk_hec"
-          address: "logstreaming.keirestu.ts.net:8088"
+          address: "0.0.0.0:8088"
           valid_tokens:
             - "${DEFAULT_PASSWORD}"
 
