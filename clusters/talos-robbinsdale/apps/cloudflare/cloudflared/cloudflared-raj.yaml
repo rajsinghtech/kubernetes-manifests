@@ -50,8 +50,8 @@ spec:
       # dnsPolicy: None
       # dnsConfig:
       #   nameservers:
-      #     - 10.69.10.69
-      #     - 10.69.69.10
+      #     - 10.50.10.50
+      #     - 10.50.69.10
       #   options:
       #     - name: ndots
       #       value: "2"

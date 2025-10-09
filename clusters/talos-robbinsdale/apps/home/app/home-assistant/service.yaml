@@ -17,4 +17,4 @@ spec:
     port: 21084
     targetPort: 21084
   type: LoadBalancer
-  loadBalancerIP: 10.69.10.13
+  loadBalancerIP: 10.50.10.13
