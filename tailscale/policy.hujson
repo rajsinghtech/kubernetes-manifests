@@ -184,11 +184,9 @@
 			"target": ["tag:k8s"],
 			"attr": [
 				"funnel",
-				// "only-tcp-443",
 			],
 		},
 	],
-	// Define test ACLs
 	"tests": [
 		{
 			"src": "rajsinghtech@github",
