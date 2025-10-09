@@ -213,6 +213,13 @@
 			"ip":  ["*"],
 			"via": ["tag:robbinsdale", "tag:ottawa"],
 		},
+
+    // Allow tailscale logstream to access k8s nodes
+    {
+			"src": ["logstream@tailscale"],
+			"dst": ["tag:k8s"],
+			"ip":  ["tcp:8088"],
+    },
 		
 		// ------------------------------------------------------------------------
 		// SUBNET ROUTE ACCESS
@@ -401,6 +408,13 @@
         "192.168.50.1:443",
         "192.168.169.1:443",
         "192.168.169.114:6443",
+      ],
+    },
+    {
+      // Tailscale Access
+      "src": "logstream@tailscale",
+      "accept": [
+        "tag:k8s:8088",
       ],
     },
   ],
