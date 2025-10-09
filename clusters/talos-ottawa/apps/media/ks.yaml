@@ -22,4 +22,7 @@ spec:
   wait: false # Allow individual components to manage wait status
   interval: 30m
   retryInterval: 1m
-  timeout: 10m 
+  timeout: 10m
+  postBuild:
+    substitute:
+      FEEDCORD_DISCORD_WEBHOOK: "https://discord.com/api/webhooks/1425671963849920522/cZwmImJVpniBQcSdUCKBcO2MW6nUNs7Rp69BgFRCQ4PXlammpAzOoWweGSyaJjpVKrpF" 
