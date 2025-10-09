@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   name: hello-world
 spec:
-  replicas: 3
+  replicas: 40
   selector:
     matchLabels:
       app: hello-world
@@ -12,6 +12,9 @@ spec:
     metadata:
       labels:
         app: hello-world
+      annotations:
+        tailcar.rajsingh.info/inject: "true"
+        tailcar.rajsingh.info/tailnet: keiretsu-labs-github
     spec:
       containers:
       - name: nginx
