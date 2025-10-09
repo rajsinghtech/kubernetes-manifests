@@ -1,16 +1,6 @@
 // This tailnet's ACLs are maintained in https://github.com/rajsinghtech/kubernetes-manifests
 {
-	// ============================================================================
-	// NETWORK CONFIGURATION
-	// ============================================================================
-	
 	"randomizeClientPort": false,
-	
-	// ============================================================================
-	// NETWORK DEFINITIONS
-	// ============================================================================
-	
-	// IP sets for subnet routing and network segmentation
 	"ipsets": {
 		// Robbinsdale site networks
 		"ipset:robbinsdale": [
@@ -20,7 +10,6 @@
 			"10.0.0.0/16",      // Service network range
 			"10.1.0.0/16",      // Pod network range
     ],
-
 		// Ottawa site networks
 		"ipset:ottawa": [
 			"192.168.169.0/24", // Main LAN
@@ -29,30 +18,15 @@
 			"10.2.0.0/16",      // Service network range
 			"10.3.0.0/16",      // Pod network range
     ],
-
     // St Petersburg site networks
     "ipset:stpetersburg": [
       "192.168.73.0/24", // Main LAN
-      "10.69.3.0/24",     // LB network range
+      "10.73.3.0/24",     // LB network range
       "10.4.0.0/16",      // Service network range
       "10.5.0.0/16",      // Pod network range
       "fd7a:115c:a1e0:b1a:0:3::/96",  // 4via6 subnet
     ],
-
-    // US West 2 site networks
-    "ipset:usw2": [
-      "10.226.0.0/16",      // Main VPC CIDR
-      "10.80.0.0/16",      // Pod network range
-      "10.81.0.0/16",      // Service network range
-      "fd7a:115c:a1e0:b1a:0:4::/96"  // 4via6 subnet
-    ],
 	},
-	
-	// ============================================================================
-	// GROUPS
-	// ============================================================================
-	
-	// Define user groups for access control
 	"groups": {
 		"group:superuser": [
 			"kbpersonal@github",
@@ -61,41 +35,17 @@
       "2yc4487c25@privaterelay.appleid.com"
 		]
 	},
-	
-	// ============================================================================
-	// TAG OWNERSHIP & MANAGEMENT
-	// ============================================================================
-	
-	// Define who can assign and manage each tag
 	"tagOwners": {
 		// Core infrastructure tags
 		"tag:k8s-operator": [],
 		"tag:k8s":          ["tag:k8s-operator", "autogroup:admin"],
-		"tag:k8s-recorder": ["tag:k8s-operator", "autogroup:admin"],
-		"tag:infra":        ["autogroup:admin", "tag:infra"],
-    "tag:udm":          ["autogroup:admin", "tag:infra"],
-		
+		"tag:k8s-recorder": ["tag:k8s-operator"],
+    "tag:udm":          ["autogroup:admin"],
 		// Site-specific tags
-		"tag:keiretsu":     ["tag:k8s-operator", "autogroup:admin", "tag:infra"],
-		"tag:robbinsdale":  ["tag:k8s-operator", "autogroup:admin", "tag:infra"],
-		"tag:ottawa":       ["tag:k8s-operator", "autogroup:admin", "tag:infra"],
-		"tag:stpetersburg": ["tag:k8s-operator", "autogroup:admin", "tag:infra"],
-		"tag:pittsburgh":   ["tag:k8s-operator", "autogroup:admin", "tag:infra"],
-		"tag:use1":         ["tag:k8s-operator", "autogroup:admin", "tag:infra"],
-		"tag:usw2":         ["tag:k8s-operator", "autogroup:admin", "tag:infra"],
-		"tag:kind":         ["tag:k8s-operator", "autogroup:admin", "tag:infra"],
-
-		// Site-specific infrastructure tags
-		"tag:ottawa-infra": ["autogroup:admin", "tag:infra"],
-
-		// TCP-443-only tag
-		"tag:restricted-outbound": ["tag:k8s-operator", "autogroup:admin"],
+		"tag:robbinsdale":  ["tag:k8s-operator", "autogroup:admin"],
+		"tag:ottawa":       ["tag:k8s-operator", "autogroup:admin"],
+		"tag:stpetersburg": ["tag:k8s-operator", "autogroup:admin"],
 	},
-	
-	// ============================================================================
-	// AUTO-APPROVAL RULES
-	// ============================================================================
-	
 	// Automatically approve certain requests without manual intervention
 	"autoApprovers": {
 		"exitNode": ["tag:k8s"],
@@ -103,92 +53,43 @@
 			"0.0.0.0/0":           ["tag:k8s"], // Default route (exit node)
 			"::/0":                ["tag:k8s"], // IPv6 default route
 			"192.168.50.0/24":     ["tag:robbinsdale"], // Robbinsdale LAN
-			"192.168.169.0/24":    ["tag:ottawa", "tag:ottawa-infra"], // Ottawa LAN
+			"192.168.169.0/24":    ["tag:ottawa"], // Ottawa LAN
 			"192.168.73.0/24":     ["tag:stpetersburg"], // St Petersburg LAN
-      "10.80.0.0/16":        ["tag:ottawa-infra"], // US West 2 EKS Hybrid cluster control plane/Ottawa worker node pod cidr
-      "10.81.0.0/16":        ["tag:ottawa-infra"], // US West 2 EKS Hybrid cluster control plane/Ottawa worker node pod cidr			
-			"10.226.0.0/16":       ["tag:usw2"], // US West 2 VPC cidr		
 		},
 		"services": {
-      "tag:keiretsu": ["tag:k8s"],
       "tag:k8s": ["tag:k8s"],
 		},
 	},
-	
-	// ============================================================================
-	// SSH ACCESS CONFIGURATION
-	// ============================================================================
-	
 	// Define SSH access policies
 	"ssh": [
 		{
 			"action":          "accept",
 			"src":             ["group:superuser"],
-			"dst":             ["tag:ottawa", "tag:ottawa-infra", "tag:robbinsdale"],
+			"dst":             ["tag:ottawa", "tag:robbinsdale", "tag:stpetersburg"],
 			"users":           ["root", "autogroup:nonroot"],
 			"recorder":        ["tag:k8s-recorder"],
 			"enforceRecorder": true,
 		},
 	],
-	
-	// ============================================================================
-	// ACCESS GRANTS (NETWORK & APPLICATION POLICIES)
-	// ============================================================================
-	
 	"grants": [
-		// ------------------------------------------------------------------------
-		// BASIC NETWORK ACCESS
-		// ------------------------------------------------------------------------
-
-    // Allow Superuser to access all robbinsdale nodes
-    {
-      "src": ["group:superuser", "ipset:robbinsdale", "tag:robbinsdale"],
-      "dst": ["tag:robbinsdale"],
-      "ip": ["*"],
-      "app": {
-        "rajsingh.info/cap/tsdnsproxy": [
-          {
-            "robbinsdale.k8s": {
-              "dns": ["10.0.0.10:53"],
-              "rewrite": "svc.cluster.local",
-              "translateid": 1
-            }
-          }
-        ]
-      }
-    },
-
-    // Allow Superuser to access all ottawa nodes
-    {
-      "src": ["group:superuser", "tag:ottawa"],
-      "dst": ["tag:ottawa"],
-      "ip": ["*"],
-      "app": {
-        "rajsingh.info/cap/tsdnsproxy": [
-          {
-            "ottawa.k8s": {
-              "dns": ["10.2.0.10:53"],
-              "rewrite": "svc.cluster.local",
-              "translateid": 2
-            }
-          }
-        ]
-      }
-    },
-		// Kubernetes operator internal networking
+		// Allow members to access their own devices
 		{
-			"src": ["tag:k8s-operator"],
+			"src": ["autogroup:member"],
+			"dst": ["autogroup:self"],
+			"ip":  ["*"],
+		},
+    // Allow Superuser to access all location nodes
+    {
+      "src": ["group:superuser", "tag:ottawa", "tag:robbinsdale", "tag:stpetersburg"],
+      "dst": ["tag:ottawa", "tag:robbinsdale", "tag:stpetersburg"],
+      "ip": ["*"],
+    },
+		// Allow members to reach k8s nodes and directly
+		{
+			"src": ["tag:k8s"],
 			"dst": ["tag:k8s"],
 			"ip":  ["*"],
 		},
-		
-		// Allow members to reach k8s nodes and directly
-		{
-			"src": ["group:superuser", "tag:k8s", "tag:k8s-operator"],
-			"dst": ["tag:k8s",],
-			"ip":  ["*"],
-		},
-		
     // Allow members to reach udm nodes
     {
       "src": ["group:superuser", "tag:udm", "tag:k8s", "tag:k8s-operator"],
@@ -198,14 +99,6 @@
         "tailscale.com/cap/relay": [],
       },
     },
-
-		// Allow members to access their own devices
-		{
-			"src": ["autogroup:member"],
-			"dst": ["autogroup:self"],
-			"ip":  ["*"],
-		},
-		
 		// Allow members to use nodes as exit nodes and app connector
 		{
 			"src": ["group:superuser", "tag:k8s"],
@@ -213,52 +106,29 @@
 			"ip":  ["*"],
 			"via": ["tag:robbinsdale", "tag:ottawa"],
 		},
-
-    // Allow tailscale logstream to access k8s nodes
-    {
-			"src": ["logstream@tailscale"],
-			"dst": ["tag:k8s"],
-			"ip":  ["tcp:8088"],
-    },
-		
-		// ------------------------------------------------------------------------
-		// SUBNET ROUTE ACCESS
-		// ------------------------------------------------------------------------
-		
 		// Access to subnets via subnet routers
 		{
-			"src": ["group:superuser", "tag:ottawa", "tag:usw2", "tag:robbinsdale"],
+			"src": ["group:superuser", "tag:ottawa", "tag:stpetersburg"],
 			"dst": ["ipset:robbinsdale"],
 			"ip":  ["*"],
 			"via": ["tag:robbinsdale"],
 		},
 		{
-		"src": ["tag:ottawa-infra", "ipset:ottawa"],
-		"dst": ["ipset:usw2"],
-		"ip":  ["*"],
-		"via": ["tag:usw2"],
-		},
-		{
-		"src": ["group:superuser", "tag:robbinsdale", "tag:usw2", "tag:ottawa"],
+		"src": ["group:superuser", "tag:robbinsdale", "tag:stpetersburg"],
 		"dst": ["ipset:ottawa"],
 		"ip":  ["*"],
 		"via": ["tag:ottawa"],
 		},
 		{
-		"src": ["group:superuser"],
+		"src": ["group:superuser", "tag:robbinsdale", "tag:ottawa"],
 		"dst": ["ipset:stpetersburg"],
 		"ip":  ["*"],
 		"via": ["tag:stpetersburg"],
 		},
-		
-		// ------------------------------------------------------------------------
-		// KUBERNETES
-		// ------------------------------------------------------------------------
-		
 		// Admin access to Kubernetes API with system:masters privileges
 		{
 			"src": ["group:superuser", "tag:k8s"],
-			"dst": ["tag:k8s","tag:k8s-operator"],
+			"dst": ["tag:k8s-operator", "tag:k8s"],
 			"ip":  ["*"],
 			"app": {
 				"tailscale.com/cap/kubernetes": [
@@ -277,11 +147,10 @@
         ],
 			},
 		},
-		
 		// Member access to Kubernetes API with read-only privileges
 		{
 			"src": ["autogroup:member"],
-			"dst": ["tag:k8s","tag:k8s-operator"],
+			"dst": ["tag:k8s-operator","tag:k8s"],
 			"ip":  ["*"],
 			"app": {
 				"tailscale.com/cap/kubernetes": [
@@ -296,11 +165,6 @@
 			},
 		},
 	],
-	
-	// ============================================================================
-	// NODE ATTRIBUTES & CAPABILITIES
-	// ============================================================================
-	
 	"nodeAttrs": [
     { 
       "target": ["*"],
@@ -346,18 +210,7 @@
         // "only-tcp-443",
       ],
 		},
-		
-		// Restricted outbound configuration
-		{
-			"target": ["tag:restricted-outbound"],
-			"attr":   ["only-tcp-443"],
-		},
 	],
-  
-  // ============================================================================
-  // Test ACLs
-  // ============================================================================
-  
   // Define test ACLs
   "tests": [
     {
@@ -379,13 +232,6 @@
       ]
     },
     {
-      // K8s operator user test ACLs
-      "src": "tag:k8s-operator",
-      "accept": [
-        "tag:k8s:443",
-      ]
-    },
-    {
       // K8s user
       "src": "tag:k8s",
       "accept": [
@@ -398,32 +244,22 @@
       "src": "tag:robbinsdale",
       "accept": [
         "192.168.169.1:443",
-        "192.168.50.1:443",
       ],
+      "deny": [
+        "192.168.50.1:443",
+      ]
     },
     {
       // Ottawa cannot reach it's own LAN
       "src": "tag:ottawa",
       "accept": [
         "192.168.50.1:443",
+      ],
+      "deny": [
         "192.168.169.1:443",
-        "192.168.169.114:6443",
-      ],
-    },
-    {
-      // Tailscale Access
-      "src": "logstream@tailscale",
-      "accept": [
-        "tag:k8s:8088",
-      ],
+      ]
     },
   ],
-    
-	
-	// ============================================================================
-	// LEGACY CONFIGURATION (DEPRECATED)
-	// ============================================================================
-	
 	// Legacy ACL rules (deprecated - using grants instead)
 	"acls": [{
 		// Private log streaming enables audit and network logs to be directly
