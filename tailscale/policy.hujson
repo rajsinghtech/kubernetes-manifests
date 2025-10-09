@@ -1,8 +1,6 @@
-// This tailnet's ACLs are maintained in https://github.com/rajsinghtech/kubernetes-manifests
 {
 	"randomizeClientPort": false,
 	"ipsets": {
-		// Robbinsdale site networks
 		"ipset:robbinsdale": [
 			"192.168.50.0/24", // Main LAN
 			"fd7a:115c:a1e0:b1a:0:1::/96", // 4via6 subnet
@@ -10,7 +8,6 @@
 			"10.0.0.0/16", // Service network range
 			"10.1.0.0/16", // Pod network range
 		],
-		// Ottawa site networks
 		"ipset:ottawa": [
 			"192.168.169.0/24", // Main LAN
 			"fd7a:115c:a1e0:b1a:0:2::/96", // 4via6 subnet
@@ -18,7 +15,6 @@
 			"10.2.0.0/16", // Service network range
 			"10.3.0.0/16", // Pod network range
 		],
-		// St Petersburg site networks
 		"ipset:stpetersburg": [
 			"192.168.73.0/24", // Main LAN
 			"10.73.3.0/24", // LB network range
@@ -36,17 +32,14 @@
 		],
 	},
 	"tagOwners": {
-		// Core infrastructure tags
 		"tag:k8s-operator": [],
 		"tag:k8s":          ["tag:k8s-operator", "autogroup:admin"],
-		"tag:k8s-recorder": ["tag:k8s-operator"],
-		"tag:udm":          ["autogroup:admin"],
-		// Site-specific tags
+		"tag:k8s-recorder": ["tag:k8s-operator", "autogroup:admin"],
 		"tag:robbinsdale":  ["tag:k8s-operator", "autogroup:admin"],
 		"tag:ottawa":       ["tag:k8s-operator", "autogroup:admin"],
 		"tag:stpetersburg": ["tag:k8s-operator", "autogroup:admin"],
+		"tag:udm":          ["autogroup:admin"],
 	},
-	// Automatically approve certain requests without manual intervention
 	"autoApprovers": {
 		"exitNode": ["tag:k8s"],
 		"routes": {
@@ -72,35 +65,29 @@
 		},
 	],
 	"grants": [
-		// Allow members to access their own devices
 		{
 			"src": ["autogroup:member"],
 			"dst": ["autogroup:self"],
 			"ip":  ["*"],
 		},
-		// Allow Superuser to access all location nodes
 		{
 			"src": ["group:superuser", "tag:ottawa", "tag:robbinsdale", "tag:stpetersburg"],
 			"dst": ["tag:ottawa", "tag:robbinsdale", "tag:stpetersburg"],
 			"ip":  ["*"],
 		},
-		// Allow members to reach udm nodes
 		{
 			"src": ["group:superuser", "tag:udm", "tag:k8s", "tag:k8s-operator"],
 			"dst": ["tag:udm"],
-			"ip":  ["*"],
 			"app": {
 				"tailscale.com/cap/relay": [],
 			},
 		},
-		// Allow members to use nodes as exit nodes and app connector
 		{
 			"src": ["group:superuser", "tag:k8s"],
 			"dst": ["autogroup:internet"],
 			"ip":  ["*"],
 			"via": ["tag:robbinsdale", "tag:ottawa"],
 		},
-		// Access to subnets via subnet routers
 		{
 			"src": ["group:superuser", "tag:ottawa", "tag:stpetersburg"],
 			"dst": ["ipset:robbinsdale"],
@@ -119,7 +106,6 @@
 			"ip":  ["*"],
 			"via": ["tag:stpetersburg"],
 		},
-		// Admin access to Kubernetes API with system:masters privileges
 		{
 			"src": ["group:superuser", "tag:k8s"],
 			"dst": ["tag:k8s-operator", "tag:k8s"],
@@ -141,7 +127,6 @@
 				],
 			},
 		},
-		// Member access to Kubernetes API with read-only privileges
 		{
 			"src": ["autogroup:member"],
 			"dst": ["tag:k8s-operator", "tag:k8s"],
@@ -208,7 +193,6 @@
 	// Define test ACLs
 	"tests": [
 		{
-			// Admin user test ACLs
 			"src": "rajsinghtech@github",
 			"accept": [
 				"192.168.50.1:443",
@@ -216,17 +200,15 @@
 				"10.0.0.1:443",
 				"10.1.0.1:443",
 				"10.2.0.1:443",
-				"10.69.0.1:443",
-				"10.169.0.1:443",
 				"tag:k8s-operator:443",
 				"tag:k8s:443",
-				"tag:k8s:80",
+				"tag:ottawa:443",
 				"tag:robbinsdale:443",
+				"tag:stpetersburg:443",
 				"rajsinghtech@github:53",
 			],
 		},
 		{
-			// K8s user
 			"src": "tag:k8s",
 			"accept": [
 				"tag:k8s-operator:443",
@@ -234,7 +216,6 @@
 			],
 		},
 		{
-			// Robbinsdale cannot reach it's own LAN
 			"src": "tag:robbinsdale",
 			"accept": [
 				"192.168.169.1:443",
@@ -244,7 +225,6 @@
 			],
 		},
 		{
-			// Ottawa cannot reach it's own LAN
 			"src": "tag:ottawa",
 			"accept": [
 				"192.168.50.1:443",
@@ -254,7 +234,6 @@
 			],
 		},
 	],
-	// Legacy ACL rules (deprecated - using grants instead)
 	"acls": [{
 		// Private log streaming enables audit and network logs to be directly
 		// uploaded to a node in your tailnet without exposing it to the public internet.
