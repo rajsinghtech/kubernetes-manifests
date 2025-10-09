@@ -11,4 +11,4 @@ spec:
       protocol: TCP
       targetPort: 1883
   type: LoadBalancer
-  loadBalancerIP: 10.69.10.11
+  loadBalancerIP: 10.50.10.11

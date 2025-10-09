@@ -1,5 +1,5 @@
 mqtt:
-  host: 10.69.10.11
+  host: 10.50.10.11
   port: 1883
   user: lhouge
   password: applegeek

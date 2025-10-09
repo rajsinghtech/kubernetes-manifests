@@ -264,7 +264,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="Og8IVxXF63fmr71o0o8v-46" value="10.69.23.4:443" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];strokeColor=default;fontFamily=Courier New;fontSize=12;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;fillColor=default;" parent="Og8IVxXF63fmr71o0o8v-45" vertex="1" connectable="0">
+        <mxCell id="Og8IVxXF63fmr71o0o8v-46" value="10.50.23.4:443" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];strokeColor=default;fontFamily=Courier New;fontSize=12;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;fillColor=default;" parent="Og8IVxXF63fmr71o0o8v-45" vertex="1" connectable="0">
           <mxGeometry x="0.723" y="2" relative="1" as="geometry">
             <mxPoint x="-58" y="-82" as="offset" />
           </mxGeometry>

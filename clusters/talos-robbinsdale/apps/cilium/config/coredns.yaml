@@ -34,10 +34,10 @@ data:
     robbinsdale.k8s:53 {
       errors
       cache 30
-      forward . 10.69.69.51
+      forward . 10.50.69.51
     }
     ts.net {
       errors
       cache 30
-      forward . 10.69.69.50
+      forward . 10.50.69.50
     }

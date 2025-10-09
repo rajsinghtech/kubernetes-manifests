@@ -168,4 +168,4 @@ spec:
     app: tsdnsproxy
   sessionAffinity: None
   type: LoadBalancer
-  loadBalancerIP: 10.69.69.51
+  loadBalancerIP: 10.50.69.51
