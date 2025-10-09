@@ -2,25 +2,25 @@
 	"randomizeClientPort": false,
 	"ipsets": {
 		"ipset:robbinsdale": [
-			"192.168.50.0/24", // Main LAN
-			"fd7a:115c:a1e0:b1a:0:1::/96", // 4via6 subnet
-			"10.69.0.0/16", // LB network range
-			"10.0.0.0/16", // Service network range
-			"10.1.0.0/16", // Pod network range
+			"192.168.50.0/24", 
+			"fd7a:115c:a1e0:b1a:0:1::/96", 
+			"10.69.0.0/16", 
+			"10.0.0.0/16", 
+			"10.1.0.0/16",
 		],
 		"ipset:ottawa": [
-			"192.168.169.0/24", // Main LAN
-			"fd7a:115c:a1e0:b1a:0:2::/96", // 4via6 subnet
-			"10.169.0.0/16", // LB network range
-			"10.2.0.0/16", // Service network range
-			"10.3.0.0/16", // Pod network range
+			"192.168.169.0/24", 
+			"fd7a:115c:a1e0:b1a:0:2::/96", 
+			"10.169.0.0/16", 
+			"10.2.0.0/16", 
+			"10.3.0.0/16",
 		],
 		"ipset:stpetersburg": [
-			"192.168.73.0/24", // Main LAN
-			"10.73.3.0/24", // LB network range
-			"10.4.0.0/16", // Service network range
-			"10.5.0.0/16", // Pod network range
-			"fd7a:115c:a1e0:b1a:0:3::/96", // 4via6 subnet
+			"192.168.73.0/24", 
+			"10.73.3.0/24", 
+			"10.4.0.0/16", 
+			"10.5.0.0/16",
+			"fd7a:115c:a1e0:b1a:0:3::/96", 
 		],
 	},
 	"groups": {
@@ -28,7 +28,6 @@
 			"kbpersonal@github",
 			"LukeHouge@github",
 			"rajsinghtech@github",
-			"2yc4487c25@privaterelay.appleid.com",
 		],
 	},
 	"tagOwners": {
@@ -43,17 +42,16 @@
 	"autoApprovers": {
 		"exitNode": ["tag:k8s"],
 		"routes": {
-			"0.0.0.0/0":        ["tag:k8s"], // Default route (exit node)
-			"::/0":             ["tag:k8s"], // IPv6 default route
-			"192.168.50.0/24":  ["tag:robbinsdale"], // Robbinsdale LAN
-			"192.168.169.0/24": ["tag:ottawa"], // Ottawa LAN
-			"192.168.73.0/24":  ["tag:stpetersburg"], // St Petersburg LAN
+			"0.0.0.0/0":        ["tag:k8s"],
+			"::/0":             ["tag:k8s"],
+			"192.168.50.0/24":  ["tag:robbinsdale"],
+			"192.168.169.0/24": ["tag:ottawa"],
+			"192.168.73.0/24":  ["tag:stpetersburg"],
 		},
 		"services": {
 			"tag:k8s": ["tag:k8s"],
 		},
 	},
-	// Define SSH access policies
 	"ssh": [
 		{
 			"action":          "accept",
