@@ -64,3 +64,4 @@ resources:
   - ./homer-operator.yaml
   - ./aws-mountpoint-s3-csi.yaml
   - ./keda.yaml
+  - ./vector.yaml
