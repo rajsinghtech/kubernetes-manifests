@@ -21,7 +21,7 @@ spec:
       kind: Backend
       name: home
   validation:
-    wellKnownCACerts: System
+    wellKnownCACertificates: System
     hostname: home.killinit.cc
 ---
 apiVersion: gateway.networking.k8s.io/v1
