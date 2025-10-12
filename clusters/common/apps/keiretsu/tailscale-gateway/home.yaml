@@ -4,11 +4,11 @@ metadata:
   name: home
 spec:
   endpoints:
-    - fqdn:
-        ip: 10.2.223.81
+    - ip:
+        address: 10.2.223.81
         port: 80
-    - fqdn:
-        ip: 10.0.127.240
+    - ip:
+        address: 10.0.127.240
         port: 80
 ---
 apiVersion: gateway.networking.k8s.io/v1alpha3
