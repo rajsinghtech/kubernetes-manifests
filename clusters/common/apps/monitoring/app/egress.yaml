@@ -1,36 +1,35 @@
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: robbinsdale-prometheus
-#   annotations:
-#     tailscale.com/tailnet-fqdn: robbinsdale-prometheus.keiretsu.ts.net
-#     tailscale.com/proxy-group: common-egress
-# spec:
-#   externalName: placeholder
-#   type: ExternalName
-#   ports:
-#   - name: http-web
-#     port: 9090
-#     protocol: TCP
-#   - name: reloader-web
-#     port: 8080
-#     protocol: TCP
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: ottawa-prometheus
-#   annotations:
-#     # tailscale.com/tailnet-fqdn: ottawa-prometheus.keiretsu.ts.net
-#     tailscale.com/tailnet-ip: 100.113.51.201
-#     tailscale.com/proxy-group: common-egress
-# spec:
-#   externalName: placeholder
-#   type: ExternalName
-#   ports:
-#   - name: http-web
-#     port: 9090
-#     protocol: TCP
-#   - name: reloader-web
-#     port: 8080
-#     protocol: TCP
+apiVersion: v1
+kind: Service
+metadata:
+  name: robbinsdale-prometheus
+  annotations:
+    tailscale.com/tailnet-fqdn: robbinsdale-prometheus.keiretsu.ts.net
+    tailscale.com/proxy-group: common-egress
+spec:
+  externalName: placeholder
+  type: ExternalName
+  ports:
+  - name: http-web
+    port: 9090
+    protocol: TCP
+  - name: reloader-web
+    port: 8080
+    protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ottawa-prometheus
+  annotations:
+    tailscale.com/tailnet-fqdn: ottawa-prometheus.keiretsu.ts.net
+    tailscale.com/proxy-group: common-egress
+spec:
+  externalName: placeholder
+  type: ExternalName
+  ports:
+  - name: http-web
+    port: 9090
+    protocol: TCP
+  - name: reloader-web
+    port: 8080
+    protocol: TCP
