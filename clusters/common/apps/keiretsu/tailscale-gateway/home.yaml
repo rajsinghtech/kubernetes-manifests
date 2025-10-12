@@ -28,7 +28,7 @@ spec:
         - group: gateway.envoyproxy.io
           kind: Backend
           name: home
-          port: 443
+          port: 80
       matches:
         - path:
             type: PathPrefix
