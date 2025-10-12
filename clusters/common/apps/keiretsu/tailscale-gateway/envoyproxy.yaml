@@ -22,7 +22,7 @@ spec:
             tailcar.rajsingh.info/tailnet: keiretsu-labs-github
       envoyService:
         annotations:
-          tailscale.com/hostname: ${LOCATION}-keiretsu-envoy-gateway
+          tailscale.com/hostname: keiretsu-envoy-gateway
           tailscale.com/proxy-group: common-ingress
           type: LoadBalancer
         loadBalancerClass: tailscale
