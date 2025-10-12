@@ -11,6 +11,19 @@ spec:
         hostname: home.lukehouge.com
         port: 443
 ---
+apiVersion: gateway.networking.k8s.io/v1alpha3
+kind: BackendTLSPolicy
+metadata:
+  name: home
+spec:
+  targetRefs:
+    - group: gateway.envoyproxy.io
+      kind: Backend
+      name: home
+  validation:
+    wellKnownCACerts: System
+    hostname: home.killinit.cc
+---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
