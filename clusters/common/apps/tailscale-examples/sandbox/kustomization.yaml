@@ -8,7 +8,7 @@ resources:
   - ./proxyt
   - ./tsidp
   - ./tsflow
-  # - ./tsdnsproxy
+  - ./tsdnsproxy
   - ./sidecar
   - ./secret.yaml
   - ./ds
