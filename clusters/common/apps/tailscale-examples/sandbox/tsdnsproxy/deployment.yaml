@@ -82,7 +82,7 @@ spec:
         - name: TS_AUTHKEY
           valueFrom:
             secretKeyRef:
-              name: ts-oauth
+              name: ts-authkey
               key: TS_AUTHKEY
         resources:
           requests:
@@ -168,4 +168,4 @@ spec:
     app: tsdnsproxy
   sessionAffinity: None
   type: LoadBalancer
-  loadBalancerIP: ${CLUSTER_LOAD_BALANCER_CIDR%.*.*/*}.69.51
+  loadBalancerIP: ${CLUSTER_LOAD_BALANCER_CIDR%.*.*/*}.69.52
