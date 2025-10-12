@@ -1,35 +1,33 @@
-apiVersion: v1
-kind: Service
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
 metadata:
-  name: robbinsdale-prometheus
-  annotations:
-    tailscale.com/tailnet-fqdn: robbinsdale-prometheus.keiretsu.ts.net
-    tailscale.com/proxy-group: common-egress
+  name: tailscale-egress
 spec:
-  externalName: placeholder
-  type: ExternalName
-  ports:
-  - name: http-web
-    port: 9090
-    protocol: TCP
-  - name: reloader-web
-    port: 8080
-    protocol: TCP
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: ottawa-prometheus
-  annotations:
-    tailscale.com/tailnet-fqdn: ottawa-prometheus.keiretsu.ts.net
-    tailscale.com/proxy-group: common-egress
-spec:
-  externalName: placeholder
-  type: ExternalName
-  ports:
-  - name: http-web
-    port: 9090
-    protocol: TCP
-  - name: reloader-web
-    port: 8080
-    protocol: TCP
+  interval: 1m
+  chart:
+    spec:
+      chart: tailscale-egress
+      version: 0.0.0-latest
+      sourceRef:
+        kind: HelmRepository
+        name: tailscale-k8s-operator-helper-charts
+        namespace: flux-system 
+      interval: 1m
+  releaseName: tailscale-egress
+  values:
+    proxyGroup: "common-egress"
+    services:
+      - name: robbinsdale-prometheus
+        fqdn: robbinsdale-prometheus.keiretsu.ts.net
+        ports:
+          - port: 9090
+            protocol: TCP
+          - port: 8080
+            protocol: TCP
+      - name: ottawa-prometheus
+        fqdn: ottawa-prometheus.keiretsu.ts.net
+        ports:
+          - port: 9090
+            protocol: TCP
+          - port: 8080
+            protocol: TCP
