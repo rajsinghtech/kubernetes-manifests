@@ -47,6 +47,12 @@ spec:
           kind: Backend
           name: home
           port: 443
+      filters:
+        - type: RequestHeaderModifier
+          requestHeaderModifier:
+            set:
+              - name: Host
+                value: home.killinit.cc
       matches:
         - path:
             type: PathPrefix
