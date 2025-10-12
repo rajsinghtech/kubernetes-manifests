@@ -11,24 +11,6 @@ spec:
         address: 10.0.127.240
         port: 80
 ---
-apiVersion: gateway.networking.k8s.io/v1alpha3
-kind: BackendTLSPolicy
-metadata:
-  name: home
-spec:
-  targetRefs:
-    - group: gateway.envoyproxy.io
-      kind: Backend
-      name: home
-  validation:
-    wellKnownCACertificates: System
-    hostname: home.killinit.cc
-    subjectAltNames:
-      - type: Hostname
-        hostname: home.killinit.cc
-      - type: Hostname
-        hostname: home.lukehouge.com
----
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
