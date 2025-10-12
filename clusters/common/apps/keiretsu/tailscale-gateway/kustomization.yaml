@@ -16,3 +16,5 @@ resources:
   - httproute.yaml 
   - tcproute.yaml
   - udproute.yaml
+# Custom Backends
+  - home.yaml
