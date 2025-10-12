@@ -24,7 +24,7 @@ spec:
                   name: cloudflare
                   key: cloudflare-k8s-token-rajsingh-info
             - name: DOMAINS
-              value: "fleet-telemetry.tesla.rajsingh.info,jellyfin.rajsingh.info,mc.rajsingh.info,immich.rajsingh.info,gatus.rajsingh.info,home.rajsingh.info"
+              value: "jellyfin.rajsingh.info,immich.rajsingh.info,gatus.rajsingh.info,home.rajsingh.info"
             - name: PROXIED
               value: "true"
             - name: IP6_PROVIDER
