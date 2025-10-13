@@ -16,7 +16,7 @@ spec:
       - "${CLUSTER_SERVICE_CIDR}" # K8s Services
       - "${CLUSTER_POD_CIDR}" # K8s Pods
       - "${CLUSTER_LOAD_BALANCER_CIDR}" # Tailscale
-      # - fd7a:115c:a1e0:b1a:0:${SITE_ID}::/96 # 4via6
+      - fd7a:115c:a1e0:b1a:0:${SITE_ID}::/96 # 4via6
 ---
 apiVersion: tailscale.com/v1alpha1
 kind: Connector
@@ -29,6 +29,6 @@ spec:
     - tag:k8s
     - tag:${LOCATION}
   hostnamePrefix: *name
-  appConnector: 
-    routes:
-      - "fd7a:115c:a1e0:b1a:0:${SITE_ID}::/96"
+  # appConnector: 
+  #   routes:
+  #     - "fd7a:115c:a1e0:b1a:0:${SITE_ID}::/96"
