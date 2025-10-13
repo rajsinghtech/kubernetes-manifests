@@ -254,7 +254,6 @@ spec:
               resources:
                 requests:
                   storage: 100Gi
-      server:
         additionalScrapeConfigs:
           - job_name: 'nagato-node-exporter'
             static_configs:
@@ -270,7 +269,6 @@ spec:
                   - opencost.opencost
                 type: "A"
                 port: 9003
-        retention: 30d
 
     alertmanager:
       enabled: true
