@@ -22,12 +22,8 @@ spec:
           containerPort: 7878
           protocol: TCP
         volumeMounts:
-        - name: movies-volume
-          mountPath: /movies
-        - name: downloads-sabnzbd-volume
-          mountPath: /downloads/sabnzbd
-        - name: downloads-qbittorrent-volume
-          mountPath: /downloads/qbittorrent
+        - name: media-volume
+          mountPath: /media-share
         - name: config-volume
           mountPath: /config
         env:
@@ -38,15 +34,9 @@ spec:
         - name: TZ
           value: ${TIMEZONE}
       volumes:
-      - name: movies-volume
+      - name: media-volume
         persistentVolumeClaim:
-          claimName: radarr-4kremux-movies
-      - name: downloads-sabnzbd-volume
-        persistentVolumeClaim:
-          claimName: sabnzbd-media
-      - name: downloads-qbittorrent-volume
-        persistentVolumeClaim:
-          claimName: qbittorrent-downloads
+          claimName: media-share
       - name: config-volume
         persistentVolumeClaim:
           claimName: radarr-4kremux-config 
