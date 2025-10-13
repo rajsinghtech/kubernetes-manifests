@@ -255,7 +255,7 @@ spec:
                 requests:
                   storage: 100Gi
         additionalScrapeConfigs:
-          - job_name: 'nagato-node-exporter'
+          - job_name: 'node-exporter'
             static_configs:
               - targets: ['nagato:9100']
           - job_name: opencost
