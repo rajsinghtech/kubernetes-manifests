@@ -2,25 +2,25 @@
 	"randomizeClientPort": false,
 	"ipsets": {
 		"ipset:robbinsdale": [
-			"192.168.50.0/24", 
-			"10.0.0.0/16", 
+			"192.168.50.0/24",
+			"10.0.0.0/16",
 			"10.1.0.0/16",
-			"10.50.0.0/16", 
-			"fd7a:115c:a1e0:b1a:0:1::/96", 
+			"10.50.0.0/16",
+			"fd7a:115c:a1e0:b1a:0:1::/96",
 		],
 		"ipset:ottawa": [
-			"192.168.169.0/24", 
-			"10.2.0.0/16", 
+			"192.168.169.0/24",
+			"10.2.0.0/16",
 			"10.3.0.0/16",
-			"10.169.0.0/16", 
+			"10.169.0.0/16",
 			"fd7a:115c:a1e0:b1a:0:2::/96",
 		],
 		"ipset:stpetersburg": [
-			"192.168.73.0/24", 
-			"10.4.0.0/16", 
+			"192.168.73.0/24",
+			"10.4.0.0/16",
 			"10.5.0.0/16",
-			"10.73.0.0/16", 
-			"fd7a:115c:a1e0:b1a:0:3::/96", 
+			"10.73.0.0/16",
+			"fd7a:115c:a1e0:b1a:0:3::/96",
 		],
 	},
 	"groups": {
@@ -123,22 +123,22 @@
 						"allow_admin_ui": true,
 					},
 				],
-        "rajsingh.info/cap/tsdnsproxy": [
-          {
-            "robbinsdale.k8s": {
-              "dns": ["10.0.0.10:53"],
-              "rewrite": "svc.cluster.local",
-              // "translateid": 1
-            }
-          },
-          {
-            "ottawa.k8s": {
-              "dns": ["10.2.0.10:53"],
-              "rewrite": "svc.cluster.local",
-              // "translateid": 2
-            }
-          },
-        ],
+				"rajsingh.info/cap/tsdnsproxy": [
+					{
+						"robbinsdale.k8s": {
+							"dns":     ["10.0.0.10:53"],
+							"rewrite": "svc.cluster.local",
+							// "translateid": 1
+						},
+					},
+					{
+						"ottawa.k8s": {
+							"dns":     ["10.2.0.10:53"],
+							"rewrite": "svc.cluster.local",
+							// "translateid": 2
+						},
+					},
+				],
 			},
 		},
 		{
