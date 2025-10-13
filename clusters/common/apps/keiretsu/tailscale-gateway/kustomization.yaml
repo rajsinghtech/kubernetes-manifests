@@ -18,3 +18,4 @@ resources:
   - udproute.yaml
 # Custom Backends
   - home.yaml
+  - hubble.yaml
