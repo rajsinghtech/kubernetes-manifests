@@ -256,6 +256,9 @@ spec:
                   storage: 100Gi
       server:
         additionalScrapeConfigs:
+          - job_name: 'nagato-node-exporter'
+            static_configs:
+              - targets: ['nagato:9100']
           - job_name: opencost
             honor_labels: true
             scrape_interval: 1m
