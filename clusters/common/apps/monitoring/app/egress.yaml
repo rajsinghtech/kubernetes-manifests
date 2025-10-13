@@ -31,3 +31,8 @@ spec:
             protocol: TCP
           - port: 8080
             protocol: TCP
+      - name: nagato
+        fqdn: nagato.keiretsu.ts.net
+        ports:
+          - port: 9100
+            protocol: TCP
