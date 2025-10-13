@@ -30,6 +30,20 @@ spec:
     - "jellyfin.${COMMON_DOMAIN}"
     - "jellyfin.${CLUSTER_DOMAIN}"
   rules:
+    - matches:
+        - path:
+            type: Exact
+            value: /metrics
+      backendRefs:
+        - group: ""
+          kind: Service
+          name: jellyfin
+          port: 8096
+          weight: 0
+      filters:
+        - type: RequestRedirect
+          requestRedirect:
+            statusCode: 404
     - backendRefs:
         - group: ""
           kind: Service
