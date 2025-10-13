@@ -4,9 +4,9 @@ metadata:
   name: home
 spec:
   endpoints:
-    - ip:
-        address: 10.2.223.81
-        port: 80
+    # - ip:
+    #     address: 10.2.223.81
+    #     port: 80
     - ip:
         address: 10.0.127.240
         port: 80
