@@ -22,12 +22,8 @@ spec:
               containerPort: 8989
               protocol: TCP
           volumeMounts:
-            - name: tv-volume
-              mountPath: /tv
-            - name: downloads-sabnzbd-volume
-              mountPath: /downloads/sabnzbd
-            - name: downloads-qbittorrent-volume
-              mountPath: /downloads/qbittorrent
+            - name: media-volume
+              mountPath: /media-share
             - name: config-volume
               mountPath: /config
           env:
@@ -38,15 +34,9 @@ spec:
             - name: TZ
               value: ${TIMEZONE}
       volumes:
-        - name: tv-volume
+        - name: media-volume
           persistentVolumeClaim:
-            claimName: sonarr-1080p-tv
-        - name: downloads-sabnzbd-volume
-          persistentVolumeClaim:
-            claimName: sabnzbd-media
-        - name: downloads-qbittorrent-volume
-          persistentVolumeClaim:
-            claimName: qbittorrent-downloads
+            claimName: media-share
         - name: config-volume
           persistentVolumeClaim:
             claimName: sonarr-1080p-config
