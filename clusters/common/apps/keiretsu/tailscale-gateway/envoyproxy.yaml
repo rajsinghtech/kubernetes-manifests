@@ -4,7 +4,6 @@ kind: EnvoyProxy
 metadata:
   name: ts
 spec:
-  ipFamily: DualStack
   provider:
     type: Kubernetes
     kubernetes:
