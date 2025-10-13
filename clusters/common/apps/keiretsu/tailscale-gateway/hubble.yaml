@@ -27,7 +27,7 @@ spec:
     - backendRefs:
         - group: gateway.envoyproxy.io
           kind: Backend
-          name: home
+          name: hubble
           port: 80
       matches:
         - path:
