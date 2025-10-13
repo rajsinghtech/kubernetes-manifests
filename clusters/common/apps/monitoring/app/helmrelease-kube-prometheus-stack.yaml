@@ -113,14 +113,14 @@ spec:
               editable: true
               options:
                 path: /var/lib/grafana/dashboards/envoy-gateway
-            - name: "kubernetes"
+            - name: "media"
               orgId: 1
-              folder: "kubernetes"
+              folder: "media"
               type: file
               disableDeletion: false
               editable: true
               options:
-                path: /var/lib/grafana/dashboards/kubernetes
+                path: /var/lib/grafana/dashboards/media
             - name: "volsync"
               orgId: 1
               folder: "volsync"
