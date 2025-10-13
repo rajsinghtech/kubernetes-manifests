@@ -29,6 +29,6 @@ spec:
     - tag:k8s
     - tag:${LOCATION}
   hostnamePrefix: *name
-  # appConnector: 
-  #   routes:
-  #     - "fd7a:115c:a1e0:b1a:0:${SITE_ID}::/96"
+  appConnector: 
+    routes:
+      - "fd7a:115c:a1e0:b1a:0:${SITE_ID}::/96"
