@@ -1,7 +1,7 @@
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: Backend
 metadata:
-  name: home
+  name: hubble
 spec:
   endpoints:
     - fqdn:
