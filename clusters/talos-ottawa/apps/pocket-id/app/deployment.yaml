@@ -1,0 +1,59 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pocket-id
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pocket-id
+  template:
+    metadata:
+      labels:
+        app: pocket-id
+    spec:
+      containers:
+        - name: pocket-id
+          image: ghcr.io/pocket-id/pocket-id:v1
+          env:
+            - name: APP_URL
+              value: "https://pocket-id.${CLUSTER_DOMAIN}"
+            - name: TRUST_PROXY
+              value: "true"
+            - name: MAXMIND_LICENSE_KEY
+              value: ""
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+          ports:
+            - containerPort: 1411
+          volumeMounts:
+            - name: data
+              mountPath: /app/data
+          livenessProbe:
+            exec:
+              command:
+                - /app/pocket-id
+                - healthcheck
+            initialDelaySeconds: 10
+            periodSeconds: 90
+            timeoutSeconds: 5
+            failureThreshold: 2
+          readinessProbe:
+            exec:
+              command:
+                - /app/pocket-id
+                - healthcheck
+            initialDelaySeconds: 10
+            periodSeconds: 90
+            timeoutSeconds: 5
+            failureThreshold: 2
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: pocket-id
+      restartPolicy: Always
