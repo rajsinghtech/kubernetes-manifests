@@ -83,10 +83,7 @@
 		{
 			"src": ["group:superuser"],
 			"dst": ["tag:udm"],
-      "ip": ["*"],
-			"app": {
-				"tailscale.com/cap/relay": [],
-			},
+			"ip":  ["*"],
 		},
 		{
 			"src": ["group:superuser", "tag:k8s"],
