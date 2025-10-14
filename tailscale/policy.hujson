@@ -85,12 +85,12 @@
 			"dst": ["tag:udm"],
 			"ip":  ["*"],
 		},
-		{
-			"src": ["group:superuser", "tag:k8s"],
-			"dst": ["autogroup:internet"],
-			"ip":  ["*"],
-			"via": ["tag:robbinsdale", "tag:ottawa"],
-		},
+		// {
+		// 	"src": ["group:superuser", "tag:k8s"],
+		// 	"dst": ["autogroup:internet"],
+		// 	"ip":  ["*"],
+		// 	"via": ["tag:robbinsdale", "tag:ottawa"],
+		// },
 		{
 			"src": ["group:superuser", "tag:ottawa", "tag:stpetersburg"],
 			"dst": ["ipset:robbinsdale"],
