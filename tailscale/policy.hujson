@@ -85,12 +85,12 @@
 			"dst": ["tag:udm"],
 			"ip":  ["*"],
 		},
-		// {
-		// 	"src": ["group:superuser", "tag:k8s"],
-		// 	"dst": ["autogroup:internet"],
-		// 	"ip":  ["*"],
-		// 	"via": ["tag:robbinsdale", "tag:ottawa"],
-		// },
+		{
+			"src": ["group:superuser", "tag:k8s"],
+			"dst": ["autogroup:internet"],
+			"ip":  ["*"],
+			"via": ["tag:robbinsdale", "tag:ottawa"],
+		},
 		{
 			"src": ["group:superuser", "tag:ottawa", "tag:stpetersburg"],
 			"dst": ["ipset:robbinsdale"],
@@ -168,16 +168,16 @@
 			"target": ["*"],
 			"app": {
 				"tailscale.com/app-connectors": [
-					{
-						"name":        "aws-cloudfront-global",
-						"connectors":  ["tag:k8s"],
-						"presetAppID": "aws-cloudfront-global",
-					},
-					{
-						"name":       "shared",
-						"connectors": ["tag:k8s"],
-						"domains":    ["docs.google.com"],
-					},
+					// {
+					// 	"name":        "aws-cloudfront-global",
+					// 	"connectors":  ["tag:k8s"],
+					// 	"presetAppID": "aws-cloudfront-global",
+					// },
+					// {
+					// 	"name":       "shared",
+					// 	"connectors": ["tag:k8s"],
+					// 	"domains":    ["docs.google.com"],
+					// },
 					// {
 					// 	"name":       "robbinsdale",
 					// 	"connectors": ["tag:robbinsdale"],
