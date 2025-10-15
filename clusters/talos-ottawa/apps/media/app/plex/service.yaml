@@ -8,7 +8,7 @@ spec:
   selector:
     app: plex
   type: LoadBalancer
-  loadBalancerIP: ${CLUSTER_LOAD_BALANCER_CIDR%.*.*/*}.69.32
+  loadBalancerIP: ${CLUSTER_LOAD_BALANCER_CIDR%.*.*/*}.10.32
   ports:
     - name: plex-tcp-32400
       port: 32400
