@@ -1,0 +1,15 @@
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationDestination
+metadata:
+  name: qbittorrent-pvt-config
+spec:
+  trigger:
+    manual: first
+  paused: false
+  restic:
+    repository: restic-media-qbittorrent-pvt-config
+    accessModes: [ReadWriteOnce]
+    copyMethod: Snapshot
+    capacity: 5Gi
+    storageClassName: ceph-block-replicated
+    volumeSnapshotClassName: csi-rbdplugin-snapclass

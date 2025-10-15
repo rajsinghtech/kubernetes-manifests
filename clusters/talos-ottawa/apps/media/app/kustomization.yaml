@@ -26,4 +26,5 @@ resources:
   - ./wizarr
   - ./configarr
   - ./qb
+  - ./qb-pvt
   - ./feedcord
