@@ -39,13 +39,13 @@ spec:
           #   failureThreshold: 3
           #   initialDelaySeconds: 15
           #   timeoutSeconds: 10
-          resources:
-            requests:
-              cpu: 2000m
-              memory: 2Gi
-            limits:
-              cpu: 5000m
-              memory: 8Gi
+          # resources:
+          #   requests:
+          #     cpu: 2000m
+          #     memory: 2Gi
+          #   limits:
+          #     cpu: 5000m
+          #     memory: 8Gi
           env:
             - name: TZ
               value: ${TIMEZONE}
@@ -56,22 +56,8 @@ spec:
               mountPath: /config
             - name: transcode
               mountPath: /transcode
-            - name: tv-4k
-              mountPath: /media/tv/4k
-            - name: tv-1080p
-              mountPath: /media/tv/1080p
-            - name: tv-anime
-              mountPath: /media/tv/anime
-            - name: movies-4k
-              mountPath: /media/tv
-            - name: movies-1080p
-              mountPath: /media/movies/1080p
-            - name: movies-4kremux
-              mountPath: /media/movies/4kremux
-            - name: movies-anime
-              mountPath: /media/movies/anime
-            - name: music
-              mountPath: /media/music
+            - name: media-volume
+              mountPath: /media-share
       volumes:
         - name: config
           persistentVolumeClaim:
@@ -80,27 +66,6 @@ spec:
           emptyDir:
             medium: Memory
             sizeLimit: 6Gi
-        - name: movies-4k
+        - name: media-volume
           persistentVolumeClaim:
-            claimName: radarr-4k-movies
-        - name: movies-1080p
-          persistentVolumeClaim:
-            claimName: radarr-1080p-movies
-        - name: movies-4kremux
-          persistentVolumeClaim:
-            claimName: radarr-4kremux-movies
-        - name: movies-anime
-          persistentVolumeClaim:
-            claimName: radarr-anime-movies
-        - name: tv-4k
-          persistentVolumeClaim:
-            claimName: sonarr-4k-tv
-        - name: tv-1080p
-          persistentVolumeClaim:
-            claimName: sonarr-1080p-tv
-        - name: tv-anime
-          persistentVolumeClaim:
-            claimName: sonarr-anime-tv
-        - name: music
-          persistentVolumeClaim:
-            claimName: lidarr-music
+            claimName: media-share
