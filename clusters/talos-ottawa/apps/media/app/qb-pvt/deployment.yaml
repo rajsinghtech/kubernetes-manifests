@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qbittorrent-pvt
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: qbittorrent-pvt
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: qbittorrent-pvt
+    spec:
+      containers:
+      - name: qbittorrent
+        image: lscr.io/linuxserver/qbittorrent:latest
+        ports:
+        - name: webui
+          containerPort: 8080
+          protocol: TCP
+        - name: torrenting
+          containerPort: 6881
+          protocol: TCP
+        - name: torrenting-udp
+          containerPort: 6881
+          protocol: UDP
+        volumeMounts:
+        - name: config-volume
+          mountPath: /config
+        - name: downloads-volume
+          mountPath: /downloads
+        env:
+        - name: PUID
+          value: "568"
+        - name: PGID
+          value: "568"
+        - name: TZ
+          value: ${TIMEZONE}
+        - name: WEBUI_PORT
+          value: "8080"
+        - name: TORRENTING_PORT
+          value: "6881"
+        - name: QBITTORRENT__AUTH_SubnetWhitelist
+          value: "${CLUSTER_POD_CIDR},${CLUSTER_SERVICE_CIDR}"
+        - name: QBITTORRENT__AUTH_AuthSubnetWhitelistEnabled
+          value: "true"
+        - name: QBITTORRENT__AUTH_LocalHostAuth
+          value: "false"
+      volumes:
+      - name: config-volume
+        persistentVolumeClaim:
+          claimName: qbittorrent-pvt-config
+      - name: downloads-volume
+        persistentVolumeClaim:
+          claimName: qbittorrent-pvt-downloads
