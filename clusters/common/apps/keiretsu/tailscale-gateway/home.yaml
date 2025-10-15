@@ -4,11 +4,11 @@ metadata:
   name: home
 spec:
   endpoints:
-    # - ip:
-    #     address: 10.2.223.81
-    #     port: 80
-    - ip:
-        address: 10.0.127.240
+    - fqdn:
+        hostname: dashboard-ts-homer.keiretsu.ottawa.k8s
+        port: 80
+    - fqdn:
+        hostname: dashboard-ts-homer.keiretsu.robbinsdale.k8s
         port: 80
 ---
 apiVersion: gateway.networking.k8s.io/v1
