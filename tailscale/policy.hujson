@@ -173,27 +173,27 @@
 					// 	"connectors":  ["tag:k8s"],
 					// 	"presetAppID": "aws-cloudfront-global",
 					// },
-					// {
-					// 	"name":       "shared",
-					// 	"connectors": ["tag:k8s"],
-					// 	"domains":    ["docs.google.com"],
-					// },
-					// {
-					// 	"name":       "robbinsdale",
-					// 	"connectors": ["tag:robbinsdale"],
-					// 	"domains": [
-					// 		"robbinsdale.k8s",
-					// 	],
-					// 	"routes": ["fd7a:115c:a1e0:b1a:0:1::/96"],
-					// },
-					// {
-					// 	"name":       "ottawa",
-					// 	"connectors": ["tag:ottawa"],
-					// 	"domains": [
-					// 		"ottawa.k8s",
-					// 	],
-					// 	"routes": ["fd7a:115c:a1e0:b1a:0:2::/96"],
-					// },
+					{
+						"name":       "shared",
+						"connectors": ["tag:k8s"],
+						"domains":    ["reddit.com"],
+					},
+					{
+						"name":       "robbinsdale",
+						"connectors": ["tag:robbinsdale"],
+						"domains": [
+							"bestbuy.com",
+						],
+						// "routes": ["fd7a:115c:a1e0:b1a:0:1::/96"],
+					},
+					{
+						"name":       "ottawa",
+						"connectors": ["tag:ottawa"],
+						"domains": [
+							"newegg.com",
+						],
+						// "routes": ["fd7a:115c:a1e0:b1a:0:2::/96"],
+					},
 				],
 			},
 		},
