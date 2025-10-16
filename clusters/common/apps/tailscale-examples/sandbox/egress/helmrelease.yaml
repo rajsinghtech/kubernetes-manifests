@@ -51,3 +51,13 @@ spec:
             protocol: TCP
           - port: 80
             protocol: TCP
+      - name: kusanagi
+        fqdn: kusanagi.keiretsu.ts.net
+        ports:
+          - port: 22
+            protocol: TCP
+      - name: robbinsdale-udm-pro
+        fqdn: robbinsdale-udm-pro.keiretsu.ts.net
+        ports:
+          - port: 22
+            protocol: TCP
