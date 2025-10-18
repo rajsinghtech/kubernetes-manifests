@@ -64,7 +64,7 @@ spec:
           tagstyle: "is-info"
           url: "https://login.tailscale.com/admin/machines"
   remoteClusters:
-  - name: ottawa
+  - name: ottawa-k8s-operator.keiretsu.ts.net
     enabled: true
     secretRef:
       name: external-clusters-kubeconfig
@@ -80,7 +80,7 @@ spec:
     ingressSelector:
       matchLabels:
         noexist: "true"
-  - name: robbinsdale
+  - name: robbinsdale-k8s-operator.keiretsu.ts.net
     enabled: true
     secretRef:
       name: external-clusters-kubeconfig
