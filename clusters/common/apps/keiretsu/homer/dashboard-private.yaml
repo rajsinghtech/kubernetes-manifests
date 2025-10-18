@@ -60,7 +60,6 @@ spec:
           name: "Tailscale"
           logo: "https://raw.githubusercontent.com/tailscale/tailscale/refs/heads/main/client/web/src/assets/icons/tailscale-icon.svg"
           subtitle: "Private Mesh Network"
-          tag: "network"
           tagstyle: "is-info"
           url: "https://login.tailscale.com/admin/machines"
   gatewaySelector:
