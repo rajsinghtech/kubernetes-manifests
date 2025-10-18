@@ -25,4 +25,3 @@ configMapGenerator:
       - dashboards/media-server.json
       - dashboards/plex-streaming.json
       - dashboards/plex.json
-      - dashboards/server.json
