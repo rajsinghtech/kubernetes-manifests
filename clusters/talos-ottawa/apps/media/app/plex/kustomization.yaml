@@ -21,7 +21,7 @@ configMapGenerator:
       labels:
         grafana_dashboard: "1"
     files:
-      - dashboards/Media Server.json
+      - dashboards/media-server-main.json
       - dashboards/container.json
       - dashboards/gpu.json
       - dashboards/media-server.json
