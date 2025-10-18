@@ -10,13 +10,13 @@ spec:
   ingress:
     - fromEndpoints:
         - matchLabels:
-            io.kubernetes.pod.namespace: envoy-gateway-system
+            k8s:io.kubernetes.pod.namespace: envoy-gateway-system
     - fromEndpoints:
         - matchLabels:
-            io.kubernetes.pod.namespace: media
+            k8s:io.kubernetes.pod.namespace: media
   ingressDeny:
     - fromCIDR:
         - 192.168.169.0/24
     - fromEndpoints:
         - matchLabels:
-            io.kubernetes.pod.namespace: tailscale
+            k8s:io.kubernetes.pod.namespace: tailscale
