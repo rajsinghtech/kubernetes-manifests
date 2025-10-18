@@ -13,19 +13,3 @@ spec:
     - group: gateway.networking.k8s.io
       kind: Gateway
       name: private
----
-apiVersion: gateway.envoyproxy.io/v1alpha1
-kind: ClientTrafficPolicy
-metadata:
-  name: enable-client-ip-detection-lan-real-ip
-spec:
-  clientIPDetection:
-    customHeader:
-      name: X-Real-IP
-  targetRefs:
-    - group: gateway.networking.k8s.io
-      kind: Gateway
-      name: public
-    - group: gateway.networking.k8s.io
-      kind: Gateway
-      name: private
