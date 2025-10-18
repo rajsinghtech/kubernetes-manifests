@@ -7,7 +7,6 @@ metadata:
     item.homer.rajsingh.info/name: "Pocket ID"
     item.homer.rajsingh.info/subtitle: "Identity and Authentication"
     item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/pocket-id-light.svg"
-    item.homer.rajsingh.info/tag: "auth"
     item.homer.rajsingh.info/keywords: "authentication, identity, sso"
 
     service.homer.rajsingh.info/name: "Infrastructure"

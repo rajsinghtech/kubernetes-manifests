@@ -7,7 +7,6 @@ metadata:
     item.homer.rajsingh.info/name: "Sonarr"
     item.homer.rajsingh.info/subtitle: "TV Series Collection Manager"
     item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/svg/sonarr.svg"
-    item.homer.rajsingh.info/tag: "media"
     item.homer.rajsingh.info/keywords: "tv, series, automation"
 
     service.homer.rajsingh.info/name: "Media"

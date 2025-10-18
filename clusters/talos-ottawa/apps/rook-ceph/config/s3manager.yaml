@@ -62,7 +62,6 @@ metadata:
     item.homer.rajsingh.info/name: "S3 Manager"
     item.homer.rajsingh.info/subtitle: "S3 Storage Manager"
     item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/svg/aws.svg"
-    item.homer.rajsingh.info/tag: "infrastructure"
     item.homer.rajsingh.info/keywords: "s3, storage, manager"
 
     service.homer.rajsingh.info/name: "Infrastructure"

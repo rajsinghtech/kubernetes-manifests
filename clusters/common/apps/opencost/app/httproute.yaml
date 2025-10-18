@@ -7,7 +7,6 @@ metadata:
     item.homer.rajsingh.info/name: "OpenCost"
     item.homer.rajsingh.info/subtitle: "Cost Monitoring"
     item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/svg/opencost.svg"
-    item.homer.rajsingh.info/tag: "infrastructure"
     item.homer.rajsingh.info/keywords: "cost, monitoring, kubernetes"
 
     service.homer.rajsingh.info/name: "Infrastructure"
