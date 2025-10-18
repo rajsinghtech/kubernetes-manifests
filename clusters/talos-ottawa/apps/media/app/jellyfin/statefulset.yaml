@@ -3,6 +3,7 @@ kind: StatefulSet
 metadata:
   name: jellyfin
 spec:
+  serviceName: jellyfin-statefulset
   replicas: 1
   podManagementPolicy: Parallel
   selector:
