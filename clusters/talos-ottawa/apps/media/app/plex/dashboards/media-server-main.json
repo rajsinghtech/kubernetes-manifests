@@ -1929,7 +1929,7 @@
         "multi": true,
         "name": "instance",
         "options": [],
-        "query": "label_values(plays_total{job=~\"$job\"}, instance)",
+        "query": "label_values(server_info{job=~\"$job\"}, instance)",
         "refresh": 1,
         "regex": "",
         "sort": 1,
@@ -1948,7 +1948,7 @@
         "multi": true,
         "name": "server",
         "options": [],
-        "query": "label_values(plays_total{job=~\"$job\", instance=~\"$instance\"}, server)",
+        "query": "label_values(server_info{job=~\"$job\", instance=~\"$instance\"}, server)",
         "refresh": 1,
         "regex": "",
         "type": "query"
