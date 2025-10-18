@@ -17,3 +17,6 @@ spec:
   ingressDeny:
     - fromCIDR:
         - 192.168.169.0/24
+    - fromEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: tailscale
