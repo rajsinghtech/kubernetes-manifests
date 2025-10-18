@@ -60,7 +60,6 @@ spec:
           name: "Tailscale"
           logo: "https://raw.githubusercontent.com/tailscale/tailscale/refs/heads/main/client/web/src/assets/icons/tailscale-icon.svg"
           subtitle: "Private Mesh Network"
-          tag: "network"
           tagstyle: "is-info"
           url: "https://login.tailscale.com/admin/machines"
   remoteClusters:
@@ -72,6 +71,7 @@ spec:
     clusterLabels:
       cluster: "ottawa"
       location: "ottawa"
+      cluster-tagstyle: "is-success"
     domainFilters:
       - "killinit.cc"
     gatewaySelector:
@@ -88,6 +88,7 @@ spec:
     clusterLabels:
       cluster: "robbinsdale"
       location: "robbinsdale"
+      cluster-tagstyle: "is-info"
     domainFilters:
       - "lukehouge.com"
     gatewaySelector:
