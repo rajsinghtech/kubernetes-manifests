@@ -12,3 +12,4 @@ resources:
   - external-dns-unifi.yaml
   - secret.yaml
   - httproute.yaml
+  - client-traffic-policy-public.yaml
