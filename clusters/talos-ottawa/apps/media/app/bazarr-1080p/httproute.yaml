@@ -7,7 +7,6 @@ metadata:
     item.homer.rajsingh.info/name: "bazarr-1080p"
     item.homer.rajsingh.info/subtitle: "Subtitle Management"
     item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/refs/heads/main/svg/bazarr.svg"
-    item.homer.rajsingh.info/tag: "media"
     item.homer.rajsingh.info/keywords: "subtitles, media, management"
 
     service.homer.rajsingh.info/name: "Media"

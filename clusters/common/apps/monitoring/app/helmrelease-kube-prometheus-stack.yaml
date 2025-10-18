@@ -305,7 +305,6 @@ metadata:
     item.homer.rajsingh.info/name: "Prometheus"
     item.homer.rajsingh.info/subtitle: "Metrics & Alerting"
     item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/prometheus.png"
-    item.homer.rajsingh.info/tag: "infrastructure"
     item.homer.rajsingh.info/keywords: "monitoring, metrics, time-series, alerting"
 
     service.homer.rajsingh.info/name: "Infrastructure"
@@ -342,7 +341,6 @@ metadata:
     item.homer.rajsingh.info/name: "Grafana"
     item.homer.rajsingh.info/subtitle: "Analytics & Monitoring"
     item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/grafana.png"
-    item.homer.rajsingh.info/tag: "infrastructure"
     item.homer.rajsingh.info/keywords: "monitoring, metrics, dashboard, visualization"
 
     service.homer.rajsingh.info/name: "Infrastructure"

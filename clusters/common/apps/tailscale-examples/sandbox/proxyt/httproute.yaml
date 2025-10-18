@@ -6,7 +6,6 @@ metadata:
     item.homer.rajsingh.info/name: "Proxyt"
     item.homer.rajsingh.info/subtitle: "Proxyt"
     item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/cilium.png"
-    item.homer.rajsingh.info/tag: "infrastructure"
     item.homer.rajsingh.info/keywords: "proxyt, network, tailscale"
 
     service.homer.rajsingh.info/name: "Infrastructure"

@@ -6,7 +6,6 @@ metadata:
     item.homer.rajsingh.info/name: "Gatus"
     item.homer.rajsingh.info/subtitle: "Service Status Monitor"
     item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/gatus.png"
-    item.homer.rajsingh.info/tag: "infrastructure"
     item.homer.rajsingh.info/keywords: "monitoring, status, uptime"
 
     service.homer.rajsingh.info/name: "Infrastructure"

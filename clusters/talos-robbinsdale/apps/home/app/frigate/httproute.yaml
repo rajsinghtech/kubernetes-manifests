@@ -8,7 +8,6 @@ metadata:
     item.homer.rajsingh.info/name: "Frigate"
     item.homer.rajsingh.info/subtitle: "Camera Dashboard"
     item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/svg/frigate.svg"
-    item.homer.rajsingh.info/tag: "utilities"
     item.homer.rajsingh.info/keywords: "frigate, camera, dashboard"
     service.homer.rajsingh.info/name: "Home"
     service.homer.rajsingh.info/icon: "fas fa-home"
