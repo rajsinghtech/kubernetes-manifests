@@ -4,6 +4,7 @@ kind: Kustomization
 namespace: media
 resources:
   - deployment.yaml
+  - statefulset.yaml
   - service.yaml
   - pvc-config.yaml
   - httproute.yaml
