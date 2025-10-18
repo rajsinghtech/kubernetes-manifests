@@ -1,3 +1,4 @@
+---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
@@ -5,7 +6,7 @@ metadata:
 spec:
   sourcePVC: plex-config
   trigger:
-    schedule: "0 8 * * *"
+    schedule: "0 13 * * *"
   restic:
     pruneIntervalDays: 14
     repository: restic-media-plex-config
