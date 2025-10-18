@@ -28,7 +28,7 @@ spec:
               containerPort: 8096
               protocol: TCP
           volumeMounts:
-            - name: tv-4k 
+            - name: tv-4k
               mountPath: /media/tv/4k
             - name: tv-1080p
               mountPath: /media/tv/1080p
@@ -46,6 +46,8 @@ spec:
               mountPath: /media/music
             - name: config
               mountPath: /config
+            - name: transcode
+              mountPath: /config/transcodes
           env:
             - name: PUID
               value: "0"
@@ -82,4 +84,8 @@ spec:
             claimName: lidarr-music
         - name: config
           persistentVolumeClaim:
-            claimName: jellyfin-config 
+            claimName: jellyfin-config
+        - name: transcode
+          emptyDir:
+            medium: Memory
+            sizeLimit: 4Gi 
