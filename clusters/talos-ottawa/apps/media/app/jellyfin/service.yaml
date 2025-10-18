@@ -13,19 +13,19 @@ spec:
     protocol: TCP
     targetPort: 8096
   type: ClusterIP
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: jellyfin-sts
-  labels:
-    app: jellyfin-sts
-spec:
-  selector:
-    app: jellyfin-sts
-  ports:
-  - name: http
-    port: 8096
-    protocol: TCP
-    targetPort: 8096
-  type: ClusterIP
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: jellyfin-sts
+#   labels:
+#     app: jellyfin-sts
+# spec:
+#   selector:
+#     app: jellyfin-sts
+#   ports:
+#   - name: http
+#     port: 8096
+#     protocol: TCP
+#     targetPort: 8096
+#   type: ClusterIP
