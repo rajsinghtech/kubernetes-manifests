@@ -1910,7 +1910,7 @@
         "multi": true,
         "name": "job",
         "options": [],
-        "query": "label_values(plays_total, job)",
+        "query": "label_values(server_info, job)",
         "refresh": 1,
         "regex": "",
         "sort": 1,

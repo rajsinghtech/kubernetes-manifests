@@ -22,11 +22,7 @@ configMapGenerator:
         grafana_dashboard: "1"
     files:
       - dashboards/media-server-main.json
-      - dashboards/container.json
-      - dashboards/gpu.json
       - dashboards/media-server.json
       - dashboards/plex-streaming.json
       - dashboards/plex.json
       - dashboards/server.json
-      - dashboards/storage.json
-      - dashboards/thermals.json
