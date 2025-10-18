@@ -6,6 +6,8 @@ spec:
   clientIPDetection:
     xForwardedFor:
       numTrustedHops: 1
+    customHeader:
+      name: X-Real-IP
   targetRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
