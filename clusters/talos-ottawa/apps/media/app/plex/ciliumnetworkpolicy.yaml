@@ -1,0 +1,19 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: plex
+  namespace: media
+spec:
+  endpointSelector:
+    matchLabels:
+      app: plex
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: envoy-gateway-system
+    - fromEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: media
+  ingressDeny:
+    - fromCIDR:
+        - 192.168.169.0/24
