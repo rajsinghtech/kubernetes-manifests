@@ -17,10 +17,10 @@ spec:
     spec:
       containers:
         - name: prom-plex-exporter
-          image: docker.io/granra/prometheus-plex-exporter:latest
+          image: ghcr.io/jsclayton/prometheus-plex-exporter:latest
           imagePullPolicy: Always
           ports:
-            - containerPort: 9594
+            - containerPort: 9000
               name: metrics
               protocol: TCP
           env:
@@ -47,6 +47,6 @@ spec:
     app: prom-plex-exporter
   ports:
     - name: metrics
-      port: 9594
+      port: 9000
       protocol: TCP
-      targetPort: 9594
+      targetPort: 9000
