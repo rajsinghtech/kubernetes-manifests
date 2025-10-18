@@ -6,6 +6,8 @@ resources:
   - ./dashboard-private.yaml
   - ./dashboard-public.yaml
   - ./dashboard-ts.yaml
+  - ./dashboard-shared.yaml
+  - ./kubeconfig.yaml
   - ./httproute-private.yaml
   - ./httproute-public.yaml
   - ./httproute-ts.yaml
