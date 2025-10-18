@@ -15,26 +15,8 @@ spec:
         - matchLabels:
             k8s:io.kubernetes.pod.namespace: media
   ingressDeny:
-    - fromCIDR:
-        - 192.168.169.0/24
+    # - fromCIDR:
+    #     - 192.168.169.0/24
     - fromEndpoints:
-        - matchLabels:
-            k8s:io.kubernetes.pod.namespace: tailscale
-  egress:
-    - toEntities:
-        - world
-    - toEndpoints:
-        - matchLabels:
-            k8s:io.kubernetes.pod.namespace: envoy-gateway-system
-    - toEndpoints:
-        - matchLabels:
-            k8s:io.kubernetes.pod.namespace: media
-    - toEntities:
-        - kube-apiserver
-    - toFQDNs:
-        - matchPattern: "*.plex.direct"
-        - matchPattern: "*.plex.tv"
-  egressDeny:
-    - toEndpoints:
         - matchLabels:
             k8s:io.kubernetes.pod.namespace: tailscale
