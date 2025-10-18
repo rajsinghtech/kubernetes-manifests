@@ -20,6 +20,11 @@ spec:
       containers:
         - name: plex
           image: docker.io/plexinc/pms-docker:plexpass
+          resources:
+            requests:
+              gpu.intel.com/i915: "1"
+            limits:
+              gpu.intel.com/i915: "1"
           imagePullPolicy: Always
           ports:
             - containerPort: 32400
@@ -54,18 +59,12 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config
-            - name: transcode
-              mountPath: /transcode
             - name: media-volume
               mountPath: /media-share
       volumes:
         - name: config
           persistentVolumeClaim:
             claimName: plex-config  
-        - name: transcode
-          emptyDir:
-            medium: Memory
-            sizeLimit: 6Gi
         - name: media-volume
           persistentVolumeClaim:
             claimName: media-share
