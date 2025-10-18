@@ -20,3 +20,17 @@ spec:
     - fromEndpoints:
         - matchLabels:
             k8s:io.kubernetes.pod.namespace: tailscale
+  egress:
+    - toEntities:
+        - world
+    - toEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: envoy-gateway-system
+    - toEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: media
+    - toEntities:
+        - kube-apiserver
+    - toFQDNs:
+        - matchPattern: "*.plex.direct"
+        - matchPattern: "*.plex.tv"
