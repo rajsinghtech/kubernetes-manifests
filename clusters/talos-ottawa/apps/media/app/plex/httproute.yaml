@@ -21,8 +21,11 @@ spec:
       kind: Gateway
       name: ts
       namespace: home
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: public
+      namespace: home
   hostnames:
-    - "plex.${COMMON_DOMAIN}"
     - "plex.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
