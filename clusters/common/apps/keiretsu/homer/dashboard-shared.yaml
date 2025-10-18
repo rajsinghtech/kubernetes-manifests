@@ -72,6 +72,8 @@ spec:
     clusterLabels:
       cluster: "ottawa"
       location: "ottawa"
+    domainFilters:
+      - "killinit.cc"
     gatewaySelector:
       matchLabels:
         external-dns: ts
@@ -86,6 +88,8 @@ spec:
     clusterLabels:
       cluster: "robbinsdale"
       location: "robbinsdale"
+    domainFilters:
+      - "lukehouge.com"
     gatewaySelector:
       matchLabels:
         external-dns: ts
