@@ -71,7 +71,7 @@ spec:
     clusterLabels:
       cluster: "ottawa"
       location: "ottawa"
-      cluster-name-suffix: " (ottawa)"
+      cluster-name-suffix: " (Ottawa)"
     domainFilters:
       - "killinit.cc"
     gatewaySelector:
@@ -88,7 +88,7 @@ spec:
     clusterLabels:
       cluster: "robbinsdale"
       location: "robbinsdale"
-      cluster-name-suffix: " (robbinsdale)"
+      cluster-name-suffix: " (Robbinsdale)"
     domainFilters:
       - "lukehouge.com"
     gatewaySelector:
