@@ -71,14 +71,12 @@ spec:
       - parameters:
           name: "Jellyfin Client Desktop"
           subtitle: "macOS/Windows"
-          tag: "download"
           tagstyle: "is-warning"
           url: "https://github.com/jellyfin/jellyfin-media-player/releases"
           logo: "https://raw.githubusercontent.com/jellyfin/jellyfin-media-player/refs/heads/master/resources/images/icon.svg"
       - parameters:
           name: "Jellyfin Client Mobile"
           subtitle: "iOS/Android"
-          tag: "download"
           tagstyle: "is-warning"
           url: "https://streamyfin.app/"
           logo: "https://avatars.githubusercontent.com/u/193271640?s=280&v=4"
