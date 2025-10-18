@@ -8,7 +8,7 @@ spec:
   resources:
     requests:
       storage: 50Gi
-  # dataSourceRef:
-  #   kind: ReplicationDestination
-  #   apiGroup: volsync.backube
-  #   name: plex-config
+  dataSourceRef:
+    kind: ReplicationDestination
+    apiGroup: volsync.backube
+    name: plex-config
