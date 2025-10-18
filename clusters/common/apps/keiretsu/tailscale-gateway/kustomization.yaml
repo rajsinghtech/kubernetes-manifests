@@ -18,5 +18,5 @@ resources:
   - tcproute.yaml
   - udproute.yaml
 # Custom Backends
-  - home.yaml
+  # - home.yaml
   - hubble.yaml
