@@ -11,17 +11,3 @@ spec:
       kind: Gateway
       name: ts
       sectionName: wildcard-${CLUSTER_DOMAIN//./-}-https
----
-apiVersion: gateway.envoyproxy.io/v1alpha1
-kind: ClientTrafficPolicy
-metadata:
-  name: plex-ts
-spec:
-  clientIPDetection:
-    customHeader:
-      name: X-Real-IP
-  targetRefs:
-    - group: gateway.networking.k8s.io
-      kind: Gateway
-      name: ts
-      sectionName: plex-${CLUSTER_DOMAIN//./-}-https
