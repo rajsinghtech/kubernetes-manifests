@@ -12,6 +12,7 @@ resources:
   - prom-plex-exporter.yaml
   - servicemonitor.yaml
   - secret.yaml
+  - networkpolicy.yaml
 configMapGenerator:
   - name: plex-dashboards
     options:
