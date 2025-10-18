@@ -34,3 +34,7 @@ spec:
     - toFQDNs:
         - matchPattern: "*.plex.direct"
         - matchPattern: "*.plex.tv"
+  egressDeny:
+    - toEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: tailscale
