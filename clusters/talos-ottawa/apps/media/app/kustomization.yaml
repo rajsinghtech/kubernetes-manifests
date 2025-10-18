@@ -20,6 +20,7 @@ resources:
   - ./sonarr-anime
   - ./sonarr-1080p
   - ./plex 
+  - ./tautulli
   - ./jellyseerr 
   - ./jellystat 
   - ./lidarr 
