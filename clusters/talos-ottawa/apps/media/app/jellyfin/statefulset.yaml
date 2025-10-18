@@ -7,7 +7,7 @@ spec:
   replicas: 1
   podManagementPolicy: Parallel
   persistentVolumeClaimRetentionPolicy:
-    whenDeleted Delete
+    whenDeleted: Delete
     whenScaled: Delete
   selector:
     matchLabels:
