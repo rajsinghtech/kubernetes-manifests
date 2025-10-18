@@ -6,7 +6,7 @@ resources:
   - pvc-media.yaml
   - ./jellyfin  
   - ./autobrr
-  # - ./prowlarr 
+  - ./prowlarr 
   - ./radarr-4k
   - ./radarr-1080p
   - ./radarr-4kremux
@@ -19,14 +19,14 @@ resources:
   - ./sonarr-4k
   - ./sonarr-anime
   - ./sonarr-1080p
-  - ./plex 
-  # - ./tautulli
-  # - ./overseerr
+  # - ./plex 
+  - ./tautulli
+  - ./overseerr
   - ./jellyseerr 
   - ./jellystat 
   - ./lidarr 
   - ./wizarr
   - ./configarr
   - ./qb
-  # - ./qb-pvt
+  - ./qb-pvt
   - ./feedcord
