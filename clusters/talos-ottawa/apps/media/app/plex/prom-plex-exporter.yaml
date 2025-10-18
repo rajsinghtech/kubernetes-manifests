@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: prom-plex-exporter
-          image: ghcr.io/jsclayton/prometheus-plex-exporter:latest
+          image: ghcr.io/timothystewart6/prometheus-plex-exporter:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 9000
