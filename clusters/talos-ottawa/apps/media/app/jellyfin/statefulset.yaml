@@ -3,9 +3,12 @@ kind: StatefulSet
 metadata:
   name: jellyfin
 spec:
-  serviceName: jellyfin-statefulset
+  serviceName: jellyfin-sts
   replicas: 1
   podManagementPolicy: Parallel
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted Delete
+    whenScaled: Delete
   selector:
     matchLabels:
       app: jellyfin-sts
