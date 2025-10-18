@@ -9,3 +9,24 @@ resources:
   - httproute.yaml
   - volsync-restore.yaml
   - volsync-backup.yaml
+  - prom-plex-exporter.yaml
+  - servicemonitor.yaml
+  - secret.yaml
+configMapGenerator:
+  - name: plex-dashboards
+    options:
+      disableNameSuffixHash: true
+      annotations:
+        grafana_folder: plex
+      labels:
+        grafana_dashboard: "1"
+    files:
+      - dashboards/Media Server.json
+      - dashboards/container.json
+      - dashboards/gpu.json
+      - dashboards/media-server.json
+      - dashboards/plex-streaming.json
+      - dashboards/plex.json
+      - dashboards/server.json
+      - dashboards/storage.json
+      - dashboards/thermals.json

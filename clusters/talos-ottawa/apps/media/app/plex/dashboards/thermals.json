@@ -1,0 +1,1453 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "Node temps + per-component panels with dotted guide lines (no hardcoding).",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 14,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "uid": "$datasource"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 4,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "line"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 70
+              }
+            ]
+          },
+          "unit": "celsius"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.2.0-17027759091",
+      "targets": [
+        {
+          "datasource": {
+            "uid": "$datasource"
+          },
+          "exemplar": true,
+          "expr": "(node_hwmon_temp_celsius{instance=\"$instance\"}\n * on (chip, sensor, instance) group_left(label) node_hwmon_sensor_label{instance=\"$instance\"}\n * on (chip, instance) group_left(chip_name) node_hwmon_chip_names{instance=\"$instance\"}) > 0",
+          "legendFormat": "{{chip_name}}-{{label}}",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "uid": "$datasource"
+          },
+          "exemplar": true,
+          "expr": "((node_hwmon_temp_celsius{instance=\"$instance\"}\n  unless on (chip, sensor, instance) node_hwmon_sensor_label{instance=\"$instance\"})\n * on (chip, instance) group_left(chip_name) node_hwmon_chip_names{instance=\"$instance\"}) > 0",
+          "legendFormat": "{{chip_name}}-{{sensor}}",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "uid": "$datasource"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "avg(DCGM_FI_DEV_GPU_TEMP{instance=~\"$gpu_instance\"} > 0)",
+          "legendFormat": "nvidia-{{modelName}}-GPU{{gpu}}",
+          "range": true,
+          "refId": "C"
+        }
+      ],
+      "title": "Temperature — Combined Sensors",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "uid": "$datasource"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "celsius"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "NVMe normal"
+            },
+            "properties": [
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    4,
+                    4
+                  ],
+                  "fill": "dash"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "NVMe warn"
+            },
+            "properties": [
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    4,
+                    4
+                  ],
+                  "fill": "dash"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "NVMe red"
+            },
+            "properties": [
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    4,
+                    4
+                  ],
+                  "fill": "dash"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "NVMe max"
+            },
+            "properties": [
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    2,
+                    6
+                  ],
+                  "fill": "dot"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 12
+      },
+      "id": 10,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.2.0-17027759091",
+      "targets": [
+        {
+          "datasource": {
+            "uid": "$datasource"
+          },
+          "expr": "(node_hwmon_temp_celsius{instance=\"$instance\", chip=~\"nvme_.*\"}\n * on (chip, sensor, instance) group_left(label) node_hwmon_sensor_label{instance=\"$instance\", label=\"Composite\"}\n * on (chip, instance) group_left(chip_name) node_hwmon_chip_names{instance=\"$instance\"})",
+          "legendFormat": "{{chip_name}}-{{label}}",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "uid": "$datasource"
+          },
+          "expr": "(0 * node_time_seconds{instance=\"$instance\"}) + $nvme_normal_max",
+          "legendFormat": "NVMe normal",
+          "refId": "N"
+        },
+        {
+          "datasource": {
+            "uid": "$datasource"
+          },
+          "expr": "(node_hwmon_temp_max_celsius{instance=\"$instance\", chip=~\"nvme_.*\", sensor=\"temp1\"} - $nvme_warn_offset)",
+          "legendFormat": "NVMe warn",
+          "refId": "Y"
+        },
+        {
+          "datasource": {
+            "uid": "$datasource"
+          },
+          "expr": "node_hwmon_temp_max_celsius{instance=\"$instance\", chip=~\"nvme_.*\", sensor=\"temp1\"}",
+          "legendFormat": "NVMe red",
+          "refId": "R"
+        },
+        {
+          "datasource": {
+            "uid": "$datasource"
+          },
+          "expr": "node_hwmon_temp_crit_celsius{instance=\"$instance\", chip=~\"nvme_.*\", sensor=\"temp1\"}",
+          "legendFormat": "NVMe max",
+          "refId": "M"
+        }
+      ],
+      "title": "NVMe — Controller (Composite) Temperature",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "uid": "$datasource"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "celsius"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CPU normal"
+            },
+            "properties": [
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    4,
+                    4
+                  ],
+                  "fill": "dash"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CPU warn"
+            },
+            "properties": [
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    4,
+                    4
+                  ],
+                  "fill": "dash"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CPU red"
+            },
+            "properties": [
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    4,
+                    4
+                  ],
+                  "fill": "dash"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CPU max"
+            },
+            "properties": [
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    2,
+                    6
+                  ],
+                  "fill": "dot"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 22
+      },
+      "id": 11,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.2.0-17027759091",
+      "targets": [
+        {
+          "datasource": {
+            "uid": "$datasource"
+          },
+          "expr": "(node_hwmon_temp_celsius{instance=\"$instance\"}\n * on (chip, sensor, instance) group_left(label) node_hwmon_sensor_label{instance=\"$instance\"}\n * on (chip, instance) group_left(chip_name) node_hwmon_chip_names{instance=\"$instance\", chip_name=~\"k10temp|coretemp\"})",
+          "legendFormat": "{{chip_name}}-{{label}}",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "uid": "$datasource"
+          },
+          "expr": "(0 * node_time_seconds{instance=\"$instance\"}) + $cpu_normal_max",
+          "legendFormat": "CPU normal",
+          "refId": "N"
+        },
+        {
+          "datasource": {
+            "uid": "$datasource"
+          },
+          "expr": "(0 * node_time_seconds{instance=\"$instance\"}) + $cpu_warn",
+          "legendFormat": "CPU warn",
+          "refId": "W"
+        },
+        {
+          "datasource": {
+            "uid": "$datasource"
+          },
+          "expr": "(0 * node_time_seconds{instance=\"$instance\"}) + $cpu_red",
+          "legendFormat": "CPU red",
+          "refId": "R"
+        },
+        {
+          "datasource": {
+            "uid": "$datasource"
+          },
+          "expr": "(0 * node_time_seconds{instance=\"$instance\"}) + $cpu_max",
+          "legendFormat": "CPU max",
+          "refId": "M"
+        }
+      ],
+      "title": "CPU — Package / Control Temperatures",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "uid": "$datasource"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "celsius"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "GPU normal"
+            },
+            "properties": [
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    4,
+                    4
+                  ],
+                  "fill": "dash"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "GPU warn"
+            },
+            "properties": [
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    4,
+                    4
+                  ],
+                  "fill": "dash"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "GPU red"
+            },
+            "properties": [
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    4,
+                    4
+                  ],
+                  "fill": "dash"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "GPU max"
+            },
+            "properties": [
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    2,
+                    6
+                  ],
+                  "fill": "dot"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 32
+      },
+      "id": 12,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.2.0-17027759091",
+      "targets": [
+        {
+          "datasource": {
+            "uid": "$datasource"
+          },
+          "editorMode": "code",
+          "expr": "avg(DCGM_FI_DEV_GPU_TEMP{instance=~\"$gpu_instance\"})",
+          "legendFormat": "nvidia-{{modelName}}-GPU{{gpu}}",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "uid": "$datasource"
+          },
+          "expr": "(0 * max(DCGM_FI_DEV_GPU_TEMP{instance=~\"$gpu_instance\"})) + $gpu_normal_max",
+          "legendFormat": "GPU normal",
+          "refId": "N"
+        },
+        {
+          "datasource": {
+            "uid": "$datasource"
+          },
+          "expr": "(0 * max(DCGM_FI_DEV_GPU_TEMP{instance=~\"$gpu_instance\"})) + $gpu_warn",
+          "legendFormat": "GPU warn",
+          "refId": "W"
+        },
+        {
+          "datasource": {
+            "uid": "$datasource"
+          },
+          "expr": "(0 * max(DCGM_FI_DEV_GPU_TEMP{instance=~\"$gpu_instance\"})) + $gpu_red",
+          "legendFormat": "GPU red",
+          "refId": "R"
+        },
+        {
+          "datasource": {
+            "uid": "$datasource"
+          },
+          "expr": "(0 * max(DCGM_FI_DEV_GPU_TEMP{instance=~\"$gpu_instance\"})) + $gpu_max",
+          "legendFormat": "GPU max",
+          "refId": "M"
+        }
+      ],
+      "title": "GPU — NVIDIA Core Temperature (DCGM)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "uid": "$datasource"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "celsius"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Drive normal"
+            },
+            "properties": [
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    4,
+                    4
+                  ],
+                  "fill": "dash"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Drive warn"
+            },
+            "properties": [
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    4,
+                    4
+                  ],
+                  "fill": "dash"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Drive red"
+            },
+            "properties": [
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    4,
+                    4
+                  ],
+                  "fill": "dash"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Drive max"
+            },
+            "properties": [
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    2,
+                    6
+                  ],
+                  "fill": "dot"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 42
+      },
+      "id": 13,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.2.0-17027759091",
+      "targets": [
+        {
+          "datasource": {
+            "uid": "$datasource"
+          },
+          "expr": "smartctl_device_temperature{temperature_type=\"current\", device=~\"$smart_device\"}\n* on (device) group_left(model_name,interface) smartctl_device",
+          "legendFormat": "{{interface}}-{{model_name}} ({{device}})",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "uid": "$datasource"
+          },
+          "expr": "(0 * max(smartctl_device_temperature{temperature_type=\"current\", device=~\"$smart_device\"})) + $hdd_normal_max",
+          "legendFormat": "Drive normal",
+          "refId": "N"
+        },
+        {
+          "datasource": {
+            "uid": "$datasource"
+          },
+          "expr": "(0 * max(smartctl_device_temperature{temperature_type=\"current\", device=~\"$smart_device\"})) + $hdd_warn",
+          "legendFormat": "Drive warn",
+          "refId": "W"
+        },
+        {
+          "datasource": {
+            "uid": "$datasource"
+          },
+          "expr": "(0 * max(smartctl_device_temperature{temperature_type=\"current\", device=~\"$smart_device\"})) + $hdd_red",
+          "legendFormat": "Drive red",
+          "refId": "R"
+        },
+        {
+          "datasource": {
+            "uid": "$datasource"
+          },
+          "expr": "(0 * max(smartctl_device_temperature{temperature_type=\"current\", device=~\"$smart_device\"})) + $hdd_max",
+          "legendFormat": "Drive max",
+          "refId": "M"
+        }
+      ],
+      "title": "Drives — smartctl Temperature (SATA & NVMe)",
+      "type": "timeseries"
+    }
+  ],
+  "preload": false,
+  "refresh": "auto",
+  "schemaVersion": 41,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "text": "Prometheus",
+          "value": "PBFA97CFB590B2093"
+        },
+        "includeAll": false,
+        "label": "Datasource",
+        "name": "datasource",
+        "options": [],
+        "query": "prometheus",
+        "refresh": 1,
+        "type": "datasource"
+      },
+      {
+        "current": {
+          "text": "node_exporter:9100",
+          "value": "node_exporter:9100"
+        },
+        "datasource": "$datasource",
+        "definition": "label_values(node_hwmon_temp_celsius, instance)",
+        "includeAll": false,
+        "label": "Node instance",
+        "name": "instance",
+        "options": [],
+        "query": {
+          "query": "label_values(node_hwmon_temp_celsius, instance)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 2,
+        "type": "query"
+      },
+      {
+        "current": {
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": "$datasource",
+        "definition": "label_values(DCGM_FI_DEV_GPU_TEMP, instance)",
+        "includeAll": true,
+        "label": "DCGM instance",
+        "multi": true,
+        "name": "gpu_instance",
+        "options": [],
+        "query": {
+          "query": "label_values(DCGM_FI_DEV_GPU_TEMP, instance)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 2,
+        "type": "query"
+      },
+      {
+        "current": {
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": "$datasource",
+        "definition": "label_values(smartctl_device_temperature, device)",
+        "includeAll": true,
+        "label": "SMART devices",
+        "multi": true,
+        "name": "smart_device",
+        "options": [],
+        "query": {
+          "query": "label_values(smartctl_device_temperature, device)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 2,
+        "type": "query"
+      },
+      {
+        "current": {
+          "text": "60",
+          "value": "60"
+        },
+        "label": "NVMe normal max (°C)",
+        "name": "nvme_normal_max",
+        "options": [
+          {
+            "selected": true,
+            "text": "60",
+            "value": "60"
+          }
+        ],
+        "query": "60",
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "text": "5",
+          "value": "5"
+        },
+        "label": "NVMe warn offset (max-Δ°C)",
+        "name": "nvme_warn_offset",
+        "options": [
+          {
+            "selected": true,
+            "text": "5",
+            "value": "5"
+          }
+        ],
+        "query": "5",
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "text": "80",
+          "value": "80"
+        },
+        "label": "CPU normal max (°C)",
+        "name": "cpu_normal_max",
+        "options": [
+          {
+            "selected": true,
+            "text": "80",
+            "value": "80"
+          }
+        ],
+        "query": "80",
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "text": "85",
+          "value": "85"
+        },
+        "label": "CPU warn (°C)",
+        "name": "cpu_warn",
+        "options": [
+          {
+            "selected": true,
+            "text": "85",
+            "value": "85"
+          }
+        ],
+        "query": "85",
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "text": "90",
+          "value": "90"
+        },
+        "label": "CPU red (°C)",
+        "name": "cpu_red",
+        "options": [
+          {
+            "selected": true,
+            "text": "90",
+            "value": "90"
+          }
+        ],
+        "query": "90",
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "text": "95",
+          "value": "95"
+        },
+        "label": "CPU max (°C)",
+        "name": "cpu_max",
+        "options": [
+          {
+            "selected": true,
+            "text": "95",
+            "value": "95"
+          }
+        ],
+        "query": "95",
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "text": "80",
+          "value": "80"
+        },
+        "label": "GPU normal max (°C)",
+        "name": "gpu_normal_max",
+        "options": [
+          {
+            "selected": true,
+            "text": "80",
+            "value": "80"
+          }
+        ],
+        "query": "80",
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "text": "85",
+          "value": "85"
+        },
+        "label": "GPU warn (°C)",
+        "name": "gpu_warn",
+        "options": [
+          {
+            "selected": true,
+            "text": "85",
+            "value": "85"
+          }
+        ],
+        "query": "85",
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "text": "90",
+          "value": "90"
+        },
+        "label": "GPU red (°C)",
+        "name": "gpu_red",
+        "options": [
+          {
+            "selected": true,
+            "text": "90",
+            "value": "90"
+          }
+        ],
+        "query": "90",
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "text": "95",
+          "value": "95"
+        },
+        "label": "GPU max (°C)",
+        "name": "gpu_max",
+        "options": [
+          {
+            "selected": true,
+            "text": "95",
+            "value": "95"
+          }
+        ],
+        "query": "95",
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "text": "45",
+          "value": "45"
+        },
+        "label": "Drive normal max (°C)",
+        "name": "hdd_normal_max",
+        "options": [
+          {
+            "selected": true,
+            "text": "45",
+            "value": "45"
+          }
+        ],
+        "query": "45",
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "text": "50",
+          "value": "50"
+        },
+        "label": "Drive warn (°C)",
+        "name": "hdd_warn",
+        "options": [
+          {
+            "selected": true,
+            "text": "50",
+            "value": "50"
+          }
+        ],
+        "query": "50",
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "text": "55",
+          "value": "55"
+        },
+        "label": "Drive red (°C)",
+        "name": "hdd_red",
+        "options": [
+          {
+            "selected": true,
+            "text": "55",
+            "value": "55"
+          }
+        ],
+        "query": "55",
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "text": "60",
+          "value": "60"
+        },
+        "label": "Drive max (°C)",
+        "name": "hdd_max",
+        "options": [
+          {
+            "selected": true,
+            "text": "60",
+            "value": "60"
+          }
+        ],
+        "query": "60",
+        "type": "textbox"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Thermals Dashboard",
+  "uid": "QIA3UR57z",
+  "version": 11
+}

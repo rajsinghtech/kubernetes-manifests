@@ -97,6 +97,14 @@ spec:
               editable: true
               options:
                 path: /var/lib/grafana/dashboards/argocd
+            - name: "plex"
+              orgId: 1
+              folder: "plex"
+              type: file
+              disableDeletion: false
+              editable: true
+              options:
+                path: /var/lib/grafana/dashboards/plex
             - name: "ceph"
               orgId: 1
               folder: "ceph"

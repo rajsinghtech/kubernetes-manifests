@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: prom-plex-exporter
+  labels:
+    app: prom-plex-exporter
+spec:
+  endpoints:
+    - interval: 30s
+      path: /metrics
+      port: metrics
+      scheme: http
+  selector:
+    matchLabels:
+      app: prom-plex-exporter

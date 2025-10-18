@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prom-plex-exporter
+  namespace: media
+  labels:
+    app: prom-plex-exporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prom-plex-exporter
+  template:
+    metadata:
+      labels:
+        app: prom-plex-exporter
+    spec:
+      containers:
+        - name: prom-plex-exporter
+          image: docker.io/granra/prometheus-plex-exporter:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9594
+              name: metrics
+              protocol: TCP
+          env:
+            - name: PLEX_SERVER
+              valueFrom:
+                secretKeyRef:
+                  name: prom-plex-exporter-secret
+                  key: PLEX_SERVER
+            - name: PLEX_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: prom-plex-exporter-secret
+                  key: PLEX_TOKEN
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prom-plex-exporter
+  namespace: media
+  labels:
+    app: prom-plex-exporter
+spec:
+  selector:
+    app: prom-plex-exporter
+  ports:
+    - name: metrics
+      port: 9594
+      protocol: TCP
+      targetPort: 9594
