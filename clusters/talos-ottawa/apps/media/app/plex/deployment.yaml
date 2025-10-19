@@ -59,12 +59,18 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config
+            - name: transcode
+              mountPath: /transcode
             - name: media-volume
               mountPath: /media-share
       volumes:
         - name: config
           persistentVolumeClaim:
-            claimName: plex-config  
+            claimName: plex-config
+        - name: transcode
+          emptyDir:
+            medium: Memory
+            sizeLimit: 16Gi
         - name: media-volume
           persistentVolumeClaim:
             claimName: media-share
