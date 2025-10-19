@@ -2,14 +2,14 @@
 apiVersion: homer.rajsingh.info/v1alpha1
 kind: Dashboard
 metadata:
-  name: dashboard-ts
+  name: dashboard-shared
   labels:
     app: homer-dashboard
     tier: frontend
 spec:
   replicas: 2
   homerConfig:
-    title: "${LOCATION} cloud ts" 
+    title: "shared cloud ts" 
     subtitle: "Infrastructure Dashboard"
     logo: "https://raw.githubusercontent.com/rajsinghtech/homer-operator/main/homer/Homer-Operator.png"
     header: true
@@ -60,14 +60,46 @@ spec:
           name: "Tailscale"
           logo: "https://raw.githubusercontent.com/tailscale/tailscale/refs/heads/main/client/web/src/assets/icons/tailscale-icon.svg"
           subtitle: "Private Mesh Network"
-          tag: "network"
           tagstyle: "is-info"
           url: "https://login.tailscale.com/admin/machines"
+  remoteClusters:
+  - name: ottawa
+    enabled: true
+    secretRef:
+      name: external-clusters-kubeconfig
+      key: kubeconfig
+    clusterLabels:
+      cluster: "ottawa"
+      location: "ottawa"
+      cluster-name-suffix: " (Ottawa)"
+    domainFilters:
+      - "killinit.cc"
+    gatewaySelector:
+      matchLabels:
+        external-dns: ts
+    ingressSelector:
+      matchLabels:
+        noexist: "true"
+  - name: robbinsdale
+    enabled: true
+    secretRef:
+      name: external-clusters-kubeconfig
+      key: kubeconfig
+    clusterLabels:
+      cluster: "robbinsdale"
+      location: "robbinsdale"
+      cluster-name-suffix: " (Robbinsdale)"
+    domainFilters:
+      - "lukehouge.com"
+    gatewaySelector:
+      matchLabels:
+        external-dns: ts
+    ingressSelector:
+      matchLabels:
+        noexist: "true"
   gatewaySelector:
     matchLabels:
-      external-dns: ts
+      disable-local-cluster: "true"
   ingressSelector:
     matchLabels:
-      noexist: "true"
-  domainFilters:
-    - "${CLUSTER_DOMAIN}"
+      disable-local-cluster: "true"

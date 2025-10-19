@@ -100,7 +100,6 @@ metadata:
     item.homer.rajsingh.info/name: "Mac OS"
     item.homer.rajsingh.info/subtitle: "Mac OS"
     item.homer.rajsingh.info/logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/MacOS_logo.svg/68px-MacOS_logo.svg.png?20221222011002"
-    item.homer.rajsingh.info/tag: "infrastructure"
     item.homer.rajsingh.info/keywords: "mac, os"
 
     service.homer.rajsingh.info/name: "Infrastructure"

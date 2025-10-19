@@ -7,7 +7,6 @@ metadata:
     item.homer.rajsingh.info/name: "qbittorrent-pvt"
     item.homer.rajsingh.info/subtitle: "Torrent Client"
     item.homer.rajsingh.info/logo: "https://img.icons8.com/?size=100&id=105243&format=png&color=000000"
-    item.homer.rajsingh.info/tag: "media"
     item.homer.rajsingh.info/keywords: "torrent, client"
 
     service.homer.rajsingh.info/name: "Media"

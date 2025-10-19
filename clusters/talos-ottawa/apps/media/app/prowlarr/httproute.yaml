@@ -7,7 +7,6 @@ metadata:
     item.homer.rajsingh.info/name: "Prowlarr"
     item.homer.rajsingh.info/subtitle: "Indexer Management"
     item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/Prowlarr/Prowlarr/develop/Logo/256.png"
-    item.homer.rajsingh.info/tag: "media"
     item.homer.rajsingh.info/keywords: "indexer, torrent, usenet"
 
     service.homer.rajsingh.info/name: "Media"

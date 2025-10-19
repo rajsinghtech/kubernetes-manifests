@@ -7,7 +7,6 @@ metadata:
     item.homer.rajsingh.info/name: "radarr-4k"
     item.homer.rajsingh.info/subtitle: "Movie Collection Manager"
     item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/radarr/radarr/develop/Logo/256.png"
-    item.homer.rajsingh.info/tag: "media"
     item.homer.rajsingh.info/keywords: "movies, collection, automation"
 
     service.homer.rajsingh.info/name: "Media"

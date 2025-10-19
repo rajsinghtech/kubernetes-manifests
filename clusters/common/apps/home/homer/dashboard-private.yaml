@@ -2,22 +2,17 @@
 apiVersion: homer.rajsingh.info/v1alpha1
 kind: Dashboard
 metadata:
-  name: dashboard-public
+  name: dashboard-private
   labels:
     app: homer-dashboard
     tier: frontend
 spec:
   replicas: 2
   homerConfig:
-    title: "${LOCATION} Cloud" 
+    title: "${LOCATION} cloud private" 
     subtitle: "Infrastructure Dashboard"
     logo: "https://raw.githubusercontent.com/rajsinghtech/homer-operator/main/homer/Homer-Operator.png"
     header: true
-    message:
-      style: "is-info"
-      title: "Welcome to ${LOCATION} Cloud"
-      icon: "fa fa-info-circle"
-      content: "Server Hosted in ${LOCATION}."
     footer: '<p>Powered by <strong>Homer-Operator</strong> | <a href="https://github.com/rajsinghtech/homer-operator">GitHub</a></p>'
     colors:
       light:
@@ -58,33 +53,18 @@ spec:
       target: "_blank"
     services:
     - parameters:
-        name: "Media"
-        icon: "fas fa-tv"
+        name: "Infrastructure"
+        icon: "fas fa-server"
       items:
       - parameters:
-          name: "Jellyseerr"
-          subtitle: "Request Media"
-          tag: "requests"
+          name: "Tailscale"
+          logo: "https://raw.githubusercontent.com/tailscale/tailscale/refs/heads/main/client/web/src/assets/icons/tailscale-icon.svg"
+          subtitle: "Private Mesh Network"
           tagstyle: "is-info"
-          url: "https://jellyseerr.rajsingh.info/"
-          logo: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/jellyseerr.svg"
-      - parameters:
-          name: "Jellyfin Client Desktop"
-          subtitle: "macOS/Windows"
-          tag: "download"
-          tagstyle: "is-warning"
-          url: "https://github.com/jellyfin/jellyfin-media-player/releases"
-          logo: "https://raw.githubusercontent.com/jellyfin/jellyfin-media-player/refs/heads/master/resources/images/icon.svg"
-      - parameters:
-          name: "Jellyfin Client Mobile"
-          subtitle: "iOS/Android"
-          tag: "download"
-          tagstyle: "is-warning"
-          url: "https://streamyfin.app/"
-          logo: "https://avatars.githubusercontent.com/u/193271640?s=280&v=4"
+          url: "https://login.tailscale.com/admin/machines"
   gatewaySelector:
     matchLabels:
-      gateway: public
+      gateway: private
   ingressSelector:
     matchLabels:
       noexist: "true"

@@ -7,7 +7,6 @@ metadata:
     item.homer.rajsingh.info/name: "ArgoCD"
     item.homer.rajsingh.info/subtitle: "GitOps Deployment"
     item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/argo-cd.png"
-    item.homer.rajsingh.info/tag: "infrastructure"
     item.homer.rajsingh.info/keywords: "gitops, kubernetes, deployment"
 
     service.homer.rajsingh.info/name: "Infrastructure"

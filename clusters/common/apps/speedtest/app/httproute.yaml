@@ -7,7 +7,6 @@ metadata:
     item.homer.rajsingh.info/name: "SpeedTest"
     item.homer.rajsingh.info/subtitle: "Network Speed Test"
     item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/speedtest-tracker.png"
-    item.homer.rajsingh.info/tag: "utilities"
     item.homer.rajsingh.info/keywords: "network, speed, test"
 
     service.homer.rajsingh.info/name: "Utilities"

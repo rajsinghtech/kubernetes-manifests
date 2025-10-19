@@ -117,7 +117,6 @@ metadata:
     item.homer.rajsingh.info/name: "Windows Server"
     item.homer.rajsingh.info/subtitle: "Windows Server"
     item.homer.rajsingh.info/logo: "https://uhf.microsoft.com/images/microsoft/RE1Mu3b.png"
-    item.homer.rajsingh.info/tag: "infrastructure"
     item.homer.rajsingh.info/keywords: "windows, server"
 
     service.homer.rajsingh.info/name: "Infrastructure"

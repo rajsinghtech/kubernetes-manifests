@@ -7,7 +7,6 @@ metadata:
     item.homer.rajsingh.info/name: "tautulli"
     item.homer.rajsingh.info/subtitle: "Plex Monitoring & Statistics"
     item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/svg/tautulli.svg"
-    item.homer.rajsingh.info/tag: "media"
     item.homer.rajsingh.info/keywords: "requests, media, jellyfin"
     service.homer.rajsingh.info/name: "Media"
     service.homer.rajsingh.info/icon: "fas fa-tv"

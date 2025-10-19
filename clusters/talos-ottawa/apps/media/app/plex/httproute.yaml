@@ -7,7 +7,6 @@ metadata:
     item.homer.rajsingh.info/name: "Plex"
     item.homer.rajsingh.info/subtitle: "Media Server"
     item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/svg/plex.svg"
-    item.homer.rajsingh.info/tag: "media"
     item.homer.rajsingh.info/keywords: "media, server, streaming"
 
     service.homer.rajsingh.info/name: "Media"
@@ -22,8 +21,11 @@ spec:
       kind: Gateway
       name: ts
       namespace: home
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: public
+      namespace: home
   hostnames:
-    - "plex.${COMMON_DOMAIN}"
     - "plex.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

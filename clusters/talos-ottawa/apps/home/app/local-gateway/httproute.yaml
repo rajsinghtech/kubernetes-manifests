@@ -6,7 +6,6 @@ metadata:
     item.homer.rajsingh.info/name: "Private Pi-hole"
     item.homer.rajsingh.info/subtitle: "DNS Ad Blocker"
     item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/pi-hole.png"
-    item.homer.rajsingh.info/tag: "home"
     item.homer.rajsingh.info/keywords: "dns, ad blocker, network"
 
     service.homer.rajsingh.info/name: "Home"
@@ -63,7 +62,6 @@ metadata:
     item.homer.rajsingh.info/name: "Private Pi-hole"
     item.homer.rajsingh.info/subtitle: "DNS Ad Blocker"
     item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/pi-hole.png"
-    item.homer.rajsingh.info/tag: "home"
     item.homer.rajsingh.info/keywords: "dns, ad blocker, network"
 
     service.homer.rajsingh.info/name: "Home"

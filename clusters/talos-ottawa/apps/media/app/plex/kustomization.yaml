@@ -9,3 +9,21 @@ resources:
   - httproute.yaml
   - volsync-restore.yaml
   - volsync-backup.yaml
+  - prom-plex-exporter.yaml
+  - servicemonitor.yaml
+  - secret.yaml
+  - ciliumnetworkpolicy.yaml
+  - backendtrafficpolicy.yaml
+configMapGenerator:
+  - name: plex-dashboards
+    options:
+      disableNameSuffixHash: true
+      annotations:
+        grafana_folder: plex
+      labels:
+        grafana_dashboard: "1"
+    files:
+      - dashboards/media-server-main.json
+      - dashboards/media-server.json
+      - dashboards/plex-streaming.json
+      - dashboards/plex.json

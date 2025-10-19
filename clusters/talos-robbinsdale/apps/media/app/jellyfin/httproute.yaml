@@ -7,7 +7,6 @@ metadata:
     item.homer.rajsingh.info/name: "Jellyfin"
     item.homer.rajsingh.info/subtitle: "TV/Movies/Music/Books"
     item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/jellyfin/jellyfin/refs/heads/master/Jellyfin.Server/Jellyfin.Server.ico"
-    item.homer.rajsingh.info/tag: "media"
     item.homer.rajsingh.info/keywords: "media, server, streaming"
 
     service.homer.rajsingh.info/name: "Media"

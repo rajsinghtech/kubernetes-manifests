@@ -7,7 +7,6 @@ metadata:
     item.homer.rajsingh.info/name: "Wizarr"
     item.homer.rajsingh.info/subtitle: "Auth Server"
     item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/svg/wizarr.svg"
-    item.homer.rajsingh.info/tag: "media"
     item.homer.rajsingh.info/keywords: "auth, server"
 
     service.homer.rajsingh.info/name: "Media"

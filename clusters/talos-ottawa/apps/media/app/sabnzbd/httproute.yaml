@@ -7,7 +7,6 @@ metadata:
     item.homer.rajsingh.info/name: "SABnzbd"
     item.homer.rajsingh.info/subtitle: "NZB Download Client"
     item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/sabnzbd/sabnzbd/refs/heads/develop/icons/logo-arrow.svg"
-    item.homer.rajsingh.info/tag: "media"
     item.homer.rajsingh.info/keywords: "nzb, download, client"
 
     service.homer.rajsingh.info/name: "Media"
