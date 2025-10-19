@@ -60,7 +60,7 @@ spec:
             - name: config
               mountPath: /config
             - name: transcode
-              mountPath: /transcode
+              mountPath: /tmp
             - name: media-volume
               mountPath: /media-share
       volumes:
