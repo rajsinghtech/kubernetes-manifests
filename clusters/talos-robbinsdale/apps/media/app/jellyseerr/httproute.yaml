@@ -7,7 +7,6 @@ metadata:
     item.homer.rajsingh.info/name: "Jellyseerr"
     item.homer.rajsingh.info/subtitle: "Media Request Manager"
     item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/svg/jellyseerr.svg"
-    item.homer.rajsingh.info/tag: "media"
     item.homer.rajsingh.info/keywords: "requests, media, jellyfin"
 
     service.homer.rajsingh.info/name: "Media"

@@ -9,7 +9,6 @@ resources:
   - envoyproxy.yaml
   - certificate-raj-wildcard-tls.yaml
   - redirect.yaml
-  - clienttrafficpolicy.yaml
 # DNS
   - secret.yaml
   - pihole.yaml
@@ -18,5 +17,5 @@ resources:
   - tcproute.yaml
   - udproute.yaml
 # Custom Backends
-  - home.yaml
+  # - home.yaml
   - hubble.yaml

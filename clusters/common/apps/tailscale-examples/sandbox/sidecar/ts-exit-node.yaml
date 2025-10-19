@@ -49,7 +49,7 @@ spec:
         - name: TS_ACCEPT_DNS
           value: "true"
         - name: TS_EXTRA_ARGS
-          value: "--advertise-tags=tag:k8s,tag:${LOCATION} --ssh --advertise-exit-node"
+          value: "--advertise-tags=tag:k8s,tag:${LOCATION} --ssh --accept-routes --advertise-exit-node"
         - name: POD_NAME
           value: "${LOCATION}-exit-node"
         - name: TS_HOSTNAME

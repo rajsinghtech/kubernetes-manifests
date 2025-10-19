@@ -7,7 +7,6 @@ metadata:
     item.homer.rajsingh.info/name: "TSFlow"
     item.homer.rajsingh.info/subtitle: "Tailscale Flow Logs"
     item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/svg/tailscale.svg"
-    item.homer.rajsingh.info/tag: "utilities"
     item.homer.rajsingh.info/keywords: "tailscale, network, logs"
 
     service.homer.rajsingh.info/name: "Utilities"

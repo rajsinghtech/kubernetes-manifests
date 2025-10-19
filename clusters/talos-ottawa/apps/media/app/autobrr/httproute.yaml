@@ -7,7 +7,6 @@ metadata:
     item.homer.rajsingh.info/name: "autobrr"
     item.homer.rajsingh.info/subtitle: "Indexer Management"
     item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/homarr-labs/dashboard-icons/refs/heads/main/svg/autobrr.svg"
-    item.homer.rajsingh.info/tag: "media"
     item.homer.rajsingh.info/keywords: "indexer, torrent, usenet"
 
     service.homer.rajsingh.info/name: "Media"

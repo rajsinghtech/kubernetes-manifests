@@ -7,7 +7,6 @@ metadata:
     item.homer.rajsingh.info/name: "Test App"
     item.homer.rajsingh.info/subtitle: "Testing Environment"
     item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/bytestash.svg"
-    item.homer.rajsingh.info/tag: "utilities"
     item.homer.rajsingh.info/keywords: "test, development, debug"
 
     service.homer.rajsingh.info/name: "Utilities"

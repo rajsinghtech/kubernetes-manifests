@@ -1,7 +1,7 @@
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: ClientTrafficPolicy
 metadata:
-  name: enable-client-ip-detection-lan
+  name: wildcard-lan
 spec:
   clientIPDetection:
     xForwardedFor:
@@ -10,6 +10,8 @@ spec:
     - group: gateway.networking.k8s.io
       kind: Gateway
       name: public
+      sectionName: wildcard-${CLUSTER_DOMAIN//./-}-https
     - group: gateway.networking.k8s.io
       kind: Gateway
       name: private
+      sectionName: wildcard-${CLUSTER_DOMAIN//./-}-https

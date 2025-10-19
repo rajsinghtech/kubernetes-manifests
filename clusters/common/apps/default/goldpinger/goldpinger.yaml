@@ -124,7 +124,6 @@ metadata:
     item.homer.rajsingh.info/name: "Goldpinger"
     item.homer.rajsingh.info/subtitle: "Network Connectivity"
     item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/meshping.svg"
-    item.homer.rajsingh.info/tag: "infrastructure"
     item.homer.rajsingh.info/keywords: "network, connectivity, debug"
 
     service.homer.rajsingh.info/name: "Infrastructure"

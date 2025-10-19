@@ -176,7 +176,7 @@
 					{
 						"name":       "shared",
 						"connectors": ["tag:k8s"],
-						"domains":    ["reddit.com"],
+						"domains":    ["speed.cloudflare.com"],
 					},
 					{
 						"name":       "robbinsdale",

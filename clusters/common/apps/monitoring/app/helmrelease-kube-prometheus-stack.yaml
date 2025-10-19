@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: kube-prometheus-stack
-      version: 78.2.0 # Use a recent stable version
+      version: 78.3.2 # Use a recent stable version
       sourceRef:
         kind: HelmRepository
         name: prometheus-community # Use prometheus-community repo (OCI or web based on previous steps)
@@ -50,6 +50,10 @@ spec:
           domain: grafana.${CLUSTER_DOMAIN}
       fullnameOverride: grafana
       additionalDataSources:
+        - name: envoy-gateway-prometheus  
+          type: prometheus
+          uid: envoy-gateway-prometheus
+          url: http://prometheus.envoy-gateway-system
         - name: ottawa-prometheus  
           type: prometheus
           uid: ottawa
@@ -97,6 +101,14 @@ spec:
               editable: true
               options:
                 path: /var/lib/grafana/dashboards/argocd
+            - name: "plex"
+              orgId: 1
+              folder: "plex"
+              type: file
+              disableDeletion: false
+              editable: true
+              options:
+                path: /var/lib/grafana/dashboards/plex
             - name: "ceph"
               orgId: 1
               folder: "ceph"
@@ -305,7 +317,6 @@ metadata:
     item.homer.rajsingh.info/name: "Prometheus"
     item.homer.rajsingh.info/subtitle: "Metrics & Alerting"
     item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/prometheus.png"
-    item.homer.rajsingh.info/tag: "infrastructure"
     item.homer.rajsingh.info/keywords: "monitoring, metrics, time-series, alerting"
 
     service.homer.rajsingh.info/name: "Infrastructure"
@@ -342,7 +353,6 @@ metadata:
     item.homer.rajsingh.info/name: "Grafana"
     item.homer.rajsingh.info/subtitle: "Analytics & Monitoring"
     item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/grafana.png"
-    item.homer.rajsingh.info/tag: "infrastructure"
     item.homer.rajsingh.info/keywords: "monitoring, metrics, dashboard, visualization"
 
     service.homer.rajsingh.info/name: "Infrastructure"

@@ -7,7 +7,6 @@ metadata:
     item.homer.rajsingh.info/name: "Code Server"
     item.homer.rajsingh.info/subtitle: "Web-based VS Code"
     item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/code-server.png"
-    item.homer.rajsingh.info/tag: "home"
     item.homer.rajsingh.info/keywords: "code, development, editor"
 
     service.homer.rajsingh.info/name: "Home"
