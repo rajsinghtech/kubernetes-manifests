@@ -1,14 +1,16 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: jellyfin
 spec:
+  serviceName: jellyfin
   replicas: 1
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Delete
+    whenScaled: Delete
   selector:
     matchLabels:
       app: jellyfin
-  strategy:
-    type: Recreate
   template:
     metadata:
       labels:
@@ -47,10 +49,11 @@ spec:
         - name: media-share
           persistentVolumeClaim:
             claimName: media-share
-        - name: config
-          persistentVolumeClaim:
-            claimName: jellyfin-config
-        # - name: transcode
-        #   emptyDir:
-        #     medium: Memory
-        #     sizeLimit: 4Gi 
+  volumeClaimTemplates:
+    - metadata:
+        name: config
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 10Gi
