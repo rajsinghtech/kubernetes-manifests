@@ -12,7 +12,7 @@ resources:
   - prom-plex-exporter.yaml
   - servicemonitor.yaml
   - secret.yaml
-  - ciliumnetworkpolicy.yaml
+  # - ciliumnetworkpolicy.yaml
   - backendtrafficpolicy.yaml
 configMapGenerator:
   - name: plex-dashboards
