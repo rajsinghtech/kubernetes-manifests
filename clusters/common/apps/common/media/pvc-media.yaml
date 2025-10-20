@@ -33,5 +33,5 @@ spec:
   resources:
     requests:
       storage: 20Ti
-  volumeName: media-share
+  volumeName: common-media-share
   storageClassName: smb
