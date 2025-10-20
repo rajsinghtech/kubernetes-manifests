@@ -8,7 +8,6 @@ metadata:
     item.homer.rajsingh.info/subtitle: "Media Server"
     item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/svg/plex.svg"
     item.homer.rajsingh.info/keywords: "media, server, streaming"
-
     service.homer.rajsingh.info/name: "Media"
     service.homer.rajsingh.info/icon: "fas fa-tv"
 spec:
@@ -34,6 +33,28 @@ spec:
           name: plex
           port: 32400
           weight: 1
+      filters:
+        - type: RequestHeaderModifier
+          requestHeaderModifier:
+            set:
+              - name: "X-Forwarded-Proto"
+                value: "https"
+              - name: "X-Plex-Device"
+                value: "Envoy Gateway"
+              - name: "X-Plex-Device-Name"
+                value: "Envoy Proxy"
+        - type: ResponseHeaderModifier
+          responseHeaderModifier:
+            remove:
+              - "Server"
+              - "X-XSS-Protection"
+            set:
+              - name: "X-Content-Type-Options"
+                value: "nosniff"
+              - name: "X-Frame-Options"
+                value: "SAMEORIGIN"
+              - name: "Cache-Control"
+                value: "no-transform"
       matches:
         - path:
             type: PathPrefix

@@ -10,3 +10,10 @@ spec:
     name: plex
   httpUpgrade:
     - type: websocket
+  connection:
+    bufferLimit: 32768
+  timeout:
+    http:
+      connectionIdleTimeout: 900s
+      maxConnectionDuration: 0s  # unlimited
+      requestTimeout: 0s  # unlimited for streaming
