@@ -3,7 +3,7 @@ kind: PersistentVolume
 metadata:
   annotations:
     pv.kubernetes.io/provisioned-by: smb.csi.k8s.io
-  name: media-share
+  name: common-media-share
 spec:
   capacity:
     storage: 20Ti
@@ -16,7 +16,7 @@ spec:
     - file_mode=0777
   csi:
     driver: smb.csi.k8s.io
-    volumeHandle: smb-server.default.svc.cluster.local/media-share
+    volumeHandle: smb-server.default.svc.cluster.local/common-media-share
     volumeAttributes:
       source: //192.168.169.111/media-share
     nodeStageSecretRef:
@@ -26,12 +26,12 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: media-share
+  name: common-media-share
 spec:
   accessModes:
     - ReadWriteMany
   resources:
     requests:
       storage: 20Ti
-  volumeName: media-share
+  volumeName: common-media-share
   storageClassName: smb
