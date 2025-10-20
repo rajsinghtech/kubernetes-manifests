@@ -14,9 +14,6 @@ spec:
         name: harbor
         namespace: flux-system
   values:
-    externalURL: https://${LOCATION}-harbor.keiretsu.ts.net
+    externalURL: https://${LOCATION}.harbor.keiretsu.ts.net
     expose:
-      annotations: 
-        tailscale.com/expose: "true"
-        tailscale.com/hostname: "${LOCATION}-harbor"
-      type: loadBalancer
+      type: clusterIP
