@@ -16,7 +16,7 @@ spec:
     - file_mode=0777
   csi:
     driver: smb.csi.k8s.io
-    volumeHandle: smb-server.default.svc.cluster.local/common/media-share
+    volumeHandle: smb-server.default.svc.cluster.local/media-share
     volumeAttributes:
       source: //192.168.169.111/media-share
     nodeStageSecretRef:
@@ -33,5 +33,5 @@ spec:
   resources:
     requests:
       storage: 20Ti
-  volumeName: common-media-share
+  volumeName: media-share
   storageClassName: smb
