@@ -216,6 +216,13 @@
 	"tests": [
 		{
 			"src": "rajsinghtech@github",
+			"proto": "icmp",
+			"accept": [
+				"tag:robbinsdale:0",
+			],
+		},
+		{
+			"src": "rajsinghtech@github",
 			"accept": [
 				"192.168.50.1:443",
 				"192.168.169.1:443",
