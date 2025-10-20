@@ -9,6 +9,7 @@ resources:
   - ./backube-charts.yaml
   - ./bjw-s.yaml
   - ./cilium.yaml
+  - ./spegel.yaml
   - ./clabernetes.yaml
   - ./cloudnative-pg.yaml
   - ./coredns.yaml
@@ -52,7 +53,6 @@ resources:
   - ./qdrant.yaml
   - ./redash.yaml
   - ./rook-ceph-charts.yaml
-  - ./spegel.yaml
   - ./stakater.yaml
   - ./stevehipwell.yaml
   - ./strimzi.yaml
