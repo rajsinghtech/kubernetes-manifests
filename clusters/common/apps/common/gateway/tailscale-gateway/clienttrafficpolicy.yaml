@@ -15,14 +15,14 @@ spec:
   clientIPDetection:
     xForwardedFor:
       numTrustedHops: 1
-  timeout:
-    http:
-      requestReceivedTimeout: 0s
-      idleTimeout: 3600s 
-      streamIdleTimeout: 900s
-  headers:
-    requestID: PreserveOrGenerate  
-  http2:
-    initialStreamWindowSize: 64Ki 
-    initialConnectionWindowSize: 1Mi 
-    maxConcurrentStreams: 100
+  # timeout:
+  #   http:
+  #     requestReceivedTimeout: 0s
+  #     idleTimeout: 3600s 
+  #     streamIdleTimeout: 900s
+  # headers:
+  #   requestID: PreserveOrGenerate  
+  # http2:
+  #   initialStreamWindowSize: 64Ki 
+  #   initialConnectionWindowSize: 1Mi 
+  #   maxConcurrentStreams: 100
