@@ -14,8 +14,9 @@ spec:
         name: harbor
         namespace: flux-system
   values:
-    externalURL: https://${LOCATION}.harbor.keiretsu.ts.net
+    externalURL: https://${LOCATION}-harbor.keiretsu.ts.net
     expose:
       type: clusterIP
       tls:
         enabled: false
+        certSource: none
