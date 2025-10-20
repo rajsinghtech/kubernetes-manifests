@@ -17,7 +17,7 @@ spec:
     externalURL: https://${LOCATION}-harbor.keiretsu.ts.net
     expose:
       type: clusterIP
-      tls:
+      tls: 
         enabled: false
         certSource: none
     core:
