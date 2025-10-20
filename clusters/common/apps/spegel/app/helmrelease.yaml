@@ -13,3 +13,6 @@ spec:
         kind: HelmRepository
         name: spegel
         namespace: flux-system
+  values:
+    spegel:
+      containerdRegistryConfigPath: /etc/cri/conf.d/hosts
