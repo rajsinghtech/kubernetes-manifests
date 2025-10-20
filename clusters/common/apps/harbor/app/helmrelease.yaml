@@ -16,4 +16,7 @@ spec:
   values:
     externalURL: https://${LOCATION}-harbor.keiretsu.ts.net
     expose:
+      annotations: 
+        tailscale.com/expose: "true"
+        tailscale.com/hostname: "${LOCATION}-harbor"
       type: loadBalancer
