@@ -45,6 +45,10 @@ spec:
               value: ${TIMEZONE}
             - name: JELLYFIN_PublishedServerUrl
               value: jellyfin.rajsingh.info
+      volumes:
+        - name: media-share
+          persistentVolumeClaim:
+            claimName: media-share
   volumeClaimTemplates:
     - metadata:
         name: config
