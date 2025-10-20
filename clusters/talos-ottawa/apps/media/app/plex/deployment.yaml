@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: plex
-          image: lscr.io/linuxserver/plex:latest
+          image: docker.io/plexinc/pms-docker:latest
           resources:
             requests:
               gpu.intel.com/i915: "1"
@@ -52,10 +52,6 @@ spec:
           #     cpu: 5000m
           #     memory: 8Gi
           env:
-            - name: PUID
-              value: "0"
-            - name: PGID
-              value: "0"
             - name: TZ
               value: ${TIMEZONE}
             - name: VERSION
@@ -63,18 +59,12 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config
-            # - name: transcode
-            #   mountPath: /transcode
             - name: media-volume
               mountPath: /media-share
       volumes:
         - name: config
           persistentVolumeClaim:
-            claimName: plex-config
-        # - name: transcode
-        #   emptyDir:
-        #     medium: Memory
-        #     sizeLimit: 64Gi
+            claimName: plex-config  
         - name: media-volume
           persistentVolumeClaim:
             claimName: media-share
