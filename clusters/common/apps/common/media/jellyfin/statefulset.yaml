@@ -58,7 +58,7 @@ spec:
         resources:
           requests:
             storage: 20Gi
-        dataSourceRef:
-          kind: PersistentVolumeClaim
-          name: jellyfin-config
+        # dataSourceRef:
+        #   kind: PersistentVolumeClaim
+        #   name: jellyfin-config
 
