@@ -20,3 +20,17 @@ spec:
       tls:
         enabled: false
         certSource: none
+    core:
+      configureUserSettings: |
+        {
+          "auth_mode": "oidc_auth",
+          "oidc_name": "tsidp",
+          "oidc_endpoint": "https://ottawa-idp.keiretsu.ts.net",
+          "oidc_client_id": "26aeab2c54a0ac76131471bedbac3d96",
+          "oidc_client_secret": "578fffa3df43d9bf9d948b1d9ca721cb980faa70cb15d6cdb3e8e3ff47f73f89",
+          "oidc_scope": "openid,profile,email",
+          "oidc_verify_cert": true,
+          "oidc_auto_onboard": true,
+          "oidc_user_claim": "preferred_username",
+          "oidc_groups_claim": "groups"
+        }
