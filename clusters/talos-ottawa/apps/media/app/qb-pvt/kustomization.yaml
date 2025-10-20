@@ -10,3 +10,4 @@ resources:
   - httproute.yaml 
   - volsync-restore.yaml
   - volsync-backup.yaml
+  - secret.yaml

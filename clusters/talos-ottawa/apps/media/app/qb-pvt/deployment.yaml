@@ -32,24 +32,24 @@ spec:
         - name: WIREGUARD_ENDPOINT_IP
           valueFrom:
             secretKeyRef:
-              name: qbittorrent-secret
+              name: qbittorrent-pvt-secret
               key: WIREGUARD_ENDPOINT_IP
         - name: WIREGUARD_ENDPOINT_PORT
           value: "51820"
         - name: WIREGUARD_PUBLIC_KEY
           valueFrom:
             secretKeyRef:
-              name: qbittorrent-secret
+              name: qbittorrent-pvt-secret
               key: WIREGUARD_PUBLIC_KEY
         - name: WIREGUARD_PRIVATE_KEY
           valueFrom:
             secretKeyRef:
-              name: qbittorrent-secret
+              name: qbittorrent-pvt-secret
               key: WIREGUARD_PRIVATE_KEY
         - name: WIREGUARD_ADDRESSES
           valueFrom:
             secretKeyRef:
-              name: qbittorrent-secret
+              name: qbittorrent-pvt-secret
               key: WIREGUARD_ADDRESSES
         - name: VPN_PORT_FORWARDING
           value: "on"
