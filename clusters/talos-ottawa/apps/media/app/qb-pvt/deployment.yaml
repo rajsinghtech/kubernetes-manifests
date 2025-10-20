@@ -15,6 +15,85 @@ spec:
         app: qbittorrent-pvt
     spec:
       containers:
+      - name: gluetun
+        image: ghcr.io/qdm12/gluetun:latest
+        securityContext:
+          capabilities:
+            add:
+            - NET_ADMIN
+          allowPrivilegeEscalation: false
+        env:
+        - name: VPN_SERVICE_PROVIDER
+          value: custom
+        - name: VPN_TYPE
+          value: wireguard
+        - name: VPN_INTERFACE
+          value: wg0
+        - name: WIREGUARD_ENDPOINT_IP
+          valueFrom:
+            secretKeyRef:
+              name: qbittorrent-secret
+              key: WIREGUARD_ENDPOINT_IP
+        - name: WIREGUARD_ENDPOINT_PORT
+          value: "51820"
+        - name: WIREGUARD_PUBLIC_KEY
+          valueFrom:
+            secretKeyRef:
+              name: qbittorrent-secret
+              key: WIREGUARD_PUBLIC_KEY
+        - name: WIREGUARD_PRIVATE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: qbittorrent-secret
+              key: WIREGUARD_PRIVATE_KEY
+        - name: WIREGUARD_ADDRESSES
+          valueFrom:
+            secretKeyRef:
+              name: qbittorrent-secret
+              key: WIREGUARD_ADDRESSES
+        - name: VPN_PORT_FORWARDING
+          value: "on"
+        - name: VPN_PORT_FORWARDING_PROVIDER
+          value: protonvpn
+        - name: DOT
+          value: "off"
+        - name: FIREWALL_INPUT_PORTS
+          value: "8080,6881,8000"
+        - name: FIREWALL_OUTBOUND_SUBNETS
+          value: ${CLUSTER_POD_CIDR}
+        - name: UPDATER_PERIOD
+          value: "24h"
+        - name: HEALTH_VPN_DURATION_INITIAL
+          value: "360s"
+        - name: LOG_LEVEL
+          value: info
+        volumeMounts:
+        - name: gluetun-config
+          mountPath: /gluetun
+      - name: gluetun-qb-port-sync
+        image: ghcr.io/bjw-s-labs/gluetun-qb-port-sync:latest
+        env:
+        - name: GLUETUN_CONTROL_SERVER_HOST
+          value: localhost
+        - name: GLUETUN_CONTROL_SERVER_PORT
+          value: "8000"
+        - name: QBITTORRENT_HOST
+          value: localhost
+        - name: QBITTORRENT_WEBUI_PORT
+          value: "8080"
+        - name: CRON_ENABLED
+          value: "true"
+        - name: CRON_SCHEDULE
+          value: "*/5 * * * *"
+        - name: LOG_TIMESTAMP
+          value: "false"
+        - name: CRON_INIT
+          value: "true"
+        volumeMounts:
+        - name: qb-port-sync-config
+          mountPath: /config
+        command: ["/bin/sh"]
+        args: ["-c", "echo '*/5 * * * * /app/gluetun-qb-port-sync' > /config/crontab && exec /entrypoint.sh"]
       - name: qbittorrent
         image: lscr.io/linuxserver/qbittorrent:latest
         ports:
@@ -55,4 +134,8 @@ spec:
           claimName: qbittorrent-pvt-config
       - name: downloads-volume
         persistentVolumeClaim:
-          claimName: qbittorrent-pvt-downloads
+          claimName: qbittorrent-downloads
+      - name: gluetun-config
+        emptyDir: {}
+      - name: qb-port-sync-config
+        emptyDir: {}
