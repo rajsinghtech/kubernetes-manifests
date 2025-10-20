@@ -1,0 +1,58 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: ${LOCATION}
+  labels:
+    external-dns: ${LOCATION}
+  annotations:
+    cert-manager.io/cluster-issuer: ${COMMON_DOMAIN//./-}
+spec:
+  gatewayClassName: ${LOCATION}
+  listeners: 
+    - name: wildcard-cdn-${COMMON_DOMAIN//./-}-http
+      hostname: "*.cdn.${COMMON_DOMAIN}"
+      port: 80
+      protocol: HTTP
+    - name: wildcard-cdn-${COMMON_DOMAIN//./-}-https
+      protocol: HTTPS
+      port: 443
+      hostname: "*.cdn.${COMMON_DOMAIN}"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        mode: Terminate
+        certificateRefs:
+        - group: ''
+          kind: Secret
+          name: wildcard-cdn-${COMMON_DOMAIN//./-}
+    - name: wildcard-${LOCATION}-${COMMON_DOMAIN//./-}-http
+      hostname: "*.${LOCATION}.${COMMON_DOMAIN}"
+      port: 80
+      protocol: HTTP
+    - name: wildcard-${LOCATION}-${COMMON_DOMAIN//./-}-https
+      protocol: HTTPS
+      port: 443
+      hostname: "*.${LOCATION}.${COMMON_DOMAIN}"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        mode: Terminate
+        certificateRefs:
+        - group: ''
+          kind: Secret
+          name: wildcard-${LOCATION}-${COMMON_DOMAIN//./-}
+    - name: pihole-udp
+      protocol: UDP
+      port: 53
+      allowedRoutes:
+        kinds:
+        - kind: UDPRoute
+    - name: pihole-tcp
+      protocol: TCP
+      port: 53
+      allowedRoutes:
+        kinds:
+        - kind: TCPRoute

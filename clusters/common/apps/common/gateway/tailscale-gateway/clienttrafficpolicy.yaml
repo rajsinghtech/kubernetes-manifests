@@ -1,0 +1,28 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: ClientTrafficPolicy
+metadata:
+  name: common
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: cdn
+      sectionName: wildcard-cdn-${COMMON_DOMAIN//./-}-https
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: ${LOCATION}
+      sectionName: wildcard-${LOCATION}-${COMMON_DOMAIN//./-}-https
+  clientIPDetection:
+    xForwardedFor:
+      numTrustedHops: 1
+  timeout:
+    http:
+      requestReceivedTimeout: 0s
+      idleTimeout: 3600s 
+      streamIdleTimeout: 900s
+  headers:
+    requestID: PreserveOrGenerate  
+  http2:
+    initialStreamWindowSize: 64Ki 
+    initialConnectionWindowSize: 1Mi 
+    maxConcurrentStreams: 100
