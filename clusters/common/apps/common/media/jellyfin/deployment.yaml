@@ -28,26 +28,12 @@ spec:
               containerPort: 8096
               protocol: TCP
           volumeMounts:
-            - name: tv-4k
-              mountPath: /media/tv/4k
-            - name: tv-1080p
-              mountPath: /media/tv/1080p
-            - name: tv-anime
-              mountPath: /media/tv/anime
-            - name: movies-4k
-              mountPath: /media/movies/4k
-            - name: movies-1080p
-              mountPath: /media/movies/1080p
-            - name: movies-4kremux
-              mountPath: /media/movies/4kremux
-            - name: movies-anime
-              mountPath: /media/movies/anime
-            - name: music
-              mountPath: /media/music
+            - name: media-share
+              mountPath: /media-share
             - name: config
               mountPath: /config
-            - name: transcode
-              mountPath: /config/transcodes
+            # - name: transcode
+            #   mountPath: /config/transcodes
           env:
             - name: PUID
               value: "0"
@@ -58,34 +44,13 @@ spec:
             - name: JELLYFIN_PublishedServerUrl
               value: jellyfin.rajsingh.info
       volumes:
-        - name: tv-4k
+        - name: media-share
           persistentVolumeClaim:
-            claimName: sonarr-4k-tv
-        - name: tv-1080p
-          persistentVolumeClaim:
-            claimName: sonarr-1080p-tv
-        - name: tv-anime
-          persistentVolumeClaim:
-            claimName: sonarr-anime-tv
-        - name: movies-4k
-          persistentVolumeClaim:
-            claimName: radarr-4k-movies
-        - name: movies-1080p
-          persistentVolumeClaim:
-            claimName: radarr-1080p-movies
-        - name: movies-4kremux
-          persistentVolumeClaim:
-            claimName: radarr-4kremux-movies
-        - name: movies-anime
-          persistentVolumeClaim:
-            claimName: radarr-anime-movies
-        - name: music
-          persistentVolumeClaim:
-            claimName: lidarr-music
+            claimName: media-share
         - name: config
           persistentVolumeClaim:
             claimName: jellyfin-config
-        - name: transcode
-          emptyDir:
-            medium: Memory
-            sizeLimit: 4Gi 
+        # - name: transcode
+        #   emptyDir:
+        #     medium: Memory
+        #     sizeLimit: 4Gi 
