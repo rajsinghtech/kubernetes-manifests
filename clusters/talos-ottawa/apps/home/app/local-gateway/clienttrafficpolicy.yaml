@@ -3,9 +3,6 @@ kind: ClientTrafficPolicy
 metadata:
   name: wildcard-lan
 spec:
-  clientIPDetection:
-    xForwardedFor:
-      numTrustedHops: 1
   targetRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
