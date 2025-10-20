@@ -30,32 +30,15 @@ spec:
             - containerPort: 32400
               name: http
               protocol: TCP
-          # readinessProbe:
-          #   httpGet:
-          #     path: /identity
-          #     port: 32400
-          #   failureThreshold: 3
-          #   initialDelaySeconds: 15
-          #   timeoutSeconds: 10
-          # livenessProbe:
-          #   httpGet:
-          #     path: /identity
-          #     port: 32400
-          #   failureThreshold: 3
-          #   initialDelaySeconds: 15
-          #   timeoutSeconds: 10
-          # resources:
-          #   requests:
-          #     cpu: 2000m
-          #     memory: 2Gi
-          #   limits:
-          #     cpu: 5000m
-          #     memory: 8Gi
           env:
             - name: TZ
               value: ${TIMEZONE}
             - name: VERSION
               value: docker
+            - name: ADVERTISE_IP
+              value: "https://plex.killinit.cc:443"
+            - name: ALLOWED_NETWORKS
+              value: "10.0.0.0/8,192.168.0.0/16"
           volumeMounts:
             - name: config
               mountPath: /config
