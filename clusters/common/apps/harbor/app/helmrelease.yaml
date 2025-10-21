@@ -14,6 +14,7 @@ spec:
         name: harbor
         namespace: flux-system
   values:
+    harborAdminPassword: "${DEFAULT_PASSWORD}"
     externalURL: https://${LOCATION}-harbor.keiretsu.ts.net
     expose:
       type: clusterIP
