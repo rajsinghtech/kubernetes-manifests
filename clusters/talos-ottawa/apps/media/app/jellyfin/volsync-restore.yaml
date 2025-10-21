@@ -13,4 +13,4 @@ spec:
     capacity: 5Gi
     storageClassName: ceph-block-replicated
     volumeSnapshotClassName: csi-rbdplugin-snapclass
-    restoreAsOf: "2025-10-17T23:14:00Z"
+    # restoreAsOf: "2025-10-17T23:14:00Z"
