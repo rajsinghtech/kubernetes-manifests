@@ -14,3 +14,20 @@ spec:
   tls:
     - hosts:
         - tsflow
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tsflow-backup-bullshit
+  annotations:
+    tailscale.com/proxy-group: "common-ingress"
+spec:
+  defaultBackend:
+    service:
+      name: tsflow
+      port:
+        number: 8080
+  ingressClassName: tailscale
+  tls:
+    - hosts:
+        - tsflow-backup
