@@ -14,6 +14,8 @@ spec:
         name: harbor
         namespace: flux-system
   values:
+    updateStrategy:
+      type: Recreate
     harborAdminPassword: "${DEFAULT_PASSWORD}"
     externalURL: https://${LOCATION}-harbor.keiretsu.ts.net
     expose:
