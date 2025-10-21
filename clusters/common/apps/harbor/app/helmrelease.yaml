@@ -33,4 +33,4 @@ spec:
           "oidc_auto_onboard": true,
           "oidc_user_claim": "preferred_username",
           "oidc_groups_claim": "groups"
-        }
+        } 
