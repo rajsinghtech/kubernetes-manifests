@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: jellyseerr
-          image: fallenbagel/jellyseerr:preview-OIDC
+          image: fallenbagel/jellyseerr:latest
           ports:
             - name: http
               containerPort: 5055

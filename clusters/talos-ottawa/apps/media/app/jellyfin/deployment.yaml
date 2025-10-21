@@ -56,7 +56,7 @@ spec:
             - name: TZ
               value: ${TIMEZONE}
             - name: JELLYFIN_PublishedServerUrl
-              value: jellyfin.rajsingh.info
+              value: jellyfin.${CLUSTER_DOMAIN}
       volumes:
         - name: tv-4k
           persistentVolumeClaim:
