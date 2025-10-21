@@ -9,7 +9,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./clusters/talos-ottawa/apps/node-feature-discovery/install
+  path: ./clusters/common/apps/node-feature-discovery/install
   prune: true
   sourceRef:
     kind: GitRepository
@@ -29,7 +29,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./clusters/talos-ottawa/apps/node-feature-discovery/rules
+  path: ./clusters/common/apps/node-feature-discovery/rules
   prune: true
   sourceRef:
     kind: GitRepository
