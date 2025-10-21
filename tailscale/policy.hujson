@@ -29,15 +29,26 @@
 			"LukeHouge@github",
 			"rajsinghtech@github",
 		],
+		"group:ottawa": [
+			"kbpersonal@github",
+			"rajsinghtech@github",
+		],
+		"group:robbinsdale": [
+			"LukeHouge@github",
+			"rajsinghtech@github",
+		],
+		"group:stpetersburg": [
+			"rajsinghtech@github",
+		],
 	},
 	"tagOwners": {
-		"tag:k8s-operator": [],
-		"tag:k8s":          ["tag:k8s-operator", "autogroup:admin"],
-		"tag:k8s-recorder": ["tag:k8s-operator", "autogroup:admin"],
-		"tag:robbinsdale":  ["tag:k8s-operator", "autogroup:admin"],
-		"tag:ottawa":       ["tag:k8s-operator", "autogroup:admin"],
-		"tag:stpetersburg": ["tag:k8s-operator", "autogroup:admin"],
-		"tag:udm":          ["autogroup:admin"],
+		"tag:k8s-operator": ["tag:k8s-operator", "group:superuser",],
+		"tag:k8s":          ["tag:k8s-operator", "group:superuser",],
+		"tag:k8s-recorder": ["tag:k8s-operator", "group:superuser",],
+		"tag:robbinsdale":  ["tag:k8s-operator", "group:superuser", "group:robbinsdale",],
+		"tag:ottawa":       ["tag:k8s-operator", "group:superuser", "group:ottawa",],
+		"tag:stpetersburg": ["tag:k8s-operator", "group:superuser", "group:stpetersburg",],
+		"tag:udm":          ["group:superuser"],
 	},
 	"autoApprovers": {
 		"exitNode": ["tag:k8s"],
