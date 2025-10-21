@@ -57,6 +57,10 @@ spec:
               value: ${TIMEZONE}
             - name: JELLYFIN_PublishedServerUrl
               value: jellyfin.${CLUSTER_DOMAIN}
+            - name: JELLYFIN_FFmpeg__probesize
+              value: "50000000"
+            - name: JELLYFIN_FFmpeg__analyzeduration
+              value: "50000000"
       volumes:
         - name: tv-4k
           persistentVolumeClaim:
