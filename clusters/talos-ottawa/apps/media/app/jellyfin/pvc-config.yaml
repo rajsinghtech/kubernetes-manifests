@@ -8,7 +8,7 @@ spec:
   resources:
     requests:
       storage: 20Gi
-  dataSourceRef:
-    kind: ReplicationDestination
-    apiGroup: volsync.backube
-    name: jellyfin-config
+  # dataSourceRef:
+  #   kind: ReplicationDestination
+  #   apiGroup: volsync.backube
+  #   name: jellyfin-config
