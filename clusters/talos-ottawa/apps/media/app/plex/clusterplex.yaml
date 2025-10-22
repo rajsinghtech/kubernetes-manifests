@@ -69,36 +69,98 @@ data:
     mkdir -p "$CACHE_DIR"
 
     # Check if drivers already exist
-    if [ -f "$CACHE_DIR/iHD_drv_video.so" ]; then
+    if [ -f "$CACHE_DIR/iHD_drv_video.so" ] || [ -f "$CACHE_DIR/i965_drv_video.so" ]; then
         echo "Drivers already cached"
+        ls -la "$CACHE_DIR"
         exit 0
     fi
 
-    # Copy drivers from system locations to Plex cache
-    # Intel iHD driver (newer Intel GPUs - Gen 8+)
-    if [ -f "/usr/lib/x86_64-linux-gnu/dri/iHD_drv_video.so" ]; then
-        cp /usr/lib/x86_64-linux-gnu/dri/iHD_drv_video.so "$CACHE_DIR/"
-        echo "Copied iHD driver"
-    elif [ -f "/usr/lib/dri/iHD_drv_video.so" ]; then
-        cp /usr/lib/dri/iHD_drv_video.so "$CACHE_DIR/"
-        echo "Copied iHD driver from /usr/lib/dri"
+    # First, let's see what's available in the container
+    echo "Searching for available GPU drivers in the container..."
+
+    # Search for any VA-API drivers
+    for search_path in /usr/lib/plexmediaserver/lib/dri /usr/lib/x86_64-linux-gnu/dri /usr/lib/dri /usr/local/lib/dri; do
+        if [ -d "$search_path" ]; then
+            echo "Found driver directory: $search_path"
+            ls -la "$search_path" 2>/dev/null || true
+        fi
+    done
+
+    # Check if drivers exist in Plex's bundled location
+    if [ -d "/usr/lib/plexmediaserver/lib/dri" ]; then
+        echo "Copying all drivers from Plex bundle..."
+        cp -r /usr/lib/plexmediaserver/lib/dri/* "$CACHE_DIR/" 2>/dev/null || true
     fi
 
+    # Copy specific Intel drivers if found
+    # Intel iHD driver (newer Intel GPUs - Gen 8+)
+    for driver_path in \
+        "/usr/lib/plexmediaserver/lib/dri/iHD_drv_video.so" \
+        "/usr/lib/x86_64-linux-gnu/dri/iHD_drv_video.so" \
+        "/usr/lib/dri/iHD_drv_video.so"; do
+        if [ -f "$driver_path" ]; then
+            cp "$driver_path" "$CACHE_DIR/"
+            echo "Copied iHD driver from $driver_path"
+            break
+        fi
+    done
+
     # Intel i965 driver (older Intel GPUs - Gen 4-9)
-    if [ -f "/usr/lib/x86_64-linux-gnu/dri/i965_drv_video.so" ]; then
-        cp /usr/lib/x86_64-linux-gnu/dri/i965_drv_video.so "$CACHE_DIR/"
-        echo "Copied i965 driver"
-    elif [ -f "/usr/lib/dri/i965_drv_video.so" ]; then
-        cp /usr/lib/dri/i965_drv_video.so "$CACHE_DIR/"
-        echo "Copied i965 driver from /usr/lib/dri"
+    for driver_path in \
+        "/usr/lib/plexmediaserver/lib/dri/i965_drv_video.so" \
+        "/usr/lib/x86_64-linux-gnu/dri/i965_drv_video.so" \
+        "/usr/lib/dri/i965_drv_video.so"; do
+        if [ -f "$driver_path" ]; then
+            cp "$driver_path" "$CACHE_DIR/"
+            echo "Copied i965 driver from $driver_path"
+            break
+        fi
+    done
+
+    # If no drivers found in standard locations, try to install them
+    if [ ! -f "$CACHE_DIR/iHD_drv_video.so" ] && [ ! -f "$CACHE_DIR/i965_drv_video.so" ]; then
+        echo "No drivers found in standard locations. Attempting to install..."
+
+        # Check if we can install packages (works in Ubuntu-based containers)
+        if command -v apt-get &> /dev/null; then
+            echo "Installing Intel Media Driver..."
+            apt-get update && apt-get install -y intel-media-va-driver-non-free i965-va-driver || true
+
+            # After installation, try copying again
+            for driver_path in \
+                "/usr/lib/x86_64-linux-gnu/dri/iHD_drv_video.so" \
+                "/usr/lib/dri/iHD_drv_video.so"; do
+                if [ -f "$driver_path" ]; then
+                    cp "$driver_path" "$CACHE_DIR/"
+                    echo "Copied iHD driver from $driver_path after installation"
+                    break
+                fi
+            done
+
+            for driver_path in \
+                "/usr/lib/x86_64-linux-gnu/dri/i965_drv_video.so" \
+                "/usr/lib/dri/i965_drv_video.so"; do
+                if [ -f "$driver_path" ]; then
+                    cp "$driver_path" "$CACHE_DIR/"
+                    echo "Copied i965 driver from $driver_path after installation"
+                    break
+                fi
+            done
+        fi
     fi
 
     # Set proper permissions
     chown -R 1000:1000 "/config/Library"
     chmod -R 755 "$CACHE_DIR"
 
-    echo "GPU driver cache setup complete"
+    echo "GPU driver cache setup complete. Contents:"
     ls -la "$CACHE_DIR"
+
+    # Verify we have at least one driver
+    if [ ! -f "$CACHE_DIR/iHD_drv_video.so" ] && [ ! -f "$CACHE_DIR/i965_drv_video.so" ]; then
+        echo "WARNING: No Intel GPU drivers were found or installed!"
+        echo "Hardware transcoding may not work properly."
+    fi
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
