@@ -272,7 +272,7 @@ metadata:
     app.kubernetes.io/part-of: clusterplex
 spec:
   serviceName: clusterplex-worker-service
-  replicas: 2
+  replicas: 5
   selector:
     matchLabels:
       app.kubernetes.io/name: clusterplex-worker
