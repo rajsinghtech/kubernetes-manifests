@@ -49,7 +49,7 @@ data:
   STAT_CPU_INTERVAL: '10000'
   EAE_SUPPORT: '1'
   TRANSCODER_VERBOSE: '0'
-  # FFMPEG_HWACCEL: 'vaapi'
+  FFMPEG_HWACCEL: 'vaapi'
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
