@@ -43,7 +43,7 @@ data:
   PGID: '1000'
   PUID: '1000'
   VERSION: docker
-  DOCKER_MODS: 'ghcr.io/pabloromeo/clusterplex_worker_dockermod:latest|linuxserver/mods:plex-intel-gpu'
+  DOCKER_MODS: 'ghcr.io/pabloromeo/clusterplex_worker_dockermod:latest'
   ORCHESTRATOR_URL: 'http://clusterplex-orchestrator:3500'
   LISTENING_PORT: '3501'
   STAT_CPU_INTERVAL: '10000'
@@ -335,6 +335,10 @@ spec:
           mountPath: /codecs
         - name: transcode
           mountPath: /transcode
+        - name: plex-config
+          mountPath: /config/Library/Application Support/Plex Media Server/Cache
+          subPath: Library/Application Support/Plex Media Server/Cache
+          readOnly: true
         resources:
           requests:
             gpu.intel.com/i915: "25"
@@ -354,6 +358,9 @@ spec:
       - name: transcode
         persistentVolumeClaim:
           claimName: "clusterplex-transcode"
+      - name: plex-config
+        persistentVolumeClaim:
+          claimName: "clusterplex-config"
   volumeClaimTemplates:
     - metadata:
         name: codecs
