@@ -43,7 +43,7 @@ data:
   PGID: '1000'
   PUID: '1000'
   VERSION: docker
-  DOCKER_MODS: 'ghcr.io/pabloromeo/clusterplex_worker_dockermod:latest'
+  DOCKER_MODS: 'ghcr.io/pabloromeo/clusterplex_worker_dockermod:latest|ghcr.io/linuxserver/mods:plex-intel-gpu'
   ORCHESTRATOR_URL: 'http://clusterplex-orchestrator:3500'
   LISTENING_PORT: '3501'
   STAT_CPU_INTERVAL: '10000'
