@@ -61,7 +61,11 @@ data:
   setup-gpu-drivers.sh: |
     #!/bin/bash
 
-    echo "[PostStart] Setting up GPU drivers for hardware transcoding..."
+    # Log to a file to verify script is running
+    LOG_FILE="/config/gpu-driver-setup.log"
+    echo "[PostStart] GPU driver setup started at $(date)" | tee -a "$LOG_FILE"
+
+    echo "[PostStart] Setting up GPU drivers for hardware transcoding..." | tee -a "$LOG_FILE"
 
     # Create the cache directory structure
     CACHE_DIR="/config/Library/Application Support/Plex Media Server/Cache/va-dri-linux-x86_64"
@@ -69,28 +73,39 @@ data:
 
     # Check if symlinks already exist and are valid
     if [ -L "$CACHE_DIR/iHD_drv_video.so" ] || [ -L "$CACHE_DIR/i965_drv_video.so" ]; then
-        echo "[PostStart] Driver symlinks already exist"
-        ls -la "$CACHE_DIR"
+        echo "[PostStart] Driver symlinks already exist" | tee -a "$LOG_FILE"
+        ls -la "$CACHE_DIR" | tee -a "$LOG_FILE"
         exit 0
     fi
 
     # Remove any existing files (from previous failed attempts)
+    echo "[PostStart] Cleaning up old driver files..." | tee -a "$LOG_FILE"
     rm -f "$CACHE_DIR"/*.so 2>/dev/null || true
 
-    echo "[PostStart] Installing Intel GPU drivers in container..."
+    echo "[PostStart] Checking if drivers are already installed..." | tee -a "$LOG_FILE"
 
-    # Install drivers using apt (LinuxServer is Ubuntu-based)
-    apt-get update > /dev/null 2>&1
-    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-        intel-media-va-driver-non-free \
-        i965-va-driver \
-        libigdgmm12 \
-        libva2 \
-        libdrm2 \
-        libdrm-intel1 > /dev/null 2>&1 || \
-        echo "[PostStart] Failed to install drivers via apt"
+    # First check if drivers are already installed in the system
+    FOUND_DRIVERS=false
+    for location in "/usr/lib/x86_64-linux-gnu/dri" "/usr/lib/dri" "/usr/local/lib/dri" "/usr/lib/plexmediaserver/lib/dri"; do
+        if [ -d "$location" ]; then
+            echo "[PostStart] Checking $location..." | tee -a "$LOG_FILE"
+            if [ -f "$location/iHD_drv_video.so" ] || [ -f "$location/i965_drv_video.so" ]; then
+                FOUND_DRIVERS=true
+                break
+            fi
+        fi
+    done
 
-    echo "[PostStart] Creating symlinks to installed drivers..."
+    # Only install if not found
+    if [ "$FOUND_DRIVERS" = false ]; then
+        echo "[PostStart] Installing Intel GPU drivers..." | tee -a "$LOG_FILE"
+        apt-get update 2>&1 | tail -5 | tee -a "$LOG_FILE"
+        DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            intel-media-va-driver-non-free \
+            i965-va-driver 2>&1 | tail -10 | tee -a "$LOG_FILE"
+    fi
+
+    echo "[PostStart] Creating symlinks to installed drivers..." | tee -a "$LOG_FILE"
 
     # Create symlinks instead of copying to avoid library mismatch
     # Check multiple possible locations
@@ -107,13 +122,13 @@ data:
             # iHD driver for newer Intel GPUs
             if [ -f "$location/iHD_drv_video.so" ]; then
                 ln -sf "$location/iHD_drv_video.so" "$CACHE_DIR/iHD_drv_video.so"
-                echo "[PostStart] Created symlink: $CACHE_DIR/iHD_drv_video.so -> $location/iHD_drv_video.so"
+                echo "[PostStart] Created symlink: $CACHE_DIR/iHD_drv_video.so -> $location/iHD_drv_video.so" | tee -a "$LOG_FILE"
             fi
 
             # i965 driver for older Intel GPUs
             if [ -f "$location/i965_drv_video.so" ]; then
                 ln -sf "$location/i965_drv_video.so" "$CACHE_DIR/i965_drv_video.so"
-                echo "[PostStart] Created symlink: $CACHE_DIR/i965_drv_video.so -> $location/i965_drv_video.so"
+                echo "[PostStart] Created symlink: $CACHE_DIR/i965_drv_video.so -> $location/i965_drv_video.so" | tee -a "$LOG_FILE"
             fi
         fi
     done
@@ -122,25 +137,27 @@ data:
     chown -R abc:abc "/config/Library" 2>/dev/null || true
     chmod -R 755 "$CACHE_DIR" 2>/dev/null || true
 
-    echo "[PostStart] GPU driver cache contents:"
-    ls -la "$CACHE_DIR"
+    echo "[PostStart] GPU driver cache contents:" | tee -a "$LOG_FILE"
+    ls -la "$CACHE_DIR" | tee -a "$LOG_FILE"
 
     # Verify symlinks are valid
     if [ -L "$CACHE_DIR/iHD_drv_video.so" ] && [ -e "$CACHE_DIR/iHD_drv_video.so" ]; then
-        echo "[PostStart] SUCCESS: iHD driver symlink is valid"
+        echo "[PostStart] SUCCESS: iHD driver symlink is valid" | tee -a "$LOG_FILE"
     fi
 
     if [ -L "$CACHE_DIR/i965_drv_video.so" ] && [ -e "$CACHE_DIR/i965_drv_video.so" ]; then
-        echo "[PostStart] SUCCESS: i965 driver symlink is valid"
+        echo "[PostStart] SUCCESS: i965 driver symlink is valid" | tee -a "$LOG_FILE"
     fi
 
     # Final check
     if [ ! -L "$CACHE_DIR/iHD_drv_video.so" ] && [ ! -L "$CACHE_DIR/i965_drv_video.so" ]; then
-        echo "[PostStart] ERROR: No Intel GPU drivers available!"
-        echo "[PostStart] Hardware transcoding will not work."
+        echo "[PostStart] ERROR: No Intel GPU drivers available!" | tee -a "$LOG_FILE"
+        echo "[PostStart] Hardware transcoding will not work." | tee -a "$LOG_FILE"
     else
-        echo "[PostStart] GPU driver setup complete - hardware transcoding should work"
+        echo "[PostStart] GPU driver setup complete - hardware transcoding should work" | tee -a "$LOG_FILE"
     fi
+
+    echo "[PostStart] Setup completed at $(date)" | tee -a "$LOG_FILE"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
