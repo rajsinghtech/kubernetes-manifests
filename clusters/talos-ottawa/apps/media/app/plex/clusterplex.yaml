@@ -51,6 +51,26 @@ data:
   TRANSCODER_VERBOSE: '0'
   FFMPEG_HWACCEL: 'vaapi'
 ---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: clusterplex-worker-init
+  labels:
+    app.kubernetes.io/name: clusterplex-worker-init
+    app.kubernetes.io/part-of: clusterplex
+data:
+  install-drivers.sh: |
+    #!/usr/bin/with-contenv bash
+    if [ ! -f /tmp/.vaapi-drivers-installed ]; then
+      echo "Installing Intel VAAPI drivers..."
+      apt-get update
+      apt-get install -y intel-media-va-driver-non-free libva-drm2 libva2 vainfo
+      touch /tmp/.vaapi-drivers-installed
+      echo "VAAPI drivers installed successfully"
+    else
+      echo "VAAPI drivers already installed"
+    fi
+---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -339,6 +359,9 @@ spec:
           mountPath: /config/Library/Application Support/Plex Media Server/Cache
           subPath: Library/Application Support/Plex Media Server/Cache
           readOnly: true
+        - name: worker-init
+          mountPath: /custom-cont-init.d/install-drivers.sh
+          subPath: install-drivers.sh
         resources:
           requests:
             gpu.intel.com/i915: "25"
@@ -361,6 +384,10 @@ spec:
       - name: plex-config
         persistentVolumeClaim:
           claimName: "clusterplex-config"
+      - name: worker-init
+        configMap:
+          name: clusterplex-worker-init
+          defaultMode: 0755
   volumeClaimTemplates:
     - metadata:
         name: codecs
