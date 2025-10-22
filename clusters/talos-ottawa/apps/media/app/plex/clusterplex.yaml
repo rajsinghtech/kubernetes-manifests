@@ -62,7 +62,7 @@ data:
     #!/bin/bash
     set -e
 
-    echo "Setting up GPU driver cache for workers..."
+    echo "Setting up GPU driver cache for workers using official Plex image..."
 
     # Create the cache directory structure
     CACHE_DIR="/config/Library/Application Support/Plex Media Server/Cache/va-dri-linux-x86_64"
@@ -75,91 +75,55 @@ data:
         exit 0
     fi
 
-    # First, let's see what's available in the container
-    echo "Searching for available GPU drivers in the container..."
+    echo "Copying GPU drivers from official Plex image..."
 
-    # Search for any VA-API drivers
-    for search_path in /usr/lib/plexmediaserver/lib/dri /usr/lib/x86_64-linux-gnu/dri /usr/lib/dri /usr/local/lib/dri; do
-        if [ -d "$search_path" ]; then
-            echo "Found driver directory: $search_path"
-            ls -la "$search_path" 2>/dev/null || true
-        fi
-    done
+    # The official Plex image includes drivers in these locations
+    DRIVER_LOCATIONS=(
+        "/usr/lib/plexmediaserver/lib/dri"
+        "/usr/lib/x86_64-linux-gnu/dri"
+        "/usr/lib/dri"
+    )
 
-    # Check if drivers exist in Plex's bundled location
-    if [ -d "/usr/lib/plexmediaserver/lib/dri" ]; then
-        echo "Copying all drivers from Plex bundle..."
-        cp -r /usr/lib/plexmediaserver/lib/dri/* "$CACHE_DIR/" 2>/dev/null || true
-    fi
+    FOUND_DRIVERS=false
 
-    # Copy specific Intel drivers if found
-    # Intel iHD driver (newer Intel GPUs - Gen 8+)
-    for driver_path in \
-        "/usr/lib/plexmediaserver/lib/dri/iHD_drv_video.so" \
-        "/usr/lib/x86_64-linux-gnu/dri/iHD_drv_video.so" \
-        "/usr/lib/dri/iHD_drv_video.so"; do
-        if [ -f "$driver_path" ]; then
-            cp "$driver_path" "$CACHE_DIR/"
-            echo "Copied iHD driver from $driver_path"
-            break
-        fi
-    done
+    for location in "${DRIVER_LOCATIONS[@]}"; do
+        if [ -d "$location" ]; then
+            echo "Found driver directory: $location"
+            ls -la "$location" 2>/dev/null || true
 
-    # Intel i965 driver (older Intel GPUs - Gen 4-9)
-    for driver_path in \
-        "/usr/lib/plexmediaserver/lib/dri/i965_drv_video.so" \
-        "/usr/lib/x86_64-linux-gnu/dri/i965_drv_video.so" \
-        "/usr/lib/dri/i965_drv_video.so"; do
-        if [ -f "$driver_path" ]; then
-            cp "$driver_path" "$CACHE_DIR/"
-            echo "Copied i965 driver from $driver_path"
-            break
-        fi
-    done
-
-    # If no drivers found in standard locations, try to install them
-    if [ ! -f "$CACHE_DIR/iHD_drv_video.so" ] && [ ! -f "$CACHE_DIR/i965_drv_video.so" ]; then
-        echo "No drivers found in standard locations. Attempting to install..."
-
-        # Check if we can install packages (works in Ubuntu-based containers)
-        if command -v apt-get &> /dev/null; then
-            echo "Installing Intel Media Driver..."
-            apt-get update && apt-get install -y intel-media-va-driver-non-free i965-va-driver || true
-
-            # After installation, try copying again
-            for driver_path in \
-                "/usr/lib/x86_64-linux-gnu/dri/iHD_drv_video.so" \
-                "/usr/lib/dri/iHD_drv_video.so"; do
-                if [ -f "$driver_path" ]; then
-                    cp "$driver_path" "$CACHE_DIR/"
-                    echo "Copied iHD driver from $driver_path after installation"
-                    break
+            # Copy all Intel drivers
+            for driver in "$location"/iHD_drv_video.so "$location"/i965_drv_video.so; do
+                if [ -f "$driver" ]; then
+                    cp "$driver" "$CACHE_DIR/" 2>/dev/null && {
+                        echo "Copied $(basename $driver) from $location"
+                        FOUND_DRIVERS=true
+                    }
                 fi
             done
 
-            for driver_path in \
-                "/usr/lib/x86_64-linux-gnu/dri/i965_drv_video.so" \
-                "/usr/lib/dri/i965_drv_video.so"; do
-                if [ -f "$driver_path" ]; then
-                    cp "$driver_path" "$CACHE_DIR/"
-                    echo "Copied i965 driver from $driver_path after installation"
-                    break
-                fi
-            done
+            # If we found drivers in Plex's bundled location, copy all of them
+            if [ "$location" = "/usr/lib/plexmediaserver/lib/dri" ] && [ -d "$location" ]; then
+                echo "Copying all drivers from Plex bundle..."
+                cp -r "$location"/* "$CACHE_DIR/" 2>/dev/null && FOUND_DRIVERS=true
+            fi
         fi
-    fi
+    done
 
-    # Set proper permissions
-    chown -R 1000:1000 "/config/Library"
-    chmod -R 755 "$CACHE_DIR"
+    # Set proper permissions (LinuxServer uses UID/GID 1000)
+    chown -R 1000:1000 "/config/Library" 2>/dev/null || true
+    chmod -R 755 "$CACHE_DIR" 2>/dev/null || true
 
     echo "GPU driver cache setup complete. Contents:"
     ls -la "$CACHE_DIR"
 
     # Verify we have at least one driver
-    if [ ! -f "$CACHE_DIR/iHD_drv_video.so" ] && [ ! -f "$CACHE_DIR/i965_drv_video.so" ]; then
-        echo "WARNING: No Intel GPU drivers were found or installed!"
-        echo "Hardware transcoding may not work properly."
+    if [ "$FOUND_DRIVERS" = false ] || ([ ! -f "$CACHE_DIR/iHD_drv_video.so" ] && [ ! -f "$CACHE_DIR/i965_drv_video.so" ]); then
+        echo "WARNING: No Intel GPU drivers found in official Plex image!"
+        echo "This is unexpected. The official Plex image should include these drivers."
+        echo "Please check the logs and consider opening an issue."
+    else
+        echo "SUCCESS: GPU drivers are now available in cache!"
+        echo "Workers should now be able to use hardware transcoding."
     fi
 ---
 apiVersion: v1
@@ -414,7 +378,7 @@ spec:
             weight: 50
       initContainers:
       - name: setup-gpu-drivers
-        image: lscr.io/linuxserver/plex:latest
+        image: plexinc/pms-docker:latest
         command: ["/bin/bash", "/scripts/setup-gpu-drivers.sh"]
         securityContext:
           privileged: true
