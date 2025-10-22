@@ -42,8 +42,6 @@ spec:
         version: latest
       configVolume:
         size: 10Gi
-        storageClass: rook-cephfs
-        accessMode: ReadWriteMany
       resources: {}
 
     orchestrator:
@@ -59,11 +57,11 @@ spec:
           value: vaapi
       securityContext:
         privileged: true
-      persistence:
-        config:
-          enabled: true
-          existingClaim: clusterplex-pms-config
+      volumeClaimTemplates:
+        - name: config
           mountPath: /config
+          accessMode: ReadWriteOnce
+          size: 10Gi
       resources:
         requests:
           gpu.intel.com/i915: "10"
