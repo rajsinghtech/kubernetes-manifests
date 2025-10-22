@@ -20,9 +20,9 @@ spec:
           image: jellyfin/jellyfin:10.11.0
           resources:
             requests:
-              gpu.intel.com/i915: "1"
+              gpu.intel.com/i915: "25"
             limits:
-              gpu.intel.com/i915: "1"
+              gpu.intel.com/i915: "25"
           ports:
             - name: http
               containerPort: 8096
