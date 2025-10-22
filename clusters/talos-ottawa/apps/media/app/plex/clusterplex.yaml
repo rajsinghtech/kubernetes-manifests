@@ -275,7 +275,7 @@ metadata:
 spec:
   serviceName: clusterplex-worker-service
   podManagementPolicy: Parallel
-  replicas: 5
+  replicas: 2
   selector:
     matchLabels:
       app.kubernetes.io/name: clusterplex-worker
@@ -337,9 +337,9 @@ spec:
           mountPath: /transcode
         resources:
           requests:
-            gpu.intel.com/i915: "10"
+            gpu.intel.com/i915: "25"
           limits:
-            gpu.intel.com/i915: "10"
+            gpu.intel.com/i915: "25"
         # resources:              # adapt requests and limits to your needs
         #   requests:
         #     cpu: 500m
