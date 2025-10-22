@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: gatus
-      version: 1.4.3 # Pinned version from original kustomization
+      version: 1.4.4 # Pinned version from original kustomization
       sourceRef:
         kind: HelmRepository
         name: twin
