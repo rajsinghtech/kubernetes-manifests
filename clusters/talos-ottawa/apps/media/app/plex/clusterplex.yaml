@@ -59,7 +59,7 @@ metadata:
     app.kubernetes.io/part-of: clusterplex
 spec:
   accessModes:
-  - ReadWriteMany
+  - ReadWriteOnce
   resources:
     requests:
       storage: "10Gi"
