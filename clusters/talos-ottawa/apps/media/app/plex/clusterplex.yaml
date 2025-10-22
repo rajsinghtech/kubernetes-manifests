@@ -62,7 +62,8 @@ data:
     #!/bin/bash
     set -e
 
-    echo "Setting up GPU driver cache for workers using official Plex image..."
+    echo "Setting up GPU driver cache for workers..."
+    echo "Note: Official Plex image does not include Intel GPU drivers, installing them..."
 
     # Create the cache directory structure
     CACHE_DIR="/config/Library/Application Support/Plex Media Server/Cache/va-dri-linux-x86_64"
@@ -75,11 +76,20 @@ data:
         exit 0
     fi
 
-    echo "Copying GPU drivers from official Plex image..."
+    echo "Installing Intel VA-API drivers in init container..."
 
-    # The official Plex image includes drivers in these locations
+    # Update package list and install Intel drivers
+    # The official Plex image is based on Ubuntu 24.04
+    apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        intel-media-va-driver-non-free \
+        i965-va-driver \
+        vainfo
+
+    echo "Intel drivers installed. Searching for driver files..."
+
+    # Now copy the installed drivers to cache
     DRIVER_LOCATIONS=(
-        "/usr/lib/plexmediaserver/lib/dri"
         "/usr/lib/x86_64-linux-gnu/dri"
         "/usr/lib/dri"
     )
@@ -91,21 +101,15 @@ data:
             echo "Found driver directory: $location"
             ls -la "$location" 2>/dev/null || true
 
-            # Copy all Intel drivers
+            # Copy Intel drivers
             for driver in "$location"/iHD_drv_video.so "$location"/i965_drv_video.so; do
                 if [ -f "$driver" ]; then
-                    cp "$driver" "$CACHE_DIR/" 2>/dev/null && {
+                    cp "$driver" "$CACHE_DIR/" && {
                         echo "Copied $(basename $driver) from $location"
                         FOUND_DRIVERS=true
                     }
                 fi
             done
-
-            # If we found drivers in Plex's bundled location, copy all of them
-            if [ "$location" = "/usr/lib/plexmediaserver/lib/dri" ] && [ -d "$location" ]; then
-                echo "Copying all drivers from Plex bundle..."
-                cp -r "$location"/* "$CACHE_DIR/" 2>/dev/null && FOUND_DRIVERS=true
-            fi
         fi
     done
 
@@ -116,11 +120,17 @@ data:
     echo "GPU driver cache setup complete. Contents:"
     ls -la "$CACHE_DIR"
 
+    # Test with vainfo if possible (requires /dev/dri access)
+    if [ -c "/dev/dri/renderD128" ]; then
+        echo "Testing VA-API with vainfo:"
+        LIBVA_DRIVER_NAME=iHD vainfo 2>/dev/null || echo "vainfo test failed (expected in init container)"
+    fi
+
     # Verify we have at least one driver
     if [ "$FOUND_DRIVERS" = false ] || ([ ! -f "$CACHE_DIR/iHD_drv_video.so" ] && [ ! -f "$CACHE_DIR/i965_drv_video.so" ]); then
-        echo "WARNING: No Intel GPU drivers found in official Plex image!"
-        echo "This is unexpected. The official Plex image should include these drivers."
-        echo "Please check the logs and consider opening an issue."
+        echo "ERROR: Failed to install or find Intel GPU drivers!"
+        echo "Hardware transcoding will not work."
+        exit 1
     else
         echo "SUCCESS: GPU drivers are now available in cache!"
         echo "Workers should now be able to use hardware transcoding."
