@@ -335,9 +335,9 @@ spec:
           mountPath: /transcode
         resources:
           requests:
-            gpu.intel.com/i915: "10"
-          limits:
-            gpu.intel.com/i915: "10"
+            gpu.intel.com/i915: "1"
+          # limits:
+          #   gpu.intel.com/i915: "10"
         # resources:              # adapt requests and limits to your needs
         #   requests:
         #     cpu: 500m
