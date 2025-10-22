@@ -213,12 +213,6 @@ spec:
             gnetId: 23423
             revision: 2
             datasource: prometheus
-        intel:
-          # Intel GPU Metrics - https://grafana.com/grafana/dashboards/23251-intel-gpu-metrics/
-          intel-gpu-metrics:
-            gnetId: 23251
-            revision: 1
-            datasource: prometheus
         ceph:
           ceph-cluster:
             gnetId: 2842
