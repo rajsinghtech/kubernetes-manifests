@@ -32,6 +32,7 @@ spec:
       sharedStorage:
         transcode:
           storageClass: rook-cephfs
+          size: 50Gi
         media:
           existingClaim: media-share
 
@@ -41,6 +42,8 @@ spec:
         version: latest
       configVolume:
         size: 10Gi
+        storageClass: rook-cephfs
+        accessMode: ReadWriteMany
       resources: {}
 
     orchestrator:
@@ -56,6 +59,11 @@ spec:
           value: vaapi
       securityContext:
         privileged: true
+      persistence:
+        config:
+          enabled: true
+          existingClaim: clusterplex-pms-config
+          mountPath: /config
       resources:
         requests:
           gpu.intel.com/i915: "10"
