@@ -87,9 +87,8 @@ data:
         libigdgmm12 \
         libva2 \
         libdrm2 \
-        libdrm-intel1 > /dev/null 2>&1 || {
+        libdrm-intel1 > /dev/null 2>&1 || \
         echo "[PostStart] Failed to install drivers via apt"
-    }
 
     echo "[PostStart] Creating symlinks to installed drivers..."
 
@@ -101,7 +100,7 @@ data:
         "/usr/local/lib/dri"
     )
 
-    for location in "${DRIVER_LOCATIONS[@]}"; do
+    for location in "/usr/lib/x86_64-linux-gnu/dri" "/usr/lib/dri" "/usr/local/lib/dri"; do
         if [ -d "$location" ]; then
             echo "[PostStart] Checking $location for drivers..."
 
