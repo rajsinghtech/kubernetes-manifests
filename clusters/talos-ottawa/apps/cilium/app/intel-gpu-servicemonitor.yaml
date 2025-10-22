@@ -14,3 +14,7 @@ spec:
     interval: 30s
     path: /metrics
     scheme: http
+    relabelings:
+    - sourceLabels: [__address__]
+      targetLabel: job
+      replacement: intel-gpu
