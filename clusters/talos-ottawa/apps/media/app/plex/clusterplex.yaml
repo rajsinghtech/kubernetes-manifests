@@ -15,7 +15,7 @@ data:
   PMS_SERVICE: "clusterplex-pms"
   PMS_PORT: "32400"
   TRANSCODER_VERBOSE: '1'
-  TRANSCODE_OPERATING_MODE: remote
+  TRANSCODE_OPERATING_MODE: both
   LOCAL_RELAY_ENABLED: '1'
   LOCAL_RELAY_PORT: "32499"
 ---
@@ -153,6 +153,11 @@ spec:
           mountPath: /config
         - name: transcode
           mountPath: /transcode
+        resources:
+          requests:
+            gpu.intel.com/i915: "10"
+          limits:
+            gpu.intel.com/i915: "10"
         # resources:          # adapt requests and limits to your needs
         #   requests:
         #     cpu: 300m
