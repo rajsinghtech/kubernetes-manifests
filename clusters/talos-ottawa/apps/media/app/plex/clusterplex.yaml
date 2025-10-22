@@ -43,12 +43,62 @@ data:
   PGID: '1000'
   PUID: '1000'
   VERSION: docker
-  DOCKER_MODS: 'ghcr.io/pabloromeo/clusterplex_worker_dockermod:master'
+  DOCKER_MODS: 'ghcr.io/pabloromeo/clusterplex_worker_dockermod:1.4.16'
   ORCHESTRATOR_URL: 'http://clusterplex-orchestrator:3500'
   LISTENING_PORT: '3501'
   STAT_CPU_INTERVAL: '10000'
   EAE_SUPPORT: '1'
   FFMPEG_HWACCEL: 'vaapi'
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: clusterplex-worker-init-script
+  labels:
+    app.kubernetes.io/name: clusterplex-worker-init-script
+    app.kubernetes.io/part-of: clusterplex
+data:
+  setup-gpu-drivers.sh: |
+    #!/bin/bash
+    set -e
+
+    echo "Setting up GPU driver cache for workers..."
+
+    # Create the cache directory structure
+    CACHE_DIR="/config/Library/Application Support/Plex Media Server/Cache/va-dri-linux-x86_64"
+    mkdir -p "$CACHE_DIR"
+
+    # Check if drivers already exist
+    if [ -f "$CACHE_DIR/iHD_drv_video.so" ]; then
+        echo "Drivers already cached"
+        exit 0
+    fi
+
+    # Copy drivers from system locations to Plex cache
+    # Intel iHD driver (newer Intel GPUs - Gen 8+)
+    if [ -f "/usr/lib/x86_64-linux-gnu/dri/iHD_drv_video.so" ]; then
+        cp /usr/lib/x86_64-linux-gnu/dri/iHD_drv_video.so "$CACHE_DIR/"
+        echo "Copied iHD driver"
+    elif [ -f "/usr/lib/dri/iHD_drv_video.so" ]; then
+        cp /usr/lib/dri/iHD_drv_video.so "$CACHE_DIR/"
+        echo "Copied iHD driver from /usr/lib/dri"
+    fi
+
+    # Intel i965 driver (older Intel GPUs - Gen 4-9)
+    if [ -f "/usr/lib/x86_64-linux-gnu/dri/i965_drv_video.so" ]; then
+        cp /usr/lib/x86_64-linux-gnu/dri/i965_drv_video.so "$CACHE_DIR/"
+        echo "Copied i965 driver"
+    elif [ -f "/usr/lib/dri/i965_drv_video.so" ]; then
+        cp /usr/lib/dri/i965_drv_video.so "$CACHE_DIR/"
+        echo "Copied i965 driver from /usr/lib/dri"
+    fi
+
+    # Set proper permissions
+    chown -R 1000:1000 "/config/Library"
+    chmod -R 755 "$CACHE_DIR"
+
+    echo "GPU driver cache setup complete"
+    ls -la "$CACHE_DIR"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -300,6 +350,17 @@ spec:
                   name: clusterplex-pms
               topologyKey: kubernetes.io/hostname
             weight: 50
+      initContainers:
+      - name: setup-gpu-drivers
+        image: lscr.io/linuxserver/plex:latest
+        command: ["/bin/bash", "/scripts/setup-gpu-drivers.sh"]
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: worker-config
+          mountPath: /config
+        - name: init-scripts
+          mountPath: /scripts
       containers:
       - name: plex-worker
         image: lscr.io/linuxserver/plex:latest
@@ -332,6 +393,8 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /data
+        - name: worker-config
+          mountPath: /config
         - name: codecs
           mountPath: /codecs
         - name: transcode
@@ -355,6 +418,12 @@ spec:
       - name: transcode
         persistentVolumeClaim:
           claimName: "clusterplex-transcode"
+      - name: worker-config
+        emptyDir: {}
+      - name: init-scripts
+        configMap:
+          name: clusterplex-worker-init-script
+          defaultMode: 0755
   volumeClaimTemplates:
     - metadata:
         name: codecs
