@@ -333,8 +333,6 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /data
-        - name: config
-          mountPath: /config
         - name: codecs
           mountPath: /codecs
         - name: transcode
@@ -355,9 +353,6 @@ spec:
       - name: data
         persistentVolumeClaim:
           claimName: "media-share"
-      - name: config
-        persistentVolumeClaim:
-          claimName: "clusterplex-config"
       - name: transcode
         persistentVolumeClaim:
           claimName: "clusterplex-transcode"
