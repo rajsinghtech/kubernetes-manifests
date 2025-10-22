@@ -1,0 +1,23 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: clusterplex-worker
+  namespace: media
+spec:
+  volumeClaimTemplates:
+    - metadata:
+        name: config
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 10Gi
+  template:
+    spec:
+      containers:
+        - name: clusterplex-worker
+          volumeMounts:
+            - name: config
+              mountPath: /config

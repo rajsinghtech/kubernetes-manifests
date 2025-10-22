@@ -15,7 +15,6 @@ resources:
   - helmrelease.yaml
   - irqbalance-daemonset.yaml
   - thunderbolt-debug.yaml
-  - intel-gpu-exporter.yaml
   - intel-gpu-podmonitor.yaml
 generatorOptions:
   disableNameSuffixHash: true
