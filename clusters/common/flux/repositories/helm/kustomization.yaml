@@ -12,6 +12,7 @@ resources:
   - ./spegel.yaml
   - ./clabernetes.yaml
   - ./cloudnative-pg.yaml
+  - ./clusterplex.yaml
   - ./coredns.yaml
   - ./csi-driver-smb.yaml
   - ./descheduler.yaml
