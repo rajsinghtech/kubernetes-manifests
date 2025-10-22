@@ -93,6 +93,14 @@ spec:
               editable: true
               options:
                 path: /var/lib/grafana/dashboards/nvidia
+            - name: "intel"
+              orgId: 1
+              folder: "intel"
+              type: file
+              disableDeletion: false
+              editable: true
+              options:
+                path: /var/lib/grafana/dashboards/intel
             - name: "argocd"
               orgId: 1
               folder: "argocd"
@@ -204,6 +212,12 @@ spec:
           nebius:
             gnetId: 23423
             revision: 2
+            datasource: prometheus
+        intel:
+          # Intel GPU Metrics - https://grafana.com/grafana/dashboards/23251-intel-gpu-metrics/
+          intel-gpu-metrics:
+            gnetId: 23251
+            revision: 1
             datasource: prometheus
         ceph:
           ceph-cluster:
