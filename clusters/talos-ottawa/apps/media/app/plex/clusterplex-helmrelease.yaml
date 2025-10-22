@@ -38,6 +38,7 @@ spec:
     pms:
       config:
         transcodeOperatingMode: remote
+        version: latest
       configVolume:
         size: 10Gi
       resources: {}
@@ -48,8 +49,11 @@ spec:
       resources: {}
 
     worker:
-      config:
-        ffmpegHwaccel: vaapi
+      env:
+        - name: VERSION
+          value: latest
+        - name: FFMPEG_HWACCEL
+          value: vaapi
       securityContext:
         privileged: true
       resources:
