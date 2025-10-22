@@ -57,11 +57,6 @@ spec:
           value: vaapi
       securityContext:
         privileged: true
-      volumeClaimTemplates:
-        - name: config
-          mountPath: /config
-          accessMode: ReadWriteOnce
-          size: 10Gi
       resources:
         requests:
           gpu.intel.com/i915: "10"
