@@ -11,4 +11,4 @@ spec:
         - -shared-dev-num=100
         - -enable-monitoring
         - -allocation-policy=balanced
-        - -v=2
+        - -v=4
