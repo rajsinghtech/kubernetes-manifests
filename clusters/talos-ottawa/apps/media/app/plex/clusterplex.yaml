@@ -332,11 +332,11 @@ spec:
           mountPath: /codecs
         - name: transcode
           mountPath: /transcode
-          resources:
-            requests:
-              gpu.intel.com/i915: "100m"
-            limits:
-              gpu.intel.com/i915: "100m"
+        resources:
+          requests:
+            gpu.intel.com/i915: "100m"
+          limits:
+            gpu.intel.com/i915: "100m"
         # resources:              # adapt requests and limits to your needs
         #   requests:
         #     cpu: 500m
