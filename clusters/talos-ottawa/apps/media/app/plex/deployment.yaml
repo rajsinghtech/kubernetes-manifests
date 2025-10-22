@@ -22,9 +22,9 @@ spec:
           image: docker.io/plexinc/pms-docker:latest
           resources:
             requests:
-              gpu.intel.com/i915: "1"
+              gpu.intel.com/i915: "25"
             limits:
-              gpu.intel.com/i915: "1"
+              gpu.intel.com/i915: "25"
           imagePullPolicy: Always
           ports:
             - containerPort: 32400
