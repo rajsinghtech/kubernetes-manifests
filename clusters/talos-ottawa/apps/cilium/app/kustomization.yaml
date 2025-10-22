@@ -20,6 +20,15 @@ resources:
 generatorOptions:
   disableNameSuffixHash: true
 configMapGenerator:
+  - name: intel-gpu-dashboards
+    options:
+      disableNameSuffixHash: true
+      annotations:
+        grafana_folder: intel
+      labels:
+        grafana_dashboard: "1"
+    files:
+      - dashboards/intel-gpu-metrics.json
   - name: cilium-values
     files:
       - values.yaml
