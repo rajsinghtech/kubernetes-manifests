@@ -48,6 +48,7 @@ data:
   LISTENING_PORT: '3501'
   STAT_CPU_INTERVAL: '10000'
   EAE_SUPPORT: '1'
+  FFMPEG_HWACCEL: 'vaapi'
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
