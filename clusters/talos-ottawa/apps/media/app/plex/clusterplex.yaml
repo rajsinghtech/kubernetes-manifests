@@ -61,45 +61,63 @@ data:
   setup-gpu-drivers.sh: |
     #!/bin/bash
 
-    echo "[PostStart] Setting up GPU driver cache for worker..."
+    echo "[PostStart] Setting up GPU drivers for hardware transcoding..."
 
     # Create the cache directory structure
     CACHE_DIR="/config/Library/Application Support/Plex Media Server/Cache/va-dri-linux-x86_64"
     mkdir -p "$CACHE_DIR"
 
-    # Check if drivers already exist and are working
-    if [ -f "$CACHE_DIR/iHD_drv_video.so" ] || [ -f "$CACHE_DIR/i965_drv_video.so" ]; then
-        echo "[PostStart] Drivers already in cache"
+    # Check if symlinks already exist and are valid
+    if [ -L "$CACHE_DIR/iHD_drv_video.so" ] || [ -L "$CACHE_DIR/i965_drv_video.so" ]; then
+        echo "[PostStart] Driver symlinks already exist"
+        ls -la "$CACHE_DIR"
         exit 0
     fi
 
-    echo "[PostStart] Copying GPU drivers from LinuxServer Plex image..."
+    # Remove any existing files (from previous failed attempts)
+    rm -f "$CACHE_DIR"/*.so 2>/dev/null || true
 
-    # LinuxServer image includes drivers at /usr/lib/plexmediaserver/lib/dri
-    PLEX_DRI_DIR="/usr/lib/plexmediaserver/lib/dri"
+    echo "[PostStart] Installing Intel GPU drivers in container..."
 
-    if [ -d "$PLEX_DRI_DIR" ]; then
-        echo "[PostStart] Found Plex driver directory: $PLEX_DRI_DIR"
+    # Install drivers using apt (LinuxServer is Ubuntu-based)
+    apt-get update > /dev/null 2>&1
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        intel-media-va-driver-non-free \
+        i965-va-driver \
+        libigdgmm12 \
+        libva2 \
+        libdrm2 \
+        libdrm-intel1 > /dev/null 2>&1 || {
+        echo "[PostStart] Failed to install drivers via apt"
+    }
 
-        # Copy all drivers from Plex's bundled location
-        cp -v "$PLEX_DRI_DIR"/*.so "$CACHE_DIR/" 2>/dev/null || true
+    echo "[PostStart] Creating symlinks to installed drivers..."
 
-        echo "[PostStart] Copied drivers from Plex bundle"
-    else
-        echo "[PostStart] Plex driver directory not found, checking system locations..."
+    # Create symlinks instead of copying to avoid library mismatch
+    # Check multiple possible locations
+    DRIVER_LOCATIONS=(
+        "/usr/lib/x86_64-linux-gnu/dri"
+        "/usr/lib/dri"
+        "/usr/local/lib/dri"
+    )
 
-        # Check system locations
-        for location in /usr/lib/x86_64-linux-gnu/dri /usr/lib/dri; do
-            if [ -d "$location" ]; then
-                echo "[PostStart] Checking $location"
-                for driver in "$location"/iHD_drv_video.so "$location"/i965_drv_video.so; do
-                    if [ -f "$driver" ]; then
-                        cp -v "$driver" "$CACHE_DIR/"
-                    fi
-                done
+    for location in "${DRIVER_LOCATIONS[@]}"; do
+        if [ -d "$location" ]; then
+            echo "[PostStart] Checking $location for drivers..."
+
+            # iHD driver for newer Intel GPUs
+            if [ -f "$location/iHD_drv_video.so" ]; then
+                ln -sf "$location/iHD_drv_video.so" "$CACHE_DIR/iHD_drv_video.so"
+                echo "[PostStart] Created symlink: $CACHE_DIR/iHD_drv_video.so -> $location/iHD_drv_video.so"
             fi
-        done
-    fi
+
+            # i965 driver for older Intel GPUs
+            if [ -f "$location/i965_drv_video.so" ]; then
+                ln -sf "$location/i965_drv_video.so" "$CACHE_DIR/i965_drv_video.so"
+                echo "[PostStart] Created symlink: $CACHE_DIR/i965_drv_video.so -> $location/i965_drv_video.so"
+            fi
+        fi
+    done
 
     # Set proper permissions
     chown -R abc:abc "/config/Library" 2>/dev/null || true
@@ -108,24 +126,22 @@ data:
     echo "[PostStart] GPU driver cache contents:"
     ls -la "$CACHE_DIR"
 
-    # Create symlinks as fallback
-    if [ ! -f "$CACHE_DIR/iHD_drv_video.so" ] && [ ! -f "$CACHE_DIR/i965_drv_video.so" ]; then
-        echo "[PostStart] WARNING: No Intel GPU drivers found!"
-        echo "[PostStart] Attempting to create symlinks to system drivers..."
-
-        # Try to symlink from system locations if they exist
-        if [ -f "/usr/lib/x86_64-linux-gnu/dri/iHD_drv_video.so" ]; then
-            ln -sf "/usr/lib/x86_64-linux-gnu/dri/iHD_drv_video.so" "$CACHE_DIR/iHD_drv_video.so"
-            echo "[PostStart] Created symlink to iHD driver"
-        fi
-
-        if [ -f "/usr/lib/x86_64-linux-gnu/dri/i965_drv_video.so" ]; then
-            ln -sf "/usr/lib/x86_64-linux-gnu/dri/i965_drv_video.so" "$CACHE_DIR/i965_drv_video.so"
-            echo "[PostStart] Created symlink to i965 driver"
-        fi
+    # Verify symlinks are valid
+    if [ -L "$CACHE_DIR/iHD_drv_video.so" ] && [ -e "$CACHE_DIR/iHD_drv_video.so" ]; then
+        echo "[PostStart] SUCCESS: iHD driver symlink is valid"
     fi
 
-    echo "[PostStart] GPU driver setup complete"
+    if [ -L "$CACHE_DIR/i965_drv_video.so" ] && [ -e "$CACHE_DIR/i965_drv_video.so" ]; then
+        echo "[PostStart] SUCCESS: i965 driver symlink is valid"
+    fi
+
+    # Final check
+    if [ ! -L "$CACHE_DIR/iHD_drv_video.so" ] && [ ! -L "$CACHE_DIR/i965_drv_video.so" ]; then
+        echo "[PostStart] ERROR: No Intel GPU drivers available!"
+        echo "[PostStart] Hardware transcoding will not work."
+    else
+        echo "[PostStart] GPU driver setup complete - hardware transcoding should work"
+    fi
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
