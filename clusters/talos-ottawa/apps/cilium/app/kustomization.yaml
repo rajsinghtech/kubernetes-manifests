@@ -16,7 +16,7 @@ resources:
   - irqbalance-daemonset.yaml
   - thunderbolt-debug.yaml
   - intel-gpu-exporter.yaml
-  - intel-gpu-servicemonitor.yaml
+  - intel-gpu-podmonitor.yaml
 generatorOptions:
   disableNameSuffixHash: true
 configMapGenerator:
@@ -29,6 +29,7 @@ configMapGenerator:
         grafana_dashboard: "1"
     files:
       - dashboards/intel-gpu-metrics.json
+      - dashboards/intel-gpu-cluster-overview.json
   - name: cilium-values
     files:
       - values.yaml
