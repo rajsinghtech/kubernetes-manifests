@@ -39,10 +39,6 @@ spec:
             set:
               - name: "X-Forwarded-Proto"
                 value: "https"
-              - name: "X-Plex-Device"
-                value: "Envoy Gateway"
-              - name: "X-Plex-Device-Name"
-                value: "Envoy Proxy"
         - type: ResponseHeaderModifier
           responseHeaderModifier:
             remove:
