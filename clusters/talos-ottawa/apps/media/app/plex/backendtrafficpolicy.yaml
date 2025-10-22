@@ -17,3 +17,23 @@ spec:
       connectionIdleTimeout: 900s
       maxConnectionDuration: 0s  # unlimited
       requestTimeout: 0s  # unlimited for streaming
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: BackendTrafficPolicy
+metadata:
+  name: clusterplex-upgrade-policy
+  namespace: tailscale-examples
+spec:
+  targetRef:
+    group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: clusterplex
+  httpUpgrade:
+    - type: websocket
+  connection:
+    bufferLimit: 32768
+  timeout:
+    http:
+      connectionIdleTimeout: 900s
+      maxConnectionDuration: 0s  # unlimited
+      requestTimeout: 0s  # unlimited for streaming
