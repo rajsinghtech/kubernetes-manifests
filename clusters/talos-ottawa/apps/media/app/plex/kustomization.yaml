@@ -15,11 +15,6 @@ resources:
   - clusterplex.yaml
   # - ciliumnetworkpolicy.yaml
   - backendtrafficpolicy.yaml
-patches:
-  - path: clusterplex-worker-config-patch.yaml
-    target:
-      kind: StatefulSet
-      name: clusterplex-worker
 configMapGenerator:
   - name: plex-dashboards
     options:
