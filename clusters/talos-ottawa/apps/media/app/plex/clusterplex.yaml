@@ -151,13 +151,13 @@ spec:
           mountPath: /config
         - name: transcode
           mountPath: /transcode
-        resources:          # adapt requests and limits to your needs
-          requests:
-            cpu: 300m
-            memory: 256Mi
-          limits:
-            cpu: 2000m
-            memory: 512Mi
+        # resources:          # adapt requests and limits to your needs
+        #   requests:
+        #     cpu: 300m
+        #     memory: 256Mi
+        #   limits:
+        #     cpu: 2000m
+        #     memory: 512Mi
       volumes:
       - name: data
         persistentVolumeClaim:
