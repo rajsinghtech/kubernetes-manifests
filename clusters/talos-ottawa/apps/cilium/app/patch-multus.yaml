@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: kube-multus-ds
+  namespace: kube-system
+spec:
+  template:
+    spec:
+      volumes:
+        - name: host-run-netns
+          hostPath:
+            path: /var/run/netns/
+      initContainers:
+        - name: install-multus-binary
+          image: ghcr.io/k8snetworkplumbingwg/multus-cni:snapshot-thick
+          command:
+            - "cp"
+            - "-f"
+            - "/usr/src/multus-cni/bin/multus-shim"
+            - "/host/opt/cni/bin/multus-shim"
+        - command:
+            - /install-cni.sh
+          image: ghcr.io/siderolabs/install-cni:v1.9.0
+          name: install-cni
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - mountPath: /host/opt/cni/bin
+              mountPropagation: Bidirectional
+              name: cnibin
+      containers:
+        - name: kube-multus
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "200Mi"
+            limits:
+              cpu: "200m"
+              memory: "1000Mi"
