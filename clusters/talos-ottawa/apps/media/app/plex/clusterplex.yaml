@@ -48,7 +48,8 @@ data:
   LISTENING_PORT: '3501'
   STAT_CPU_INTERVAL: '10000'
   EAE_SUPPORT: '1'
-  FFMPEG_HWACCEL: 'vaapi'
+  TRANSCODER_VERBOSE: '0'
+  # FFMPEG_HWACCEL: 'vaapi'
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -303,8 +304,6 @@ spec:
       containers:
       - name: plex-worker
         image: lscr.io/linuxserver/plex:latest
-        securityContext:
-          privileged: true
         startupProbe:
           httpGet:
             path: /health
@@ -334,6 +333,8 @@ spec:
           mountPath: /data
         - name: codecs
           mountPath: /codecs
+        - name: config
+          mountPath: /config
         - name: transcode
           mountPath: /transcode
         resources:
@@ -366,7 +367,17 @@ spec:
         resources:
           requests:
             storage: 1Gi
-        # specify your storage class
+        #storageClassName: longhorn
+    - metadata:
+        name: config
+        labels:
+          app.kubernetes.io/name: clusterplex-worker-config-pvc
+          app.kubernetes.io/part-of: clusterplex
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 1Gi
         #storageClassName: longhorn
 ---
 apiVersion: gateway.networking.k8s.io/v1
