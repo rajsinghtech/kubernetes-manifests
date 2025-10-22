@@ -59,10 +59,11 @@ metadata:
     app.kubernetes.io/part-of: clusterplex
 spec:
   accessModes:
-  - ReadWriteOnce
+  - ReadWriteMany
   resources:
     requests:
       storage: "10Gi"
+  storageClassName: rook-cephfs
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -332,6 +333,8 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /data
+        - name: config
+          mountPath: /config
         - name: codecs
           mountPath: /codecs
         - name: transcode
@@ -352,6 +355,9 @@ spec:
       - name: data
         persistentVolumeClaim:
           claimName: "media-share"
+      - name: config
+        persistentVolumeClaim:
+          claimName: "clusterplex-config"
       - name: transcode
         persistentVolumeClaim:
           claimName: "clusterplex-transcode"
