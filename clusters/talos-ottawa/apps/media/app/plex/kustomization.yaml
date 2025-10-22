@@ -12,7 +12,8 @@ resources:
   - prom-plex-exporter.yaml
   - servicemonitor.yaml
   - secret.yaml
-  # - clusterplex.yaml
+  - clusterplex-helmrelease.yaml
+  - clusterplex-httproute.yaml
   # - ciliumnetworkpolicy.yaml
   - backendtrafficpolicy.yaml
 configMapGenerator:
