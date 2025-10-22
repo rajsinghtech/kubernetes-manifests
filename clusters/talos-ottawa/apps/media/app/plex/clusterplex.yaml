@@ -332,13 +332,13 @@ spec:
           mountPath: /codecs
         - name: transcode
           mountPath: /transcode
-        resources:              # adapt requests and limits to your needs
-          requests:
-            cpu: 500m
-            memory: 200Mi
-          limits:
-            cpu: 3000m
-            memory: 800Mi
+        # resources:              # adapt requests and limits to your needs
+        #   requests:
+        #     cpu: 500m
+        #     memory: 200Mi
+        #   limits:
+        #     cpu: 3000m
+        #     memory: 800Mi
       volumes:
       - name: data
         persistentVolumeClaim:
