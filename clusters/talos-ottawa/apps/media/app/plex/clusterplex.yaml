@@ -48,6 +48,7 @@ data:
   LISTENING_PORT: '3501'
   STAT_CPU_INTERVAL: '10000'
   EAE_SUPPORT: '1'
+  FFMPEG_HWACCEL: 'vaapi'
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -302,6 +303,8 @@ spec:
       containers:
       - name: plex-worker
         image: lscr.io/linuxserver/plex:latest
+        securityContext:
+          privileged: true
         startupProbe:
           httpGet:
             path: /health
@@ -335,9 +338,9 @@ spec:
           mountPath: /transcode
         resources:
           requests:
-            gpu.intel.com/i915: "1"
-          # limits:
-          #   gpu.intel.com/i915: "10"
+            gpu.intel.com/i915: "10"
+          limits:
+            gpu.intel.com/i915: "10"
         # resources:              # adapt requests and limits to your needs
         #   requests:
         #     cpu: 500m
