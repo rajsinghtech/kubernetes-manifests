@@ -5,7 +5,7 @@ metadata:
 spec:
   endpoints:
     - fqdn:
-        hostname:${APP}.${LOCATION}.${COMMON_DOMAIN}
+        hostname: ${APP}.${LOCATION}.${COMMON_DOMAIN}
         port: ${APP_PORT}
     - fqdn:
         hostname: ${APP}.${FAILOVER}.${COMMON_DOMAIN}
