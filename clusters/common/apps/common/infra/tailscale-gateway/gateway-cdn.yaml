@@ -51,13 +51,13 @@ spec:
       allowedRoutes:
         kinds:
         - kind: TCPRoute
-    - name: rdp
+    - name: rdp-udp
       protocol: UDP
       port: 53
       allowedRoutes:
         kinds:
         - kind: UDPRoute
-    - name: rdp
+    - name: rdp-tcp
       protocol: TCP
       port: 53
       allowedRoutes:
