@@ -1,0 +1,32 @@
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyProxy
+metadata:
+  name: cdn
+spec:
+  provider:
+    type: Kubernetes
+    kubernetes:
+      envoyDeployment:
+        replicas: 3
+      envoyService:
+        annotations:
+          tailscale.com/hostname: cdn-envoy-gateway
+          tailscale.com/proxy-group: cdn-ingress
+        loadBalancerClass: tailscale
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyProxy
+metadata:
+  name: ${LOCATION}
+spec:
+  provider:
+    type: Kubernetes
+    kubernetes:
+      envoyDeployment:
+        replicas: 3
+      envoyService:
+        annotations:
+          tailscale.com/hostname: ${LOCATION}-envoy-gateway
+          tailscale.com/proxy-group: cdn-ingress
+        loadBalancerClass: tailscale

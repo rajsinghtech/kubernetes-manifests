@@ -1,0 +1,147 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: windows-11
+  labels:
+    name: windows-11
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  selector:
+    matchLabels:
+      app: windows-11
+  template:
+    metadata:
+      labels:
+        app: windows-11
+    spec:
+      containers:
+      - name: windows
+        image: dockurr/windows
+        env:
+        - name: RAM_SIZE
+          RAM_SIZE: "8G"
+        - name: CPU_CORES
+          value: "4"
+        - name: VERSION
+          value: "11"
+        - name: DISK_SIZE
+          value: "64G"
+        ports:
+          - containerPort: 8006
+            name: http
+            protocol: TCP
+          - containerPort: 3389
+            name: rdp
+            protocol: TCP
+          - containerPort: 3389
+            name: udp
+            protocol: UDP
+          - containerPort: 5900
+            name: vnc
+            protocol: TCP
+        securityContext:
+          capabilities:
+            add:
+            - NET_ADMIN
+          privileged: true
+        volumeMounts:
+        - name: install-script
+          mountPath: /oem
+        - name: ts-oauth-secret
+          mountPath: /data/secrets
+          readOnly: true
+        - name: storage
+          mountPath: /storage
+        - mountPath: /dev/kvm
+          name: dev-kvm
+        - mountPath: /dev/net/tun
+          name: dev-tun
+      terminationGracePeriodSeconds: 120
+      volumes:
+      - name: install-script
+        configMap:
+          name: install-script
+          defaultMode: 0755 # Set the permissions for the files in the ConfigMap
+      - name: ts-oauth-secret
+        secret:
+          secretName: ts-oauth
+          defaultMode: 0755
+      - name: storage
+        emptyDir: {}
+        sizeLimit: 64Gi
+      - hostPath:
+          path: /dev/kvm
+        name: dev-kvm
+      - hostPath:
+          path: /dev/net/tun
+          type: CharDevice
+        name: dev-tun
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: windows-11
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: windows-11-lan.${CLUSTER_DOMAIN}
+spec:
+  internalTrafficPolicy: Cluster
+  ports:
+    - name: http
+      port: 8006
+      protocol: TCP
+      targetPort: 8006
+    - name: rdp
+      port: 3389
+      protocol: TCP
+      targetPort: 3389
+    - name: udp
+      port: 3389
+      protocol: UDP
+      targetPort: 3389
+    - name: vnc
+      port: 5900
+      protocol: TCP
+      targetPort: 5900
+  selector:
+    app: windows-11
+  type: ClusterIP
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: windows-11
+  namespace: windows
+  annotations:
+    item.homer.rajsingh.info/name: "Windows Server"
+    item.homer.rajsingh.info/subtitle: "Windows Server"
+    item.homer.rajsingh.info/logo: "https://uhf.microsoft.com/images/microsoft/RE1Mu3b.png"
+    item.homer.rajsingh.info/keywords: "windows, server"
+
+    service.homer.rajsingh.info/name: "Infrastructure"
+    service.homer.rajsingh.info/icon: "fas fa-server"
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: ts
+      namespace: home
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: ts
+      namespace: keiretsu
+  hostnames:
+    - "windows-11.${CLUSTER_DOMAIN}"
+    - "windows-11.${LOCATION}.${cdn_DOMAIN}"
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: windows-11
+          port: 8006
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: / 

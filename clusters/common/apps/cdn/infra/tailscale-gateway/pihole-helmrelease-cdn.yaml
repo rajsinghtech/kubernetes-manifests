@@ -1,0 +1,74 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: pihole-cdn
+spec:
+  interval: 30m
+  releaseName: pihole-cdn
+  chart:
+    spec:
+      chart: pihole
+      version: 2.34.0
+      sourceRef:
+        kind: HelmRepository
+        name: pihole
+        namespace: flux-system
+  install:
+    timeout: 15m
+    remediation:
+      retries: 3
+  upgrade:
+    timeout: 15m
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    hostname: "pihole-cdn"
+    extraEnvVars:
+      FTLCONF_dns_listeningMode: 'all'
+    admin:
+      existingSecret: "pihole"
+      passwordKey: password
+    strategyType: RollingUpdate
+    serviceWeb:
+      type: ClusterIP
+      # type: LoadBalancer
+    serviceDns:
+      annotations:
+        tailscale.com/hostname: pihole-cdn
+        tailscale.com/proxy-group: cdn-ingress
+      externalTrafficPolicy: Cluster
+      loadBalancerClass: tailscale
+      mixedService: true
+      port: 53
+    ingress:
+      enabled: false 
+    podDnsConfig:
+      enabled: false 
+---
+apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: TCPRoute
+metadata:
+  name: pihole-cdn-tcp
+spec:
+  parentRefs:
+  - name: cdn
+    sectionName: pihole-tcp
+  rules:
+  - backendRefs:
+    - name: pihole-cdn-dns
+      port: 53
+---
+apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: UDPRoute
+metadata:
+  name: pihole-cdn-udp
+spec:
+  parentRefs:
+  - name: cdn
+    sectionName: pihole-udp
+  rules:
+  - backendRefs:
+    - name: pihole-cdn-dns
+      port: 53
