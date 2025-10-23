@@ -20,7 +20,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: kubernetes-manifests
-  wait: false # Allow individual components to manage wait status
+  wait: false
   interval: 30m
   retryInterval: 1m
   timeout: 10m 

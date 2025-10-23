@@ -15,9 +15,9 @@ spec:
       numTrustedHops: 1
   timeout:
     http:
-      requestReceivedTimeout: 0s  # No timeout for receiving requests
-      idleTimeout: 3600s  # 1 hour idle timeout
-      streamIdleTimeout: 900s  # 15 minutes for idle streams
+      requestReceivedTimeout: 0s 
+      idleTimeout: 3600s
+      streamIdleTimeout: 900s
   headers:
     requestID: PreserveOrGenerate  
   http2:

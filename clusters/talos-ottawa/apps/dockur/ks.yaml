@@ -16,7 +16,7 @@ spec:
     name: kubernetes-manifests
   dependsOn:
     - name: rook-ceph-cluster-config
-  wait: false # Allow individual components to manage wait status
+  wait: false
   interval: 30m
   retryInterval: 1m
   timeout: 5m
