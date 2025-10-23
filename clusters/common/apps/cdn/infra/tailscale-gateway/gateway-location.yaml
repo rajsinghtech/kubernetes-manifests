@@ -56,13 +56,13 @@ spec:
       allowedRoutes:
         kinds:
         - kind: TCPRoute
-    - name: rdp-udp
+    - name: windows-11-udp
       protocol: UDP
       port: 3389
       allowedRoutes:
         kinds:
         - kind: UDPRoute
-    - name: rdp-tcp
+    - name: windows-11-tcp
       protocol: TCP
       port: 3389
       allowedRoutes:
