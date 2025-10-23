@@ -44,7 +44,7 @@ spec:
             - name: TZ
               value: ${TIMEZONE}
             - name: JELLYFIN_PublishedServerUrl
-              value: jellyfin.${LOCATION}.${cdn_DOMAIN}
+              value: jellyfin.${LOCATION}.${COMMON_DOMAIN}
       volumes:
         - name: media-share
           persistentVolumeClaim:

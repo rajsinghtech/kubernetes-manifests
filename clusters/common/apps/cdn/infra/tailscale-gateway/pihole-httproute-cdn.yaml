@@ -17,8 +17,8 @@ spec:
       name: cdn
       namespace: cdn
   hostnames:
-    - "pihole.cdn.${cdn_DOMAIN}"
-    - "pihole.${LOCATION}.${cdn_DOMAIN}"
+    - "pihole.cdn.${COMMON_DOMAIN}"
+    - "pihole.${LOCATION}.${COMMON_DOMAIN}"
   rules:
     - matches:
         - path:

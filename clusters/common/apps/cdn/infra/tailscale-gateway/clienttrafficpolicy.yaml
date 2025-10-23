@@ -7,11 +7,11 @@ spec:
     - group: gateway.networking.k8s.io
       kind: Gateway
       name: cdn
-      sectionName: wildcard-cdn-${cdn_DOMAIN//./-}-https
+      sectionName: wildcard-cdn-${COMMON_DOMAIN//./-}-https
     - group: gateway.networking.k8s.io
       kind: Gateway
       name: ${LOCATION}
-      sectionName: wildcard-${LOCATION}-${cdn_DOMAIN//./-}-https
+      sectionName: wildcard-${LOCATION}-${COMMON_DOMAIN//./-}-https
   clientIPDetection:
     xForwardedFor:
       numTrustedHops: 1
