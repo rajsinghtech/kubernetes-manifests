@@ -15,5 +15,5 @@ metadata:
 spec:
   endpoints:
     - fqdn:
-        hostname: ${APP}.${FAILOVER}.${COMMON_DOMAIN}
+        hostname: ${APP}.${NAMESPACE}.${FAILOVER}.k8s
         port: ${APP_PORT}
