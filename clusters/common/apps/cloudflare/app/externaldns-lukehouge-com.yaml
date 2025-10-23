@@ -40,4 +40,4 @@ spec:
     domainFilters: 
       - lukehouge.com
     txtOwnerId: ${LOCATION}-lukehouge-com
-    txtPrefix: k8s.${LOCATION}.lukehouge.com
+    txtPrefix: k8s.${LOCATION}.lukehouge.com.
