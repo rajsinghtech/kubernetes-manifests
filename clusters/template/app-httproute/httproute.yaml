@@ -32,7 +32,7 @@ spec:
     - group: gateway.networking.k8s.io
       kind: Gateway
       name: cdn
-      namespace: common
+      namespace: cdn
   hostnames:
     - "${APP}.${COMMON_DOMAIN}"
     - "${APP}.${LOCATION}.${COMMON_DOMAIN}"
