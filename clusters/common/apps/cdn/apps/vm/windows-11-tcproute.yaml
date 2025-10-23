@@ -16,6 +16,7 @@ spec:
     kind: GitRepository
     name: kubernetes-manifests
     namespace: flux-system
+  postBuild:
     substitute:
       "APP": windows-11
       "APP_PORT": "3389"
