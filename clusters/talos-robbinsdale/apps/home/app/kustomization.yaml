@@ -6,4 +6,3 @@ resources:
   - ./frigate 
   - ./mqtt 
   - ./home-assistant 
-  - ./code-server 

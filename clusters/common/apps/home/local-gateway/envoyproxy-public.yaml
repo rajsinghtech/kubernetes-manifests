@@ -10,4 +10,4 @@ spec:
       envoyDeployment:
         replicas: 3
       envoyService:
-        loadBalancerIP: 10.50.10.15
+        loadBalancerIP: ${CLUSTER_LOAD_BALANCER_CIDR%.*.*/*}.10.15
