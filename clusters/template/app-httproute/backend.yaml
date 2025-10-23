@@ -7,6 +7,8 @@ spec:
     - fqdn:
         hostname: ${APP}.${LOCATION}.${COMMON_DOMAIN}
         port: 443
+  tls:
+    insecureSkipVerify: true
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: Backend
@@ -17,3 +19,5 @@ spec:
     - fqdn:
         hostname: ${APP}.${FAILOVER}.${COMMON_DOMAIN}
         port: 443
+  tls:
+    insecureSkipVerify: true
