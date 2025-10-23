@@ -1,0 +1,43 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: external-dns-cloudflare-killinit-cc
+spec:
+  interval: 5m
+  releaseName: external-dns-cloudflare-killinit-cc
+  chart:
+    spec:
+      chart: external-dns
+      version: "*" 
+      sourceRef:
+        kind: HelmRepository
+        name: external-dns
+        namespace: flux-system 
+      interval: 1h
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  values:
+    provider: cloudflare
+    env:
+      - name: CF_API_TOKEN
+        valueFrom:
+          secretKeyRef:
+            name: cloudflare
+            key: KILLINIT_CC_CLOUDFLARE_API_TOKEN
+    extraArgs:
+      - --gateway-label-filter=gateway==public
+    policy: sync
+    sources:
+      - gateway-httproute
+      - gateway-tlsroute
+      - gateway-tcproute
+      - gateway-udproute
+    domainFilters: 
+      - killinit.cc
+    txtOwnerId: ${LOCATION}-killinit-cc
+    txtPrefix: k8s.${LOCATION}.killinit.cc

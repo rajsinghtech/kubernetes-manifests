@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cloudflare-ddns-killinit
+  name: cloudflare-ddns-killinit-cc
   labels:
-    app: cloudflare-ddns-killinit
+    app: cloudflare-ddns-killinit-cc
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      app: cloudflare-ddns-killinit
+      app: cloudflare-ddns-killinit-cc
   template:
     metadata:
       labels:
-        app: cloudflare-ddns-killinit
+        app: cloudflare-ddns-killinit-cc
     spec:
       containers:
         - name: cloudflare-ddns
@@ -22,11 +22,11 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: cloudflare
-                  key: cloudflare-k8s-token-killinit-cc
+                  key: KILLINIT_CC_CLOUDFLARE_API_TOKEN
             - name: DOMAINS
-              value: "jellyfin.killinit.cc,jellyseerr.killinit.cc,status.killinit.cc,home.killinit.cc,wizarr.killinit.cc,proxyt.killinit.cc,pocket-id.killinit.cc,plex.killinit.cc,clusterplex.killinit.cc"
+              value: "${LOCATION}.killinit.cc"
             - name: PROXIED
-              value: "false"
+              value: "true"
             - name: IP6_PROVIDER
               value: "none"
       securityContext:
