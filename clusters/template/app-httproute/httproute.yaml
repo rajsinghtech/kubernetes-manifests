@@ -35,10 +35,12 @@ spec:
   rules:
     - backendRefs:
         - group: gateway.envoyproxy.io
+          kind: Backend
           port: ${APP_PORT}
           name: ${APP}-${LOCATION}-http
           weight: 0
         - group: gateway.envoyproxy.io
+          kind: Backend
           port: ${APP_PORT}
           name: ${APP}-${FAILOVER}-http
           weight: 1
