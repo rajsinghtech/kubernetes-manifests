@@ -37,7 +37,7 @@ spec:
     serviceDns:
       annotations:
         tailscale.com/hostname: pihole-${LOCATION}
-        tailscale.com/proxy-group: cdn-ingress
+        tailscale.com/proxy-group: common-ingress
       externalTrafficPolicy: Cluster
       loadBalancerClass: tailscale
       mixedService: true
