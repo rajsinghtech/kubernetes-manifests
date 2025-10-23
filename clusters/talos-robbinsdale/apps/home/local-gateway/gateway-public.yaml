@@ -4,7 +4,7 @@ kind: Gateway
 metadata:
   name: public
   annotations:
-    external-dns.alpha.kubernetes.io/target: "${LOCATION}.rajsingh.info"
+    external-dns.alpha.kubernetes.io/target: "${LOCATION}.rajsingh.info,${LOCATION}.lukehouge.com,${LOCATION}.killinit.cc"
   labels:
     gateway: public
 spec:
