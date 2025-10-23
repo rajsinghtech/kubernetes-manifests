@@ -16,6 +16,7 @@ resources:
   - httproute.yaml 
   - tcproute.yaml
   - udproute.yaml
+  - cloudflare-externaldns-rajsingh-info.yaml
 
 # Tailscale
   - egress.yaml
