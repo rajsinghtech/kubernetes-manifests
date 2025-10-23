@@ -1,7 +1,7 @@
 apiVersion: gateway.networking.k8s.io/v1alpha2
-kind: TCPRoute
+kind: UDPRoute
 metadata:
-  name: ${APP}-${LOCATION}-tcp
+  name: ${APP}-${LOCATION}-udp
   annotations:
     external-dns.alpha.kubernetes.io/hostname: "${APP}.${LOCATION}.${COMMON_DOMAIN},${APP}.cdn.${COMMON_DOMAIN}"
 spec:
@@ -10,7 +10,7 @@ spec:
       kind: Gateway
       name: ${LOCATION}
       namespace: cdn
-      sectionName: ${APP}-tcp
+      sectionName: ${APP}-udp
   rules:
     - backendRefs:
         - group: ""
@@ -20,9 +20,9 @@ spec:
           weight: 1
 ---
 apiVersion: gateway.networking.k8s.io/v1alpha2
-kind: TCPRoute
+kind: UDPRoute
 metadata:
-  name: ${APP}-cdn-tcp
+  name: ${APP}-cdn-udp
   annotations:
     external-dns.alpha.kubernetes.io/hostname: "${APP}.${LOCATION}.${COMMON_DOMAIN},${APP}.cdn.${COMMON_DOMAIN}"
 spec:
@@ -31,7 +31,7 @@ spec:
       kind: Gateway
       name: cdn
       namespace: cdn
-      sectionName: ${APP}-tcp
+      sectionName: ${APP}-udp
   rules:
     - backendRefs:
         - group: gateway.envoyproxy.io

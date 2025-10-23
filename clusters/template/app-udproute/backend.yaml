@@ -1,7 +1,7 @@
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: Backend
 metadata:
-  name: ${APP}-${LOCATION}-tcp
+  name: ${APP}-${LOCATION}-udp
 spec:
   endpoints:
     - fqdn:
@@ -11,7 +11,7 @@ spec:
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: Backend
 metadata:
-  name: ${APP}-${FAILOVER}-tcp
+  name: ${APP}-${FAILOVER}-udp
 spec:
   endpoints:
     - fqdn:
