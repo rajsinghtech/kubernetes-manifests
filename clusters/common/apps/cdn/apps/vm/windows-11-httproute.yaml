@@ -1,0 +1,29 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app windows-11-httproute
+spec:
+  targetNamespace: cdn
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  dependsOn:
+    - name: envoy-gateway-system-install
+      namespace: flux-system
+  path: ./clusters/template/app-httproute
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: kubernetes-manifests
+    namespace: flux-system
+  postBuild:
+    substitute:
+      "APP": windows-11
+      "APP_PORT": "8006"
+      "LOCATION": ${LOCATION}
+      "FAILOVER": ${FAILOVER}
+      "COMMON_DOMAIN": ${COMMON_DOMAIN}
+  wait: false
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m 

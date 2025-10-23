@@ -1,12 +1,19 @@
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: Backend
 metadata:
-  name: ${APP}
+  name: ${APP}-${LOCATION}-http
 spec:
   endpoints:
     - fqdn:
         hostname: ${APP}.${LOCATION}.${COMMON_DOMAIN}
         port: ${APP_PORT}
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: Backend
+metadata:
+  name: ${APP}-${FAILOVER}-http
+spec:
+  endpoints:
     - fqdn:
         hostname: ${APP}.${FAILOVER}.${COMMON_DOMAIN}
         port: ${APP_PORT}
