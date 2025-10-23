@@ -31,7 +31,7 @@ spec:
       kind: Gateway
       name: cdn
       namespace: cdn
-      sectionName: ${APP}
+      sectionName: ${APP}-tcp
   rules:
     - backendRefs:
         - group: gateway.envoyproxy.io
