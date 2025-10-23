@@ -8,7 +8,18 @@ spec:
     type: Kubernetes
     kubernetes:
       envoyDeployment:
+        patch:
+          type: StrategicMerge
+          value:
+            spec:
+              template:
+                spec:
+                  automountServiceAccountToken: true
         replicas: 3
+        pod:
+          annotations:
+            tailcar.rajsingh.info/inject: "true"
+            tailcar.rajsingh.info/tailnet: keiretsu-labs-github
       envoyService:
         annotations:
           tailscale.com/hostname: cdn-envoy-gateway
