@@ -1,0 +1,48 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: external-dns-cloudflare-rajsingh-info
+spec:
+  interval: 5m
+  releaseName: external-dns-cloudflare-rajsingh-info
+  chart:
+    spec:
+      chart: external-dns
+      version: "*" 
+      sourceRef:
+        kind: HelmRepository
+        name: external-dns
+        namespace: flux-system 
+      interval: 1h
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  values:
+    provider: cloudflare
+    env:
+      - name: CF_API_KEY
+        valueFrom:
+          secretKeyRef:
+            name: cloudflare
+            key: RAJSINGH_INFO_CLOUDFLARE_API_TOKEN
+      - name: CF_API_EMAIL
+        valueFrom:
+          secretKeyRef:
+            name: cloudflare
+            key: RAJSINGH_INFO_CLOUDFLARE_EMAIL
+    extraArgs:
+      - --gateway-label-filter=gateway==public
+    policy: sync
+    sources:
+      - gateway-httproute
+      - gateway-tlsroute
+      - gateway-tcproute
+      - gateway-udproute
+    domainFilters: 
+      - ${COMMON_DOMAIN}
+    txtOwnerId: ${LOCATION}-${COMMON_DOMAIN//./-}
+    txtPrefix: k8s.${LOCATION}.${COMMON_DOMAIN}
