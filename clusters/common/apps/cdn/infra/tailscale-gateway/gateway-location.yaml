@@ -1,0 +1,70 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: ${LOCATION}
+  labels:
+    external-dns: ${LOCATION}
+  annotations:
+    cert-manager.io/cluster-issuer: ${cdn_DOMAIN//./-}
+spec:
+  gatewayClassName: ${LOCATION}
+  listeners: 
+    - name: wildcard-cdn-${cdn_DOMAIN//./-}-http
+      hostname: "*.cdn.${cdn_DOMAIN}"
+      port: 80
+      protocol: HTTP
+    - name: wildcard-cdn-${cdn_DOMAIN//./-}-https
+      protocol: HTTPS
+      port: 443
+      hostname: "*.cdn.${cdn_DOMAIN}"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        mode: Terminate
+        certificateRefs:
+        - group: ''
+          kind: Secret
+          name: wildcard-cdn-${cdn_DOMAIN//./-}
+    - name: wildcard-${LOCATION}-${cdn_DOMAIN//./-}-http
+      hostname: "*.${LOCATION}.${cdn_DOMAIN}"
+      port: 80
+      protocol: HTTP
+    - name: wildcard-${LOCATION}-${cdn_DOMAIN//./-}-https
+      protocol: HTTPS
+      port: 443
+      hostname: "*.${LOCATION}.${cdn_DOMAIN}"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        mode: Terminate
+        certificateRefs:
+        - group: ''
+          kind: Secret
+          name: wildcard-${LOCATION}-${cdn_DOMAIN//./-}
+    - name: pihole-udp
+      protocol: UDP
+      port: 53
+      allowedRoutes:
+        kinds:
+        - kind: UDPRoute
+    - name: pihole-tcp
+      protocol: TCP
+      port: 53
+      allowedRoutes:
+        kinds:
+        - kind: TCPRoute
+    - name: rdp-udp
+      protocol: UDP
+      port: 3389
+      allowedRoutes:
+        kinds:
+        - kind: UDPRoute
+    - name: rdp-tcp
+      protocol: TCP
+      port: 3389
+      allowedRoutes:
+        kinds:
+        - kind: TCPRoute
