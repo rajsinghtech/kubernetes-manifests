@@ -18,7 +18,7 @@ spec:
   postBuild:
     substitute:
       "APP": windows-11
-      "APP_PORT": 3389
+      "APP_PORT": "3389"
   wait: false 
   interval: 30m
   retryInterval: 1m
