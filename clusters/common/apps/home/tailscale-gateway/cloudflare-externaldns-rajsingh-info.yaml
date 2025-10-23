@@ -24,16 +24,11 @@ spec:
   values:
     provider: cloudflare
     env:
-      - name: CF_API_KEY
+      - name: CF_API_TOKEN
         valueFrom:
           secretKeyRef:
             name: cloudflare
             key: RAJSINGH_INFO_CLOUDFLARE_API_TOKEN
-      - name: CF_API_EMAIL
-        valueFrom:
-          secretKeyRef:
-            name: cloudflare
-            key: RAJSINGH_INFO_CLOUDFLARE_EMAIL
     extraArgs:
       - --gateway-label-filter=gateway==public
     policy: sync
