@@ -6,13 +6,13 @@ metadata:
 spec:
   parentRefs:
     - name: cdn
-      sectionName: wildcard-cdn-${cdn_DOMAIN//./-}-http
+      sectionName: wildcard-cdn-${COMMON_DOMAIN//./-}-http
     - name: cdn
-      sectionName: wildcard-${LOCATION}-${cdn_DOMAIN//./-}-http
+      sectionName: wildcard-${LOCATION}-${COMMON_DOMAIN//./-}-http
     - name: ${LOCATION}
-      sectionName: wildcard-cdn-${cdn_DOMAIN//./-}-http
+      sectionName: wildcard-cdn-${COMMON_DOMAIN//./-}-http
     - name: ${LOCATION}
-      sectionName: wildcard-${LOCATION}-${cdn_DOMAIN//./-}-http
+      sectionName: wildcard-${LOCATION}-${COMMON_DOMAIN//./-}-http
   rules:
     - filters:
         - type: RequestRedirect

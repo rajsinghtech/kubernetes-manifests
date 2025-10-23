@@ -6,14 +6,14 @@ metadata:
   labels:
     external-dns: cdn
   annotations:
-    cert-manager.io/cluster-issuer: ${cdn_DOMAIN//./-}
+    cert-manager.io/cluster-issuer: ${COMMON_DOMAIN//./-}
 spec:
   gatewayClassName: cdn
   listeners: 
-    - name: wildcard-cdn-${cdn_DOMAIN//./-}-https
+    - name: wildcard-cdn-${COMMON_DOMAIN//./-}-https
       protocol: HTTPS
       port: 443
-      hostname: "*.cdn.${cdn_DOMAIN}"
+      hostname: "*.cdn.${COMMON_DOMAIN}"
       allowedRoutes:
         namespaces:
           from: All
@@ -22,11 +22,11 @@ spec:
         certificateRefs:
         - group: ''
           kind: Secret
-          name: wildcard-cdn-${cdn_DOMAIN//./-}
-    - name: wildcard-${LOCATION}-${cdn_DOMAIN//./-}-https
+          name: wildcard-cdn-${COMMON_DOMAIN//./-}
+    - name: wildcard-${LOCATION}-${COMMON_DOMAIN//./-}-https
       protocol: HTTPS
       port: 443
-      hostname: "*.${LOCATION}.${cdn_DOMAIN}"
+      hostname: "*.${LOCATION}.${COMMON_DOMAIN}"
       allowedRoutes:
         namespaces:
           from: All
@@ -35,7 +35,7 @@ spec:
         certificateRefs:
         - group: ''
           kind: Secret
-          name: wildcard-${LOCATION}-${cdn_DOMAIN//./-}
+          name: wildcard-${LOCATION}-${COMMON_DOMAIN//./-}
     - name: http
       port: 80
       protocol: HTTP

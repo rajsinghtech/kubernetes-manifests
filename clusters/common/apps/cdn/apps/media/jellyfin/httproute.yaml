@@ -19,8 +19,8 @@ spec:
       name: ${LOCATION}
       namespace: cdn
   hostnames:
-    - "jellyfin.${cdn_DOMAIN}"
-    - "jellyfin.${LOCATION}.${cdn_DOMAIN}"
+    - "jellyfin.${COMMON_DOMAIN}"
+    - "jellyfin.${LOCATION}.${COMMON_DOMAIN}"
   rules:
     - matches:
         - path:

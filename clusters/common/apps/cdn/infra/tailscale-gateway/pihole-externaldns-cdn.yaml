@@ -41,6 +41,6 @@ spec:
       - gateway-tcproute
       - gateway-udproute
     domainFilters: 
-      - ${cdn_DOMAIN}
-    txtOwnerId: cdn-${cdn_DOMAIN//./-}
-    txtPrefix: k8s.cdn.${cdn_DOMAIN}
+      - ${COMMON_DOMAIN}
+    txtOwnerId: cdn-${COMMON_DOMAIN//./-}
+    txtPrefix: k8s.cdn.${COMMON_DOMAIN}

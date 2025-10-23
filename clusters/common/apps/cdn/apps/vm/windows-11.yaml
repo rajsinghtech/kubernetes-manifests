@@ -133,7 +133,7 @@ spec:
       namespace: keiretsu
   hostnames:
     - "windows-11.${CLUSTER_DOMAIN}"
-    - "windows-11.${LOCATION}.${cdn_DOMAIN}"
+    - "windows-11.${LOCATION}.${COMMON_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""
