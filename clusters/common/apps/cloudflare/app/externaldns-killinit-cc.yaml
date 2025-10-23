@@ -40,4 +40,4 @@ spec:
     domainFilters: 
       - killinit.cc
     txtOwnerId: ${LOCATION}-killinit-cc
-    txtPrefix: k8s.${LOCATION}.killinit.cc
+    txtPrefix: k8s.${LOCATION}.killinit.cc.

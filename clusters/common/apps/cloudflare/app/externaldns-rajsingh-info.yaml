@@ -40,4 +40,4 @@ spec:
     domainFilters: 
       - rajsingh.info
     txtOwnerId: ${LOCATION}-rajsingh-info
-    txtPrefix: k8s.${LOCATION}.rajsingh.info
+    txtPrefix: k8s.${LOCATION}.rajsingh.info.
