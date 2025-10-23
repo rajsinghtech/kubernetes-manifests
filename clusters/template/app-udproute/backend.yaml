@@ -5,7 +5,7 @@ metadata:
 spec:
   endpoints:
     - fqdn:
-        hostname: ${APP}.${LOCATION}.${COMMON_DOMAIN}
+        hostname: ${APP}.${NAMESPACE}.${LOCATION}.k8s
         port: ${APP_PORT}
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1
