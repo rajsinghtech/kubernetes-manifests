@@ -5,10 +5,8 @@ metadata:
 spec:
   endpoints:
     - fqdn:
-        hostname: ${APP}.${LOCATION}.${COMMON_DOMAIN}
-        port: 443
-  tls:
-    insecureSkipVerify: true
+        hostname: ${APP}.${NAMESPACE}.${LOCATION}.k8s
+        port: ${APP_PORT}
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: Backend
@@ -18,6 +16,4 @@ spec:
   endpoints:
     - fqdn:
         hostname: ${APP}.${FAILOVER}.${COMMON_DOMAIN}
-        port: 443
-  tls:
-    insecureSkipVerify: true
+        port: ${APP_PORT}

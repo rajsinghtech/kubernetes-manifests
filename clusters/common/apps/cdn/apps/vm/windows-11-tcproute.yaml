@@ -23,6 +23,7 @@ spec:
       "LOCATION": ${LOCATION}
       "FAILOVER": ${FAILOVER}
       "COMMON_DOMAIN": ${COMMON_DOMAIN}
+      "NAMESPACE": cdn
   wait: false 
   interval: 30m
   retryInterval: 1m
