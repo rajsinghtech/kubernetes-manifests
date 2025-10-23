@@ -5,7 +5,7 @@ metadata:
   namespace: flux-system
 spec:
   targetNamespace: cdn
-  cdnMetadata:
+  commonMetadata:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
@@ -27,7 +27,7 @@ metadata:
   namespace: flux-system
 spec:
   targetNamespace: cdn
-  cdnMetadata:
+  commonMetadata:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
