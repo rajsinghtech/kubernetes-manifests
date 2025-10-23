@@ -4,4 +4,3 @@ kind: Kustomization
 namespace: cloudflare
 resources:
   - cloudflare-ddns-killinit.yaml
-  - secret.yaml
