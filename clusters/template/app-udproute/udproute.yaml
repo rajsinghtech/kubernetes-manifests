@@ -36,9 +36,9 @@ spec:
     - backendRefs:
         - group: gateway.envoyproxy.io
           kind: Backend
-          name: ${APP}-${LOCATION}
+          name: ${APP}-${LOCATION}-udp
           weight: 0
         - group: gateway.envoyproxy.io
           kind: Backend
-          name: ${APP}-${FAILOVER}
+          name: ${APP}-${FAILOVER}-udp
           weight: 1
