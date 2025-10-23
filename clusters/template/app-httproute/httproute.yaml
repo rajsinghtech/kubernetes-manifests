@@ -1,7 +1,7 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: ${APP}-${LOCATION}
+  name: ${APP}-${LOCATION}-http
 spec:
   parentRefs:
     - group: gateway.networking.k8s.io
@@ -9,8 +9,8 @@ spec:
       name: ${LOCATION}
       namespace: cdn
   hostnames:
-    - "${APP}.${COMMON_DOMAIN}"
     - "${APP}.${LOCATION}.${COMMON_DOMAIN}"
+    - "${APP}.cdn.${COMMON_DOMAIN}"
   rules:
     - backendRefs:
         - group: ""
@@ -18,15 +18,11 @@ spec:
           name: ${APP}
           port: ${APP_PORT}
           weight: 1
-      matches:
-        - path:
-            type: PathPrefix
-            value: /
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: ${APP}-${LOCATION}
+  name: ${APP}-cdn-http
 spec:
   parentRefs:
     - group: gateway.networking.k8s.io
@@ -34,16 +30,15 @@ spec:
       name: cdn
       namespace: cdn
   hostnames:
-    - "${APP}.${COMMON_DOMAIN}"
     - "${APP}.${LOCATION}.${COMMON_DOMAIN}"
+    - "${APP}.cdn.${COMMON_DOMAIN}"
   rules:
     - backendRefs:
-        - group: ""
-          kind: Service
-          name: ${APP}
-          port: ${APP_PORT}
+        - group: gateway.envoyproxy.io
+          kind: Backend
+          name: ${APP}-${LOCATION}-http
+          weight: 0
+        - group: gateway.envoyproxy.io
+          kind: Backend
+          name: ${APP}-${FAILOVER}-http
           weight: 1
-      matches:
-        - path:
-            type: PathPrefix
-            value: /
