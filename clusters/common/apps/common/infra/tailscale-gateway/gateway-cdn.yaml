@@ -53,13 +53,13 @@ spec:
         - kind: TCPRoute
     - name: rdp-udp
       protocol: UDP
-      port: 53
+      port: 3389
       allowedRoutes:
         kinds:
         - kind: UDPRoute
     - name: rdp-tcp
       protocol: TCP
-      port: 53
+      port: 3389
       allowedRoutes:
         kinds:
         - kind: TCPRoute
