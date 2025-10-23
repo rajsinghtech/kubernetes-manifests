@@ -22,7 +22,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: cloudflare
-                  key: RAJSINGH_INFO_CLOUDFLARE_EMAIL
+                  key: RAJSINGH_INFO_CLOUDFLARE_API_TOKEN
             - name: DOMAINS
               value: "${LOCATION}.rajsingh.info"
             - name: PROXIED
