@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cloudflare-ddns-raj
+  name: cloudflare-ddns-rajsingh-info
   labels:
-    app: cloudflare-ddns-raj
+    app: cloudflare-ddns-rajsingh-info
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      app: cloudflare-ddns-raj
+      app: cloudflare-ddns-rajsingh-info
   template:
     metadata:
       labels:
-        app: cloudflare-ddns-raj
+        app: cloudflare-ddns-rajsingh-info
     spec:
       containers:
         - name: cloudflare-ddns
