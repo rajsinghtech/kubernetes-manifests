@@ -146,14 +146,14 @@
 						"robbinsdale.k8s": {
 							"dns":     ["10.0.0.10:53"],
 							"rewrite": "svc.cluster.local",
-							// "translateid": 1
+							"translateid": -1
 						},
 					},
 					{
 						"ottawa.k8s": {
 							"dns":     ["10.2.0.10:53"],
 							"rewrite": "svc.cluster.local",
-							// "translateid": 2
+							"translateid": -1
 						},
 					},
 				],
