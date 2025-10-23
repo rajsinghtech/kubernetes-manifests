@@ -6,6 +6,7 @@ metadata:
   namespace: flux-system
 data:
   LOCATION: ottawa
+  FAILOVER: robbinsdale
   SITE_ID: "2"
   TIMEZONE: America/New_York
   CLUSTER_NAME: talos-ottawa
