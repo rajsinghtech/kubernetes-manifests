@@ -4,4 +4,3 @@ kind: Kustomization
 resources:
   - ./vm
   - ./media
-  - ./windows-11-tcproute.yaml
