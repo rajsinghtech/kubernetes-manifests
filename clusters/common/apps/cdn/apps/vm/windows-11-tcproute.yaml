@@ -11,7 +11,7 @@ spec:
   dependsOn:
     - name: envoy-gateway-system-install
       namespace: flux-system
-  path: ./clusters/template/apps/app-tcproute
+  path: ./clusters/template/app-tcproute
   prune: true
   sourceRef:
     kind: GitRepository
