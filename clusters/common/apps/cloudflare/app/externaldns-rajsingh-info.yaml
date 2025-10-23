@@ -38,6 +38,6 @@ spec:
       - gateway-tcproute
       - gateway-udproute
     domainFilters: 
-      - ${COMMON_DOMAIN}
-    txtOwnerId: ${LOCATION}-${COMMON_DOMAIN//./-}
-    txtPrefix: k8s.${LOCATION}.${COMMON_DOMAIN}
+      - rajsingh.info
+    txtOwnerId: ${LOCATION}-rajsingh-info
+    txtPrefix: k8s.${LOCATION}.rajsingh.info
