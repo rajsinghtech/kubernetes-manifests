@@ -56,7 +56,7 @@ spec:
       serviceAccountName: tsdnsproxy
       containers:
       - name: tsdnsproxy
-        image: ghcr.io/rajsinghtech/tsdnsproxy:latest  # Update with your registry/image
+        image: ghcr.io/rajsinghtech/tsdnsproxy:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 53
