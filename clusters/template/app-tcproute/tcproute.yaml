@@ -3,7 +3,7 @@ kind: TCPRoute
 metadata:
   name: ${APP}-${LOCATION}
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: "${APP}.${LOCATION}.{COMMON_DOMAIN},${APP}.cdn.{COMMON_DOMAIN}"
+    external-dns.alpha.kubernetes.io/hostname: "${APP}.${LOCATION}.${COMMON_DOMAIN},${APP}.cdn.${COMMON_DOMAIN}"
 spec:
   parentRefs:
     - group: gateway.networking.k8s.io
