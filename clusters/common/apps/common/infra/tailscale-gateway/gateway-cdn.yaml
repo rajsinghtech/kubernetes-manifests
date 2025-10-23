@@ -51,3 +51,15 @@ spec:
       allowedRoutes:
         kinds:
         - kind: TCPRoute
+    - name: rdp
+      protocol: UDP
+      port: 53
+      allowedRoutes:
+        kinds:
+        - kind: UDPRoute
+    - name: rdp
+      protocol: TCP
+      port: 53
+      allowedRoutes:
+        kinds:
+        - kind: TCPRoute
