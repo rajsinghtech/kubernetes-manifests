@@ -28,7 +28,7 @@ spec:
       - name: kubeconfig
         secret:
           secretName: headlamp-kubeconfig
-          defaultMode: 0400
+          defaultMode: 0444
 
     env:
       - name: KUBECONFIG
