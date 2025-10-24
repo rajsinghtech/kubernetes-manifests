@@ -7,6 +7,8 @@ spec:
   selector:
     matchLabels:
       app: prowlarr
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
