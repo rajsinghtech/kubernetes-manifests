@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: flaresolver
-        image: ghcr.io/flaresolverr/flaresolverr:v3.4.1
+        image: ghcr.io/flaresolverr/flaresolverr:v3.4.2
         ports:
         - name: proxy
           containerPort: 8191
