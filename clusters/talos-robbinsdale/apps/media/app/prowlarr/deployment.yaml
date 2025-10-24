@@ -13,8 +13,8 @@ spec:
         app: prowlarr
     spec:
       containers:
-      - name: flaresolver 
-        image: ghcr.io/flaresolverr/flaresolverr:latest
+      - name: flaresolver
+        image: ghcr.io/flaresolverr/flaresolverr:v3.4.1
         ports:
         - name: proxy
           containerPort: 8191
@@ -23,7 +23,7 @@ spec:
         - name: LOG_LEVEL
           value: "info"
       - name: prowlarr
-        image: lscr.io/linuxserver/prowlarr:latest
+        image: lscr.io/linuxserver/prowlarr:2.0.5
         ports:
         - name: http
           containerPort: 9696
