@@ -1,0 +1,17 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: headlamp
+spec:
+  interval: 1m
+  chart:
+    spec:
+      chart: headlamp
+      version: "*"
+      sourceRef:
+        kind: HelmRepository
+        name: headlamp
+      interval: 1m
+  releaseName: headlamp
+  values:

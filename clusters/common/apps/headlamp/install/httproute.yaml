@@ -1,0 +1,31 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: headlamp
+  annotations:
+    item.homer.rajsingh.info/name: "Headlamp"
+    item.homer.rajsingh.info/subtitle: "AI Chat"
+    item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/openai.png"
+    item.homer.rajsingh.info/keywords: "k8s"
+
+    service.homer.rajsingh.info/name: "Infrastructure"
+    service.homer.rajsingh.info/icon: "fas fa-server"
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: ts
+      namespace: home
+  hostnames:
+    - "headlamp.${CLUSTER_DOMAIN}"
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: headlamp
+          port: 80
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: / 
