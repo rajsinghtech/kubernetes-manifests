@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: bazarr
-        image: lscr.io/linuxserver/bazarr:latest
+        image: lscr.io/linuxserver/bazarr:v1.5.3
         ports:
         - name: http
           containerPort: 6767
