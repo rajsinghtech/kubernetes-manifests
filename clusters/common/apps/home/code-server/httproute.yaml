@@ -35,3 +35,21 @@ spec:
         - path:
             type: PathPrefix
             value: /
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: code
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: code
+  oidc:
+    provider:
+      issuer: "https://pocket-id.${CLUSTER_DOMAIN}"
+    clientID: "6e0ae47f-0ebe-4044-9aae-28e9da38ac3e"
+    clientSecret:
+      name: "code-server-secret"
+    redirectURL: "https://code.${CLUSTER_DOMAIN}/oauth2/callback"
+    logoutPath: "/logout"
