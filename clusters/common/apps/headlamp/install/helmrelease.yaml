@@ -17,6 +17,7 @@ spec:
   releaseName: headlamp
   values:
     config:
+      baseurl: "https://headlamp.${CLUSTER_DOMAIN}"
       oidc:
         clientID: "05c250fc-4dc0-4f53-9381-ab0b704c918e"
         clientSecret: "eLHTrBgsWJZhtgWSGwmOppseSRkUDCie"
