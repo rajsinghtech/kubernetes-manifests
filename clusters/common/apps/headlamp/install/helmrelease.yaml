@@ -12,6 +12,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: headlamp
+        namespace: flux-system
       interval: 1m
   releaseName: headlamp
   values:
