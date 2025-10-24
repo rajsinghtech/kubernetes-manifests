@@ -16,8 +16,25 @@ spec:
       interval: 1m
   releaseName: headlamp
   values:
+    config:
+      inCluster: false
+
+    volumeMounts:
+      - name: kubeconfig
+        mountPath: /kubeconfig
+        readOnly: true
+
+    volumes:
+      - name: kubeconfig
+        secret:
+          secretName: headlamp-kubeconfig
+          defaultMode: 0400
+
+    env:
+      - name: KUBECONFIG
+        value: /kubeconfig/config
+
     # config:
-    #   inCluster: true
     #   oidc:
     #     clientID: "05c250fc-4dc0-4f53-9381-ab0b704c918e"
     #     clientSecret: "eLHTrBgsWJZhtgWSGwmOppseSRkUDCie"
