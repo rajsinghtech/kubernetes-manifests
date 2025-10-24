@@ -7,6 +7,8 @@ spec:
   selector:
     matchLabels:
       app: audioarr
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
