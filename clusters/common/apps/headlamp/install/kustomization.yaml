@@ -4,3 +4,10 @@ kind: Kustomization
 resources:
   - helmrelease.yaml
   - httproute.yaml
+
+secretGenerator:
+  - name: headlamp-kubeconfig
+    files:
+      - config=kubeconfig.yaml
+    options:
+      disableNameSuffixHash: true
