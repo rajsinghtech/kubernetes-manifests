@@ -4,8 +4,8 @@ metadata:
   name: headlamp
   annotations:
     item.homer.rajsingh.info/name: "Headlamp"
-    item.homer.rajsingh.info/subtitle: "AI Chat"
-    item.homer.rajsingh.info/logo: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/openai.png"
+    item.homer.rajsingh.info/subtitle: "Access yo Cluster g"
+    item.homer.rajsingh.info/logo: "https://headlamp.dev/img/logo.svg"
     item.homer.rajsingh.info/keywords: "k8s"
 
     service.homer.rajsingh.info/name: "Infrastructure"
