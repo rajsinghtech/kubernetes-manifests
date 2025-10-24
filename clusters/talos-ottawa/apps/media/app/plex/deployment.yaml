@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: plex
-          image: docker.io/plexinc/pms-docker:latest
+          image: docker.io/plexinc/pms-docker:1.42.2.10156-f737b826c
           resources:
             requests:
               gpu.intel.com/i915: "25"
