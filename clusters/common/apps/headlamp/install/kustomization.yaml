@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   - helmrelease.yaml
   - httproute.yaml
+  - ingress.yaml
 
 secretGenerator:
   - name: headlamp-kubeconfig
