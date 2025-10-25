@@ -25,15 +25,20 @@ spec:
               - op: add
                 path: /metadata/annotations/grafana_folder
                 value: "envoy-gateway"
-  values: 
+  values:
     dashboard:
       labels:
         grafana_dashboard: "1"
       enabled: false
     grafana:
       enabled: false
-    # prometheus:
-    #   enabled: true
+    prometheus:
+      enabled: true
+      kube-state-metrics:
+        enabled: true
+      server:
+        remoteWrite:
+          - url: http://kube-prometheus-stack-prometheus.monitoring:9090/api/v1/write
     # loki:
     #   enabled: true
     # alloy:
