@@ -39,6 +39,8 @@ spec:
       server:
         remoteWrite:
           - url: http://kube-prometheus-stack-prometheus.monitoring:9090/api/v1/write
+        persistentVolume:
+          enabled: false
     # loki:
     #   enabled: true
     # alloy:

@@ -50,10 +50,6 @@ spec:
           domain: grafana.${CLUSTER_DOMAIN}
       fullnameOverride: grafana
       additionalDataSources:
-        - name: envoy-gateway-prometheus  
-          type: prometheus
-          uid: envoy-gateway-prometheus
-          url: http://prometheus.envoy-gateway-system
         - name: ottawa-prometheus  
           type: prometheus
           uid: ottawa
