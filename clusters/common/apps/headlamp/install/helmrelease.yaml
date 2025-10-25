@@ -17,6 +17,11 @@ spec:
   releaseName: headlamp
   values:
     config:
+      oidc:
+        clientID: "05c250fc-4dc0-4f53-9381-ab0b704c918e"
+        clientSecret: "eLHTrBgsWJZhtgWSGwmOppseSRkUDCie"
+        issuerURL: "https://pocket-id.${CLUSTER_DOMAIN}"
+        scopes: "openid profile email"
       inCluster: false
 
     volumeMounts:
@@ -33,10 +38,3 @@ spec:
     env:
       - name: KUBECONFIG
         value: /kubeconfig/config
-
-    # config:
-    #   oidc:
-    #     clientID: "05c250fc-4dc0-4f53-9381-ab0b704c918e"
-    #     clientSecret: "eLHTrBgsWJZhtgWSGwmOppseSRkUDCie"
-    #     issuerURL: "https://pocket-id.${CLUSTER_DOMAIN}"
-    #     scopes: "openid profile email"
