@@ -75,3 +75,69 @@ spec:
         volumeMounts:
           - mountPath: /headlamp/plugins
             name: headlamp-plugins
+
+      - name: opencost-plugin
+        command:
+          - /bin/sh
+          - -c
+          - mkdir -p /headlamp/plugins && cp -r /plugins/* /headlamp/plugins/
+        image: ghcr.io/headlamp-k8s/headlamp-plugin-opencost:latest
+        imagePullPolicy: Always
+        volumeMounts:
+          - mountPath: /headlamp/plugins
+            name: headlamp-plugins
+
+      - name: keda-plugin
+        command:
+          - /bin/sh
+          - -c
+          - mkdir -p /headlamp/plugins && cp -r /plugins/* /headlamp/plugins/
+        image: ghcr.io/headlamp-k8s/headlamp-plugin-keda:latest
+        imagePullPolicy: Always
+        volumeMounts:
+          - mountPath: /headlamp/plugins
+            name: headlamp-plugins
+
+      - name: kompose-plugin
+        command:
+          - /bin/sh
+          - -c
+          - mkdir -p /headlamp/plugins && cp -r /plugins/* /headlamp/plugins/
+        image: ghcr.io/headlamp-k8s/headlamp-plugin-kompose:latest
+        imagePullPolicy: Always
+        volumeMounts:
+          - mountPath: /headlamp/plugins
+            name: headlamp-plugins
+
+      - name: plugin-catalog-plugin
+        command:
+          - /bin/sh
+          - -c
+          - mkdir -p /headlamp/plugins && cp -r /plugins/* /headlamp/plugins/
+        image: ghcr.io/headlamp-k8s/headlamp-plugin-plugin-catalog:latest
+        imagePullPolicy: Always
+        volumeMounts:
+          - mountPath: /headlamp/plugins
+            name: headlamp-plugins
+
+      - name: backstage-plugin
+        command:
+          - /bin/sh
+          - -c
+          - mkdir -p /headlamp/plugins && cp -r /plugins/* /headlamp/plugins/
+        image: ghcr.io/headlamp-k8s/headlamp-plugin-backstage:latest
+        imagePullPolicy: Always
+        volumeMounts:
+          - mountPath: /headlamp/plugins
+            name: headlamp-plugins
+
+      - name: app-catalog-plugin
+        command:
+          - /bin/sh
+          - -c
+          - mkdir -p /headlamp/plugins && cp -r /plugins/* /headlamp/plugins/
+        image: ghcr.io/headlamp-k8s/headlamp-plugin-app-catalog:latest
+        imagePullPolicy: Always
+        volumeMounts:
+          - mountPath: /headlamp/plugins
+            name: headlamp-plugins
