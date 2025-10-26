@@ -25,3 +25,6 @@ nodes:
 networking:
   apiServerAddress: "127.0.0.1"
   apiServerPort: 6443
+  disableDefaultCNI: false
+  podSubnet: "10.244.0.0/16"
+  serviceSubnet: "10.96.0.0/12"
