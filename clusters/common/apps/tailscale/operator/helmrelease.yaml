@@ -27,7 +27,7 @@ spec:
     operatorConfig:
       image:
         repo: ghcr.io/rajsinghtech/tailscale/k8s-operator
-        tag: 72
+        tag: "72"
       hostname: "${LOCATION}-k8s-operator" 
       logging: "info" # info, debug, dev
       defaultTags:
@@ -37,4 +37,4 @@ spec:
       defaultTags: "tag:k8s,tag:${LOCATION}"
       image: 
         repo: ghcr.io/rajsinghtech/tailscale/tailscale
-        tag: 72
+        tag: "72"
