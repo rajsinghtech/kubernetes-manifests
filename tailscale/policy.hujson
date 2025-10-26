@@ -48,6 +48,7 @@
 		"tag:robbinsdale":  ["tag:k8s-operator", "group:superuser", "group:robbinsdale",],
 		"tag:ottawa":       ["tag:k8s-operator", "group:superuser", "group:ottawa",],
 		"tag:stpetersburg": ["tag:k8s-operator", "group:superuser", "group:stpetersburg",],
+		"tag:kind": ["tag:k8s-operator", "group:superuser", "group:kind",],
 		"tag:udm":          ["group:superuser"],
 	},
 	"autoApprovers": {
