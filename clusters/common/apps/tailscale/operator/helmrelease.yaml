@@ -25,9 +25,9 @@ spec:
     apiServerProxyConfig:
       mode: "true"
     operatorConfig:
-    #   image:
-    #     repo: ghcr.io/rajsinghtech/k8s-operator
-    #     tag: v0.0.8
+      image:
+        repo: ghcr.io/rajsinghtech/tailscale/k8s-operator
+        tag: 72
       hostname: "${LOCATION}-k8s-operator" 
       logging: "info" # info, debug, dev
       defaultTags:
@@ -35,6 +35,6 @@ spec:
         - "tag:k8s-operator"
     proxyConfig:
       defaultTags: "tag:k8s,tag:${LOCATION}"
-      # image: 
-      #   repo: ghcr.io/rajsinghtech/tailscale
-      #   tag: unstable
+      image: 
+        repo: ghcr.io/rajsinghtech/tailscale/tailscale
+        tag: 72
