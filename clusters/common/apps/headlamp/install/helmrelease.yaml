@@ -76,17 +76,6 @@ spec:
           - mountPath: /headlamp/plugins
             name: headlamp-plugins
 
-      - name: opencost-plugin
-        command:
-          - /bin/sh
-          - -c
-          - mkdir -p /headlamp/plugins && cp -r /plugins/* /headlamp/plugins/
-        image: ghcr.io/headlamp-k8s/headlamp-plugin-opencost:latest
-        imagePullPolicy: Always
-        volumeMounts:
-          - mountPath: /headlamp/plugins
-            name: headlamp-plugins
-
       - name: keda-plugin
         command:
           - /bin/sh
