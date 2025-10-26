@@ -40,6 +40,9 @@
 		"group:stpetersburg": [
 			"rajsinghtech@github",
 		],
+		"group:kind": [
+			"rajsinghtech@github",
+		],
 	},
 	"tagOwners": {
 		"tag:k8s-operator": ["tag:k8s-operator", "group:superuser",],
