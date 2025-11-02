@@ -24,6 +24,10 @@ spec:
       labels:
         app: tsidp
     spec:
+      securityContext:
+        fsGroup: 65532
+        runAsNonRoot: true
+        runAsUser: 65532
       containers:
       - name: tsidp
         image: ghcr.io/tailscale/tsidp:latest
