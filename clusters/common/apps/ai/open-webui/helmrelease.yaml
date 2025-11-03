@@ -36,7 +36,6 @@ spec:
       persistentVolume:
         enabled: true
         size: 100Gi
-        storageClass: "longhorn"
     sso:
       enabled: true
       enableSignup: true
