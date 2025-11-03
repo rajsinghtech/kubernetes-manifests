@@ -51,7 +51,10 @@ spec:
                 accelerate==1.6.0 \
                 fastapi==0.115.0 \
                 pydantic==2.9.2 \
-                pillow==11.0.0
+                pillow==11.0.0 \
+                addict \
+                matplotlib \
+                torchvision
             volumeMounts:
             - name: pip-packages
               mountPath: /pip-packages
@@ -134,7 +137,10 @@ spec:
                 accelerate==1.6.0 \
                 fastapi==0.115.0 \
                 pydantic==2.9.2 \
-                pillow==11.0.0
+                pillow==11.0.0 \
+                addict \
+                matplotlib \
+                torchvision
             volumeMounts:
             - name: pip-packages
               mountPath: /pip-packages
