@@ -26,9 +26,9 @@ spec:
       runtimeClassName: nvidia
       resources:
         limits:
-          nvidia.com/gpu: "8"
+          nvidia.com/gpu: "1"
         requests:
-          nvidia.com/gpu: "8"
+          nvidia.com/gpu: "1"
       models:
         pull:
           - llama3.2:1b
