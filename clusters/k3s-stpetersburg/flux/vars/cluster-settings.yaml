@@ -21,4 +21,4 @@ data:
   LAN_GATEWAY_IP: "192.168.73.1"
 
   # Domain
-  CLUSTER_DOMAIN: rajsingh.com
+  CLUSTER_DOMAIN: rajsingh.info
