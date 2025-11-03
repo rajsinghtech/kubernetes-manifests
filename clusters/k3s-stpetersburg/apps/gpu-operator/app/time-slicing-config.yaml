@@ -7,4 +7,4 @@ sharing:
     failRequestsGreaterThanOne: false
     resources:
       - name: nvidia.com/gpu
-        replicas: 8
+        replicas: 5
