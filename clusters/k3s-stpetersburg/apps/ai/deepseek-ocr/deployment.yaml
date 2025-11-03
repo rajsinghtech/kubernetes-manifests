@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: vllm
-        image: vllm/vllm-openai:v0.8.5
+        image: vllm/vllm-openai:nightly
         args:
         - --model=deepseek-ai/DeepSeek-OCR
         - --served-model-name=deepseek-ocr
