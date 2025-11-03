@@ -33,9 +33,29 @@ spec:
         pull:
           - llama3.2:1b
           - deepseek-coder:33b
+          - llava:13b
       persistentVolume:
         enabled: true
         size: 100Gi
+
+    extraEnvVars:
+      - name: ENABLE_RAG_WEB_SEARCH
+        value: "true"
+      - name: RAG_WEB_SEARCH_ENGINE
+        value: "duckduckgo"
+      - name: ENABLE_RAG_WEB_LOADER_SSL_VERIFICATION
+        value: "true"
+      - name: RAG_EMBEDDING_ENGINE
+        value: "ollama"
+      - name: RAG_EMBEDDING_MODEL
+        value: "nomic-embed-text:latest"
+      - name: ENABLE_OLLAMA_API
+        value: "true"
+      - name: WEBUI_NAME
+        value: "AI Demo - Kubernetes on GB10"
+      - name: ENABLE_COMMUNITY_SHARING
+        value: "true"
+
     sso:
       enabled: true
       enableSignup: true
