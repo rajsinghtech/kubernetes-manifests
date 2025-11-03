@@ -53,7 +53,6 @@ class ChatCompletionResponse(BaseModel):
 
 @serve.deployment(
     name="deepseek-ocr",
-    num_replicas=1,
     ray_actor_options={
         "num_gpus": 1,
         "num_cpus": 4,
