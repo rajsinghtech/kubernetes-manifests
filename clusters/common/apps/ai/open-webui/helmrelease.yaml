@@ -18,7 +18,14 @@ spec:
   releaseName: open-webui
   values:
     ollama:
-      enabled: false
+      enabled: true
+      gpu:
+        enabled: true
+        type: 'nvidia'
+        number: 1
+      models:
+        pull:
+          - llama3.2:1b
     ollamaUrls:
       - "http://kirito.ai:11434"
     sso:
