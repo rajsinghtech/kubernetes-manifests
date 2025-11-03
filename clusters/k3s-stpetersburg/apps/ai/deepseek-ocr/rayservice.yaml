@@ -66,8 +66,6 @@ spec:
               value: /tmp/huggingface
             - name: RAY_SERVE_ENABLE_EXPERIMENTAL_STREAMING
               value: "1"
-            - name: PYTHONPATH
-              value: "/pip-packages:/app"
             ports:
             - containerPort: 6379
               name: gcs
@@ -147,8 +145,6 @@ spec:
               value: /tmp/huggingface
             - name: CUDA_VISIBLE_DEVICES
               value: "0"
-            - name: PYTHONPATH
-              value: "/pip-packages:/app"
             resources:
               requests:
                 cpu: "4"
