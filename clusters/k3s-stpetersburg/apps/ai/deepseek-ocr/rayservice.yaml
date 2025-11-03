@@ -15,7 +15,7 @@ spec:
         import_path: serve_app:deployment
         runtime_env:
           env_vars:
-            PYTHONPATH: "/pip-packages:/app"
+            RAY_SERVE_REQUEST_PROCESSING_TIMEOUT_S: "600"
         deployments:
           - name: deepseek-ocr
             autoscaling_config:
@@ -66,6 +66,8 @@ spec:
               value: /tmp/huggingface
             - name: RAY_SERVE_ENABLE_EXPERIMENTAL_STREAMING
               value: "1"
+            - name: PYTHONPATH
+              value: "/app:/pip-packages"
             ports:
             - containerPort: 6379
               name: gcs
@@ -145,6 +147,8 @@ spec:
               value: /tmp/huggingface
             - name: CUDA_VISIBLE_DEVICES
               value: "0"
+            - name: PYTHONPATH
+              value: "/app:/pip-packages"
             resources:
               requests:
                 cpu: "4"
