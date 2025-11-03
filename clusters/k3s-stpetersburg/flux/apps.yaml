@@ -6,7 +6,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 30m
-  path: ./clusters/talos-stpetersburg/apps
+  path: ./clusters/k3s-stpetersburg/apps
   prune: true
   sourceRef:
     kind: GitRepository
