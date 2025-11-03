@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 DeepSeek-OCR Ray Serve Application
-OpenAI-compatible OCR inference using vLLM
+OpenAI-compatible OCR inference using HuggingFace Transformers
 """
 import os
 import io
@@ -13,8 +13,8 @@ from ray import serve
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from PIL import Image
-from vllm import LLM, SamplingParams
-from vllm.model_executor.models.deepseek_ocr import NGramPerReqLogitsProcessor
+import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer, AutoProcessor
 
 logging.basicConfig(
     level=logging.INFO,
@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI(
     title="DeepSeek-OCR API",
-    description="OpenAI-compatible OCR inference server powered by vLLM and Ray Serve",
+    description="OpenAI-compatible OCR inference server powered by HuggingFace Transformers and Ray Serve",
     version="1.0.0"
 )
 
@@ -71,18 +71,26 @@ class ChatCompletionResponse(BaseModel):
 @serve.ingress(app)
 class DeepSeekOCRServe:
     def __init__(self):
-        logger.info("Initializing DeepSeek-OCR model with vLLM...")
+        logger.info("Initializing DeepSeek-OCR model with Transformers...")
 
         model_name = "deepseek-ai/DeepSeek-OCR"
 
-        self.llm = LLM(
-            model=model_name,
-            enable_prefix_caching=False,
+        # Load model and processor
+        self.model = AutoModelForCausalLM.from_pretrained(
+            model_name,
+            torch_dtype=torch.bfloat16,
+            device_map="auto",
             trust_remote_code=True,
-            dtype="bfloat16",
-            gpu_memory_utilization=0.9,
-            max_model_len=8192,
-            tensor_parallel_size=1,
+        )
+
+        self.processor = AutoProcessor.from_pretrained(
+            model_name,
+            trust_remote_code=True
+        )
+
+        self.tokenizer = AutoTokenizer.from_pretrained(
+            model_name,
+            trust_remote_code=True
         )
 
         logger.info("DeepSeek-OCR model loaded successfully")
@@ -154,28 +162,31 @@ class DeepSeekOCRServe:
 
             logger.info(f"Processing OCR request: {prompt_text[:100]}...")
 
-            model_input = [{
-                "prompt": prompt_text,
-                "multi_modal_data": {"image": image_data}
-            }]
+            # Process the inputs
+            inputs = self.processor(
+                text=prompt_text,
+                images=image_data,
+                return_tensors="pt"
+            ).to(self.model.device)
 
-            sampling_params = SamplingParams(
-                temperature=request.temperature,
-                max_tokens=request.max_tokens,
-                logits_processors=[
-                    NGramPerReqLogitsProcessor(
-                        ngram_size=8,
-                        ngram_window=3,
-                        ngram_token_whitelist=None
-                    )
-                ]
+            # Generate response
+            with torch.no_grad():
+                outputs = self.model.generate(
+                    **inputs,
+                    max_new_tokens=request.max_tokens,
+                    temperature=request.temperature if request.temperature > 0 else None,
+                    do_sample=request.temperature > 0,
+                )
+
+            # Decode response
+            response_text = self.tokenizer.decode(
+                outputs[0][inputs["input_ids"].shape[1]:],
+                skip_special_tokens=True
             )
 
-            outputs = self.llm.generate(model_input, sampling_params)
-
-            response_text = outputs[0].outputs[0].text
-            prompt_tokens = len(outputs[0].prompt_token_ids)
-            completion_tokens = len(outputs[0].outputs[0].token_ids)
+            # Calculate token counts (approximate)
+            prompt_tokens = inputs["input_ids"].shape[1]
+            completion_tokens = outputs.shape[1] - prompt_tokens
 
             return ChatCompletionResponse(
                 id=f"chatcmpl-{os.urandom(12).hex()}",
@@ -206,7 +217,7 @@ class DeepSeekOCRServe:
     async def root(self):
         """Root endpoint"""
         return {
-            "message": "DeepSeek-OCR API Server (Ray Serve + vLLM)",
+            "message": "DeepSeek-OCR API Server (Ray Serve + Transformers)",
             "docs": "/docs",
             "health": "/health"
         }
