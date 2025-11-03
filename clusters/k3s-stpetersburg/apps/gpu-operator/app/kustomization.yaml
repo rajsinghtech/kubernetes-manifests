@@ -4,9 +4,3 @@ kind: Kustomization
 resources:
   - helmrelease.yaml
   - servicemonitor.yaml
-configMapGenerator:
-  - name: time-slicing-config
-    files:
-      - inference=time-slicing-config.yaml
-    options:
-      disableNameSuffixHash: true

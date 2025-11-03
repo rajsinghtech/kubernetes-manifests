@@ -6,82 +6,68 @@
 - **Memory**: 128GB unified memory
 - **Architecture**: ARM64 Grace Blackwell
 
-## GPU Sharing Mode: Time-Slicing
+## GPU Mode: Exclusive Access (No Sharing)
 
-### Why Time-Slicing?
-- ✅ **Proven and stable** in GPU operator
-- ✅ **Works on GB10** without issues
-- ✅ **Simple configuration**
-- ❌ No memory/compute limits per pod
+### Why Exclusive Access?
+- ✅ **Best performance** - no context switching overhead
+- ✅ **Full GPU resources** - entire 128GB VRAM available
+- ✅ **Lowest latency** - no time-slicing delays
 - ❌ GB10 does not support MIG
 - ❌ MPS is broken (socket issues)
+- ❌ Time-slicing has poor inference latency
 
 ### Configuration
-- **Replicas**: 4 virtual GPU slices
-- **failRequestsGreaterThanOne**: false (allows pods to request multiple slices)
-- **renameByDefault**: false (keeps resource name as nvidia.com/gpu)
+- **Mode**: Exclusive GPU access (default device plugin behavior)
+- **VRAM**: Full 128GB unified memory per pod
+- **Allocation**: nvidia.com/gpu: 1 = entire GPU
 
 ## Pod Resource Requests
 
-### Single GPU Slice (1/4th of GPU)
+### Exclusive GPU Access
 ```yaml
 spec:
   containers:
   - name: inference
     resources:
       limits:
+        nvidia.com/gpu: 1  # Full GPU with 128GB VRAM
+      requests:
         nvidia.com/gpu: 1
 ```
 
-### Multiple GPU Slices (More GPU Time)
-```yaml
-spec:
-  containers:
-  - name: inference
-    resources:
-      limits:
-        nvidia.com/gpu: 2  # 2/4ths (half) of GPU time
-```
+### Example Workloads
 
-**Note**: Requesting multiple slices gives more GPU time-slices, but does NOT provide:
-- Guaranteed proportional performance (2 slices ≠ 2x performance)
-- Memory isolation (all workloads share 128GB)
-- Dedicated compute resources
-
-### Example Workload Sizing
-
-#### Small Inference Workloads
+#### Large Language Models
 - Request: `nvidia.com/gpu: 1`
-- Use case: Small models, low throughput APIs
+- VRAM: Full 128GB available
+- Use case: 33B+ parameter models, high throughput inference
+- Example: DeepSeek-Coder 33B (~66GB FP16 or ~16GB 4-bit)
 
-#### Medium Inference Workloads
-- Request: `nvidia.com/gpu: 2`
-- Use case: Medium models, moderate throughput
-
-#### Large Inference Workloads
-- Request: `nvidia.com/gpu: 3-4`
-- Use case: Large models, high throughput
+#### Multiple Small Models
+- Request: `nvidia.com/gpu: 1` per pod
+- Limit: Only 1 pod can use GPU at a time on this single-GPU node
+- For multiple concurrent workloads, consider deploying across multiple GB10 nodes
 
 ## Important Notes
 
-1. **No Resource Isolation**: Time-slicing provides NO memory or compute isolation
-2. **Shared Memory**: All workloads share the full 128GB - watch for OOM errors
-3. **Equal Time Slices**: Each replica gets equal GPU time regardless of request count
-4. **Monitor Total Usage**: Ensure total pod requests don't exceed 4 available slices
-5. **No Guaranteed Performance**: Multiple slices ≠ guaranteed proportional performance
+1. **Exclusive Access**: Each pod requesting `nvidia.com/gpu: 1` gets the entire GPU
+2. **Full Memory**: Pods have access to the full 128GB unified memory
+3. **Single Node Limitation**: spark-9533 has 1 GPU - only 1 pod can run at a time
+4. **Best Performance**: No sharing overhead = maximum inference speed
+5. **For Multiple Workloads**: Deploy additional GB10 nodes or use smaller quantized models
 
 ## Verification
 
 After deployment, check node capacity:
 ```bash
 kubectl get node spark-9533 -o json | jq '.status.capacity."nvidia.com/gpu"'
-# Should show: "4"
+# Should show: "1"
 ```
 
-Check time-slicing is active:
+Check GPU is detected:
 ```bash
 kubectl get node spark-9533 -o json | jq '.metadata.labels | with_entries(select(.key | contains("nvidia.com/gpu")))'
-# Look for: nvidia.com/gpu.replicas: "4"
+# Look for: nvidia.com/gpu.present: "true"
 ```
 
 ## Monitoring
