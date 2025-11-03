@@ -54,16 +54,16 @@ spec:
           - mountPath: /headlamp/plugins
             name: headlamp-plugins
 
-      - name: cert-manager-plugin
-        command:
-          - /bin/sh
-          - -c
-          - mkdir -p /headlamp/plugins && cp -r /plugins/* /headlamp/plugins/
-        image: ghcr.io/headlamp-k8s/headlamp-plugin-cert-manager:latest
-        imagePullPolicy: Always
-        volumeMounts:
-          - mountPath: /headlamp/plugins
-            name: headlamp-plugins
+      # - name: cert-manager-plugin
+      #   command:
+      #     - /bin/sh
+      #     - -c
+      #     - mkdir -p /headlamp/plugins && cp -r /plugins/* /headlamp/plugins/
+      #   image: ghcr.io/headlamp-k8s/headlamp-plugin-cert-manager:latest
+      #   imagePullPolicy: Always
+      #   volumeMounts:
+      #     - mountPath: /headlamp/plugins
+      #       name: headlamp-plugins
 
       - name: ai-assistant-plugin
         command:
