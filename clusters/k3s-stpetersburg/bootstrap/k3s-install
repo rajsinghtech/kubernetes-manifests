@@ -1,3 +1,10 @@
 curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC='--flannel-backend=none --disable-network-policy' sh -
 helm upgrade --install cilium cilium/cilium --version 1.18.3 --namespace kube-system --kubeconfig ~/.kube/stpetersburg --values clusters/k3s-stpetersburg/apps/cilium/app/values.yaml
 k apply -k clusters/common/bootstrap/flux --kubeconfig ~/.kube/stpetersburg
+
+
+
+root@spark-9533:~# cat /etc/sysctl.d/99-kubernetes-inotify.conf
+# Increase inotify limits for Kubernetes
+fs.inotify.max_user_instances = 8192
+fs.inotify.max_user_watches = 524288
