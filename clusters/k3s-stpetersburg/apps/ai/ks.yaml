@@ -39,7 +39,7 @@ spec:
     name: kubernetes-manifests
   dependsOn:
     - name: kuberay
-  wait: true
+  wait: false
   interval: 5m
   retryInterval: 1m
   timeout: 10m
