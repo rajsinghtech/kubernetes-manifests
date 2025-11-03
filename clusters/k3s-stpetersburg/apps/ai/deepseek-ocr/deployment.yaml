@@ -25,7 +25,7 @@ spec:
         - deepseek-ai/DeepSeek-OCR
         - --served-model-name=deepseek-ocr
         - --no-enable-prefix-caching
-        - --gpu-memory-utilization=0.9
+        - --gpu-memory-utilization=0.7
         - --max-model-len=8192
         - --trust-remote-code
         - --host=0.0.0.0
