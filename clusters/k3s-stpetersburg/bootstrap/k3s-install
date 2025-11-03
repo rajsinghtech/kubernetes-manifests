@@ -1,1 +1,3 @@
 curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC='--flannel-backend=none --disable-network-policy' sh -
+helm upgrade --install cilium cilium/cilium --version 1.18.3 --namespace kube-system --kubeconfig ~/.kube/stpetersburg --values clusters/k3s-stpetersburg/apps/cilium/app/values.yaml
+k apply -k clusters/common/bootstrap/flux --kubeconfig ~/.kube/stpetersburg
