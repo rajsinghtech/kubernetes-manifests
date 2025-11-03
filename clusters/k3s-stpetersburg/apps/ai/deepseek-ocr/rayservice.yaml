@@ -112,7 +112,7 @@ spec:
     workerGroupSpecs:
     - groupName: gpu-workers
       replicas: 1
-      minReplicas: 0
+      minReplicas: 1
       maxReplicas: 2
       rayStartParams:
         num-cpus: '4'
