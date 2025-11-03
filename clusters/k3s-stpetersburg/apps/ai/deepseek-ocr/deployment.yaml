@@ -18,40 +18,67 @@ spec:
       labels:
         app: deepseek-ocr
     spec:
-      containers:
-      - name: vllm
-        image: vllm/vllm-openai:nightly
+      initContainers:
+      - name: install-deps
+        image: pytorch/pytorch:2.6.0-cuda12.8-cudnn9-runtime
+        command: ["/bin/bash", "-c"]
         args:
-        - deepseek-ai/DeepSeek-OCR
-        - --served-model-name=deepseek-ocr
-        - --no-enable-prefix-caching
-        - --gpu-memory-utilization=0.7
-        - --max-model-len=8192
-        - --trust-remote-code
-        - --host=0.0.0.0
-        - --port=8000
+        - |
+          apt-get update && apt-get install -y --no-install-recommends build-essential git
+          pip install --no-cache-dir \
+            transformers==4.46.3 \
+            tokenizers==0.20.3 \
+            fastapi==0.115.0 \
+            uvicorn[standard]==0.32.0 \
+            pillow==11.0.0 \
+            accelerate==1.2.1 \
+            einops==0.8.0 \
+            requests
+          pip install --no-cache-dir flash-attn==2.7.3 --no-build-isolation || echo "Flash Attention skipped"
+          cp -r /opt/conda/lib/python3.*/site-packages/* /deps/
+        volumeMounts:
+        - name: deps
+          mountPath: /deps
+      containers:
+      - name: deepseek-ocr
+        image: pytorch/pytorch:2.6.0-cuda12.8-cudnn9-runtime
+        command: ["/bin/bash", "-c"]
+        args:
+        - |
+          export PYTHONPATH="/deps:$PYTHONPATH"
+          python /app/server.py
         env:
         - name: HF_TOKEN
           valueFrom:
             secretKeyRef:
               name: hf-secret
               key: HF_TOKEN
+        - name: HF_HOME
+          value: /tmp/huggingface
         - name: HF_HUB_CACHE
           value: /tmp/huggingface
+        - name: CUDA_VISIBLE_DEVICES
+          value: "0"
+        - name: PYTHONUNBUFFERED
+          value: "1"
         ports:
         - containerPort: 8000
           name: http
           protocol: TCP
         resources:
           requests:
-            cpu: "2"
-            memory: 12Gi
-            nvidia.com/gpu: "1"
-          limits:
             cpu: "4"
             memory: 16Gi
             nvidia.com/gpu: "1"
+          limits:
+            cpu: "8"
+            memory: 24Gi
+            nvidia.com/gpu: "1"
         volumeMounts:
+        - name: deps
+          mountPath: /deps
+        - name: server-code
+          mountPath: /app
         - name: devshm
           mountPath: /dev/shm
         - name: hf-cache
@@ -73,13 +100,19 @@ spec:
           timeoutSeconds: 5
           failureThreshold: 3
       volumes:
+      - name: deps
+        emptyDir: {}
+      - name: server-code
+        configMap:
+          name: deepseek-ocr-server
+          defaultMode: 0755
       - name: devshm
         emptyDir:
           medium: Memory
-          sizeLimit: 6Gi
+          sizeLimit: 8Gi
       - name: hf-cache
         emptyDir:
-          sizeLimit: 10Gi
+          sizeLimit: 20Gi
 ---
 apiVersion: v1
 kind: Service
