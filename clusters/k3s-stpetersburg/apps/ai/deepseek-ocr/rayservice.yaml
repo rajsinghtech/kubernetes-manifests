@@ -15,7 +15,7 @@ spec:
         import_path: serve_app:deployment
         runtime_env:
           env_vars:
-            PYTHONPATH: "/app"
+            PYTHONPATH: "/pip-packages:/app"
         deployments:
           - name: deepseek-ocr
             autoscaling_config:
@@ -44,13 +44,16 @@ spec:
             - /bin/bash
             - -c
             - |
-              pip install --no-cache-dir \
+              pip install --no-cache-dir --target=/pip-packages \
                 transformers==4.57.1 \
                 accelerate==1.6.0 \
                 fastapi==0.115.0 \
                 pydantic==2.9.2 \
                 pillow==11.0.0 \
                 numpy==2.2.1
+            volumeMounts:
+            - name: pip-packages
+              mountPath: /pip-packages
           containers:
           - name: ray-head
             image: rayproject/ray:2.46.0-py311-gpu
@@ -64,6 +67,8 @@ spec:
               value: /tmp/huggingface
             - name: RAY_SERVE_ENABLE_EXPERIMENTAL_STREAMING
               value: "1"
+            - name: PYTHONPATH
+              value: "/pip-packages:/app"
             ports:
             - containerPort: 6379
               name: gcs
@@ -87,6 +92,8 @@ spec:
               mountPath: /tmp/huggingface
             - name: devshm
               mountPath: /dev/shm
+            - name: pip-packages
+              mountPath: /pip-packages
           volumes:
           - name: serve-code
             configMap:
@@ -99,6 +106,9 @@ spec:
             emptyDir:
               medium: Memory
               sizeLimit: 8Gi
+          - name: pip-packages
+            emptyDir:
+              sizeLimit: 5Gi
     workerGroupSpecs:
     - groupName: gpu-workers
       replicas: 1
@@ -116,13 +126,16 @@ spec:
             - /bin/bash
             - -c
             - |
-              pip install --no-cache-dir \
+              pip install --no-cache-dir --target=/pip-packages \
                 transformers==4.57.1 \
                 accelerate==1.6.0 \
                 fastapi==0.115.0 \
                 pydantic==2.9.2 \
                 pillow==11.0.0 \
                 numpy==2.2.1
+            volumeMounts:
+            - name: pip-packages
+              mountPath: /pip-packages
           containers:
           - name: ray-worker
             image: rayproject/ray:2.46.0-py311-gpu
@@ -136,6 +149,8 @@ spec:
               value: /tmp/huggingface
             - name: CUDA_VISIBLE_DEVICES
               value: "0"
+            - name: PYTHONPATH
+              value: "/pip-packages:/app"
             resources:
               requests:
                 cpu: "4"
@@ -152,6 +167,8 @@ spec:
               mountPath: /tmp/huggingface
             - name: devshm
               mountPath: /dev/shm
+            - name: pip-packages
+              mountPath: /pip-packages
           volumes:
           - name: serve-code
             configMap:
@@ -164,6 +181,9 @@ spec:
             emptyDir:
               medium: Memory
               sizeLimit: 8Gi
+          - name: pip-packages
+            emptyDir:
+              sizeLimit: 5Gi
 ---
 apiVersion: v1
 kind: Service
