@@ -6,118 +6,88 @@
 - **Memory**: 128GB unified memory
 - **Architecture**: ARM64 Grace Blackwell
 
-## GPU Sharing Mode: MPS (Multi-Process Service)
+## GPU Sharing Mode: Time-Slicing
 
-### Why MPS?
-- ✅ **Configurable memory limits** per pod
-- ✅ **Configurable compute allocation** per pod
-- ✅ **Parallel execution** (better than time-slicing)
-- ✅ **Better isolation** than time-slicing
+### Why Time-Slicing?
+- ✅ **Proven and stable** in GPU operator
+- ✅ **Works on GB10** without issues
+- ✅ **Simple configuration**
+- ❌ No memory/compute limits per pod
 - ❌ GB10 does not support MIG
+- ❌ MPS is broken (socket issues)
 
 ### Configuration
-- **Replicas**: 10 virtual GPU slices
-- **Default memory per replica**: 12.8GB (128GB / 10)
-- **Default compute per replica**: 10% GPU threads
+- **Replicas**: 8 virtual GPU slices
+- **failRequestsGreaterThanOne**: false (allows pods to request multiple slices)
+- **renameByDefault**: false (keeps resource name as nvidia.com/gpu)
 
 ## Pod Resource Requests
 
-### Basic Request (Default Limits)
+### Single GPU Slice (1/8th of GPU)
 ```yaml
 spec:
   containers:
   - name: inference
-    resources:
-      limits:
-        nvidia.com/gpu: 1  # Request 1 MPS slice
-```
-
-### Custom Memory and Compute Limits
-```yaml
-spec:
-  containers:
-  - name: inference
-    env:
-      # Limit to 20% of GPU compute threads
-      - name: CUDA_MPS_ACTIVE_THREAD_PERCENTAGE
-        value: "20"
-
-      # Limit to 16GB GPU memory (device 0)
-      - name: CUDA_MPS_PINNED_DEVICE_MEM_LIMIT
-        value: "0=16G"
     resources:
       limits:
         nvidia.com/gpu: 1
 ```
 
-### Example Workload Tiers
-
-#### Small Models (e.g., 7B LLMs)
+### Multiple GPU Slices (More GPU Time)
 ```yaml
-env:
-  - name: CUDA_MPS_ACTIVE_THREAD_PERCENTAGE
-    value: "10"  # 10% compute
-  - name: CUDA_MPS_PINNED_DEVICE_MEM_LIMIT
-    value: "0=8G"  # 8GB memory
-resources:
-  limits:
-    nvidia.com/gpu: 1
+spec:
+  containers:
+  - name: inference
+    resources:
+      limits:
+        nvidia.com/gpu: 2  # 2/8ths of GPU time
 ```
 
-#### Medium Models (e.g., 13B-30B LLMs)
-```yaml
-env:
-  - name: CUDA_MPS_ACTIVE_THREAD_PERCENTAGE
-    value: "25"  # 25% compute
-  - name: CUDA_MPS_PINNED_DEVICE_MEM_LIMIT
-    value: "0=32G"  # 32GB memory
-resources:
-  limits:
-    nvidia.com/gpu: 1
-```
+**Note**: Requesting multiple slices gives more GPU time-slices, but does NOT provide:
+- Guaranteed proportional performance (2 slices ≠ 2x performance)
+- Memory isolation (all workloads share 128GB)
+- Dedicated compute resources
 
-#### Large Models (e.g., 70B+ LLMs)
-```yaml
-env:
-  - name: CUDA_MPS_ACTIVE_THREAD_PERCENTAGE
-    value: "50"  # 50% compute
-  - name: CUDA_MPS_PINNED_DEVICE_MEM_LIMIT
-    value: "0=64G"  # 64GB memory
-resources:
-  limits:
-    nvidia.com/gpu: 1
-```
+### Example Workload Sizing
 
-## Memory Limit Syntax
-Format: `<device-id>=<memory-size>`
-- Device ID: `0` (single GPU system)
-- Memory size: `8G`, `16G`, `32G`, etc.
+#### Small Inference Workloads
+- Request: `nvidia.com/gpu: 1`
+- Use case: Small models, low throughput APIs
+
+#### Medium Inference Workloads
+- Request: `nvidia.com/gpu: 2`
+- Use case: Medium models, moderate throughput
+
+#### Large Inference Workloads
+- Request: `nvidia.com/gpu: 3-4`
+- Use case: Large models, high throughput
 
 ## Important Notes
 
-1. **No Hard Isolation**: MPS provides resource limits but not hard memory/fault isolation like MIG
-2. **Monitor OOM**: Watch for out-of-memory errors if workloads exceed their limits
-3. **Total Resources**: Ensure sum of all pod requests doesn't exceed 128GB memory / 100% compute
-4. **Experimental**: MPS support in GPU operator is marked as experimental (as of v0.15.0)
+1. **No Resource Isolation**: Time-slicing provides NO memory or compute isolation
+2. **Shared Memory**: All workloads share the full 128GB - watch for OOM errors
+3. **Equal Time Slices**: Each replica gets equal GPU time regardless of request count
+4. **Monitor Total Usage**: Ensure total pod requests don't exceed 8 available slices
+5. **No Guaranteed Performance**: Multiple slices ≠ guaranteed proportional performance
 
 ## Verification
 
 After deployment, check node capacity:
 ```bash
 kubectl get node spark-9533 -o json | jq '.status.capacity."nvidia.com/gpu"'
-# Should show: "10"
+# Should show: "8"
 ```
 
-Check GPU operator logs:
+Check time-slicing is active:
 ```bash
-kubectl logs -n gpu-operator -l app=nvidia-device-plugin-daemonset
-# Look for: "MPS is healthy, active thread percentage = 100.0"
+kubectl get node spark-9533 -o json | jq '.metadata.labels | with_entries(select(.key | contains("nvidia.com/gpu")))'
+# Look for: nvidia.com/gpu.replicas: "8"
 ```
 
 ## Monitoring
 
-MPS provides per-process GPU metrics, but DCGM metrics may not associate correctly to containers. Monitor:
-- Pod memory usage
-- Model inference latency
-- Throughput metrics
-- OOM events in pod logs
+Watch for:
+- Out-of-memory errors (no memory limits)
+- Inference latency increase (context switching overhead)
+- GPU utilization via DCGM exporter
+- Pod GPU resource requests vs limits
