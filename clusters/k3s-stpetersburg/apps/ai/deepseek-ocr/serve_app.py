@@ -12,9 +12,6 @@ from typing import Optional, List, Dict, Any
 from ray import serve
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from PIL import Image
-import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer, AutoProcessor
 
 logging.basicConfig(
     level=logging.INFO,
@@ -71,6 +68,14 @@ class ChatCompletionResponse(BaseModel):
 @serve.ingress(app)
 class DeepSeekOCRServe:
     def __init__(self):
+        # Import heavy dependencies here where runtime_env PYTHONPATH is active
+        from PIL import Image as PILImage
+        import torch as torch_module
+        from transformers import AutoModelForCausalLM, AutoTokenizer, AutoProcessor
+
+        self.Image = PILImage
+        self.torch = torch_module
+
         logger.info("Initializing DeepSeek-OCR model with Transformers...")
 
         model_name = "deepseek-ai/DeepSeek-OCR"
@@ -78,7 +83,7 @@ class DeepSeekOCRServe:
         # Load model and processor
         self.model = AutoModelForCausalLM.from_pretrained(
             model_name,
-            torch_dtype=torch.bfloat16,
+            torch_dtype=self.torch.bfloat16,
             device_map="auto",
             trust_remote_code=True,
         )
@@ -138,7 +143,7 @@ class DeepSeekOCRServe:
                         if image_url.startswith("data:image"):
                             base64_data = image_url.split(",")[1]
                             image_bytes = base64.b64decode(base64_data)
-                            image_data = Image.open(io.BytesIO(image_bytes)).convert("RGB")
+                            image_data = self.Image.open(io.BytesIO(image_bytes)).convert("RGB")
                         else:
                             raise HTTPException(
                                 status_code=400,
@@ -170,7 +175,7 @@ class DeepSeekOCRServe:
             ).to(self.model.device)
 
             # Generate response
-            with torch.no_grad():
+            with self.torch.no_grad():
                 outputs = self.model.generate(
                     **inputs,
                     max_new_tokens=request.max_tokens,
