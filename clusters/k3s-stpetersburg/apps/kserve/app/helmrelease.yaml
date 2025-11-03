@@ -1,0 +1,84 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kserve-crd
+  namespace: kserve
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: kserve-crd
+      version: "v0.16.0"
+      sourceRef:
+        kind: HelmRepository
+        name: kserve
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3 
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kserve
+  namespace: kserve
+spec:
+  dependsOn:
+    - name: kserve-crd
+  interval: 30m
+  chart:
+    spec:
+      chart: kserve
+      version: "v0.16.0"
+      sourceRef:
+        kind: HelmRepository
+        name: kserve
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3 
+  values:
+    kserve:
+      controller:
+        deploymentMode: RawDeployment
+        gateway:
+          ingressGateway:
+            enableGatewayApi: true
+            kserveGateway: keiretsu/ts
+          domain: ${CLUSTER_DOMAIN}
+  postRenderers:
+    - kustomize:
+        patches:
+          - patch: |
+              apiVersion: serving.kserve.io/v1alpha1
+              kind: ClusterStorageContainer
+              metadata:
+                name: default
+              spec:
+                container:
+                  name: storage-initializer
+                  env:
+                  - name: HF_TOKEN
+                    valueFrom:
+                      secretKeyRef:
+                        name: hf-secret
+                        key: HF_TOKEN
+                        optional: false
+                  resources:
+                    requests:
+                      memory: 2Gi
+                      cpu: "1"
+                    limits:
+                      memory: 4Gi
+                      cpu: "1"
+                supportedUriFormats:
+                  - prefix: hf://
