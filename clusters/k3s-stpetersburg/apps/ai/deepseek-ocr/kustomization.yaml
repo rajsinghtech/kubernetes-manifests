@@ -4,3 +4,4 @@ kind: Kustomization
 namespace: ai
 resources:
   - deployment.yaml
+  - secret.yaml
