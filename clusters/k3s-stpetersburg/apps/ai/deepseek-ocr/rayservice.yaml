@@ -46,6 +46,7 @@ spec:
             - |
               pip install --no-cache-dir --target=/pip-packages \
                 "numpy>=1.21.6,<2.0" \
+                "urllib3>=1.25.4,<1.27" \
                 transformers==4.57.1 \
                 accelerate==1.6.0 \
                 fastapi==0.115.0 \
@@ -128,6 +129,7 @@ spec:
             - |
               pip install --no-cache-dir --target=/pip-packages \
                 "numpy>=1.21.6,<2.0" \
+                "urllib3>=1.25.4,<1.27" \
                 transformers==4.57.1 \
                 accelerate==1.6.0 \
                 fastapi==0.115.0 \
