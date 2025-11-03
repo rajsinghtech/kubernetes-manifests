@@ -20,7 +20,7 @@ spec:
     spec:
       initContainers:
       - name: install-deps
-        image: pytorch/pytorch:2.6.0-cuda12.8-cudnn9-runtime
+        image: pytorch/pytorch:2.4.0-cuda12.1-cudnn9-runtime
         command: ["/bin/bash", "-c"]
         args:
         - |
@@ -41,7 +41,7 @@ spec:
           mountPath: /deps
       containers:
       - name: deepseek-ocr
-        image: pytorch/pytorch:2.6.0-cuda12.8-cudnn9-runtime
+        image: pytorch/pytorch:2.4.0-cuda12.1-cudnn9-runtime
         command: ["/bin/bash", "-c"]
         args:
         - |
