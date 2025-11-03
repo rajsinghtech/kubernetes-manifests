@@ -2,7 +2,7 @@
 apiVersion: cilium.io/v2alpha1
 kind: CiliumBGPClusterConfig
 metadata:
-  name: opnsense
+  name: unifi
 spec:
   nodeSelector:
     matchLabels:
