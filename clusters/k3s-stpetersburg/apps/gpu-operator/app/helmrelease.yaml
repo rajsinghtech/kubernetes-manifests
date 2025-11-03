@@ -21,3 +21,7 @@ spec:
     cleanupOnFail: true
     remediation:
       retries: 3 
+  values:
+  devicePlugin:
+    config:
+      name: time-slicing-config
