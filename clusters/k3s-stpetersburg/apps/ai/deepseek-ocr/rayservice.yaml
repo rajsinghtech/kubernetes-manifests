@@ -16,12 +16,6 @@ spec:
         runtime_env:
           env_vars:
             PYTHONPATH: "/app"
-          pip:
-            - vllm==0.8.5
-            - fastapi==0.115.0
-            - pydantic==2.9.2
-            - pillow==11.0.0
-            - numpy==2.2.1
         deployments:
           - name: deepseek-ocr
             autoscaling_config:
@@ -43,6 +37,19 @@ spec:
         num-cpus: '0'
       template:
         spec:
+          initContainers:
+          - name: install-deps
+            image: rayproject/ray:2.46.0-py311-gpu
+            command:
+            - /bin/bash
+            - -c
+            - |
+              pip install --no-cache-dir \
+                vllm==0.8.5 \
+                fastapi==0.115.0 \
+                pydantic==2.9.2 \
+                pillow==11.0.0 \
+                numpy==2.2.1
           containers:
           - name: ray-head
             image: rayproject/ray:2.46.0-py311-gpu
@@ -101,6 +108,19 @@ spec:
         num-gpus: '1'
       template:
         spec:
+          initContainers:
+          - name: install-deps
+            image: rayproject/ray:2.46.0-py311-gpu
+            command:
+            - /bin/bash
+            - -c
+            - |
+              pip install --no-cache-dir \
+                vllm==0.8.5 \
+                fastapi==0.115.0 \
+                pydantic==2.9.2 \
+                pillow==11.0.0 \
+                numpy==2.2.1
           containers:
           - name: ray-worker
             image: rayproject/ray:2.46.0-py311-gpu
