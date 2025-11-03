@@ -1,0 +1,165 @@
+---
+apiVersion: ray.io/v1
+kind: RayService
+metadata:
+  name: deepseek-ocr
+  namespace: ai
+  labels:
+    app: deepseek-ocr
+spec:
+  serviceUnhealthySecondThreshold: 900
+  deploymentUnhealthySecondThreshold: 600
+  serveConfigV2: |
+    applications:
+      - name: deepseek-ocr
+        import_path: serve_app:deployment
+        runtime_env:
+          working_dir: "file:///app"
+          pip:
+            - vllm==0.8.5
+            - fastapi==0.115.0
+            - pydantic==2.9.2
+            - pillow==11.0.0
+            - numpy==2.2.1
+        deployments:
+          - name: deepseek-ocr
+            num_replicas: 1
+            autoscaling_config:
+              min_replicas: 0
+              max_replicas: 2
+              target_ongoing_requests: 1
+              upscale_delay_s: 30
+              downscale_delay_s: 300
+            ray_actor_options:
+              num_gpus: 1
+              num_cpus: 4
+              memory: 25769803776  # 24GB
+  rayClusterConfig:
+    rayVersion: '2.46.0'
+    enableInTreeAutoscaling: true
+    headGroupSpec:
+      rayStartParams:
+        dashboard-host: '0.0.0.0'
+        num-cpus: '0'
+      template:
+        spec:
+          containers:
+          - name: ray-head
+            image: rayproject/ray:2.46.0-py311-gpu
+            env:
+            - name: HF_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: hf-secret
+                  key: HF_TOKEN
+            - name: HF_HOME
+              value: /tmp/huggingface
+            - name: RAY_SERVE_ENABLE_EXPERIMENTAL_STREAMING
+              value: "1"
+            ports:
+            - containerPort: 6379
+              name: gcs
+            - containerPort: 8265
+              name: dashboard
+            - containerPort: 10001
+              name: client
+            - containerPort: 8000
+              name: serve
+            resources:
+              requests:
+                cpu: "2"
+                memory: 8Gi
+              limits:
+                cpu: "4"
+                memory: 16Gi
+            volumeMounts:
+            - name: serve-code
+              mountPath: /app
+            - name: hf-cache
+              mountPath: /tmp/huggingface
+            - name: devshm
+              mountPath: /dev/shm
+          volumes:
+          - name: serve-code
+            configMap:
+              name: deepseek-ocr-serve
+              defaultMode: 0755
+          - name: hf-cache
+            emptyDir:
+              sizeLimit: 30Gi
+          - name: devshm
+            emptyDir:
+              medium: Memory
+              sizeLimit: 8Gi
+    workerGroupSpecs:
+    - groupName: gpu-workers
+      replicas: 1
+      minReplicas: 0
+      maxReplicas: 2
+      rayStartParams:
+        num-cpus: '4'
+        num-gpus: '1'
+      template:
+        spec:
+          containers:
+          - name: ray-worker
+            image: rayproject/ray:2.46.0-py311-gpu
+            env:
+            - name: HF_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: hf-secret
+                  key: HF_TOKEN
+            - name: HF_HOME
+              value: /tmp/huggingface
+            - name: CUDA_VISIBLE_DEVICES
+              value: "0"
+            resources:
+              requests:
+                cpu: "4"
+                memory: 24Gi
+                nvidia.com/gpu: "1"
+              limits:
+                cpu: "8"
+                memory: 32Gi
+                nvidia.com/gpu: "1"
+            volumeMounts:
+            - name: serve-code
+              mountPath: /app
+            - name: hf-cache
+              mountPath: /tmp/huggingface
+            - name: devshm
+              mountPath: /dev/shm
+          volumes:
+          - name: serve-code
+            configMap:
+              name: deepseek-ocr-serve
+              defaultMode: 0755
+          - name: hf-cache
+            emptyDir:
+              sizeLimit: 30Gi
+          - name: devshm
+            emptyDir:
+              medium: Memory
+              sizeLimit: 8Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: deepseek-ocr-ts
+  namespace: ai
+  annotations:
+    tailscale.com/hostname: ${LOCATION}-ai-deepseek-ocr
+  labels:
+    app: deepseek-ocr
+spec:
+  type: LoadBalancer
+  loadBalancerClass: tailscale
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8000
+  selector:
+    ray.io/serve: "true"
+    ray.io/node-type: head
