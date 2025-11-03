@@ -11,5 +11,4 @@ resources:
   - envoyproxy-public.yaml
   - external-dns-unifi.yaml
   - secret.yaml
-  - httproute.yaml
   - clienttrafficpolicy.yaml
