@@ -32,6 +32,7 @@ spec:
       models:
         pull:
           - llama3.2:1b
+          - deepseek-coder:33b
     sso:
       enabled: true
       enableSignup: true
