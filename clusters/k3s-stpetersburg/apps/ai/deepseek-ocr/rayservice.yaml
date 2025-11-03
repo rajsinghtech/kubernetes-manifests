@@ -47,15 +47,17 @@ spec:
               pip install --no-cache-dir --target=/pip-packages \
                 "numpy>=1.21.6,<2.0" \
                 "urllib3>=1.25.4,<1.27" \
-                transformers==4.57.1 \
+                transformers==4.46.3 \
+                tokenizers==0.20.3 \
+                PyMuPDF \
+                img2pdf \
+                einops \
+                easydict \
+                addict \
+                Pillow \
                 accelerate==1.6.0 \
                 fastapi==0.115.0 \
-                pydantic==2.9.2 \
-                pillow==11.0.0 \
-                addict \
-                matplotlib \
-                torchvision \
-                einops
+                pydantic==2.9.2
             volumeMounts:
             - name: pip-packages
               mountPath: /pip-packages
@@ -134,15 +136,17 @@ spec:
               pip install --no-cache-dir --target=/pip-packages \
                 "numpy>=1.21.6,<2.0" \
                 "urllib3>=1.25.4,<1.27" \
-                transformers==4.57.1 \
+                transformers==4.46.3 \
+                tokenizers==0.20.3 \
+                PyMuPDF \
+                img2pdf \
+                einops \
+                easydict \
+                addict \
+                Pillow \
                 accelerate==1.6.0 \
                 fastapi==0.115.0 \
-                pydantic==2.9.2 \
-                pillow==11.0.0 \
-                addict \
-                matplotlib \
-                torchvision \
-                einops
+                pydantic==2.9.2
             volumeMounts:
             - name: pip-packages
               mountPath: /pip-packages
