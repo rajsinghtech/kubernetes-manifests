@@ -23,7 +23,6 @@ spec:
             - numpy==2.2.1
         deployments:
           - name: deepseek-ocr
-            num_replicas: 1
             autoscaling_config:
               min_replicas: 0
               max_replicas: 2
