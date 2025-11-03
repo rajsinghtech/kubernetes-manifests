@@ -1,0 +1,8 @@
+version: v1
+flags:
+  migStrategy: none
+sharing:
+  mps:
+    resources:
+      - name: nvidia.com/gpu
+        replicas: 10

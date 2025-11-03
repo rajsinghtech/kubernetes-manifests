@@ -23,31 +23,33 @@ spec:
       retries: 3 
   values:
     driver:
-      enabled: false
+      enabled: false  # Pre-installed on DGX systems
+
     toolkit:
       enabled: true
+      version: v1.18.0
+
     devicePlugin:
       enabled: true
+      version: v0.18.0
       config:
-        create: true
-        name: "device-plugin-configs"
-        default: "inference-config"
-        data:
-          inference-config: |-
-            version: v1
-            flags:
-              migStrategy: none
-            sharing:
-              timeSlicing:
-                replicas: 4
-                renameByDefault: false
-                failRequestsGreaterThanOne: false
-    gfd:
-      enabled: true
+        name: "time-slicing-config"
+        default: "inference"
+
     dcgmExporter:
       enabled: true
-      serviceMonitor:
-        enabled: true
-        interval: 15s
+
+    gfd:
+      enabled: true
+
+    operator:
+      defaultRuntime: containerd
+
     mig:
-      strategy: single
+      strategy: none  # Not using MIG for inference time-slicing
+
+    validator:
+      plugin:
+        env:
+          - name: WITH_WORKLOAD
+            value: "true"
