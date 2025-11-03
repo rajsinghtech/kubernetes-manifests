@@ -67,3 +67,4 @@ resources:
   - ./aws-mountpoint-s3-csi.yaml
   - ./keda.yaml
   - ./vector.yaml
+  - ./kuberay.yaml
