@@ -54,7 +54,8 @@ spec:
                 pillow==11.0.0 \
                 addict \
                 matplotlib \
-                torchvision
+                torchvision \
+                einops
             volumeMounts:
             - name: pip-packages
               mountPath: /pip-packages
@@ -140,7 +141,8 @@ spec:
                 pillow==11.0.0 \
                 addict \
                 matplotlib \
-                torchvision
+                torchvision \
+                einops
             volumeMounts:
             - name: pip-packages
               mountPath: /pip-packages
