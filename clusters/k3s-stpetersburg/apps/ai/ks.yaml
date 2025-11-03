@@ -1,22 +1,44 @@
+# apiVersion: kustomize.toolkit.fluxcd.io/v1
+# kind: Kustomization
+# metadata:
+#   name: &app ai-kserve
+#   namespace: flux-system
+# spec:
+#   targetNamespace: ai
+#   commonMetadata:
+#     labels:
+#       app.kubernetes.io/name: *app
+#   path: ./clusters/${CLUSTER_NAME}/apps/ai/kserve
+#   prune: true
+#   sourceRef:
+#     kind: GitRepository
+#     name: kubernetes-manifests
+#   dependsOn:
+#     - name: envoy-gateway-system-install
+#     - name: kserve
+#   wait: true
+#   interval: 1m
+#   retryInterval: 1m
+#   timeout: 1m 
+# ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app ai-kserve
+  name: &app ai-deepseek-ocr
   namespace: flux-system
 spec:
   targetNamespace: ai
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./clusters/${CLUSTER_NAME}/apps/ai/kserve
+  path: ./clusters/${CLUSTER_NAME}/apps/ai/deepseek-ocr
   prune: true
   sourceRef:
     kind: GitRepository
     name: kubernetes-manifests
   dependsOn:
     - name: envoy-gateway-system-install
-    - name: kserve
   wait: true
   interval: 1m
   retryInterval: 1m
-  timeout: 1m 
+  timeout: 1m

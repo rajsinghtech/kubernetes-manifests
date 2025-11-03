@@ -1,0 +1,117 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deepseek-ocr
+  namespace: ai
+  labels:
+    app: deepseek-ocr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deepseek-ocr
+  template:
+    metadata:
+      labels:
+        app: deepseek-ocr
+    spec:
+      containers:
+      - name: vllm
+        image: vllm/vllm-openai:v0.8.5
+        args:
+        - --model=deepseek-ai/DeepSeek-OCR
+        - --served-model-name=deepseek-ocr
+        - --enable-prefix-caching=false
+        - --gpu-memory-utilization=0.9
+        - --max-model-len=8192
+        - --trust-remote-code
+        - --host=0.0.0.0
+        - --port=8000
+        env:
+        - name: HF_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: hf-secret
+              key: HF_TOKEN
+        - name: HF_HUB_CACHE
+          value: /tmp/huggingface
+        ports:
+        - containerPort: 8000
+          name: http
+          protocol: TCP
+        resources:
+          requests:
+            cpu: "2"
+            memory: 12Gi
+            nvidia.com/gpu: "1"
+          limits:
+            cpu: "4"
+            memory: 16Gi
+            nvidia.com/gpu: "1"
+        volumeMounts:
+        - name: devshm
+          mountPath: /dev/shm
+        - name: hf-cache
+          mountPath: /tmp/huggingface
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 300
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+      volumes:
+      - name: devshm
+        emptyDir:
+          medium: Memory
+          sizeLimit: 6Gi
+      - name: hf-cache
+        emptyDir:
+          sizeLimit: 10Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: deepseek-ocr
+  namespace: ai
+  labels:
+    app: deepseek-ocr
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 8000
+    protocol: TCP
+    targetPort: 8000
+  selector:
+    app: deepseek-ocr
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: deepseek-ocr-ts
+  namespace: ai
+  annotations:
+    tailscale.com/hostname: ${LOCATION}-ai-deepseek-ocr
+  labels:
+    app: deepseek-ocr
+spec:
+  type: LoadBalancer
+  loadBalancerClass: tailscale
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8000
+  selector:
+    app: deepseek-ocr
