@@ -23,15 +23,14 @@ spec:
       retries: 3 
   values:
     driver:
-      enabled: false  # Pre-installed on your node
+      enabled: false
     toolkit:
       enabled: true
-
     devicePlugin:
       enabled: true
       config:
         create: true
-        name: "time-slicing-config"
+        name: "device-plugin-configs"
         default: "inference-config"
         data:
           inference-config: |-
@@ -43,24 +42,12 @@ spec:
                 replicas: 4
                 renameByDefault: false
                 failRequestsGreaterThanOne: false
-    dcgm:
-      enabled: false  # Use embedded
+    gfd:
+      enabled: true
     dcgmExporter:
       enabled: true
       serviceMonitor:
-        enabled: true  # Connect to your kube-prometheus-stack
+        enabled: true
         interval: 15s
-        additionalLabels:
-          release: kube-prometheus-stack  # Match your Prometheus operator
     mig:
-      strategy: single  # GB10 doesn't support MIG
-    migManager:
-      enabled: true  # Keep enabled even though not using MIG
-    gfd:
-      enabled: true  # GPU Feature Discovery
-    validator:
-      enabled: true
-      plugin:
-        env:
-        - name: NVIDIA_DRIVER_CAPABILITIES
-          value: "compute,utility"
+      strategy: single
