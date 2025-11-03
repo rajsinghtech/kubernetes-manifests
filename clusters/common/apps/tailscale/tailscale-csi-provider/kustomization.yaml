@@ -3,6 +3,6 @@ kind: Kustomization
 
 resources:
   - secretproviderclass.yaml
-  - daemonset.yaml
-  - secret.yaml
+  # - daemonset.yaml
+  # - secret.yaml
   # - examples/sidecar.yaml
