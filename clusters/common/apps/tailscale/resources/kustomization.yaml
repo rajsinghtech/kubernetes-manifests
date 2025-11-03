@@ -3,9 +3,9 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - rbac.yaml
-  - connector.yaml
-  - proxyclass.yaml 
-  - dnsconfig.yaml
-  - proxygroup.yaml
-  - recorder.yaml
-  - egress.yaml
+  # - connector.yaml
+  # - proxyclass.yaml 
+  # - dnsconfig.yaml
+  # - proxygroup.yaml
+  # - recorder.yaml
+  # - egress.yaml
