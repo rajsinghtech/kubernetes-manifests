@@ -32,8 +32,6 @@ spec:
       models:
         pull:
           - llama3.2:1b
-    ollamaUrls:
-      - "http://kirito.ai:11434"
     sso:
       enabled: true
       enableSignup: true
