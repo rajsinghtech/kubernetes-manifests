@@ -5,6 +5,7 @@ metadata:
   annotations:
     tailscale.com/hostname: go
     tailscale.com/proxy-group: common-ingress
+    tailscale.com/tags: "tag:k8s"
 spec:
   ports:
   - name: http-web

@@ -24,6 +24,7 @@ spec:
         annotations:
           tailscale.com/hostname: cdn-envoy-gateway
           tailscale.com/proxy-group: common-ingress
+          tailscale.com/tags: "tag:k8s"
         loadBalancerClass: tailscale
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1

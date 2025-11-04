@@ -4,8 +4,8 @@ metadata:
   name: code-server
   annotations:
     tailscale.com/expose: "true"
-    tailscale.com/hostname: code-server
-    # tailscale.com/proxy-group: common-ingress
+    tailscale.com/hostname: ${LOCATION}-code-server
+    tailscale.com/proxy-group: common-ingress
 spec:
   selector:
     app: code-server  # Match labels with your Deployment
