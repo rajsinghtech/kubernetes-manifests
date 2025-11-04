@@ -4,6 +4,7 @@ metadata:
   annotations:
     tailscale.com/tailnet-hostname: rook-ceph-rgw-object-store
     tailscale.com/proxy-group: common-ingress
+    tailscale.com/tags: "tag:k8s"
   name: rook-ceph-rgw-object-store-ts
   namespace: rook-ceph
 spec:
