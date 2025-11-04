@@ -4,6 +4,7 @@ metadata:
   name: headlamp
   annotations:
     tailscale.com/proxy-group: "common-ingress"
+    tailscale.com/tags: "tag:k8s"
 spec:
   defaultBackend:
     service:
