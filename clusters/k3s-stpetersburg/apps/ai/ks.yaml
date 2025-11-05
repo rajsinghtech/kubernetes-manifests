@@ -16,7 +16,7 @@ spec:
   dependsOn:
     - name: envoy-gateway-system-install
     - name: kserve
-  wait: true
+  wait: false
   interval: 1m
   retryInterval: 1m
   timeout: 1m
