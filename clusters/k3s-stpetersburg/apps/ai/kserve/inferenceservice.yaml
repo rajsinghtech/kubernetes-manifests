@@ -41,7 +41,7 @@ spec:
       - name: PYTORCH_CUDA_ALLOC_CONF
         value: "max_split_size_mb:512"
       - name: PYTHONPATH
-        value: "/app:/usr/local/lib/python3.12/site-packages-extra"
+        value: "/app:/pip-packages"
       ports:
       - containerPort: 8080
         protocol: TCP
@@ -65,7 +65,7 @@ spec:
       - name: devshm
         mountPath: /dev/shm
       - name: pip-packages
-        mountPath: /usr/local/lib/python3.11/site-packages-extra
+        mountPath: /pip-packages
       livenessProbe:
         httpGet:
           path: /health
