@@ -8,6 +8,7 @@ resources:
   - inferenceservice.yaml
   - service.yaml
   - secret.yaml
+  - qwen.yaml
 
 commonLabels:
   app: deepseek-ocr
