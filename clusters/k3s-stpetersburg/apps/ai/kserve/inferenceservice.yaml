@@ -40,6 +40,8 @@ spec:
         value: "0"
       - name: PYTORCH_CUDA_ALLOC_CONF
         value: "max_split_size_mb:512"
+      - name: PYTHONUSERBASE
+        value: "/root/.local"
       - name: PYTHONPATH
         value: "/app"
       ports:
