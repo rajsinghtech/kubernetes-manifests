@@ -186,14 +186,21 @@ def process_ocr_request(
         tmp_path = tmp.name
 
     try:
+        # Create temp output directory
+        import tempfile
+        import os
+        tmp_output_dir = tempfile.mkdtemp()
+
         # Use DeepSeek-OCR's custom infer method
         response_text = model.infer(
             tokenizer=tokenizer,
             prompt=prompt_text,
             image_file=tmp_path,
+            output_path=tmp_output_dir,
             base_size=1024,
             image_size=640,
-            crop_mode=True
+            crop_mode=True,
+            save_results=False
         )
 
         # Estimate token counts (approximate)
@@ -203,10 +210,15 @@ def process_ocr_request(
         return response_text, prompt_tokens, completion_tokens
 
     finally:
-        # Clean up temp file
+        # Clean up temp files
         import os
+        import shutil
         try:
             os.unlink(tmp_path)
+        except Exception:
+            pass
+        try:
+            shutil.rmtree(tmp_output_dir, ignore_errors=True)
         except Exception:
             pass
 
