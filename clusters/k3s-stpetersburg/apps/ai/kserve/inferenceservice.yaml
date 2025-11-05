@@ -40,10 +40,8 @@ spec:
         value: "0"
       - name: PYTORCH_CUDA_ALLOC_CONF
         value: "max_split_size_mb:512"
-      - name: PYTHONUSERBASE
-        value: "/root/.local"
       - name: PYTHONPATH
-        value: "/app"
+        value: "/app:/pip-packages"
       ports:
       - containerPort: 8080
         protocol: TCP
@@ -96,10 +94,15 @@ spec:
         - -c
         - |
           set -e
-          echo "Installing Python dependencies to user site..."
-          # NOTE: Using --user to install AFTER system packages (where CUDA torch is)
-          # This ensures NGC's CUDA PyTorch is used instead of CPU PyTorch from PyPI
-          pip install --user --no-cache-dir \
+          echo "Installing Python dependencies..."
+          # Create constraints file to prevent torch/torchvision installation
+          cat > /tmp/constraints.txt << 'CONSTRAINTS'
+torch==2.6.0a0+ecf3bae
+torchvision==0.20.0a0
+CONSTRAINTS
+
+          # Install with constraints to prevent overriding NGC torch
+          pip install --no-cache-dir --target=/pip-packages --constraint=/tmp/constraints.txt \
             transformers==4.46.3 \
             tokenizers==0.20.3 \
             Pillow \
@@ -109,14 +112,11 @@ spec:
             fastapi==0.115.0 \
             uvicorn[standard]==0.32.0 \
             pydantic==2.9.2 \
-            python-multipart
-
-          # Install accelerate without dependencies to avoid torch conflict
-          pip install --user --no-cache-dir --no-deps \
+            python-multipart \
             accelerate==1.6.0
 
           echo "Dependencies installed successfully"
-          python3 -m site
+          ls -lah /pip-packages
       volumeMounts:
       - name: pip-packages
         mountPath: /pip-packages
