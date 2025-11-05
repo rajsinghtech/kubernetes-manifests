@@ -95,12 +95,8 @@ spec:
         - |
           set -e
           echo "Installing Python dependencies..."
-          # Create constraints file to prevent torch/torchvision installation
-          echo "torch==2.6.0a0+ecf3bae" > /tmp/constraints.txt
-          echo "torchvision==0.20.0a0" >> /tmp/constraints.txt
-
-          # Install with constraints to prevent overriding NGC torch
-          pip install --no-cache-dir --target=/pip-packages --constraint=/tmp/constraints.txt \
+          # Install main packages (transformers may pull deps, but not torch since it's satisfied)
+          pip install --no-cache-dir --target=/pip-packages \
             transformers==4.46.3 \
             tokenizers==0.20.3 \
             Pillow \
@@ -110,8 +106,15 @@ spec:
             fastapi==0.115.0 \
             uvicorn[standard]==0.32.0 \
             pydantic==2.9.2 \
-            python-multipart \
-            accelerate==1.6.0
+            python-multipart
+
+          # Install accelerate without deps since torch is already in system
+          pip install --no-cache-dir --no-deps --target=/pip-packages \
+            accelerate==1.6.0 \
+            psutil \
+            numpy \
+            pyyaml \
+            huggingface-hub
 
           echo "Dependencies installed successfully"
           ls -lah /pip-packages
