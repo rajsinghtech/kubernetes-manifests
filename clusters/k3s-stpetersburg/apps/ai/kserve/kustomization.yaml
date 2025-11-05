@@ -14,8 +14,3 @@ commonLabels:
   app.kubernetes.io/name: deepseek-ocr
   app.kubernetes.io/component: inference
   app.kubernetes.io/part-of: kserve
-
-configMapGenerator:
-  - name: deepseek-ocr-server
-    files:
-      - server.py
