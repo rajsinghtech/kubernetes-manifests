@@ -96,10 +96,8 @@ spec:
           set -e
           echo "Installing Python dependencies..."
           # Create constraints file to prevent torch/torchvision installation
-          cat > /tmp/constraints.txt << 'CONSTRAINTS'
-torch==2.6.0a0+ecf3bae
-torchvision==0.20.0a0
-CONSTRAINTS
+          echo "torch==2.6.0a0+ecf3bae" > /tmp/constraints.txt
+          echo "torchvision==0.20.0a0" >> /tmp/constraints.txt
 
           # Install with constraints to prevent overriding NGC torch
           pip install --no-cache-dir --target=/pip-packages --constraint=/tmp/constraints.txt \
