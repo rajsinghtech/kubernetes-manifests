@@ -96,7 +96,6 @@ spec:
           set -e
           echo "Installing Python dependencies..."
           # NOTE: torch and torchvision are already in NGC image with CUDA support
-          # NOTE: accelerate removed as it pulls in incompatible torch version
           pip install --no-cache-dir --target=/pip-packages \
             transformers==4.46.3 \
             tokenizers==0.20.3 \
@@ -108,6 +107,10 @@ spec:
             uvicorn[standard]==0.32.0 \
             pydantic==2.9.2 \
             python-multipart
+
+          # Install accelerate without dependencies to avoid torch conflict
+          pip install --no-cache-dir --no-deps --target=/pip-packages \
+            accelerate==1.6.0
 
           echo "Dependencies installed successfully"
           ls -lah /pip-packages
