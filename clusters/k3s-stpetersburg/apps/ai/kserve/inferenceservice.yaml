@@ -114,10 +114,10 @@ spec:
 
           # Install accelerate without dependencies to avoid torch conflict
           # Then manually install accelerate's required dependencies
+          # Skip numpy - use NGC's numpy to avoid torchvision compatibility issues
           pip install --no-cache-dir --no-deps --target=/pip-packages \
             accelerate==1.6.0 \
             psutil \
-            'numpy<2' \
             pyyaml \
             'huggingface-hub>=0.27.0,<1.0'
 
