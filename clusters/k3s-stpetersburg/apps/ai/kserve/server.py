@@ -46,7 +46,7 @@ def load_model():
 
     from PIL import Image as PILImage
     import torch as torch_module
-    from transformers import AutoModelForCausalLM, AutoTokenizer, AutoProcessor
+    from transformers import AutoModel, AutoTokenizer, AutoProcessor
 
     model_state["Image"] = PILImage
     model_state["torch"] = torch_module
@@ -55,7 +55,7 @@ def load_model():
 
     try:
         logger.info(f"Loading model from {model_name}...")
-        model_state["model"] = AutoModelForCausalLM.from_pretrained(
+        model_state["model"] = AutoModel.from_pretrained(
             model_name,
             torch_dtype=torch_module.bfloat16,
             device_map="auto",
