@@ -41,7 +41,7 @@ spec:
       - name: PYTORCH_CUDA_ALLOC_CONF
         value: "max_split_size_mb:512"
       - name: PYTHONPATH
-        value: "/app:/pip-packages"
+        value: "/app:/usr/local/lib/python3.12/dist-packages:/pip-packages"
       ports:
       - containerPort: 8080
         protocol: TCP
