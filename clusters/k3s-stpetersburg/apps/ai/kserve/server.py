@@ -188,12 +188,18 @@ def process_ocr_request(
 
     logger.info(f"Processing OCR request: {prompt_text[:100]}...")
 
-    # Process inputs
+    # Process inputs - DeepSeek-OCR uses prepare_inputs method
     inputs = processor(
-        text=prompt_text,
         images=image_data,
+        text=prompt_text,
         return_tensors="pt"
-    ).to(model.device)
+    )
+
+    # Move to device
+    if isinstance(inputs, dict):
+        inputs = {k: v.to(model.device) if hasattr(v, 'to') else v for k, v in inputs.items()}
+    else:
+        inputs = inputs.to(model.device)
 
     # Generate response
     with torch.no_grad():

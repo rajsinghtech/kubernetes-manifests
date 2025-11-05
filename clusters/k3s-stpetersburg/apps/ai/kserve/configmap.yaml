@@ -198,10 +198,16 @@ data:
 
         # Process inputs
         inputs = processor(
-            text=prompt_text,
+            images=image_data,
             images=image_data,
             return_tensors="pt"
-        ).to(model.device)
+        )
+
+    # Move to device
+    if isinstance(inputs, dict):
+        inputs = {k: v.to(model.device) if hasattr(v, 'to') else v for k, v in inputs.items()}
+    else:
+        inputs = inputs.to(model.device)
 
         # Generate response
         with torch.no_grad():
