@@ -99,11 +99,10 @@ spec:
         - |
           set -e
           echo "Installing Python dependencies..."
+          # NOTE: torch and torchvision are already in NGC image with CUDA support
           pip install --no-cache-dir --target=/pip-packages \
             transformers==4.46.3 \
             tokenizers==0.20.3 \
-            torch==2.6.0 \
-            torchvision \
             Pillow \
             einops \
             easydict \
