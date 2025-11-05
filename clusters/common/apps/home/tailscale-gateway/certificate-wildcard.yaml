@@ -14,19 +14,3 @@ spec:
   usages:
     - digital signature
     - key encipherment 
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: wildcard-${COMMON_DOMAIN//./-}
-spec:
-  dnsNames:
-    - '*.${COMMON_DOMAIN}'
-  issuerRef:
-    group: cert-manager.io
-    kind: ClusterIssuer
-    name: ${COMMON_DOMAIN//./-}
-  secretName: wildcard-${COMMON_DOMAIN//./-}
-  usages:
-    - digital signature
-    - key encipherment 
