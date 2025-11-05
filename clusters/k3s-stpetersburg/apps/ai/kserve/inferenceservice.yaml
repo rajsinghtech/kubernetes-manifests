@@ -115,7 +115,9 @@ spec:
             uvicorn[standard]==0.32.0 \
             pydantic==2.9.2 \
             python-multipart \
-            accelerate==1.6.0
+            accelerate==1.6.0 \
+            'numpy<2' \
+            'huggingface-hub>=0.27.0,<1.0'
 
           echo "Dependencies installed successfully"
           ls -lah /pip-packages
