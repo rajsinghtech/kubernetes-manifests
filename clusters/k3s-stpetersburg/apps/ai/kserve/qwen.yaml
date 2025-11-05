@@ -15,11 +15,11 @@ spec:
       resources:
         limits:
           cpu: "2"
-          memory: 6Gi
+          memory: 12Gi
           nvidia.com/gpu: "1"
         requests:
           cpu: "1"
-          memory: 12Gi
+          memory: 6Gi
           nvidia.com/gpu: "1"
 ---
 apiVersion: v1
