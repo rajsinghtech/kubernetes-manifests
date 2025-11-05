@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: deepseek-ocr-ts
+  namespace: ai
+  annotations:
+    tailscale.com/hostname: ${LOCATION}-ai-kserve-deepseek-ocr
+  labels:
+    app: deepseek-ocr
+spec:
+  type: LoadBalancer
+  loadBalancerClass: tailscale
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    serving.kserve.io/inferenceservice: deepseek-ocr
+    component: predictor
