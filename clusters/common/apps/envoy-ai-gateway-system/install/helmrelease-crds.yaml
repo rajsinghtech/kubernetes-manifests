@@ -1,0 +1,23 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: ai-gateway-crds
+  namespace: envoy-ai-gateway-system
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: ai-gateway-crds-helm
+      version: v0.0.0-latest
+      sourceRef:
+        kind: HelmRepository
+        name: envoy-gateway
+        namespace: flux-system
+      interval: 1m
+  releaseName: aieg-crd
+  install:
+    createNamespace: false
+    crds: CreateReplace
+  upgrade:
+    crds: CreateReplace
