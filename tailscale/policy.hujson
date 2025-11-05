@@ -129,7 +129,7 @@
 		},
 		{
 			"src": ["group:superuser", "tag:k8s"],
-			"dst": ["tag:k8s-operator"],
+			"dst": ["tag:k8s-operator", "tag:k8s"],
 			"ip":  ["*"],
 			"app": {
 				"tailscale.com/cap/kubernetes": [
