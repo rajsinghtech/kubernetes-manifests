@@ -48,8 +48,12 @@ spec:
         name: http
       resources:
         requests:
+          cpu: "1"                                                                                                                                                                                                                              │
+          memory: 2Gi
           nvidia.com/gpu: "1"
         limits:
+          cpu: "8"                                                                                                                                                                                                                              │
+          memory: 40Gi
           nvidia.com/gpu: "1"
       volumeMounts:
       - name: server-code
