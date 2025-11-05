@@ -106,7 +106,7 @@
 			"src": ["group:superuser", "tag:k8s"],
 			"dst": ["autogroup:internet"],
 			"ip":  ["*"],
-			"via": ["tag:robbinsdale", "tag:ottawa"],
+			"via": ["tag:robbinsdale", "tag:ottawa", "tag:stpetersburg"],
 		},
 		{
 			"src": ["group:superuser", "tag:ottawa", "tag:stpetersburg"],

@@ -1,0 +1,21 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: ai
+
+resources:
+  - configmap.yaml
+  - inferenceservice.yaml
+  - service.yaml
+  - secret.yaml
+
+commonLabels:
+  app: deepseek-ocr
+  app.kubernetes.io/name: deepseek-ocr
+  app.kubernetes.io/component: inference
+  app.kubernetes.io/part-of: kserve
+
+configMapGenerator:
+  - name: deepseek-ocr-server
+    files:
+      - server.py
