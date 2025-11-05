@@ -29,7 +29,6 @@ logger = logging.getLogger(__name__)
 # Global model state
 model_state = {
     "model": None,
-    "processor": None,
     "tokenizer": None,
     "Image": None,
     "torch": None,
@@ -46,7 +45,7 @@ def load_model():
 
     from PIL import Image as PILImage
     import torch as torch_module
-    from transformers import AutoModel, AutoTokenizer, AutoProcessor
+    from transformers import AutoModel, AutoTokenizer
 
     model_state["Image"] = PILImage
     model_state["torch"] = torch_module
@@ -60,12 +59,6 @@ def load_model():
             torch_dtype=torch_module.bfloat16,
             device_map="auto",
             trust_remote_code=True,
-        )
-
-        logger.info("Loading processor...")
-        model_state["processor"] = AutoProcessor.from_pretrained(
-            model_name,
-            trust_remote_code=True
         )
 
         logger.info("Loading tokenizer...")
@@ -182,45 +175,40 @@ def process_ocr_request(
         raise HTTPException(status_code=503, detail="Model not loaded")
 
     model = model_state["model"]
-    processor = model_state["processor"]
     tokenizer = model_state["tokenizer"]
-    torch = model_state["torch"]
 
     logger.info(f"Processing OCR request: {prompt_text[:100]}...")
 
-    # Process inputs - DeepSeek-OCR uses prepare_inputs method
-    inputs = processor(
-        images=image_data,
-        text=prompt_text,
-        return_tensors="pt"
-    )
+    # Save image to temporary file for model.infer()
+    import tempfile
+    with tempfile.NamedTemporaryFile(suffix='.png', delete=False) as tmp:
+        image_data.save(tmp.name)
+        tmp_path = tmp.name
 
-    # Move to device
-    if isinstance(inputs, dict):
-        inputs = {k: v.to(model.device) if hasattr(v, 'to') else v for k, v in inputs.items()}
-    else:
-        inputs = inputs.to(model.device)
-
-    # Generate response
-    with torch.no_grad():
-        outputs = model.generate(
-            **inputs,
-            max_new_tokens=max_tokens,
-            temperature=temperature if temperature > 0 else None,
-            do_sample=temperature > 0,
+    try:
+        # Use DeepSeek-OCR's custom infer method
+        response_text = model.infer(
+            tokenizer=tokenizer,
+            prompt=prompt_text,
+            image_file=tmp_path,
+            base_size=1024,
+            image_size=640,
+            crop_mode=True
         )
 
-    # Decode response
-    response_text = tokenizer.decode(
-        outputs[0][inputs["input_ids"].shape[1]:],
-        skip_special_tokens=True
-    )
+        # Estimate token counts (approximate)
+        prompt_tokens = len(tokenizer.encode(prompt_text))
+        completion_tokens = len(tokenizer.encode(response_text))
 
-    # Calculate token counts
-    prompt_tokens = int(inputs["input_ids"].shape[1])
-    completion_tokens = int(outputs.shape[1] - prompt_tokens)
+        return response_text, prompt_tokens, completion_tokens
 
-    return response_text, prompt_tokens, completion_tokens
+    finally:
+        # Clean up temp file
+        import os
+        try:
+            os.unlink(tmp_path)
+        except Exception:
+            pass
 
 
 @app.post("/v1/chat/completions")
