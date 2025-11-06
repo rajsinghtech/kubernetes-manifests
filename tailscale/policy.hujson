@@ -284,6 +284,9 @@
 			],
 		},
 	],
+  "attrConfig": {
+    "custom:potato":      {"type": "string", "allowSetByNode": true, "broadcastToPeers": ["*"]},
+  },
 	"acls": [{
 		// Private log streaming enables audit and network logs to be directly
 		// uploaded to a node in your tailnet without exposing it to the public internet.
