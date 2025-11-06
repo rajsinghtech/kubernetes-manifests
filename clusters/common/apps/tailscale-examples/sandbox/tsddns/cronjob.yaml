@@ -1,0 +1,51 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: tsddns
+  namespace: tailscale-examples
+spec:
+  schedule: "*/45 * * * *"
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: tsddns
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: tsddns
+            image: ghcr.io/rajsinghtech/tsddns:latest
+            imagePullPolicy: Always
+            args:
+            - "--config"
+            - "/config/config.json"
+            env:
+            - name: TAILSCALE_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: ts-oauth
+                  key: client_id
+            - name: TAILSCALE_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: ts-oauth
+                  key: client_secret
+            volumeMounts:
+            - name: config
+              mountPath: /config
+              readOnly: true
+            resources:
+              requests:
+                memory: "64Mi"
+                cpu: "100m"
+              limits:
+                memory: "128Mi"
+                cpu: "200m"
+          volumes:
+          - name: config
+            configMap:
+              name: tsddns-config
