@@ -28,6 +28,11 @@ spec:
         ports:
           - port: 443
             protocol: TCP
+      - name: stpetersburg-k8s-operator
+        fqdn: stpetersburg-k8s-operator.keiretsu.ts.net
+        ports:
+          - port: 443
+            protocol: TCP
       - name: ottawa-envoy-gateway
         ip: 10.169.10.15
         ports:
