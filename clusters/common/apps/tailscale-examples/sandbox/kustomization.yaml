@@ -6,6 +6,7 @@ resources:
   # - ./hello
   - ./proxyt
   - ./tsidp
+  - ./tsddns
   - ./tsflow
   - ./tsdnsproxy
   - ./sidecar

@@ -1,0 +1,23 @@
+{
+    "rajsingh.info": [
+      "svc:stpetersburg-home-envoy-gateway"
+    ],
+    "stpetersburg.internal": [
+        "192.168.73.1"
+    ],
+
+    "killinit.cc": [
+        "svc:ottawa-home-envoy-gateway"
+      ],
+    "ottawa.internal": [
+        "192.168.69.1"
+    ],
+
+    "lukehouge.com": [
+        "svc:robbinsdale-home-envoy-gateway"
+      ],
+    "robbinsdale.internal": [
+        "192.168.50.1",
+        "device:robbinsdale-udm-pro"
+    ]
+}
