@@ -7,7 +7,7 @@ spec:
     pod:
       container:
         image:
-          docker.io/tailscale/tsrecorder:stable
+          docker.io/tailscale/tsrecorder:v1.90.6
   enableUI: true
   tags:
     - "tag:k8s"
