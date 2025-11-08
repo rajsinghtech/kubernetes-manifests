@@ -15,3 +15,35 @@ spec:
   - name: metrics
     port: 9835
     protocol: TCP
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: tailscale-egress
+spec:
+  interval: 1m
+  chart:
+    spec:
+      chart: tailscale-egress
+      version: 0.0.0-latest
+      sourceRef:
+        kind: HelmRepository
+        name: tailscale-k8s-operator-helper-charts
+        namespace: flux-system 
+      interval: 1m
+  releaseName: tailscale-egress
+  values:
+    proxyGroup: "common-egress"
+    services:
+      - name: ottawa-kirito-ollama
+        fqdn: kirito.keiretsu.ts.net
+        ports:
+          - port: 11434
+            protocol: TCP
+          - port: 9835
+            protocol: TCP
+      - name: stpetersburg-ollama
+        fqdn: stpetersburg-ollama.keiretsu.ts.net
+        ports:
+          - port: 11434
+            protocol: TCP
