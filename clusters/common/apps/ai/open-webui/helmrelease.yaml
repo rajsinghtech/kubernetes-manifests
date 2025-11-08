@@ -20,9 +20,10 @@ spec:
     ollama:
       enabled: false
 
+    ollamaUrls:
+      - "http://stpetersburg-ollama:11434"
+
     extraEnvVars:
-      - name: OLLAMA_BASE_URL
-        value: "http://stpetersburg-ollama:11434"
       - name: ENABLE_RAG_WEB_SEARCH
         value: "true"
       - name: RAG_WEB_SEARCH_ENGINE
