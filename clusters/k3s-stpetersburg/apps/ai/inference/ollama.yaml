@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: ollama
-      version: "*"
+      version: "1.33.0"
       sourceRef:
         kind: HelmRepository
         name: ollama
@@ -41,3 +41,22 @@ spec:
       size: "30Gi"
       accessModes:
         - ReadWriteOnce
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    tailscale.com/hostname: "${LOCATION}-ollama"
+    tailscale.com/proxy-class: "common"
+  name: ollama-ts
+spec:
+  ports:
+  - name: http
+    port: 11434
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/instance: ollama
+    app.kubernetes.io/name: ollama
+  type: LoadBalancer
+  loadBalancerClass: tailscale
