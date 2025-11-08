@@ -11,8 +11,3 @@ resources:
   - secret.yaml
   # - qwen.yaml
 
-commonLabels:
-  app: deepseek-ocr
-  app.kubernetes.io/name: deepseek-ocr
-  app.kubernetes.io/component: inference
-  app.kubernetes.io/part-of: kserve
