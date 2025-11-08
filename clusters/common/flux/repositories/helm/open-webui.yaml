@@ -3,7 +3,6 @@ apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
   name: open-webui
-  namespace: flux-system
 spec:
-  interval: 2h
-  url: https://helm.openwebui.com/ 
+  interval: 1h
+  url: https://open-webui.github.io/helm-charts
