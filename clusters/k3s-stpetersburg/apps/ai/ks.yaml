@@ -1,14 +1,14 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app ai-kserve
+  name: &app ai-inference
   namespace: flux-system
 spec:
   targetNamespace: ai
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./clusters/${CLUSTER_NAME}/apps/ai/kserve
+  path: ./clusters/${CLUSTER_NAME}/apps/ai/inference
   prune: true
   sourceRef:
     kind: GitRepository
@@ -20,28 +20,3 @@ spec:
   interval: 1m
   retryInterval: 1m
   timeout: 1m
----
-# Uncomment to deploy DeepSeek-OCR with KServe
-# This uses HuggingFace Transformers (not vLLM) to work with GB10 GPU (sm_121)
-# which has Triton compiler incompatibility
-# apiVersion: kustomize.toolkit.fluxcd.io/v1
-# kind: Kustomization
-# metadata:
-#   name: &app ai-kserve-deepseek-ocr
-#   namespace: flux-system
-# spec:
-#   targetNamespace: ai
-#   commonMetadata:
-#     labels:
-#       app.kubernetes.io/name: *app
-#   path: ./clusters/${CLUSTER_NAME}/apps/ai/kserve/deepseek-ocr
-#   prune: true
-#   sourceRef:
-#     kind: GitRepository
-#     name: kubernetes-manifests
-#   dependsOn:
-#     - name: kserve
-#   wait: false
-#   interval: 5m
-#   retryInterval: 2m
-#   timeout: 15m 

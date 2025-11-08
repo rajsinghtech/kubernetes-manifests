@@ -4,11 +4,12 @@ kind: Kustomization
 namespace: ai
 
 resources:
-  - configmap.yaml
-  - inferenceservice.yaml
-  - service.yaml
+  # - configmap.yaml
+  # - inferenceservice.yaml
+  # - service.yaml
+  - ollama.yaml
   - secret.yaml
-  - qwen.yaml
+  # - qwen.yaml
 
 commonLabels:
   app: deepseek-ocr
