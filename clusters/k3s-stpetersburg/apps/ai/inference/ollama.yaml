@@ -31,10 +31,10 @@ spec:
       requests:
         memory: "8Gi"
         cpu: "2000m"
-        nvidia.com/gpu: "8"
+        nvidia.com/gpu: "1"
       limits:
         memory: "16Gi"
-        nvidia.com/gpu: "8"
+        nvidia.com/gpu: "1"
 
     persistentVolume:
       enabled: true
