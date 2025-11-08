@@ -4,7 +4,6 @@ kind: Kustomization
 namespace: ai
 resources:
   - helmrelease.yaml
-  - helmrepository.yaml
   - egress.yaml
   - httproute.yaml
   - scrapeconfig.yaml
