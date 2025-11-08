@@ -13,7 +13,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: open-webui
-        namespace: ai
+        namespace: flux-system
       interval: 1m
   releaseName: open-webui
   values:
@@ -31,9 +31,7 @@ spec:
           nvidia.com/gpu: "1"
       models:
         pull:
-          - llama3.2:1b
-          - deepseek-coder:33b
-          - llava:13b
+          - qwen3-vl:8b
       persistentVolume:
         enabled: true
         size: 100Gi
@@ -51,8 +49,8 @@ spec:
         value: "nomic-embed-text:latest"
       - name: ENABLE_OLLAMA_API
         value: "true"
-      - name: WEBUI_NAME
-        value: "AI Demo - Kubernetes on GB10"
+      # - name: WEBUI_NAME
+      #   value: "AI Demo - Kubernetes on GB10"
       - name: ENABLE_COMMUNITY_SHARING
         value: "true"
 
