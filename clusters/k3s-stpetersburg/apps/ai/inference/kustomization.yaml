@@ -4,10 +4,6 @@ kind: Kustomization
 namespace: ai
 
 resources:
-  # - configmap.yaml
-  # - inferenceservice.yaml
-  # - service.yaml
   - ollama.yaml
   - secret.yaml
-  # - qwen.yaml
-
+  - openwebui.yaml
