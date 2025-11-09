@@ -40,8 +40,8 @@ spec:
       #   value: "AI Demo - Kubernetes on GB10"
       - name: ENABLE_COMMUNITY_SHARING
         value: "true"
-      - name: WEBUI_AUTH_TRUSTED_EMAIL_HEADER
-        value: Cf-Access-Authenticated-User-Email
+      # - name: WEBUI_AUTH_TRUSTED_EMAIL_HEADER
+      #   value: Cf-Access-Authenticated-User-Email
 
     sso:
       enabled: true
