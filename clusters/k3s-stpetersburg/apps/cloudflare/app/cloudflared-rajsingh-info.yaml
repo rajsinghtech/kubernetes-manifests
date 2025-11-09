@@ -6,7 +6,7 @@ metadata:
   name: cloudflared-rajsingh-info
   namespace: cloudflared
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       pod: cloudflared-rajsingh-info
