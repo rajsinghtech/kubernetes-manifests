@@ -6,7 +6,7 @@ resources:
   - ddns-rajsingh-info.yaml
   - ddns-lukehouge-com.yaml
   - ddns-killinit-cc.yaml
-  - externaldns-rajsingh-info.yaml
+  # - externaldns-rajsingh-info.yaml
   - externaldns-lukehouge-com.yaml
   - externaldns-killinit-cc.yaml
   - cloudflared-rajsingh-info.yaml
