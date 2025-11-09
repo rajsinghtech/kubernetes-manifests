@@ -22,7 +22,6 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "sonarr-anime.${COMMON_DOMAIN}"
     - "sonarr-anime.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

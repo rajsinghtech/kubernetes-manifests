@@ -22,7 +22,6 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "lidarr.${COMMON_DOMAIN}"
     - "lidarr.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

@@ -26,7 +26,6 @@ spec:
       name: private
       namespace: home
   hostnames:
-    - "status.${COMMON_DOMAIN}"
     - "status.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

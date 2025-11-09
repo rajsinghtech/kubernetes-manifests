@@ -22,7 +22,6 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "homeassistant.${COMMON_DOMAIN}"
     - "homeassistant.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

@@ -21,7 +21,6 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "speedtest.${COMMON_DOMAIN}"
     - "speedtest.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

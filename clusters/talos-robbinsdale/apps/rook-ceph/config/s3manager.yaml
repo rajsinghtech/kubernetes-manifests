@@ -77,7 +77,6 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "s3ui.${COMMON_DOMAIN}"
     - "s3ui.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

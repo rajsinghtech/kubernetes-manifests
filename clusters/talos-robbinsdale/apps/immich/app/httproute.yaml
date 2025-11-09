@@ -22,7 +22,6 @@ spec:
       name: public
       namespace: home
   hostnames:
-    - "immich.${COMMON_DOMAIN}"
     - "immich.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

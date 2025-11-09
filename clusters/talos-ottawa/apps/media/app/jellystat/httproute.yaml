@@ -22,7 +22,6 @@ spec:
       name: private
       namespace: home
   hostnames:
-    - "jellystat.${COMMON_DOMAIN}"
     - "jellystat.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

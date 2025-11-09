@@ -22,7 +22,6 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "sonarr.${COMMON_DOMAIN}"
     - "sonarr.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

@@ -22,7 +22,6 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "transmission-books.${COMMON_DOMAIN}"
     - "transmission-books.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

@@ -22,7 +22,6 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "sabnzbd.${COMMON_DOMAIN}"
     - "sabnzbd.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

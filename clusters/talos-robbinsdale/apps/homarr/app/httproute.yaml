@@ -22,7 +22,6 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "homarr.${COMMON_DOMAIN}"
     - "homarr.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

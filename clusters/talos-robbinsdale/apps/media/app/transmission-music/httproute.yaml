@@ -22,7 +22,6 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "transmission-music.${COMMON_DOMAIN}"
     - "transmission-music.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

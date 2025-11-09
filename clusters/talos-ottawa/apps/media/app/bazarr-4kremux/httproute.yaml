@@ -22,7 +22,6 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "bazarr-4kremux.${COMMON_DOMAIN}"
     - "bazarr-4kremux.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

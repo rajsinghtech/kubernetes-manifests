@@ -22,7 +22,6 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "readarr.${COMMON_DOMAIN}"
     - "readarr.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
