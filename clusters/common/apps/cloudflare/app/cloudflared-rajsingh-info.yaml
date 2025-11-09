@@ -2,18 +2,18 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: cloudflared-raj
-  name: cloudflared-raj
+    app: cloudflared-rajsingh-info
+  name: cloudflared-rajsingh-info
   namespace: cloudflared
 spec:
   replicas: 3
   selector:
     matchLabels:
-      pod: cloudflared-raj
+      pod: cloudflared-rajsingh-info
   template:
     metadata:
       labels:
-        pod: cloudflared-raj
+        pod: cloudflared-rajsingh-info
     spec:
       containers:
         - command:
@@ -32,7 +32,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: cloudflare
-                  key: "cloudflared-k8s-tunnel-token-rajsingh-info"
+                  key: "RAJSINGH_INFO_CLOUDFLARED_TOKEN"
           livenessProbe:
             httpGet:
               path: /ready
