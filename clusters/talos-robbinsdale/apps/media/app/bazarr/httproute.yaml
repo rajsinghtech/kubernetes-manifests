@@ -22,7 +22,6 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "bazarr.${COMMON_DOMAIN}"
     - "bazarr.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

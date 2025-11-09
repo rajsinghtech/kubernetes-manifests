@@ -22,7 +22,6 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "rook.${COMMON_DOMAIN}"
     - "rook.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

@@ -22,7 +22,6 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "qbittorrent.${COMMON_DOMAIN}"
     - "qbittorrent.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

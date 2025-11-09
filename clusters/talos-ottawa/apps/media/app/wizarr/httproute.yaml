@@ -26,7 +26,6 @@ spec:
       name: public
       namespace: home
   hostnames:
-    - "wizarr.${COMMON_DOMAIN}"
     - "wizarr.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

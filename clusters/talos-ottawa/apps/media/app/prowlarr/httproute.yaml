@@ -22,7 +22,6 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "prowlarr.${COMMON_DOMAIN}"
     - "prowlarr.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

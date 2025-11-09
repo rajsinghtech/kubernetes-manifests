@@ -22,7 +22,6 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "audioarr.${COMMON_DOMAIN}"
     - "audioarr.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

@@ -25,7 +25,6 @@ spec:
       name: public
       namespace: home
   hostnames:
-    - "tautulli.${COMMON_DOMAIN}"
     - "tautulli.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

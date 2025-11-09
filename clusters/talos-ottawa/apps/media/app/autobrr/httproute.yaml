@@ -22,7 +22,6 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "autobrr.${COMMON_DOMAIN}"
     - "autobrr.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

@@ -22,7 +22,6 @@ spec:
       name: public
       namespace: home
   hostnames:
-    - "jellyfin.${COMMON_DOMAIN}"
     - "jellyfin.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

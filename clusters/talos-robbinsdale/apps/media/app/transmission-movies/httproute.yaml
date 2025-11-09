@@ -22,7 +22,6 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "transmission-movies.${COMMON_DOMAIN}"
     - "transmission-movies.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

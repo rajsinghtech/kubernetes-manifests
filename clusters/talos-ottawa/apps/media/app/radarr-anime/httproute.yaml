@@ -22,7 +22,6 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "radarr-anime.${COMMON_DOMAIN}"
     - "radarr-anime.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

@@ -22,7 +22,6 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "radarr-4k.${COMMON_DOMAIN}"
     - "radarr-4k.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

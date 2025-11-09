@@ -22,7 +22,6 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "jellyseerr.${COMMON_DOMAIN}"
     - "jellyseerr.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

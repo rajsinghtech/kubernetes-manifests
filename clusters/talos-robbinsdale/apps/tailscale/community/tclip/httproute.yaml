@@ -22,7 +22,6 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "tclip.${COMMON_DOMAIN}"
     - "tclip.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:

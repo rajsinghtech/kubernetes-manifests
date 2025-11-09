@@ -26,7 +26,6 @@ spec:
       name: ts
       namespace: home
   hostnames:
-    - "jellystat.${COMMON_DOMAIN}"
     - "jellystat.${CLUSTER_DOMAIN}"
   rules:
     - backendRefs:
