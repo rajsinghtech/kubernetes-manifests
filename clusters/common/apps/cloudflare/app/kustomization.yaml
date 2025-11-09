@@ -9,4 +9,5 @@ resources:
   - externaldns-rajsingh-info.yaml
   - externaldns-lukehouge-com.yaml
   - externaldns-killinit-cc.yaml
+  - cloudflared-rajsingh-info.yaml
   - secret.yaml
