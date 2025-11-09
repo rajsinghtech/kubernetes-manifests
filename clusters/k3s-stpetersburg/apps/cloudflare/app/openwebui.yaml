@@ -2,7 +2,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: open-webui-cloudflared
+  name: open-webui
   namespace: ai
 spec:
   interval: 1m
@@ -15,13 +15,13 @@ spec:
         name: open-webui
         namespace: flux-system
       interval: 1m
-  releaseName: open-webui-cloudflared
+  releaseName: open-webui
   values:
     ollama:
       enabled: false
 
     ollamaUrls:
-      - "http://stpetersburg-ollama:11434"
+      - "http://stpetersburg-ollama.ai:11434"
 
     extraEnvVars:
       - name: ENABLE_RAG_WEB_SEARCH

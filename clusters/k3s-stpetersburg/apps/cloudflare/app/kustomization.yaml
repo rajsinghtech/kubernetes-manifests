@@ -4,3 +4,4 @@ kind: Kustomization
 namespace: cloudflare
 resources:
   - cloudflared-rajsingh-info.yaml
+  - openwebui.yaml
