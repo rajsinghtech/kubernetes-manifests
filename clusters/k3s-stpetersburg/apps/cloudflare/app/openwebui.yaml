@@ -28,9 +28,9 @@ spec:
       - name: RAG_WEB_SEARCH_ENGINE
         value: "searxng"
       - name: RAG_WEB_SEARCH_RESULT_COUNT
-        value: 3
+        value: "3"
       - name: RAG_WEB_SEARCH_CONCURRENT_REQUESTS
-        value: 10
+        value: "10"
       - name: SEARXNG_QUERY_URL
         value: http://searxng:8080/search
       - name: WEBUI_AUTH_TRUSTED_EMAIL_HEADER
