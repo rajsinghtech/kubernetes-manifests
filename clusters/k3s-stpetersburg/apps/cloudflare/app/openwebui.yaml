@@ -22,5 +22,6 @@ spec:
     ollamaUrls:
       - "http://stpetersburg-ollama.ai:11434"
 
+    extraEnvVars:
       - name: WEBUI_AUTH_TRUSTED_EMAIL_HEADER
         value: Cf-Access-Authenticated-User-Email
