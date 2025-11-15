@@ -23,6 +23,11 @@ data:
       - 'Hash plugin'
       - 'Self Information'
       - 'Tracker URL remover'
+    botdetection:
+      ip_limit:
+        enabled: false
+      link_token:
+        enabled: false
 ---
 apiVersion: apps/v1
 kind: Deployment
