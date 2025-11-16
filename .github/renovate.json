@@ -6,6 +6,7 @@
   ],
   "dependencyDashboard": true,
   "dependencyDashboardTitle": "Renovate Dashboard 🤖",
+  "prConcurrentLimit": 0,
   "ignorePaths": ["**/*.sops.*"],
   "flux": {
     "managerFilePatterns": ["/clusters/.+\\.ya?ml$/"]
