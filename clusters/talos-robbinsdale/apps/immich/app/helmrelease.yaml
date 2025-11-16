@@ -53,14 +53,55 @@ spec:
         library:
           existingClaim: immich-unas
     server:
+      controllers:
+        main:
+          containers:
+            main:
+              env:
+                DB_DATABASE_NAME: immich
+                DB_USERNAME:
+                  valueFrom:
+                    secretKeyRef:
+                      name: immich-postgres-user
+                      key: username
+                DB_PASSWORD:
+                  valueFrom:
+                    secretKeyRef:
+                      name: immich-postgres-user
+                      key: password
+                DB_HOSTNAME: immich-postgresql-ceph-rw
+                REDIS_HOSTNAME: dragonfly-immich
+                REDIS_PASSWORD:
+                  valueFrom:
+                    secretKeyRef:
+                      name: immich-dragonfly-secret
+                      key: password
       persistence:
         external:
           enabled: true
           existingClaim: immich-unas-pics
           readOnly: true
-    microservices:
-      persistence:
-        external:
-          enabled: true
-          existingClaim: immich-unas-pics
-          readOnly: true
+    machine-learning:
+      controllers:
+        main:
+          containers:
+            main:
+              env:
+                DB_DATABASE_NAME: immich
+                DB_USERNAME:
+                  valueFrom:
+                    secretKeyRef:
+                      name: immich-postgres-user
+                      key: username
+                DB_PASSWORD:
+                  valueFrom:
+                    secretKeyRef:
+                      name: immich-postgres-user
+                      key: password
+                DB_HOSTNAME: immich-postgresql-ceph-rw
+                REDIS_HOSTNAME: dragonfly-immich
+                REDIS_PASSWORD:
+                  valueFrom:
+                    secretKeyRef:
+                      name: immich-dragonfly-secret
+                      key: password
