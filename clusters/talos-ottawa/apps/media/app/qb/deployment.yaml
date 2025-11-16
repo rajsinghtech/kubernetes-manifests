@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: gluetun
-        image: ghcr.io/qdm12/gluetun:v3.40.0
+        image: ghcr.io/qdm12/gluetun:v3.40.1
         securityContext:
           capabilities:
             add:
@@ -95,7 +95,7 @@ spec:
         command: ["/bin/sh"]
         args: ["-c", "echo '*/5 * * * * /app/gluetun-qb-port-sync' > /config/crontab && exec /entrypoint.sh"]
       - name: qbittorrent
-        image: lscr.io/linuxserver/qbittorrent:5.1.2
+        image: lscr.io/linuxserver/qbittorrent:20.04.1
         ports:
         - name: webui
           containerPort: 8080
