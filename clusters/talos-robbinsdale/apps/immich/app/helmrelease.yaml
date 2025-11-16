@@ -60,7 +60,3 @@ spec:
           enabled: true
           existingClaim: immich-unas-pics
           readOnly: true
-    postgresql:
-      enabled: false
-    redis:
-      enabled: false
