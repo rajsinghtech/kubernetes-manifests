@@ -95,7 +95,7 @@ spec:
         command: ["/bin/sh"]
         args: ["-c", "echo '*/5 * * * * /app/gluetun-qb-port-sync' > /config/crontab && exec /entrypoint.sh"]
       - name: qbittorrent
-        image: lscr.io/linuxserver/qbittorrent:5.1.2
+        image: lscr.io/linuxserver/qbittorrent:20.04.1
         ports:
         - name: webui
           containerPort: 8080
