@@ -4,7 +4,7 @@ metadata:
   name: jellyfin
 spec:
   serviceName: jellyfin
-  replicas: 1
+  replicas: 0
   persistentVolumeClaimRetentionPolicy:
     whenDeleted: Delete
     whenScaled: Delete
