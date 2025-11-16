@@ -21,8 +21,8 @@ spec:
     remediation:
       retries: 3
   values:
-    image:
-      tag: v2.0.1
+    # image:
+    #   tag: v2.0.1
     env:
       DB_DATABASE_NAME: immich
       DB_USERNAME:

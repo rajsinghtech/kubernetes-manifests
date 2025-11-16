@@ -13,7 +13,6 @@ resources:
   - servicemonitor.yaml
   - secret.yaml
   - clusterplex.yaml
-  # - ciliumnetworkpolicy.yaml
   - backendtrafficpolicy.yaml
 configMapGenerator:
   - name: plex-dashboards
