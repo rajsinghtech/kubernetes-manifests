@@ -21,27 +21,31 @@ spec:
     remediation:
       retries: 3
   values:
-    # image:
-    #   tag: v2.0.1
-    env:
-      DB_DATABASE_NAME: immich
-      DB_USERNAME:
-        valueFrom:
-          secretKeyRef:
-            name: immich-postgres-user
-            key: username
-      DB_PASSWORD:
-        valueFrom:
-          secretKeyRef:
-            name: immich-postgres-user
-            key: password
-      DB_HOSTNAME: immich-postgresql-ceph-rw
-      REDIS_HOSTNAME: dragonfly-immich
-      REDIS_PASSWORD:
-        valueFrom:
-          secretKeyRef:
-            name: immich-dragonfly-secret
-            key: password
+    controllers:
+      main:
+        containers:
+          main:
+            image:
+              tag: v2.0.1
+            env:
+              DB_DATABASE_NAME: immich
+              DB_USERNAME:
+                valueFrom:
+                  secretKeyRef:
+                    name: immich-postgres-user
+                    key: username
+              DB_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: immich-postgres-user
+                    key: password
+              DB_HOSTNAME: immich-postgresql-ceph-rw
+              REDIS_HOSTNAME: dragonfly-immich
+              REDIS_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: immich-dragonfly-secret
+                    key: password
     immich:
       metrics:
         enabled: true
