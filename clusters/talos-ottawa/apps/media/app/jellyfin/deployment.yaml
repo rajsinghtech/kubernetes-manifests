@@ -17,7 +17,7 @@ spec:
       hostname: jellyfin
       containers:
         - name: jellyfin
-          image: jellyfin/jellyfin:10.11.2
+          image: jellyfin/jellyfin:10.11.3
           resources:
             requests:
               gpu.intel.com/i915: "25"
