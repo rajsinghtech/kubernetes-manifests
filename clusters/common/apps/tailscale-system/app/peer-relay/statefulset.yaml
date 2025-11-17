@@ -55,13 +55,14 @@ spec:
         - -c
         - |
           export TS_DEBUG_RELAY_SERVER_ADDRS="${POD_IP},$(cat /relay-info/relay-ip)"
+          export TS_DEBUG_RELAY_SERVER_ADDRS="${TS_DEBUG_PRETENDPOINT}:41642"
           exec /usr/local/bin/containerboot
         ports:
         - name: metrics
           containerPort: 9002
           protocol: TCP
         - name: wireguard
-          containerPort: 41641
+          containerPort: 41642
           protocol: UDP
         - name: relay
           containerPort: 8888
@@ -101,8 +102,8 @@ spec:
           value: 0.0.0.0:9002
         - name: TS_HOSTNAME
           value: $(POD_NAME)
-        # - name: TS_TAILSCALED_EXTRA_ARGS
-        #   value: "--port=41641"
+        - name: TS_TAILSCALED_EXTRA_ARGS
+          value: "--port=41642"
         lifecycle:
           postStart:
             exec:
