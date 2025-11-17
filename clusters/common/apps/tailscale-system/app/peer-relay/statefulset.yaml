@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: ${LOCATION}-sidecar-peer-relay
+  name: ${LOCATION}-peer-relay
 spec:
   replicas: 1
-  serviceName: ${LOCATION}-sidecar-peer-relay
+  serviceName: ${LOCATION}-peer-relay
   podManagementPolicy: Parallel
   updateStrategy:
     type: RollingUpdate
   selector:
     matchLabels:
-      app: ${LOCATION}-sidecar-peer-relay
+      app: ${LOCATION}-peer-relay
   template:
     metadata:
       labels:
-        app: ${LOCATION}-sidecar-peer-relay
+        app: ${LOCATION}-peer-relay
     spec:
       initContainers:
       - name: dns-lookup
@@ -101,8 +101,8 @@ spec:
           value: 0.0.0.0:9002
         - name: TS_HOSTNAME
           value: $(POD_NAME)
-        - name: TS_TAILSCALED_EXTRA_ARGS
-          value: "--port=41641"
+        # - name: TS_TAILSCALED_EXTRA_ARGS
+        #   value: "--port=41641"
         lifecycle:
           postStart:
             exec:
