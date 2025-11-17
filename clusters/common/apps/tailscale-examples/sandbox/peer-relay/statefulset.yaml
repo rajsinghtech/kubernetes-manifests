@@ -24,7 +24,7 @@ spec:
         - /bin/sh
         - -c
         - |
-          RESOLVED_IP=$(getent hosts ${FQDN} | awk '{print $1}')
+          RESOLVED_IP=$(nslookup ${FQDN} | grep -A1 "^Name:" | grep "^Address" | head -n1 | awk '{print $3}')
           if [ -z "$RESOLVED_IP" ]; then
             echo "Failed to resolve ${FQDN}" >&2
             exit 1
