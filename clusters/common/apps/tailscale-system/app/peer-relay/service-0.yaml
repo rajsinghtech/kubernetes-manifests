@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: ${LOCATION}-sidecar-peer-relay-0
+  name: ${LOCATION}-peer-relay-0
 spec:
   type: LoadBalancer
   selector:
-    app: ${LOCATION}-sidecar-peer-relay
-    statefulset.kubernetes.io/pod-name: ${LOCATION}-sidecar-peer-relay-0
+    app: ${LOCATION}-peer-relay
+    statefulset.kubernetes.io/pod-name: ${LOCATION}-peer-relay-0
   ports:
   - name: relay
     port: 8888
