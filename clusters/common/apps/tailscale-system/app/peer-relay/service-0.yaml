@@ -19,5 +19,5 @@ spec:
   - name: wireguard
     port: 41642
     targetPort: 41642
-    protocol: TCP
+    protocol: UDP
   loadBalancerIP: ${CLUSTER_LOAD_BALANCER_CIDR%.*.*/*}.100.100

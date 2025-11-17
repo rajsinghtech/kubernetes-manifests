@@ -17,22 +17,6 @@ spec:
         app: ${LOCATION}-peer-relay
     spec:
       initContainers:
-      - name: dns-lookup
-        image: nicolaka/netshoot:latest
-        command:
-        - /bin/sh
-        - -c
-        - |
-          RESOLVED_IP=$(dig +short ottawa.rajsingh.info | head -n1)
-          if [ -z "$RESOLVED_IP" ]; then
-            echo "Failed to resolve ottawa.rajsingh.info" >&2
-            exit 1
-          fi
-          echo -n "$RESOLVED_IP" > /relay-info/relay-ip
-          echo "Resolved ottawa.rajsingh.info to $RESOLVED_IP"
-        volumeMounts:
-        - name: relay-info
-          mountPath: /relay-info
       - args:
         - sysctl -w net.ipv4.ip_forward=1 && if sysctl net.ipv6.conf.all.forwarding;
           then sysctl -w net.ipv6.conf.all.forwarding=1; fi
@@ -50,13 +34,6 @@ spec:
         image: "ghcr.io/tailscale/tailscale:unstable-v1.91.88"
         securityContext:
           privileged: true
-        command:
-        - /bin/sh
-        - -c
-        - |
-          export TS_DEBUG_RELAY_SERVER_ADDRS="${POD_IP},$(cat /relay-info/relay-ip)"
-          export TS_DEBUG_RELAY_SERVER_ADDRS="${TS_DEBUG_PRETENDPOINT}:41642"
-          exec /usr/local/bin/containerboot
         ports:
         - name: metrics
           containerPort: 9002
@@ -102,16 +79,13 @@ spec:
           value: 0.0.0.0:9002
         - name: TS_HOSTNAME
           value: $(POD_NAME)
+        - name: TS_DEBUG_PRETENDPOINT
+          value: "142.115.155.168:41642"
+        - name: TS_DEBUG_RELAY_SERVER_ADDRS
+          value: "$(POD_IP),142.115.155.168"
         - name: TS_TAILSCALED_EXTRA_ARGS
           value: "--port=41642"
         lifecycle:
           postStart:
             exec:
               command: ["/bin/sh", "-c", "sleep 10 && tailscale set --relay-server-port=8888"]
-        volumeMounts:
-        - name: relay-info
-          mountPath: /relay-info
-          readOnly: true
-      volumes:
-      - name: relay-info
-        emptyDir: {}
