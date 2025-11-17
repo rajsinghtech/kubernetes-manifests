@@ -18,21 +18,18 @@ spec:
     spec:
       initContainers:
       - name: dns-lookup
-        image: busybox:latest
+        image: nicolaka/netshoot:latest
         command:
         - /bin/sh
         - -c
         - |
-          RESOLVED_IP=$(nslookup ${FQDN} | grep -A1 "^Name:" | grep "^Address" | head -n1 | awk '{print $3}')
+          RESOLVED_IP=$(dig +short ottawa.rajsingh.info | head -n1)
           if [ -z "$RESOLVED_IP" ]; then
-            echo "Failed to resolve ${FQDN}" >&2
+            echo "Failed to resolve ottawa.rajsingh.info" >&2
             exit 1
           fi
           echo -n "$RESOLVED_IP" > /relay-info/relay-ip
-          echo "Resolved ${FQDN} to $RESOLVED_IP"
-        env:
-        - name: FQDN
-          value: "${FQDN}"
+          echo "Resolved ottawa.rajsingh.info to $RESOLVED_IP"
         volumeMounts:
         - name: relay-info
           mountPath: /relay-info
