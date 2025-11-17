@@ -16,7 +16,6 @@ spec:
       labels:
         app: ${LOCATION}-sidecar-peer-relay
     spec:
-      serviceAccountName: "tailscale"
       initContainers:
       - name: dns-lookup
         image: busybox:latest
