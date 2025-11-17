@@ -80,9 +80,9 @@ spec:
         - name: TS_HOSTNAME
           value: $(POD_NAME)
         - name: TS_DEBUG_PRETENDPOINT
-          value: "142.115.155.168:41642,142.115.155.168:8888"
+          value: "142.115.155.168:41642"
         - name: TS_DEBUG_RELAY_SERVER_ADDRS
-          value: "$(POD_IP),142.115.155.168"
+          value: "$(POD_IP),${CLUSTER_LOAD_BALANCER_CIDR%.*.*/*}.100.100,142.115.155.168"
         - name: TS_TAILSCALED_EXTRA_ARGS
           value: "--port=41642"
         lifecycle:
