@@ -1,0 +1,120 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ${LOCATION}-sidecar-peer-relay
+spec:
+  replicas: 1
+  serviceName: ${LOCATION}-sidecar-peer-relay
+  podManagementPolicy: Parallel
+  updateStrategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: ${LOCATION}-sidecar-peer-relay
+  template:
+    metadata:
+      labels:
+        app: ${LOCATION}-sidecar-peer-relay
+    spec:
+      serviceAccountName: "tailscale"
+      initContainers:
+      - name: dns-lookup
+        image: busybox:latest
+        command:
+        - /bin/sh
+        - -c
+        - |
+          RESOLVED_IP=$(getent hosts ${FQDN} | awk '{print $1}')
+          if [ -z "$RESOLVED_IP" ]; then
+            echo "Failed to resolve ${FQDN}" >&2
+            exit 1
+          fi
+          echo -n "$RESOLVED_IP" > /relay-info/relay-ip
+          echo "Resolved ${FQDN} to $RESOLVED_IP"
+        env:
+        - name: FQDN
+          value: "${FQDN}"
+        volumeMounts:
+        - name: relay-info
+          mountPath: /relay-info
+      - args:
+        - sysctl -w net.ipv4.ip_forward=1 && if sysctl net.ipv6.conf.all.forwarding;
+          then sysctl -w net.ipv6.conf.all.forwarding=1; fi
+        command:
+        - /bin/sh
+        - -c
+        image: "ghcr.io/tailscale/tailscale:unstable-v1.91.88"
+        imagePullPolicy: IfNotPresent
+        name: sysctler
+        securityContext:
+          privileged: true
+      containers:
+      - name: tailscale
+        imagePullPolicy: IfNotPresent
+        image: "ghcr.io/tailscale/tailscale:unstable-v1.91.88"
+        securityContext:
+          privileged: true
+        command:
+        - /bin/sh
+        - -c
+        - |
+          export TS_DEBUG_RELAY_SERVER_ADDRS="${POD_IP},$(cat /relay-info/relay-ip)"
+          exec /usr/local/bin/containerboot
+        ports:
+        - name: metrics
+          containerPort: 9002
+          protocol: TCP
+        - name: wireguard
+          containerPort: 41641
+          protocol: UDP
+        - name: relay
+          containerPort: 8888
+          protocol: UDP
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_UID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.uid
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: TS_KUBE_SECRET
+          value: ""
+        - name: TS_USERSPACE
+          value: "false"
+        - name: TS_STATE_DIR
+          value: "/dev/shm"
+        - name: TS_AUTHKEY
+          valueFrom:
+            secretKeyRef:
+              name: ts-oauth
+              key: TS_AUTHKEY_EPHEMERAL
+              optional: true
+        - name: TS_ACCEPT_DNS
+          value: "true"
+        - name: TS_EXTRA_ARGS
+          value: "--advertise-tags=tag:k8s,tag:${LOCATION},tag:relay --accept-routes --ssh"
+        - name: TS_ENABLE_METRICS
+          value: "true"
+        - name: TS_LOCAL_ADDR_PORT
+          value: 0.0.0.0:9002
+        - name: TS_HOSTNAME
+          value: $(POD_NAME)
+        - name: TS_TAILSCALED_EXTRA_ARGS
+          value: "--port=41641"
+        lifecycle:
+          postStart:
+            exec:
+              command: ["/bin/sh", "-c", "sleep 10 && tailscale set --relay-server-port=8888"]
+        volumeMounts:
+        - name: relay-info
+          mountPath: /relay-info
+          readOnly: true
+      volumes:
+      - name: relay-info
+        emptyDir: {}
