@@ -132,6 +132,7 @@
 			"dst": ["tag:k8s-operator", "tag:k8s"],
 			"ip":  ["*"],
 			"app": {
+				"tailscale.com/cap/relay": [],
 				"tailscale.com/cap/kubernetes": [
 					{
 						"impersonate": {
