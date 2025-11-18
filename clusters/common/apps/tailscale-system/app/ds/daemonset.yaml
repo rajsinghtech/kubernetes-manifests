@@ -20,7 +20,7 @@ spec:
         env:
           # Store the state in a k8s secret
         - name: TS_KUBE_SECRET
-          value: "$(POD_NAME)"
+          value: "$(NODE_NAME)"
         - name: TS_USERSPACE
           value: "true"
         - name: TS_OUTBOUND_HTTP_PROXY_LISTEN
@@ -40,6 +40,10 @@ spec:
         - name: TS_EXTRA_ARGS
           value: "--advertise-tags=tag:k8s,tag:${LOCATION} --accept-routes --ssh"
         - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: NODE_NAME
           valueFrom:
             fieldRef:
               fieldPath: spec.nodeName
