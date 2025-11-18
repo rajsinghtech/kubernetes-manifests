@@ -19,9 +19,22 @@ spec:
         imagePullPolicy: Always
         image: "ghcr.io/tailscale/tailscale:latest"
         env:
-          # Store the state in a k8s secret
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_UID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.uid
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
         - name: TS_KUBE_SECRET
           value: $(NODE_NAME)
+        - name: TS_STATE
+          value: kube:$(NODE_NAME)
         - name: TS_USERSPACE
           value: "true"
         - name: TS_OUTBOUND_HTTP_PROXY_LISTEN
@@ -40,15 +53,3 @@ spec:
           value: "true"
         - name: TS_EXTRA_ARGS
           value: "--advertise-tags=tag:k8s,tag:${LOCATION} --accept-routes --ssh"
-        - name: POD_NAME
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.name
-        - name: NODE_NAME
-          valueFrom:
-            fieldRef:
-              fieldPath: spec.nodeName
-        - name: POD_UID
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.uid
