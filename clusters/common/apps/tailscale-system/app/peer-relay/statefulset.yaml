@@ -38,9 +38,9 @@ spec:
         - name: metrics
           containerPort: 9002
           protocol: TCP
-        - name: wireguard
-          containerPort: 41642
-          protocol: UDP
+        # - name: wireguard
+        #   containerPort: 41642
+        #   protocol: UDP
         - name: relay
           containerPort: 6969
           protocol: UDP
@@ -79,12 +79,12 @@ spec:
           value: 0.0.0.0:9002
         - name: TS_HOSTNAME
           value: $(POD_NAME)
-        - name: TS_DEBUG_PRETENDPOINT
-          value: "142.115.155.168:41642,${CLUSTER_LOAD_BALANCER_CIDR%.*.*/*}.100.100:41642"
+        # - name: TS_DEBUG_PRETENDPOINT
+        #   value: "142.115.155.168:41642,${CLUSTER_LOAD_BALANCER_CIDR%.*.*/*}.100.100:41642"
         - name: TS_DEBUG_RELAY_SERVER_ADDRS
           value: "$(POD_IP),${CLUSTER_LOAD_BALANCER_CIDR%.*.*/*}.100.100,142.115.155.168"
-        - name: TS_TAILSCALED_EXTRA_ARGS
-          value: "--port=41642"
+        # - name: TS_TAILSCALED_EXTRA_ARGS
+        #   value: "--port=41642"
         lifecycle:
           postStart:
             exec:
