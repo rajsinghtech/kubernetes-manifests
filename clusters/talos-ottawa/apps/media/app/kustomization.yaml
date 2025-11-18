@@ -30,4 +30,4 @@ resources:
   - ./qb
   - ./qb-pvt
   - ./feedcord
-  - ./tunarr
+  # - ./tunarr
