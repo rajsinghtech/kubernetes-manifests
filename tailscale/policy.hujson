@@ -94,9 +94,9 @@
 		{
 			"src": ["*"],
 			"dst": ["tag:udm"],
-			"app": {
-				"tailscale.com/cap/relay": [],
-			},
+			// "app": {
+			// 	"tailscale.com/cap/relay": [],
+			// },
 		},
 		{
 			"src": ["group:superuser"],
