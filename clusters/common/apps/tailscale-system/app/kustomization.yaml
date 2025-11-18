@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
   - ./secret.yaml
   - ./peer-relay
+  - ./ds
