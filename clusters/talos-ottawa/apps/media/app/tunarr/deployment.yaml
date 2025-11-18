@@ -31,6 +31,11 @@ spec:
               value: "0"
             - name: TZ
               value: ${TIMEZONE}
+          resources:
+            requests:
+              gpu.intel.com/i915: "25"
+            limits:
+              gpu.intel.com/i915: "25"
       volumes:
         - name: config-volume
           persistentVolumeClaim:
