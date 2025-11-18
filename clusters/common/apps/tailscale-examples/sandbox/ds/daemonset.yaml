@@ -1,53 +1,53 @@
-# apiVersion: apps/v1
-# kind: DaemonSet
-# metadata:
-#   name: tailscale
-# spec:
-#   selector:
-#     matchLabels:
-#       app: tailscale
-#   template:
-#     metadata:
-#       labels:
-#         app: tailscale
-#     spec:
-#       serviceAccountName: "tailscale"
-#       hostNetwork: true
-#       containers:
-#       - name: tailscale
-#         imagePullPolicy: Always
-#         image: "ghcr.io/tailscale/tailscale:latest"
-#         ports:
-#         - containerPort: 1055
-#           name: tailscale
-#           protocol: TCP
-#         env:
-#           # Store the state in a k8s secret
-#         - name: TS_KUBE_SECRET
-#           value: ""
-#         - name: TS_USERSPACE
-#           value: "true"
-#         - name: TS_OUTBOUND_HTTP_PROXY_LISTEN
-#           value: "0.0.0.0:1055"
-#         - name: TS_SOCKS5_SERVER
-#           value: "0.0.0.0:1055"
-#         - name: TS_DEBUG_FIREWALL_MODE
-#           value: auto
-#         - name: TS_AUTHKEY
-#           valueFrom:
-#             secretKeyRef:
-#               name: ts-oauth
-#               key: TS_AUTHKEY_EPHEMERAL
-#               optional: true
-#         - name: TS_ACCEPT_DNS
-#           value: "true"
-#         - name: TS_EXTRA_ARGS
-#           value: "--advertise-tags=tag:k8s,tag:${LOCATION} --accept-routes --ssh"
-#         - name: POD_NAME
-#           valueFrom:
-#             fieldRef:
-#               fieldPath: metadata.name
-#         - name: POD_UID
-#           valueFrom:
-#             fieldRef:
-#               fieldPath: metadata.uid
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: tailscale
+spec:
+  selector:
+    matchLabels:
+      app: tailscale
+  template:
+    metadata:
+      labels:
+        app: tailscale
+    spec:
+      serviceAccountName: "tailscale"
+      hostNetwork: true
+      containers:
+      - name: tailscale
+        imagePullPolicy: Always
+        image: "ghcr.io/tailscale/tailscale:latest"
+        ports:
+        - containerPort: 1055
+          name: tailscale
+          protocol: TCP
+        env:
+          # Store the state in a k8s secret
+        - name: TS_KUBE_SECRET
+          value: ""
+        - name: TS_USERSPACE
+          value: "true"
+        - name: TS_OUTBOUND_HTTP_PROXY_LISTEN
+          value: "0.0.0.0:1055"
+        - name: TS_SOCKS5_SERVER
+          value: "0.0.0.0:1055"
+        - name: TS_DEBUG_FIREWALL_MODE
+          value: auto
+        - name: TS_AUTHKEY
+          valueFrom:
+            secretKeyRef:
+              name: ts-oauth
+              key: TS_AUTHKEY_EPHEMERAL
+              optional: true
+        - name: TS_ACCEPT_DNS
+          value: "true"
+        - name: TS_EXTRA_ARGS
+          value: "--advertise-tags=tag:k8s,tag:${LOCATION} --accept-routes --ssh"
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_UID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.uid
