@@ -9,8 +9,8 @@ spec:
     statefulset.kubernetes.io/pod-name: ${LOCATION}-peer-relay-0
   ports:
   - name: relay
-    port: 8888
-    targetPort: 8888
+    port: 6969
+    targetPort: 6969
     protocol: UDP
   - name: metrics
     port: 9002

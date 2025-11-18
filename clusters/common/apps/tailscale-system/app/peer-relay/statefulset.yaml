@@ -42,7 +42,7 @@ spec:
           containerPort: 41642
           protocol: UDP
         - name: relay
-          containerPort: 8888
+          containerPort: 6969
           protocol: UDP
         env:
         - name: POD_NAME
@@ -88,4 +88,4 @@ spec:
         lifecycle:
           postStart:
             exec:
-              command: ["/bin/sh", "-c", "sleep 10 && tailscale set --relay-server-port=8888"]
+              command: ["/bin/sh", "-c", "sleep 10 && tailscale set --relay-server-port=6969"]
