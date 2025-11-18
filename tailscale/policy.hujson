@@ -98,11 +98,11 @@
 		// 		"tailscale.com/cap/relay": [],
 		// 	},
 		// },
-		{
-			"src": ["group:superuser"],
-			"dst": ["tag:udm"],
-			"ip":  ["*"],
-		},
+		// {
+		// 	"src": ["group:superuser"],
+		// 	"dst": ["tag:udm"],
+		// 	"ip":  ["*"],
+		// },
 		{
 			"src": ["group:superuser", "tag:k8s"],
 			"dst": ["autogroup:internet"],
