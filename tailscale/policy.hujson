@@ -91,13 +91,13 @@
 			"dst": ["tag:ottawa", "tag:robbinsdale", "tag:stpetersburg"],
 			"ip":  ["*"],
 		},
-		{
-			"src": ["*"],
-			"dst": ["tag:udm"],
-			// "app": {
-			// 	"tailscale.com/cap/relay": [],
-			// },
-		},
+		// {
+		// 	"src": ["*"],
+		// 	"dst": ["tag:udm"],
+		// 	"app": {
+		// 		"tailscale.com/cap/relay": [],
+		// 	},
+		// },
 		{
 			"src": ["group:superuser"],
 			"dst": ["tag:udm"],
