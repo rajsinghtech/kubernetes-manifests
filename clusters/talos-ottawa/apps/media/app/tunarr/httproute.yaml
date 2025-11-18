@@ -1,0 +1,36 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: tunarr
+  namespace: media
+  annotations:
+    item.homer.rajsingh.info/name: "tunarr"
+    item.homer.rajsingh.info/subtitle: "TV Channels"
+    item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/svg/sonarr.svg"
+    item.homer.rajsingh.info/keywords: "tv, series, automation"
+
+    service.homer.rajsingh.info/name: "Media"
+    service.homer.rajsingh.info/icon: "fas fa-tv"
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: private
+      namespace: home
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: ts
+      namespace: home
+  hostnames:
+    - "tunarr.${CLUSTER_DOMAIN}"
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: tunarr
+          port: 8000
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /

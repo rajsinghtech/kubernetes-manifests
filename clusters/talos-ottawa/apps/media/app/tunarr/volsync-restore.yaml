@@ -1,0 +1,15 @@
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationDestination
+metadata:
+  name: tunarr-config
+spec:
+  trigger:
+    manual: first1
+  paused: false
+  restic:
+    repository: restic-media-tunarr-config
+    accessModes: [ReadWriteOnce]
+    copyMethod: Snapshot
+    capacity: 5Gi
+    storageClassName: ceph-block-replicated
+    volumeSnapshotClassName: csi-rbdplugin-snapclass

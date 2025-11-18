@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tunarr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tunarr
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: tunarr
+    spec:
+      containers:
+        - name: tunarr
+          image: chrisbenincasa/tunarr:0.22.15
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          volumeMounts:
+            - name: config-volume
+              mountPath: /config
+          env:
+            - name: PUID
+              value: "0"
+            - name: GUID
+              value: "0"
+            - name: TZ
+              value: ${TIMEZONE}
+      volumes:
+        - name: config-volume
+          persistentVolumeClaim:
+            claimName: tunarr-config

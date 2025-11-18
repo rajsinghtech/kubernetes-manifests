@@ -1,0 +1,29 @@
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: media-tunarr-config
+spec:
+  sourcePVC: tunarr-config
+  trigger:
+    schedule: "0 4 * * *"
+  restic:
+    pruneIntervalDays: 14
+    repository: restic-media-tunarr-config
+    retain:
+      hourly: 1
+      daily: 3
+      weekly: 4
+      monthly: 2
+      yearly: 1
+    copyMethod: Direct
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: restic-media-tunarr-config
+type: Opaque
+stringData:
+  RESTIC_REPOSITORY: s3:https://${COMMON_S3_ENDPOINT}/keiretsu/${LOCATION}/media/tunarr-config
+  RESTIC_PASSWORD: ${COMMON_RESTIC_SECRET}
+  AWS_ACCESS_KEY_ID: ${COMMON_S3_ACCESS_KEY}
+  AWS_SECRET_ACCESS_KEY: ${COMMON_S3_SECRET_KEY}
