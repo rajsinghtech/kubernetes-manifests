@@ -16,8 +16,8 @@ spec:
     port: 9002
     targetPort: 9002
     protocol: TCP
-  - name: wireguard
-    port: 41642
-    targetPort: 41642
-    protocol: UDP
+  # - name: wireguard
+  #   port: 41642
+  #   targetPort: 41642
+  #   protocol: UDP
   loadBalancerIP: ${CLUSTER_LOAD_BALANCER_CIDR%.*.*/*}.100.100
