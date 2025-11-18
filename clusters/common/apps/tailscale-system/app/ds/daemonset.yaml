@@ -17,20 +17,16 @@ spec:
       - name: tailscale
         imagePullPolicy: Always
         image: "ghcr.io/tailscale/tailscale:latest"
-        ports:
-        - containerPort: 1055
-          name: tailscale
-          protocol: TCP
         env:
           # Store the state in a k8s secret
         - name: TS_KUBE_SECRET
-          value: ""
+          value: "$(POD_NAME)"
         - name: TS_USERSPACE
           value: "true"
         - name: TS_OUTBOUND_HTTP_PROXY_LISTEN
-          value: "0.0.0.0:1055"
+          value: ""
         - name: TS_SOCKS5_SERVER
-          value: "0.0.0.0:1055"
+          value: ""
         - name: TS_DEBUG_FIREWALL_MODE
           value: auto
         - name: TS_AUTHKEY
@@ -46,7 +42,7 @@ spec:
         - name: POD_NAME
           valueFrom:
             fieldRef:
-              fieldPath: metadata.name
+              fieldPath: spec.nodeName
         - name: POD_UID
           valueFrom:
             fieldRef:
