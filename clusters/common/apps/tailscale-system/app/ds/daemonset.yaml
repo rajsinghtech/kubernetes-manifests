@@ -12,6 +12,7 @@ spec:
         app: tailscale
     spec:
       serviceAccountName: "tailscale"
+      dnsPolicy: ClusterFirst
       hostNetwork: true
       containers:
       - name: tailscale
