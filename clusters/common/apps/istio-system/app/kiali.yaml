@@ -49,7 +49,7 @@ spec:
       clustering:
         autodetect_secrets:
           enabled: true
-          label: "istio/multiCluster=true"
+          label: "kiali.io/multiCluster=true"
         clusters:
         - name: robbinsdale
           secret_name: istio-remote-secret-robbinsdale
