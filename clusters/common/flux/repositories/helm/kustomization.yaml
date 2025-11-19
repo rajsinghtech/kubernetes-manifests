@@ -26,7 +26,7 @@ resources:
   - ./fluent.yaml
   - ./grafana.yaml
   - ./harbor.yaml
-  - ./kaili.yaml
+  - ./kiali.yaml
   - ./immich.yaml
   - ./ingress-nginx.yaml
   - ./intel-charts.yaml
