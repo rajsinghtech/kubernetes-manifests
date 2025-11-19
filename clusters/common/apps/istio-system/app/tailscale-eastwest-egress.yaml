@@ -4,8 +4,11 @@ kind: Service
 metadata:
   name: robbinsdale-istio-eastwestgateway
   namespace: istio-system
+  annotations:
+    tailscale.com/tailnet-fqdn: robbinsdale-istio-eastwestgateway.keiretsu.ts.net
+    tailscale.com/proxy-group: common-egress
 spec:
-  externalName: robbinsdale-istio-eastwestgateway.keiretsu.ts.net
+  externalName: placeholder
   type: ExternalName
   ports:
   - name: status-port
@@ -26,8 +29,11 @@ kind: Service
 metadata:
   name: ottawa-istio-eastwestgateway
   namespace: istio-system
+  annotations:
+    tailscale.com/tailnet-fqdn: ottawa-istio-eastwestgateway.keiretsu.ts.net
+    tailscale.com/proxy-group: common-egress
 spec:
-  externalName: ottawa-istio-eastwestgateway.keiretsu.ts.net
+  externalName: placeholder
   type: ExternalName
   ports:
   - name: status-port
@@ -48,8 +54,11 @@ kind: Service
 metadata:
   name: stpetersburg-istio-eastwestgateway
   namespace: istio-system
+  annotations:
+    tailscale.com/tailnet-fqdn: stpetersburg-istio-eastwestgateway.keiretsu.ts.net
+    tailscale.com/proxy-group: common-egress
 spec:
-  externalName: stpetersburg-istio-eastwestgateway.keiretsu.ts.net
+  externalName: placeholder
   type: ExternalName
   ports:
   - name: status-port
