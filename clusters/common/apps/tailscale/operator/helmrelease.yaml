@@ -24,6 +24,7 @@ spec:
   values:
     apiServerProxyConfig:
       allowImpersonation: "true"
+      mode: "true"
     operatorConfig:
       # image:
       #   repo: ghcr.io/rajsinghtech/tailscale/k8s-operator
