@@ -29,4 +29,24 @@ spec:
         enabled: true
         clusterName: ${LOCATION}
       network: ${LOCATION}
+    meshConfig:
+      meshNetworks:
+        robbinsdale:
+          endpoints:
+          - fromRegistry: robbinsdale
+          gateways:
+          - service: robbinsdale-istio-eastwestgateway.istio-system
+            port: 15443
+        ottawa:
+          endpoints:
+          - fromRegistry: ottawa
+          gateways:
+          - service: ottawa-istio-eastwestgateway.istio-system
+            port: 15443
+        stpetersburg:
+          endpoints:
+          - fromRegistry: stpetersburg
+          gateways:
+          - service: stpetersburg-istio-eastwestgateway.istio-system
+            port: 15443
 
