@@ -57,7 +57,8 @@ jobs:
           RESPONSE=$(./tailscale/scripts/create-tailnet.sh "${{ steps.get_access_token.outputs.access_token }}" "$TAILNET_NAME")
           echo "$RESPONSE"
 
-          FULL_TAILNET_NAME=$(echo "$RESPONSE" | jq -r '.dnsName')
+          # Try new format first (dnsName), fallback to legacy format (tailnetName)
+          FULL_TAILNET_NAME=$(echo "$RESPONSE" | jq -r '.dnsName // .tailnetName')
           TAILNET_OAUTH_CLIENT_ID=$(echo "$RESPONSE" | jq -r '.oauthClient.oauthClientID')
           TAILNET_OAUTH_CLIENT_SECRET=$(echo "$RESPONSE" | jq -r '.oauthClient.oauthClientSecret')
           
