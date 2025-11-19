@@ -32,6 +32,7 @@ spec:
       service_type: LoadBalancer
       service_annotations:
         tailscale.com/hostname: ${LOCATION}-kiali
+      cluster_wide_access: true
     external_services:
       prometheus:
         url: http://kube-prometheus-stack-prometheus.monitoring:9090
@@ -39,3 +40,14 @@ spec:
         enabled: false
       tracing:
         enabled: false
+      istio:
+        config_map_name: istio
+        istio_sidecar_injector_config_map_name: istio-sidecar-injector
+        istiod_deployment_name: istiod
+        root_namespace: istio-system
+    kiali_feature_flags:
+      clustering:
+        autodetect_secrets:
+          enabled: true
+          label: "istio/multiCluster=true"
+        clusters: []
