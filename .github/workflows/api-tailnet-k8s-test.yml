@@ -171,6 +171,16 @@ jobs:
           
           echo "✅ Success! Operator device found in tailnet"
 
+      - name: Get tailnet settings
+        run: |
+          echo "Fetching tailnet settings..."
+          SETTINGS=$(curl -s -X GET \
+            "https://api.tailscale.com/api/v2/tailnet/${{ steps.create_tailnet.outputs.full_tailnet_name }}/settings" \
+            -H "Authorization: Bearer ${{ steps.get_tailnet_token.outputs.tailnet_access_token }}")
+
+          echo "Tailnet Settings:"
+          echo "$SETTINGS" | jq '.'
+
       # - name: Test basic connectivity
       #   run: |
       #     echo "Creating test service..."
