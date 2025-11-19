@@ -1,0 +1,31 @@
+---
+apiVersion: networking.istio.io/v1
+kind: DestinationRule
+metadata:
+  name: global-failover
+  namespace: istio-system
+spec:
+  host: "*.cluster.local"
+  exportTo:
+    - "*"
+  trafficPolicy:
+    loadBalancer:
+      simple: ROUND_ROBIN
+      localityLbSetting:
+        enabled: true
+        failoverPriority:
+          - "topology.istio.io/network"
+    outlierDetection:
+      consecutive5xxErrors: 1
+      interval: 1s
+      baseEjectionTime: 1m
+      maxEjectionPercent: 100
+    connectionPool:
+      tcp:
+        maxConnections: 1000
+        connectTimeout: 30s
+      http:
+        http1MaxPendingRequests: 1024
+        http2MaxRequests: 1024
+        maxRequestsPerConnection: 2
+        idleTimeout: 300s
