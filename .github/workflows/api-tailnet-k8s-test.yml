@@ -59,8 +59,10 @@ jobs:
 
           # Try new format first (dnsName), fallback to legacy format (tailnetName)
           FULL_TAILNET_NAME=$(echo "$RESPONSE" | jq -r '.dnsName // .tailnetName')
-          TAILNET_OAUTH_CLIENT_ID=$(echo "$RESPONSE" | jq -r '.oauthClient.oauthClientID')
-          TAILNET_OAUTH_CLIENT_SECRET=$(echo "$RESPONSE" | jq -r '.oauthClient.oauthClientSecret')
+          # Try new format first (id), fallback to legacy format (oauthClientID)
+          TAILNET_OAUTH_CLIENT_ID=$(echo "$RESPONSE" | jq -r '.oauthClient.id // .oauthClient.oauthClientID')
+          # Try new format first (secret), fallback to legacy format (oauthClientSecret)
+          TAILNET_OAUTH_CLIENT_SECRET=$(echo "$RESPONSE" | jq -r '.oauthClient.secret // .oauthClient.oauthClientSecret')
           
           echo "::add-mask::$TAILNET_OAUTH_CLIENT_SECRET"
           echo "full_tailnet_name=$FULL_TAILNET_NAME" >> $GITHUB_OUTPUT
