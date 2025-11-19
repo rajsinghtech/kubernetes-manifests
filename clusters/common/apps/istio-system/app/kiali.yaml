@@ -1,0 +1,41 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kiali-server
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: kiali-server
+      version: ">=1.80.0"
+      sourceRef:
+        kind: HelmRepository
+        name: kiali
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  dependsOn:
+    - name: istio-istiod
+  values:
+    auth:
+      strategy: anonymous
+    deployment:
+      accessible_namespaces:
+      - "**"
+      ingress_enabled: false
+      service_type: LoadBalancer
+      service_annotations:
+        tailscale.com/hostname: ${LOCATION}-kiali
+    external_services:
+      prometheus:
+        url: http://kube-prometheus-stack-prometheus.monitoring:9090
+      grafana:
+        enabled: false
+      tracing:
+        enabled: false
