@@ -6,6 +6,7 @@ resources:
   - istio-base.yaml
   - istio-istiod.yaml
   - istio-eastwestgateway.yaml
+  - eastwest-egress.yaml
   - gateway.yaml
   - secret.yaml
   - destinationrule-global-failover.yaml
