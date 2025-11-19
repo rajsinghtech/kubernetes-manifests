@@ -3,10 +3,10 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: istio-system
 resources:
-  - istio-base.yaml
-  - istio-istiod.yaml
-  - istio-eastwestgateway.yaml
-  - istio-gateway.yaml
+  # - istio-base.yaml
+  # - istio-istiod.yaml
+  # - istio-eastwestgateway.yaml
+  # - istio-gateway.yaml
   - tailscale-eastwest-egress.yaml
-  - tailscale-kubeconfig.yaml
-  - destinationrule-global-failover.yaml
+  # - tailscale-kubeconfig.yaml
+  # - destinationrule-global-failover.yaml
