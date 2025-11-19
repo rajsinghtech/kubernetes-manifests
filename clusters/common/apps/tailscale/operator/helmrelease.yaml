@@ -23,7 +23,7 @@ spec:
       retries: 3
   values:
     apiServerProxyConfig:
-      mode: "true"
+      allowImpersonation: "true"
     operatorConfig:
       # image:
       #   repo: ghcr.io/rajsinghtech/tailscale/k8s-operator
