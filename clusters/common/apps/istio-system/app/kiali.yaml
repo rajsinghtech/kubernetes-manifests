@@ -50,4 +50,13 @@ spec:
         autodetect_secrets:
           enabled: true
           label: "istio/multiCluster=true"
-        clusters: []
+        clusters:
+        - name: robbinsdale
+          secret_name: istio-remote-secret-robbinsdale
+          network: robbinsdale
+        - name: ottawa
+          secret_name: istio-remote-secret-ottawa
+          network: ottawa
+        - name: stpetersburg
+          secret_name: istio-remote-secret-stpetersburg
+          network: stpetersburg
