@@ -15,8 +15,8 @@ if [ -z "$TAILNET_NAME" ]; then
     exit 1
 fi
 
-if ! echo "$TAILNET_NAME" | grep -E '^[a-zA-Z0-9_]+$' > /dev/null; then
-    echo "Error: Tailnet name must contain only alphanumeric characters and underscores" >&2
+if ! echo "$TAILNET_NAME" | grep -E "^[a-zA-Z0-9' -]+$" > /dev/null; then
+    echo "Error: Tailnet name can only contain letters, numbers, spaces, apostrophes, and hyphens" >&2
     exit 1
 fi
 

@@ -51,7 +51,7 @@ jobs:
       - name: Create API-only tailnet
         id: create_tailnet
         run: |
-          TAILNET_NAME="ci_test_$(date +%s)_$(echo $GITHUB_SHA | cut -c1-8)"
+          TAILNET_NAME="ci-test-$(date +%s)-$(echo $GITHUB_SHA | cut -c1-8)"
           echo "Creating tailnet: $TAILNET_NAME"
           
           RESPONSE=$(./tailscale/scripts/create-tailnet.sh "${{ steps.get_access_token.outputs.access_token }}" "$TAILNET_NAME")
