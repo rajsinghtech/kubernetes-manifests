@@ -28,5 +28,5 @@ spec:
       multiCluster:
         enabled: true
         clusterName: ${LOCATION}
-      network: tailscale
+      network: ${LOCATION}
 
