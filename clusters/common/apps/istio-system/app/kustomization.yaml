@@ -11,3 +11,4 @@ resources:
   - tailscale-kubeconfig.yaml
   - destinationrule-global-failover.yaml
   - kiali.yaml
+  - kiali-httproute.yaml

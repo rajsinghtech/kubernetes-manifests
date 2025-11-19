@@ -1,0 +1,36 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: kiali
+  namespace: istio-system
+  annotations:
+    item.homer.rajsingh.info/name: "Kiali"
+    item.homer.rajsingh.info/subtitle: "Service Mesh Observability"
+    item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/svg/kiali.svg"
+    item.homer.rajsingh.info/keywords: "istio, service mesh, observability"
+
+    service.homer.rajsingh.info/name: "Infrastructure"
+    service.homer.rajsingh.info/icon: "fas fa-server"
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: private
+      namespace: home
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: ts
+      namespace: home
+  hostnames:
+    - "kiali.${CLUSTER_DOMAIN}"
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: kiali
+          port: 20001
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
