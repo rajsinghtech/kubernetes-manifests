@@ -5,5 +5,6 @@ namespace: istio-system
 resources:
   - istio-base.yaml
   - istio-istiod.yaml
+  - istio-eastwestgateway.yaml
   - gateway.yaml
   - secret.yaml
