@@ -10,7 +10,7 @@ spec:
   prune: true
   sourceRef:
     kind: GitRepository
-    name: flux-system
+    name: kubernetes-manifests
   wait: false
   dependsOn:
     - name: istio-system
