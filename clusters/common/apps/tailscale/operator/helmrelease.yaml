@@ -26,6 +26,9 @@ spec:
       allowImpersonation: "true"
       mode: "true"
     operatorConfig:
+      extraEnv:
+        - name: "TS_EXPERIMENTAL_KUBE_API_EVENTS"
+          value: "true"
       # image:
       #   repo: ghcr.io/rajsinghtech/tailscale/k8s-operator
       #   tag: "72"
