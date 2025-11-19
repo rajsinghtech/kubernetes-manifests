@@ -48,3 +48,28 @@ spec:
   - name: tls-webhook
     port: 15017
     protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: stpetersburg-istio-eastwestgateway
+  namespace: istio-system
+  annotations:
+    tailscale.com/tailnet-fqdn: stpetersburg-istio-eastwestgateway.keiretsu.ts.net
+    tailscale.com/proxy-group: common-egress
+spec:
+  externalName: placeholder
+  type: ExternalName
+  ports:
+  - name: status-port
+    port: 15021
+    protocol: TCP
+  - name: tls
+    port: 15443
+    protocol: TCP
+  - name: tls-istiod
+    port: 15012
+    protocol: TCP
+  - name: tls-webhook
+    port: 15017
+    protocol: TCP
