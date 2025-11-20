@@ -30,8 +30,8 @@ spec:
       containers:
       - name: tailscale
         imagePullPolicy: Always
-        image: "ghcr.io/tailscale/tailscale:1.80.0"
-        # image: "ghcr.io/tailscale/tailscale:1.90.6"
+        image: "ghcr.io/tailscale/tailscale:v1.80.0"
+        # image: "ghcr.io/tailscale/tailscale:v1.90.6"
         securityContext:
           privileged: true
         env:
