@@ -52,7 +52,7 @@ spec:
         - name: TS_EXTRA_ARGS
           value: "--advertise-tags=tag:k8s,tag:${LOCATION} --accept-routes --ssh --encrypt-state"
         - name: TS_TAILSCALED_EXTRA_ARGS
-          value: "-encrypt-state=true"
+          value: ""
         - name: TS_HOSTNAME
           value: "${LOCATION}-sidecar"
         - name: TS_STATE_DIR
