@@ -31,7 +31,7 @@ spec:
       - name: tailscale
         imagePullPolicy: Always
         # image: "ghcr.io/tailscale/tailscale:v1.80.0"
-        image: "ghcr.io/tailscale/tailscale:v1.90.6"
+        image: "ghcr.io/tailscale/tailscale:v1.90.8"
         securityContext:
           privileged: true
         env:
