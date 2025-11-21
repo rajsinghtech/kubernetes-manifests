@@ -27,3 +27,18 @@ spec:
   - name: https
     port: 443 
     protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: stpetersburg-k8s-operator
+  annotations:
+    tailscale.com/tailnet-fqdn: stpetersburg-k8s-operator.keiretsu.ts.net
+    tailscale.com/proxy-group: common-egress
+spec:
+  externalName: placeholder
+  type: ExternalName
+  ports:
+  - name: https
+    port: 443 
+    protocol: TCP
