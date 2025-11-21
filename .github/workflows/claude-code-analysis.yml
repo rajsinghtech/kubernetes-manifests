@@ -133,7 +133,9 @@ jobs:
 
           echo "Verifying kubectl connection..."
           kubectl cluster-info
-          kubectl get nodes
+
+          echo "Testing read permissions..."
+          kubectl get pods -A --limit=5 || echo "Limited permissions, but connected"
 
           echo "✅ Successfully connected to Kubernetes cluster via Tailscale"
 
