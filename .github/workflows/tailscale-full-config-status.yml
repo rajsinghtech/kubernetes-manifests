@@ -23,7 +23,7 @@ jobs:
         with:
           oauth-client-id: ${{ inputs.client_id }}
           audience: ${{ inputs.audience }}
-          tags: tag:ci
+          tags: tag:k8s
           args: --accept-routes --accept-dns
 
       - name: Status
