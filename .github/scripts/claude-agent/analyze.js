@@ -5,15 +5,11 @@
  *
  * Features:
  * - Analyzes code for bugs and vulnerabilities
- * - Checks Kubernetes cluster health
- * - Uses custom MCP tools for kubectl integration
+ * - Checks Kubernetes cluster health via Bash + kubectl
  * - Connects via Tailscale for secure access
  */
 
 import { query } from '@anthropic-ai/claude-agent-sdk';
-import { createSdkMcpServer, tool } from '@anthropic-ai/claude-agent-sdk';
-import { z } from 'zod';
-import { execSync } from 'child_process';
 import * as fs from 'fs';
 
 // ============================================================================
@@ -25,8 +21,8 @@ const CONFIG = {
   authToken: 'sk-na',
   apiTimeout: 3000000,
   model: 'claude-sonnet-4-5',
-  repoPath: process.cwd(),
-  outputFile: 'analysis-results.json',
+  repoPath: '/home/runner/work/kubernetes-manifests/kubernetes-manifests',
+  outputFile: '/home/runner/work/kubernetes-manifests/kubernetes-manifests/analysis-results.json',
   alwaysThinkingEnabled: true,
   disableNonessentialTraffic: true
 };
@@ -38,223 +34,7 @@ console.log(`- API Timeout: ${CONFIG.apiTimeout}ms`);
 console.log(`- Repo Path: ${CONFIG.repoPath}`);
 console.log('');
 
-// ============================================================================
-// Custom MCP Tools for Kubernetes
-// ============================================================================
-
-const server = createSdkMcpServer('kubernetes-tools');
-
-/**
- * kubectl get - Query Kubernetes resources
- */
-const kubectlGetSchema = z.object({
-  resource_type: z.string().describe('Resource type (pods, services, deployments, nodes, etc.)'),
-  namespace: z.string().default('default').describe('Kubernetes namespace'),
-  resource_name: z.string().optional().describe('Specific resource name (optional)'),
-  output_format: z.enum(['json', 'yaml', 'wide', 'name']).default('json').describe('Output format'),
-  all_namespaces: z.boolean().default(false).describe('Query across all namespaces')
-});
-
-const kubectlGet = tool(
-  'kubectl_get',
-  'Query Kubernetes resources like pods, services, deployments, nodes, etc.',
-  kubectlGetSchema,
-  async (args) => {
-    try {
-      const cmd = ['kubectl', 'get', args.resource_type];
-
-      if (args.all_namespaces) {
-        cmd.push('--all-namespaces');
-      } else {
-        cmd.push('-n', args.namespace);
-      }
-
-      cmd.push('-o', args.output_format);
-
-      if (args.resource_name) {
-        cmd.push(args.resource_name);
-      }
-
-      console.log(`[kubectl] Running: ${cmd.join(' ')}`);
-
-      const output = execSync(cmd.join(' '), {
-        timeout: 30000,
-        encoding: 'utf-8',
-        stdio: ['pipe', 'pipe', 'pipe']
-      });
-
-      return {
-        success: true,
-        output,
-        command: cmd.join(' ')
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: error.message,
-        stderr: error.stderr?.toString(),
-        command: error.cmd
-      };
-    }
-  }
-);
-
-/**
- * kubectl logs - Get pod logs
- */
-const kubectlLogsSchema = z.object({
-  pod_name: z.string().describe('Pod name'),
-  namespace: z.string().default('default').describe('Kubernetes namespace'),
-  container: z.string().optional().describe('Container name (for multi-container pods)'),
-  tail: z.number().optional().default(100).describe('Number of lines to show from the end'),
-  previous: z.boolean().default(false).describe('Get logs from previous container instance')
-});
-
-const kubectlLogs = tool(
-  'kubectl_logs',
-  'Get logs from a Kubernetes pod. Useful for debugging and checking application output.',
-  kubectlLogsSchema,
-  async (args) => {
-    try {
-      const cmd = [
-        'kubectl', 'logs',
-        args.pod_name,
-        '-n', args.namespace,
-        '--tail', args.tail.toString()
-      ];
-
-      if (args.container) {
-        cmd.push('-c', args.container);
-      }
-
-      if (args.previous) {
-        cmd.push('--previous');
-      }
-
-      console.log(`[kubectl] Running: ${cmd.join(' ')}`);
-
-      const output = execSync(cmd.join(' '), {
-        timeout: 30000,
-        encoding: 'utf-8',
-        stdio: ['pipe', 'pipe', 'pipe']
-      });
-
-      return {
-        success: true,
-        logs: output,
-        command: cmd.join(' ')
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: error.message,
-        stderr: error.stderr?.toString()
-      };
-    }
-  }
-);
-
-/**
- * kubectl describe - Get detailed resource information
- */
-const kubectlDescribeSchema = z.object({
-  resource_type: z.string().describe('Resource type (pod, service, deployment, etc.)'),
-  resource_name: z.string().describe('Resource name'),
-  namespace: z.string().default('default').describe('Kubernetes namespace')
-});
-
-const kubectlDescribe = tool(
-  'kubectl_describe',
-  'Get detailed information about a specific Kubernetes resource including events and status.',
-  kubectlDescribeSchema,
-  async (args) => {
-    try {
-      const cmd = [
-        'kubectl', 'describe',
-        args.resource_type,
-        args.resource_name,
-        '-n', args.namespace
-      ];
-
-      console.log(`[kubectl] Running: ${cmd.join(' ')}`);
-
-      const output = execSync(cmd.join(' '), {
-        timeout: 30000,
-        encoding: 'utf-8',
-        stdio: ['pipe', 'pipe', 'pipe']
-      });
-
-      return {
-        success: true,
-        description: output,
-        command: cmd.join(' ')
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: error.message,
-        stderr: error.stderr?.toString()
-      };
-    }
-  }
-);
-
-/**
- * kubectl events - Get cluster events
- */
-const kubectlEventsSchema = z.object({
-  namespace: z.string().default('default').describe('Kubernetes namespace'),
-  all_namespaces: z.boolean().default(false).describe('Get events from all namespaces')
-});
-
-const kubectlEvents = tool(
-  'kubectl_events',
-  'Get recent Kubernetes events. Useful for troubleshooting and seeing recent cluster activity.',
-  kubectlEventsSchema,
-  async (args) => {
-    try {
-      const cmd = ['kubectl', 'get', 'events'];
-
-      if (args.all_namespaces) {
-        cmd.push('--all-namespaces');
-      } else {
-        cmd.push('-n', args.namespace);
-      }
-
-      cmd.push('--sort-by', '.lastTimestamp');
-
-      console.log(`[kubectl] Running: ${cmd.join(' ')}`);
-
-      const output = execSync(cmd.join(' '), {
-        timeout: 30000,
-        encoding: 'utf-8',
-        stdio: ['pipe', 'pipe', 'pipe']
-      });
-
-      return {
-        success: true,
-        events: output
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: error.message
-      };
-    }
-  }
-);
-
-// Register all tools with the MCP server
-server.addTool(kubectlGet);
-server.addTool(kubectlLogs);
-server.addTool(kubectlDescribe);
-server.addTool(kubectlEvents);
-
-console.log('✅ Kubernetes MCP tools registered:');
-console.log('   - kubectl_get');
-console.log('   - kubectl_logs');
-console.log('   - kubectl_describe');
-console.log('   - kubectl_events');
+console.log('✅ Claude Code Agent initialized');
 console.log('');
 
 // ============================================================================
@@ -350,28 +130,29 @@ Return your findings in this EXACT JSON format (no markdown, no code blocks):
 
   const options = {
     allowedTools: [
-      // File exploration and analysis
-      'Glob',
-      'Grep',
-      'Read',
-      // Kubernetes tools
-      'mcp__kubernetes-tools__kubectl_get',
-      'mcp__kubernetes-tools__kubectl_logs',
-      'mcp__kubernetes-tools__kubectl_describe',
-      'mcp__kubernetes-tools__kubectl_events',
-      // Allow bash for git commands if needed
-      'Bash'
+      'Glob',   // Find files by pattern
+      'Grep',   // Search file contents
+      'Read',   // Read files
+      'Bash'    // Run kubectl commands
     ],
     permissionMode: 'default',
     cwd: CONFIG.repoPath,
-    systemPrompt: `You are an expert code reviewer with access to Kubernetes cluster tools via kubectl.
+    systemPrompt: `You are an expert code reviewer with access to a Kubernetes cluster via kubectl.
+
 You have deep expertise in:
 - Security analysis and vulnerability detection
 - Kubernetes best practices and troubleshooting
 - Code quality and maintainability
 - Infrastructure as code patterns
 
-Use the kubectl tools to verify deployment health and security posture.
+You can use kubectl commands via the Bash tool to check cluster health:
+- kubectl get pods -A
+- kubectl get deployments -A
+- kubectl get events -A --sort-by='.lastTimestamp'
+- kubectl logs <pod-name> -n <namespace>
+- kubectl describe <resource> <name> -n <namespace>
+
+Note: You have read-only view permissions (ClusterRole: view)
 Be thorough, specific, and actionable in your analysis.`
   };
 
