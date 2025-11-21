@@ -10,6 +10,8 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
+    env:
+      RUNNER_DEBUG: 1
     steps:
       - name: Tailscale
         uses: tailscale/github-action@v4
