@@ -51,11 +51,6 @@ spec:
             args:
             - /scripts/analyze-cluster.sh
             env:
-            - name: ANTHROPIC_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: claude-api-key
-                  key: api-key
             - name: ANTHROPIC_BASE_URL
               value: "http://llm-proxy.keiretsu.ts.net"
             - name: ANTHROPIC_AUTH_TOKEN
