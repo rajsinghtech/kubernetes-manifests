@@ -168,7 +168,6 @@ jobs:
           else
             echo "⚠️  No analysis results file found"
           fi
-
       # Step 9: Comment on PR with results
       - name: Comment on PR
         if: github.event_name == 'pull_request' && hashFiles('analysis-results.json') != ''

@@ -1,0 +1,30 @@
+name: Tailscale Status Check
+
+permissions:
+  id-token: write
+  contents: read
+
+on:
+  workflow_dispatch:
+    inputs:
+      audience:
+        required: true
+        default: "api.tailscale.com/kb8cB2pMCZ11CNTRL"
+      client_id:
+        required: true
+        default: "TbqNGJkY5611CNTRL/kb8cB2pMCZ11CNTRL"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Tailscale
+        uses: tailscale/github-action@v4
+        with:
+          oauth-client-id: ${{ inputs.client_id }}
+          audience: ${{ inputs.audience }}
+          tags: tag:ci
+          args: --accept-routes --accept-dns
+
+      - name: Status
+        run: tailscale status
