@@ -115,6 +115,9 @@ jobs:
           echo "Configuring kubectl via Tailscale..."
           sudo tailscale configure kubeconfig ottawa-k8s-operator.keiretsu.ts.net
 
+          echo "Setting kubectl context..."
+          kubectl config use-context ottawa-k8s-operator.keiretsu.ts.net
+
           echo "Verifying kubectl connection..."
           kubectl cluster-info
           kubectl get nodes
@@ -137,7 +140,7 @@ jobs:
       - name: Run Claude Code analysis
         env:
           ANTHROPIC_BASE_URL: http://llm-proxy.keiretsu.ts.net
-          ANTHROPIC_AUTH_TOKEN: ${{ secrets.LLM_PROXY_API_KEY }}
+          ANTHROPIC_AUTH_TOKEN: sk-na
           API_TIMEOUT_MS: 3000000
           CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC: 1
         run: |
