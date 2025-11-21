@@ -115,8 +115,12 @@ jobs:
           echo "Configuring kubectl via Tailscale..."
           sudo tailscale configure kubeconfig ottawa-k8s-operator.keiretsu.ts.net
 
+          echo "Available contexts:"
+          kubectl config get-contexts
+
           echo "Setting kubectl context..."
-          kubectl config use-context ottawa-k8s-operator.keiretsu.ts.net
+          CONTEXT_NAME=$(kubectl config get-contexts -o name | grep ottawa)
+          kubectl config use-context "$CONTEXT_NAME"
 
           echo "Verifying kubectl connection..."
           kubectl cluster-info
