@@ -54,6 +54,7 @@
 		"tag:stpetersburg": ["tag:k8s-operator", "tag:infra", "group:superuser", "group:stpetersburg",],
 		"tag:kind":         ["tag:k8s-operator", "tag:infra", "group:superuser", "group:kind",],
 		"tag:udm":          ["tag:infra", "group:superuser"],
+		"tag:ci":           ["tag:k8s-operator", "tag:infra", "group:superuser",],
 	},
 	"autoApprovers": {
 		"exitNode": ["tag:k8s"],
@@ -105,25 +106,25 @@
 		// 	"ip":  ["*"],
 		// },
 		{
-			"src": ["group:superuser", "tag:k8s"],
+			"src": ["group:superuser", "tag:k8s", "tag:ci"],
 			"dst": ["autogroup:internet"],
 			"ip":  ["*"],
-			"via": ["tag:robbinsdale", "tag:ottawa", "tag:stpetersburg"],
+			"via": ["tag:robbinsdale", "tag:ottawa", "tag:stpetersburg", "tag:ci"],
 		},
 		{
-			"src": ["group:superuser", "tag:ottawa", "tag:stpetersburg"],
+			"src": ["group:superuser", "tag:ottawa", "tag:stpetersburg", "tag:ci"],
 			"dst": ["ipset:robbinsdale"],
 			"ip":  ["*"],
 			"via": ["tag:robbinsdale"],
 		},
 		{
-			"src": ["group:superuser", "tag:robbinsdale", "tag:stpetersburg"],
+			"src": ["group:superuser", "tag:robbinsdale", "tag:stpetersburg", "tag:ci"],
 			"dst": ["ipset:ottawa"],
 			"ip":  ["*"],
 			"via": ["tag:ottawa"],
 		},
 		{
-			"src": ["group:superuser", "tag:robbinsdale", "tag:ottawa"],
+			"src": ["group:superuser", "tag:robbinsdale", "tag:ottawa", "tag:ci"],
 			"dst": ["ipset:stpetersburg"],
 			"ip":  ["*"],
 			"via": ["tag:stpetersburg"],
@@ -165,7 +166,7 @@
 			},
 		},
 		{
-			"src": ["autogroup:member"],
+			"src": ["autogroup:member", "tag:ci"],
 			"dst": ["tag:k8s-operator", "tag:k8s"],
 			"ip":  ["*"],
 			"app": {
