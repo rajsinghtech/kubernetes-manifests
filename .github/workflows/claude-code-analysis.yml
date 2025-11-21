@@ -153,14 +153,9 @@ jobs:
 
       # Step 7: Run Claude Code analysis
       - name: Run Claude Code analysis
-        env:
-          ANTHROPIC_BASE_URL: http://llm-proxy.keiretsu.ts.net
-          ANTHROPIC_AUTH_TOKEN: sk-na
-          API_TIMEOUT_MS: 3000000
-          CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC: 1
         run: |
           cd .github/scripts/claude-agent
-          node analyze.js
+          node simple-analyze.js
           echo "✅ Analysis complete"
 
       # Step 8: Display results
