@@ -7,4 +7,3 @@ resources:
   - ./rbac.yaml
   - ./analysis-script.yaml
   - ./cronjob.yaml
-  - ./secret.yaml

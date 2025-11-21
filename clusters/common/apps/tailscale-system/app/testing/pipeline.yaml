@@ -34,6 +34,15 @@ spec:
         args:
         - |
           set -e
+
+          # Wait for Tailscale to be online
+          echo "Waiting for Tailscale to be online..."
+          until tailscale status | head -n 1 | grep -q "online"; do
+            echo "Tailscale is offline, waiting..."
+            sleep 5
+          done
+          echo "Tailscale is online!"
+
           echo "Installing Claude Code..."
           apk add --no-cache curl bash kubectl
 
@@ -48,16 +57,14 @@ spec:
           curl -fsSL https://storage.googleapis.com/anthropic-release/claude-code/latest/linux-${ARCH}/claude -o /usr/local/bin/claude
           chmod +x /usr/local/bin/claude
 
+          # Configure kubectl to use Tailscale cluster
+          echo "Configuring kubeconfig for ${LOCATION}.keiretsu.ts.net..."
+          tailscale configure kubeconfig ${LOCATION}.keiretsu.ts.net
+
           echo "Claude Code agent ready. Sleeping..."
           # Keep container running
           tail -f /dev/null
         env:
-        - name: ANTHROPIC_API_KEY
-          valueFrom:
-            secretKeyRef:
-              name: claude-api-key
-              key: api-key
-              optional: true
         - name: ANTHROPIC_BASE_URL
           value: "http://llm-proxy.keiretsu.ts.net"
         - name: ANTHROPIC_AUTH_TOKEN
