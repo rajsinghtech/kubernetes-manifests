@@ -6,13 +6,6 @@ permissions:
 
 on:
   workflow_dispatch:
-    inputs:
-      audience:
-        required: true
-        default: "api.tailscale.com/kb8cB2pMCZ11CNTRL"
-      client_id:
-        required: true
-        default: "TbqNGJkY5611CNTRL/kb8cB2pMCZ11CNTRL"
 
 jobs:
   check:
@@ -22,7 +15,7 @@ jobs:
         uses: tailscale/github-action@v4
         with:
           oauth-client-id: TbqNGJkY5611CNTRL
-          audience: ${{ inputs.audience }}
+          audience: kb8cB2pMCZ11CNTRL
           tags: tag:k8s
           args: --accept-routes --accept-dns
 
