@@ -78,7 +78,7 @@ jobs:
                     "reusable": false,
                     "ephemeral": true,
                     "preauthorized": true,
-                    "tags": ["tag:ci", "tag:claude-agent"]
+                    "tags": ["tag:ci"]
                   }
                 }
               },
