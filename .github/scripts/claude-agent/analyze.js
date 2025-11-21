@@ -21,12 +21,14 @@ import * as fs from 'fs';
 // ============================================================================
 
 const CONFIG = {
-  baseUrl: process.env.ANTHROPIC_BASE_URL || 'http://llm-proxy.keiretsu.ts.net',
-  authToken: process.env.ANTHROPIC_AUTH_TOKEN || process.env.ANTHROPIC_API_KEY,
-  apiTimeout: parseInt(process.env.API_TIMEOUT_MS || '300000'),
-  model: process.env.CLAUDE_MODEL || 'claude-sonnet-4-5',
+  baseUrl: 'http://llm-proxy.keiretsu.ts.net',
+  authToken: 'sk-na',
+  apiTimeout: 3000000,
+  model: 'claude-sonnet-4-5',
   repoPath: process.cwd(),
-  outputFile: 'analysis-results.json'
+  outputFile: 'analysis-results.json',
+  alwaysThinkingEnabled: true,
+  disableNonessentialTraffic: true
 };
 
 console.log('Claude Code Agent Configuration:');
