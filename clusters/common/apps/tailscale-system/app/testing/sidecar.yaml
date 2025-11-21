@@ -31,7 +31,7 @@ spec:
       - name: tailscale
         imagePullPolicy: Always
         # image: "ghcr.io/tailscale/tailscale:v1.80.0"
-        image: "ghcr.io/tailscale/tailscale:v1.90.6"
+        image: "ghcr.io/tailscale/tailscale:v1.90.8"
         securityContext:
           privileged: true
         env:
@@ -50,7 +50,7 @@ spec:
         - name: TS_ACCEPT_DNS
           value: "true"
         - name: TS_EXTRA_ARGS
-          value: "--advertise-tags=tag:k8s,tag:${LOCATION} --accept-routes --ssh --encrypt-state"
+          value: "--advertise-tags=tag:k8s,tag:${LOCATION} --accept-routes --ssh"
         - name: TS_TAILSCALED_EXTRA_ARGS
           value: ""
         - name: TS_HOSTNAME

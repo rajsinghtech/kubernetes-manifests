@@ -1,0 +1,50 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: claude-monitor-script
+data:
+  analyze-cluster.sh: |
+    #!/bin/bash
+    set -e
+
+    echo "=== Kubernetes Cluster Analysis Started at $(date) ==="
+    echo "Cluster: ${CLUSTER_NAME:-unknown}"
+    echo "Location: ${LOCATION:-unknown}"
+    echo ""
+
+    # Create a temporary directory for analysis
+    WORK_DIR=$(mktemp -d)
+    cd "$WORK_DIR"
+
+    # Run Claude Code with the analysis prompt
+    claude --dangerously-skip-permissions \
+      --model sonnet \
+      --max-turns 5 \
+      -p "Analyze this Kubernetes cluster for issues and potential problems:
+
+    1. Check for pods in CrashLoopBackOff, Error, or ImagePullBackOff states
+    2. Check for failed or pending jobs
+    3. Check for deployments with unavailable replicas
+    4. Check for node conditions (MemoryPressure, DiskPressure, etc.)
+    5. Check for recent events indicating problems
+    6. Check for persistent volumes in Failed or Pending states
+    7. Identify any resource quota or limit issues
+
+    Use kubectl commands to gather this information. The cluster context is already configured.
+
+    For each issue found:
+    - Describe the problem clearly
+    - Suggest potential root causes
+    - Recommend remediation steps
+
+    If no issues are found, provide a summary of the cluster health status.
+
+    Format your response as a structured report with sections for each category checked."
+
+    echo ""
+    echo "=== Analysis Completed at $(date) ==="
+
+    # Cleanup
+    cd /
+    rm -rf "$WORK_DIR"

@@ -1,0 +1,112 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ${LOCATION}-pipeline
+spec:
+  serviceName: "${LOCATION}-pipeline"
+  replicas: 1
+  podManagementPolicy: Parallel
+  selector:
+    matchLabels:
+      app: ${LOCATION}-pipeline
+  template:
+    metadata:
+      labels:
+        app: ${LOCATION}-pipeline
+    spec:
+      serviceAccountName: "tailscale"
+      initContainers:
+      - args:
+        - sysctl -w net.ipv4.ip_forward=1 && if sysctl net.ipv6.conf.all.forwarding;
+          then sysctl -w net.ipv6.conf.all.forwarding=1; fi
+        command:
+        - /bin/sh
+        - -c
+        image: "ghcr.io/tailscale/tailscale:latest"
+        imagePullPolicy: Always
+        name: sysctler
+        securityContext:
+          privileged: true
+      containers:
+      - name: agent
+        image: alpine:latest
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          set -e
+          echo "Installing Claude Code..."
+          apk add --no-cache curl bash kubectl
+
+          # Install Claude Code
+          ARCH=$(uname -m)
+          if [ "$ARCH" = "x86_64" ]; then
+            ARCH="x64"
+          elif [ "$ARCH" = "aarch64" ]; then
+            ARCH="arm64"
+          fi
+
+          curl -fsSL https://storage.googleapis.com/anthropic-release/claude-code/latest/linux-${ARCH}/claude -o /usr/local/bin/claude
+          chmod +x /usr/local/bin/claude
+
+          echo "Claude Code agent ready. Sleeping..."
+          # Keep container running
+          tail -f /dev/null
+        env:
+        - name: ANTHROPIC_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: claude-api-key
+              key: api-key
+              optional: true
+        - name: ANTHROPIC_BASE_URL
+          value: "http://llm-proxy.keiretsu.ts.net"
+        - name: ANTHROPIC_AUTH_TOKEN
+          value: "sk-na"
+        - name: API_TIMEOUT_MS
+          value: "3000000"
+        - name: CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC
+          value: "1"
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+
+      - name: tailscale
+        imagePullPolicy: Always
+        image: "ghcr.io/tailscale/tailscale:v1.90.8"
+        securityContext:
+          privileged: true
+        env:
+        - name: TS_KUBE_SECRET
+          value: ""
+        - name: TS_USERSPACE
+          value: "false"
+        - name: TS_DEBUG_FIREWALL_MODE
+          value: auto
+        - name: TS_AUTHKEY
+          valueFrom:
+            secretKeyRef:
+              name: ts-oauth
+              key: TS_AUTHKEY_EPHEMERAL
+              optional: true
+        - name: TS_ACCEPT_DNS
+          value: "true"
+        - name: TS_EXTRA_ARGS
+          value: "--advertise-tags=tag:ci,tag:${LOCATION} --accept-routes --ssh"
+        - name: TS_TAILSCALED_EXTRA_ARGS
+          value: ""
+        - name: TS_HOSTNAME
+          value: "${LOCATION}-pipeline"
+        - name: TS_STATE_DIR
+          value: /var/lib/tailscale
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_UID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.uid
