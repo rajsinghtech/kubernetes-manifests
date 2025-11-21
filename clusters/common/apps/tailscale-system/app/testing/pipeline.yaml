@@ -35,13 +35,15 @@ spec:
         - |
           set -e
 
-          # Wait for Tailscale to be online
-          echo "Waiting for Tailscale to be online..."
-          until tailscale status | head -n 1 | grep -q "online"; do
-            echo "Tailscale is offline, waiting..."
+          # Wait for Tailscale networking to be ready
+          echo "Waiting for Tailscale networking..."
+          until ping -c 1 100.100.100.100 > /dev/null 2>&1; do
+            echo "Tailscale not ready, waiting..."
             sleep 5
           done
-          echo "Tailscale is online!"
+          echo "Tailscale network is up!"
+          echo "Waiting 10 seconds for full initialization..."
+          sleep 10
 
           echo "Installing Claude Code..."
           apk add --no-cache curl bash kubectl
