@@ -21,7 +21,7 @@ jobs:
       - name: Tailscale
         uses: tailscale/github-action@v4
         with:
-          oauth-client-id: ${{ inputs.client_id }}
+          oauth-client-id: TbqNGJkY5611CNTRL
           audience: ${{ inputs.audience }}
           tags: tag:k8s
           args: --accept-routes --accept-dns
