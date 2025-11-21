@@ -19,6 +19,7 @@ jobs:
           oauth-client-id: TbqNGJkY5611CNTRL
           audience: kb8cB2pMCZ11CNTRL
           tags: tag:k8s
+          version: 1.90.8
           args: --accept-routes --accept-dns
 
       - name: Status
