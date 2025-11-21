@@ -10,6 +10,7 @@
  */
 
 import { query } from '@anthropic-ai/claude-agent-sdk';
+import { execSync } from 'child_process';
 import * as fs from 'fs';
 
 // ============================================================================
