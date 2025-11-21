@@ -111,15 +111,24 @@ jobs:
 
       # Step 5: Configure kubectl with Tailscale
       - name: Configure kubectl via Tailscale
+        env:
+          KUBECONFIG: /home/runner/.kube/config
         run: |
+          echo "Creating kubeconfig directory..."
+          mkdir -p /home/runner/.kube
+
           echo "Configuring kubectl via Tailscale..."
-          sudo tailscale configure kubeconfig ottawa-k8s-operator.keiretsu.ts.net
+          sudo -E tailscale configure kubeconfig ottawa-k8s-operator.keiretsu.ts.net
+
+          echo "Fixing permissions..."
+          sudo chown runner:runner /home/runner/.kube/config
+          sudo chmod 600 /home/runner/.kube/config
 
           echo "Available contexts:"
           kubectl config get-contexts
 
           echo "Setting kubectl context..."
-          CONTEXT_NAME=$(kubectl config get-contexts -o name | grep ottawa)
+          CONTEXT_NAME=$(kubectl config get-contexts -o name | head -1)
           kubectl config use-context "$CONTEXT_NAME"
 
           echo "Verifying kubectl connection..."
