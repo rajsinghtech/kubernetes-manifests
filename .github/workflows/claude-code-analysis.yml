@@ -113,7 +113,7 @@ jobs:
       - name: Configure kubectl via Tailscale
         run: |
           echo "Configuring kubectl via Tailscale..."
-          tailscale configure kubeconfig ottawa-k8s-operator.keiretsu.ts.net
+          sudo tailscale configure kubeconfig ottawa-k8s-operator.keiretsu.ts.net
 
           echo "Verifying kubectl connection..."
           kubectl cluster-info
