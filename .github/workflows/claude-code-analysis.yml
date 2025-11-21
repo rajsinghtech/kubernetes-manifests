@@ -56,20 +56,58 @@ jobs:
           echo "access_token=$ACCESS_TOKEN" >> $GITHUB_OUTPUT
           echo "Successfully obtained Tailscale access token"
 
-      # Step 3: Connect to Tailscale network
-      - name: Setup Tailscale
-        uses: tailscale/github-action@v4
-        with:
-          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
-          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
-          tags: tag:ci,tag:claude-agent
-          version: latest
-
-      # Step 4: Install Tailscale CLI for kubeconfig
-      - name: Install Tailscale CLI
+      # Step 3: Install and configure Tailscale
+      - name: Install Tailscale
         run: |
           curl -fsSL https://tailscale.com/install.sh | sh
           tailscale --version
+
+      # Step 4: Create ephemeral auth key and connect to Tailscale
+      - name: Create Tailscale auth key
+        id: create_authkey
+        run: |
+          echo "Creating ephemeral auth key..."
+          RESPONSE=$(curl -s -X POST \
+            https://api.tailscale.com/api/v2/tailnet/-/keys \
+            -H "Authorization: Bearer ${{ steps.get_tailscale_token.outputs.access_token }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "capabilities": {
+                "devices": {
+                  "create": {
+                    "reusable": false,
+                    "ephemeral": true,
+                    "preauthorized": true,
+                    "tags": ["tag:ci", "tag:claude-agent"]
+                  }
+                }
+              },
+              "expirySeconds": 3600
+            }')
+
+          AUTH_KEY=$(echo "$RESPONSE" | jq -r '.key')
+          if [ "$AUTH_KEY" == "null" ] || [ -z "$AUTH_KEY" ]; then
+            echo "Error: Failed to create auth key" >&2
+            echo "Response: $RESPONSE" >&2
+            exit 1
+          fi
+
+          echo "::add-mask::$AUTH_KEY"
+          echo "authkey=$AUTH_KEY" >> $GITHUB_OUTPUT
+          echo "✅ Auth key created"
+
+      - name: Connect to Tailscale
+        run: |
+          echo "Starting tailscaled..."
+          sudo tailscaled --state=/var/lib/tailscale/tailscaled.state --socket=/run/tailscale/tailscaled.sock &
+          sleep 3
+
+          echo "Connecting to Tailscale..."
+          sudo tailscale up --authkey="${{ steps.create_authkey.outputs.authkey }}" --hostname="claude-agent-$(date +%s)"
+
+          echo "Verifying Tailscale connection..."
+          sudo tailscale status
+          echo "✅ Connected to Tailscale"
 
       # Step 5: Configure kubectl with Tailscale
       - name: Configure kubectl via Tailscale
