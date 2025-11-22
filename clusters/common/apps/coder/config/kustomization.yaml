@@ -4,3 +4,4 @@ kind: Kustomization
 namespace: coder
 resources:
   - postgres.yaml
+  - secret.yaml
