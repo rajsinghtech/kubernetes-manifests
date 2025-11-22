@@ -1,0 +1,38 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: coder-postgres
+  namespace: coder
+spec:
+  instances: 3
+  bootstrap:
+    initdb:
+      database: coder
+      owner: coder
+      secret:
+        name: coder-postgres-user
+  monitoring:
+    enablePodMonitor: true
+  storage:
+    size: 20Gi
+    storageClass: ceph-block-replicated-nvme
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: coder-postgres-user
+  namespace: coder
+type: kubernetes.io/basic-auth
+stringData:
+  username: coder
+  password: ${CODER_POSTGRES_PASSWORD}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: coder-db-url
+  namespace: coder
+type: Opaque
+stringData:
+  url: postgres://coder:${CODER_POSTGRES_PASSWORD}@coder-postgres-rw.coder.svc.cluster.local:5432/coder?sslmode=disable

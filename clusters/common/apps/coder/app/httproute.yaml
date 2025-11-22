@@ -1,0 +1,38 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: coder
+  namespace: coder
+  annotations:
+    item.homer.rajsingh.info/name: "Coder"
+    item.homer.rajsingh.info/subtitle: "Development Environments"
+    item.homer.rajsingh.info/logo: "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/svg/coder.svg"
+    item.homer.rajsingh.info/keywords: "dev, ide, workspace"
+
+    service.homer.rajsingh.info/name: "Development"
+    service.homer.rajsingh.info/icon: "fas fa-code"
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: private
+      namespace: home
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: ts
+      namespace: home
+  hostnames:
+    - "coder.${CLUSTER_DOMAIN}"
+    - "*.coder.${CLUSTER_DOMAIN}"
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: coder
+          port: 80
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /

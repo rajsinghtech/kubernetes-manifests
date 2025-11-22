@@ -90,6 +90,11 @@
 			"ip":  ["*"],
 		},
 		{
+			"src": ["tag:singh360"],
+			"dst": ["tag:singh360"],
+			"ip":  ["*"],
+		},
+		{
 			"src": ["group:superuser", "tag:ottawa", "tag:robbinsdale", "tag:stpetersburg"],
 			"dst": ["tag:ottawa", "tag:robbinsdale", "tag:stpetersburg"],
 			"ip":  ["*"],

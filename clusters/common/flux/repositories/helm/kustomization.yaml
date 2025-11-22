@@ -14,6 +14,7 @@ resources:
   - ./clabernetes.yaml
   - ./cloudnative-pg.yaml
   - ./clusterplex.yaml
+  - ./coder.yaml
   - ./coredns.yaml
   - ./csi-driver-smb.yaml
   - ./descheduler.yaml
