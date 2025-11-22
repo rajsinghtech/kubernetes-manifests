@@ -36,6 +36,7 @@ next
 
 # Claude documentation
 CLAUDE.md
+claude.md
 
 # Decrypted files
 *.dec
@@ -47,3 +48,6 @@ CLAUDE.md
 *.swp
 tailscale/validate.sh
 clusters/common/bootstrap/flux/secret.yaml
+
+# Python virtual environment
+venv/
