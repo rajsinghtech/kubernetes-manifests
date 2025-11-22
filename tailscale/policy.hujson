@@ -55,6 +55,7 @@
 		"tag:kind":         ["tag:k8s-operator", "tag:infra", "group:superuser", "group:kind",],
 		"tag:udm":          ["tag:infra", "group:superuser"],
 		"tag:ci":           ["tag:k8s-operator", "tag:infra", "group:superuser",],
+		"tag:singh360":     ["tag:k8s-operator", "tag:infra", "group:superuser",],
 	},
 	"autoApprovers": {
 		"exitNode": ["tag:k8s"],
