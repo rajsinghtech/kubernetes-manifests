@@ -16,7 +16,6 @@ spec:
     enablePodMonitor: true
   storage:
     size: 20Gi
-    storageClass: ceph-block-replicated-nvme
 ---
 apiVersion: v1
 kind: Secret
