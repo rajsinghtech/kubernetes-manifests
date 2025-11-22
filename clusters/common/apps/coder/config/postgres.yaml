@@ -26,7 +26,7 @@ metadata:
 type: kubernetes.io/basic-auth
 stringData:
   username: coder
-  password: ${CODER_POSTGRES_PASSWORD}
+  password: ${DEFAULT_PASSWORD}
 ---
 apiVersion: v1
 kind: Secret
@@ -35,4 +35,4 @@ metadata:
   namespace: coder
 type: Opaque
 stringData:
-  url: postgres://coder:${CODER_POSTGRES_PASSWORD}@coder-postgres-rw.coder.svc.cluster.local:5432/coder?sslmode=disable
+  url: postgres://coder:${DEFAULT_PASSWORD}@coder-postgres-rw.coder.svc.cluster.local:5432/coder?sslmode=disable

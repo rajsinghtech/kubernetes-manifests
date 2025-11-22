@@ -1,10 +1,10 @@
-kind: Namespace
+---
 apiVersion: v1
+kind: Namespace
 metadata:
   name: cdn
   labels:
     pod-security.kubernetes.io/enforce: privileged
     kustomize.toolkit.fluxcd.io/prune: disabled
   annotations:
-    volsync.backube/privileged-movers: "true"
-#    argocd.argoproj.io/sync-options: Prune=false 
+    volsync.backube/privileged-movers: "true" 
