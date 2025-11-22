@@ -1,0 +1,46 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: coder
+  namespace: coder
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: coder
+      version: 2.28.3
+      sourceRef:
+        kind: HelmRepository
+        name: coder
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  dependsOn:
+    - name: coder
+      namespace: flux-system
+  values:
+    coder:
+      env:
+        - name: CODER_PG_CONNECTION_URL
+          valueFrom:
+            secretKeyRef:
+              name: coder-db-url
+              key: url
+        - name: CODER_ACCESS_URL
+          value: "https://coder.${CLUSTER_DOMAIN}"
+        - name: CODER_WILDCARD_ACCESS_URL
+          value: "*.coder.${CLUSTER_DOMAIN}"
+
+      service:
+        type: ClusterIP
+        sessionAffinity: ClientIP
+
+    serviceAccount:
+      create: true
+      name: coder
