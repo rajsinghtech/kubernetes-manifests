@@ -65,7 +65,6 @@ resources:
   - ./weave-gitops.yaml
   - ./wger.yaml
   - ./istio.yaml
-  - ./kiali.yaml
   - ./homer-operator.yaml
   - ./aws-mountpoint-s3-csi.yaml
   - ./keda.yaml

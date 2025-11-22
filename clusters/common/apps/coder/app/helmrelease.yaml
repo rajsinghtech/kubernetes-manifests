@@ -21,9 +21,6 @@ spec:
     cleanupOnFail: true
     remediation:
       retries: 3
-  dependsOn:
-    - name: coder
-      namespace: flux-system
   values:
     coder:
       env:
