@@ -4,5 +4,6 @@ kind: Kustomization
 namespace: coder
 resources:
   - ../config
+  - rbac.yaml
   - helmrelease.yaml
   - httproute.yaml
