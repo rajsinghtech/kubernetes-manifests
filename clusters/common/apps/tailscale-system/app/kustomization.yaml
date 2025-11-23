@@ -6,4 +6,3 @@ resources:
   - ./rbac.yaml
   - ./peer-relay
   - ./ds
-  - ./testing
