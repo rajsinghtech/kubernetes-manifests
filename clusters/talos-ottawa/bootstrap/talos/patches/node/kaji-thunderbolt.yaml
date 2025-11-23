@@ -1,6 +1,13 @@
 # Thunderbolt network configuration for kaji (Node 3)
 # Based on current dmesg: 0-1 connects to rei, 1-1 connects to asuka
+#
+# CPU 8 (core 16) isolated due to hardware instability causing segfaults
+# All crashes occur exclusively on CPU 8: ceph segfaults, envoy protection faults
+# Node eventually dies and requires reboot. isolcpus prevents scheduling to this core.
 machine:
+  install:
+    extraKernelArgs:
+      - isolcpus=8  # Isolate CPU 8 from scheduler to prevent crashes
   network:
     interfaces:
       # Thunderbolt to rei (busPath 0-1.0)
