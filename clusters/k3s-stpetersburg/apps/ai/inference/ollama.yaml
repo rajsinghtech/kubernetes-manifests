@@ -25,8 +25,7 @@ spec:
         nvidiaResource: "nvidia.com/gpu"
       models:
         pull:
-          # - qwen3-vl:8b
-          - qwen3-vl:32b
+          - llama3.3:latest
 
     resources:
       requests:
@@ -34,7 +33,7 @@ spec:
         cpu: "2000m"
         nvidia.com/gpu: "1"
       limits:
-        memory: "16Gi"
+        memory: "70Gi"
         nvidia.com/gpu: "1"
 
     persistentVolume:
