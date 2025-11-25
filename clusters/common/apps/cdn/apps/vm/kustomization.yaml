@@ -5,7 +5,7 @@ resources:
   - windows-11-httproute.yaml
   - windows-11-udproute.yaml
   - windows-11-tcproute.yaml
-  - windows-11.yaml
+  # - windows-11.yaml
   - secret.yaml
 configMapGenerator:
   - name: install-script
