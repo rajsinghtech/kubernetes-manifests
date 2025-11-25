@@ -1,43 +1,43 @@
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: &app cdn-infra
-  namespace: flux-system
-spec:
-  targetNamespace: cdn
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
-  dependsOn:
-    - name: envoy-gateway-system-install
-  path: ./clusters/common/apps/cdn/infra
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: kubernetes-manifests
-  wait: false 
-  interval: 30m
-  retryInterval: 1m
-  timeout: 5m 
----
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: &app cdn-apps
-  namespace: flux-system
-spec:
-  targetNamespace: cdn
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
-  dependsOn:
-    - name: envoy-gateway-system-install
-  path: ./clusters/common/apps/cdn/apps
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: kubernetes-manifests
-  wait: false 
-  interval: 30m
-  retryInterval: 1m
-  timeout: 5m 
+# apiVersion: kustomize.toolkit.fluxcd.io/v1
+# kind: Kustomization
+# metadata:
+#   name: &app cdn-infra
+#   namespace: flux-system
+# spec:
+#   targetNamespace: cdn
+#   commonMetadata:
+#     labels:
+#       app.kubernetes.io/name: *app
+#   dependsOn:
+#     - name: envoy-gateway-system-install
+#   path: ./clusters/common/apps/cdn/infra
+#   prune: true
+#   sourceRef:
+#     kind: GitRepository
+#     name: kubernetes-manifests
+#   wait: false 
+#   interval: 30m
+#   retryInterval: 1m
+#   timeout: 5m 
+# ---
+# apiVersion: kustomize.toolkit.fluxcd.io/v1
+# kind: Kustomization
+# metadata:
+#   name: &app cdn-apps
+#   namespace: flux-system
+# spec:
+#   targetNamespace: cdn
+#   commonMetadata:
+#     labels:
+#       app.kubernetes.io/name: *app
+#   dependsOn:
+#     - name: envoy-gateway-system-install
+#   path: ./clusters/common/apps/cdn/apps
+#   prune: true
+#   sourceRef:
+#     kind: GitRepository
+#     name: kubernetes-manifests
+#   wait: false 
+#   interval: 30m
+#   retryInterval: 1m
+#   timeout: 5m 
