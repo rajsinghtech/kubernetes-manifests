@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: coder
-      version: 2.28.3
+      version: 2.28.4
       sourceRef:
         kind: HelmRepository
         name: coder
