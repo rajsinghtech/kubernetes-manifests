@@ -1,10 +1,41 @@
-curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC='--flannel-backend=none --disable-network-policy' sh -
-helm upgrade --install cilium cilium/cilium --version 1.18.3 --namespace kube-system --kubeconfig ~/.kube/stpetersburg --values clusters/k3s-stpetersburg/apps/cilium/app/values.yaml
-k apply -k clusters/common/bootstrap/flux --kubeconfig ~/.kube/stpetersburg
+# On spark node:
 
+# Disable systemd-resolved and set static DNS
+systemctl disable --now systemd-resolved
+rm -f /etc/resolv.conf
+echo 'nameserver 192.168.73.1' > /etc/resolv.conf
 
-
-root@spark-9533:~# cat /etc/sysctl.d/99-kubernetes-inotify.conf
+# Set inotify limits
+cat > /etc/sysctl.d/99-kubernetes-inotify.conf << 'EOF'
 # Increase inotify limits for Kubernetes
 fs.inotify.max_user_instances = 8192
 fs.inotify.max_user_watches = 524288
+EOF
+sysctl --system
+
+# Copy k3s-config.yaml to node (from local machine)
+# scp clusters/k3s-stpetersburg/bootstrap/k3s-config.yaml root@stpetersburg-spark:/etc/rancher/k3s/config.yaml
+
+# Or create manually:
+mkdir -p /etc/rancher/k3s
+cat > /etc/rancher/k3s/config.yaml << 'EOF'
+flannel-backend: none
+disable-network-policy: true
+disable:
+  - servicelb
+  - traefik
+cluster-cidr: 10.5.0.0/16
+service-cidr: 10.4.0.0/16
+kubelet-arg:
+  - max-pods=250
+EOF
+
+# Install k3s (reads config from /etc/rancher/k3s/config.yaml)
+curl -sfL https://get.k3s.io | sh -
+
+# On local machine:
+# grab kubeconfig and configure local lan ip of spark ~/.kube/stpetersburg
+# sed -i '' 's/127.0.0.1/192.168.73.206/' ~/.kube/stpetersburg
+helm upgrade --install cilium cilium/cilium --version 1.18.3 --namespace kube-system --kubeconfig ~/.kube/stpetersburg --values clusters/k3s-stpetersburg/apps/cilium/app/values.yaml
+kubectl apply -k clusters/common/bootstrap/flux --kubeconfig ~/.kube/stpetersburg
+kubectl apply -k clusters/k3s-stpetersburg/flux/config --kubeconfig ~/.kube/stpetersburg
