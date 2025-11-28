@@ -26,6 +26,7 @@ spec:
       models:
         pull:
           - llama3.3:latest
+          - llama3.2-vision:90b
 
     resources:
       requests:
