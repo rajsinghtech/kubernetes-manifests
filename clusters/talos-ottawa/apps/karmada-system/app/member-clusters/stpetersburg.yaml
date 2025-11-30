@@ -1,0 +1,15 @@
+---
+# Cluster object for St Petersburg in Push mode
+# Applied to Karmada API server (not host cluster)
+# The Secret is managed separately in stpetersburg-secret.sops.yaml
+apiVersion: cluster.karmada.io/v1alpha1
+kind: Cluster
+metadata:
+  name: stpetersburg
+spec:
+  syncMode: Push
+  apiEndpoint: https://stpetersburg-k8s-operator.keiretsu.ts.net
+  secretRef:
+    namespace: karmada-cluster
+    name: stpetersburg
+  insecureSkipTLSVerification: true
