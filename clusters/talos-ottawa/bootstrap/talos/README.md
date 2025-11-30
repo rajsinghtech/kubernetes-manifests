@@ -41,16 +41,16 @@ Cable connections:
 ### Expected Network Configuration
 
 - **rei**:
-  - Primary: 192.168.169.113 (Static DHCP on eth1)
-  - Secondary: 192.168.249.113/24 (Static on eth2)
+  - Primary: 192.168.169.117 (Static DHCP on eth1)
+  - Secondary: 192.168.249.117/24 (Static on eth2)
   - Thunderbolt: 169.254.255.101/32
 - **asuka**:
-  - Primary: 192.168.169.114 (Static DHCP on eth1)
-  - Secondary: 192.168.249.114/24 (Static on eth2)
+  - Primary: 192.168.169.118 (Static DHCP on eth1)
+  - Secondary: 192.168.249.118/24 (Static on eth2)
   - Thunderbolt: 169.254.255.102/32
 - **kaji**:
-  - Primary: 192.168.169.115 (Static DHCP on eth1)
-  - Secondary: 192.168.249.115/24 (Static on eth2)
+  - Primary: 192.168.169.119 (Static DHCP on eth1)
+  - Secondary: 192.168.249.119/24 (Static on eth2)
   - Thunderbolt: 169.254.255.103/32
 - **VIP**: 192.168.169.25 (shared between control planes)
 
@@ -126,9 +126,9 @@ diskutil eject /dev/diskX
    - [ ] Connect Thunderbolt cables between all nodes (full mesh)
    - [ ] Connect network cables
    - [ ] Ensure static DHCP mappings are configured for:
-     - rei: 192.168.169.113
-     - asuka: 192.168.169.114
-     - kaji: 192.168.169.115
+     - rei: 192.168.169.117
+     - asuka: 192.168.169.118
+     - kaji: 192.168.169.119
    - [ ] Have IPMI/console access ready
 
 2. **Boot all 3 nodes from USB:**
@@ -149,7 +149,7 @@ diskutil eject /dev/diskX
 3. **Verify all nodes are in maintenance mode:**
 ```bash
 # Should see all 3 nodes responding
-for ip in 192.168.169.113 192.168.169.114 192.168.169.115; do
+for ip in 192.168.169.117 192.168.169.118 192.168.169.119; do
   echo -n "Node $ip: "
   talosctl -n $ip -e $ip version --insecure | grep Tag || echo "❌ Not responding"
 done
@@ -171,18 +171,18 @@ echo "📡 Gathering hardware info from all nodes..."
 
 # rei
 echo "Getting info from rei..."
-talosctl -n 192.168.169.113 -e 192.168.169.113 get disks --insecure -o yaml > hardware-info/rei-disks.yaml
-talosctl -n 192.168.169.113 -e 192.168.169.113 get links --insecure -o yaml > hardware-info/rei-links.yaml
+talosctl -n 192.168.169.117 -e 192.168.169.117 get disks --insecure -o yaml > hardware-info/rei-disks.yaml
+talosctl -n 192.168.169.117 -e 192.168.169.117 get links --insecure -o yaml > hardware-info/rei-links.yaml
 
 # asuka
 echo "Getting info from asuka..."
-talosctl -n 192.168.169.114 -e 192.168.169.114 get disks --insecure -o yaml > hardware-info/asuka-disks.yaml
-talosctl -n 192.168.169.114 -e 192.168.169.114 get links --insecure -o yaml > hardware-info/asuka-links.yaml
+talosctl -n 192.168.169.118 -e 192.168.169.118 get disks --insecure -o yaml > hardware-info/asuka-disks.yaml
+talosctl -n 192.168.169.118 -e 192.168.169.118 get links --insecure -o yaml > hardware-info/asuka-links.yaml
 
 # kaji
 echo "Getting info from kaji..."
-talosctl -n 192.168.169.115 -e 192.168.169.115 get disks --insecure -o yaml > hardware-info/kaji-disks.yaml
-talosctl -n 192.168.169.115 -e 192.168.169.115 get links --insecure -o yaml > hardware-info/kaji-links.yaml
+talosctl -n 192.168.169.119 -e 192.168.169.119 get disks --insecure -o yaml > hardware-info/kaji-disks.yaml
+talosctl -n 192.168.169.119 -e 192.168.169.119 get links --insecure -o yaml > hardware-info/kaji-links.yaml
 
 # Extract critical information
 echo ""
@@ -265,9 +265,9 @@ echo "📤 Applying configurations to all nodes..."
 mise run apply
 
 # This will:
-# - Apply k8s.ottawa.local-rei.yaml to 192.168.169.113
-# - Apply k8s.ottawa.local-asuka.yaml to 192.168.169.114  
-# - Apply k8s.ottawa.local-kaji.yaml to 192.168.169.115
+# - Apply k8s.ottawa.local-rei.yaml to 192.168.169.117
+# - Apply k8s.ottawa.local-asuka.yaml to 192.168.169.118
+# - Apply k8s.ottawa.local-kaji.yaml to 192.168.169.119
 # - INSTALLS TALOS TO DISK (as specified in config)
 # - Nodes will reboot from disk with their configurations
 
@@ -500,7 +500,7 @@ task -d bootstrap/talos upgrade-k8s controller=rei to=v1.33.1
 ```bash
 # Check console/IPMI for errors
 # Try applying with insecure flag directly
-talosctl -n 192.168.169.113 -e 192.168.169.113 apply-config --insecure --file bootstrap/talos/clusterconfig/k8s.ottawa.local-rei.yaml
+talosctl -n 192.168.169.117 -e 192.168.169.117 apply-config --insecure --file bootstrap/talos/clusterconfig/k8s.ottawa.local-rei.yaml
 ```
 
 ### Wrong Disk Selected
@@ -516,7 +516,7 @@ talosctl -n NODE_IP -e NODE_IP get disks --insecure -o yaml | grep -B2 -A3 nvme1
 ```bash
 # Config files are named: k8s.ottawa.local-NODENAME.yaml
 # Example for rei:
-talosctl -n 192.168.169.113 -e 192.168.169.113 apply-config --insecure --file bootstrap/talos/clusterconfig/k8s.ottawa.local-rei.yaml
+talosctl -n 192.168.169.117 -e 192.168.169.117 apply-config --insecure --file bootstrap/talos/clusterconfig/k8s.ottawa.local-rei.yaml
 ```
 
 ### Thunderbolt Not Working
