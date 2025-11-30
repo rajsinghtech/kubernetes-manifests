@@ -5,5 +5,6 @@ namespace: istio-system
 resources:
   - istio-gateway.yaml
   - destinationrule-global-failover.yaml
+  - peerauthentication-permissive.yaml
   - kiali.yaml
   - kiali-httproute.yaml
