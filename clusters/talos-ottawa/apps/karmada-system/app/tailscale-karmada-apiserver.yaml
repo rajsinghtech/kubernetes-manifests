@@ -1,0 +1,23 @@
+---
+# Tailscale LoadBalancer to expose Karmada API server
+# This creates a Tailscale endpoint: ottawa-karmada-apiserver.keiretsu.ts.net
+apiVersion: v1
+kind: Service
+metadata:
+  name: karmada-apiserver-tailscale
+  namespace: karmada-system
+  annotations:
+    tailscale.com/hostname: ottawa-karmada-apiserver
+    tailscale.com/proxy-class: common
+spec:
+  type: LoadBalancer
+  loadBalancerClass: tailscale
+  selector:
+    # The Karmada operator creates the API server with these labels
+    app.kubernetes.io/component: karmada-apiserver
+    app.kubernetes.io/instance: karmada
+  ports:
+    - name: https
+      port: 5443
+      targetPort: 5443
+      protocol: TCP

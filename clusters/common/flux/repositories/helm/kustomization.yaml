@@ -70,3 +70,4 @@ resources:
   - ./keda.yaml
   - ./vector.yaml
   - ./kuberay.yaml
+  - ./karmada.yaml
