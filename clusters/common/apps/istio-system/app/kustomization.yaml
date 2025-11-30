@@ -4,6 +4,7 @@ kind: Kustomization
 namespace: istio-system
 resources:
   - istio-base.yaml
+  - istio-cni.yaml
   - istio-istiod.yaml
   - istio-eastwestgateway.yaml
   - tailscale-eastwest-egress.yaml

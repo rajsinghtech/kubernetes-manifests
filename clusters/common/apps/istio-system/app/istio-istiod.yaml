@@ -22,7 +22,11 @@ spec:
       retries: 3
   dependsOn:
     - name: istio-base
+    - name: istio-cni
   values:
+    istio_cni:
+      enabled: true
+      chained: true
     global:
       meshID: primary
       multiCluster:
