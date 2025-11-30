@@ -6,6 +6,5 @@ resources:
   - istio-base.yaml
   - istio-istiod.yaml
   - istio-eastwestgateway.yaml
-  - istio-gateway.yaml
   - tailscale-eastwest-egress.yaml
   - tailscale-kubeconfig.yaml
