@@ -23,7 +23,7 @@ spec:
         command:
         - /bin/sh
         - -c
-        image: "ghcr.io/tailscale/tailscale:unstable-v1.91.88"
+        image: "ghcr.io/tailscale/tailscale:v1.90.9"
         imagePullPolicy: IfNotPresent
         name: sysctler
         securityContext:
@@ -31,7 +31,7 @@ spec:
       containers:
       - name: tailscale
         imagePullPolicy: IfNotPresent
-        image: "ghcr.io/tailscale/tailscale:unstable-v1.91.88"
+        image: "ghcr.io/tailscale/tailscale:v1.90.9"
         securityContext:
           privileged: true
         ports:
@@ -81,8 +81,8 @@ spec:
           value: $(POD_NAME)
         # - name: TS_DEBUG_PRETENDPOINT
         #   value: "76.67.37.205:41642,${CLUSTER_LOAD_BALANCER_CIDR%.*.*/*}.100.100:41642"
-        - name: TS_DEBUG_RELAY_SERVER_ADDRS
-          value: "$(POD_IP),${CLUSTER_LOAD_BALANCER_CIDR%.*.*/*}.100.100,76.67.37.205"
+        # - name: TS_DEBUG_RELAY_SERVER_ADDRS
+        #   value: "$(POD_IP),${CLUSTER_LOAD_BALANCER_CIDR%.*.*/*}.100.100,76.67.37.205"
         # - name: TS_TAILSCALED_EXTRA_ARGS
         #   value: "--port=41642"
         lifecycle:
