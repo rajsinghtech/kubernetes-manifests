@@ -2,6 +2,7 @@
 ---
 # renovate: datasource=docker depName=ghcr.io/siderolabs/installer
 talosVersion: v1.10.6
+# talosVersion: v1.11.5
 # renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
 kubernetesVersion: v1.33.1
 clusterName: "k8s.killinit.internal"
