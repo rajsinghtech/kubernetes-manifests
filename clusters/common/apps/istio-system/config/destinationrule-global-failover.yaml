@@ -9,8 +9,6 @@ spec:
   exportTo:
     - "*"
   trafficPolicy:
-    tls:
-      mode: DISABLE
     loadBalancer:
       simple: ROUND_ROBIN
       localityLbSetting:
