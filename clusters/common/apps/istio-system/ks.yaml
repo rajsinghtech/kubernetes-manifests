@@ -35,7 +35,7 @@ spec:
     kind: GitRepository
     name: kubernetes-manifests
   dependsOn:
-  - istio-system
+    - name: istio-system
   wait: false
   interval: 30m
   retryInterval: 1m
