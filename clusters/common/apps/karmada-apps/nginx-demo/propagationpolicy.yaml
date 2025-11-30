@@ -1,6 +1,7 @@
 ---
+# ClusterPropagationPolicy is cluster-scoped (no namespace needed)
 apiVersion: policy.karmada.io/v1alpha1
-kind: PropagationPolicy
+kind: ClusterPropagationPolicy
 metadata:
   name: nginx-propagation
 spec:
@@ -8,6 +9,10 @@ spec:
     - apiVersion: apps/v1
       kind: Deployment
       name: nginx
+      namespace: nginx-demo
+    - apiVersion: v1
+      kind: Namespace
+      name: nginx-demo
   placement:
     clusterAffinity:
       clusterNames:
