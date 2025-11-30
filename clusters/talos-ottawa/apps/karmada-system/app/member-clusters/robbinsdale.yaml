@@ -2,18 +2,13 @@
 # Cluster object for Robbinsdale in Push mode
 # Applied to Karmada API server (not host cluster)
 # The Secret is managed separately in robbinsdale-secret.sops.yaml
-#
-# NOTE: Uses internal egress service URL (robbinsdale-k8s-operator.tailscale.svc)
-# which routes through the common-egress ProxyGroup to reach the external
-# Tailscale endpoint (robbinsdale-k8s-operator.keiretsu.ts.net).
-# This allows Karmada components to reach the member cluster API server.
 apiVersion: cluster.karmada.io/v1alpha1
 kind: Cluster
 metadata:
   name: robbinsdale
 spec:
   syncMode: Push
-  apiEndpoint: https://robbinsdale-k8s-operator.tailscale.svc.cluster.local
+  apiEndpoint: https://robbinsdale-k8s-operator.keiretsu.ts.net
   secretRef:
     namespace: karmada-cluster
     name: robbinsdale
