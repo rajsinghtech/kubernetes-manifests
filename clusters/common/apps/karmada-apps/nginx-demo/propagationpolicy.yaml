@@ -1,0 +1,33 @@
+---
+apiVersion: policy.karmada.io/v1alpha1
+kind: PropagationPolicy
+metadata:
+  name: nginx-propagation
+spec:
+  resourceSelectors:
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: nginx
+  placement:
+    clusterAffinity:
+      clusterNames:
+        - ottawa
+        - robbinsdale
+        - stpetersburg
+    replicaScheduling:
+      replicaDivisionPreference: Weighted
+      replicaSchedulingType: Divided
+      weightPreference:
+        staticWeightList:
+          - targetCluster:
+              clusterNames:
+                - ottawa
+            weight: 1
+          - targetCluster:
+              clusterNames:
+                - robbinsdale
+            weight: 1
+          - targetCluster:
+              clusterNames:
+                - stpetersburg
+            weight: 1
