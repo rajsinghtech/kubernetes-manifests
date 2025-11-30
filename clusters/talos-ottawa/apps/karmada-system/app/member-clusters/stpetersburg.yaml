@@ -2,6 +2,7 @@
 # Cluster object for St Petersburg in Push mode
 # Applied to Karmada API server (not host cluster)
 # The Secret is managed separately in stpetersburg-secret.sops.yaml
+# The impersonator secret is managed separately in stpetersburg-impersonator-secret.sops.yaml
 apiVersion: cluster.karmada.io/v1alpha1
 kind: Cluster
 metadata:
@@ -12,4 +13,7 @@ spec:
   secretRef:
     namespace: karmada-cluster
     name: stpetersburg
+  impersonatorSecretRef:
+    namespace: karmada-cluster
+    name: stpetersburg-impersonator
   insecureSkipTLSVerification: true

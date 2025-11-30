@@ -4,5 +4,7 @@ kind: Kustomization
 resources:
   - robbinsdale.yaml
   - robbinsdale-secret.sops.yaml
+  - robbinsdale-impersonator-secret.sops.yaml
   - stpetersburg.yaml
   - stpetersburg-secret.sops.yaml
+  - stpetersburg-impersonator-secret.sops.yaml
