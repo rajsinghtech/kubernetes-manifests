@@ -136,7 +136,7 @@
 			"via": ["tag:stpetersburg"],
 		},
 		{
-			"src": ["group:superuser", "tag:k8s"],
+			"src": ["group:superuser",],
 			"dst": ["tag:k8s-operator", "tag:k8s"],
 			"ip":  ["*"],
 			"app": {
@@ -148,6 +148,40 @@
 						},
 						"recorder":        ["tag:k8s-recorder"],
 						"enforceRecorder": true,
+					},
+				],
+				"tailscale.com/cap/tsidp": [
+					{
+						"allow_admin_ui": true,
+					},
+				],
+				"rajsingh.info/cap/tsdnsproxy": [
+					{
+						"robbinsdale.k8s": {
+							"dns":     ["10.0.0.10:53"],
+							"rewrite": "svc.cluster.local",
+							"translateid": -1
+						},
+						"ottawa.k8s": {
+							"dns":     ["10.2.0.10:53"],
+							"rewrite": "svc.cluster.local",
+							"translateid": -1
+						}
+					}
+				],
+			},
+		},
+		{
+			"src": ["tag:k8s"],
+			"dst": ["tag:k8s-operator", "tag:k8s"],
+			"ip":  ["*"],
+			"app": {
+				"tailscale.com/cap/relay": [],
+				"tailscale.com/cap/kubernetes": [
+					{
+						"impersonate": {
+							"groups": ["system:masters"],
+						},
 					},
 				],
 				"tailscale.com/cap/tsidp": [
