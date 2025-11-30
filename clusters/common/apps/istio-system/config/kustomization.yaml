@@ -4,6 +4,7 @@ kind: Kustomization
 namespace: istio-system
 resources:
   - istio-gateway.yaml
+  - gateway-cross-network.yaml
   - destinationrule-global-failover.yaml
   - peerauthentication-permissive.yaml
   - kiali.yaml
