@@ -1,7 +1,0 @@
-{
-    "Parameters": {
-      "RoleName": "hybrid-ssm-role-kb",
-      "SSMDeregisterConditionTagKey": "Department",
-      "SSMDeregisterConditionTagValue": "SE"
-    }
-  }
