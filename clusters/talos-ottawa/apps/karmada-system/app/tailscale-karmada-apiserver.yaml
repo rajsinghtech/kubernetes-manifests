@@ -14,7 +14,7 @@ spec:
   loadBalancerClass: tailscale
   selector:
     # The Karmada operator creates the API server with these labels
-    app.kubernetes.io/component: karmada-apiserver
+    app.kubernetes.io/name: karmada-apiserver
     app.kubernetes.io/instance: karmada
   ports:
     - name: https
