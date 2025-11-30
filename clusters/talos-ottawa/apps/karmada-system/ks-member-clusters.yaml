@@ -1,0 +1,25 @@
+---
+# Flux Kustomization that applies member cluster registrations TO the Karmada API server
+# Uses kubeConfig to target Karmada instead of the host cluster
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: karmada-member-clusters
+  namespace: flux-system
+spec:
+  # Apply to Karmada API server using the kubeconfig secret
+  kubeConfig:
+    secretRef:
+      name: karmada-kubeconfig
+      key: value
+  path: ./clusters/talos-ottawa/apps/karmada-system/app/member-clusters
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: kubernetes-manifests
+  wait: false
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m
+  dependsOn:
+    - name: karmada-control-plane
