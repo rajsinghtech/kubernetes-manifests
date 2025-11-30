@@ -4,4 +4,5 @@ kind: Kustomization
 resources:
   - ./ks.yaml
   - ./ks-member-clusters.yaml
+  - ./ks-karmada-apps.yaml
   - ./app/karmada-kubeconfig-secret.yaml
