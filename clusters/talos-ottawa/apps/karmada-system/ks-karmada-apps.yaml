@@ -13,7 +13,7 @@ spec:
     secretRef:
       name: karmada-kubeconfig
       key: value
-  path: ./clusters/common/apps/karmada-apps
+  path: ./clusters/talos-ottawa/apps/karmada-system/app/karmada-apps
   prune: true
   sourceRef:
     kind: GitRepository
