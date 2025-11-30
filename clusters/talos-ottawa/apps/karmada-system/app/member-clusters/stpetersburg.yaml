@@ -2,13 +2,18 @@
 # Cluster object for St Petersburg in Push mode
 # Applied to Karmada API server (not host cluster)
 # The Secret is managed separately in stpetersburg-secret.sops.yaml
+#
+# NOTE: Uses internal egress service URL (stpetersburg-k8s-operator.tailscale.svc)
+# which routes through the common-egress ProxyGroup to reach the external
+# Tailscale endpoint (stpetersburg-k8s-operator.keiretsu.ts.net).
+# This allows Karmada components to reach the member cluster API server.
 apiVersion: cluster.karmada.io/v1alpha1
 kind: Cluster
 metadata:
   name: stpetersburg
 spec:
   syncMode: Push
-  apiEndpoint: https://stpetersburg-k8s-operator.keiretsu.ts.net
+  apiEndpoint: https://stpetersburg-k8s-operator.tailscale.svc.cluster.local
   secretRef:
     namespace: karmada-cluster
     name: stpetersburg
