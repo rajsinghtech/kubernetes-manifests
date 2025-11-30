@@ -28,5 +28,5 @@ spec:
       image:
         registry: docker.io
         repository: karmada/karmada-operator
-        tag: v1.15.0
+        tag: v1.16.0
         pullPolicy: IfNotPresent
