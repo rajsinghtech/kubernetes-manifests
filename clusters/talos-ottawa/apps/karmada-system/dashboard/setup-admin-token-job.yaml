@@ -18,7 +18,7 @@ spec:
       serviceAccountName: default
       containers:
         - name: setup-token
-          image: ghcr.io/fluxcd/flux-cli:v2.4.0
+          image: ghcr.io/fluxcd/flux-cli:v2.7.5
           command:
             - /bin/sh
             - -c
