@@ -13,6 +13,11 @@ spec:
       labels:
         app: liqo-test
     spec:
+      tolerations:
+        # Allow scheduling on Liqo virtual nodes (Cilium taint)
+        - key: node.cilium.io/agent-not-ready
+          operator: Exists
+          effect: NoSchedule
       containers:
         - name: nginx
           image: nginx:alpine
