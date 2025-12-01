@@ -7,3 +7,4 @@ resources:
   - kubeconfig-secret.yaml
   - helmrelease.yaml
   - httproute.yaml
+  - setup-admin-token-job.yaml
