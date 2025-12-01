@@ -31,8 +31,8 @@ spec:
           topology.kubernetes.io/region: ${LOCATION}
           liqo.io/provider: tailscale
 
-    # Networking configuration - disable Liqo networking, use Tailscale instead
-    # Tailscale already provides pod-to-pod connectivity via subnet routes
+    # Networking configuration - disable Liqo networking
+    # Tailscale provides raw IP connectivity between clusters, Istio handles service mesh
     networking:
       enabled: false   # Don't use Liqo's WireGuard tunnels
       reflectIPs: true # Still reflect pod IPs so services work cross-cluster
