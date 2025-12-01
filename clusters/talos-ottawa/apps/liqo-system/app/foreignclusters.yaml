@@ -1,0 +1,34 @@
+---
+# Ottawa peers with Robbinsdale
+apiVersion: core.liqo.io/v1beta1
+kind: ForeignCluster
+metadata:
+  name: robbinsdale
+spec:
+  # Cluster identity - must match the remote cluster's clusterName in Liqo config
+  clusterID: robbinsdale
+  # Foreign cluster API server endpoint via Tailscale
+  foreignProxyURL: https://robbinsdale-k8s-operator.keiretsu.ts.net
+  # Skip TLS verification (Tailscale handles encryption)
+  insecureSkipTLSVerify: true
+  # Networking configuration
+  networking:
+    # Use Liqo's gateway for connectivity
+    type: Gateway
+  # Offloading configuration - allow workloads from this cluster
+  offloading:
+    enabled: true
+---
+# Ottawa peers with StPetersburg
+apiVersion: core.liqo.io/v1beta1
+kind: ForeignCluster
+metadata:
+  name: stpetersburg
+spec:
+  clusterID: stpetersburg
+  foreignProxyURL: https://stpetersburg-k8s-operator.keiretsu.ts.net
+  insecureSkipTLSVerify: true
+  networking:
+    type: Gateway
+  offloading:
+    enabled: true

@@ -1,0 +1,13 @@
+---
+# ForeignCluster resources define peers
+# Each cluster will apply the ones for OTHER clusters
+# These are applied via cluster-specific overlays
+#
+# Peering topology: Full mesh (all clusters peer with all others)
+#
+# Ottawa peers with: Robbinsdale, StPetersburg
+# Robbinsdale peers with: Ottawa, StPetersburg
+# StPetersburg peers with: Ottawa, Robbinsdale
+#
+# This file is empty - actual ForeignClusters are defined per-cluster
+# because each cluster needs different peers

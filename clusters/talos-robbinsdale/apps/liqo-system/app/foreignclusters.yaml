@@ -1,0 +1,28 @@
+---
+# Robbinsdale peers with Ottawa
+apiVersion: core.liqo.io/v1beta1
+kind: ForeignCluster
+metadata:
+  name: ottawa
+spec:
+  clusterID: ottawa
+  foreignProxyURL: https://ottawa-k8s-operator.keiretsu.ts.net
+  insecureSkipTLSVerify: true
+  networking:
+    type: Gateway
+  offloading:
+    enabled: true
+---
+# Robbinsdale peers with StPetersburg
+apiVersion: core.liqo.io/v1beta1
+kind: ForeignCluster
+metadata:
+  name: stpetersburg
+spec:
+  clusterID: stpetersburg
+  foreignProxyURL: https://stpetersburg-k8s-operator.keiretsu.ts.net
+  insecureSkipTLSVerify: true
+  networking:
+    type: Gateway
+  offloading:
+    enabled: true
