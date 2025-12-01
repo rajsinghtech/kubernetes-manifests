@@ -61,3 +61,13 @@ securityContext:
     - NET_ADMIN
     - SYS_ADMIN
     - SYS_RESOURCE
+# Exclude Liqo virtual nodes from DaemonSet scheduling
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: liqo.io/type
+              operator: NotIn
+              values:
+                - virtual-node
