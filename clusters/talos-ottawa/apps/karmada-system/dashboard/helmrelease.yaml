@@ -26,6 +26,7 @@ spec:
   values:
     api:
       image:
+        registry: ""
         repository: karmada/karmada-dashboard-api
         tag: "v0.2.0"
         pullPolicy: IfNotPresent
@@ -38,6 +39,7 @@ spec:
 
     web:
       image:
+        registry: ""
         repository: karmada/karmada-dashboard-web
         tag: "v0.2.0"
         pullPolicy: IfNotPresent
@@ -48,6 +50,7 @@ spec:
 
     karmadaKubernetesDashboardAPI:
       image:
+        registry: ""
         repository: karmada/kubernetes-dashboard-api
         tag: "v0.2.0"
         pullPolicy: IfNotPresent
