@@ -31,18 +31,11 @@ spec:
           topology.kubernetes.io/region: ${LOCATION}
           liqo.io/provider: tailscale
 
-    # Networking configuration
+    # Networking configuration - disable Liqo networking, use Tailscale instead
+    # Tailscale already provides pod-to-pod connectivity via subnet routes
     networking:
-      internal: true
-      # Use Tailscale for connectivity - expose gateway via Tailscale LB
-      gatewayTemplates:
-        server:
-          service:
-            type: LoadBalancer
-            loadBalancerClass: tailscale
-            annotations:
-              tailscale.com/hostname: ${LOCATION}-liqo-gateway
-              tailscale.com/proxy-class: common
+      enabled: false   # Don't use Liqo's WireGuard tunnels
+      reflectIPs: true # Still reflect pod IPs so services work cross-cluster
 
     # API server endpoint via Tailscale
     apiServer:
