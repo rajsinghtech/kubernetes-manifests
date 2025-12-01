@@ -48,7 +48,7 @@ spec:
         type: ClusterIP
         port: 8000
 
-    karmadaKubernetesDashboardAPI:
+    kubernetes_dashboard_api:
       image:
         registry: ""
         repository: karmada/kubernetes-dashboard-api
