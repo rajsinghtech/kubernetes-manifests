@@ -1,0 +1,22 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app liqo-peering
+  namespace: flux-system
+spec:
+  targetNamespace: liqo
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  path: ./clusters/talos-robbinsdale/apps/liqo-system/app
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: kubernetes-manifests
+  wait: false
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m
+  dependsOn:
+    - name: liqo-system
