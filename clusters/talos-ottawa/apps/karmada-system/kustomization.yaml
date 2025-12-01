@@ -5,4 +5,5 @@ resources:
   - ./ks.yaml
   - ./ks-member-clusters.yaml
   - ./ks-karmada-apps.yaml
+  - ./ks-dashboard.yaml
   - ./app/karmada-kubeconfig-secret.yaml

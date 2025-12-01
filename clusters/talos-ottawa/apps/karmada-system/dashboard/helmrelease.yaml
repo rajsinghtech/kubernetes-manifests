@@ -1,0 +1,63 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: karmada-dashboard
+  namespace: karmada-system
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: karmada-dashboard
+      version: "0.1.*"
+      sourceRef:
+        kind: HelmRepository
+        name: karmada-dashboard
+        namespace: flux-system
+  maxHistory: 2
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    api:
+      image:
+        repository: docker.io/karmada/karmada-dashboard-api
+        tag: "v1.16.0"
+        pullPolicy: IfNotPresent
+      replicaCount: 1
+      kubeconfigName: karmada-dashboard-kubeconfig
+      kubeconfigContext: karmada
+      service:
+        type: ClusterIP
+        port: 8000
+
+    web:
+      image:
+        repository: docker.io/karmada/karmada-dashboard-web
+        tag: "v1.16.0"
+        pullPolicy: IfNotPresent
+      replicaCount: 1
+      service:
+        type: ClusterIP
+        port: 8000
+
+    karmadaKubernetesDashboardAPI:
+      image:
+        repository: docker.io/karmada/kubernetes-dashboard-api
+        tag: "v1.16.0"
+        pullPolicy: IfNotPresent
+      replicaCount: 1
+      kubeconfigName: karmada-dashboard-kubeconfig
+      kubeconfigContext: karmada
+      service:
+        type: ClusterIP
+        port: 8000
+
+    ingress:
+      enabled: false
