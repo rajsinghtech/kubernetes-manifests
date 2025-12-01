@@ -71,3 +71,4 @@ resources:
   - ./vector.yaml
   - ./kuberay.yaml
   - ./karmada.yaml
+  - ./karmada-dashboard.yaml
