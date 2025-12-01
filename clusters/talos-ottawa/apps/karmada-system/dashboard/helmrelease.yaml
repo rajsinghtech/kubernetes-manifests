@@ -15,9 +15,13 @@ spec:
         namespace: karmada-system
   maxHistory: 2
   install:
+    disableHooks: true
+    disableWait: true
     remediation:
       retries: 3
   upgrade:
+    disableHooks: true
+    disableWait: true
     cleanupOnFail: true
     remediation:
       retries: 3
