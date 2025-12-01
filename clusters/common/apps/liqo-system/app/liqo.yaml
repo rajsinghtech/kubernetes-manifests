@@ -49,27 +49,26 @@ spec:
       address: https://${LOCATION}-k8s-operator.keiretsu.ts.net
       trustedCA: false
 
-    # Networking CIDRs - per cluster
-    networkManager:
-      config:
-        # Pod CIDR varies per cluster, use variable substitution
-        podCIDR: ${CLUSTER_POD_CIDR}
-        serviceCIDR: ${CLUSTER_SERVICE_CIDR}
-        # Reserved subnets to avoid conflicts
-        reservedSubnets:
-          # Robbinsdale
-          - 10.0.0.0/16
-          - 10.1.0.0/16
-          # Ottawa
-          - 10.2.0.0/16
-          - 10.3.0.0/16
-          # St. Petersburg
-          - 10.4.0.0/16
-          - 10.5.0.0/16
-          # Local LANs
-          - 192.168.50.0/24
-          - 192.168.169.0/24
-          - 192.168.73.0/24
+    # IPAM configuration
+    ipam:
+      # Pod CIDR varies per cluster, use variable substitution
+      podCIDR: ${CLUSTER_POD_CIDR}
+      serviceCIDR: ${CLUSTER_SERVICE_CIDR}
+      # Reserved subnets to avoid conflicts with existing networks
+      reservedSubnets:
+        # Robbinsdale
+        - 10.0.0.0/16
+        - 10.1.0.0/16
+        # Ottawa
+        - 10.2.0.0/16
+        - 10.3.0.0/16
+        # St. Petersburg
+        - 10.4.0.0/16
+        - 10.5.0.0/16
+        # Local LANs
+        - 192.168.50.0/24
+        - 192.168.169.0/24
+        - 192.168.73.0/24
 
     # Controller manager settings
     controllerManager:
