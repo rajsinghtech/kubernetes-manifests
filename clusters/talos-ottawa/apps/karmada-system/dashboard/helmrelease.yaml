@@ -8,10 +8,9 @@ spec:
   interval: 30m
   chart:
     spec:
-      chart: karmada-dashboard
-      version: "0.1.*"
+      chart: charts/karmada-dashboard
       sourceRef:
-        kind: HelmRepository
+        kind: GitRepository
         name: karmada-dashboard
         namespace: flux-system
   maxHistory: 2
@@ -28,7 +27,7 @@ spec:
     api:
       image:
         repository: docker.io/karmada/karmada-dashboard-api
-        tag: "v1.16.0"
+        tag: "v0.2.0"
         pullPolicy: IfNotPresent
       replicaCount: 1
       kubeconfigName: karmada-dashboard-kubeconfig
@@ -40,7 +39,7 @@ spec:
     web:
       image:
         repository: docker.io/karmada/karmada-dashboard-web
-        tag: "v1.16.0"
+        tag: "v0.2.0"
         pullPolicy: IfNotPresent
       replicaCount: 1
       service:
@@ -50,7 +49,7 @@ spec:
     karmadaKubernetesDashboardAPI:
       image:
         repository: docker.io/karmada/kubernetes-dashboard-api
-        tag: "v1.16.0"
+        tag: "v0.2.0"
         pullPolicy: IfNotPresent
       replicaCount: 1
       kubeconfigName: karmada-dashboard-kubeconfig

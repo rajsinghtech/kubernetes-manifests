@@ -1,9 +1,11 @@
 ---
 apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelmRepository
+kind: GitRepository
 metadata:
   name: karmada-dashboard
   namespace: flux-system
 spec:
   interval: 1h
-  url: https://raw.githubusercontent.com/karmada-io/dashboard/master/charts
+  url: https://github.com/karmada-io/dashboard
+  ref:
+    tag: v0.2.0
