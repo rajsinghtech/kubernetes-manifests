@@ -20,4 +20,15 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
-      retries: 3 
+      retries: 3
+  values:
+    node:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: liqo.io/type
+                    operator: NotIn
+                    values:
+                      - virtual-node

@@ -130,6 +130,15 @@ spec:
         operator: "Exists"
       - effect: "NoSchedule"
         operator: "Exists"
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: liqo.io/type
+                    operator: NotIn
+                    values:
+                      - virtual-node
       containers:
       - name: node-cache
         image: registry.k8s.io/dns/k8s-dns-node-cache:1.26.7
