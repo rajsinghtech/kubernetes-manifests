@@ -1,6 +1,8 @@
 cni:
   exclusive: false
 kubeProxyReplacement: true
+socketLB:
+  hostNamespaceOnly: true
 autoDirectNodeRoutes: true
 directRoutingSkipUnreachable: true
 enableIPv4BIGTCP: true
