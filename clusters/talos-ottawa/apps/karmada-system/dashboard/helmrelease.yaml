@@ -26,7 +26,7 @@ spec:
   values:
     api:
       image:
-        repository: docker.io/karmada/karmada-dashboard-api
+        repository: karmada/karmada-dashboard-api
         tag: "v0.2.0"
         pullPolicy: IfNotPresent
       replicaCount: 1
@@ -38,7 +38,7 @@ spec:
 
     web:
       image:
-        repository: docker.io/karmada/karmada-dashboard-web
+        repository: karmada/karmada-dashboard-web
         tag: "v0.2.0"
         pullPolicy: IfNotPresent
       replicaCount: 1
@@ -48,7 +48,7 @@ spec:
 
     karmadaKubernetesDashboardAPI:
       image:
-        repository: docker.io/karmada/kubernetes-dashboard-api
+        repository: karmada/kubernetes-dashboard-api
         tag: "v0.2.0"
         pullPolicy: IfNotPresent
       replicaCount: 1
