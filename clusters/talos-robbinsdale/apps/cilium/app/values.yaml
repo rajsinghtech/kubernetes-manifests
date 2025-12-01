@@ -2,6 +2,7 @@ cni:
   exclusive: false
 kubeProxyReplacement: true
 socketLB:
+  enabled: true
   hostNamespaceOnly: true
 autoDirectNodeRoutes: true
 directRoutingSkipUnreachable: true
