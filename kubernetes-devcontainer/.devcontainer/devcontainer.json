@@ -1,0 +1,14 @@
+{
+  "name": "Tailscale Development Container",
+  "image": "node:20",
+  "features": {},
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "golang.go"
+      ]
+    }
+  },
+  "postCreateCommand": "bash -c 'npm install -g @anthropic-ai/claude-code@latest && echo \"Claude Code installed globally\"'",
+  "remoteUser": "node"
+}
