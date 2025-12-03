@@ -280,7 +280,7 @@ resource "kubernetes_deployment" "main" {
         # Docker-in-Docker sidecar for Kind
         container {
           name  = "docker"
-          image = "docker:27-dind"
+          image = "docker:29-dind"
           security_context {
             privileged = true
           }
