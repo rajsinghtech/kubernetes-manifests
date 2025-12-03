@@ -39,7 +39,7 @@ spec:
 
         # OIDC Authentication with Pocket ID
         - name: CODER_OIDC_ISSUER_URL
-          value: "https://pocket-id.${CLUSTER_DOMAIN}"
+          value: "https://pocket-id.killinit.cc"
         - name: CODER_OIDC_CLIENT_ID
           valueFrom:
             secretKeyRef:
