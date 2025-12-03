@@ -277,33 +277,11 @@ resource "kubernetes_deployment" "main" {
       spec {
         security_context {}
 
-        # Docker-in-Docker sidecar for Kind
-        container {
-          name  = "docker"
-          image = "docker:27-dind"
-          security_context {
-            privileged = true
-          }
-          env {
-            name  = "DOCKER_TLS_CERTDIR"
-            value = ""
-          }
-          volume_mount {
-            mount_path = "/var/lib/docker"
-            name       = "docker-storage"
-          }
-        }
-
         container {
           name              = "dev"
           image             = var.cache_repo == "" ? local.devcontainer_builder_image : envbuilder_cached_image.cached.0.image
           image_pull_policy = "Always"
           security_context {}
-
-          env {
-            name  = "DOCKER_HOST"
-            value = "tcp://localhost:2375"
-          }
 
           # Set the environment using cached_image.cached.0.env if the cache repo is enabled.
           # Otherwise, use the local.envbuilder_env.
@@ -340,11 +318,6 @@ resource "kubernetes_deployment" "main" {
             claim_name = kubernetes_persistent_volume_claim.workspaces.metadata.0.name
             read_only  = false
           }
-        }
-
-        volume {
-          name = "docker-storage"
-          empty_dir {}
         }
 
         affinity {
@@ -387,45 +360,6 @@ resource "coder_agent" "main" {
     if ! command -v claude &> /dev/null; then
       echo "Installing Claude Code CLI..."
       sudo npm install -g @anthropic-ai/claude-code@latest
-    fi
-
-    # Install Docker CLI if not already installed
-    if ! command -v docker &> /dev/null; then
-      echo "Installing Docker CLI..."
-      curl -fsSL https://download.docker.com/linux/static/stable/x86_64/docker-27.4.1.tgz | sudo tar xz -C /usr/local/bin --strip-components=1 docker/docker
-    fi
-
-    # Wait for Docker daemon to be ready
-    echo "Waiting for Docker daemon..."
-    for i in {1..30}; do
-      if docker info >/dev/null 2>&1; then
-        echo "Docker is ready!"
-        break
-      fi
-      sleep 1
-    done
-
-    # Install Kind if not already installed
-    if ! command -v kind &> /dev/null; then
-      echo "Installing Kind..."
-      curl -Lo /tmp/kind https://kind.sigs.k8s.io/dl/v0.25.0/kind-linux-amd64
-      sudo install -o root -g root -m 0755 /tmp/kind /usr/local/bin/kind
-      rm /tmp/kind
-    fi
-
-    # Install kubectl if not already installed
-    if ! command -v kubectl &> /dev/null; then
-      echo "Installing kubectl..."
-      curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-      sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-      rm kubectl
-    fi
-
-    # Create Kind cluster if it doesn't exist
-    if ! kind get clusters 2>/dev/null | grep -q "^kind$"; then
-      echo "Creating Kind cluster..."
-      kind create cluster --wait 5m
-      echo "Kind cluster created successfully!"
     fi
 
     # Add any commands that should be executed at workspace startup (e.g install requirements, start a program, etc) here
