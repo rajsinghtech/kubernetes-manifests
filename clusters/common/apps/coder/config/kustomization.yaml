@@ -5,3 +5,4 @@ namespace: coder
 resources:
   - postgres.yaml
   - secret.yaml
+  - egress.yaml
