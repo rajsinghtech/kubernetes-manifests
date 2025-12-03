@@ -19,3 +19,6 @@ spec:
     services:
       - name: llm
         fqdn: llm.keiretsu.ts.net
+        ports:
+          - port: 80
+            protocol: TCP
