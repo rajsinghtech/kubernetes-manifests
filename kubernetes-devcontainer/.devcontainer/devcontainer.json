@@ -1,7 +1,11 @@
 {
-  "name": "Tailscale Development Container",
-  "image": "node:20",
-  "features": {},
+  "name": "Tailscale Development with Claude Code",
+  "image": "mcr.microsoft.com/devcontainers/go:1.23",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20"
+    }
+  },
   "customizations": {
     "vscode": {
       "extensions": [
@@ -9,6 +13,6 @@
       ]
     }
   },
-  "postCreateCommand": "bash -c 'npm install -g @anthropic-ai/claude-code@latest && echo \"Claude Code installed globally\"'",
-  "remoteUser": "node"
+  "postCreateCommand": "npm install -g @anthropic-ai/claude-code@latest",
+  "remoteUser": "vscode"
 }
