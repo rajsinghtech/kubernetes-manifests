@@ -27,6 +27,9 @@ spec:
         pull:
           - llama3.3:latest
           - llama3.2-vision:90b
+          - gemma3:4b
+          - mistral-small3.2:24b
+          - deepseek-ocr:3b
 
     resources:
       requests:
