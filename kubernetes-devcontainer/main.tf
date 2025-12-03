@@ -112,7 +112,7 @@ data "coder_parameter" "repo" {
 }
 
 data "coder_parameter" "fallback_image" {
-  default      = "codercom/enterprise-base:ubuntu"
+  default      = "mcr.microsoft.com/devcontainers/go:1.23"
   description  = "This image runs if the devcontainer fails to build."
   display_name = "Fallback Image"
   mutable      = true
@@ -178,8 +178,7 @@ locals {
     "ENVBUILDER_FALLBACK_IMAGE" : data.coder_parameter.fallback_image.value,
     "ENVBUILDER_DOCKER_CONFIG_BASE64" : base64encode(try(data.kubernetes_secret.cache_repo_dockerconfig_secret[0].data[".dockerconfigjson"], "")),
     "ENVBUILDER_PUSH_IMAGE" : var.cache_repo == "" ? "" : "true",
-    # Use devcontainer from this template directory (embedded in Git)
-    "ENVBUILDER_DEVCONTAINER_DIR" : "https://github.com/rajsinghtech/kubernetes-manifests/tree/main/kubernetes-devcontainer",
+    "ENVBUILDER_POST_START_SCRIPT_PATH" : "/workspaces/.devcontainer-setup.sh",
     # Claude Code environment variables
     "ANTHROPIC_BASE_URL" : "http://llm.coder.svc.cluster.local",
     "ANTHROPIC_AUTH_TOKEN" : "sk-na",
@@ -350,6 +349,18 @@ resource "coder_agent" "main" {
   os             = "linux"
   startup_script = <<-EOT
     set -e
+
+    # Install Node.js 20 and Claude Code CLI if not already installed
+    if ! command -v node &> /dev/null; then
+      echo "Installing Node.js 20..."
+      curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+      sudo apt-get install -y nodejs
+    fi
+
+    if ! command -v claude &> /dev/null; then
+      echo "Installing Claude Code CLI..."
+      sudo npm install -g @anthropic-ai/claude-code@latest
+    fi
 
     # Add any commands that should be executed at workspace startup (e.g install requirements, start a program, etc) here
   EOT
