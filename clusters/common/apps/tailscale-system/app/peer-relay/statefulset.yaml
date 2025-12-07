@@ -38,9 +38,6 @@ spec:
         - name: metrics
           containerPort: 9002
           protocol: TCP
-        # - name: wireguard
-        #   containerPort: 41642
-        #   protocol: UDP
         - name: relay
           containerPort: 6969
           protocol: UDP
@@ -58,16 +55,16 @@ spec:
             fieldRef:
               fieldPath: status.podIP
         - name: TS_KUBE_SECRET
-          value: ""
+          value: $(POD_NAME)
+        - name: TS_STATE
+          value: kube:$(POD_NAME)
         - name: TS_USERSPACE
           value: "false"
-        - name: TS_STATE_DIR
-          value: "/dev/shm"
         - name: TS_AUTHKEY
           valueFrom:
             secretKeyRef:
               name: ts-oauth
-              key: TS_AUTHKEY_EPHEMERAL
+              key: TS_AUTHKEY
               optional: true
         - name: TS_ACCEPT_DNS
           value: "true"
