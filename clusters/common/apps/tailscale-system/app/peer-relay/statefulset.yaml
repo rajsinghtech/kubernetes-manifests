@@ -16,6 +16,7 @@ spec:
       labels:
         app: ${LOCATION}-peer-relay
     spec:
+      serviceAccountName: "tailscale"
       initContainers:
       - args:
         - sysctl -w net.ipv4.ip_forward=1 && if sysctl net.ipv6.conf.all.forwarding;
