@@ -12,7 +12,7 @@ resources:
   - github.com/kubernetes-sigs/descheduler/kubernetes/cronjob?ref=release-1.32
   - https://raw.githubusercontent.com/kubernetes-sigs/mcs-api/62ede9a032dcfbc41b3418d7360678cb83092498/config/crd/multicluster.x-k8s.io_serviceexports.yaml
   - https://raw.githubusercontent.com/kubernetes-sigs/mcs-api/62ede9a032dcfbc41b3418d7360678cb83092498/config/crd/multicluster.x-k8s.io_serviceimports.yaml
-  - clustermesh-egress.yaml
+  # - clustermesh-egress.yaml
   - helmrelease.yaml
   - irqbalance-daemonset.yaml
   - thunderbolt-debug.yaml
@@ -33,9 +33,9 @@ configMapGenerator:
   - name: cilium-values
     files:
       - values.yaml
-  - name: cilium-clustermesh-values
-    files:
-      - values-clustermesh.yaml
+  # - name: cilium-clustermesh-values
+  #   files:
+  #     - values-clustermesh.yaml
 patches:
   - path: patch-intel-gpu-plugin.yaml
   - path: patch-multus.yaml
