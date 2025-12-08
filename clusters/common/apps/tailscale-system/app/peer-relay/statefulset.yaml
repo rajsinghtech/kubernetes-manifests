@@ -86,4 +86,4 @@ spec:
         lifecycle:
           postStart:
             exec:
-              command: ["/bin/sh", "-c", "sleep 10 && tailscale set --relay-server-port=6969"]
+              command: ["/bin/sh", "-c", "sleep 10 && tailscale set --relay-server-port=6969 --relay-server-static-endpoints=76.67.37.205:6969"]
