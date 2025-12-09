@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: kube-prometheus-stack
-      version: 79.11.0 # Use a recent stable version
+      version: 79.12.0 # Use a recent stable version
       sourceRef:
         kind: HelmRepository
         name: prometheus-community # Use prometheus-community repo (OCI or web based on previous steps)
