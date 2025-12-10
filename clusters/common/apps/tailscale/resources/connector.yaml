@@ -21,7 +21,7 @@ spec:
 apiVersion: tailscale.com/v1alpha1
 kind: Connector
 metadata:
-  name: &name ${LOCATION}-appconnector
+  name: &name ${LOCATION}-app-connector
 spec:
   replicas: 3
   proxyClass: common
