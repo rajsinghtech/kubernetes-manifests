@@ -28,7 +28,7 @@ spec:
   statefulSet:
     pod:
       tailscaleContainer:
-        image: ghcr.io/rajsinghtech/tailscale/k8s-proxy:77
+        image: ghcr.io/rajsinghtech/tailscale/k8s-proxy:78
   metrics:
     enable: true
     serviceMonitor:
