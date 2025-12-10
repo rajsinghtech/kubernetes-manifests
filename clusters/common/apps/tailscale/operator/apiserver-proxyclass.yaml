@@ -1,0 +1,9 @@
+apiVersion: tailscale.com/v1alpha1
+kind: ProxyClass
+metadata:
+  name: apiserver-tcpforward-test
+spec:
+  statefulSet:
+    pod:
+      tailscaleContainer:
+        image: ghcr.io/rajsinghtech/tailscale/k8s-proxy:76
