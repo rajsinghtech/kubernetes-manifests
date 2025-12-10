@@ -19,3 +19,17 @@ spec:
     enable: true
     serviceMonitor:
       enable: true
+---
+apiVersion: tailscale.com/v1alpha1
+kind: ProxyClass
+metadata:
+  name: k8s-proxy-l4-test
+spec:
+  statefulSet:
+    pod:
+      tailscaleContainer:
+        image: ghcr.io/rajsinghtech/tailscale/k8s-proxy:77
+  metrics:
+    enable: true
+    serviceMonitor:
+      enable: true
