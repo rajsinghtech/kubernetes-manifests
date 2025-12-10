@@ -31,7 +31,7 @@ metadata:
 spec:
   type: kube-apiserver
   replicas: 3
-  proxyClass: apiserver-tcpforward-test
+  proxyClass: common
   tags:
     - tag:k8s-operator
     - tag:${LOCATION}
