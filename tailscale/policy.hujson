@@ -233,11 +233,11 @@
 					// 	"connectors":  ["tag:k8s"],
 					// 	"presetAppID": "aws-cloudfront-global",
 					// },
-					{
-						"name":        "app-github",
-						"connectors":  ["tag:k8s"],
-						"presetAppID": "github",
-					},
+					// {
+					// 	"name":        "app-github",
+					// 	"connectors":  ["tag:k8s"],
+					// 	"presetAppID": "github",
+					// },
 					{
 						"name":       "shared",
 						"connectors": ["tag:k8s"],
