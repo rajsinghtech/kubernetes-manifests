@@ -11,6 +11,6 @@ resources:
   - ./tsdnsproxy
   - ./sidecar
   - ./secret.yaml
-  - ./golink
+  # - ./golink
   - ./egress
   - ./vector
