@@ -11,90 +11,6 @@ spec:
     requests:
       storage: 50Gi
 ---
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: deepseek-ocr-server
-  namespace: ai
-data:
-  server.py: |
-    from fastapi import FastAPI, File, UploadFile, Form
-    from fastapi.responses import JSONResponse
-    from transformers import AutoModel, AutoTokenizer
-    import torch
-    import os
-    import base64
-    from io import BytesIO
-    from PIL import Image
-    import uvicorn
-    
-    app = FastAPI()
-    
-    # Load model at startup
-    model_name = 'deepseek-ai/DeepSeek-OCR'
-    print(f"Loading model {model_name}...")
-    tokenizer = AutoTokenizer.from_pretrained(
-        f"/models/{model_name}", 
-        trust_remote_code=True,
-        local_files_only=True
-    )
-    model = AutoModel.from_pretrained(
-        f"/models/{model_name}",
-        _attn_implementation='flash_attention_2',
-        trust_remote_code=True,
-        use_safetensors=True,
-        local_files_only=True
-    )
-    model = model.eval().cuda().to(torch.bfloat16)
-    print("Model loaded successfully!")
-    
-    @app.get("/health")
-    async def health():
-        return {"status": "ok"}
-    
-    @app.post("/v1/ocr")
-    async def ocr(
-        image: UploadFile = File(...),
-        prompt: str = Form(default="<image>\nFree OCR. "),
-        base_size: int = Form(default=1024),
-        image_size: int = Form(default=640),
-        crop_mode: bool = Form(default=True)
-    ):
-        try:
-            # Read image
-            image_bytes = await image.read()
-            pil_image = Image.open(BytesIO(image_bytes))
-            
-            # Save temporarily
-            temp_path = "/tmp/input_image.jpg"
-            pil_image.save(temp_path)
-            
-            # Run inference
-            result = model.infer(
-                tokenizer,
-                prompt=prompt,
-                image_file=temp_path,
-                output_path="/tmp",
-                base_size=base_size,
-                image_size=image_size,
-                crop_mode=crop_mode,
-                save_results=False,
-                test_compress=False
-            )
-            
-            return JSONResponse(content={
-                "text": result,
-                "model": model_name
-            })
-        except Exception as e:
-            return JSONResponse(
-                status_code=500,
-                content={"error": str(e)}
-            )
-    
-    if __name__ == "__main__":
-        uvicorn.run(app, host="0.0.0.0", port=8080)
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -125,7 +41,7 @@ spec:
           python3 << 'PYEOF'
           from huggingface_hub import snapshot_download
           import os
-          
+
           model_dir = "/models/deepseek-ai/DeepSeek-OCR"
           if not os.path.exists(f"{model_dir}/config.json"):
               print("Downloading DeepSeek-OCR model...")
@@ -147,52 +63,9 @@ spec:
             cpu: "2000m"
           limits:
             memory: "16Gi"
-      - name: install-deps
-        image: pytorch/pytorch:2.6.0-cuda12.4-cudnn9-runtime
-        command: ["/bin/bash", "-c"]
-        args:
-        - |
-          pip install --no-cache-dir \
-            transformers==4.46.3 \
-            tokenizers==0.20.3 \
-            einops \
-            addict \
-            easydict \
-            Pillow \
-            numpy \
-            fastapi \
-            uvicorn[standard] \
-            python-multipart \
-            flash-attn==2.7.3 --no-build-isolation
-          echo "Dependencies installed"
-        volumeMounts:
-        - name: pip-cache
-          mountPath: /root/.cache/pip
-        resources:
-          requests:
-            memory: "4Gi"
-            cpu: "2000m"
-          limits:
-            memory: "16Gi"
       containers:
       - name: deepseek-ocr
-        image: pytorch/pytorch:2.6.0-cuda12.4-cudnn9-runtime
-        command: ["/bin/bash", "-c"]
-        args:
-        - |
-          pip install --no-cache-dir \
-            transformers==4.46.3 \
-            tokenizers==0.20.3 \
-            einops \
-            addict \
-            easydict \
-            Pillow \
-            numpy \
-            fastapi \
-            uvicorn[standard] \
-            python-multipart \
-            flash-attn==2.7.3 --no-build-isolation
-          python /app/server.py
+        image: ghcr.io/rajsinghtech/deepseek-ocr:arm64-cuda
         ports:
         - containerPort: 8080
           name: http
@@ -213,10 +86,6 @@ spec:
         volumeMounts:
         - name: models
           mountPath: /models
-        - name: server-code
-          mountPath: /app
-        - name: pip-cache
-          mountPath: /root/.cache/pip
         livenessProbe:
           httpGet:
             path: /health
@@ -235,12 +104,6 @@ spec:
       - name: models
         persistentVolumeClaim:
           claimName: deepseek-ocr-models
-      - name: server-code
-        configMap:
-          name: deepseek-ocr-server
-          defaultMode: 0755
-      - name: pip-cache
-        emptyDir: {}
       nodeSelector:
         nvidia.com/gpu.present: "true"
 ---
