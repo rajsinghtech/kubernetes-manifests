@@ -66,6 +66,11 @@ spec:
       containers:
       - name: deepseek-ocr
         image: ghcr.io/rajsinghtech/deepseek-ocr:arm64-cuda
+        command: ["/bin/bash", "-c"]
+        args:
+        - |
+          pip3 install --no-cache-dir torchvision==0.20.1 --index-url https://download.pytorch.org/whl/cu124
+          python3 /app/server.py
         ports:
         - containerPort: 8080
           name: http
