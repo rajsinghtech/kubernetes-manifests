@@ -24,7 +24,7 @@ spec:
         command:
         - /bin/sh
         - -c
-        image: "ghcr.io/tailscale/tailscale:unstable-v1.91.150"
+        image: "ghcr.io/tailscale/tailscale:unstable-v1.93.44"
         imagePullPolicy: IfNotPresent
         name: sysctler
         securityContext:
@@ -32,7 +32,7 @@ spec:
       containers:
       - name: tailscale
         imagePullPolicy: IfNotPresent
-        image: "ghcr.io/tailscale/tailscale:unstable-v1.91.150"
+        image: "ghcr.io/tailscale/tailscale:unstable-v1.93.44"
         securityContext:
           privileged: true
         ports:
@@ -70,7 +70,7 @@ spec:
         - name: TS_ACCEPT_DNS
           value: "true"
         - name: TS_EXTRA_ARGS
-          value: "--advertise-tags=tag:k8s,tag:${LOCATION},tag:udm --accept-routes --ssh"
+          value: "--advertise-tags=tag:k8s,tag:${LOCATION} --accept-routes --ssh"
         - name: TS_ENABLE_METRICS
           value: "true"
         - name: TS_LOCAL_ADDR_PORT
