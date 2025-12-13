@@ -1,0 +1,177 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: llama-cpp-models
+  namespace: ai
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 30Gi
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: llama-cpp-scripts
+  namespace: ai
+data:
+  download-model.sh: |
+    #!/bin/bash
+    set -e
+
+    MODEL_DIR="/models"
+    REPO_ID="unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF"
+    MODEL_FILE="Qwen3-Coder-30B-A3B-Instruct-Q4_K_M.gguf"
+    MODEL_PATH="$MODEL_DIR/$MODEL_FILE"
+
+    mkdir -p "$MODEL_DIR"
+
+    if [ -f "$MODEL_PATH" ]; then
+      echo "Model already exists at $MODEL_PATH"
+      exit 0
+    fi
+
+    echo "Downloading Qwen3-30B Coder model from Hugging Face..."
+    echo "Repository: $REPO_ID"
+    echo "File: $MODEL_FILE (18.6 GB)"
+
+    # Download using huggingface-cli
+    huggingface-cli download "$REPO_ID" "$MODEL_FILE" \
+      --local-dir "$MODEL_DIR" \
+      --local-dir-use-symlinks False
+
+    echo "Download complete!"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: llama-cpp-server
+  namespace: ai
+  labels:
+    app: llama-cpp-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: llama-cpp-server
+  template:
+    metadata:
+      labels:
+        app: llama-cpp-server
+    spec:
+      initContainers:
+      - name: model-downloader
+        image: python:3.11-slim
+        command: ["/bin/bash", "-c"]
+        args:
+        - |
+          pip install -q huggingface-hub[cli]
+          /scripts/download-model.sh
+        volumeMounts:
+        - name: models
+          mountPath: /models
+        - name: scripts
+          mountPath: /scripts
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "1000m"
+          limits:
+            memory: "2Gi"
+      containers:
+      - name: llama-cpp
+        image: ghcr.io/ggml-org/llama.cpp:server-cuda
+        args:
+        - "-m"
+        - "/models/Qwen3-Coder-30B-A3B-Instruct-Q4_K_M.gguf"
+        - "--port"
+        - "8080"
+        - "--host"
+        - "0.0.0.0"
+        - "-n"
+        - "2048"
+        - "--n-gpu-layers"
+        - "99"
+        - "-c"
+        - "8192"
+        - "--parallel"
+        - "4"
+        - "--threads"
+        - "8"
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources:
+          requests:
+            memory: "16Gi"
+            cpu: "4000m"
+            nvidia.com/gpu: "1"
+          limits:
+            memory: "32Gi"
+            nvidia.com/gpu: "1"
+        volumeMounts:
+        - name: models
+          mountPath: /models
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+      volumes:
+      - name: models
+        persistentVolumeClaim:
+          claimName: llama-cpp-models
+      - name: scripts
+        configMap:
+          name: llama-cpp-scripts
+          defaultMode: 0755
+      nodeSelector:
+        nvidia.com/gpu.present: "true"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: llama-cpp-server
+  namespace: ai
+  labels:
+    app: llama-cpp-server
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: http
+  selector:
+    app: llama-cpp-server
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: llama-cpp-ts
+  namespace: ai
+  annotations:
+    tailscale.com/hostname: "${LOCATION}-llama-cpp"
+    tailscale.com/proxy-class: "common"
+spec:
+  type: LoadBalancer
+  loadBalancerClass: tailscale
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: http
+  selector:
+    app: llama-cpp-server
