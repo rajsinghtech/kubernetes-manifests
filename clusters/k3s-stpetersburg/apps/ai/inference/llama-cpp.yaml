@@ -90,7 +90,7 @@ spec:
             memory: "8Gi"
       containers:
       - name: llama-cpp
-        image: ghcr.io/ggml-org/llama.cpp:server
+        image: ghcr.io/rajsinghtech/llama.cpp:server-cuda-arm64@sha256:664f05a08b1c78b2ea222678d8dea0bc9be09b8424f16adc491f775a15b6cf7f
         args:
         - "-m"
         - "/models/Qwen3-Coder-30B-A3B-Instruct-Q4_K_M.gguf"
