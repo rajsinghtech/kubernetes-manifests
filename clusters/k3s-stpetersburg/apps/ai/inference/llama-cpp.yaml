@@ -59,6 +59,8 @@ metadata:
     app: llama-cpp-server
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: llama-cpp-server
