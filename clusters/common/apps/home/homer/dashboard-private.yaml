@@ -7,7 +7,7 @@ metadata:
     app: homer-dashboard
     tier: frontend
 spec:
-  replicas: 2
+  replicas: 1
   homerConfig:
     title: "${LOCATION} cloud private" 
     subtitle: "Infrastructure Dashboard"

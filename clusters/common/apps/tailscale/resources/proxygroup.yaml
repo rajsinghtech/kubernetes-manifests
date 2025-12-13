@@ -9,7 +9,7 @@ spec:
     - tag:${LOCATION}
   proxyClass: common-accept-routes
   type: egress
-  replicas: 3
+  replicas: 2
 ---
 apiVersion: tailscale.com/v1alpha1
 kind: ProxyGroup
@@ -22,7 +22,7 @@ spec:
     - tag:${LOCATION}
   proxyClass: common
   type: ingress
-  replicas: 3
+  replicas: 2
 ---
 apiVersion: tailscale.com/v1alpha1
 kind: ProxyGroup
@@ -30,7 +30,7 @@ metadata:
   name: kubernetes-${LOCATION}
 spec:
   type: kube-apiserver
-  replicas: 3
+  replicas: 2
   proxyClass: k8s-proxy-l4-test
   tags:
     - tag:k8s-operator

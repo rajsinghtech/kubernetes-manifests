@@ -5,7 +5,7 @@ metadata:
   name: coder-postgres
   namespace: coder
 spec:
-  instances: 3
+  instances: 1
   bootstrap:
     initdb:
       database: coder

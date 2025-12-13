@@ -4,13 +4,13 @@ kind: Kustomization
 resources:
   # - ./derper
   # - ./hello
-  - ./proxyt
-  - ./tsidp
-  - ./tsddns
+  # - ./proxyt
+  # - ./tsidp
+  # - ./tsddns
   - ./tsflow
-  - ./tsdnsproxy
-  - ./sidecar
+  # - ./tsdnsproxy
+  # - ./sidecar
   - ./secret.yaml
   # - ./golink
-  - ./egress
-  - ./vector
+  # - ./egress
+  # - ./vector

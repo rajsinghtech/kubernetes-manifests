@@ -23,7 +23,7 @@ spec:
   values:
     controller:
       enabled: true
-      replicaCount: 3
+      replicaCount: 1
       serviceMonitor:
         create: true
     volumeSnapshotClasses: [] 
