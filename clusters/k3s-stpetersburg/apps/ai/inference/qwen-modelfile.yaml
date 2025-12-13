@@ -1,0 +1,66 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: qwen-modelfile
+  namespace: ai
+data:
+  Modelfile: |
+    FROM /models/Qwen3-Coder-30B-A3B-Instruct-Q4_K_M.gguf
+
+    TEMPLATE """{{ if .System }}<|im_start|>system
+    {{ .System }}<|im_end|>
+    {{ end }}{{ if .Prompt }}<|im_start|>user
+    {{ .Prompt }}<|im_end|>
+    {{ end }}<|im_start|>assistant
+    """
+
+    PARAMETER stop "<|im_start|>"
+    PARAMETER stop "<|im_end|>"
+    PARAMETER temperature 0.7
+    PARAMETER top_p 0.8
+    PARAMETER top_k 20
+    PARAMETER num_ctx 8192
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ollama-create-qwen
+  namespace: ai
+spec:
+  ttlSecondsAfterFinished: 86400
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: ollama-create
+        image: ollama/ollama:latest
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          # Wait for Ollama server to be ready
+          until curl -f http://ollama:11434/api/version; do
+            echo "Waiting for Ollama server..."
+            sleep 5
+          done
+
+          # Copy modelfile and GGUF to temporary location
+          cp /modelfile/Modelfile /tmp/Modelfile
+
+          # Create model from GGUF using Modelfile
+          OLLAMA_HOST=http://ollama:11434 ollama create qwen3-coder:30b-q4 -f /tmp/Modelfile
+
+          echo "Model qwen3-coder:30b-q4 created successfully!"
+          OLLAMA_HOST=http://ollama:11434 ollama list
+        volumeMounts:
+        - name: modelfile
+          mountPath: /modelfile
+        - name: models
+          mountPath: /models
+      volumes:
+      - name: modelfile
+        configMap:
+          name: qwen-modelfile
+      - name: models
+        persistentVolumeClaim:
+          claimName: llama-cpp-models
