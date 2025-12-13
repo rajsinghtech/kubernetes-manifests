@@ -8,7 +8,7 @@ spec:
     type: Kubernetes
     kubernetes:
       envoyDeployment:
-        replicas: 3
+        replicas: 2
       envoyService:
         annotations:
           tailscale.com/hostname: ${LOCATION}-home-envoy-gateway

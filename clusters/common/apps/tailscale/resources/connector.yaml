@@ -3,7 +3,7 @@ kind: Connector
 metadata:
   name: &name ${LOCATION}-subnet-router
 spec:
-  replicas: 3
+  replicas: 2
   proxyClass: common
   tags:
     - tag:k8s
@@ -23,7 +23,7 @@ kind: Connector
 metadata:
   name: &name ${LOCATION}-app-connector
 spec:
-  replicas: 3
+  replicas: 2
   proxyClass: common
   tags:
     - tag:k8s
