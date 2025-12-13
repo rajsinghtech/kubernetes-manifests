@@ -15,7 +15,7 @@ spec:
               template:
                 spec:
                   automountServiceAccountToken: true
-        replicas: 3
+        replicas: 2
         pod:
           annotations:
             tailcar.rajsingh.info/inject: "true"

@@ -8,7 +8,7 @@ clustermesh:
   enableMCSAPISupport: true
   useAPIServer: true
   apiserver:
-    replicas: 3
+    replicas: 2
     service:
       annotations:
         tailscale.com/hostname: ${LOCATION}

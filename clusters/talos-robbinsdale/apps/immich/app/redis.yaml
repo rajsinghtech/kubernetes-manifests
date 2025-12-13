@@ -4,7 +4,7 @@ kind: Dragonfly
 metadata:
   name: dragonfly-immich
 spec:
-  replicas: 3
+  replicas: 2
   args:
     - --maxmemory=1000M
     - --proactor_threads=2
