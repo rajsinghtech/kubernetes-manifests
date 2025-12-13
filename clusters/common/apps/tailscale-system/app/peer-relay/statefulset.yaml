@@ -70,7 +70,7 @@ spec:
         - name: TS_ACCEPT_DNS
           value: "true"
         - name: TS_EXTRA_ARGS
-          value: "--advertise-tags=tag:k8s,tag:${LOCATION} --accept-routes --ssh"
+          value: "--advertise-tags=tag:k8s,tag:${LOCATION} --accept-routes --ssh --advertise-exit-node"
         - name: TS_ENABLE_METRICS
           value: "true"
         - name: TS_LOCAL_ADDR_PORT

@@ -1,7 +1,7 @@
 apiVersion: tailscale.com/v1alpha1
 kind: Connector
 metadata:
-  name: &name ${LOCATION}-subnet-router
+  name: &name ${LOCATION}-subnetrouter
 spec:
   replicas: 2
   proxyClass: common
@@ -9,7 +9,7 @@ spec:
     - tag:k8s
     - tag:${LOCATION}
   hostnamePrefix: *name
-  exitNode: true
+  # exitNode: true
   subnetRouter:
     advertiseRoutes:
       - "${LAN_CIDR}" # LAN
@@ -21,7 +21,7 @@ spec:
 apiVersion: tailscale.com/v1alpha1
 kind: Connector
 metadata:
-  name: &name ${LOCATION}-app-connector
+  name: &name ${LOCATION}-appconnector
 spec:
   replicas: 2
   proxyClass: common
