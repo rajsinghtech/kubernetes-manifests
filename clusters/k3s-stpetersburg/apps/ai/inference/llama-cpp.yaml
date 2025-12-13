@@ -67,7 +67,8 @@ spec:
         command: ["/bin/bash", "-c"]
         args:
         - |
-          pip install -q huggingface-hub[cli]
+          pip install -q huggingface-hub
+          export PATH="$PATH:/usr/local/bin"
           /scripts/download-model.sh
         volumeMounts:
         - name: models
