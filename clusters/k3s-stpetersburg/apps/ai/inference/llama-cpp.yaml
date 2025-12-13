@@ -82,10 +82,10 @@ spec:
           mountPath: /scripts
         resources:
           requests:
-            memory: "1Gi"
+            memory: "2Gi"
             cpu: "1000m"
           limits:
-            memory: "2Gi"
+            memory: "8Gi"
       containers:
       - name: llama-cpp
         image: ghcr.io/ggml-org/llama.cpp:server-cuda
