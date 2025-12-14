@@ -217,6 +217,7 @@ data:
       qwen3vl-30b:
         name: "Qwen3-VL-30B-A3B-Instruct"
         description: "Qwen3-VL 30B vision-language model with MoE architecture. Supports both text and image inputs for multimodal reasoning."
+        cmd: /bin/true  # Dummy command - backend is managed by Kubernetes
         proxy: "http://llama-cpp-vision:8080"
         checkEndpoint: "/health"
         aliases:
@@ -231,6 +232,7 @@ data:
       qwen3-coder-30b:
         name: "Qwen3-Coder-30B-A3B-Instruct"
         description: "Qwen3-Coder 30B model with MoE architecture. Specialized for code generation, analysis, and debugging across 90+ programming languages."
+        cmd: /bin/true  # Dummy command - backend is managed by Kubernetes
         proxy: "http://llama-cpp-coder:8081"
         checkEndpoint: "/health"
         aliases:
