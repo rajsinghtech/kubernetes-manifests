@@ -27,8 +27,8 @@ data:
 
     # Vision model configuration
     VISION_REPO_ID = "Qwen/Qwen3-VL-30B-A3B-Instruct-GGUF"
-    VISION_MODEL_FILE = "qwen3vl-30b-instruct-q4-k-m.gguf"
-    MMPROJ_FILE = "mmproj-Qwen3VL-30B-Instruct-Q8_0.gguf"
+    VISION_MODEL_FILE = "Qwen3VL-30B-A3B-Instruct-Q4_K_M.gguf"
+    MMPROJ_FILE = "mmproj-Qwen3VL-30B-A3B-Instruct-Q8_0.gguf"
 
     # Coder model configuration
     CODER_REPO_ID = "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF"
@@ -143,9 +143,9 @@ spec:
         image: ghcr.io/rajsinghtech/llama.cpp:server-cuda-arm64@sha256:664f05a08b1c78b2ea222678d8dea0bc9be09b8424f16adc491f775a15b6cf7f
         args:
         - "-m"
-        - "/models/qwen3vl-30b-instruct-q4-k-m.gguf"
+        - "/models/Qwen3VL-30B-A3B-Instruct-Q4_K_M.gguf"
         - "--mmproj"
-        - "/models/mmproj-Qwen3VL-30B-Instruct-Q8_0.gguf"
+        - "/models/mmproj-Qwen3VL-30B-A3B-Instruct-Q8_0.gguf"
         - "--port"
         - "8080"
         - "--host"
@@ -350,83 +350,86 @@ spec:
   selector:
     app: llama-cpp-coder
 ---
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: llama-swap
-  namespace: ai
-  labels:
-    app: llama-swap
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: llama-swap
-  template:
-    metadata:
-      labels:
-        app: llama-swap
-    spec:
-      containers:
-      - name: llama-swap
-        image: ghcr.io/mostlygeek/llama-swap:cuda
-        ports:
-        - containerPort: 8080
-          name: http
-          protocol: TCP
-        env:
-        - name: LLAMA_SWAP_CONFIG
-          value: "/config/config.yaml"
-        volumeMounts:
-        - name: config
-          mountPath: /config
-        resources:
-          requests:
-            memory: "512Mi"
-            cpu: "500m"
-          limits:
-            memory: "1Gi"
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: http
-          initialDelaySeconds: 10
-          periodSeconds: 30
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: http
-          initialDelaySeconds: 5
-          periodSeconds: 10
-      volumes:
-      - name: config
-        configMap:
-          name: llama-swap-config
----
+# TODO: Build llama-swap for ARM64 on stpetersburg-spark
+# Temporarily disabled until ARM64 build is available
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: llama-swap
+#   namespace: ai
+#   labels:
+#     app: llama-swap
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: llama-swap
+#   template:
+#     metadata:
+#       labels:
+#         app: llama-swap
+#     spec:
+#       containers:
+#       - name: llama-swap
+#         image: ghcr.io/rajsinghtech/llama-swap:arm64
+#         ports:
+#         - containerPort: 8080
+#           name: http
+#           protocol: TCP
+#         env:
+#         - name: LLAMA_SWAP_CONFIG
+#           value: "/config/config.yaml"
+#         volumeMounts:
+#         - name: config
+#           mountPath: /config
+#         resources:
+#           requests:
+#             memory: "512Mi"
+#             cpu: "500m"
+#           limits:
+#             memory: "1Gi"
+#         livenessProbe:
+#           httpGet:
+#             path: /health
+#             port: http
+#           initialDelaySeconds: 10
+#           periodSeconds: 30
+#         readinessProbe:
+#           httpGet:
+#             path: /health
+#             port: http
+#           initialDelaySeconds: 5
+#           periodSeconds: 10
+#       volumes:
+#       - name: config
+#         configMap:
+#           name: llama-swap-config
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: llama-swap
+#   namespace: ai
+#   labels:
+#     app: llama-swap
+# spec:
+#   type: ClusterIP
+#   ports:
+#   - name: http
+#     port: 8080
+#     protocol: TCP
+#     targetPort: http
+#   selector:
+#     app: llama-swap
+# ---
+
 apiVersion: v1
 kind: Service
 metadata:
-  name: llama-swap
-  namespace: ai
-  labels:
-    app: llama-swap
-spec:
-  type: ClusterIP
-  ports:
-  - name: http
-    port: 8080
-    protocol: TCP
-    targetPort: http
-  selector:
-    app: llama-swap
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: llama-cpp-ts
+  name: llama-cpp-vision-ts
   namespace: ai
   annotations:
-    tailscale.com/hostname: "${LOCATION}-llama-cpp"
+    tailscale.com/hostname: "${LOCATION}-llama-cpp-vision"
     tailscale.com/proxy-class: "common"
 spec:
   type: LoadBalancer
@@ -437,4 +440,23 @@ spec:
     protocol: TCP
     targetPort: http
   selector:
-    app: llama-swap
+    app: llama-cpp-vision
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: llama-cpp-coder-ts
+  namespace: ai
+  annotations:
+    tailscale.com/hostname: "${LOCATION}-llama-cpp-coder"
+    tailscale.com/proxy-class: "common"
+spec:
+  type: LoadBalancer
+  loadBalancerClass: tailscale
+  ports:
+  - name: http
+    port: 8081
+    protocol: TCP
+    targetPort: http
+  selector:
+    app: llama-cpp-coder
