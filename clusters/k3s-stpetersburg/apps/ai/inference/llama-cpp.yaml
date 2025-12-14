@@ -9,7 +9,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 30Gi
+      storage: 80Gi
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -24,50 +24,100 @@ data:
     from huggingface_hub import hf_hub_download
 
     MODEL_DIR = "/models"
-    REPO_ID = "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF"
-    MODEL_FILE = "Qwen3-Coder-30B-A3B-Instruct-Q4_K_M.gguf"
-    MODEL_PATH = Path(MODEL_DIR) / MODEL_FILE
+
+    # Vision model configuration
+    VISION_REPO_ID = "Qwen/Qwen3-VL-30B-A3B-Instruct-GGUF"
+    VISION_MODEL_FILE = "qwen3vl-30b-instruct-q4-k-m.gguf"
+    MMPROJ_FILE = "mmproj-Qwen3VL-30B-Instruct-Q8_0.gguf"
+
+    # Coder model configuration
+    CODER_REPO_ID = "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF"
+    CODER_MODEL_FILE = "Qwen3-Coder-30B-A3B-Instruct-Q4_K_M.gguf"
 
     # Create directory
     Path(MODEL_DIR).mkdir(parents=True, exist_ok=True)
 
-    # Check if model already exists
-    if MODEL_PATH.exists():
-        print(f"Model already exists at {MODEL_PATH}")
-        exit(0)
+    # Download vision model
+    vision_model_path = Path(MODEL_DIR) / VISION_MODEL_FILE
+    if not vision_model_path.exists():
+        print("=" * 60)
+        print("Downloading Qwen3-VL-30B vision-language model...")
+        print(f"Repository: {VISION_REPO_ID}")
+        print(f"File: {VISION_MODEL_FILE} (18.6 GB)")
+        print("=" * 60)
 
-    print("Downloading Qwen3-30B Coder model from Hugging Face...")
-    print(f"Repository: {REPO_ID}")
-    print(f"File: {MODEL_FILE} (18.6 GB)")
+        hf_hub_download(
+            repo_id=VISION_REPO_ID,
+            filename=VISION_MODEL_FILE,
+            local_dir=MODEL_DIR,
+            local_dir_use_symlinks=False
+        )
+        print(f"✓ Vision model downloaded: {vision_model_path}\n")
+    else:
+        print(f"✓ Vision model already exists: {vision_model_path}")
 
-    # Download using huggingface_hub API
-    hf_hub_download(
-        repo_id=REPO_ID,
-        filename=MODEL_FILE,
-        local_dir=MODEL_DIR,
-        local_dir_use_symlinks=False
-    )
+    # Download mmproj file
+    mmproj_path = Path(MODEL_DIR) / MMPROJ_FILE
+    if not mmproj_path.exists():
+        print("\n" + "=" * 60)
+        print("Downloading vision encoder (mmproj)...")
+        print(f"File: {MMPROJ_FILE}")
+        print("=" * 60)
 
-    print("Download complete!")
+        hf_hub_download(
+            repo_id=VISION_REPO_ID,
+            filename=MMPROJ_FILE,
+            local_dir=MODEL_DIR,
+            local_dir_use_symlinks=False
+        )
+        print(f"✓ Vision encoder downloaded: {mmproj_path}\n")
+    else:
+        print(f"✓ Vision encoder already exists: {mmproj_path}")
+
+    # Download coder model
+    coder_model_path = Path(MODEL_DIR) / CODER_MODEL_FILE
+    if not coder_model_path.exists():
+        print("\n" + "=" * 60)
+        print("Downloading Qwen3-Coder-30B coding model...")
+        print(f"Repository: {CODER_REPO_ID}")
+        print(f"File: {CODER_MODEL_FILE} (18.6 GB)")
+        print("=" * 60)
+
+        hf_hub_download(
+            repo_id=CODER_REPO_ID,
+            filename=CODER_MODEL_FILE,
+            local_dir=MODEL_DIR,
+            local_dir_use_symlinks=False
+        )
+        print(f"✓ Coder model downloaded: {coder_model_path}\n")
+    else:
+        print(f"✓ Coder model already exists: {coder_model_path}")
+
+    print("\n" + "=" * 60)
+    print("All downloads complete!")
+    print("Models available:")
+    print(f"  - Vision: {VISION_MODEL_FILE}")
+    print(f"  - Coder:  {CODER_MODEL_FILE}")
+    print("=" * 60)
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: llama-cpp-server
+  name: llama-cpp-vision
   namespace: ai
   labels:
-    app: llama-cpp-server
+    app: llama-cpp-vision
 spec:
   replicas: 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: llama-cpp-server
+      app: llama-cpp-vision
   template:
     metadata:
       labels:
-        app: llama-cpp-server
+        app: llama-cpp-vision
     spec:
       initContainers:
       - name: model-downloader
@@ -93,7 +143,9 @@ spec:
         image: ghcr.io/rajsinghtech/llama.cpp:server-cuda-arm64@sha256:664f05a08b1c78b2ea222678d8dea0bc9be09b8424f16adc491f775a15b6cf7f
         args:
         - "-m"
-        - "/models/Qwen3-Coder-30B-A3B-Instruct-Q4_K_M.gguf"
+        - "/models/qwen3vl-30b-instruct-q4-k-m.gguf"
+        - "--mmproj"
+        - "/models/mmproj-Qwen3VL-30B-Instruct-Q8_0.gguf"
         - "--port"
         - "8080"
         - "--host"
@@ -108,6 +160,7 @@ spec:
         - "4"
         - "--threads"
         - "8"
+        - "--jinja"
         ports:
         - containerPort: 8080
           name: http
@@ -149,12 +202,52 @@ spec:
         nvidia.com/gpu.present: "true"
 ---
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: llama-swap-config
+  namespace: ai
+data:
+  config.yaml: |
+    # llama-swap configuration for multiple Qwen3 models
+    logLevel: info
+    healthCheckTimeout: 120
+
+    models:
+      # Vision-Language Model (multimodal)
+      qwen3vl-30b:
+        name: "Qwen3-VL-30B-A3B-Instruct"
+        description: "Qwen3-VL 30B vision-language model with MoE architecture. Supports both text and image inputs for multimodal reasoning."
+        proxy: "http://llama-cpp-vision:8080"
+        checkEndpoint: "/health"
+        aliases:
+          - "qwen3vl"
+          - "qwen3-vl-30b"
+          - "qwen3-vl-30b-instruct"
+          - "gpt-4-vision-preview"  # OpenAI-compatible alias
+        ttl: 3600
+        concurrencyLimit: 4
+
+      # Code-Specialized Model (text-only, optimized for coding)
+      qwen3-coder-30b:
+        name: "Qwen3-Coder-30B-A3B-Instruct"
+        description: "Qwen3-Coder 30B model with MoE architecture. Specialized for code generation, analysis, and debugging across 90+ programming languages."
+        proxy: "http://llama-cpp-coder:8081"
+        checkEndpoint: "/health"
+        aliases:
+          - "qwen3-coder"
+          - "qwen-coder-30b"
+          - "qwen3-coder-30b-instruct"
+          - "gpt-4-turbo"  # OpenAI-compatible alias for coding
+        ttl: 3600
+        concurrencyLimit: 4
+---
+apiVersion: v1
 kind: Service
 metadata:
-  name: llama-cpp-server
+  name: llama-cpp-vision
   namespace: ai
   labels:
-    app: llama-cpp-server
+    app: llama-cpp-vision
 spec:
   type: ClusterIP
   ports:
@@ -163,7 +256,169 @@ spec:
     protocol: TCP
     targetPort: http
   selector:
-    app: llama-cpp-server
+    app: llama-cpp-vision
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: llama-cpp-coder
+  namespace: ai
+  labels:
+    app: llama-cpp-coder
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: llama-cpp-coder
+  template:
+    metadata:
+      labels:
+        app: llama-cpp-coder
+    spec:
+      containers:
+      - name: llama-cpp
+        image: ghcr.io/rajsinghtech/llama.cpp:server-cuda-arm64@sha256:664f05a08b1c78b2ea222678d8dea0bc9be09b8424f16adc491f775a15b6cf7f
+        args:
+        - "-m"
+        - "/models/Qwen3-Coder-30B-A3B-Instruct-Q4_K_M.gguf"
+        - "--port"
+        - "8081"
+        - "--host"
+        - "0.0.0.0"
+        - "-n"
+        - "2048"
+        - "--n-gpu-layers"
+        - "99"
+        - "-c"
+        - "8192"
+        - "--parallel"
+        - "4"
+        - "--threads"
+        - "8"
+        ports:
+        - containerPort: 8081
+          name: http
+          protocol: TCP
+        resources:
+          requests:
+            memory: "16Gi"
+            cpu: "4000m"
+            nvidia.com/gpu: "1"
+          limits:
+            memory: "32Gi"
+            nvidia.com/gpu: "1"
+        volumeMounts:
+        - name: models
+          mountPath: /models
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+      volumes:
+      - name: models
+        persistentVolumeClaim:
+          claimName: llama-cpp-models
+      nodeSelector:
+        nvidia.com/gpu.present: "true"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: llama-cpp-coder
+  namespace: ai
+  labels:
+    app: llama-cpp-coder
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 8081
+    protocol: TCP
+    targetPort: http
+  selector:
+    app: llama-cpp-coder
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: llama-swap
+  namespace: ai
+  labels:
+    app: llama-swap
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: llama-swap
+  template:
+    metadata:
+      labels:
+        app: llama-swap
+    spec:
+      containers:
+      - name: llama-swap
+        image: ghcr.io/mostlygeek/llama-swap:cuda
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        env:
+        - name: LLAMA_SWAP_CONFIG
+          value: "/config/config.yaml"
+        volumeMounts:
+        - name: config
+          mountPath: /config
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 5
+          periodSeconds: 10
+      volumes:
+      - name: config
+        configMap:
+          name: llama-swap-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: llama-swap
+  namespace: ai
+  labels:
+    app: llama-swap
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: http
+  selector:
+    app: llama-swap
 ---
 apiVersion: v1
 kind: Service
@@ -182,4 +437,4 @@ spec:
     protocol: TCP
     targetPort: http
   selector:
-    app: llama-cpp-server
+    app: llama-swap
