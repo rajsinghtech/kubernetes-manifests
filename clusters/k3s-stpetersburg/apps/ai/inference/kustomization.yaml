@@ -6,5 +6,4 @@ namespace: ai
 resources:
   - ollama.yaml
   - llama-cpp.yaml
-  - deepseek-ocr.yaml
   - secret.yaml
