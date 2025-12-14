@@ -31,7 +31,7 @@ metadata:
 spec:
   type: kube-apiserver
   replicas: 2
-  # proxyClass: k8s-proxy-l4-test 
+  proxyClass: k8s-proxy-l4-test
   tags:
     - tag:k8s-operator
     - tag:${LOCATION}
