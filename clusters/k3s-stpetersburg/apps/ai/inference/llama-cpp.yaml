@@ -217,7 +217,7 @@ data:
       qwen3vl-30b:
         name: "Qwen3-VL-30B-A3B-Instruct"
         description: "Qwen3-VL 30B vision-language model with MoE architecture. Supports both text and image inputs for multimodal reasoning."
-        cmd: /bin/true  # Dummy command - backend is managed by Kubernetes
+        cmd: sleep infinity  # Keep-alive command - backend is managed by Kubernetes
         proxy: "http://llama-cpp-vision:8080"
         checkEndpoint: "/health"
         aliases:
@@ -225,14 +225,14 @@ data:
           - "qwen3-vl-30b"
           - "qwen3-vl-30b-instruct"
           - "gpt-4-vision-preview"  # OpenAI-compatible alias
-        ttl: 3600
+        ttl: 0  # Disable TTL - backend is always running
         concurrencyLimit: 4
 
       # Code-Specialized Model (text-only, optimized for coding)
       qwen3-coder-30b:
         name: "Qwen3-Coder-30B-A3B-Instruct"
         description: "Qwen3-Coder 30B model with MoE architecture. Specialized for code generation, analysis, and debugging across 90+ programming languages."
-        cmd: /bin/true  # Dummy command - backend is managed by Kubernetes
+        cmd: sleep infinity  # Keep-alive command - backend is managed by Kubernetes
         proxy: "http://llama-cpp-coder:8081"
         checkEndpoint: "/health"
         aliases:
@@ -240,7 +240,7 @@ data:
           - "qwen-coder-30b"
           - "qwen3-coder-30b-instruct"
           - "gpt-4-turbo"  # OpenAI-compatible alias for coding
-        ttl: 3600
+        ttl: 0  # Disable TTL - backend is always running
         concurrencyLimit: 4
 ---
 apiVersion: v1
