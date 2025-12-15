@@ -10,3 +10,8 @@ configMapGenerator:
       - inference=time-slicing-config.yaml
     options:
       disableNameSuffixHash: true
+  - name: dcgm-metrics-config
+    files:
+      - dcgm-metrics.csv
+    options:
+      disableNameSuffixHash: true
