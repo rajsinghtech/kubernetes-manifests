@@ -9,7 +9,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 80Gi
+      storage: 50Gi
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -25,10 +25,9 @@ data:
 
     MODEL_DIR = "/models"
 
-    # Vision model configuration
-    VISION_REPO_ID = "Qwen/Qwen3-VL-30B-A3B-Instruct-GGUF"
-    VISION_MODEL_FILE = "Qwen3VL-30B-A3B-Instruct-Q4_K_M.gguf"
-    MMPROJ_FILE = "mmproj-Qwen3VL-30B-A3B-Instruct-Q8_0.gguf"
+    # Reasoning model configuration (Apriel Thinker)
+    THINKER_REPO_ID = "bartowski/ServiceNow-AI_Apriel-1.6-15b-Thinker-GGUF"
+    THINKER_MODEL_FILE = "ServiceNow-AI_Apriel-1.6-15b-Thinker-Q4_K_M.gguf"
 
     # Coder model configuration
     CODER_REPO_ID = "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF"
@@ -37,42 +36,24 @@ data:
     # Create directory
     Path(MODEL_DIR).mkdir(parents=True, exist_ok=True)
 
-    # Download vision model
-    vision_model_path = Path(MODEL_DIR) / VISION_MODEL_FILE
-    if not vision_model_path.exists():
+    # Download thinker model
+    thinker_model_path = Path(MODEL_DIR) / THINKER_MODEL_FILE
+    if not thinker_model_path.exists():
         print("=" * 60)
-        print("Downloading Qwen3-VL-30B vision-language model...")
-        print(f"Repository: {VISION_REPO_ID}")
-        print(f"File: {VISION_MODEL_FILE} (18.6 GB)")
-        print("=" * 60)
-
-        hf_hub_download(
-            repo_id=VISION_REPO_ID,
-            filename=VISION_MODEL_FILE,
-            local_dir=MODEL_DIR,
-            local_dir_use_symlinks=False
-        )
-        print(f"✓ Vision model downloaded: {vision_model_path}\n")
-    else:
-        print(f"✓ Vision model already exists: {vision_model_path}")
-
-    # Download mmproj file
-    mmproj_path = Path(MODEL_DIR) / MMPROJ_FILE
-    if not mmproj_path.exists():
-        print("\n" + "=" * 60)
-        print("Downloading vision encoder (mmproj)...")
-        print(f"File: {MMPROJ_FILE}")
+        print("Downloading Apriel-1.6-15B Thinker reasoning model...")
+        print(f"Repository: {THINKER_REPO_ID}")
+        print(f"File: {THINKER_MODEL_FILE} (8.79 GB)")
         print("=" * 60)
 
         hf_hub_download(
-            repo_id=VISION_REPO_ID,
-            filename=MMPROJ_FILE,
+            repo_id=THINKER_REPO_ID,
+            filename=THINKER_MODEL_FILE,
             local_dir=MODEL_DIR,
             local_dir_use_symlinks=False
         )
-        print(f"✓ Vision encoder downloaded: {mmproj_path}\n")
+        print(f"✓ Thinker model downloaded: {thinker_model_path}\n")
     else:
-        print(f"✓ Vision encoder already exists: {mmproj_path}")
+        print(f"✓ Thinker model already exists: {thinker_model_path}")
 
     # Download coder model
     coder_model_path = Path(MODEL_DIR) / CODER_MODEL_FILE
@@ -96,28 +77,28 @@ data:
     print("\n" + "=" * 60)
     print("All downloads complete!")
     print("Models available:")
-    print(f"  - Vision: {VISION_MODEL_FILE}")
-    print(f"  - Coder:  {CODER_MODEL_FILE}")
+    print(f"  - Thinker: {THINKER_MODEL_FILE}")
+    print(f"  - Coder:   {CODER_MODEL_FILE}")
     print("=" * 60)
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: llama-cpp-vision
+  name: llama-cpp-thinker
   namespace: ai
   labels:
-    app: llama-cpp-vision
+    app: llama-cpp-thinker
 spec:
   replicas: 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: llama-cpp-vision
+      app: llama-cpp-thinker
   template:
     metadata:
       labels:
-        app: llama-cpp-vision
+        app: llama-cpp-thinker
     spec:
       initContainers:
       - name: model-downloader
@@ -143,35 +124,32 @@ spec:
         image: ghcr.io/rajsinghtech/llama.cpp:server-cuda-arm64@sha256:664f05a08b1c78b2ea222678d8dea0bc9be09b8424f16adc491f775a15b6cf7f
         args:
         - "-m"
-        - "/models/Qwen3VL-30B-A3B-Instruct-Q4_K_M.gguf"
-        - "--mmproj"
-        - "/models/mmproj-Qwen3VL-30B-A3B-Instruct-Q8_0.gguf"
+        - "/models/ServiceNow-AI_Apriel-1.6-15b-Thinker-Q4_K_M.gguf"
         - "--port"
         - "8080"
         - "--host"
         - "0.0.0.0"
         - "-n"
-        - "2048"
+        - "4096"
         - "--n-gpu-layers"
         - "99"
         - "-c"
-        - "8192"
+        - "16384"
         - "--parallel"
         - "4"
         - "--threads"
         - "8"
-        - "--jinja"
         ports:
         - containerPort: 8080
           name: http
           protocol: TCP
         resources:
           requests:
-            memory: "16Gi"
-            cpu: "4000m"
+            memory: "12Gi"
+            cpu: "2000m"
             nvidia.com/gpu: "1"
           limits:
-            memory: "32Gi"
+            memory: "24Gi"
             nvidia.com/gpu: "1"
         volumeMounts:
         - name: models
@@ -208,23 +186,23 @@ metadata:
   namespace: ai
 data:
   config.yaml: |
-    # llama-swap configuration for multiple Qwen3 models
+    # llama-swap configuration for reasoning and coding models
     logLevel: info
     healthCheckTimeout: 120
 
     models:
-      # Vision-Language Model (multimodal)
-      qwen3vl-30b:
-        name: "Qwen3-VL-30B-A3B-Instruct"
-        description: "Qwen3-VL 30B vision-language model with MoE architecture. Supports both text and image inputs for multimodal reasoning."
+      # Reasoning Model (step-by-step thinking)
+      apriel-thinker-15b:
+        name: "Apriel-1.6-15B-Thinker"
+        description: "ServiceNow Apriel 15B reasoning model. Specialized for step-by-step thinking, systematic analysis, and thoughtful problem-solving."
         cmd: sleep infinity  # Keep-alive command - backend is managed by Kubernetes
-        proxy: "http://llama-cpp-vision:8080"
+        proxy: "http://llama-cpp-thinker:8080"
         checkEndpoint: "/health"
         aliases:
-          - "qwen3vl"
-          - "qwen3-vl-30b"
-          - "qwen3-vl-30b-instruct"
-          - "gpt-4-vision-preview"  # OpenAI-compatible alias
+          - "apriel-thinker"
+          - "apriel-15b"
+          - "thinker"
+          - "o1-mini"  # OpenAI-compatible alias for reasoning
         ttl: 0  # Disable TTL - backend is always running
         concurrencyLimit: 4
 
@@ -246,10 +224,10 @@ data:
 apiVersion: v1
 kind: Service
 metadata:
-  name: llama-cpp-vision
+  name: llama-cpp-thinker
   namespace: ai
   labels:
-    app: llama-cpp-vision
+    app: llama-cpp-thinker
 spec:
   type: ClusterIP
   ports:
@@ -258,7 +236,7 @@ spec:
     protocol: TCP
     targetPort: http
   selector:
-    app: llama-cpp-vision
+    app: llama-cpp-thinker
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -445,10 +423,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: llama-cpp-vision-ts
+  name: llama-cpp-thinker-ts
   namespace: ai
   annotations:
-    tailscale.com/hostname: "${LOCATION}-llama-cpp-vision"
+    tailscale.com/hostname: "${LOCATION}-llama-cpp-thinker"
     tailscale.com/proxy-class: "common"
 spec:
   type: LoadBalancer
@@ -459,7 +437,7 @@ spec:
     protocol: TCP
     targetPort: http
   selector:
-    app: llama-cpp-vision
+    app: llama-cpp-thinker
 ---
 apiVersion: v1
 kind: Service
