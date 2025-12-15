@@ -100,8 +100,9 @@ GPU metrics are exported by NVIDIA DCGM Exporter on port 9400:
 - `DCGM_FI_DEV_MEM_COPY_UTIL` - Memory controller utilization
 
 **Memory Usage**
-- `DCGM_FI_DEV_FB_USED` - Framebuffer memory used (bytes)
-- `DCGM_FI_DEV_FB_FREE` - Framebuffer memory free (bytes)
+- Traditional framebuffer metrics (FB_USED/FB_FREE) are **not available** on GB10
+- GB10 uses 128GB unified memory architecture (CPU+GPU shared)
+- Monitor memory usage through system-level tools instead of DCGM
 - Watch for OOM errors - no memory limits with time-slicing!
 
 **Temperature & Power**
