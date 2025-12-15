@@ -425,7 +425,7 @@ spec:
         - "--n-gpu-layers"
         - "99"
         - "-c"
-        - "32768"
+        - "65536"
         - "--parallel"
         - "4"
         - "--threads"
@@ -436,11 +436,11 @@ spec:
           protocol: TCP
         resources:
           requests:
-            memory: "16Gi"
+            memory: "20Gi"
             cpu: "2000m"
             nvidia.com/gpu: "1"
           limits:
-            memory: "24Gi"
+            memory: "32Gi"
             nvidia.com/gpu: "1"
         volumeMounts:
         - name: models
