@@ -36,7 +36,7 @@ data:
     # Vision model configuration (Pixtral multimodal)
     VISION_REPO_ID = "bartowski/mistral-community_pixtral-12b-GGUF"
     VISION_MODEL_FILE = "mistral-community_pixtral-12b-Q4_K_M.gguf"
-    VISION_MMPROJ_FILE = "mistral-community_pixtral-12b-mmproj-Q4_0.gguf"
+    VISION_MMPROJ_FILE = "mmproj-mistral-community_pixtral-12b-f16.gguf"
 
     # Create directory
     Path(MODEL_DIR).mkdir(parents=True, exist_ok=True)
@@ -170,7 +170,7 @@ spec:
         - "-m"
         - "/models/ServiceNow-AI_Apriel-1.6-15b-Thinker-Q4_K_M.gguf"
         - "--port"
-        - "8080"
+        - "80"
         - "--host"
         - "0.0.0.0"
         - "-n"
@@ -184,7 +184,7 @@ spec:
         - "--threads"
         - "8"
         ports:
-        - containerPort: 8080
+        - containerPort: 80
           name: http
           protocol: TCP
         resources:
@@ -234,7 +234,7 @@ spec:
   type: ClusterIP
   ports:
   - name: http
-    port: 8080
+    port: 80
     protocol: TCP
     targetPort: http
   selector:
@@ -257,7 +257,7 @@ data:
         name: "Apriel-1.6-15B-Thinker"
         description: "ServiceNow Apriel 15B reasoning model. Specialized for step-by-step thinking, systematic analysis, and thoughtful problem-solving."
         cmd: sleep infinity  # Keep-alive command - backend is managed by Kubernetes
-        proxy: "http://apriel-thinker:8080"
+        proxy: "http://apriel-thinker:80"
         checkEndpoint: "/health"
         aliases:
           - "apriel-thinker"
@@ -272,7 +272,7 @@ data:
         name: "Qwen3-Coder-30B-A3B-Instruct"
         description: "Qwen3-Coder 30B model with MoE architecture. Specialized for code generation, analysis, and debugging across 90+ programming languages."
         cmd: sleep infinity  # Keep-alive command - backend is managed by Kubernetes
-        proxy: "http://qwen-coder:8081"
+        proxy: "http://qwen-coder:80"
         checkEndpoint: "/health"
         aliases:
           - "qwen3-coder"
@@ -287,7 +287,7 @@ data:
         name: "Pixtral-12B"
         description: "Mistral Pixtral-12B multimodal vision model. Native image understanding with 2D RoPE embeddings, supports natural image resolution and aspect ratios."
         cmd: sleep infinity  # Keep-alive command - backend is managed by Kubernetes
-        proxy: "http://mistral-vision:8082"
+        proxy: "http://mistral-vision:80"
         checkEndpoint: "/health"
         aliases:
           - "pixtral"
@@ -323,7 +323,7 @@ spec:
         - "-m"
         - "/models/Qwen3-Coder-30B-A3B-Instruct-Q4_K_M.gguf"
         - "--port"
-        - "8081"
+        - "80"
         - "--host"
         - "0.0.0.0"
         - "-n"
@@ -337,7 +337,7 @@ spec:
         - "--threads"
         - "8"
         ports:
-        - containerPort: 8081
+        - containerPort: 80
           name: http
           protocol: TCP
         resources:
@@ -383,7 +383,7 @@ spec:
   type: ClusterIP
   ports:
   - name: http
-    port: 8081
+    port: 80
     protocol: TCP
     targetPort: http
   selector:
@@ -415,9 +415,9 @@ spec:
         - "-m"
         - "/models/mistral-community_pixtral-12b-Q4_K_M.gguf"
         - "--mmproj"
-        - "/models/mistral-community_pixtral-12b-mmproj-Q4_0.gguf"
+        - "/models/mmproj-mistral-community_pixtral-12b-f16.gguf"
         - "--port"
-        - "8082"
+        - "80"
         - "--host"
         - "0.0.0.0"
         - "-n"
@@ -431,7 +431,7 @@ spec:
         - "--threads"
         - "8"
         ports:
-        - containerPort: 8082
+        - containerPort: 80
           name: http
           protocol: TCP
         resources:
@@ -477,7 +477,7 @@ spec:
   type: ClusterIP
   ports:
   - name: http
-    port: 8082
+    port: 80
     protocol: TCP
     targetPort: http
   selector:
@@ -504,7 +504,7 @@ spec:
       - name: llama-swap
         image: ghcr.io/rajsinghtech/llama-swap:arm64
         ports:
-        - containerPort: 8080
+        - containerPort: 80
           name: http
           protocol: TCP
         env:
@@ -547,7 +547,7 @@ spec:
   type: ClusterIP
   ports:
   - name: http
-    port: 8080
+    port: 80
     protocol: TCP
     targetPort: http
   selector:
@@ -590,7 +590,7 @@ spec:
   - name: http
     port: 80
     protocol: TCP
-    targetPort: 8080
+    targetPort: 80
   selector:
     app: apriel-thinker
 ---
@@ -610,7 +610,7 @@ spec:
   - name: http
     port: 80
     protocol: TCP
-    targetPort: 8081
+    targetPort: 80
   selector:
     app: qwen-coder
 ---
@@ -630,6 +630,6 @@ spec:
   - name: http
     port: 80
     protocol: TCP
-    targetPort: 8082
+    targetPort: 80
   selector:
     app: mistral-vision
