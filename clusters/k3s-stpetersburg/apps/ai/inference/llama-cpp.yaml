@@ -417,26 +417,26 @@ spec:
         - "--mmproj"
         - "/models/mmproj-mistral-community_pixtral-12b-f16.gguf"
         - "--port"
-        - "80"
+        - "8082"
         - "--host"
         - "0.0.0.0"
         - "-n"
-        - "2048"
+        - "4096"
         - "--n-gpu-layers"
         - "99"
         - "-c"
-        - "8192"
+        - "32768"
         - "--parallel"
         - "4"
         - "--threads"
         - "8"
         ports:
-        - containerPort: 80
+        - containerPort: 8082
           name: http
           protocol: TCP
         resources:
           requests:
-            memory: "12Gi"
+            memory: "16Gi"
             cpu: "2000m"
             nvidia.com/gpu: "1"
           limits:
@@ -477,7 +477,7 @@ spec:
   type: ClusterIP
   ports:
   - name: http
-    port: 80
+    port: 8082
     protocol: TCP
     targetPort: http
   selector:
@@ -547,7 +547,7 @@ spec:
   type: ClusterIP
   ports:
   - name: http
-    port: 80
+    port: 8080
     protocol: TCP
     targetPort: http
   selector:
@@ -570,7 +570,7 @@ spec:
   - name: http
     port: 80
     protocol: TCP
-    targetPort: http
+    targetPort: 8080
   selector:
     app: llama-swap
 ---
