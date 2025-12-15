@@ -108,21 +108,21 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: llama-cpp-thinker
+  name: apriel-thinker
   namespace: ai
   labels:
-    app: llama-cpp-thinker
+    app: apriel-thinker
 spec:
   replicas: 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: llama-cpp-thinker
+      app: apriel-thinker
   template:
     metadata:
       labels:
-        app: llama-cpp-thinker
+        app: apriel-thinker
     spec:
       initContainers:
       - name: model-downloader
@@ -220,7 +220,7 @@ data:
         name: "Apriel-1.6-15B-Thinker"
         description: "ServiceNow Apriel 15B reasoning model. Specialized for step-by-step thinking, systematic analysis, and thoughtful problem-solving."
         cmd: sleep infinity  # Keep-alive command - backend is managed by Kubernetes
-        proxy: "http://llama-cpp-thinker:8080"
+        proxy: "http://apriel-thinker:8080"
         checkEndpoint: "/health"
         aliases:
           - "apriel-thinker"
@@ -235,7 +235,7 @@ data:
         name: "Qwen3-Coder-30B-A3B-Instruct"
         description: "Qwen3-Coder 30B model with MoE architecture. Specialized for code generation, analysis, and debugging across 90+ programming languages."
         cmd: sleep infinity  # Keep-alive command - backend is managed by Kubernetes
-        proxy: "http://llama-cpp-coder:8081"
+        proxy: "http://qwen-coder:8081"
         checkEndpoint: "/health"
         aliases:
           - "qwen3-coder"
@@ -250,7 +250,7 @@ data:
         name: "Mistral-Small-3.1-24B-Instruct"
         description: "Mistral Small 24B vision model with built-in multimodal support. Can analyze images and provide insights based on visual content."
         cmd: sleep infinity  # Keep-alive command - backend is managed by Kubernetes
-        proxy: "http://llama-cpp-vision:8082"
+        proxy: "http://mistral-vision:8082"
         checkEndpoint: "/health"
         aliases:
           - "mistral-vision"
@@ -260,41 +260,24 @@ data:
         ttl: 0  # Disable TTL - backend is always running
         concurrencyLimit: 4
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  name: llama-cpp-thinker
-  namespace: ai
-  labels:
-    app: llama-cpp-thinker
-spec:
-  type: ClusterIP
-  ports:
-  - name: http
-    port: 8080
-    protocol: TCP
-    targetPort: http
-  selector:
-    app: llama-cpp-thinker
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: llama-cpp-coder
+  name: qwen-coder
   namespace: ai
   labels:
-    app: llama-cpp-coder
+    app: qwen-coder
 spec:
   replicas: 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: llama-cpp-coder
+      app: qwen-coder
   template:
     metadata:
       labels:
-        app: llama-cpp-coder
+        app: qwen-coder
     spec:
       containers:
       - name: llama-cpp
@@ -352,41 +335,24 @@ spec:
       nodeSelector:
         nvidia.com/gpu.present: "true"
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  name: llama-cpp-coder
-  namespace: ai
-  labels:
-    app: llama-cpp-coder
-spec:
-  type: ClusterIP
-  ports:
-  - name: http
-    port: 8081
-    protocol: TCP
-    targetPort: http
-  selector:
-    app: llama-cpp-coder
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: llama-cpp-vision
+  name: mistral-vision
   namespace: ai
   labels:
-    app: llama-cpp-vision
+    app: mistral-vision
 spec:
   replicas: 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: llama-cpp-vision
+      app: mistral-vision
   template:
     metadata:
       labels:
-        app: llama-cpp-vision
+        app: mistral-vision
     spec:
       containers:
       - name: llama-cpp
@@ -443,23 +409,6 @@ spec:
           claimName: llama-cpp-models
       nodeSelector:
         nvidia.com/gpu.present: "true"
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: llama-cpp-vision
-  namespace: ai
-  labels:
-    app: llama-cpp-vision
-spec:
-  type: ClusterIP
-  ports:
-  - name: http
-    port: 8082
-    protocol: TCP
-    targetPort: http
-  selector:
-    app: llama-cpp-vision
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -540,6 +489,7 @@ metadata:
   annotations:
     tailscale.com/hostname: "${LOCATION}-llama-cpp"
     tailscale.com/proxy-class: "common"
+    tailscale.com/tags: "tag:singh360,tag:k8s,tag:${LOCATION}"
 spec:
   type: LoadBalancer
   loadBalancerClass: tailscale
@@ -554,11 +504,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: llama-cpp-thinker-ts
+  name: apriel-thinker-ts
   namespace: ai
   annotations:
-    tailscale.com/hostname: "${LOCATION}-llama-cpp-thinker"
+    tailscale.com/hostname: "${LOCATION}-apriel-thinker"
     tailscale.com/proxy-class: "common"
+    tailscale.com/tags: "tag:singh360,tag:k8s,tag:${LOCATION}"
 spec:
   type: LoadBalancer
   loadBalancerClass: tailscale
@@ -568,16 +519,17 @@ spec:
     protocol: TCP
     targetPort: http
   selector:
-    app: llama-cpp-thinker
+    app: apriel-thinker
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: llama-cpp-coder-ts
+  name: qwen-coder-ts
   namespace: ai
   annotations:
-    tailscale.com/hostname: "${LOCATION}-llama-cpp-coder"
+    tailscale.com/hostname: "${LOCATION}-qwen-coder"
     tailscale.com/proxy-class: "common"
+    tailscale.com/tags: "tag:singh360,tag:k8s,tag:${LOCATION}"
 spec:
   type: LoadBalancer
   loadBalancerClass: tailscale
@@ -587,4 +539,24 @@ spec:
     protocol: TCP
     targetPort: http
   selector:
-    app: llama-cpp-coder
+    app: qwen-coder
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mistral-vision-ts
+  namespace: ai
+  annotations:
+    tailscale.com/hostname: "${LOCATION}-mistral-vision"
+    tailscale.com/proxy-class: "common"
+    tailscale.com/tags: "tag:singh360,tag:k8s,tag:${LOCATION}"
+spec:
+  type: LoadBalancer
+  loadBalancerClass: tailscale
+  ports:
+  - name: http
+    port: 8082
+    protocol: TCP
+    targetPort: http
+  selector:
+    app: mistral-vision
