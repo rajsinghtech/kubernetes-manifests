@@ -366,11 +366,11 @@ spec:
         - "--host"
         - "0.0.0.0"
         - "-n"
-        - "2048"
+        - "4096"
         - "--n-gpu-layers"
         - "99"
         - "-c"
-        - "8192"
+        - "32768"
         - "--parallel"
         - "4"
         - "--threads"
@@ -381,11 +381,11 @@ spec:
           protocol: TCP
         resources:
           requests:
-            memory: "16Gi"
+            memory: "20Gi"
             cpu: "4000m"
             nvidia.com/gpu: "1"
           limits:
-            memory: "32Gi"
+            memory: "40Gi"
             nvidia.com/gpu: "1"
         volumeMounts:
         - name: models
