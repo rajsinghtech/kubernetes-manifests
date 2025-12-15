@@ -610,7 +610,7 @@ spec:
   - name: http
     port: 80
     protocol: TCP
-    targetPort: 80
+    targetPort: 8081
   selector:
     app: qwen-coder
 ---
@@ -630,6 +630,6 @@ spec:
   - name: http
     port: 80
     protocol: TCP
-    targetPort: 80
+    targetPort: 8082
   selector:
     app: mistral-vision
