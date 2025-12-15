@@ -33,6 +33,10 @@ data:
     CODER_REPO_ID = "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF"
     CODER_MODEL_FILE = "Qwen3-Coder-30B-A3B-Instruct-Q4_K_M.gguf"
 
+    # Vision model configuration (Mistral with built-in vision)
+    VISION_REPO_ID = "unsloth/Mistral-Small-3.1-24B-Instruct-2503-GGUF"
+    VISION_MODEL_FILE = "Mistral-Small-3.1-24B-Instruct-2503-Q4_K_M.gguf"
+
     # Create directory
     Path(MODEL_DIR).mkdir(parents=True, exist_ok=True)
 
@@ -74,11 +78,31 @@ data:
     else:
         print(f"✓ Coder model already exists: {coder_model_path}")
 
+    # Download vision model
+    vision_model_path = Path(MODEL_DIR) / VISION_MODEL_FILE
+    if not vision_model_path.exists():
+        print("\n" + "=" * 60)
+        print("Downloading Mistral-Small-3.1-24B vision model...")
+        print(f"Repository: {VISION_REPO_ID}")
+        print(f"File: {VISION_MODEL_FILE} (14.3 GB)")
+        print("=" * 60)
+
+        hf_hub_download(
+            repo_id=VISION_REPO_ID,
+            filename=VISION_MODEL_FILE,
+            local_dir=MODEL_DIR,
+            local_dir_use_symlinks=False
+        )
+        print(f"✓ Vision model downloaded: {vision_model_path}\n")
+    else:
+        print(f"✓ Vision model already exists: {vision_model_path}")
+
     print("\n" + "=" * 60)
     print("All downloads complete!")
     print("Models available:")
     print(f"  - Thinker: {THINKER_MODEL_FILE}")
     print(f"  - Coder:   {CODER_MODEL_FILE}")
+    print(f"  - Vision:  {VISION_MODEL_FILE}")
     print("=" * 60)
 ---
 apiVersion: apps/v1
@@ -220,6 +244,21 @@ data:
           - "gpt-4-turbo"  # OpenAI-compatible alias for coding
         ttl: 0  # Disable TTL - backend is always running
         concurrencyLimit: 4
+
+      # Vision Model (multimodal image-text)
+      mistral-vision-24b:
+        name: "Mistral-Small-3.1-24B-Instruct"
+        description: "Mistral Small 24B vision model with built-in multimodal support. Can analyze images and provide insights based on visual content."
+        cmd: sleep infinity  # Keep-alive command - backend is managed by Kubernetes
+        proxy: "http://llama-cpp-vision:8082"
+        checkEndpoint: "/health"
+        aliases:
+          - "mistral-vision"
+          - "mistral-24b"
+          - "vision"
+          - "gpt-4-vision-preview"  # OpenAI-compatible alias for vision
+        ttl: 0  # Disable TTL - backend is always running
+        concurrencyLimit: 4
 ---
 apiVersion: v1
 kind: Service
@@ -329,6 +368,98 @@ spec:
     targetPort: http
   selector:
     app: llama-cpp-coder
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: llama-cpp-vision
+  namespace: ai
+  labels:
+    app: llama-cpp-vision
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: llama-cpp-vision
+  template:
+    metadata:
+      labels:
+        app: llama-cpp-vision
+    spec:
+      containers:
+      - name: llama-cpp
+        image: ghcr.io/rajsinghtech/llama.cpp:server-cuda-arm64@sha256:664f05a08b1c78b2ea222678d8dea0bc9be09b8424f16adc491f775a15b6cf7f
+        args:
+        - "-m"
+        - "/models/Mistral-Small-3.1-24B-Instruct-2503-Q4_K_M.gguf"
+        - "--port"
+        - "8082"
+        - "--host"
+        - "0.0.0.0"
+        - "-n"
+        - "4096"
+        - "--n-gpu-layers"
+        - "99"
+        - "-c"
+        - "32768"
+        - "--parallel"
+        - "4"
+        - "--threads"
+        - "8"
+        ports:
+        - containerPort: 8082
+          name: http
+          protocol: TCP
+        resources:
+          requests:
+            memory: "16Gi"
+            cpu: "2000m"
+            nvidia.com/gpu: "1"
+          limits:
+            memory: "32Gi"
+            nvidia.com/gpu: "1"
+        volumeMounts:
+        - name: models
+          mountPath: /models
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+      volumes:
+      - name: models
+        persistentVolumeClaim:
+          claimName: llama-cpp-models
+      nodeSelector:
+        nvidia.com/gpu.present: "true"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: llama-cpp-vision
+  namespace: ai
+  labels:
+    app: llama-cpp-vision
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 8082
+    protocol: TCP
+    targetPort: http
+  selector:
+    app: llama-cpp-vision
 ---
 apiVersion: apps/v1
 kind: Deployment
