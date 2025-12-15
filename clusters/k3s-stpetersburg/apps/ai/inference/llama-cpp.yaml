@@ -287,7 +287,7 @@ data:
         name: "Pixtral-12B"
         description: "Mistral Pixtral-12B multimodal vision model. Native image understanding with 2D RoPE embeddings, supports natural image resolution and aspect ratios."
         cmd: sleep infinity  # Keep-alive command - backend is managed by Kubernetes
-        proxy: "http://mistral-vision:80"
+        proxy: "http://mistral-vision:8082"
         checkEndpoint: "/health"
         aliases:
           - "pixtral"
@@ -610,7 +610,7 @@ spec:
   - name: http
     port: 80
     protocol: TCP
-    targetPort: 8081
+    targetPort: 80
   selector:
     app: qwen-coder
 ---
