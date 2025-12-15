@@ -204,6 +204,23 @@ spec:
         nvidia.com/gpu.present: "true"
 ---
 apiVersion: v1
+kind: Service
+metadata:
+  name: apriel-thinker
+  namespace: ai
+  labels:
+    app: apriel-thinker
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: http
+  selector:
+    app: apriel-thinker
+---
+apiVersion: v1
 kind: ConfigMap
 metadata:
   name: llama-swap-config
@@ -335,6 +352,23 @@ spec:
       nodeSelector:
         nvidia.com/gpu.present: "true"
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: qwen-coder
+  namespace: ai
+  labels:
+    app: qwen-coder
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 8081
+    protocol: TCP
+    targetPort: http
+  selector:
+    app: qwen-coder
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -409,6 +443,23 @@ spec:
           claimName: llama-cpp-models
       nodeSelector:
         nvidia.com/gpu.present: "true"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mistral-vision
+  namespace: ai
+  labels:
+    app: mistral-vision
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 8082
+    protocol: TCP
+    targetPort: http
+  selector:
+    app: mistral-vision
 ---
 apiVersion: apps/v1
 kind: Deployment
