@@ -183,7 +183,7 @@ spec:
           mountPath: /scripts
         resources:
           requests:
-            memory: "2Gi"
+            memory: "1Gi"
             cpu: "1000m"
           limits:
             memory: "8Gi"
@@ -213,8 +213,8 @@ spec:
           protocol: TCP
         resources:
           requests:
-            memory: "12Gi"
-            cpu: "2000m"
+            memory: "1Gi"
+            cpu: "500m"
             nvidia.com/gpu: "1"
           limits:
             memory: "24Gi"
@@ -381,7 +381,7 @@ spec:
           protocol: TCP
         resources:
           requests:
-            memory: "20Gi"
+            memory: "1Gi"
             cpu: "4000m"
             nvidia.com/gpu: "1"
           limits:
@@ -475,7 +475,7 @@ spec:
           protocol: TCP
         resources:
           requests:
-            memory: "20Gi"
+            memory: "1Gi"
             cpu: "2000m"
             nvidia.com/gpu: "1"
           limits:
@@ -567,7 +567,7 @@ spec:
           protocol: TCP
         resources:
           requests:
-            memory: "48Gi"
+            memory: "1Gi"
             cpu: "4000m"
             nvidia.com/gpu: "1"
           limits:
