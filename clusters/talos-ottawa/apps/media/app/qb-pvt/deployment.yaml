@@ -56,7 +56,7 @@ spec:
         - name: WIREGUARD_MTU
           value: '1410'
         - name: HEALTH_VPN_DURATION_INITIAL
-          value: 10s
+          value: "360s"
         - name: HEALTH_VPN_DURATION_ADDITION
           value: 5s
         - name: VPN_PORT_FORWARDING
