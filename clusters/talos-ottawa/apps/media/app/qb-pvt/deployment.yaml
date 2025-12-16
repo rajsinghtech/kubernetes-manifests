@@ -51,6 +51,14 @@ spec:
             secretKeyRef:
               name: qbittorrent-pvt-secret
               key: WIREGUARD_ADDRESSES
+        - name: WIREGUARD_PERSISTENT_KEEPALIVE_INTERVAL
+          value: 14s
+        - name: WIREGUARD_MTU
+          value: '1410'
+        - name: HEALTH_VPN_DURATION_INITIAL
+          value: 10s
+        - name: HEALTH_VPN_DURATION_ADDITION
+          value: 5s
         - name: VPN_PORT_FORWARDING
           value: "on"
         - name: VPN_PORT_FORWARDING_PROVIDER
