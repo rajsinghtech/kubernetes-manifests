@@ -1,3 +1,5 @@
+cluster:
+  name: ${LOCATION}
 cni:
   exclusive: false
 kubeProxyReplacement: true
