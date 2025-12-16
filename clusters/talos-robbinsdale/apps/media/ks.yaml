@@ -14,7 +14,6 @@ spec:
     - name: volsync
     - name: cnpg-system
     - name: dragonfly-operator-system
-    - name: ingress-nginx # For some ingress definitions within
   path: ./clusters/${CLUSTER_NAME}/apps/media/app
   prune: true
   sourceRef:
