@@ -25,49 +25,21 @@ data:
 
     MODEL_DIR = "/models"
 
-    # Instruction model configuration (Mistral Ministral-3-14B)
-    INSTRUCT_REPO_ID = "mistralai/Ministral-3-14B-Instruct-2512-GGUF"
-    INSTRUCT_MODEL_FILE = "Ministral-3-14B-Instruct-2512-Q4_K_M.gguf"
-
-    # Coder model configuration
+    # Coder model configuration (Qwen3-Coder-30B)
     CODER_REPO_ID = "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF"
     CODER_MODEL_FILE = "Qwen3-Coder-30B-A3B-Instruct-Q4_K_M.gguf"
 
-    # Vision model configuration (Pixtral multimodal)
-    VISION_REPO_ID = "bartowski/mistral-community_pixtral-12b-GGUF"
-    VISION_MODEL_FILE = "mistral-community_pixtral-12b-Q4_K_M.gguf"
-    VISION_MMPROJ_FILE = "mmproj-mistral-community_pixtral-12b-f16.gguf"
-
-    # General model configuration (Llama 3.3 70B)
-    GENERAL_REPO_ID = "unsloth/Llama-3.3-70B-Instruct-GGUF"
-    GENERAL_MODEL_FILE = "Llama-3.3-70B-Instruct-Q4_K_M.gguf"
+    # General model configuration (Llama 3.1 8B)
+    GENERAL_REPO_ID = "bartowski/Meta-Llama-3.1-8B-Instruct-GGUF"
+    GENERAL_MODEL_FILE = "Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf"
 
     # Create directory
     Path(MODEL_DIR).mkdir(parents=True, exist_ok=True)
 
-    # Download instruct model
-    instruct_model_path = Path(MODEL_DIR) / INSTRUCT_MODEL_FILE
-    if not instruct_model_path.exists():
-        print("=" * 60)
-        print("Downloading Ministral-3-14B-Instruct multimodal model...")
-        print(f"Repository: {INSTRUCT_REPO_ID}")
-        print(f"File: {INSTRUCT_MODEL_FILE} (8.24 GB)")
-        print("=" * 60)
-
-        hf_hub_download(
-            repo_id=INSTRUCT_REPO_ID,
-            filename=INSTRUCT_MODEL_FILE,
-            local_dir=MODEL_DIR,
-            local_dir_use_symlinks=False
-        )
-        print(f"✓ Instruct model downloaded: {instruct_model_path}\n")
-    else:
-        print(f"✓ Instruct model already exists: {instruct_model_path}")
-
     # Download coder model
     coder_model_path = Path(MODEL_DIR) / CODER_MODEL_FILE
     if not coder_model_path.exists():
-        print("\n" + "=" * 60)
+        print("=" * 60)
         print("Downloading Qwen3-Coder-30B coding model...")
         print(f"Repository: {CODER_REPO_ID}")
         print(f"File: {CODER_MODEL_FILE} (18.6 GB)")
@@ -83,50 +55,13 @@ data:
     else:
         print(f"✓ Coder model already exists: {coder_model_path}")
 
-    # Download vision model
-    vision_model_path = Path(MODEL_DIR) / VISION_MODEL_FILE
-    vision_mmproj_path = Path(MODEL_DIR) / VISION_MMPROJ_FILE
-
-    if not vision_model_path.exists():
-        print("\n" + "=" * 60)
-        print("Downloading Pixtral-12B multimodal vision model...")
-        print(f"Repository: {VISION_REPO_ID}")
-        print(f"File: {VISION_MODEL_FILE} (8.4 GB)")
-        print("=" * 60)
-
-        hf_hub_download(
-            repo_id=VISION_REPO_ID,
-            filename=VISION_MODEL_FILE,
-            local_dir=MODEL_DIR,
-            local_dir_use_symlinks=False
-        )
-        print(f"✓ Vision model downloaded: {vision_model_path}\n")
-    else:
-        print(f"✓ Vision model already exists: {vision_model_path}")
-
-    if not vision_mmproj_path.exists():
-        print("\n" + "=" * 60)
-        print("Downloading Pixtral-12B mmproj file...")
-        print(f"File: {VISION_MMPROJ_FILE}")
-        print("=" * 60)
-
-        hf_hub_download(
-            repo_id=VISION_REPO_ID,
-            filename=VISION_MMPROJ_FILE,
-            local_dir=MODEL_DIR,
-            local_dir_use_symlinks=False
-        )
-        print(f"✓ Vision mmproj downloaded: {vision_mmproj_path}\n")
-    else:
-        print(f"✓ Vision mmproj already exists: {vision_mmproj_path}")
-
     # Download general model
     general_model_path = Path(MODEL_DIR) / GENERAL_MODEL_FILE
     if not general_model_path.exists():
         print("\n" + "=" * 60)
-        print("Downloading Llama-3.3-70B general model...")
+        print("Downloading Llama-3.1-8B general model...")
         print(f"Repository: {GENERAL_REPO_ID}")
-        print(f"File: {GENERAL_MODEL_FILE} (42.7 GB)")
+        print(f"File: {GENERAL_MODEL_FILE} (4.92 GB)")
         print("=" * 60)
 
         hf_hub_download(
@@ -142,127 +77,9 @@ data:
     print("\n" + "=" * 60)
     print("All downloads complete!")
     print("Models available:")
-    print(f"  - Instruct: {INSTRUCT_MODEL_FILE}")
-    print(f"  - Coder:    {CODER_MODEL_FILE}")
-    print(f"  - Vision:   {VISION_MODEL_FILE}")
-    print(f"  - Mmproj:   {VISION_MMPROJ_FILE}")
-    print(f"  - General:  {GENERAL_MODEL_FILE}")
+    print(f"  - Coder:   {CODER_MODEL_FILE}")
+    print(f"  - General: {GENERAL_MODEL_FILE}")
     print("=" * 60)
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: ministral-instruct
-  namespace: ai
-  labels:
-    app: ministral-instruct
-spec:
-  replicas: 0
-  strategy:
-    type: Recreate
-  selector:
-    matchLabels:
-      app: ministral-instruct
-  template:
-    metadata:
-      labels:
-        app: ministral-instruct
-    spec:
-      initContainers:
-      - name: model-downloader
-        image: python:3.14-slim
-        command: ["/bin/bash", "-c"]
-        args:
-        - |
-          pip install -q huggingface-hub
-          python3 /scripts/download-model.py
-        volumeMounts:
-        - name: models
-          mountPath: /models
-        - name: scripts
-          mountPath: /scripts
-        resources:
-          requests:
-            memory: "1Gi"
-            cpu: "1000m"
-          limits:
-            memory: "8Gi"
-      containers:
-      - name: llama-cpp
-        image: ghcr.io/rajsinghtech/llama.cpp:server-cuda-arm64@sha256:664f05a08b1c78b2ea222678d8dea0bc9be09b8424f16adc491f775a15b6cf7f
-        args:
-        - "-m"
-        - "/models/Ministral-3-14B-Instruct-2512-Q4_K_M.gguf"
-        - "--port"
-        - "80"
-        - "--host"
-        - "0.0.0.0"
-        - "-n"
-        - "4096"
-        - "--n-gpu-layers"
-        - "99"
-        - "-c"
-        - "32768"
-        - "--parallel"
-        - "4"
-        - "--threads"
-        - "8"
-        ports:
-        - containerPort: 80
-          name: http
-          protocol: TCP
-        resources:
-          requests:
-            memory: "1Gi"
-            cpu: "500m"
-            nvidia.com/gpu: "1"
-          limits:
-            memory: "24Gi"
-            nvidia.com/gpu: "1"
-        volumeMounts:
-        - name: models
-          mountPath: /models
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: http
-          initialDelaySeconds: 60
-          periodSeconds: 30
-          timeoutSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: http
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
-      volumes:
-      - name: models
-        persistentVolumeClaim:
-          claimName: llama-cpp-models
-      - name: scripts
-        configMap:
-          name: llama-cpp-scripts
-          defaultMode: 0755
-      nodeSelector:
-        nvidia.com/gpu.present: "true"
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: ministral-instruct
-  namespace: ai
-  labels:
-    app: ministral-instruct
-spec:
-  type: ClusterIP
-  ports:
-  - name: http
-    port: 80
-    protocol: TCP
-    targetPort: http
-  selector:
-    app: ministral-instruct
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -271,30 +88,15 @@ metadata:
   namespace: ai
 data:
   config.yaml: |
-    # llama-swap configuration for reasoning and coding models
+    # llama-swap configuration for coding and general purpose models
     logLevel: info
     healthCheckTimeout: 120
 
     models:
-      # Instruction Model (multimodal with vision and function calling)
-      ministral-3-14b:
-        name: "Ministral-3-14B-Instruct"
-        description: "Mistral Ministral-3 14B multimodal model. Vision understanding, function calling, multilingual support (11 languages), and 256K context window."
-        cmd: sleep infinity  # Keep-alive command - backend is managed by Kubernetes
-        proxy: "http://ministral-instruct:80"
-        checkEndpoint: "/health"
-        aliases:
-          - "ministral"
-          - "ministral-3"
-          - "o1-mini"  # OpenAI-compatible alias for reasoning
-          - "gpt-4o-mini"  # OpenAI-compatible alias for multimodal
-        ttl: 0  # Disable TTL - backend is always running
-        concurrencyLimit: 4
-
       # Code-Specialized Model (text-only, optimized for coding)
       qwen3-coder-30b:
         name: "Qwen3-Coder-30B-A3B-Instruct"
-        description: "Qwen3-Coder 30B model with MoE architecture. Specialized for code generation, analysis, and debugging across 90+ programming languages."
+        description: "Qwen3-Coder 30B model with MoE architecture. Specialized for code generation, analysis, and debugging across 90+ programming languages. 256K context window."
         cmd: sleep infinity  # Keep-alive command - backend is managed by Kubernetes
         proxy: "http://qwen-coder:80"
         checkEndpoint: "/health"
@@ -306,35 +108,21 @@ data:
         ttl: 0  # Disable TTL - backend is always running
         concurrencyLimit: 4
 
-      # Vision Model (multimodal image-text)
-      pixtral-12b:
-        name: "Pixtral-12B"
-        description: "Mistral Pixtral-12B multimodal vision model. Native image understanding with 2D RoPE embeddings, supports natural image resolution and aspect ratios."
+      # General Model (Llama 3.1 8B)
+      llama-3.1-8b:
+        name: "Llama-3.1-8B-Instruct"
+        description: "Meta Llama 3.1 8B instruction-tuned model. General-purpose model with strong reasoning and 128K context window. Efficient 8B parameter size."
         cmd: sleep infinity  # Keep-alive command - backend is managed by Kubernetes
-        proxy: "http://mistral-vision:8082"
+        proxy: "http://llama-3-1:80"
         checkEndpoint: "/health"
         aliases:
-          - "pixtral"
-          - "pixtral-12b"
-          - "vision"
-          - "gpt-4-vision-preview"  # OpenAI-compatible alias for vision
+          - "llama-3.1"
+          - "llama-3.1-8b"
+          - "llama3.1"
+          - "gpt-4"  # OpenAI-compatible alias for general tasks
+          - "gpt-4o-mini"  # OpenAI-compatible alias
         ttl: 0  # Disable TTL - backend is always running
         concurrencyLimit: 4
-
-      # General Model (Llama 3.3 70B)
-      llama-3.3-70b:
-        name: "Llama-3.3-70B-Instruct"
-        description: "Meta Llama 3.3 70B instruction-tuned model. High-performance general-purpose model with strong reasoning, multilingual, and long-context capabilities (128K tokens)."
-        cmd: sleep infinity  # Keep-alive command - backend is managed by Kubernetes
-        proxy: "http://llama-3-3:8083"
-        checkEndpoint: "/health"
-        aliases:
-          - "llama-3.3"
-          - "llama-3.3-70b"
-          - "llama3.3"
-          - "gpt-4"  # OpenAI-compatible alias for general tasks
-        ttl: 0  # Disable TTL - backend is always running
-        concurrencyLimit: 2
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -431,32 +219,30 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mistral-vision
+  name: llama-3-1
   namespace: ai
   labels:
-    app: mistral-vision
+    app: llama-3-1
 spec:
   replicas: 0
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: mistral-vision
+      app: llama-3-1
   template:
     metadata:
       labels:
-        app: mistral-vision
+        app: llama-3-1
     spec:
       containers:
       - name: llama-cpp
         image: ghcr.io/rajsinghtech/llama.cpp:server-cuda-arm64@sha256:664f05a08b1c78b2ea222678d8dea0bc9be09b8424f16adc491f775a15b6cf7f
         args:
         - "-m"
-        - "/models/mistral-community_pixtral-12b-Q4_K_M.gguf"
-        - "--mmproj"
-        - "/models/mmproj-mistral-community_pixtral-12b-f16.gguf"
+        - "/models/Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf"
         - "--port"
-        - "8082"
+        - "80"
         - "--host"
         - "0.0.0.0"
         - "-n"
@@ -464,22 +250,22 @@ spec:
         - "--n-gpu-layers"
         - "99"
         - "-c"
-        - "65536"
+        - "131072"
         - "--parallel"
         - "4"
         - "--threads"
         - "8"
         ports:
-        - containerPort: 8082
+        - containerPort: 80
           name: http
           protocol: TCP
         resources:
           requests:
             memory: "1Gi"
-            cpu: "2000m"
+            cpu: "1000m"
             nvidia.com/gpu: "1"
           limits:
-            memory: "32Gi"
+            memory: "16Gi"
             nvidia.com/gpu: "1"
         volumeMounts:
         - name: models
@@ -508,111 +294,19 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: mistral-vision
+  name: llama-3-1
   namespace: ai
   labels:
-    app: mistral-vision
+    app: llama-3-1
 spec:
   type: ClusterIP
   ports:
   - name: http
-    port: 8082
+    port: 80
     protocol: TCP
     targetPort: http
   selector:
-    app: mistral-vision
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: llama-3-3
-  namespace: ai
-  labels:
-    app: llama-3-3
-spec:
-  replicas: 0
-  strategy:
-    type: Recreate
-  selector:
-    matchLabels:
-      app: llama-3-3
-  template:
-    metadata:
-      labels:
-        app: llama-3-3
-    spec:
-      containers:
-      - name: llama-cpp
-        image: ghcr.io/rajsinghtech/llama.cpp:server-cuda-arm64@sha256:664f05a08b1c78b2ea222678d8dea0bc9be09b8424f16adc491f775a15b6cf7f
-        args:
-        - "-m"
-        - "/models/Llama-3.3-70B-Instruct-Q4_K_M.gguf"
-        - "--port"
-        - "8083"
-        - "--host"
-        - "0.0.0.0"
-        - "-n"
-        - "4096"
-        - "--n-gpu-layers"
-        - "99"
-        - "-c"
-        - "32768"
-        - "--parallel"
-        - "4"
-        - "--threads"
-        - "8"
-        ports:
-        - containerPort: 8083
-          name: http
-          protocol: TCP
-        resources:
-          requests:
-            memory: "1Gi"
-            cpu: "4000m"
-            nvidia.com/gpu: "1"
-          limits:
-            memory: "64Gi"
-            nvidia.com/gpu: "1"
-        volumeMounts:
-        - name: models
-          mountPath: /models
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: http
-          initialDelaySeconds: 120
-          periodSeconds: 30
-          timeoutSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: http
-          initialDelaySeconds: 60
-          periodSeconds: 10
-          timeoutSeconds: 5
-      volumes:
-      - name: models
-        persistentVolumeClaim:
-          claimName: llama-cpp-models
-      nodeSelector:
-        nvidia.com/gpu.present: "true"
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: llama-3-3
-  namespace: ai
-  labels:
-    app: llama-3-3
-spec:
-  type: ClusterIP
-  ports:
-  - name: http
-    port: 8083
-    protocol: TCP
-    targetPort: http
-  selector:
-    app: llama-3-3
+    app: llama-3-1
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -708,26 +402,6 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: ministral-instruct-ts
-  namespace: ai
-  annotations:
-    tailscale.com/hostname: "${LOCATION}-ministral-instruct"
-    tailscale.com/proxy-class: "common"
-    tailscale.com/tags: "tag:singh360,tag:k8s,tag:${LOCATION}"
-spec:
-  type: LoadBalancer
-  loadBalancerClass: tailscale
-  ports:
-  - name: http
-    port: 80
-    protocol: TCP
-    targetPort: 80
-  selector:
-    app: ministral-instruct
----
-apiVersion: v1
-kind: Service
-metadata:
   name: qwen-coder-ts
   namespace: ai
   annotations:
@@ -748,10 +422,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: mistral-vision-ts
+  name: llama-3-1-ts
   namespace: ai
   annotations:
-    tailscale.com/hostname: "${LOCATION}-mistral-vision"
+    tailscale.com/hostname: "${LOCATION}-llama-3-1"
     tailscale.com/proxy-class: "common"
     tailscale.com/tags: "tag:singh360,tag:k8s,tag:${LOCATION}"
 spec:
@@ -761,26 +435,6 @@ spec:
   - name: http
     port: 80
     protocol: TCP
-    targetPort: 8082
+    targetPort: 80
   selector:
-    app: mistral-vision
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: llama-3-3-ts
-  namespace: ai
-  annotations:
-    tailscale.com/hostname: "${LOCATION}-llama-3-3"
-    tailscale.com/proxy-class: "common"
-    tailscale.com/tags: "tag:singh360,tag:k8s,tag:${LOCATION}"
-spec:
-  type: LoadBalancer
-  loadBalancerClass: tailscale
-  ports:
-  - name: http
-    port: 80
-    protocol: TCP
-    targetPort: 8083
-  selector:
-    app: llama-3-3
+    app: llama-3-1
