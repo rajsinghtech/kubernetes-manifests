@@ -157,7 +157,7 @@ metadata:
   labels:
     app: ministral-instruct
 spec:
-  replicas: 1
+  replicas: 0
   strategy:
     type: Recreate
   selector:
@@ -344,7 +344,7 @@ metadata:
   labels:
     app: qwen-coder
 spec:
-  replicas: 1
+  replicas: 0
   strategy:
     type: Recreate
   selector:
@@ -436,7 +436,7 @@ metadata:
   labels:
     app: mistral-vision
 spec:
-  replicas: 1
+  replicas: 0
   strategy:
     type: Recreate
   selector:
@@ -530,7 +530,7 @@ metadata:
   labels:
     app: llama-3-3
 spec:
-  replicas: 1
+  replicas: 0
   strategy:
     type: Recreate
   selector:
