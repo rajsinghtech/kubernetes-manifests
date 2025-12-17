@@ -170,7 +170,7 @@ metadata:
   labels:
     app: qwen-coder
 spec:
-  replicas: 1
+  replicas: 0
   strategy:
     type: Recreate
   selector:
