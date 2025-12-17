@@ -25,9 +25,9 @@ data:
 
     MODEL_DIR = "/models"
 
-    # Reasoning model configuration (Apriel Thinker)
-    THINKER_REPO_ID = "bartowski/ServiceNow-AI_Apriel-1.6-15b-Thinker-GGUF"
-    THINKER_MODEL_FILE = "ServiceNow-AI_Apriel-1.6-15b-Thinker-Q4_K_M.gguf"
+    # Instruction model configuration (Mistral Ministral-3-14B)
+    INSTRUCT_REPO_ID = "mistralai/Ministral-3-14B-Instruct-2512-GGUF"
+    INSTRUCT_MODEL_FILE = "Ministral-3-14B-Instruct-2512-Q4_K_M.gguf"
 
     # Coder model configuration
     CODER_REPO_ID = "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF"
@@ -45,24 +45,24 @@ data:
     # Create directory
     Path(MODEL_DIR).mkdir(parents=True, exist_ok=True)
 
-    # Download thinker model
-    thinker_model_path = Path(MODEL_DIR) / THINKER_MODEL_FILE
-    if not thinker_model_path.exists():
+    # Download instruct model
+    instruct_model_path = Path(MODEL_DIR) / INSTRUCT_MODEL_FILE
+    if not instruct_model_path.exists():
         print("=" * 60)
-        print("Downloading Apriel-1.6-15B Thinker reasoning model...")
-        print(f"Repository: {THINKER_REPO_ID}")
-        print(f"File: {THINKER_MODEL_FILE} (8.79 GB)")
+        print("Downloading Ministral-3-14B-Instruct multimodal model...")
+        print(f"Repository: {INSTRUCT_REPO_ID}")
+        print(f"File: {INSTRUCT_MODEL_FILE} (8.24 GB)")
         print("=" * 60)
 
         hf_hub_download(
-            repo_id=THINKER_REPO_ID,
-            filename=THINKER_MODEL_FILE,
+            repo_id=INSTRUCT_REPO_ID,
+            filename=INSTRUCT_MODEL_FILE,
             local_dir=MODEL_DIR,
             local_dir_use_symlinks=False
         )
-        print(f"✓ Thinker model downloaded: {thinker_model_path}\n")
+        print(f"✓ Instruct model downloaded: {instruct_model_path}\n")
     else:
-        print(f"✓ Thinker model already exists: {thinker_model_path}")
+        print(f"✓ Instruct model already exists: {instruct_model_path}")
 
     # Download coder model
     coder_model_path = Path(MODEL_DIR) / CODER_MODEL_FILE
@@ -142,31 +142,31 @@ data:
     print("\n" + "=" * 60)
     print("All downloads complete!")
     print("Models available:")
-    print(f"  - Thinker: {THINKER_MODEL_FILE}")
-    print(f"  - Coder:   {CODER_MODEL_FILE}")
-    print(f"  - Vision:  {VISION_MODEL_FILE}")
-    print(f"  - Mmproj:  {VISION_MMPROJ_FILE}")
-    print(f"  - General: {GENERAL_MODEL_FILE}")
+    print(f"  - Instruct: {INSTRUCT_MODEL_FILE}")
+    print(f"  - Coder:    {CODER_MODEL_FILE}")
+    print(f"  - Vision:   {VISION_MODEL_FILE}")
+    print(f"  - Mmproj:   {VISION_MMPROJ_FILE}")
+    print(f"  - General:  {GENERAL_MODEL_FILE}")
     print("=" * 60)
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: apriel-thinker
+  name: ministral-instruct
   namespace: ai
   labels:
-    app: apriel-thinker
+    app: ministral-instruct
 spec:
   replicas: 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: apriel-thinker
+      app: ministral-instruct
   template:
     metadata:
       labels:
-        app: apriel-thinker
+        app: ministral-instruct
     spec:
       initContainers:
       - name: model-downloader
@@ -192,7 +192,7 @@ spec:
         image: ghcr.io/rajsinghtech/llama.cpp:server-cuda-arm64@sha256:664f05a08b1c78b2ea222678d8dea0bc9be09b8424f16adc491f775a15b6cf7f
         args:
         - "-m"
-        - "/models/ServiceNow-AI_Apriel-1.6-15b-Thinker-Q4_K_M.gguf"
+        - "/models/Ministral-3-14B-Instruct-2512-Q4_K_M.gguf"
         - "--port"
         - "80"
         - "--host"
@@ -202,7 +202,7 @@ spec:
         - "--n-gpu-layers"
         - "99"
         - "-c"
-        - "16384"
+        - "32768"
         - "--parallel"
         - "4"
         - "--threads"
@@ -250,10 +250,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: apriel-thinker
+  name: ministral-instruct
   namespace: ai
   labels:
-    app: apriel-thinker
+    app: ministral-instruct
 spec:
   type: ClusterIP
   ports:
@@ -262,7 +262,7 @@ spec:
     protocol: TCP
     targetPort: http
   selector:
-    app: apriel-thinker
+    app: ministral-instruct
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -276,18 +276,18 @@ data:
     healthCheckTimeout: 120
 
     models:
-      # Reasoning Model (step-by-step thinking)
-      apriel-thinker-15b:
-        name: "Apriel-1.6-15B-Thinker"
-        description: "ServiceNow Apriel 15B reasoning model. Specialized for step-by-step thinking, systematic analysis, and thoughtful problem-solving."
+      # Instruction Model (multimodal with vision and function calling)
+      ministral-3-14b:
+        name: "Ministral-3-14B-Instruct"
+        description: "Mistral Ministral-3 14B multimodal model. Vision understanding, function calling, multilingual support (11 languages), and 256K context window."
         cmd: sleep infinity  # Keep-alive command - backend is managed by Kubernetes
-        proxy: "http://apriel-thinker:80"
+        proxy: "http://ministral-instruct:80"
         checkEndpoint: "/health"
         aliases:
-          - "apriel-thinker"
-          - "apriel-15b"
-          - "thinker"
+          - "ministral"
+          - "ministral-3"
           - "o1-mini"  # OpenAI-compatible alias for reasoning
+          - "gpt-4o-mini"  # OpenAI-compatible alias for multimodal
         ttl: 0  # Disable TTL - backend is always running
         concurrencyLimit: 4
 
@@ -366,11 +366,11 @@ spec:
         - "--host"
         - "0.0.0.0"
         - "-n"
-        - "8192"
+        - "16384"
         - "--n-gpu-layers"
         - "99"
         - "-c"
-        - "65536"
+        - "262144"
         - "--parallel"
         - "4"
         - "--threads"
@@ -708,10 +708,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: apriel-thinker-ts
+  name: ministral-instruct-ts
   namespace: ai
   annotations:
-    tailscale.com/hostname: "${LOCATION}-apriel-thinker"
+    tailscale.com/hostname: "${LOCATION}-ministral-instruct"
     tailscale.com/proxy-class: "common"
     tailscale.com/tags: "tag:singh360,tag:k8s,tag:${LOCATION}"
 spec:
@@ -723,7 +723,7 @@ spec:
     protocol: TCP
     targetPort: 80
   selector:
-    app: apriel-thinker
+    app: ministral-instruct
 ---
 apiVersion: v1
 kind: Service
