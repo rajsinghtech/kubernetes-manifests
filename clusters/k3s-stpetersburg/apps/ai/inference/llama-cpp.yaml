@@ -33,6 +33,10 @@ data:
     GENERAL_REPO_ID = "bartowski/Meta-Llama-3.1-8B-Instruct-GGUF"
     GENERAL_MODEL_FILE = "Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf"
 
+    # Large model configuration (Llama 3.3 70B)
+    LARGE_REPO_ID = "unsloth/Llama-3.3-70B-Instruct-GGUF"
+    LARGE_MODEL_FILE = "Llama-3.3-70B-Instruct-Q4_K_M.gguf"
+
     # Create directory
     Path(MODEL_DIR).mkdir(parents=True, exist_ok=True)
 
@@ -74,11 +78,31 @@ data:
     else:
         print(f"✓ General model already exists: {general_model_path}")
 
+    # Download large model
+    large_model_path = Path(MODEL_DIR) / LARGE_MODEL_FILE
+    if not large_model_path.exists():
+        print("\n" + "=" * 60)
+        print("Downloading Llama-3.3-70B large model...")
+        print(f"Repository: {LARGE_REPO_ID}")
+        print(f"File: {LARGE_MODEL_FILE} (42.7 GB)")
+        print("=" * 60)
+
+        hf_hub_download(
+            repo_id=LARGE_REPO_ID,
+            filename=LARGE_MODEL_FILE,
+            local_dir=MODEL_DIR,
+            local_dir_use_symlinks=False
+        )
+        print(f"✓ Large model downloaded: {large_model_path}\n")
+    else:
+        print(f"✓ Large model already exists: {large_model_path}")
+
     print("\n" + "=" * 60)
     print("All downloads complete!")
     print("Models available:")
     print(f"  - Coder:   {CODER_MODEL_FILE}")
     print(f"  - General: {GENERAL_MODEL_FILE}")
+    print(f"  - Large:   {LARGE_MODEL_FILE}")
     print("=" * 60)
 ---
 apiVersion: v1
@@ -119,10 +143,24 @@ data:
           - "llama-3.1"
           - "llama-3.1-8b"
           - "llama3.1"
-          - "gpt-4"  # OpenAI-compatible alias for general tasks
           - "gpt-4o-mini"  # OpenAI-compatible alias
         ttl: 0  # Disable TTL - backend is always running
         concurrencyLimit: 4
+
+      # Large Model (Llama 3.3 70B)
+      llama-3.3-70b:
+        name: "Llama-3.3-70B-Instruct"
+        description: "Meta Llama 3.3 70B instruction-tuned model. High-performance general-purpose model with strong reasoning, multilingual, and long-context capabilities (128K tokens)."
+        cmd: sleep infinity  # Keep-alive command - backend is managed by Kubernetes
+        proxy: "http://llama-3-3:80"
+        checkEndpoint: "/health"
+        aliases:
+          - "llama-3.3"
+          - "llama-3.3-70b"
+          - "llama3.3"
+          - "gpt-4"  # OpenAI-compatible alias for general tasks
+        ttl: 0  # Disable TTL - backend is always running
+        concurrencyLimit: 2
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -311,6 +349,98 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: llama-3-3
+  namespace: ai
+  labels:
+    app: llama-3-3
+spec:
+  replicas: 0
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: llama-3-3
+  template:
+    metadata:
+      labels:
+        app: llama-3-3
+    spec:
+      containers:
+      - name: llama-cpp
+        image: ghcr.io/rajsinghtech/llama.cpp:server-cuda-arm64@sha256:664f05a08b1c78b2ea222678d8dea0bc9be09b8424f16adc491f775a15b6cf7f
+        args:
+        - "-m"
+        - "/models/Llama-3.3-70B-Instruct-Q4_K_M.gguf"
+        - "--port"
+        - "80"
+        - "--host"
+        - "0.0.0.0"
+        - "-n"
+        - "4096"
+        - "--n-gpu-layers"
+        - "99"
+        - "-c"
+        - "32768"
+        - "--parallel"
+        - "4"
+        - "--threads"
+        - "8"
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "4000m"
+            nvidia.com/gpu: "1"
+          limits:
+            memory: "64Gi"
+            nvidia.com/gpu: "1"
+        volumeMounts:
+        - name: models
+          mountPath: /models
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 120
+          periodSeconds: 30
+          timeoutSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 5
+      volumes:
+      - name: models
+        persistentVolumeClaim:
+          claimName: llama-cpp-models
+      nodeSelector:
+        nvidia.com/gpu.present: "true"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: llama-3-3
+  namespace: ai
+  labels:
+    app: llama-3-3
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app: llama-3-3
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
   name: llama-swap
   namespace: ai
   labels:
@@ -438,3 +568,23 @@ spec:
     targetPort: 80
   selector:
     app: llama-3-1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: llama-3-3-ts
+  namespace: ai
+  annotations:
+    tailscale.com/hostname: "${LOCATION}-llama-3-3"
+    tailscale.com/proxy-class: "common"
+    tailscale.com/tags: "tag:singh360,tag:k8s,tag:${LOCATION}"
+spec:
+  type: LoadBalancer
+  loadBalancerClass: tailscale
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: llama-3-3
