@@ -70,7 +70,7 @@ spec:
         - name: UPDATER_PERIOD
           value: "24h"
         - name: HEALTH_VPN_DURATION_INITIAL
-          value: "360s"
+          value: "10s"
         - name: LOG_LEVEL
           value: info
         volumeMounts:
