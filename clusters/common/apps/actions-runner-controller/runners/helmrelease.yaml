@@ -22,7 +22,8 @@ spec:
       retries: 3
   values:
     # Runner scale set name - use this in your workflow's runs-on
-    runnerScaleSetName: arc-runner-set
+    # Uses cluster location for unique naming across clusters
+    runnerScaleSetName: arc-runner-${LOCATION}
 
     # Repository URL
     githubConfigUrl: https://github.com/rajsinghtech/kubernetes-manifests
