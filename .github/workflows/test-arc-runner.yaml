@@ -5,8 +5,8 @@ on:
 
 jobs:
   test:
-    # Use common label - GitHub dispatches to first available cluster
-    runs-on: arc-runner
+    # Use cluster-specific runner (robbinsdale=primary, ottawa=media, stpetersburg=GPU)
+    runs-on: arc-runner-robbinsdale
     steps:
       - name: Checkout
         uses: actions/checkout@v4

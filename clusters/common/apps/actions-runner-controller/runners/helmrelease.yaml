@@ -22,12 +22,8 @@ spec:
       retries: 3
   values:
     # Runner scale set name - unique per cluster
+    # Use in workflows: runs-on: arc-runner-robbinsdale (or ottawa/stpetersburg)
     runnerScaleSetName: arc-runner-${LOCATION}
-
-    # Common label for load balancing across clusters
-    # Use "runs-on: arc-runner" to let GitHub pick any available cluster
-    labels:
-      - arc-runner
 
     # Repository URL
     githubConfigUrl: https://github.com/rajsinghtech/kubernetes-manifests
