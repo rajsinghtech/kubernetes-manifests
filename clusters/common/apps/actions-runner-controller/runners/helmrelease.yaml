@@ -21,9 +21,13 @@ spec:
     remediation:
       retries: 3
   values:
-    # Runner scale set name - use this in your workflow's runs-on
-    # Uses cluster location for unique naming across clusters
+    # Runner scale set name - unique per cluster
     runnerScaleSetName: arc-runner-${LOCATION}
+
+    # Common label for load balancing across clusters
+    # Use "runs-on: arc-runner" to let GitHub pick any available cluster
+    labels:
+      - arc-runner
 
     # Repository URL
     githubConfigUrl: https://github.com/rajsinghtech/kubernetes-manifests

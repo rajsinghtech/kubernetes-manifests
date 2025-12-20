@@ -5,7 +5,8 @@ on:
 
 jobs:
   test:
-    runs-on: arc-runner-stpetersburg
+    # Use common label - GitHub dispatches to first available cluster
+    runs-on: arc-runner
     steps:
       - name: Checkout
         uses: actions/checkout@v4
