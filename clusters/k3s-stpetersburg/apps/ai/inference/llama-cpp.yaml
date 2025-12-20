@@ -146,7 +146,7 @@ spec:
     spec:
       containers:
       - name: llama-cpp
-        image: ghcr.io/rajsinghtech/llama.cpp:server-cuda-arm64@sha256:664f05a08b1c78b2ea222678d8dea0bc9be09b8424f16adc491f775a15b6cf7f
+        image: ghcr.io/rajsinghtech/llama.cpp:server-cuda-arm64@sha256:f1c3c723f8838317b97558aeaf99850a93159c1e56a79c431a48f92467a46d2e
         args:
         - "-m"
         - "/models/Qwen3-Coder-30B-A3B-Instruct-Q4_K_M.gguf"
@@ -238,7 +238,7 @@ spec:
     spec:
       containers:
       - name: llama-cpp
-        image: ghcr.io/rajsinghtech/llama.cpp:server-cuda-arm64@sha256:664f05a08b1c78b2ea222678d8dea0bc9be09b8424f16adc491f775a15b6cf7f
+        image: ghcr.io/rajsinghtech/llama.cpp:server-cuda-arm64@sha256:f1c3c723f8838317b97558aeaf99850a93159c1e56a79c431a48f92467a46d2e
         args:
         - "-m"
         - "/models/Nemotron-3-Nano-30B-A3B-Q4_K_M.gguf"
