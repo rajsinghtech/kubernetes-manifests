@@ -71,3 +71,4 @@ resources:
   - ./vector.yaml
   - ./kuberay.yaml
   - ./liqo.yaml
+  - ./actions-runner-controller.yaml

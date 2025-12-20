@@ -1,0 +1,55 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: arc-runner-set
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: gha-runner-scale-set
+      version: 0.10.1
+      sourceRef:
+        kind: HelmRepository
+        name: actions-runner-controller
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    # Runner scale set name - use this in your workflow's runs-on
+    runnerScaleSetName: arc-runner-set
+
+    # Repository URL
+    githubConfigUrl: https://github.com/rajsinghtech/kubernetes-manifests
+
+    # Reference to the secret containing GitHub PAT
+    githubConfigSecret: github-pat-secret
+
+    # Controller service account
+    controllerServiceAccount:
+      namespace: arc-systems
+      name: gha-runner-scale-set-controller
+
+    # Scaling configuration
+    minRunners: 0
+    maxRunners: 5
+
+    # Runner pod template
+    template:
+      spec:
+        containers:
+          - name: runner
+            image: ghcr.io/actions/actions-runner:latest
+            command: ["/home/runner/run.sh"]
+            resources:
+              limits:
+                cpu: "2"
+                memory: 4Gi
+              requests:
+                cpu: "500m"
+                memory: 1Gi

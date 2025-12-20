@@ -1,0 +1,54 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app actions-runner-controller
+  namespace: flux-system
+spec:
+  targetNamespace: arc-systems
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  path: ./clusters/common/apps/actions-runner-controller/app
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: kubernetes-manifests
+  wait: true
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app actions-runner-controller-runners
+  namespace: flux-system
+spec:
+  targetNamespace: arc-runners
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  dependsOn:
+    - name: actions-runner-controller
+  path: ./clusters/common/apps/actions-runner-controller/runners
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: kubernetes-manifests
+  wait: true
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: common-settings
+      - kind: Secret
+        name: common-secrets
+      - kind: ConfigMap
+        name: cluster-settings
+        optional: true
+      - kind: Secret
+        name: cluster-secrets
+        optional: true
