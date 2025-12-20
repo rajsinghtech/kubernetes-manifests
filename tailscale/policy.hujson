@@ -112,6 +112,12 @@
 			"dst": ["tag:ottawa", "tag:robbinsdale", "tag:stpetersburg"],
 			"ip":  ["*"],
 		},
+		// Allow Funnel ingress traffic to reach tag:k8s nodes
+		{
+			"src": ["autogroup:shared"],
+			"dst": ["tag:k8s"],
+			"ip":  ["*"],
+		},
 		// {
 		// 	"src": ["*"],
 		// 	"dst": ["tag:udm"],
