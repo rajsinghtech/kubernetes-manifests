@@ -21,12 +21,15 @@ spec:
     remediation:
       retries: 3
   values:
-    # Runner scale set name - unique per cluster
-    # Use in workflows: runs-on: arc-runner-robbinsdale (or ottawa/stpetersburg)
-    runnerScaleSetName: arc-runner-${LOCATION}
+    # Runner scale set name - same across all clusters for load balancing
+    # Use in workflows: runs-on: arc-runner
+    runnerScaleSetName: arc-runner
 
-    # Repository URL
-    githubConfigUrl: https://github.com/rajsinghtech/kubernetes-manifests
+    # Runner group - unique per cluster (enables same name across clusters)
+    runnerGroup: ${LOCATION}-runners
+
+    # Organization URL (runners available to all org repos)
+    githubConfigUrl: https://github.com/keiretsu-labs
 
     # Reference to the secret containing GitHub PAT
     githubConfigSecret: github-pat-secret

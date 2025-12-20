@@ -5,8 +5,8 @@ on:
 
 jobs:
   test:
-    # Use cluster-specific runner (robbinsdale=primary, ottawa=media, stpetersburg=GPU)
-    runs-on: arc-runner-robbinsdale
+    # Load balanced across all clusters - GitHub picks first available
+    runs-on: arc-runner
     steps:
       - name: Checkout
         uses: actions/checkout@v4
