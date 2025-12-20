@@ -8,6 +8,7 @@ spec:
   events:
     - "ping"
     - "push"
+    - "status"
   secretRef:
     name: webhook-token
   resources:
