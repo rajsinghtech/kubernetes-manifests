@@ -1,0 +1,18 @@
+name: Test ARC Runner
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: arc-runner-stpetersburg
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Test runner
+        run: |
+          echo "Hello from ARC runner!"
+          echo "Runner: $RUNNER_NAME"
+          echo "OS: $(uname -a)"
+          kubectl version --client || echo "kubectl not installed (expected)"
