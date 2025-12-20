@@ -42,10 +42,10 @@ spec:
         description: "GitOps-managed Kubernetes cluster monitoring - Single source of truth for infrastructure health"
         header: "K8s-Ottawa Infrastructure Dashboard"
         logo: "https://raw.githubusercontent.com/kubernetes/kubernetes/master/logo/logo.png"
-        link: "https://github.com/rajsinghtech/kubernetes-manifests"
+        link: "https://github.com/keiretsu-labs/kubernetes-manifests"
         buttons:
           - name: "GitOps Repository"
-            link: "https://github.com/rajsinghtech/kubernetes-manifests"
+            link: "https://github.com/keiretsu-labs/kubernetes-manifests"
           # - name: "Portfolio"
           #   link: "https://www.${CLUSTER_DOMAIN}"
       endpoints:

@@ -5,7 +5,7 @@ metadata:
   namespace: flux-system
 spec:
   type: github
-  address: https://github.com/rajsinghtech/kubernetes-manifests
+  address: https://github.com/keiretsu-labs/kubernetes-manifests
   secretRef:
     name: kubernetes-manifests-github-token
   username: fluxcd-bot

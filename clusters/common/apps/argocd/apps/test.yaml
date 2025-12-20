@@ -10,7 +10,7 @@ spec:
   project: default
   source:
     path: clusters/common/apps/argocd/test
-    repoURL: https://github.com/rajsinghtech/kubernetes-manifests
+    repoURL: https://github.com/keiretsu-labs/kubernetes-manifests
     targetRevision: HEAD
   syncPolicy:
     automated:
@@ -31,7 +31,7 @@ spec:
   project: default
   source:
     path: clusters/common/apps/argocd/test
-    repoURL: https://github.com/rajsinghtech/kubernetes-manifests
+    repoURL: https://github.com/keiretsu-labs/kubernetes-manifests
     targetRevision: HEAD
   syncPolicy:
     automated:

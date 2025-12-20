@@ -54,7 +54,7 @@ spec:
     links:
     - name: "Kubernetes Manifests"
       icon: "fab fa-github"
-      url: "https://github.com/rajsinghtech/kubernetes-manifests"
+      url: "https://github.com/keiretsu-labs/kubernetes-manifests"
       target: "_blank"
     services:
     - parameters:

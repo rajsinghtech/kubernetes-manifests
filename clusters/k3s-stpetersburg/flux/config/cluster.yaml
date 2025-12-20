@@ -6,7 +6,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 30m
-  url: "https://github.com/rajsinghtech/kubernetes-manifests.git"
+  url: "https://github.com/keiretsu-labs/kubernetes-manifests.git"
   ref:
     branch: "main"
   ignore: |
