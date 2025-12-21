@@ -63,8 +63,8 @@ spec:
           value: protonvpn
         - name: DOT
           value: "off"
-        - name: DNS_KEEP_NAMESERVER
-          value: "on"
+        # - name: DNS_KEEP_NAMESERVER
+        #   value: "on"
         - name: HEALTH_TARGET_ADDRESS
           value: "1.1.1.1:443"
         - name: FIREWALL_INPUT_PORTS
