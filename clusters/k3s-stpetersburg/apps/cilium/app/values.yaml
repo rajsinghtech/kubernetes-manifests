@@ -38,3 +38,10 @@ bgpControlPlane:
 hubble:
   relay:
     enabled: true
+  tls:
+    auto:
+      method: certmanager
+      certManagerIssuerRef:
+        group: cert-manager.io
+        kind: ClusterIssuer
+        name: internal
