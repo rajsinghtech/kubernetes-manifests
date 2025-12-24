@@ -20,9 +20,13 @@ spec:
         imagePullPolicy: Always
         ports:
         - name: http
-          containerPort: 8080 
+          containerPort: 8080
           protocol: TCP
         env:
+        - name: ENVIRONMENT
+          value: "production"
+        - name: TAILSCALE_TAILNET
+          value: "-"
         - name: TAILSCALE_OAUTH_CLIENT_ID
           valueFrom:
             secretKeyRef:
@@ -33,5 +37,22 @@ spec:
             secretKeyRef:
               name: ts-oauth
               key: client_secret
-        - name: TAILSCALE_TAILNET
-          value: "-"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
