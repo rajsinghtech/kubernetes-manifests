@@ -1,0 +1,13 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: 360-ai
+  namespace: flux-system
+spec:
+  interval: 1m
+  url: ssh://git@bitbucket.org/itsingh360/360-ai.git
+  ref:
+    branch: main
+  secretRef:
+    name: bitbucket-ssh-key

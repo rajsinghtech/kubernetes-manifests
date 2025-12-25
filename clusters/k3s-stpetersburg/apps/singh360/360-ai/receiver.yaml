@@ -1,0 +1,16 @@
+---
+apiVersion: notification.toolkit.fluxcd.io/v1
+kind: Receiver
+metadata:
+  name: 360-ai
+  namespace: flux-system
+spec:
+  type: bitbucket
+  events:
+    - "ping"
+    - "repo:push"
+  secretRef:
+    name: webhook-token
+  resources:
+    - kind: GitRepository
+      name: 360-ai
