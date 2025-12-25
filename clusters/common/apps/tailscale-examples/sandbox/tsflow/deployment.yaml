@@ -49,10 +49,16 @@ spec:
             port: 8080
           initialDelaySeconds: 5
           periodSeconds: 10
+        volumeMounts:
+        - name: data
+          mountPath: /app/data
         resources:
           requests:
-            memory: "64Mi"
-            cpu: "50m"
+            memory: "128Mi"
+            cpu: "100m"
           limits:
-            memory: "256Mi"
-            cpu: "500m"
+            memory: "512Mi"
+            cpu: "1000m"
+      volumes:
+      - name: data
+        emptyDir: {}
