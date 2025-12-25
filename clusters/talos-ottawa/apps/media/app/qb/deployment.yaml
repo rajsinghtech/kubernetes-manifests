@@ -73,6 +73,16 @@ spec:
           value: ${CLUSTER_POD_CIDR}
         - name: UPDATER_PERIOD
           value: "24h"
+        - name: UPDATER_PROTONVPN_EMAIL
+          valueFrom:
+            secretKeyRef:
+              name: qbittorrent-secret
+              key: UPDATER_PROTONVPN_EMAIL
+        - name: UPDATER_PROTONVPN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: qbittorrent-secret
+              key: UPDATER_PROTONVPN_PASSWORD
         - name: HEALTH_VPN_DURATION_INITIAL
           value: "10s"
         - name: LOG_LEVEL
