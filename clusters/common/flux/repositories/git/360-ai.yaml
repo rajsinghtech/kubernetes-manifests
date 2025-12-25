@@ -8,6 +8,6 @@ spec:
   interval: 1m
   url: ssh://git@bitbucket.org/itsingh360/360-ai.git
   ref:
-    branch: main
+    branch: development
   secretRef:
     name: bitbucket-ssh-key
