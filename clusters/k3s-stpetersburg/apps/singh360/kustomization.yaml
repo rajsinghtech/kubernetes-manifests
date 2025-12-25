@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
   - ./ks.yaml
   - ./360-ai
+  - ./namespace.yaml
