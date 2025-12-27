@@ -131,7 +131,7 @@
 		// 	"ip":  ["*"],
 		// },
 		{
-			"src": ["group:superuser", "tag:k8s", "tag:ci"],
+			"src": ["autogroup:member", "tag:k8s", "tag:ci"],
 			"dst": ["autogroup:internet"],
 			"ip":  ["*"],
 			"via": ["tag:robbinsdale", "tag:ottawa", "tag:stpetersburg", "tag:ci"],
