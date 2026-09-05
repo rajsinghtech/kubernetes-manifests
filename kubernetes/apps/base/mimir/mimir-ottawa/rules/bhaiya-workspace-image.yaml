@@ -68,3 +68,51 @@ groups:
             error), so this alert does not claim the tag is missing. Restore
             registry reachability and inspect Bhaiya's probe status before
             treating the release as stale.
+
+      - alert: BhaiyaWorkspaceImageAdoptionStale
+        expr: |
+          max by (cluster) (
+            bhaiya_workspace_image_adoption_status{
+              job="bhaiya",
+              container="bhaiya",
+              status="behind"
+            } == 1
+          )
+        for: 75m
+        labels:
+          severity: critical
+        annotations:
+          summary: Workspace image adoption is behind
+          description: >-
+            Bhaiya has reported that the newest queued workspace-image release
+            is not represented by the active template or every observed
+            ready/idle curated workspace for at least 75 minutes. Query
+            bhaiya_workspace_image_adoption_info for the queued version,
+            digest, template identity, and registry state. This catches a
+            stalled template adoption or workspace propagation even while the
+            control plane and Deployments remain healthy; a missing publication
+            is also a definitive delivery failure rather than an unknown probe
+            result. The alert identity is deliberately stable across newer
+            queued releases so continuous lag does not reset its timer.
+
+      - alert: BhaiyaWorkspaceImageAdoptionUnknown
+        expr: |
+          max by (cluster) (
+            bhaiya_workspace_image_adoption_status{
+              job="bhaiya",
+              container="bhaiya",
+              status="unknown"
+            } == 1
+          )
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: Workspace image adoption cannot be evaluated
+          description: >-
+            Bhaiya cannot establish workspace-image adoption. Query
+            bhaiya_workspace_image_adoption_info for the queued version,
+            registry state, and template identity, then restore the Forgejo,
+            registry, or durable workspace observation path. Unknown is kept
+            separate from stale so this warning never claims a delivery failure
+            without evidence.
