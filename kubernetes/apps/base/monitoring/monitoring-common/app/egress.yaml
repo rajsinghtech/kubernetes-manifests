@@ -5,15 +5,9 @@ metadata:
   name: tailscale-egress
 spec:
   interval: 1m
-  chart:
-    spec:
-      chart: tailscale-egress
-      version: 0.0.0-latest
-      sourceRef:
-        kind: HelmRepository
-        name: tailscale-k8s-operator-helper-charts
-        namespace: flux-system 
-      interval: 1m
+  chartRef:
+    kind: OCIRepository
+    name: tailscale-egress
   releaseName: tailscale-egress
   values:
     proxyGroup: "common-egress"
