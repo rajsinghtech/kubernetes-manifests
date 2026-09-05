@@ -11,7 +11,7 @@ groups:
           max by (cluster, namespace, job_name) (
             kube_job_status_failed{
               namespace="mimir",
-              job_name=~"mimir-config-loader.*"
+              job_name=~"mimir-rules-.*"
             }
           ) > 0
         for: 5m
@@ -20,7 +20,7 @@ groups:
         annotations:
           summary: Mimir rule loader Job is failing
           description: >-
-            The mimir-config-loader Job has failed. Its three tenant sync
+            The content-hashed Mimir rules loader Job has failed. Its three tenant sync
             containers deliver every native rule group to the Ottawa,
             Robbinsdale, and St. Petersburg Mimir rulers; inspect the Job and
             its logs before relying on a newly changed alert.
@@ -32,7 +32,7 @@ groups:
               max_over_time(
                 kube_job_status_completion_time{
                   namespace="mimir",
-                  job_name=~"mimir-config-loader.*"
+                  job_name=~"mimir-rules-.*"
                 }[24h]
               )
             ) > 24 * 60 * 60
@@ -42,7 +42,7 @@ groups:
             absent_over_time(
               kube_job_status_completion_time{
                 namespace="mimir",
-                job_name=~"mimir-config-loader.*"
+                job_name=~"mimir-rules-.*"
               }[24h]
             )
             and on ()
@@ -54,6 +54,6 @@ groups:
         annotations:
           summary: Mimir rule loader has not completed successfully in 24 hours
           description: >-
-            No successful mimir-config-loader completion has been observed in
+            No successful content-hashed Mimir rules loader completion has been observed in
             the last 24 hours. This also covers the loader Job not being
             created; inspect Flux, the Job, and the three tenant sync logs.

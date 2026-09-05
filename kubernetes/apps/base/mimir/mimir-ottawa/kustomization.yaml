@@ -13,9 +13,11 @@ resources:
   - gateway-servicemonitor.yaml
   - loader-job.yaml
   - referencegrant.yaml
+configurations:
+  - name-reference.yaml
 configMapGenerator:
-  # Hash-suffixed so any rule change rolls the mimir-config-loader Job
-  # (its volume ref changes), forcing a re-sync into the Mimir ruler.
+  # Hash-suffixed so any rule change produces a new loader Job identity and
+  # re-syncs the changed rules into the Mimir ruler.
   - name: mimir-rules
     files:
       - rules/bhaiya.yaml

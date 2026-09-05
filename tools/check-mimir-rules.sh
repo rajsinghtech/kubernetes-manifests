@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # Verify that every native Mimir rule has the complete load path:
-# rules directory -> hashed rules ConfigMap -> mounted loader arguments for
-# every tenant. A YAML file that is only present on disk is not an alert.
+# rules directory -> hashed rules ConfigMap -> content-hashed loader Job ->
+# mounted loader arguments for every tenant. A YAML file that is only present
+# on disk is not an alert, and a completed fixed-name Job cannot accept a rule
+# update.
 set -euo pipefail
 
 ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -50,6 +52,7 @@ def read_yaml(path):
 
 kustomization = read_yaml(KUSTOMIZATION)
 generator_files = set()
+loader_name_source_wired = False
 if isinstance(kustomization, dict):
     generators = kustomization.get("configMapGenerator", [])
     generator = next(
@@ -71,6 +74,31 @@ if isinstance(kustomization, dict):
             for item in raw_files:
                 if not isinstance(item, str) or not item.startswith("rules/"):
                     fail(f"{KUSTOMIZATION}: invalid mimir-rules entry {item!r}")
+    configurations = kustomization.get("configurations", [])
+    if "name-reference.yaml" not in configurations:
+        fail(
+            f"{KUSTOMIZATION}: missing name-reference.yaml; the completed "
+            "loader Job must follow the rules ConfigMap hash"
+        )
+    else:
+        name_reference = MIMIR / "name-reference.yaml"
+        document = read_yaml(name_reference)
+        references = document.get("nameReference", []) if isinstance(document, dict) else []
+        for reference in references:
+            if not isinstance(reference, dict):
+                continue
+            if reference.get("kind") != "ConfigMap" or reference.get("version") != "v1":
+                continue
+            for field_spec in reference.get("fieldSpecs", []):
+                if not isinstance(field_spec, dict):
+                    continue
+                if field_spec.get("kind") == "Job" and field_spec.get("path") == "metadata/name":
+                    loader_name_source_wired = True
+if not loader_name_source_wired:
+    fail(
+        f"{KUSTOMIZATION}: generated mimir-rules name is not wired to the "
+        "loader Job metadata.name; completed Jobs must be content-hashed"
+    )
 
 on_disk = {path.name for path in RULES.iterdir() if path.suffix in {".yaml", ".yml"}}
 missing_from_configmap = on_disk - generator_files
@@ -104,6 +132,11 @@ for name in sorted(generator_files & on_disk):
 loader = read_yaml(LOADER)
 containers = []
 if isinstance(loader, dict):
+    if loader.get("metadata", {}).get("name") != "mimir-rules":
+        fail(
+            f"{LOADER}: source Job name must remain mimir-rules so the "
+            "generated ConfigMap name reference can hash it"
+        )
     containers = (
         loader.get("spec", {})
         .get("template", {})
