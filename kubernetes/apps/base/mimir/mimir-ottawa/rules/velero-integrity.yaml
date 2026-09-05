@@ -1,0 +1,84 @@
+# Velero Backup and PodVolumeBackup CR state is exported by the shared
+# kube-state-metrics custom-resource configuration. The Velero server counters
+# are useful for newly observed events, but do not represent the persisted
+# phase of an individual Backup (a real Failed Backup kept last_status=1).
+#
+# Keep this namespace separate from rules/velero.yaml. Both files are synced by
+# the same mimirtool Job and a repeated namespace aborts every tenant sync.
+namespace: velero-integrity
+groups:
+  - name: velero-integrity.rules
+    rules:
+      - alert: VeleroBackupInFailureState
+        expr: |
+          max by (cluster, namespace, backup, schedule, phase) (
+            velero_cr_backup_info{
+              namespace="velero-system",
+              schedule!="",
+              phase=~"Failed|PartiallyFailed"
+            }
+          ) > 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: Velero schedule {{ $labels.schedule }} has a {{ $labels.phase }} backup
+          description: >-
+            Backup {{ $labels.backup }} for schedule {{ $labels.schedule }} has
+            remained in {{ $labels.phase }} for at least five minutes. Inspect
+            the Backup failureReason/message, its PodVolumeBackup children,
+            Velero server and node-agent logs, and the Garage backup location.
+
+      - alert: VeleroPodVolumeBackupFailed
+        expr: |
+          max by (cluster, namespace, pod_volume_backup, backup, node, phase) (
+            velero_cr_podvolumebackup_info{
+              namespace="velero-system",
+              phase=~"Failed|Canceled"
+            }
+          ) > 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: Velero PodVolumeBackup {{ $labels.phase }} for {{ $labels.backup }}
+          description: >-
+            PodVolumeBackup {{ $labels.pod_volume_backup }} for Backup
+            {{ $labels.backup }} on node {{ $labels.node }} has remained
+            {{ $labels.phase }} for at least five minutes. Inspect the PVB
+            status message, the parent Backup, node-agent logs, and the storage
+            path before treating the parent Backup as restorable.
+
+      - alert: VeleroPodVolumeBackupBytesMismatch
+        expr: |
+          (
+            max by (cluster, namespace, pod_volume_backup, backup, node) (
+              velero_cr_podvolumebackup_bytes_done{
+                namespace="velero-system"
+              }
+            )
+            != on (cluster, namespace, pod_volume_backup, backup, node)
+            max by (cluster, namespace, pod_volume_backup, backup, node) (
+              velero_cr_podvolumebackup_bytes_total{
+                namespace="velero-system"
+              }
+            )
+          )
+          and on (cluster, namespace, pod_volume_backup, backup, node)
+          max by (cluster, namespace, pod_volume_backup, backup, node) (
+            velero_cr_podvolumebackup_info{
+              namespace="velero-system",
+              phase="Completed"
+            }
+          )
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: Velero completed PVB {{ $labels.pod_volume_backup }} has incomplete bytes
+          description: >-
+            Completed PodVolumeBackup {{ $labels.pod_volume_backup }} for
+            Backup {{ $labels.backup }} reports bytesDone different from
+            totalBytes on node {{ $labels.node }}. Inspect the PVB status and
+            node-agent/Kopia logs; matching item counts do not establish volume
+            integrity.
