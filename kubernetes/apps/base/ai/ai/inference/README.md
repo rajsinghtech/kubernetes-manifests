@@ -192,9 +192,14 @@ For Bhaiya-managed workspaces, the generated config lives at
 ```
 
 Tailscale MagicDNS hostnames:
-- `stpetersburg-vllm` → active SGLang Qwen3.8 server (port 80 → 8000)
+- `stpetersburg-vllm` → active vLLM Qwen3.8 head via Service `vllm-ts` (port 80 → 8000)
 - There is no current `stpetersburg-llama-cpp` Service; the llama.cpp route
   described above is historical reference material only.
+
+The `vllm/vllm-openai` digest in `qwen38.yaml` is the MiaAI-Lab recipe image
+and must not be Renovate-bumped to stock Docker Hub digests: those lack the
+`qwen3_8_flash_next` package the startup patches expect. Renovate ignores
+`vllm/vllm-openai` for that reason.
 
 ## References
 
