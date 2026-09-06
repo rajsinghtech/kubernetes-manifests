@@ -104,227 +104,6 @@ spec:
             capabilities:
               drop:
                 - ALL
-        - name: discover-ai-models
-          image: python:3.14-alpine@sha256:05b2b8b732ecd268fee8727a369f936f022d1321b59befd13c30ede22769dcdc
-          command:
-            - python
-            - -c
-          args:
-            - |
-              import json
-              import pathlib
-              import time
-              import urllib.request
-
-              upstream = "http://ai.keiretsu.ts.net/v1"
-              for attempt in range(30):
-                  try:
-                      with urllib.request.urlopen(upstream + "/models", timeout=10) as response:
-                          payload = json.load(response)
-                      models = []
-                      seen = set()
-                      for entry in payload.get("data", []):
-                          model = str(entry.get("id", "")).strip()
-                          if model and model not in seen:
-                              seen.add(model)
-                              models.append(model)
-                      if not models:
-                          raise RuntimeError("upstream returned no models")
-                      break
-                  except Exception:
-                      if attempt == 29:
-                          raise
-                      time.sleep(2)
-
-              lines = [
-                  "openai-compatibility:",
-                  '  - name: "ai"',
-                  '    prefix: "ai"',
-                  f'    base-url: "{upstream}"',
-                  "    disable-cooling: false",
-                  "    headers:",
-                  '      User-Agent: "Bhaiya-CLIProxy/1.0"',
-                  "    models:",
-              ]
-              for model in models:
-                  lines.append("      - name: " + json.dumps(model))
-              pathlib.Path("/provider/ai.yaml").write_text(
-                  "\n".join(lines) + "\n", encoding="utf-8"
-              )
-              print(f"discovered {len(models)} ai models")
-          env:
-            - name: PYTHONDONTWRITEBYTECODE
-              value: "1"
-          volumeMounts:
-            - name: provider-config
-              mountPath: /provider
-          resources:
-            requests:
-              cpu: 5m
-              memory: 32Mi
-            limits:
-              cpu: 200m
-              memory: 128Mi
-          securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
-            capabilities:
-              drop:
-                - ALL
-        - name: discover-ai-kartik-models
-          image: python:3.14-alpine@sha256:05b2b8b732ecd268fee8727a369f936f022d1321b59befd13c30ede22769dcdc
-          command:
-            - python
-            - -c
-          args:
-            - |
-              import json
-              import pathlib
-              import time
-              import urllib.request
-
-              upstream = "http://ai-kartik.keiretsu.ts.net/v1"
-              for attempt in range(30):
-                  try:
-                      with urllib.request.urlopen(upstream + "/models", timeout=10) as response:
-                          payload = json.load(response)
-                      models = []
-                      seen = set()
-                      for entry in payload.get("data", []):
-                          model = str(entry.get("id", "")).strip()
-                          if model and model not in seen:
-                              seen.add(model)
-                              models.append(model)
-                      if not models:
-                          raise RuntimeError("upstream returned no models")
-                      break
-                  except Exception:
-                      if attempt == 29:
-                          raise
-                      time.sleep(2)
-
-              lines = [
-                  "openai-compatibility:",
-                  '  - name: "ai-kartik"',
-                  '    prefix: "ai-kartik"',
-                  f'    base-url: "{upstream}"',
-                  "    disable-cooling: false",
-                  "    headers:",
-                  '      User-Agent: "Bhaiya-CLIProxy/1.0"',
-                  "    models:",
-              ]
-              for model in models:
-                  lines.append("      - name: " + json.dumps(model))
-              pathlib.Path("/provider/ai-kartik.yaml").write_text(
-                  "\n".join(lines) + "\n", encoding="utf-8"
-              )
-              print(f"discovered {len(models)} ai-kartik models")
-          env:
-            - name: PYTHONDONTWRITEBYTECODE
-              value: "1"
-          volumeMounts:
-            - name: provider-config
-              mountPath: /provider
-          resources:
-            requests:
-              cpu: 5m
-              memory: 32Mi
-            limits:
-              cpu: 200m
-              memory: 128Mi
-          securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
-            capabilities:
-              drop:
-                - ALL
-        - name: discover-vllm-models
-          image: python:3.14-alpine@sha256:05b2b8b732ecd268fee8727a369f936f022d1321b59befd13c30ede22769dcdc
-          command:
-            - python
-            - -c
-          args:
-            - |
-              import json
-              import pathlib
-              import time
-              import urllib.request
-
-              # This ExternalName is the supported in-cluster route to the
-              # tailnet endpoint. A single 5s timeout during St. Petersburg
-              # LWS rolls used to omit the vllm/ prefix entirely, so Pi and
-              # Hermes 400 unknown provider even after the GPU is healthy.
-              # Retry like the other discover inits, then pin the known
-              # serving ID so the catalog still advertises the GPU route.
-              # Completions fail closed against the live upstream.
-              upstream = "http://stpetersburg-vllm-upstream/v1"
-              models = []
-              seen = set()
-              last_error = None
-              for attempt in range(30):
-                  try:
-                      with urllib.request.urlopen(upstream + "/models", timeout=15) as response:
-                          payload = json.load(response)
-                      for entry in payload.get("data", []):
-                          model = str(entry.get("id", "")).strip()
-                          if model and model not in seen:
-                              seen.add(model)
-                              models.append(model)
-                      if not models:
-                          raise RuntimeError("upstream returned no models")
-                      last_error = None
-                      break
-                  except Exception as error:
-                      last_error = error
-                      if attempt == 29:
-                          break
-                      time.sleep(2)
-              if not models:
-                  models = ["Qwen3.8-Flash-Next-NVFP4"]
-                  seen = set(models)
-                  print(
-                      "vllm discovery unavailable after retries; "
-                      f"pinning known route: {last_error}"
-                  )
-              lines = [
-                  "openai-compatibility:",
-                  '  - name: "vllm"',
-                  '    prefix: "vllm"',
-                  f'    base-url: "{upstream}"',
-                  "    disable-cooling: false",
-                  "    models:",
-              ]
-              for model in models:
-                  lines.append("      - name: " + json.dumps(model))
-                  if model == "deepseek-v4-flash" and "DeepSeek-V4-Flash" not in seen:
-                      lines.append('        alias: "DeepSeek-V4-Flash"')
-                  if model == "deepseek-v4-flash-vision-exp" and "DeepSeek-V4-Flash-Vision-Exp" not in seen:
-                      lines.append('        alias: "DeepSeek-V4-Flash-Vision-Exp"')
-                  if model == "Qwen3.8-Flash-Next-NVFP4" and "Qwen3.8-Flash-Next" not in seen:
-                      lines.append('        alias: "Qwen3.8-Flash-Next"')
-              pathlib.Path("/provider/vllm.yaml").write_text(
-                  "\n".join(lines) + "\n", encoding="utf-8"
-              )
-              print(f"discovered {len(models)} vllm models")
-          env:
-            - name: PYTHONDONTWRITEBYTECODE
-              value: "1"
-          volumeMounts:
-            - name: provider-config
-              mountPath: /provider
-          resources:
-            requests:
-              cpu: 5m
-              memory: 32Mi
-            limits:
-              cpu: 200m
-              memory: 128Mi
-          securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
-            capabilities:
-              drop:
-                - ALL
         - name: render-config
           image: eceasy/cli-proxy-api:v7.2.151@sha256:9d3a608c20d386f5475a7c2ca01936e6441293168b639948f8ddbf8555ecc2b5
           command:
@@ -385,11 +164,22 @@ spec:
               ws-auth: true
               routing:
                 strategy: round-robin
+                # Affinity is deliberate: it keeps one conversation on one
+                # subscription so the account's prompt cache keeps hitting.
+                # It is not what blocked failover -- request-retry was.
                 session-affinity: true
+              # Additional credential retry rounds. These rounds are what
+              # handle 403/408/429/500/502/503/504, so leaving this at 0
+              # meant a rate-limited subscription returned the 429 straight
+              # to the client instead of moving to the next credential. A
+              # disabled or throttled account now falls through to a healthy
+              # one. Upstream's own default is 3.
+              request-retry: 3
+              # Allow a bounded wait for a cooling credential before starting
+              # another round; 0 forbade every positive cooldown wait.
+              max-retry-interval: 30
               EOF
-              cat /provider/ai.yaml >> /config/config.yaml
-              tail -n +2 /provider/ai-kartik.yaml >> /config/config.yaml
-              tail -n +2 /provider/vllm.yaml >> /config/config.yaml
+              cat /provider/providers.yaml >> /config/config.yaml
           env:
             - name: API_KEY
               valueFrom:
@@ -1151,9 +941,8 @@ spec:
             medium: Memory
             sizeLimit: 1Mi
         - name: provider-config
-          emptyDir:
-            medium: Memory
-            sizeLimit: 1Mi
+          configMap:
+            name: cliproxy-providers
         - name: data
           persistentVolumeClaim:
             claimName: cliproxy-data

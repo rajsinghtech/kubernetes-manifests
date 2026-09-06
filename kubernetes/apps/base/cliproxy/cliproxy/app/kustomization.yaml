@@ -16,3 +16,10 @@ resources:
   - httproute-api.yaml
   - securitypolicy.yaml
   - tinyauth-redirect-lua.yaml
+
+configMapGenerator:
+  # Hash-suffixed on purpose: editing the catalog must roll the Deployment,
+  # because render-config only reads it at pod start.
+  - name: cliproxy-providers
+    files:
+      - providers.yaml=providers/providers.yaml
