@@ -1,8 +1,8 @@
 ---
 # Syncs the native rule groups into the Mimir ruler, once per tenant (each
-# cluster is a tenant). Recreated by Flux whenever the rules ConfigMap changes,
-# because the configMapGenerator hash suffix changes the Job's volume reference
-# and the force annotation lets Flux replace the otherwise-immutable Job.
+# cluster is a tenant). Kustomize replaces this base name with the generated
+# rules ConfigMap's content-hashed name, so a rule change creates a new Job
+# instead of mutating a completed Job's immutable pod template.
 #
 # grafana/mimirtool is distroless (no /bin/sh), so each tenant sync runs the
 # mimirtool entrypoint directly instead of a shell loop. Alertmanager config is
@@ -11,9 +11,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: mimir-config-loader
-  annotations:
-    kustomize.toolkit.fluxcd.io/force: enabled
+  name: mimir-rules
 spec:
   backoffLimit: 6
   ttlSecondsAfterFinished: 3600
@@ -37,6 +35,7 @@ spec:
             - /rules/bhaiya-reconciler.yaml
             - /rules/bhaiya-provider-provisioning.yaml
             - /rules/bhaiya-ssh.yaml
+            - /rules/bhaiya-sandbox-telemetry.yaml
             - /rules/bhaiya-workspace-image.yaml
             - /rules/blackbox.yaml
             - /rules/ceph.yaml
@@ -69,6 +68,7 @@ spec:
             - /rules/bhaiya-reconciler.yaml
             - /rules/bhaiya-provider-provisioning.yaml
             - /rules/bhaiya-ssh.yaml
+            - /rules/bhaiya-sandbox-telemetry.yaml
             - /rules/bhaiya-workspace-image.yaml
             - /rules/blackbox.yaml
             - /rules/ceph.yaml
@@ -97,6 +97,7 @@ spec:
             - /rules/bhaiya-reconciler.yaml
             - /rules/bhaiya-provider-provisioning.yaml
             - /rules/bhaiya-ssh.yaml
+            - /rules/bhaiya-sandbox-telemetry.yaml
             - /rules/bhaiya-workspace-image.yaml
             - /rules/blackbox.yaml
             - /rules/ceph.yaml

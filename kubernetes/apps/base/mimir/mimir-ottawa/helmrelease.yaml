@@ -63,8 +63,8 @@ spec:
           sharding_ring:
             replication_factor: 1
         ruler:
-          # Ruler evaluates the rule groups loaded by mimir-config-loader and
-          # pushes firing alerts to the kube-prometheus-stack (Prometheus)
+          # Ruler evaluates the rule groups loaded by the content-hashed Mimir
+          # rules loader Job and pushes firing alerts to the kube-prometheus-stack (Prometheus)
           # Alertmanager — the bundled Mimir AM hits an upstream notify bug
           # (mimir#2910). One ruler (ottawa) drives all tenants' alerts here.
           alertmanager_url: http://kube-prometheus-stack-alertmanager.monitoring.svc.cluster.local:9093/

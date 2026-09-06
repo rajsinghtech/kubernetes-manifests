@@ -1,0 +1,10 @@
+nameReference:
+  # The loader Job deliberately shares the rules ConfigMap's base name so the
+  # generated ConfigMap hash also becomes the Job's identity. This is a
+  # content-based create-on-change for completed Jobs, whose pod templates are
+  # immutable after they run.
+  - kind: ConfigMap
+    version: v1
+    fieldSpecs:
+      - kind: Job
+        path: metadata/name

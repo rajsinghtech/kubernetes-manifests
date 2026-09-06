@@ -1,0 +1,94 @@
+# Sandbox RCA signals are evaluated by the per-cluster Mimir ruler. This is a
+# native Mimir rule file; PrometheusRule objects in the bhaiya namespace are
+# not evaluated by the agent-mode Prometheus.
+#
+# Keep this namespace unique across every file passed to mimirtool. A repeated
+# namespace aborts the complete rule sync for every tenant.
+namespace: bhaiya-sandbox-telemetry
+groups:
+  - name: bhaiya-sandbox-telemetry.rules
+    rules:
+      - alert: BhaiyaEtcdTelemetryMissing
+        expr: absent(etcd_server_has_leader)
+        for: 15m
+        labels:
+          severity: critical
+        annotations:
+          summary: Native etcd telemetry is missing
+          description: >-
+            No etcd_server_has_leader series is present for this Mimir tenant.
+            Check the kube-etcd ServiceMonitor and endpoint scrape before
+            interpreting any etcd panel as healthy.
+
+      - alert: BhaiyaEtcdMemberWithoutLeader
+        expr: sum by (cluster, instance) (1 - etcd_server_has_leader) > 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: etcd member {{ $labels.instance }} has no leader
+          description: >-
+            Correlate the member's WAL fsync, backend commit, read-index,
+            apiserver, and node-runtime signals. This is a control-plane
+            symptom, not proof of the initiating fault.
+
+      - alert: BhaiyaKubeletSandboxErrors
+        expr: sum by (cluster, node) (
+                rate(kubelet_run_podsandbox_errors_total[5m])
+              ) > 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: Kubelet on {{ $labels.node }} is failing sandbox operations
+          description: >-
+            Correlate this node-attributed error rate with runtime operation
+            errors, Kata shim logs, and any recent workspace exit 255. A
+            missing kubelet target is a collection gap, not a zero.
+
+      - alert: BhaiyaKubeletRuntimeErrors
+        expr: sum by (cluster, node, operation_type) (
+                rate(kubelet_runtime_operations_errors_total{
+                  operation_type=~"run_podsandbox|podsandbox_status|stop_podsandbox|create_container|stop_container"
+                }[5m])
+              ) > 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Kubelet runtime {{ $labels.operation_type }} errors on {{ $labels.node }}
+          description: >-
+            This names the CRI operation and node but not the process that
+            initiated the failure. Use it to order the direct runtime records.
+
+      - alert: BhaiyaKataSandboxExit255
+        expr: |
+          (
+            kube_pod_container_status_last_terminated_exitcode{
+              namespace="bhaiya", pod=~"sandbox-.+", container="workspace"
+            } == 255
+          )
+          and on (cluster, namespace, pod, uid)
+          kube_pod_container_status_last_terminated_reason{
+            namespace="bhaiya", pod=~"sandbox-.+", container="workspace", reason="Error"
+          }
+          and on (cluster, namespace, pod, uid)
+          kube_pod_runtimeclass_name_info{
+            namespace="bhaiya", pod=~"sandbox-.+", runtimeclass_name=~"kata-.*"
+          }
+          and on (cluster, namespace, pod, uid)
+          (
+            time() - kube_pod_container_status_last_terminated_timestamp{
+              namespace="bhaiya", pod=~"sandbox-.+", container="workspace"
+            } < 15 * 60
+          )
+        labels:
+          severity: critical
+        annotations:
+          summary: Kata workspace {{ $labels.namespace }}/{{ $labels.pod }} exited 255
+          description: >-
+            This is a bounded symptom alert. Inspect node-attributed kubelet,
+            containerd, Kata, Cloud Hypervisor, and virtiofsd evidence; do not
+            treat exit 255 as a root cause. Restart-to-remount is the recovery;
+            do not reset or recreate the workspace because that can discard its
+            PVC.
