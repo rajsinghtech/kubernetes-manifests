@@ -103,7 +103,9 @@ spec:
   startupPolicy: LeaderCreated
   leaderWorkerTemplate:
     size: 2
-    restartPolicy: RecreateGroupOnPodRestart
+    # Keep the head downloader alive if the worker has a transient failure; the
+    # 200Gi PVCs are resumable and the group must not erase active downloads.
+    restartPolicy: None
     leaderTemplate:
       metadata:
         labels:
