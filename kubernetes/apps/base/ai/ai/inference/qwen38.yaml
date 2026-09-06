@@ -127,7 +127,7 @@ spec:
             requests: { memory: "64Mi", cpu: "100m" }
             limits: { memory: "256Mi", cpu: "500m" }
         - name: download-models
-          image: vllm/vllm-openai@sha256:3b0e188ffceb3d07e09c3cb5215433a0020eacf02d7f882ed3a8bfd15454477e
+          image: vllm/vllm-openai@sha256:2a7cde230b59f3ce6cab33dd245ba6bee41aa87b38c9fe84f966ff24016813ce
           command: [/bin/bash]
           args: [/scripts/download-and-validate.sh]
           env:
@@ -155,7 +155,7 @@ spec:
             requests: { memory: "64Mi", cpu: "100m" }
             limits: { memory: "256Mi", cpu: "500m" }
         - name: vllm
-          image: vllm/vllm-openai@sha256:3b0e188ffceb3d07e09c3cb5215433a0020eacf02d7f882ed3a8bfd15454477e
+          image: vllm/vllm-openai@sha256:2a7cde230b59f3ce6cab33dd245ba6bee41aa87b38c9fe84f966ff24016813ce
           # Upstream MiaAI-Lab arm64 image; patches below are applied at startup.
           command: [bash, -c]
           args:
@@ -304,7 +304,7 @@ spec:
             requests: { memory: "64Mi", cpu: "100m" }
             limits: { memory: "256Mi", cpu: "500m" }
         - name: download-models
-          image: vllm/vllm-openai@sha256:3b0e188ffceb3d07e09c3cb5215433a0020eacf02d7f882ed3a8bfd15454477e
+          image: vllm/vllm-openai@sha256:2a7cde230b59f3ce6cab33dd245ba6bee41aa87b38c9fe84f966ff24016813ce
           command: [/bin/bash]
           args: [/scripts/download-and-validate.sh]
           env:
@@ -332,7 +332,7 @@ spec:
             requests: { memory: "64Mi", cpu: "100m" }
             limits: { memory: "256Mi", cpu: "500m" }
         - name: vllm
-          image: vllm/vllm-openai@sha256:3b0e188ffceb3d07e09c3cb5215433a0020eacf02d7f882ed3a8bfd15454477e
+          image: vllm/vllm-openai@sha256:2a7cde230b59f3ce6cab33dd245ba6bee41aa87b38c9fe84f966ff24016813ce
           # Upstream MiaAI-Lab arm64 image; patches below are applied at startup.
           command: [bash, -c]
           args:
