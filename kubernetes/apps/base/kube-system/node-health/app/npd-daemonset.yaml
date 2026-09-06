@@ -40,7 +40,6 @@ spec:
             - --prometheus-address=0.0.0.0
             - --prometheus-port=20257
             - --config.system-log-monitor=/config/kernel-monitor.json
-            - --config.custom-plugin-monitor=/config/health-checker-kubelet.json
           env:
             - name: NODE_NAME
               valueFrom:
@@ -58,15 +57,12 @@ spec:
           volumeMounts:
             - {name: kmsg, mountPath: /dev/kmsg, readOnly: true}
             - {name: log, mountPath: /var/log, readOnly: true}
-            - {name: talos-binaries, mountPath: /home/kubernetes/bin, readOnly: true}
             - {name: config, mountPath: /config, readOnly: true}
       volumes:
         - name: kmsg
           hostPath: {path: /dev/kmsg}
         - name: log
           hostPath: {path: /var/log}
-        - name: talos-binaries
-          hostPath: {path: /home/kubernetes/bin}
         - name: config
           configMap:
             name: node-problem-detector-config
