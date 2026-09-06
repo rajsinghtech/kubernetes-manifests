@@ -1,9 +1,11 @@
 ---
-# Allow Prometheus in the monitoring namespace to scrape Flux controller
-# metrics endpoints (port 8080). The common `allow-gatus` NP only opens
-# port 9090 from the gatus namespace, leaving Prometheus blocked which
-# trips PrometheusTargetDown on every flux controller. Robbinsdale and
-# Ottawa don't see this regression; add the policy explicitly on StP.
+# Keep this identical to the common flux-monitoring allow-monitoring policy.
+# St. Petersburg reconciles both Kustomizations against the same object; the
+# StP-only 8080 variant previously won on alternate intervals and stripped
+# port 9090. That broke the blackbox path to source-controller: Service port
+# 80 maps to container port 9090 (http), while Prometheus scrapes 8080
+# (http-prom). Without 9090, probe_success stays 0 for the full timeout and
+# ProbeSlowResponse fires as a consequence.
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -20,4 +22,6 @@ spec:
               kubernetes.io/metadata.name: monitoring
       ports:
         - port: 8080
+          protocol: TCP
+        - port: 9090
           protocol: TCP
