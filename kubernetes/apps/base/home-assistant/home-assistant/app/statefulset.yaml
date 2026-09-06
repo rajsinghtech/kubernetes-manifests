@@ -26,6 +26,10 @@ spec:
         - key: node-role.kubernetes.io/control-plane
           operator: Exists
           effect: NoSchedule
+        # Keep HA schedulable during transient control-plane memory pressure.
+        - key: node.kubernetes.io/memory-pressure
+          operator: Exists
+          effect: NoSchedule
       priorityClassName: "infra-high"
       initContainers:
         - name: route-fix
