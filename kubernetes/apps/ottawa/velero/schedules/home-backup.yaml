@@ -12,3 +12,6 @@ spec:
       - home
       - tinyauth
     defaultVolumesToFsBackup: true
+    resourcePolicy:
+      kind: configmap
+      name: fs-backup-resource-policy

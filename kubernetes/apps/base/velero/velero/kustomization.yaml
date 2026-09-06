@@ -6,6 +6,7 @@ resources:
   - ./velero-rotation-key-2.yaml
   - ./helmrelease.yaml
   - ./node-agent-config.yaml
+  - ./fs-backup-resource-policy.yaml
   - ./limitrange.yaml
   - ./servicemonitor.yaml
   - ./networkpolicy.yaml

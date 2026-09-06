@@ -1,0 +1,31 @@
+---
+# Skip ephemeral volumes under defaultVolumesToFsBackup: true.
+#
+# Opt-out mode otherwise captures emptyDir volumes such as Bhaiya sandbox
+# `scratch` / `hermes-managed` and AirConnect's disposable `config`. Those
+# volumes have no durable data, but a single Kopia/Garage or node-memory
+# failure on them still marks the parent Backup PartiallyFailed and pages
+# VeleroPodVolumeBackupFailed — which is what made bhaiya-backup and
+# home-assistant-backup look unprotected when the durable PVCs were fine.
+#
+# Secret/configMap/projected/downwardAPI volumes remain auto-skipped by
+# Velero itself; this policy only needs to cover emptyDir. Schedules that
+# want fs-backup must reference this ConfigMap via
+# spec.template.resourcePolicy.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fs-backup-resource-policy
+  namespace: velero-system
+  labels:
+    velero.io/plugin-config: ""
+    velero.io/pod-volume-backup: VolumePolicies
+data:
+  emptyDirSkip: |
+    version: v1
+    volumePolicies:
+      - conditions:
+          volumeTypes:
+            - emptyDir
+        action:
+          type: skip

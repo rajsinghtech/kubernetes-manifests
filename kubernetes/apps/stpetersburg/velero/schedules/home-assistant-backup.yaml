@@ -11,3 +11,8 @@ spec:
     includedNamespaces:
       - home-assistant
     defaultVolumesToFsBackup: true
+    # Skip AirConnect emptyDir noise. NOTE: homeassistant-config is still
+    # unprotected — Velero refuses local-path hostPath PVs (see findings).
+    resourcePolicy:
+      kind: configmap
+      name: fs-backup-resource-policy
