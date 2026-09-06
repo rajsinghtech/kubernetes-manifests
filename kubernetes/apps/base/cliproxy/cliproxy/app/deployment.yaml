@@ -178,6 +178,16 @@ spec:
               # Allow a bounded wait for a cooling credential before starting
               # another round; 0 forbade every positive cooldown wait.
               max-retry-interval: 30
+              # St. Petersburg's Qwen SGLang endpoint accepts system messages
+              # but rejects OpenAI's developer role, which Pi sends by default.
+              # Keep this compatibility translation scoped to the Qwen alias.
+              payload:
+                override:
+                  - models:
+                      - name: "vllm/Qwen3.8-Flash-Next"
+                        protocol: "openai"
+                    params:
+                      'messages.#(role=="developer")#.role': system
               EOF
               cat /provider/providers.yaml >> /config/config.yaml
           env:
