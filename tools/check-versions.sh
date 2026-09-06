@@ -58,10 +58,35 @@ import os
 import pathlib
 import re
 import sys
+import time
 import urllib.error
 import urllib.request
 
 import yaml
+
+
+def fetch_url(url, timeout=20, attempts=3, read=True):
+    # These fetches are the only part of this script that touches the network,
+    # so a single upstream reset would otherwise fail the whole version check
+    # and hide every real invariant behind a red run. urllib.error.URLError is
+    # an OSError, so one except clause covers connection resets and timeouts;
+    # the original exception is re-raised on the last attempt so callers keep
+    # their existing messages. Pass read=False for reachability-only checks:
+    # some asserted assets are binary (Kometa ships a fonts.zip) and decoding
+    # them would fail for a reason that has nothing to do with availability.
+    delay = 1
+    for attempt in range(1, attempts + 1):
+        try:
+            with urllib.request.urlopen(url, timeout=timeout) as resp:
+                if resp.status != 200:
+                    raise OSError(f"HTTP {resp.status}")
+                return resp.read().decode() if read else None
+        except OSError:
+            if attempt == attempts:
+                raise
+            time.sleep(delay)
+            delay *= 2
+
 
 CLUSTERS = ["ottawa", "robbinsdale", "stpetersburg"]
 # Rook-Ceph runs on Ottawa and Robbinsdale only; St. Petersburg has no cluster.
@@ -184,8 +209,7 @@ for cluster in CEPH_CLUSTERS:
     url = ROOK_SRC.format(tag=rook_tag)
 
     try:
-        with urllib.request.urlopen(url, timeout=20) as resp:
-            src = resp.read().decode()
+        src = fetch_url(url)
     except (urllib.error.URLError, OSError) as err:
         note = f"{cluster}/cluster.yaml (could not read {url}: {err})"
         if os.environ.get("CI"):
@@ -271,9 +295,7 @@ def url_versions(path, pattern, expected):
         if match:
             if os.environ.get("CI"):
                 try:
-                    with urllib.request.urlopen(url, timeout=20) as resp:
-                        if resp.status != 200:
-                            raise ValueError(f"HTTP {resp.status}")
+                    fetch_url(url, read=False)
                 except (urllib.error.URLError, OSError, ValueError) as err:
                     raise ValueError(f"unavailable asset {url}: {err}") from err
             values.append(canonical(match.group("version")))
@@ -437,9 +459,7 @@ for site in ("ottawa", "robbinsdale"):
         failures.append(f"  Kometa {site}: versioned fonts archive URL not found")
     elif os.environ.get("CI"):
         try:
-            with urllib.request.urlopen(match.group(0), timeout=20) as resp:
-                if resp.status != 200:
-                    raise ValueError(f"HTTP {resp.status}")
+            fetch_url(match.group(0), read=False)
         except (urllib.error.URLError, OSError, ValueError) as err:
             failures.append(f"  Kometa {site}: unavailable asset {match.group(0)}: {err}")
 
@@ -447,8 +467,7 @@ snapshot_hr = pathlib.Path("kubernetes/apps/base/snapshot-controller/app/helmrel
 snapshot_chart = yaml.safe_load(snapshot_hr.read_text())["spec"]["chart"]["spec"]["version"]
 snapshot_expected = None
 try:
-    with urllib.request.urlopen(PIRAEUS_INDEX, timeout=20) as resp:
-        index = yaml.safe_load(resp.read().decode())
+    index = yaml.safe_load(fetch_url(PIRAEUS_INDEX))
     releases = index["entries"]["snapshot-controller"]
     release = next(item for item in releases if str(item["version"]) == str(snapshot_chart))
     snapshot_expected = canonical(release["appVersion"])
