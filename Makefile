@@ -13,17 +13,13 @@ test: ## Render-test all clusters with flate
 test-%: ## Render-test one cluster, e.g. make test-talos-ottawa
 	@$(FLATE) test all --path clusters/$*/flux/config $(FLATE_FLAGS)
 # Application manifests live in two trees while the migration is completed.
-# Both trees sit outside the cluster-config scan root, but must still be able
-# to fail the bounded gate when an application manifest changes. Some clusters
-# have no legacy app tree, so skip a missing path.
+# A standalone location-tree scan is incomplete: shared bootstrap sources live
+# under clusters/common, so Flate aliases both the self GitRepository and any
+# foreign source (for example csi-addons) to this working tree. In baseline
+# mode, scan the complete cluster root instead. Its bootstrap follows common
+# and the location app tree, while the root walk also covers legacy apps.
 ifneq ($(strip $(FLATE_BASE)),)
-	@for path in \
-		clusters/$*/apps \
-		kubernetes/apps/$(patsubst talos-%,%,$*); do \
-		if [ -d "$$path" ]; then \
-			$(FLATE) test all --path "$$path" $(FLATE_FLAGS) || exit 1; \
-		fi; \
-	done
+	@$(FLATE) test all --path clusters/$* $(FLATE_FLAGS)
 endif
 
 diff: ## Show rendered diff vs origin/main for all clusters
