@@ -326,7 +326,7 @@ spec:
               drop:
                 - ALL
         - name: render-config
-          image: eceasy/cli-proxy-api:v7.2.133@sha256:944f8b1f5d23981244b5d482290d411d2623bf685749a74c5bca849c865c0ac8
+          image: eceasy/cli-proxy-api:v7.2.151@sha256:9d3a608c20d386f5475a7c2ca01936e6441293168b639948f8ddbf8555ecc2b5
           command:
             - /bin/sh
             - -ec
@@ -421,7 +421,7 @@ spec:
                 - ALL
       containers:
         - name: cliproxy
-          image: eceasy/cli-proxy-api:v7.2.133@sha256:944f8b1f5d23981244b5d482290d411d2623bf685749a74c5bca849c865c0ac8
+          image: eceasy/cli-proxy-api:v7.2.151@sha256:9d3a608c20d386f5475a7c2ca01936e6441293168b639948f8ddbf8555ecc2b5
           command:
             - /CLIProxyAPI/CLIProxyAPI
           args:
