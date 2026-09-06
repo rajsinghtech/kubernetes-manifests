@@ -9,34 +9,28 @@ namespace: velero-integrity
 groups:
   - name: velero-integrity.rules
     rules:
-      - alert: VeleroBackupInFailureState
-        expr: |
-          max by (cluster, namespace, backup, schedule, phase) (
-            velero_cr_backup_info{
-              namespace="velero-system",
-              schedule!="",
-              phase=~"Failed|PartiallyFailed"
-            }
-          ) > 0
-        for: 5m
-        labels:
-          severity: warning
-        annotations:
-          summary: Velero schedule {{ $labels.schedule }} has a {{ $labels.phase }} backup
-          description: >-
-            Backup {{ $labels.backup }} for schedule {{ $labels.schedule }} has
-            remained in {{ $labels.phase }} for at least five minutes. Inspect
-            the Backup failureReason/message, its PodVolumeBackup children,
-            Velero server and node-agent logs, and the Garage backup location.
-
+      # Failed/Canceled PVB CRs persist until TTL expiry. Matching every one
+      # latches for days after the parent Backup has already been superseded.
+      # Restrict to parents created in the last 24h so a recent failure still
+      # pages, while historical objects stop saturating the alert stream.
+      # Schedule-level paging for the newest Backup remains in
+      # VeleroScheduleLastBackupFailed below.
       - alert: VeleroPodVolumeBackupFailed
         expr: |
-          max by (cluster, namespace, pod_volume_backup, backup, node, phase) (
-            velero_cr_podvolumebackup_info{
-              namespace="velero-system",
-              phase=~"Failed|Canceled"
-            }
-          ) > 0
+          (
+            max by (cluster, namespace, pod_volume_backup, backup, node, phase) (
+              velero_cr_podvolumebackup_info{
+                namespace="velero-system",
+                phase=~"Failed|Canceled"
+              }
+            ) > 0
+          )
+          and on (cluster, namespace, backup)
+          (
+            velero_cr_backup_created_timestamp{
+              namespace="velero-system"
+            } > time() - 24 * 3600
+          )
         for: 5m
         labels:
           severity: warning
@@ -45,9 +39,12 @@ groups:
           description: >-
             PodVolumeBackup {{ $labels.pod_volume_backup }} for Backup
             {{ $labels.backup }} on node {{ $labels.node }} has remained
-            {{ $labels.phase }} for at least five minutes. Inspect the PVB
-            status message, the parent Backup, node-agent logs, and the storage
-            path before treating the parent Backup as restorable.
+            {{ $labels.phase }} for at least five minutes, and the parent
+            Backup was created within the last 24 hours. Older
+            Failed/Canceled PVB objects are intentionally ignored so a
+            recovered schedule stops paging. Inspect the PVB status message,
+            the parent Backup, node-agent logs, and the storage path before
+            treating the parent Backup as restorable.
 
       - alert: VeleroPodVolumeBackupBytesMismatch
         expr: |
