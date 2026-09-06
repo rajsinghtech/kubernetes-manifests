@@ -21,7 +21,7 @@ spec:
       containers:
       - name: app
         # renovate: datasource=docker depName=ghcr.io/maintainerr/maintainerr
-        image: ghcr.io/maintainerr/maintainerr:3.26.0
+        image: ghcr.io/maintainerr/maintainerr:3.27.0
         ports:
         - name: http
           containerPort: 6246
