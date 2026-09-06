@@ -1,0 +1,20 @@
+---
+apiVersion: garage.rajsingh.info/v1beta1
+kind: GarageBucket
+metadata:
+  name: suwayomi-postgres
+  namespace: garage
+spec:
+  clusterRef:
+    name: garage
+  globalAlias: suwayomi-postgres
+  quotas:
+    maxSize: 100Gi
+    maxObjects: 1000000
+  keyPermissions:
+    - keyRef:
+        name: suwayomi-postgres-key
+        namespace: media
+      read: true
+      write: true
+      owner: true

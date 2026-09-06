@@ -10,6 +10,8 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
+    - name: garage
+    - name: garage-keys
     - name: cnpg-system
   path: ./kubernetes/apps/base/woodpecker/woodpecker/app
   prune: true

@@ -9,6 +9,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
+    - name: garage-keys
     - name: cnpg-system
     - name: home-local-gateway
   path: ./kubernetes/apps/base/teslamate/teslamate/app

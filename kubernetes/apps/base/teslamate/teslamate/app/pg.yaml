@@ -17,3 +17,57 @@ spec:
     enablePodMonitor: true
   storage:
     size: 8Gi
+  plugins:
+    - name: barman-cloud.cloudnative-pg.io
+      isWALArchiver: true
+      parameters:
+        barmanObjectName: teslamate-postgres-s3-store
+        serverName: teslamate-postgres
+  backup:
+    retentionPolicy: "30d"
+  externalClusters:
+    - name: teslamate-postgres-backup
+      plugin:
+        name: barman-cloud.cloudnative-pg.io
+        parameters:
+          barmanObjectName: teslamate-postgres-s3-store
+          serverName: teslamate-postgres
+---
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: teslamate-postgres-s3-store
+  namespace: teslamate
+spec:
+  configuration:
+    destinationPath: s3://teslamate-postgres/${LOCATION}/
+    endpointURL: http://${COMMON_S3_ENDPOINT}
+    s3Credentials:
+      accessKeyId:
+        name: teslamate-postgres-s3
+        key: AWS_ACCESS_KEY_ID
+      secretAccessKey:
+        name: teslamate-postgres-s3
+        key: AWS_SECRET_ACCESS_KEY
+    wal:
+      maxParallel: 8
+  instanceSidecarConfiguration:
+    env:
+      - name: AWS_DEFAULT_REGION
+        value: garage
+  retentionPolicy: "30d"
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: teslamate-postgres-s3
+  namespace: teslamate
+spec:
+  schedule: "0 30 1 * * *"
+  immediate: true
+  backupOwnerReference: self
+  method: plugin
+  pluginConfiguration:
+    name: barman-cloud.cloudnative-pg.io
+  cluster:
+    name: teslamate-postgres

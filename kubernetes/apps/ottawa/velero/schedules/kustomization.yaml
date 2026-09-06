@@ -7,3 +7,4 @@ resources:
   - ./home-backup.yaml
   - ./bhaiya-backup.yaml
   - ./cliproxy-backup.yaml
+  - ./forgejo-backup.yaml

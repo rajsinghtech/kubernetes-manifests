@@ -18,3 +18,57 @@ spec:
     storageClass: ceph-block-replicated
   monitoring:
     enablePodMonitor: true
+  plugins:
+    - name: barman-cloud.cloudnative-pg.io
+      isWALArchiver: true
+      parameters:
+        barmanObjectName: woodpecker-postgres-s3-store
+        serverName: woodpecker-postgres
+  backup:
+    retentionPolicy: "30d"
+  externalClusters:
+    - name: woodpecker-postgres-backup
+      plugin:
+        name: barman-cloud.cloudnative-pg.io
+        parameters:
+          barmanObjectName: woodpecker-postgres-s3-store
+          serverName: woodpecker-postgres
+---
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: woodpecker-postgres-s3-store
+  namespace: woodpecker
+spec:
+  configuration:
+    destinationPath: s3://woodpecker-postgres/${LOCATION}/
+    endpointURL: http://${COMMON_S3_ENDPOINT}
+    s3Credentials:
+      accessKeyId:
+        name: woodpecker-postgres-s3
+        key: AWS_ACCESS_KEY_ID
+      secretAccessKey:
+        name: woodpecker-postgres-s3
+        key: AWS_SECRET_ACCESS_KEY
+    wal:
+      maxParallel: 8
+  instanceSidecarConfiguration:
+    env:
+      - name: AWS_DEFAULT_REGION
+        value: garage
+  retentionPolicy: "30d"
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: woodpecker-postgres-s3
+  namespace: woodpecker
+spec:
+  schedule: "0 45 2 * * *"
+  immediate: true
+  backupOwnerReference: self
+  method: plugin
+  pluginConfiguration:
+    name: barman-cloud.cloudnative-pg.io
+  cluster:
+    name: woodpecker-postgres

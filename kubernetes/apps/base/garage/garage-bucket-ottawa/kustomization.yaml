@@ -6,3 +6,7 @@ resources:
   - ../garage-bucket
   - bucket.yaml
   - firefly-postgres.yaml
+  - forgejo-postgres.yaml
+  - woodpecker-postgres.yaml
+  - suwayomi-postgres.yaml
+  - teslamate-postgres.yaml
