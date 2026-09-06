@@ -336,23 +336,18 @@ assert "full make gate -> three renders" test "$(wc -l <"$flate_calls" | tr -d '
 : >"$flate_calls"
 KMAN_FLATE_BIN="$fstub/flate" FLATE_CALLS="$flate_calls" FLATE_BASE=baseline \
   make -s -C "$ROOT" test
-assert "baseline make gate -> eight renders" test "$(wc -l <"$flate_calls" | tr -d ' ')" = 8
+assert "baseline make gate -> six renders" test "$(wc -l <"$flate_calls" | tr -d ' ')" = 6
 for cluster in talos-ottawa talos-robbinsdale talos-stpetersburg; do
   assert "full make gate -> $cluster" grep -q -- "--path clusters/$cluster/flux/config" "$flate_calls"
-  location="${cluster#talos-}"
-  assert "baseline make gate -> $location app tree" \
-    grep -q -- "--path kubernetes/apps/$location" "$flate_calls"
+  assert "baseline make gate -> $cluster complete context" \
+    grep -q -- "--path clusters/$cluster" "$flate_calls"
 done
-assert "baseline make gate -> Ottawa legacy app tree" \
-  grep -q -- '--path clusters/talos-ottawa/apps' "$flate_calls"
-assert "baseline make gate -> St Petersburg legacy app tree" \
-  grep -q -- '--path clusters/talos-stpetersburg/apps' "$flate_calls"
-refute "baseline make gate -> skips missing Robbinsdale legacy tree" \
-  grep -q -- '--path clusters/talos-robbinsdale/apps' "$flate_calls"
+refute "baseline make gate -> no incomplete location-only scan" \
+  grep -q -- '--path kubernetes/apps/' "$flate_calls"
 
-# A renderer failure from a legacy app tree must propagate through the loop;
-# this is the control for malformed YAML in that path (the real Flate parser is
-# exercised by the integration gate, while this offline test stays networkless).
+# A renderer failure from the complete context render must propagate through
+# make. The real Flate parser is exercised by the integration gate, while this
+# offline test stays networkless.
 cat >"$fstub/flate" <<EOF
 #!/usr/bin/env bash
 if [ "\${1:-}" = "--version" ]; then
@@ -360,14 +355,14 @@ if [ "\${1:-}" = "--version" ]; then
   exit 0
 fi
 case "\$*" in
-  *'--path clusters/talos-ottawa/apps'*) exit 1 ;;
+  *'--path clusters/talos-ottawa --no-progress'*) exit 1 ;;
 esac
 printf '%s\\n' "\$*" >>"\$FLATE_CALLS"
 EOF
 chmod +x "$fstub/flate"
 KMAN_FLATE_BIN="$fstub/flate" FLATE_CALLS="$flate_calls" FLATE_BASE=baseline \
-  make -s -C "$ROOT" test-talos-ottawa >/dev/null 2>&1; legacy_ec=$?
-assert "legacy app render failure -> make fails" test "$legacy_ec" != 0
+  make -s -C "$ROOT" test-talos-ottawa >/dev/null 2>&1; context_ec=$?
+assert "complete context render failure -> make fails" test "$context_ec" != 0
 rm -rf "$fstub"
 
 # ---------------------------------------------------------------- check.sh (stubbed make; no real render)
