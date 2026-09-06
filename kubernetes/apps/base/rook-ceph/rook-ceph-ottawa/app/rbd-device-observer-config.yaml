@@ -1,0 +1,226 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rbd-device-observer
+  namespace: rook-ceph
+  labels:
+    app.kubernetes.io/name: rbd-device-observer
+    app.kubernetes.io/component: observability
+data:
+  observe.sh: |
+    #!/bin/sh
+    set -eu
+
+    # This is intentionally a small host observer, not a second CSI driver.
+    # It records the join between the kernel RBD device, kubelet's mount
+    # namespace, and the PV metadata already held by the Kubernetes API.
+    API_SERVER="https://$${KUBERNETES_SERVICE_HOST}:$${KUBERNETES_SERVICE_PORT}"
+    SERVICE_ACCOUNT_DIR=/var/run/secrets/kubernetes.io/serviceaccount
+    TOKEN_FILE="$${SERVICE_ACCOUNT_DIR}/token"
+    CA_FILE="$${SERVICE_ACCOUNT_DIR}/ca.crt"
+    STATE_FILE=/var/lib/rbd-device-observer/state.tsv
+    CURRENT_FILE=/tmp/current.tsv
+    PV_JSON=/tmp/persistent-volumes.json
+    PV_MAP=/tmp/persistent-volumes.tsv
+    PV_DRIVER=rook-ceph.rbd.csi.ceph.com
+    NODE="$${NODE_NAME}"
+    CLUSTER="$${CLUSTER_NAME}"
+
+    mkdir -p "$$(dirname "$${STATE_FILE}")"
+    touch "$${STATE_FILE}"
+
+    api_get() {
+      curl -fsS --connect-timeout 5 --max-time 30 --cacert "$${CA_FILE}" \
+        -H "Authorization: Bearer $$(cat "$${TOKEN_FILE}")" \
+        "$${API_SERVER}$${1}"
+    }
+
+    emit_error() {
+      now=$$(date -u +%Y-%m-%dT%H:%M:%SZ)
+      jq -cn \
+        --arg observed_at "$${now}" \
+        --arg cluster "$${CLUSTER}" \
+        --arg node "$${NODE}" \
+        --arg error "$${1}" \
+        '{schema:"keiretsu.csi_rbd_device_map/v1", observed_at:$$observed_at,
+          cluster:$$cluster, node:$$node, source:"rbd-device-observer",
+          operation:"snapshot", result:"error", error:$$error}'
+    }
+
+    read_attr() {
+      if [ -r "$${1}" ]; then
+        value=$$(cat "$${1}" 2>/dev/null || true)
+        if [ -n "$${value}" ]; then
+          printf '%s' "$${value}"
+          return
+        fi
+      fi
+      printf '%s' '-'
+    }
+
+    lookup_pv_field() {
+      # The TSV deliberately uses '-' for absent claim references so the
+      # shell's whitespace IFS cannot collapse an empty column while parsing.
+      awk -F '\t' -v image="$${IMAGE}" -v field="$${1}" '
+        $$4 == image {
+          value = $$field
+          if (value == "") value = "-"
+          print value
+          found = 1
+          exit
+        }
+        END {
+          if (!found) print "-"
+        }
+      ' "$${PV_MAP}"
+    }
+
+    emit_record() {
+      line="$${1}"
+      operation="$${2}"
+      result="$${3}"
+      IFS="$$(printf '\t')" read -r device major minor pool image handle pv pv_uid pvc_ns pvc_name pvc_uid pod_uid phase error <<EOF
+    $${line}
+    EOF
+      now=$$(date -u +%Y-%m-%dT%H:%M:%SZ)
+      jq -cn \
+        --arg observed_at "$${now}" \
+        --arg cluster "$${CLUSTER}" \
+        --arg node "$${NODE}" \
+        --arg device "$${device}" \
+        --arg major "$${major}" \
+        --arg minor "$${minor}" \
+        --arg pool "$${pool}" \
+        --arg image "$${image}" \
+        --arg handle "$${handle}" \
+        --arg pv "$${pv}" \
+        --arg pv_uid "$${pv_uid}" \
+        --arg pvc_ns "$${pvc_ns}" \
+        --arg pvc_name "$${pvc_name}" \
+        --arg pvc_uid "$${pvc_uid}" \
+        --arg pod_uid "$${pod_uid}" \
+        --arg phase "$${phase}" \
+        --arg operation "$${operation}" \
+        --arg result "$${result}" \
+        --arg error "$${error}" \
+        '{schema:"keiretsu.csi_rbd_device_map/v1", observed_at:$$observed_at,
+          cluster:$$cluster, node:$$node, source:"rbd-device-observer",
+          device:{path:$$device, major:$$major, minor:$$minor},
+          rbd:{pool:$$pool, image:$$image},
+          csi:{volume_handle:(if $$handle == "-" then null else $$handle end)},
+          pv:{name:(if $$pv == "-" then null else $$pv end),
+              uid:(if $$pv_uid == "-" then null else $$pv_uid end)},
+          pvc:{namespace:(if $$pvc_ns == "-" then null else $$pvc_ns end),
+               name:(if $$pvc_name == "-" then null else $$pvc_name end),
+               uid:(if $$pvc_uid == "-" then null else $$pvc_uid end)},
+          pod_uid:(if $$pod_uid == "-" then null else $$pod_uid end),
+          phase:$$phase, operation:$$operation, result:$$result,
+          error:(if $$error == "-" then null else $$error end)}'
+    }
+
+    append_device() {
+      phase="$${1}"
+      pod_uid="$${2}"
+      error="$${3}"
+      printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
+        "$${DEVICE}" "$${MAJOR}" "$${MINOR}" "$${POOL}" "$${IMAGE}" \
+        "$${HANDLE}" "$${PV}" "$${PV_UID}" "$${PVC_NS}" "$${PVC_NAME}" \
+        "$${PVC_UID}" "$${pod_uid}" "$${phase}" "$${error}" >> "$${CURRENT_FILE}"
+    }
+
+    refresh_pv_map() {
+      if ! api_get /api/v1/persistentvolumes > "$${PV_JSON}"; then
+        emit_error persistent_volume_list_failed
+        return 1
+      fi
+      if ! jq -er --arg driver "$${PV_DRIVER}" '
+          .items[]
+          | select(.spec.csi.driver == $$driver)
+          | [(.metadata.name // "-"),
+             (.metadata.uid // "-"),
+             (.spec.csi.volumeHandle // "-"),
+             (.spec.csi.volumeAttributes.imageName // "-"),
+             (.spec.csi.volumeAttributes.pool // "-"),
+             (.spec.claimRef.namespace // "-"),
+             (.spec.claimRef.name // "-"),
+             (.spec.claimRef.uid // "-")]
+          | @tsv
+        ' "$${PV_JSON}" > "$${PV_MAP}"; then
+        emit_error persistent_volume_parse_failed
+        return 1
+      fi
+      return 0
+    }
+
+    snapshot_devices() {
+      : > "$${CURRENT_FILE}"
+      for device_dir in /sys/bus/rbd/devices/*; do
+        [ -d "$${device_dir}" ] || continue
+        id=$$(basename "$${device_dir}")
+        DEVICE="/dev/rbd$${id}"
+        MAJOR=$$(read_attr "$${device_dir}/major")
+        MINOR=$$(read_attr "$${device_dir}/minor")
+        POOL=$$(read_attr "$${device_dir}/pool")
+        IMAGE=$$(read_attr "$${device_dir}/name")
+        HANDLE=$$(lookup_pv_field 3)
+        PV=$$(lookup_pv_field 1)
+        PV_UID=$$(lookup_pv_field 2)
+        PVC_NS=$$(lookup_pv_field 6)
+        PVC_NAME=$$(lookup_pv_field 7)
+        PVC_UID=$$(lookup_pv_field 8)
+        ERROR=-
+        if [ "$${HANDLE}" = '-' ]; then
+          ERROR=persistent_volume_not_found_for_image
+        fi
+
+        mounts=$$(awk -v device="$${MAJOR}:$${MINOR}" '
+          $$3 == device && index($$0, "/var/lib/kubelet/pods/") {
+            print "publish\t" $$0
+            next
+          }
+          $$3 == device && index($$0, "/var/lib/kubelet/plugins/kubernetes.io/csi/rook-ceph.rbd.csi.ceph.com/") {
+            print "stage\t" $$0
+          }
+        ' /proc/1/mountinfo 2>/dev/null || true)
+
+        if [ -n "$${mounts}" ]; then
+          while IFS="$$(printf '\t')" read -r phase mount_line; do
+            [ -n "$${mount_line}" ] || continue
+            pod_uid=$$(printf '%s\n' "$${mount_line}" \
+              | sed -n 's#.* /var/lib/kubelet/pods/\([^/]*\)/.*#\1#p')
+            [ -n "$${pod_uid}" ] || pod_uid=-
+            append_device "$${phase}" "$${pod_uid}" "$${ERROR}"
+          done <<EOF
+    $${mounts}
+    EOF
+        else
+          append_device mapped - "$${ERROR}"
+        fi
+      done
+    }
+
+    while :; do
+      if refresh_pv_map; then
+        snapshot_devices
+
+        # A new line means a map, a changed device/PVC/phase is represented as
+        # an unmap plus map, and a line disappearing is an unmap. The state is
+        # bounded by the devices currently known on this node; the history is
+        # the JSON emitted to stdout and retained by the normal log pipeline.
+        while IFS= read -r line; do
+          [ -n "$${line}" ] || continue
+          if ! grep -F -x -- "$${line}" "$${STATE_FILE}" >/dev/null 2>&1; then
+            emit_record "$${line}" map present
+          fi
+        done < "$${CURRENT_FILE}"
+        while IFS= read -r line; do
+          [ -n "$${line}" ] || continue
+          if ! grep -F -x -- "$${line}" "$${CURRENT_FILE}" >/dev/null 2>&1; then
+            emit_record "$${line}" unmap absent
+          fi
+        done < "$${STATE_FILE}"
+        cp "$${CURRENT_FILE}" "$${STATE_FILE}"
+      fi
+      sleep 60
+    done

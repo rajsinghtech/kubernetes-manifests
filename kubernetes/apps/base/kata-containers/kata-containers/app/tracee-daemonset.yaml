@@ -58,6 +58,14 @@ spec:
             - enrich=true
             - --containers
             - sockets.containerd=/var/run/containerd/containerd.sock
+            # Tracee 0.24 serves health and Prometheus endpoints through the
+            # server subcommands; the old config keys are not listeners.
+            - --server
+            - http-address=:3366
+            - --server
+            - metrics
+            - --server
+            - healthz
           securityContext:
             privileged: true
           ports:

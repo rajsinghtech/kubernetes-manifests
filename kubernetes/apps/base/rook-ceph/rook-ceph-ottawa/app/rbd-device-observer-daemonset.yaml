@@ -1,0 +1,100 @@
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: rbd-device-observer
+  namespace: rook-ceph
+  labels:
+    app.kubernetes.io/name: rbd-device-observer
+    app.kubernetes.io/component: observability
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: rbd-device-observer
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: rbd-device-observer
+        app.kubernetes.io/component: observability
+    spec:
+      serviceAccountName: rbd-device-observer
+      priorityClassName: system-node-critical
+      hostPID: true
+      automountServiceAccountToken: true
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/os
+                    operator: In
+                    values: [linux]
+      tolerations:
+        - operator: Exists
+          effect: NoSchedule
+        - operator: Exists
+          effect: NoExecute
+      containers:
+        - name: observer
+          # This is the already deployed Ceph-CSI image. It is used only for
+          # its small shell/curl/jq runtime; it does not start the CSI driver.
+          image: quay.io/cephcsi/cephcsi:v3.17.0@sha256:886e6d2416d62dd7c8fbe659b6306b6c9451d6918e35ad5d1ac774520e11ef87
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh", "/config/observe.sh"]
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: CLUSTER_NAME
+              value: ${CLUSTER_NAME}
+          securityContext:
+            privileged: true
+            readOnlyRootFilesystem: true
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              cpu: 50m
+              memory: 64Mi
+          volumeMounts:
+            - name: config
+              mountPath: /config
+              readOnly: true
+            - name: host-dev
+              mountPath: /dev
+              readOnly: true
+            - name: host-sys
+              mountPath: /sys
+              readOnly: true
+            - name: host-kubelet
+              mountPath: /var/lib/kubelet
+              readOnly: true
+            - name: state
+              mountPath: /var/lib/rbd-device-observer
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: config
+          configMap:
+            name: rbd-device-observer
+            defaultMode: 0555
+        - name: host-dev
+          hostPath:
+            path: /dev
+            type: Directory
+        - name: host-sys
+          hostPath:
+            path: /sys
+            type: Directory
+        - name: host-kubelet
+          hostPath:
+            path: /var/lib/kubelet
+            type: Directory
+        - name: state
+          hostPath:
+            path: /var/lib/rbd-device-observer
+            type: DirectoryOrCreate
+        - name: tmp
+          emptyDir: {}

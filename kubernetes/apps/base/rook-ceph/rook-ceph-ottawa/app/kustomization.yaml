@@ -4,3 +4,6 @@ kind: Kustomization
 resources:
   - helmrelease.yaml
   - csi-rbac.yaml
+  - rbd-device-observer-config.yaml
+  - rbd-device-observer-rbac.yaml
+  - rbd-device-observer-daemonset.yaml
