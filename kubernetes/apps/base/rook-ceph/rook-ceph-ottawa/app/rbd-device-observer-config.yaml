@@ -31,7 +31,7 @@ data:
     touch "$${STATE_FILE}"
 
     api_get() {
-      curl -fsS --cacert "$${CA_FILE}" \
+      curl -fsS --connect-timeout 5 --max-time 30 --cacert "$${CA_FILE}" \
         -H "Authorization: Bearer $$(cat "$${TOKEN_FILE}")" \
         "$${API_SERVER}$${1}"
     }
