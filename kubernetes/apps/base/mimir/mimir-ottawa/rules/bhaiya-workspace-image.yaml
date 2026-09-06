@@ -82,18 +82,19 @@ groups:
         labels:
           severity: critical
         annotations:
-          summary: Workspace image adoption is behind
+          summary: Workspace image template adoption is behind
           description: >-
             Bhaiya has reported that the newest queued workspace-image release
-            is not represented by the active template or every observed
-            ready/idle curated workspace for at least 75 minutes. Query
-            bhaiya_workspace_image_adoption_info for the queued version,
-            digest, template identity, and registry state. This catches a
-            stalled template adoption or workspace propagation even while the
-            control plane and Deployments remain healthy; a missing publication
-            is also a definitive delivery failure rather than an unknown probe
-            result. The alert identity is deliberately stable across newer
-            queued releases so continuous lag does not reset its timer.
+            is not represented by the active workspace template for at least
+            75 minutes. Query bhaiya_workspace_image_adoption_info for the
+            queued version, digest, template identity, and registry state.
+            This is template-adoption failure only: a definitive missing
+            publication or a template that never took the queued digest.
+            Ready/idle curated workspace lag is expected after adoption and
+            is reported by bhaiya_workspace_image_adoption_workspace_count,
+            not by this alert. The alert identity is deliberately stable
+            across newer queued releases so continuous lag does not reset
+            its timer.
 
       - alert: BhaiyaWorkspaceImageAdoptionUnknown
         expr: |
@@ -108,11 +109,13 @@ groups:
         labels:
           severity: warning
         annotations:
-          summary: Workspace image adoption cannot be evaluated
+          summary: Workspace image template adoption cannot be evaluated
           description: >-
-            Bhaiya cannot establish workspace-image adoption. Query
+            Bhaiya cannot establish workspace-image template adoption. Query
             bhaiya_workspace_image_adoption_info for the queued version,
             registry state, and template identity, then restore the Forgejo,
-            registry, or durable workspace observation path. Unknown is kept
-            separate from stale so this warning never claims a delivery failure
-            without evidence.
+            registry, or durable template observation path. Unknown is kept
+            separate from stale so this warning never claims a delivery
+            failure without evidence. Fleet drift remains on
+            bhaiya_workspace_image_adoption_workspace_count and does not
+            page through this alert.
