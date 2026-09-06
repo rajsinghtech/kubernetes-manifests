@@ -1,0 +1,37 @@
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: kata-runtime-observer-metrics
+  namespace: kube-system
+spec:
+  description: Allow Prometheus to scrape the bounded Kata runtime-exit counter and kubelet to check health.
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: kata-runtime-observer
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: monitoring
+            app.kubernetes.io/name: prometheus-agent
+            app.kubernetes.io/instance: kube-prometheus-stack
+            operator.prometheus.io/name: kube-prometheus-stack
+      toPorts:
+        - ports:
+            - port: "3366"
+              protocol: TCP
+          rules:
+            http:
+              - method: GET
+                path: /metrics$
+    - fromEntities:
+        - host
+        - remote-node
+      toPorts:
+        - ports:
+            - port: "3366"
+              protocol: TCP
+          rules:
+            http:
+              - method: GET
+                path: /healthz$
