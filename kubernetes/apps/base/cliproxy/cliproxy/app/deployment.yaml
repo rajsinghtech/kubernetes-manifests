@@ -312,7 +312,7 @@ spec:
               )
               metadata_alias_sources = {
                   "codex-subscription/vllm-fallback": "codex-subscription/gpt-5.6-luna",
-                  "vllm/DeepSeek-V4-Flash-Vision-Exp": "vllm/deepseek-v4-flash-vision-exp",
+                  "vllm/Qwen3.8-Flash-Next": "vllm/Qwen3.8-Flash-Next-NVFP4",
               }
               # The St. Petersburg Vision-Exp catalog does not publish all
               # serving-profile facts in /v1/models. Keep those facts explicit
@@ -320,10 +320,10 @@ spec:
               # the active route accurately. Assert an 8k output cap so a stuck
               # stream cannot legally decode for the full 1,048,576 context.
               metadata_overrides = {
-                  "vllm/deepseek-v4-flash-vision-exp": {
+                  "vllm/Qwen3.8-Flash-Next-NVFP4": {
                       "context_window": 1048576,
                       "max_tokens": 8192,
-                      "name": "DeepSeek V4 Flash Vision-Exp",
+                      "name": "Qwen3.8 Flash Next",
                       "reasoning": True,
                   },
               }

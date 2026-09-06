@@ -2,22 +2,21 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: ai
-
 resources:
   - namespace.yaml
-  - dsv4.yaml
+  - qwen38.yaml
   - secret.yaml
   - probes.yaml
   - prometheusrule.yaml
 
 configMapGenerator:
-  - name: dsv4-vision-exp
+  - name: qwen-patches
     options:
       disableNameSuffixHash: true
     files:
-      - hotfix-dsv4-vision-exp.py=vision-exp/hotfix-dsv4-vision-exp.py
-      - vision_exp__init__.py=vision-exp/vision_exp/__init__.py
-      - vision_exp__apply.py=vision-exp/vision_exp/apply.py
-      - vision_exp__image_processor.py=vision-exp/vision_exp/image_processor.py
-      - vision_exp__processor.py=vision-exp/vision_exp/processor.py
-      - vision_exp__vision.py=vision-exp/vision_exp/vision.py
+      - patch_checkpoint_config.py=qwen-patches/patch_checkpoint_config.py
+      - patch_ple_layer.py=qwen-patches/patch_ple_layer.py
+      - patch_modelopt_mxfp8.py=qwen-patches/patch_modelopt_mxfp8.py
+      - patch_modelopt_fp8_block_moe.py=qwen-patches/patch_modelopt_fp8_block_moe.py
+      - patch_qsa_fp8_kv.py=qwen-patches/patch_qsa_fp8_kv.py
+      - patch_mtp_draft_vocab.py=qwen-patches/patch_mtp_draft_vocab.py

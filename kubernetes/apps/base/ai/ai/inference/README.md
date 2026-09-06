@@ -11,20 +11,17 @@
 - **CUDA**: Requires CUDA 13.0+
 - **OS**: Talos Linux v1.12.2
 
-## Active Setup: DeepSeek-V4-Flash-Vision-Exp DSpark
+## Active Setup: Qwen3.8-Flash-Next-NVFP4 vLLM
 
-**Model**: `deepseek-ai/DeepSeek-V4-Flash-Vision-Exp@6821d6ad` (48 shards,
-Vision-Exp with native image support)
-**Image**: `ghcr.io/anemll/dspark-vllm-gx10@sha256:a83948492cf13df455170fb42885f5ef4db54fefe0feff0f841ecbff464ac9d8`
-(ARM64/SM121, with the pinned upstream Vision-Exp hotfix)
-**Deployment**: `dsv4.yaml`, a two-member LeaderWorkerSet pinned to
-`spark-0` and `spark-1`, with SGLang TP=2 over the RDMA rail.
-**Serving profile**: 1M-token YaRN context, NVFP4 KV cache, no NEXTN
-speculative decoding. `--max-running-requests 3` matches the mamba state
-cache cap (19 slots, 5 per request). Do not advertise a higher value.
-Decode CUDA graphs are disabled as containment pending a SGLang #36418 image.
-**Endpoint**: `stpetersburg-vllm` (port 80 → 8000), also exposed internally as
-the `qwen38` Service.
+**Model**: `nvidia/Qwen3.8-Flash-Next-NVFP4@fc694b54` (11 shards,
+NVFP4 experts + FP8 PLE, with native image support)
+**Image**: `vllm/vllm-openai@sha256:3b0e188ffceb3d07e09c3cb5215433a0020eacf02d7f882ed3a8bfd15454477e`
+(ARM64/SM121, the image provided by the MiaAI-Lab recipe)
+**Deployment**: `qwen38.yaml`, a two-member LeaderWorkerSet pinned to
+`spark-0` and `spark-1`, using the upstream MiaAI-Lab vLLM image with TP2+EP+MTP3 over the RDMA rail.
+**Serving profile**: 1M-token YaRN context, FP8 QSA KV cache, TP2+EP+MTP3,
+`GPU_MEMORY_UTILIZATION=0.835`, and the upstream `MM_ENCODER_TP_MODE=data`
+multimodal configuration. **Endpoint**: `qwen38.ai:8000`.
 
 The OpenAI-compatible model ID is `Qwen3.8-Flash-Next-NVFP4`. CLIProxy exposes
 the stable client ID `vllm/Qwen3.8-Flash-Next` and uses the upstream ID for
@@ -36,8 +33,8 @@ The Bhaiya default is the CLIProxy alias, so clients remain on the managed
 gateway instead of dialing the DGX endpoint directly.
 
 The source recipe and patch provenance are pinned in the manifests to
-upstream revision `169fbad266f2791335a3102f0d3d625e7c295563`; the model revision is
-`7b719225242aacd3dbd3f9407468c2ee9a9d2594`.
+upstream revision `c2325b22602b51a5faf55fc2bebccc34f3f80b9f`; the model revision is
+`fc694b54fb0174e0913e6adf86691ef85a4ead47`.
 [`MiaAI-Lab/Qwen3.8-Flash-Next-Dual-DGX-Sparks`](https://github.com/MiaAI-Lab/Qwen3.8-Flash-Next-Dual-DGX-Sparks).
 The deployment reuses the already-published, digest-pinned serving image;
 there is no in-repo image build in this rollback.
@@ -46,16 +43,13 @@ there is no in-repo image build in this rollback.
 
 - This is one TP=2 LWS group spanning both Sparks: `spark-0` is rank 0 and
   `spark-1` is rank 1. There is no spare GPU for test workloads.
-- Each SGLang rank requests `94Gi` and is limited to `96Gi`; the model PVCs are
+- Each vLLM rank requests `90Gi` and is limited to `96Gi`; the model PVCs are
   separate per rank. The cache-drop init container and bounded cache-drop loop
   reclaim unified memory before and during serving.
-- The memory-sensitive serving settings are `--mem-fraction-static 0.90`,
-  `--mamba-full-memory-ratio 0.3`, a `1048576` context, and
-  `--max-running-requests 3`. Do not raise the mamba ratio (or the advertised
-  running-request cap) or place unrelated GPU workloads on either Spark
-  without a new load qualification. NEXTN speculative decoding is disabled:
-  the target-verify logits kernel can race on huge prompts and pin generation
-  on a single token with `spec_accept_length=1` while GPUs stay busy.
+- The memory-sensitive serving settings are `--gpu-memory-utilization 0.835`,
+  `--max-num-seqs 8`, and `--max-num-batched-tokens 8192`. Do not raise these
+  without a new load qualification or place unrelated GPU workloads on either
+  Spark.
 - Metrics are scraped once by the `qwen38` ServiceMonitor at 15-second
   intervals and stored in the St. Petersburg Mimir tenant. Do not add a second
   static ScrapeConfig for this Service; duplicate scrapes double-count counter

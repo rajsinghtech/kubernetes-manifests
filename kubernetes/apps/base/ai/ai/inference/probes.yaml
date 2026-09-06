@@ -1,5 +1,5 @@
 ---
-# DeepSeek-V4-Flash-Vision-Exp OpenAI-compatible inference server.
+# Qwen3.8-Flash-Next-NVFP4 OpenAI-compatible inference server.
 apiVersion: monitoring.coreos.com/v1
 kind: Probe
 metadata:
@@ -12,8 +12,8 @@ spec:
   targets:
     staticConfig:
       static:
-        - http://dsv4.ai:8000/health
-        - http://dsv4.ai:8000/v1/models
+        - http://qwen38.ai:8000/health
+        - http://qwen38.ai:8000/v1/models
       labels:
         service: ai-inference
         target: vllm
