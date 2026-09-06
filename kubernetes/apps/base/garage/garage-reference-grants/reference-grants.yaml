@@ -27,6 +27,8 @@ spec:
     - kind: GarageKey
       name: omnibus-postgres-key
     - kind: GarageKey
+      name: suwayomi-postgres-key
+    - kind: GarageKey
       name: tracearr-postgres-key
 ---
 apiVersion: garage.rajsingh.info/v1beta1

@@ -4,3 +4,6 @@ kind: Kustomization
 resources:
   - reference-grants.yaml
   - firefly-reference-grant.yaml
+  - forgejo-reference-grant.yaml
+  - woodpecker-reference-grant.yaml
+  - teslamate-reference-grant.yaml

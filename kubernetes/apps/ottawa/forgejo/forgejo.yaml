@@ -11,6 +11,7 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: garage
+    - name: garage-keys
     - name: cnpg-system
   path: ./kubernetes/apps/base/forgejo/forgejo/app
   prune: true

@@ -5,3 +5,7 @@ resources:
   - ../garage-keys
   - bhaiya-postgres-key.yaml
   - firefly-postgres-key.yaml
+  - forgejo-postgres-key.yaml
+  - woodpecker-postgres-key.yaml
+  - suwayomi-postgres-key.yaml
+  - teslamate-postgres-key.yaml

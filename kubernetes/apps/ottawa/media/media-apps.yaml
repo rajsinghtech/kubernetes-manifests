@@ -13,6 +13,7 @@ spec:
     - name: rook-ceph-cluster-config
     - name: cnpg-system
     - name: dragonfly-operator-system
+    - name: garage-keys
   path: ./kubernetes/apps/base/media/media-ottawa
   prune: true
   sourceRef:

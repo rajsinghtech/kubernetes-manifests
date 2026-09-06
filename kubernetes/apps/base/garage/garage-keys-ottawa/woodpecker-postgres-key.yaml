@@ -1,0 +1,22 @@
+---
+apiVersion: garage.rajsingh.info/v1beta1
+kind: GarageKey
+metadata:
+  name: woodpecker-postgres-key
+  namespace: woodpecker
+spec:
+  clusterRef:
+    name: garage
+    namespace: garage
+  name: "Woodpecker PostgreSQL Backup Key"
+  secretTemplate:
+    name: woodpecker-postgres-s3
+    accessKeyIdKey: AWS_ACCESS_KEY_ID
+    secretAccessKeyKey: AWS_SECRET_ACCESS_KEY
+  bucketPermissions:
+    - bucketRef:
+        name: woodpecker-postgres
+        namespace: garage
+      read: true
+      write: true
+      owner: true

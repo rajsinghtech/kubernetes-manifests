@@ -1,0 +1,22 @@
+---
+apiVersion: garage.rajsingh.info/v1beta1
+kind: GarageKey
+metadata:
+  name: forgejo-postgres-key
+  namespace: forgejo
+spec:
+  clusterRef:
+    name: garage
+    namespace: garage
+  name: "Forgejo PostgreSQL Backup Key"
+  secretTemplate:
+    name: forgejo-postgres-s3
+    accessKeyIdKey: AWS_ACCESS_KEY_ID
+    secretAccessKeyKey: AWS_SECRET_ACCESS_KEY
+  bucketPermissions:
+    - bucketRef:
+        name: forgejo-postgres
+        namespace: garage
+      read: true
+      write: true
+      owner: true

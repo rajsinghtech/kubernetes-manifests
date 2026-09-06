@@ -45,6 +45,10 @@ spec:
     - kind: GarageBucket
       namespace: bhaiya
     - kind: GarageKey
+      namespace: woodpecker
+    - kind: GarageKey
+      namespace: teslamate
+    - kind: GarageKey
       namespace: velero-system
     - kind: GarageKey
       namespace: firefly
