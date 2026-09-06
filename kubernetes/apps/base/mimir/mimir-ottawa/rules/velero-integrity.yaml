@@ -20,7 +20,7 @@ groups:
           ) > 0
         for: 5m
         labels:
-          severity: critical
+          severity: warning
         annotations:
           summary: Velero schedule {{ $labels.schedule }} has a {{ $labels.phase }} backup
           description: >-
@@ -39,7 +39,7 @@ groups:
           ) > 0
         for: 5m
         labels:
-          severity: critical
+          severity: warning
         annotations:
           summary: Velero PodVolumeBackup {{ $labels.phase }} for {{ $labels.backup }}
           description: >-
@@ -82,3 +82,44 @@ groups:
             totalBytes on node {{ $labels.node }}. Inspect the PVB status and
             node-agent/Kopia logs; matching item counts do not establish volume
             integrity.
+
+      - alert: VeleroScheduleLastBackupFailed
+        expr: |
+          (
+            max by (cluster, namespace, schedule, backup, phase) (
+              velero_cr_backup_info{
+                namespace="velero-system",
+                schedule!="",
+                phase=~"Failed|PartiallyFailed"
+              }
+            ) > 0
+          )
+          and on (cluster, namespace, schedule, backup)
+          (
+            velero_cr_backup_created_timestamp{
+              namespace="velero-system",
+              schedule!=""
+            }
+            == on (cluster, namespace, schedule) group_left
+            max by (cluster, namespace, schedule) (
+              velero_cr_backup_created_timestamp{
+                namespace="velero-system",
+                schedule!=""
+              }
+            )
+          )
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: Velero schedule {{ $labels.schedule }} has no successful latest backup
+          description: >-
+            The newest persisted Backup attempt for schedule
+            {{ $labels.schedule }} is {{ $labels.backup }} and has remained in
+            {{ $labels.phase }} for at least five minutes. This is the paging
+            signal: inspect the Backup failureReason/message, its PodVolumeBackup
+            children, Velero server and node-agent logs, and the Garage backup
+            location. Older failed Backup objects are intentionally ignored
+            when a newer attempt exists. The creation timestamp is used for
+            ordering; velero_backup_last_status is not authoritative for this
+            condition.
