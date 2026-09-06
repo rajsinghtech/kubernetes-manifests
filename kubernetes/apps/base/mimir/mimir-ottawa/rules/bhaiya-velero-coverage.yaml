@@ -1,0 +1,103 @@
+# Bhaiya exports an aggregate view of the Velero PodVolumeBackup population
+# that it can prove belongs to a labelled Bhaiya Backup. These counters are
+# process-lifetime signals with an explicit first-observation baseline, so old
+# unlabelled PVBs do not become a permanent new-object alert after a rollout.
+#
+# Keep this namespace separate from rules/velero.yaml. A repeated namespace
+# aborts the complete mimirtool sync for every tenant.
+namespace: bhaiya-velero-coverage
+groups:
+  - name: bhaiya-velero-coverage.rules
+    rules:
+      - alert: BhaiyaVeleroPodVolumeBackupLabelCoverageStalled
+        expr: |
+          (
+            max by (cluster) (
+              increase(
+                bhaiya_velero_pod_volume_backups_eligible_created_total{
+                  job="bhaiya",
+                  container="bhaiya"
+                }[30m]
+              )
+            ) > 0
+          )
+          and on (cluster)
+          (
+            max by (cluster) (
+              increase(
+                bhaiya_velero_pod_volume_backups_eligible_label_progress_total{
+                  job="bhaiya",
+                  container="bhaiya"
+                }[15m]
+              )
+            ) == 0
+          )
+          and on (cluster)
+          (
+            max by (cluster) (
+              bhaiya_velero_pod_volume_backups_eligible{
+                job="bhaiya",
+                container="bhaiya"
+              }
+            )
+            >
+            max by (cluster) (
+              bhaiya_velero_pod_volume_backups_labelled{
+                job="bhaiya",
+                container="bhaiya"
+              }
+            )
+          )
+          and on (cluster)
+          (
+            max by (cluster) (
+              bhaiya_velero_pod_volume_backups_observation_success{
+                job="bhaiya",
+                container="bhaiya"
+              }
+            ) == 1
+          )
+        # Retained history reached roughly 14m30s of this predicate. Keeping
+        # the 15m no-progress window but using a 10m pending period requires
+        # 25m from the last progress and has a real historical true positive;
+        # 15m here would have never fired in the observed data.
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: Velero PodVolumeBackup label coverage stalled in {{ $labels.cluster }}
+          description: >-
+            Bhaiya observed at least one new eligible PodVolumeBackup during
+            the last 30 minutes, the eligible population still exceeds the
+            labelled population, and no expected workspace-label progress was
+            observed for 15 minutes. This has persisted for 10 minutes. The
+            eligible denominator requires an exact Backup owner name and UID
+            plus the Bhaiya workspace label on that Backup; it deliberately
+            excludes historical or unprovable PVBs. Inspect Bhaiya logs for
+            "observe Velero PodVolumeBackup label coverage" and "label Velero
+            PodVolumeBackup", then check the Velero API list/patch RBAC and
+            the PVB's exact Backup owner before treating this as a new repair
+            stall.
+
+      - alert: BhaiyaVeleroPodVolumeBackupCoverageUnavailable
+        expr: |
+          max by (cluster) (
+            bhaiya_velero_pod_volume_backups_observation_success{
+              job="bhaiya",
+              container="bhaiya"
+            }
+          ) == 0
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: Velero PodVolumeBackup coverage observation unavailable in {{ $labels.cluster }}
+          description: >-
+            Every observed Bhaiya coverage replica has reported that its latest
+            Velero Backup/PodVolumeBackup list failed for at least 15 minutes.
+            The eligible and labelled gauges may be the last good snapshot and
+            must not be interpreted as a current zero. Inspect Bhaiya logs for
+            "list Velero backups for PVB coverage" or "list Velero
+            PodVolumeBackups for coverage", then check API reachability and
+            RBAC. A successful observation with zero eligible objects is valid
+            data and does not fire this alert.
