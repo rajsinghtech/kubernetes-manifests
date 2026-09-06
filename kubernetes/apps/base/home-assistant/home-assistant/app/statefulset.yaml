@@ -30,7 +30,7 @@ spec:
         - key: node.kubernetes.io/memory-pressure
           operator: Exists
           effect: NoSchedule
-      priorityClassName: "infra-high"
+      priorityClassName: "infra-critical"
       initContainers:
         - name: route-fix
           image: alpine:3.24
@@ -54,10 +54,11 @@ spec:
       containers:
         - name: homeassistant
           image: homeassistant/home-assistant:2026.9
+          # Guaranteed QoS prevents HA from being selected before Burstable workloads.
           resources:
             requests:
-              memory: "512Mi"
-              cpu: "500m"
+              memory: "1Gi"
+              cpu: "1"
             limits:
               memory: "1Gi"
               cpu: "1"
