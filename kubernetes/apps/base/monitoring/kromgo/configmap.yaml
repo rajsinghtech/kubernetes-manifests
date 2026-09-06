@@ -1,6 +1,6 @@
 ---
 # renovate: datasource=github-tags depName=home-operations/kromgo
-# yaml-language-server: $schema=https://raw.githubusercontent.com/home-operations/kromgo/0.15.2/config.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/home-operations/kromgo/0.16.1/config.schema.json
 apiVersion: v1
 kind: ConfigMap
 metadata:
