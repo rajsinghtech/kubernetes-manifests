@@ -54,6 +54,12 @@ kube-state-metrics:
           - imagepolicies
           - imageupdateautomations
         verbs: [ "list", "watch" ]
+      - apiGroups:
+          - velero.io
+        resources:
+          - backups
+          - podvolumebackups
+        verbs: [ "list", "watch" ]
   customResourceState:
     enabled: true
     config:
@@ -247,3 +253,52 @@ kube-state-metrics:
                   ready: [ status, conditions, "[type=Ready]", status ]
                   suspended: [ spec, suspend ]
                   webhook_path: [ status, webhookPath ]
+          - groupVersionKind:
+              group: velero.io
+              version: v1
+              kind: Backup
+            metricNamePrefix: velero_cr
+            labelsFromPath:
+              namespace: [ metadata, namespace ]
+              backup: [ metadata, name ]
+              schedule: [ metadata, labels, velero.io/schedule-name ]
+            metrics:
+              - name: "backup_info"
+                help: "The current phase of a Velero Backup custom resource."
+                each:
+                  type: Info
+                  info:
+                    labelsFromPath:
+                      phase: [ status, phase ]
+          - groupVersionKind:
+              group: velero.io
+              version: v1
+              kind: PodVolumeBackup
+            metricNamePrefix: velero_cr
+            labelsFromPath:
+              namespace: [ metadata, namespace ]
+              pod_volume_backup: [ metadata, name ]
+              backup: [ metadata, labels, velero.io/backup-name ]
+              node: [ spec, node ]
+            metrics:
+              - name: "podvolumebackup_info"
+                help: "The current phase of a Velero PodVolumeBackup custom resource."
+                each:
+                  type: Info
+                  info:
+                    labelsFromPath:
+                      phase: [ status, phase ]
+              - name: "podvolumebackup_bytes_done"
+                help: "Bytes reported as uploaded by a Velero PodVolumeBackup."
+                each:
+                  type: Gauge
+                  gauge:
+                    path: [ status, progress ]
+                    valueFrom: [ bytesDone ]
+              - name: "podvolumebackup_bytes_total"
+                help: "Total bytes reported for a Velero PodVolumeBackup."
+                each:
+                  type: Gauge
+                  gauge:
+                    path: [ status, progress ]
+                    valueFrom: [ totalBytes ]

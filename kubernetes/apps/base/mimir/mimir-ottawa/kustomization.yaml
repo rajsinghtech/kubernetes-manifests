@@ -39,4 +39,5 @@ configMapGenerator:
       - rules/payments.yaml
       - rules/smartctl.yaml
       - rules/velero.yaml
+      - rules/velero-integrity.yaml
       - rules/zot.yaml
