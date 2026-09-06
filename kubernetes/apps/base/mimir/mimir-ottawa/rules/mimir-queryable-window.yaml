@@ -1,0 +1,41 @@
+namespace: mimir-queryable-window
+groups:
+  - name: mimir.queryable-window
+    rules:
+      - record: mimir_query_canary
+        expr: vector(1)
+        labels:
+          source: ruler
+
+      - alert: MimirRecentQueryWindowUnavailable
+        expr: |
+          absent_over_time(
+            mimir_query_canary{source="ruler"}[5m] offset 6h
+          )
+          and on ()
+          (
+            sum(
+              count_over_time(
+                mimir_query_canary{source="ruler"}[5m] offset 13h
+              )
+            ) > 0
+          )
+        for: 10m
+        labels:
+          severity: critical
+        annotations:
+          summary: Mimir's recent query window is unavailable
+          description: >-
+            The dedicated Mimir query canary has no readable sample at the
+            six-hour offset for ten minutes, while the older thirteen-hour
+            canary remains readable from the store. This indicates that the
+            recent ingester-served window is not queryable. It does not prove
+            that every metric series is missing or that the data is permanently
+            lost. The six-hour offset must remain inside
+            querier.query_store_after (currently 12h); update this rule with
+            any query_store_after change or it can silently stop testing the
+            protected recent window.
+            This alert shares the Mimir ruler/query path it observes and is
+            not protection against a ruler, gateway, querier, or complete
+            query-path outage; pair it with an independent external query
+            check.
