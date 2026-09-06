@@ -20,6 +20,27 @@ spec:
     cleanupOnFail: true
     remediation:
       retries: 3
+  postRenderers:
+    - kustomize:
+        patches:
+          # The chart's persistentVolume mode adds volumeClaimTemplates to the
+          # StatefulSet. That field cannot be added to the existing StatefulSet
+          # in place, so keep the chart's emptyDir mode and replace only the
+          # mutable pod-template volume with the separately managed claim.
+          # The test operation makes a chart volume-order change fail closed.
+          - target:
+              kind: StatefulSet
+              name: mimir-ingester
+            patch: |-
+              - op: test
+                path: /spec/template/spec/volumes/2/name
+                value: storage
+              - op: remove
+                path: /spec/template/spec/volumes/2/emptyDir
+              - op: add
+                path: /spec/template/spec/volumes/2/persistentVolumeClaim
+                value:
+                  claimName: storage-mimir-ingester-0
   values:
     rollout_operator:
       enabled: false
@@ -79,6 +100,11 @@ spec:
               endpoint: ${COMMON_S3_ENDPOINT}
               bucket_name: mimir
               insecure: true
+        blocks_storage:
+          tsdb:
+            # The first rollout moves the ingester from emptyDir to RBD. Flush
+            # and ship the current head before Kubernetes removes the old pod.
+            flush_blocks_on_shutdown: true
         limits:
           compactor_blocks_retention_period: 7d
           ingestion_rate: 500000
@@ -93,6 +119,9 @@ spec:
       zoneAwareReplication:
         enabled: false
       persistentVolume:
+        # Adding chart-managed volumeClaimTemplates would be rejected as an
+        # immutable StatefulSet update. The PVC is managed beside this release
+        # and the post-renderer switches the pod template to it.
         enabled: false
       extraArgs:
         "-ingester.ring.replication-factor": "1"

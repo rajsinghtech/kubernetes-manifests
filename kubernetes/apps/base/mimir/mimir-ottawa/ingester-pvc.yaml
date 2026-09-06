@@ -1,0 +1,27 @@
+---
+# Mimir's ingester TSDB/WAL must not share shiro's /var-backed NVMe with
+# containerd, Garage, and the rest of the node. Keep this claim separate from
+# the Helm chart so the existing StatefulSet does not need an immutable
+# volumeClaimTemplates transition.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: storage-mimir-ingester-0
+  annotations:
+    # Keep the TSDB data if this manifest is ever removed from the Flux source;
+    # deleting the claim would delete its RBD because the storage class uses
+    # reclaimPolicy=Delete.
+    kustomize.toolkit.fluxcd.io/prune: disabled
+  labels:
+    app.kubernetes.io/component: ingester
+    app.kubernetes.io/instance: mimir
+    app.kubernetes.io/name: mimir
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: ceph-block-replicated
+  resources:
+    requests:
+      # Current local ingester blocks are ~3.6GiB; leave room for WAL, indexes,
+      # compaction, and growth rather than using the chart's 2Gi default.
+      storage: 20Gi

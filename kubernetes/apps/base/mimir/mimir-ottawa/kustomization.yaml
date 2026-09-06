@@ -4,6 +4,7 @@ kind: Kustomization
 namespace: mimir
 resources:
   - helmrelease.yaml
+  - ingester-pvc.yaml
   - ingress-ts.yaml
   - ingress-qf-ts.yaml
   # Keep the Helm-owned Service in Flux's inventory while removing the legacy
