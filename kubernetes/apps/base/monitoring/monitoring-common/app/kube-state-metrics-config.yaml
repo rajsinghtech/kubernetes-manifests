@@ -60,6 +60,12 @@ kube-state-metrics:
           - backups
           - podvolumebackups
         verbs: [ "list", "watch" ]
+      - apiGroups:
+          - postgresql.cnpg.io
+        resources:
+          - clusters
+          - backups
+        verbs: [ "list", "watch" ]
   customResourceState:
     enabled: true
     config:
@@ -276,6 +282,45 @@ kube-state-metrics:
                   type: Gauge
                   gauge:
                     path: [ metadata, creationTimestamp ]
+          - groupVersionKind:
+              group: postgresql.cnpg.io
+              version: v1
+              kind: Cluster
+            metricNamePrefix: cnpg_cr
+            labelsFromPath:
+              namespace: [ metadata, namespace ]
+              cnpg_cluster: [ metadata, name ]
+            metrics:
+              - name: "cluster_info"
+                help: "Information about a CloudNativePG Cluster custom resource."
+                each:
+                  type: Info
+                  info:
+                    labelsFromPath:
+                      name: [ metadata, name ]
+          - groupVersionKind:
+              group: postgresql.cnpg.io
+              version: v1
+              kind: Backup
+            metricNamePrefix: cnpg_cr
+            labelsFromPath:
+              namespace: [ metadata, namespace ]
+              backup: [ metadata, name ]
+              cnpg_cluster: [ spec, cluster, name ]
+            metrics:
+              - name: "backup_info"
+                help: "The current phase of a CloudNativePG Backup custom resource."
+                each:
+                  type: Info
+                  info:
+                    labelsFromPath:
+                      phase: [ status, phase ]
+              - name: "backup_completed_timestamp"
+                help: "Unix completion timestamp of a CloudNativePG Backup custom resource."
+                each:
+                  type: Gauge
+                  gauge:
+                    path: [ status, stoppedAt ]
           - groupVersionKind:
               group: velero.io
               version: v1

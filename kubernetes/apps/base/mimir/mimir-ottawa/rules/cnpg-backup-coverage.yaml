@@ -1,0 +1,58 @@
+namespace: cnpg-backup-coverage
+groups:
+  - name: cnpg-backup-coverage.rules
+    rules:
+      - alert: CNPGBackupStale
+        expr: |
+          (
+            time()
+            - max by (cluster, namespace, cnpg_cluster) (
+                cnpg_cr_backup_completed_timestamp
+                and on (cluster, namespace, backup, cnpg_cluster)
+                cnpg_cr_backup_info{phase="completed"}
+              )
+          ) > 172800
+          and on (cluster, namespace, cnpg_cluster)
+          max by (cluster, namespace, cnpg_cluster) (
+            cnpg_cr_cluster_info
+          )
+        for: 10m
+        labels:
+          severity: critical
+        annotations:
+          summary: CNPG cluster {{ $labels.namespace }}/{{ $labels.cnpg_cluster }} has a stale backup
+          description: >-
+            The newest completed CloudNativePG Backup custom resource for
+            {{ $labels.namespace }}/{{ $labels.cnpg_cluster }} is more than 48
+            hours old. Inspect the Backup phase and completion details, the
+            barman-cloud plugin, and the object-store path. This proves CR
+            freshness only; it does not prove that the object-store backup is
+            complete, restorable, or contains every database object. This rule
+            also shares the Mimir ruler and kube-state-metrics query path, so it
+            is not protection against a complete observation-path outage.
+
+      - alert: CNPGBackupMissing
+        expr: |
+          cnpg_cr_cluster_info
+          unless on (cluster, namespace, cnpg_cluster)
+          (
+            max by (cluster, namespace, cnpg_cluster) (
+              cnpg_cr_backup_completed_timestamp
+              and on (cluster, namespace, backup, cnpg_cluster)
+              cnpg_cr_backup_info{phase="completed"}
+            )
+          )
+        for: 10m
+        labels:
+          severity: critical
+        annotations:
+          summary: CNPG cluster {{ $labels.namespace }}/{{ $labels.cnpg_cluster }} has no completed backup
+          description: >-
+            No completed CloudNativePG Backup custom resource is observed for
+            {{ $labels.namespace }}/{{ $labels.cnpg_cluster }}. This catches a
+            cluster with no ScheduledBackup or Backup at all instead of treating
+            the missing series as healthy. Inspect the Cluster, Backup and
+            ScheduledBackup resources and configure the intended backup path.
+            This proves CR coverage only; it does not prove object-store
+            contents or restore capability, and it is not protection against a
+            complete Mimir or kube-state-metrics observation-path outage.
