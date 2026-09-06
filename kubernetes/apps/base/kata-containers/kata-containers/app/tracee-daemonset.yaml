@@ -1,0 +1,117 @@
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: kata-runtime-observer
+  namespace: kube-system
+  labels:
+    app.kubernetes.io/name: kata-runtime-observer
+    app.kubernetes.io/component: runtime-observer
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kata-runtime-observer
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: kata-runtime-observer
+        app.kubernetes.io/component: runtime-observer
+    spec:
+      serviceAccountName: kata-runtime-observer
+      automountServiceAccountToken: false
+      priorityClassName: system-node-critical
+      hostPID: true
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/os
+                    operator: In
+                    values: [linux]
+      tolerations:
+        - operator: Exists
+          effect: NoSchedule
+        - operator: Exists
+          effect: NoExecute
+      containers:
+        - name: tracee
+          # The digest is the multi-architecture manifest for Tracee 0.24.1.
+          image: docker.io/aquasec/tracee:0.24.1@sha256:cfbbfee972e64a644f6b1bac74ee26998e6e12442697be4c797ae563553a2a5b
+          imagePullPolicy: IfNotPresent
+          command:
+            - /tracee/tracee
+          args:
+            - --config
+            - /tracee/config.yaml
+            - --events
+            - sched_process_exit
+            # Linux TASK_COMM_LEN truncates cloud-hypervisor to
+            # cloud-hyperviso; the prefix catches both that and any future
+            # suffix without tracing unrelated processes.
+            - --scope
+            - comm=cloud-hyperviso*,virtiofsd
+            # Containerd enrichment supplies the sandbox/container and, when
+            # available, Kubernetes identity in the structured log. It is not
+            # copied into metric labels.
+            - --containers
+            - enrich=true
+            - --containers
+            - sockets.containerd=/var/run/containerd/containerd.sock
+          securityContext:
+            privileged: true
+          ports:
+            - name: metrics
+              containerPort: 3366
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: metrics
+            periodSeconds: 10
+            timeoutSeconds: 2
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          volumeMounts:
+            - name: tracee-tmp
+              mountPath: /tmp/tracee
+            - name: os-release
+              mountPath: /etc/os-release-host
+              readOnly: true
+            - name: containerd-socket
+              mountPath: /var/run/containerd/containerd.sock
+              readOnly: true
+            - name: tracee-config
+              mountPath: /tracee/config.yaml
+              subPath: config.yaml
+              readOnly: true
+      volumes:
+        - name: tracee-tmp
+          hostPath:
+            path: /tmp/tracee
+            type: DirectoryOrCreate
+        - name: os-release
+          hostPath:
+            path: /etc/os-release
+            type: File
+        - name: containerd-socket
+          hostPath:
+            path: /var/run/containerd/containerd.sock
+            type: Socket
+        - name: tracee-config
+          configMap:
+            name: kata-runtime-observer-config
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kata-runtime-observer
+  namespace: kube-system
+  labels:
+    app.kubernetes.io/name: kata-runtime-observer
+    app.kubernetes.io/component: runtime-observer

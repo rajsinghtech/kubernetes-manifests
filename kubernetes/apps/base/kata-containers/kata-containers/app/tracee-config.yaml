@@ -1,0 +1,34 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kata-runtime-observer-config
+  namespace: kube-system
+  labels:
+    app.kubernetes.io/name: kata-runtime-observer
+    app.kubernetes.io/component: runtime-observer
+data:
+  config.yaml: |
+    # Keep the observer deliberately small: the command line below selects one
+    # lifecycle tracepoint and two host-side runtime processes.
+    cache:
+        type: mem
+        size: 512
+    perf-buffer-size: 256
+    healthz: true
+    metrics: true
+    pprof: false
+    pyroscope: false
+    listen-addr: :3366
+    log:
+        level: info
+    output:
+        json:
+            files:
+                - stdout
+        options:
+            parse-arguments: true
+            stack-addresses: false
+            exec-env: false
+            exec-hash: dev-inode
+            sort-events: false
