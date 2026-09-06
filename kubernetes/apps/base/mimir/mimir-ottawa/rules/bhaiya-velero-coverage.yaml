@@ -2,6 +2,9 @@
 # that it can prove belongs to a labelled Bhaiya Backup. These counters are
 # process-lifetime signals with an explicit first-observation baseline, so old
 # unlabelled PVBs do not become a permanent new-object alert after a rollout.
+# The workspace missing-home signal below is deliberately a separate Bhaiya
+# aggregate: Velero's Backup phase and item counters cannot distinguish a
+# successful metadata-only Backup from one that captured the durable home PVC.
 #
 # Keep this namespace separate from rules/velero.yaml. A repeated namespace
 # aborts the complete mimirtool sync for every tenant.
@@ -101,3 +104,38 @@ groups:
             PodVolumeBackups for coverage", then check API reachability and
             RBAC. A successful observation with zero eligible objects is valid
             data and does not fire this alert.
+
+      - alert: BhaiyaVeleroWorkspaceBackupMissingHomePVB
+        expr: |
+          max by (cluster) (
+            (
+              bhaiya_velero_workspace_backups_missing_home_pod_volume_backups{
+                job="bhaiya",
+                container="bhaiya"
+              } > 0
+            )
+            and on (cluster, job, container, instance)
+            (
+              bhaiya_velero_pod_volume_backups_observation_success{
+                job="bhaiya",
+                container="bhaiya"
+              } == 1
+            )
+          )
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Workspace Velero Backup is missing its home PodVolumeBackup
+          description: >-
+            Bhaiya's successful Velero observation counted at least one
+            workspace-labelled Completed Backup without a completed home
+            PodVolumeBackup for at least five minutes. A workspace always has
+            a durable home PVC, so this is an invalid volume-less completion;
+            a completed PVB with zero logical bytes remains legitimate. This
+            alert is intentionally gated on
+            bhaiya_velero_pod_volume_backups_observation_success=1 and does
+            not infer volume health from velero_backup_last_status or matching
+            item counts. It remains inactive until Bhaiya exports the
+            missing-home aggregate metric; unlabelled/platform Backups are
+            outside this assertion.

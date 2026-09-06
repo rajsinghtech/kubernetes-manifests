@@ -270,6 +270,12 @@ kube-state-metrics:
                   info:
                     labelsFromPath:
                       phase: [ status, phase ]
+              - name: "backup_created_timestamp"
+                help: "Unix creation timestamp of a Velero Backup custom resource."
+                each:
+                  type: Gauge
+                  gauge:
+                    path: [ metadata, creationTimestamp ]
           - groupVersionKind:
               group: velero.io
               version: v1
