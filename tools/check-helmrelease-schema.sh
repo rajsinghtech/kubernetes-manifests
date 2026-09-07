@@ -47,20 +47,37 @@ fi
 total=0
 for cluster in "${targets[@]}"; do
   rendered="$tmp/$cluster.yaml"
+  flate_err="$tmp/$cluster-flate.err"
   selected="$tmp/$cluster-helmreleases.yaml"
-  # The flux/config subtree contains only the bootstrap Kustomization objects;
-  # HelmRelease sources live in the location's app tree beneath the cluster
-  # root. Render the complete cluster context so an empty bootstrap document
-  # set cannot masquerade as a successful schema check.
-  tools/flate.sh build all --path "clusters/$cluster" \
-    --allow-missing-secrets --no-progress >"$rendered"
+  location="${cluster#talos-}"
+  # `build all` emits the final chart resources for HelmReleases; it does not
+  # emit the HelmRelease CRs themselves. The location application tree's
+  # Kustomization artifacts retain those post-build CR documents, which are
+  # the objects this CRD gate validates. The full cluster render gate below
+  # remains authoritative for chart/source reconciliation failures.
+  flate_rc=0
+  tools/flate.sh build ks --path "kubernetes/apps/$location" \
+    --allow-missing-secrets --no-progress >"$rendered" 2>"$flate_err" || flate_rc=$?
+  if [ ! -s "$rendered" ]; then
+    echo "error: Flate emitted no rendered Kustomization output for $cluster (exit $flate_rc)" >&2
+    tail -30 "$flate_err" >&2 || true
+    exit 1
+  fi
+  # Flate can retain usable Kustomization output while reporting unrelated
+  # chart/source failures in this source-only view. Do not turn that partial
+  # output into a false zero-resource schema failure; tools/check.sh runs the
+  # complete cluster render immediately after this focused check and reports
+  # those failures there.
   count="$(python3 - "$rendered" "$selected" <<'PY'
 import pathlib, sys, yaml
 source, target = map(pathlib.Path, sys.argv[1:])
 text = source.read_text()
 try:
-    documents = list(yaml.safe_load_all(text))
-    nodes = list(yaml.compose_all(text))
+    # BaseLoader inspects the node tree without applying PyYAML's YAML 1.1
+    # scalar constructors. Flate can legitimately emit plain values such as
+    # `=` that Kubernetes' YAML decoder accepts but SafeLoader rejects.
+    documents = list(yaml.load_all(text, Loader=yaml.BaseLoader))
+    nodes = list(yaml.compose_all(text, Loader=yaml.BaseLoader))
 except yaml.YAMLError as error:
     raise SystemExit(f"rendered Flate YAML is invalid: {error}")
 if len(documents) != len(nodes):
