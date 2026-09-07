@@ -72,3 +72,106 @@ groups:
             server, and node-agent pods. This is a freshness/reporting guard;
             it cannot detect a backup that completes while silently missing
             data, and it also needs the Velero metric to remain scrapeable.
+
+      # VeleroBackupStale requires a last_successful_timestamp series. A Schedule
+      # that is Enabled but has never produced a Backup (forgejo-backup after
+      # #2732 had status.lastBackup unset) creates no such series and stays
+      # invisible. Page from the Schedule CR once it is older than 36h without
+      # lastBackup. Clears when lastBackup is set; does not latch on history.
+      - alert: VeleroScheduleNeverBackedUp
+        expr: |
+          (
+            max by (cluster, namespace, schedule) (
+              velero_cr_schedule_info{
+                namespace="velero-system",
+                phase="Enabled",
+                paused!="true"
+              }
+            )
+            and on (cluster, namespace, schedule)
+            (
+              time()
+              - max by (cluster, namespace, schedule) (
+                  velero_cr_schedule_created_timestamp{
+                    namespace="velero-system"
+                  }
+                )
+              > 129600
+            )
+          )
+          unless on (cluster, namespace, schedule)
+          (
+            max by (cluster, namespace, schedule) (
+              velero_cr_schedule_last_backup_timestamp{
+                namespace="velero-system"
+              } > 0
+            )
+          )
+        for: 15m
+        labels:
+          severity: critical
+        annotations:
+          summary: Velero schedule {{ $labels.schedule }} has never produced a backup
+          description: >-
+            Schedule {{ $labels.schedule }} has been Enabled for more than 36
+            hours with no status.lastBackup. VeleroBackupStale cannot see this
+            because no velero_backup_last_successful_timestamp series exists
+            until the first success. Inspect the Schedule, its first cron
+            window, BackupStorageLocation, and Velero logs. The alert clears
+            when lastBackup is set.
+
+      # BackupRepository phase=Ready coexists with refused Kopia maintenance
+      # (#575 Garage degraded read-after-write on _maintenance). Prefer
+      # lastMaintenanceTime freshness over the failure counter so a historical
+      # refusal does not latch after later successes.
+      - alert: VeleroBackupRepositoryMaintenanceStale
+        expr: |
+          (
+            max by (cluster, namespace, repository, volume_namespace) (
+              velero_cr_backuprepository_info{
+                namespace="velero-system",
+                phase="Ready"
+              }
+            )
+            and on (cluster, namespace, repository)
+            (
+              time()
+              - max by (cluster, namespace, repository) (
+                  velero_cr_backuprepository_last_maintenance_timestamp{
+                    namespace="velero-system"
+                  }
+                )
+              > 21600
+            )
+          )
+        for: 30m
+        labels:
+          severity: warning
+        annotations:
+          summary: Velero BackupRepository {{ $labels.repository }} maintenance is stale
+          description: >-
+            BackupRepository {{ $labels.repository }} (volume namespace
+            {{ $labels.volume_namespace }}) is Ready but has not recorded
+            lastMaintenanceTime within 6 hours (maintenanceFrequency is 1h).
+            This is the #575-shaped gap: Ready does not mean prune/maintenance
+            is succeeding. Inspect recent maintain Jobs and Velero logs for
+            "clock skew" / refused maintenance. The alert clears when
+            lastMaintenanceTime advances; it does not latch on
+            velero_repo_maintenance_failure_total.
+
+      - alert: VeleroBackupStorageLocationUnavailable
+        expr: |
+          max by (cluster, backup_location_name) (
+            velero_backup_location_status_gauge == 0
+          )
+        for: 15m
+        labels:
+          severity: critical
+        annotations:
+          summary: Velero BackupStorageLocation {{ $labels.backup_location_name }} is unavailable
+          description: >-
+            BackupStorageLocation {{ $labels.backup_location_name }} is not
+            Available. New backups cannot be written even while old objects
+            remain readable in Garage. Inspect BSL status, credentials, and
+            the garage-gateway path. Clears when the location becomes Available
+            again.
