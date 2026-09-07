@@ -1,103 +1,120 @@
-# km#2753 post-merge verification — INEFFECTIVE; corrected root cause
+# km#2753 post-merge — INEFFECTIVE; widened to manifest GETs
 
-Date: 2026-09-07 UTC  
-Worktree: `/workspace/worktrees/km/garagepanic` branch `work/referrers2`  
+Date: 2026-09-07 UTC (updated with manifest-path evidence)  
+Branch: `work/referrers2` @ `7adbcf93f`  
 Remote: `https://github.com/keiretsu-labs/kubernetes-manifests.git`
 
-## Verdict
+## Status of #2753
 
-**km#2753 merged and rolled out, but it did not fix `/referrers/` latency.** Treating it as done would be false. This note supersedes the optimism in `referrers-FINDINGS.md` / the #2753 merge claim.
+**Merged, applied, pods rolled — did not fix latency.** Claiming otherwise is worse than the original bug.
 
-## Post-merge evidence (all after Flux applied `6d3bd2914`)
-
-| Check | Result |
+| Signal | Post-#2753 |
 | --- | --- |
-| Live `cm/zot-config` | `extensions.sync.enable=true`, one registry `ghcr.io` / `rajsinghtech/**`, **`onDemand: false`** |
-| Pods | `zot-74698dc659-*` age ~4–5m at first measure; config checksum rolled |
-| Startup log | `OnDemand:false`, `PollInterval:6h`, `sync extension is enabled` |
-| Still logged | `trying to get updated referrers by syncing on demand` for `corp/bhaiya` |
-| Still logged | `trying to get updated image by syncing on demand` for `corp/workspace` / `0.3.277` |
-| Referrers latency | still **~14s** when it completes; also **28s** and **http=000 at 30–45s** under load — **not better** |
-| GraphQL `Referrers` (MetaDB) | **~40–80ms**, empty list |
-| ImageList MetaDB | `corp/bhaiya` **697** images; `corp/workspace` **151** |
-| Scheduled poll | `SyncGenerator` repeatedly **`failed to list repositories for ghcr.io: unauthorized`** — poll was already non-functional without credentials |
+| Live config | `sync.enable=true`, one registry `ghcr.io`/`rajsinghtech/**`, **`onDemand:false`** |
+| Still logged | `trying to get updated referrers by syncing on demand` (`corp/bhaiya`) |
+| **NEW / critical** | `trying to get updated image by syncing on demand` for **`corp/workspace` `0.3.277`** and other **local corp/* tag** GETs |
+| OCI `/referrers/` | still ~14s (also 28s / http=000 at 30–45s) |
+| GraphQL MetaDB `Referrers` | ~40–80ms |
+| Poll sync | `SyncGenerator` → `ghcr.io: unauthorized` (dead) |
 
-Comparable method to pre-fix: digest from `manifests/latest`, curl matrix with max-time 3/5/12/15/20(+). Pre-fix: ≤12s hang, ≥15s → 200 in ~14s. Post-#2753: same pattern; sometimes worse.
+## Source: both paths share one gate (zot v2.1.20)
 
-## Why `onDemand: false` cannot stop the gate (source, zot v2.1.20)
+### Gate (not per-registry `OnDemand`)
 
-Raj’s hypothesis is **correct**:
+```go
+// pkg/api/routes.go
+func isSyncOnDemandEnabled(ctlr *Controller) bool {
+  extensionsConfig := ctlr.Config.CopyExtensionsConfig()
+  if extensionsConfig.IsSyncEnabled() &&
+     fmt.Sprintf("%v", ctlr.SyncOnDemand) != fmt.Sprintf("%v", nil) {
+    return true
+  }
+  return false
+}
+```
 
-1. `getReferrers` / missing-manifest paths call `isSyncOnDemandEnabled(ctlr)` (`pkg/api/routes.go`).
-2. That returns true when **`extensions.sync.enable` and `ctlr.SyncOnDemand != nil`** — **not** when any registry has `OnDemand: true`.
-3. `EnableSyncExtension` **always** `NewOnDemand(log)` when sync is enabled, then only `onDemand.Add(service)` for registries with `OnDemand: true` (`pkg/extensions/extension_sync.go`).
-4. With only periodical sync (`pollInterval` set, `onDemand: false`): **no services are Added**, but a **non-nil empty** `BaseOnDemand` is still returned and assigned to `Controller.SyncOnDemand`.
-5. Result: every `/referrers/` still logs “syncing on demand”, awaits `SyncReferrers` (empty loop, returns quickly), then runs storage `GetReferrers`.
+`EnableSyncExtension` **always** `NewOnDemand(log)` when sync is enabled; it only `Add(service)` for registries with `OnDemand:true`. With only poll sync (`onDemand:false` + `pollInterval`), **no services are added**, but a **non-nil empty** `BaseOnDemand` is still installed → gate stays true forever.
 
-So #2753 removed the filtered SyncReferrers **service work** (no more “filtered out by sync config” on that path) but **did not disable the gate**.
+**Config cannot “evaluate content filter before sync” to skip the wait:** filtering happens *inside* `SyncImage`/`SyncReferrers` after the HTTP handler has already decided to await them. There is no registry content entry that short-circuits `isSyncOnDemandEnabled`. An explicit `corp/**` content prefix would only make zot try to sync corp from ghcr (nonsense), not skip the gate.
 
-## Where the ~14s actually goes
+### `getReferrers` (always waits if gate on)
 
-After the empty SyncReferrers return, `imgStore.GetReferrers` (`pkg/storage/common/common.go`) does:
+Always: log → `SyncOnDemand.SyncReferrers` → `imgStore.GetReferrers` (O(n) S3 scan of every repo descriptor; ~697 images in `corp/bhaiya` ⇒ ~14s). Empty SyncReferrers (no services) is cheap; **the scan is the cost**.
 
-- load the repo index
-- for **every** descriptor, `GetBlobContent` (S3/Garage) and JSON-parse to see if `subject` matches
+### `getImageManifest` (delivery path — Raj’s new evidence)
 
-With ~697 images in `corp/bhaiya`, that is an **O(n) S3 read** per referrers query. That matches:
+```go
+// Digest reference: return local hit WITHOUT sync; sync only if miss && gate.
+content, digest, mediaType, err := imgStore.GetImageManifest(name, reference)
+if err == nil || !syncEnabled { return ... }
 
-- GraphQL Referrers (MetaDB index) ~50ms vs OCI `/referrers/` ~14s+
-- tags/list and large catalog endpoints also becoming slow under the same storage pressure
-- v2.1.21 still uses the same storage `GetReferrers` + same sync gate (no MetaDB fast path for the OCI route). `manifestCheckInterval` (#4328) only throttles upstream on-demand checks; it does not replace the S3 scan.
+// Tag reference OR digest miss with sync enabled:
+// ALWAYS logs and awaits SyncImage BEFORE re-reading local — even on a local hit.
+log "trying to get updated image by syncing on demand"
+SyncOnDemand.SyncImage(...)
+return imgStore.GetImageManifest(...)
+```
 
-**#2753 could never make OCI `/referrers/` fast on this repo size.** At best it removed a small sync-service overhead on top of the scan.
+So for **tags** (including `corp/workspace:0.3.277`, `latest`, `sha-*` tags that aren’t digests), sync-enabled zot **always** pays the on-demand wait on every GET, even when the image is local and the ghcr filter can never match `corp/*`. Measured: workspace manifest **5–11s** with that log line; digest GETs of a present manifest stay fast (~0.1s) when they hit the digest short-circuit.
 
-## Does the release path get faster?
+That is why #2753’s per-registry flag looked plausible but could not help either referrers or tagged manifest GETs.
 
-**No measurable win expected from #2753 for current `corp/bhaiya` validate.**
+## Is ghcr sync load-bearing?
 
-- `.woodpecker/release.sh` on main **does not call `/referrers/`** (provenance is manifest/config labels).
-- Manifest GETs for local `corp/*` still hit `getImageManifest`’s “syncing on demand” log while sync stays enabled (empty SyncImage), and we still saw **5–11s** on `corp/workspace:0.3.277` under load — that is a separate on-demand **gate**, not the S3 referrers scan.
+**No evidence it is.** Cluster workloads pull `ghcr.io/rajsinghtech/...` **directly** (garage-operator, tsdnsproxy, tsflow, tsk9s, patched garage image, etc.). Corp images use `oci.cdn.../corp/...`. Live poll sync is **unauthorized** against ghcr without credentials. Keeping `sync.enable=true` currently buys: failing SyncGenerator spam + SyncOnDemand gate on local traffic.
 
-## Poll sync after disabling onDemand
+Therefore **disabling the sync extension entirely is the correct config fix** for the gate (already pushed on `work/referrers2`), not “add a corp/** content trick.”
 
-We said poll would remain. Live: **`SyncGenerator` fails unauthorized against ghcr.io** repeatedly since restart. So the “keep poll” benefit is currently **aspirational** unless credentials are added. Disabling the whole sync extension would not remove a working mirror that we are successfully using right now; it would remove a failing generator and the SyncOnDemand gate.
+## What disabling sync fixes vs what it does not
 
-## Options that can actually work
-
-| Option | Effect on gate log / empty Sync* | Effect on ~14s `/referrers/` | Cost |
-| --- | --- | --- | --- |
-| A. Keep #2753 only | Partial (no SyncReferrers service) | **None** | Already merged; **do not claim fixed** |
-| B. `"sync": { "enable": false }` | Stops gate (`SyncOnDemand` nil) and on-demand manifest waits | **None** (S3 scan remains) | Loses broken/unauth poll; fine if we don’t rely on ghcr pull-through |
-| C. Client timeouts ≥20–30s for OCI referrers | N/A | Makes hang look like success when scan finishes | Does not fix server cost; current release.sh doesn’t need it |
-| D. Upstream: MetaDB-backed OCI GetReferrers (or index) | N/A | **Real fix** | Needs upstream work; not in v2.1.21 |
-| E. Shrink `corp/bhaiya` retention / split repos | N/A | Reduces O(n) | Operational, not a sync flag |
-
-**Honest recommendation:**  
-
-1. **Do not close the referrers problem on #2753.**  
-2. Prefer **B** if Raj agrees ghcr sync isn’t earning its keep (evidence: unauthorized poll). That stops misleading on-demand waits on local repos.  
-3. Accept that **OCI `/referrers/` stays slow** until D or E; use GraphQL/search for any internal referrer queries.  
-4. **Do not** raise release timeouts as the primary “fix” for validate wedges that aren’t calling `/referrers/`.
-
-## #527 overall (three-problem split)
-
-| Problem | Status |
+| Symptom | After `sync.enable: false` |
 | --- | --- |
-| 1. Write-path multipart panic | Mitigated in Ottawa (fork pin); fixed upstream in **v2.4.0** (#1522). Upgrade PR #2751 still awaiting sign-off to drop the fork. |
-| 2. Read-path `get.rs` empty-block panic | Same as (1). |
-| 3. Referrers / validate latency story | **Not fixed.** #2753 ineffective for latency; real cost is S3 `GetReferrers` scan (+ sync gate still active). |
+| “syncing on demand” logs on corp/* | **Gone** (`SyncOnDemand` nil) |
+| Empty SyncImage wait on tag GETs | **Gone** |
+| Poll SyncGenerator unauthorized errors | **Gone** |
+| OCI `/referrers/` ~14s | **Remains** — storage `GetReferrers` O(n) over S3 |
+| GraphQL Referrers | Already fast (MetaDB) |
 
-**Do not close #527** until (3) is honestly dispositioned (B+documented residual, or upstream/timeout plan) and Raj is happy with (1)(2) via v2.4.0 or the fork remaining.
+Real OCI `/referrers/` speed needs **upstream MetaDB-backed GetReferrers** (not in v2.1.20/21) or a much smaller repo. Client timeout mitigation does not fix S3 scan cost.
+
+## Client timeout mitigation (if we must keep OCI referrers callers)
+
+Current `release.sh` **does not** call `/referrers/` — validate wedges from that era are not fixed by referrers timeouts alone.
+
+If something else still probes OCI referrers (cosign/oras/crane):
+
+| Client | Suggested budget | Rationale |
+| --- | --- | --- |
+| Interactive curl / scripts | **≥20s** `max-time` (prefer **30s**) | Empty index often returns ~14s; under load 28s+ seen |
+| Parallel CI probes | fail-fast on first transport timeout; **do not** retry into a void | Retries amplify queueing |
+| Prefer | GraphQL `/v2/_zot/ext/search` `Referrers` | ~50ms when search/MetaDB enabled |
+
+For **tagged manifest** GETs while sync remains enabled: any client assuming &lt;2s local registry latency can flake; after sync.disable, local tag GETs should return to normal storage latency (still not a substitute for fixing `/referrers/` scan).
+
+## Follow-up already on branch (not claiming prod-fixed until merged+remeasured)
+
+`work/referrers2`: `extensions.sync.enable: false`, docs that #2753 missed the gate, dry-run accepted, render OK.
+
+**Required after merge:** re-run the same curl matrix + confirm logs no longer contain “syncing on demand”; separately note `/referrers/` may still be ~14s.
+
+## #527 close assessment
+
+| # | Problem | Close? |
+| --- | --- | --- |
+| 1 | Multipart write panic | Mitigated (Ottawa fork) + upstream v2.4.0; upgrade #2751 pending |
+| 2 | GET empty-block panic | Same |
+| 3 | Referrers / on-demand delivery drag | **Open** — #2753 ineffective; `referrers2` addresses gate only |
+
+**Do not close #527** until Raj merges/verifies sync.disable and accepts residual `/referrers/` O(n) (or an upstream plan).
 
 ## What I refuted
 
-- **“#2753 fixed referrers in prod”** — refuted by live latency + logs.  
-- **“Per-registry `onDemand: false` disables SyncOnDemand”** — refuted by `EnableSyncExtension` + `isSyncOnDemandEnabled`.  
-- **“Remaining ~14s is still SyncReferrers filtering”** — refuted; filtered-out lines are gone; MetaDB GraphQL is fast; storage `GetReferrers` is O(n) S3.  
-- **“Release validate will get faster from #2753”** — not supported; release.sh doesn’t use `/referrers/`.  
-- **“Poll sync still works after #2753”** — poll generator is failing unauthorized.
+- **“#2753 fixed it”** — false in prod.  
+- **“Only referrers are affected”** — false; tag manifest GETs on the delivery path hit the same gate.  
+- **“Content-filter-first config can skip sync”** — not available in v2.1.20; filter runs inside Sync*.  
+- **“Must keep sync for ghcr mirroring”** — not load-bearing here; poll unauthorized; images pull ghcr directly.  
+- **“Disable sync makes `/referrers/` fast”** — false; only removes the gate.
 
 ## Limits
 
-- Read-only verification; no further live apply in this turn until Raj picks B/C/D/E.  
-- Findings only; honesty over a second hopeful merge.
+Honesty over a second false “fixed.” No prod apply from this note beyond what’s already in `work/referrers2` awaiting review.
