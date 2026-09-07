@@ -453,6 +453,18 @@ kube-state-metrics:
                   info:
                     labelsFromPath:
                       phase: [ status, phase ]
+              # An unadmitted PVR can have a snapshot reference but no phase
+              # or status.node. Keep its creation time observable so the
+              # restore-level starvation alert can detect presence without
+              # admission. The optional node label above is omitted by
+              # kube-state-metrics when status.node is absent; it does not
+              # suppress this metadata-backed series.
+              - name: "podvolumerestore_created_timestamp"
+                help: "Unix creation timestamp of a Velero PodVolumeRestore custom resource."
+                each:
+                  type: Gauge
+                  gauge:
+                    path: [ metadata, creationTimestamp ]
               - name: "podvolumerestore_bytes_done"
                 help: "Bytes reported as restored by a Velero PodVolumeRestore."
                 each:
