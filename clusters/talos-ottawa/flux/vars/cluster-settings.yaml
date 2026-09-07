@@ -41,17 +41,6 @@ data:
   COMMON_S3_ENDPOINT: "garage-gateway.garage.svc.cluster.local:3900"
   VICTORIA_LOGS_HOST: "victoria-logs-victoria-logs-single-server.monitoring"
 
-  # Garage: patched build carrying the CompleteMultipartUpload and GET
-  # empty-blocks fixes (upstream Deuxfleurs/garage#1403, still unfixed as of
-  # v2.3.0). Upstream indexes final_version.blocks.items()[0] during multipart
-  # completion and all_blocks[0] while reading; a zero-block version can kill
-  # the process before it can answer. The patches return an internal error for
-  # completion and an empty body for GET. Ottawa only, because this build is
-  # linux/amd64 ONLY while upstream dxflrs/garage ships four platforms — every
-  # Ottawa node is amd64, the other clusters keep the default.
-  # Revert by removing this key.
-  GARAGE_IMAGE: "ghcr.io/rajsinghtech/garage:v2.3.0-multipart-fix-63a41e9bf41e25f27adf83752c8c9a1e6cc3e0b6@sha256:38cccb8a9ef4c20f80c372c9ae4c5cf0ef32596ee00fc5f3ce32355331798847"
-
   # Garage: storage layout hand-managed per-node in clusters/talos-ottawa/apps/garage
   # (Manual) so the array can move off SMB to ceph/local-path per node. Gateway
   # tier stays operator-managed (Auto). Requires operator v0.6.11+.
