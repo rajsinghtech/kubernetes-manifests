@@ -61,6 +61,21 @@ spec:
               ip route add 10.5.0.0/16 dev eth0 2>/dev/null || true
               ip route add 10.4.0.0/16 dev eth0 2>/dev/null || true
               ip route add 169.254.0.0/16 dev eth0 2>/dev/null || true
+          # Requests must equal limits here or the POD is not Guaranteed.
+          # Kubernetes computes QoS across every container including init
+          # containers: the homeassistant container already sets 1Gi/1 with
+          # requests == limits, but this one had no resources at all, which
+          # silently demoted the whole pod to Burstable — and Burstable pods
+          # are evicted before Guaranteed ones under node memory pressure.
+          # That is why infra-critical + the memory-pressure toleration did
+          # not stop orin-0 evicting Home Assistant.
+          resources:
+            requests:
+              memory: "32Mi"
+              cpu: "50m"
+            limits:
+              memory: "32Mi"
+              cpu: "50m"
           securityContext:
             capabilities:
               add: ["NET_ADMIN"]
