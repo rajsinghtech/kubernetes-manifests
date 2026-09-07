@@ -31,11 +31,21 @@ spec:
   upgrade:
     cleanupOnFail: true
     timeout: 25m
+    # Helm must not gate this release on Mimir readiness. Its ring components
+    # (compactor/store-gateway/ingester) legitimately take 1-5m to join and the
+    # ingester's graceful shutdown flushes its whole TSDB head (grace 1200s).
+    # Helm reported "release is in a failed state" seconds into every upgrade
+    # and remediated, so the timeouts above were never even reached
+    # (corp/bhaiya#713). Flux health-checks the Kustomization separately and the
+    # ring self-heals, so waiting here buys nothing and blocked delivery of
+    # #2765's query-window config for four PRs.
+    disableWait: true
+    disableWaitForJobs: true
     remediation:
       # 'retry' is NOT a valid strategy (live CRD accepts only rollback |
       # uninstall), and setting it fails the whole Kustomization dry-run.
-      # The 15m timeouts above are the actual fix: a healthy ring join no
-      # longer times out, so remediation is not triggered at all.
+      # Timeouts alone were never the fix (see disableWait above); they are
+      # kept as a backstop for a genuinely hung operation.
       retries: 2
   postRenderers:
     - kustomize:
