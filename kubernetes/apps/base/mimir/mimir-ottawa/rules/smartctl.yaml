@@ -64,3 +64,40 @@ groups:
             Device {{ $labels.device }} on instance {{ $labels.instance }} interface is slower than it should be
         labels:
           severity: critical
+
+      # Early warning for HDD media wear before overall SMART status flips.
+      # Metric/labels verified from live smartctl-exporter scrape on
+      # Robbinsdale tank (10.1.0.24): smartctl_device_attribute with
+      # attribute_name=Reallocated_Sector_Ct|Current_Pending_Sector and
+      # attribute_value_type=raw. Mimir query API was unhealthy
+      # (query_ingesters_within config fault) at authoring time, so the
+      # expression was validated against the exporter /metrics surface that
+      # Prometheus scrapes into the talos-robbinsdale tenant.
+      #
+      # Pages when raw realloc or pending-sector count rises by >=1 over 24h
+      # and stays elevated for 6h. Flat-but-already-failed disks (tank sda/
+      # sdb/sdc today) continue to page via SmartDeviceTestFailed; this rule
+      # is for growth before that flip.
+      - alert: SmartDeviceSectorCountGrowing
+        expr: |-
+          (
+            increase(
+              smartctl_device_attribute{
+                attribute_name=~"Reallocated_Sector_Ct|Current_Pending_Sector",
+                attribute_value_type="raw"
+              }[24h]
+            ) >= 1
+          )
+        for: 6h
+        annotations:
+          summary: >-
+            Drive {{ $labels.device }} on {{ $labels.instance }} is accumulating
+            {{ $labels.attribute_name }} (raw +{{ printf "%.0f" $value }} over 24h)
+          description: >-
+            SMART attribute {{ $labels.attribute_name }} raw count grew by at
+            least 1 over the last 24h and stayed elevated for 6h. This is the
+            early-warning path for media failure before overall SMART status
+            flips (SmartDeviceTestFailed). Plan replacement; do not silence
+            while the count is still climbing.
+        labels:
+          severity: critical
