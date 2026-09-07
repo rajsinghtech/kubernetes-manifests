@@ -25,13 +25,22 @@ spec:
     keepMonthly: 3
   mover:
     # Live /config has root-owned 0600 files under .storage/ (auth, etc.).
-    # Default mover UID 65532 would Succeed with 0 files. Root mover is
-    # required to READ; mount stays read-only (above). Namespace must carry
-    # kopiur.home-operations.com/privileged-movers=true.
+    # Default mover UID 65532 would Succeed with 0 files — a silent empty
+    # backup. inheritSecurityContextFrom cannot help: HA's pod spec pins no
+    # runAsUser (image USER only), so inheritance would fall back to 65532
+    # (InheritPinnedNoUid). Explicit root is required to READ.
+    #
+    # privilegedMode is the CRD's namespace-gated elevation flag (pairs with
+    # kopiur.home-operations.com/privileged-movers on the Namespace). It alone
+    # does not set UID 0 for backup reads — docs pair it with runAsUser: 0
+    # (and use privilegedMode especially so restores can preserve ownership).
+    privilegedMode: true
     securityContext:
       runAsUser: 0
       runAsNonRoot: false
-    tolerations:
-      - key: node-role.kubernetes.io/control-plane
-        operator: Exists
-        effect: NoSchedule
+    # Do NOT put tolerations here — SnapshotPolicy.spec.mover has no
+    # tolerations field (schema reject / Flux dry-run fail). Scheduling onto
+    # tainted orin-0 is handled by Repository.sourceColocation Auto (default):
+    # Direct movers pin to the RWO holder node and union the holder pod's
+    # tolerations (HA already tolerates control-plane). Optional explicit base
+    # tolerations live on Repository.spec.moverDefaults.tolerations only.

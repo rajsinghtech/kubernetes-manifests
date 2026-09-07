@@ -1,6 +1,6 @@
 # #695 — StP HA capture via kopiur (Direct)
 
-**Status:** GitOps draft on `work/kopiur-stp-ha`. **Not merged / not applied.**  
+**Status:** merged via km#2775; apply fix for mover scheduling on `work/kopiur-mover-schedule`.  
 VolSync is out (Raj). Velero FSB still skips hostPath; leave `home-assistant-backup` + km#2764 alone.
 
 ## Constraints encoded in manifests
@@ -14,7 +14,25 @@ VolSync is out (Raj). Velero FSB still skips hostPath; leave `home-assistant-bac
 | 5 | Chart `0.10.7` + image digests pinned | `HelmRelease` |
 | 6 | StP only | `kubernetes/apps/stpetersburg/kopiur` |
 
-Root mover + `privileged-movers` annotation: live `/config` has root-owned `0600` files; mount stays read-only.
+## Apply fix (invalid `SnapshotPolicy.spec.mover.tolerations`)
+
+Installed CRD: `spec.mover` allows only `cache`, `inheritSecurityContextFrom`,
+`podSecurityContext`, `privilegedMode`, `resources`, `securityContext`,
+`ttlSecondsAfterFinished` — **no tolerations**.
+
+How Direct movers still schedule onto tainted orin-0:
+
+1. **Not** HelmRelease root `tolerations` — chart model: root = controller only.
+2. **Not** `inheritSecurityContextFrom` — security only; HA also pins no `runAsUser`.
+3. **Yes:** `Repository.moverDefaults.sourceColocation: Auto` (default) pins the
+   mover to the RWO holder node and **unions the holder pod's tolerations**.
+   `homeassistant-0` already has `node-role.kubernetes.io/control-plane` Exists
+   NoSchedule.
+4. **Yes:** `Repository.moverDefaults.tolerations` (CRD-valid) as explicit base.
+
+Root read access: `securityContext.runAsUser: 0` + `runAsNonRoot: false` **and**
+`privilegedMode: true` (namespace-gated; preserve ownership on restore). Mount
+stays `readOnly: true`.
 
 ## Acceptance (do not claim success without)
 
