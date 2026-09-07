@@ -70,3 +70,31 @@ spec:
         - remote-email
         - remote-name
         - remote-groups
+---
+# Tinyauth returns 401 with x-tinyauth-location for unauthenticated requests.
+# Convert that ext_authz response into the browser redirect expected by the
+# public Bhaiya UI. This is route-scoped because the response filter must run
+# after the route's ext_authz check.
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyExtensionPolicy
+metadata:
+  name: bhaiya-tinyauth-redirect
+  namespace: keiretsu-top
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: bhaiya-cdn
+  lua:
+    - inline: |
+        function envoy_on_response(response_handle)
+          local headers = response_handle:headers()
+          if headers:get(":status") == "401" then
+            local location = headers:get("x-tinyauth-location")
+            if location then
+              headers:replace(":status", "302")
+              headers:add("Location", location)
+              headers:remove("x-tinyauth-location")
+            end
+          end
+        end
