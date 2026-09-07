@@ -18,7 +18,11 @@ spec:
   # in its cluster-settings to run a patched build; any override must cover every
   # node architecture in that cluster, since a single-arch image will not run on
   # a mixed-arch cluster.
-  image: ${GARAGE_IMAGE:=dxflrs/garage:v2.3.0}
+  # Prefer the digest-pinned upstream multi-arch tag. Ottawa previously overrode
+  # this with a fork build for empty-block panic guards; those landed in v2.4.0
+  # (Deuxfleurs/garage#1522), so the override is removed and every cluster shares
+  # one upstream image. GARAGE_IMAGE remains substitutable for emergencies.
+  image: ${GARAGE_IMAGE:=dxflrs/garage:v2.4.0@sha256:715d176efc35384bf72cf6052fd61b74b3e27a1e31a9dfedabe646bd1e92f137}
 
   replication:
     factor: 3
