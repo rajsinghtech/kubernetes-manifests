@@ -41,4 +41,3 @@ resources:
   - omnibus/secret.sops.yaml
   - oidc-secrets.sops.yaml
   - komga-scan-secret.sops.yaml
-  - restic-orphan-cleanup.yaml
