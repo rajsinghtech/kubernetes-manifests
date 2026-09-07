@@ -151,14 +151,26 @@ spec:
           - action: drop
             sourceLabels: [__name__]
             regex: (apiserver_request_duration_seconds|apiserver_request_sli_duration_seconds|apiserver_request_body_size_bytes|apiserver_response_sizes|apiserver_watch_cache_read_wait_seconds|apiserver_watch_list_duration_seconds|apiserver_watch_events_sizes|etcd_request_duration_seconds|rpc_duration_seconds|rpc_duration)_bucket
-          # Second pass: the _sum/_count of those histograms plus apiserver/etcd
-          # internal bookkeeping series — verified referenced by zero dashboards,
-          # alerts, or badges. apiserver_request_total and
-          # apiserver_request_duration_seconds_{sum,count} are deliberately NOT
-          # matched here (the API dashboards use them).
+          # Second pass: drop unused latency companions / bookkeeping, but do
+          # NOT blank the watch-cache LIST attribution counters.
+          #
+          # Measured on live /metrics (2026-09-07), per apiserver endpoint:
+          #   StP  restore set ≈ 3840 series (cache_list_* + storage_list_* +
+          #        longrunning_requests + watch_cache_capacity +
+          #        non-bucket apiserver_watch_cache_* including read-wait
+          #        _sum/_count). Ottawa ≈ 4476.
+          #   Still dropped watch latency _bucket ≈ 12311 (StP) / 14289
+          #        (Ottawa) — the class that drove the ~470k-series agent OOM.
+          #   apiserver_request_total already kept (≈1801 StP / 2241 Ottawa;
+          #        labels: verb/resource/code/scope — no username/client on
+          #        v1.36, so SA attribution still needs audit logs).
+          #   apiserver_watch_list_duration_seconds_{sum,count} already kept
+          #        (only its _bucket is in the first drop rule).
+          # Recording rules are unnecessary: the useful counters are separable
+          # from the expensive buckets.
           - action: drop
             sourceLabels: [__name__]
-            regex: (apiserver_request_sli_duration_seconds|apiserver_response_sizes|apiserver_watch_events_sizes|etcd_request_duration_seconds|apiserver_admission_controller_admission_duration_seconds|apiserver_admission_step_admission_duration_seconds|apiserver_admission_webhook_admission_duration_seconds)_(sum|count)|apiserver_watch_events_total|apiserver_watch_cache_.*|apiserver_storage_list_.*|apiserver_cache_list_.*|apiserver_longrunning_requests|apiextensions_openapi_v3?_regeneration_count|etcd_requests_total|etcd_bookmark_total|watch_cache_capacity
+            regex: (apiserver_request_sli_duration_seconds|apiserver_response_sizes|apiserver_watch_events_sizes|etcd_request_duration_seconds|apiserver_admission_controller_admission_duration_seconds|apiserver_admission_step_admission_duration_seconds|apiserver_admission_webhook_admission_duration_seconds)_(sum|count)|apiserver_watch_events_total|apiextensions_openapi_v3?_regeneration_count|etcd_requests_total|etcd_bookmark_total
 
     kubelet:
       serviceMonitor:
