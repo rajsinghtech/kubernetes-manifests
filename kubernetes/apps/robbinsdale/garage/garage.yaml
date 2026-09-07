@@ -62,7 +62,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./kubernetes/apps/base/garage/garage-keys
+  path: ./kubernetes/apps/base/garage/garage-keys-robbinsdale
   prune: true
   sourceRef:
     kind: GitRepository
