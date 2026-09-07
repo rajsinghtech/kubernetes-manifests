@@ -6,3 +6,4 @@ resources:
   - app.yaml
   - egress.yaml
   - secret.sops.yaml
+  - restic-orphan-cleanup.yaml
