@@ -174,6 +174,7 @@ run_capped() {
   exit 1
 }
 
+run_capped "mimir-promql" tools/check-mimir-promql.sh
 run_capped "version-sync" tools/check-versions.sh
 run_capped "notification-scope" tools/check-notification-scope.sh
 run_capped "cliproxy-pi-bridge" tools/check-cliproxy-pi-bridge.sh
