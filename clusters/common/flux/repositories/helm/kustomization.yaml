@@ -9,7 +9,6 @@ resources:
   - ./coredns.yaml
   - ./csi-driver-smb.yaml
   - ./descheduler.yaml
-  - ./tailscale-helper-charts.yaml
   - ./envoy-gateway.yaml
   - ./external-dns.yaml
   - ./external-secrets.yaml
