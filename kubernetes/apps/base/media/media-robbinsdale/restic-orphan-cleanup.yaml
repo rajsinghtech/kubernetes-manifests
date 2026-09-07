@@ -81,7 +81,7 @@ spec:
       containers:
         - name: cleanup
           # alpine/k8s bundles kubectl, bash, and base64; pin the multi-arch index digest.
-          image: docker.io/alpine/k8s:1.33.3@sha256:47e4ea4c263fb4e14e51d7c5ca841da756673f18e2340f38c0cf1f7219d05e85
+          image: docker.io/alpine/k8s:1.37.0@sha256:b421c2e9419edb98db39b6ab641669f4db7bb2acf354f22450c6b7e7176d1ff4
           imagePullPolicy: IfNotPresent
           securityContext:
             allowPrivilegeEscalation: false
