@@ -52,6 +52,7 @@ spec:
             - /rules/monitoring.yaml
             - /rules/node-health.yaml
             - /rules/node-clock.yaml
+            - /rules/velero-node-saturation.yaml
             - /rules/payments.yaml
             - /rules/smartctl.yaml
             - /rules/velero.yaml
@@ -92,6 +93,7 @@ spec:
             - /rules/monitoring.yaml
             - /rules/node-health.yaml
             - /rules/node-clock.yaml
+            - /rules/velero-node-saturation.yaml
             - /rules/payments.yaml
             - /rules/smartctl.yaml
             - /rules/velero.yaml
@@ -128,6 +130,7 @@ spec:
             - /rules/monitoring.yaml
             - /rules/node-health.yaml
             - /rules/node-clock.yaml
+            - /rules/velero-node-saturation.yaml
             - /rules/payments.yaml
             - /rules/smartctl.yaml
             - /rules/velero.yaml

@@ -2,6 +2,7 @@
 # monitoring-common/app/kube-state-metrics-config.yaml. The exporter must
 # provide the metric names and direct cluster/node/phase labels documented
 # there; without that deployment this rule is intentionally inert.
+namespace: velero-node-saturation
 groups:
   - name: velero-node-saturation.rules
     rules:
