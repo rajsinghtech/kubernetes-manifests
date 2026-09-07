@@ -210,7 +210,7 @@ spec:
               --mm-encoder-tp-mode data --limit-mm-per-prompt '{"image":1,"video":1}' \
               --speculative-config '{"method":"mtp","num_speculative_tokens":3}' \
               --compilation-config '{"mode":0,"cudagraph_mode":"FULL_DECODE_ONLY"}' \
-              --hf-overrides '{"text_config":{"rope_parameters":{"rope_type":"yarn","factor":4.0,"original_max_position_embeddings":262144}}}' \
+              --hf-overrides '{"text_config":{"ple_embedding_dtype":"float8_e4m3fn","rope_parameters":{"rope_type":"yarn","factor":4.0,"original_max_position_embeddings":262144}}}' \
               --nnodes 2 --node-rank 0 --master-addr 192.168.74.1 --master-port 26400
           ports:
           - { containerPort: 8000, name: http, protocol: TCP }
@@ -389,7 +389,7 @@ spec:
               --mm-encoder-tp-mode data --limit-mm-per-prompt '{"image":1,"video":1}' \
               --speculative-config '{"method":"mtp","num_speculative_tokens":3}' \
               --compilation-config '{"mode":0,"cudagraph_mode":"FULL_DECODE_ONLY"}' \
-              --hf-overrides '{"text_config":{"rope_parameters":{"rope_type":"yarn","factor":4.0,"original_max_position_embeddings":262144}}}' \
+              --hf-overrides '{"text_config":{"ple_embedding_dtype":"float8_e4m3fn","rope_parameters":{"rope_type":"yarn","factor":4.0,"original_max_position_embeddings":262144}}}' \
               --nnodes 2 --node-rank 1 --master-addr 192.168.74.1 --master-port 26400
           env:
           - { name: VLLM_HOST_IP, value: "192.168.74.2" }
