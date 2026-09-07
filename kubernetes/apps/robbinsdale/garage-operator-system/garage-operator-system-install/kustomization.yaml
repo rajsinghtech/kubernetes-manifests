@@ -1,0 +1,17 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../../base/garage-operator-system/garage-operator-system-install
+patches:
+  - target:
+      group: helm.toolkit.fluxcd.io
+      version: v2
+      kind: HelmRelease
+      name: garage-operator
+      namespace: garage-operator-system
+    patch: |-
+      - op: add
+        path: /spec/values/image
+        value:
+          digest: sha256:4ed5db5a815b987af4b142e91453dcce50561687e2bd1c1a9ea6ae5205bc82d0
