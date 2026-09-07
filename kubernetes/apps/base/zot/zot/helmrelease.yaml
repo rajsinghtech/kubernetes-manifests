@@ -72,11 +72,16 @@ spec:
           secretKeyRef:
             name: garage-s3-auth
             key: AWS_SECRET_ACCESS_KEY
-    # sync.onDemand must stay false. With it true, every /v2/.../referrers/{digest}
-    # (and missing-manifest) path waits on SyncReferrers/SyncImage before answering.
-    # For local corp/* repos outside the ghcr.io content prefix that is a ~14s
-    # filtered-out no-op that still blocks the HTTP response; clients with ≤12s
-    # timeouts observe http=000 "hangs". Scheduled pollInterval sync remains.
+    # sync must stay disabled unless a registry has OnDemand:true *and* we accept
+    # the OCI /referrers + missing-manifest gate. isSyncOnDemandEnabled is true
+    # whenever extensions.sync.enable and Controller.SyncOnDemand != nil — even
+    # with every registry OnDemand:false (EnableSyncExtension still returns an
+    # empty BaseOnDemand). That leaves "syncing on demand" logs on local corp/*
+    # repos. Poll sync for ghcr.io/rajsinghtech/** is also failing unauthorized
+    # without credentials, so enable=false removes a dead generator. Residual:
+    # storage GetReferrers still O(n) S3-scans the repo index (~14s on corp/bhaiya);
+    # GraphQL Referrers via MetaDB stays fast. Real OCI referrers speed needs
+    # upstream MetaDB-backed GetReferrers or a smaller repo.
     configFiles:
       config.json: |-
         {
@@ -150,7 +155,7 @@ spec:
             "ui": { "enable": true },
             "metrics": { "enable": true },
             "sync": {
-              "enable": true,
+              "enable": false,
               "downloadDir": "/var/lib/registry/sync-tmp",
               "registries": [{
                 "urls": ["https://ghcr.io"],
