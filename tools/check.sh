@@ -111,15 +111,31 @@ run_capped() {
   set +m
 
   {
-    sleep "$CHECK_TIMEOUT"
+    timer_pid=""
+    cleanup_timer() {
+      if [ -n "$timer_pid" ]; then
+        kill "$timer_pid" 2>/dev/null || true
+        wait "$timer_pid" 2>/dev/null || true
+      fi
+    }
+    trap 'cleanup_timer; exit 143' TERM INT
+
+    sleep "$CHECK_TIMEOUT" &
+    timer_pid=$!
+    wait "$timer_pid"
     printf 'yes' >"$timedout"
     kill -TERM -"$pid" 2>/dev/null || kill -TERM "$pid" 2>/dev/null
-    sleep 5
+    sleep 5 &
+    timer_pid=$!
+    wait "$timer_pid"
     kill -KILL -"$pid" 2>/dev/null || kill -KILL "$pid" 2>/dev/null
   } >/dev/null 2>&1 &
   local watchdog=$!
 
   wait "$pid" || rc=$?
+  # The watchdog shell launches timer sleeps. Terminating the shell runs its
+  # trap, which kills the tracked timer without risking the enclosing job
+  # process group (and any lock owner) in non-interactive shells.
   kill "$watchdog" 2>/dev/null || true
   wait "$watchdog" 2>/dev/null || true
 

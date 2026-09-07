@@ -379,6 +379,90 @@ exits  "quick + cluster -> exit 2"      2 "$T/check.sh" --quick ot
 assert "help -> concise usage"           grep -q '^Usage:' <<<"$("$T/check.sh" --help)"
 aliasout="$(PATH="$mstub:$PATH" "$T/check.sh" ot 2>/dev/null)"
 assert "short cluster alias accepted"   grep -q '^✓ render OK: talos-ottawa$' <<<"$aliasout"
+
+# A completed gate must reap every watchdog timer descendant. Use an isolated
+# temporary gate root so this test exercises the real run_capped implementation
+# without allowing a sleep stub to affect repository prerequisite checks.
+# Every timer announces its PID through one shared FIFO; each isolated helper
+# consumes exactly the timer belonging to its own run_capped invocation. The
+# parent opens the render FIFO before starting the gate and uses read -t only as
+# a bounded supervisor, never as synchronization by elapsed sleep.
+watchdog_tmp="$(mktemp -d)"
+mkdir -p "$watchdog_tmp/tools" "$watchdog_tmp/stub"
+cp "$T/check.sh" "$watchdog_tmp/tools/check.sh"
+for helper in check-versions.sh check-notification-scope.sh \
+  check-cliproxy-pi-bridge.sh check-zot-upload-affinity.sh \
+  check-mimir-rules.sh check-velero-pvc-coverage.sh; do
+  cat >"$watchdog_tmp/tools/$helper" <<'EOF'
+#!/usr/bin/env bash
+IFS= read -r _ <"$WATCHDOG_READY"
+exit 0
+EOF
+  chmod +x "$watchdog_tmp/tools/$helper"
+done
+watchdog_ready="$watchdog_tmp/ready"
+watchdog_release="$watchdog_tmp/release"
+watchdog_pids="$watchdog_tmp/pids"
+render_ready="$watchdog_tmp/render-ready"
+render_go="$watchdog_tmp/render-go"
+mkfifo "$watchdog_ready" "$watchdog_release" "$render_ready" "$render_go"
+cat >"$watchdog_tmp/stub/sleep" <<'EOF'
+#!/usr/bin/env bash
+printf '%s\n' "$$" >>"$WATCHDOG_PIDS"
+printf '%s\n' "$$" >"$WATCHDOG_READY"
+IFS= read -r _ <"$WATCHDOG_RELEASE"
+EOF
+chmod +x "$watchdog_tmp/stub/sleep"
+cat >"$watchdog_tmp/stub/make" <<'EOF'
+#!/usr/bin/env bash
+IFS= read -r timer_pid <"$WATCHDOG_READY"
+printf '%s\n' "$timer_pid" >"$RENDER_READY"
+IFS= read -r _ <"$RENDER_GO"
+EOF
+chmod +x "$watchdog_tmp/stub/make"
+# Keep a reader/writer open before starting children so no readiness event can
+# be lost between the watchdog's announcement and the consumer's open.
+exec 7<>"$watchdog_ready"
+exec 8<>"$render_ready"
+watchdog_sleep_pid=""
+stop_fixture_pid() {
+  local fixture_pid="$1"
+  kill -TERM "$fixture_pid" 2>/dev/null || true
+  if kill -0 "$fixture_pid" 2>/dev/null; then
+    kill -KILL "$fixture_pid" 2>/dev/null || true
+  fi
+}
+WATCHDOG_READY="$watchdog_ready" WATCHDOG_RELEASE="$watchdog_release" \
+  WATCHDOG_PIDS="$watchdog_pids" RENDER_READY="$render_ready" \
+  RENDER_GO="$render_go" FLATE_BASE=baseline \
+  PATH="$watchdog_tmp/stub:$PATH" "$watchdog_tmp/tools/check.sh" ot \
+  >"$watchdog_tmp/output" 2>&1 &
+watchdog_check_pid=$!
+if IFS= read -r -t 30 watchdog_sleep_pid <&8; then
+  printf 'go\n' >"$render_go"
+  wait "$watchdog_check_pid"; watchdog_ec=$?
+else
+  watchdog_ec=124
+  stop_fixture_pid "$watchdog_check_pid"
+  while IFS= read -r fixture_pid; do
+    [ -n "$fixture_pid" ] || continue
+    stop_fixture_pid "$fixture_pid"
+  done <"$watchdog_pids"
+  wait "$watchdog_check_pid" 2>/dev/null || true
+fi
+assert "completed gate -> watchdog exits successfully" test "$watchdog_ec" = 0
+watchdog_unreaped=0
+while IFS= read -r fixture_pid; do
+  [ -n "$fixture_pid" ] || continue
+  if kill -0 "$fixture_pid" 2>/dev/null; then
+    watchdog_unreaped=1
+  fi
+done <"$watchdog_pids"
+assert "completed gate -> every watchdog timer reaped" test "$watchdog_unreaped" = 0
+exec 7>&-
+exec 8>&-
+rm -rf "$watchdog_tmp"
+
 printf '#!/usr/bin/env bash\necho "render Error: boom"; exit 1\n' >"$mstub/make"; chmod +x "$mstub/make"
 fout="$(PATH="$mstub:$PATH" "$T/check.sh" 2>/dev/null)"; fec=$?
 assert "failure -> exit 1"              test "$fec" = 1
