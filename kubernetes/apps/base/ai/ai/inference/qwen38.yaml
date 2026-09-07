@@ -193,6 +193,10 @@ spec:
             python3 /tmp/qwen-patches/patch_modelopt_fp8_block_moe.py
             python3 /tmp/qwen-patches/patch_qsa_fp8_kv.py
             python3 /tmp/qwen-patches/patch_checkpoint_config.py /models/qwen38 /tmp/qwen-patches
+            cp /tmp/qwen-patches/ple_layer_patched.py "$VLLM_DIR/models/qwen3_8_flash_next/nvidia/ple_layer.py"
+            cp /tmp/qwen-patches/modelopt_patched.py "$VLLM_DIR/model_executor/layers/quantization/modelopt.py"
+            cp /tmp/qwen-patches/qsa_ops_patched.py "$VLLM_DIR/models/qwen3_8_flash_next/nvidia/ops/qsa.py"
+            cp /tmp/qwen-patches/qsa_nvidia_patched.py "$VLLM_DIR/models/qwen3_8_flash_next/nvidia/qsa.py"
             if [ -f /tmp/qwen-patches/config_patched.json ]; then cp /tmp/qwen-patches/config_patched.json /models/qwen38/config.json; fi
             if [ -f /tmp/qwen-patches/hf_quant_config_patched.json ]; then cp /tmp/qwen-patches/hf_quant_config_patched.json /models/qwen38/hf_quant_config.json; fi
             exec vllm serve /models/qwen38 \
@@ -368,6 +372,10 @@ spec:
             python3 /tmp/qwen-patches/patch_modelopt_fp8_block_moe.py
             python3 /tmp/qwen-patches/patch_qsa_fp8_kv.py
             python3 /tmp/qwen-patches/patch_checkpoint_config.py /models/qwen38 /tmp/qwen-patches
+            cp /tmp/qwen-patches/ple_layer_patched.py "$VLLM_DIR/models/qwen3_8_flash_next/nvidia/ple_layer.py"
+            cp /tmp/qwen-patches/modelopt_patched.py "$VLLM_DIR/model_executor/layers/quantization/modelopt.py"
+            cp /tmp/qwen-patches/qsa_ops_patched.py "$VLLM_DIR/models/qwen3_8_flash_next/nvidia/ops/qsa.py"
+            cp /tmp/qwen-patches/qsa_nvidia_patched.py "$VLLM_DIR/models/qwen3_8_flash_next/nvidia/qsa.py"
             if [ -f /tmp/qwen-patches/config_patched.json ]; then cp /tmp/qwen-patches/config_patched.json /models/qwen38/config.json; fi
             if [ -f /tmp/qwen-patches/hf_quant_config_patched.json ]; then cp /tmp/qwen-patches/hf_quant_config_patched.json /models/qwen38/hf_quant_config.json; fi
             exec vllm serve /models/qwen38 \
