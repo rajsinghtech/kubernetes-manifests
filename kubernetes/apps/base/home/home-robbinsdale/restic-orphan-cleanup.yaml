@@ -1,0 +1,130 @@
+# Delete the known Robbinsdale Home orphans left by VolSync after the purged
+# Garage `keiretsu` bucket was removed. These Secrets are not in git, so Flux
+# cannot prune them; this Job is deliberately a one-shot migration.
+#
+# Keep the allowlist and the runtime repository checks together. The latter
+# prevents a stale name from deleting a Secret after it has been repointed.
+# Remove this file after the Job completes; completed Jobs are not durable app
+# resources and can block later Flux reconciliation when their pod template is
+# changed (see c0c283bee / teaspoon-data-migration).
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: restic-orphan-cleanup
+  namespace: home
+  labels:
+    app.kubernetes.io/name: restic-orphan-cleanup
+    app.kubernetes.io/component: retired-volsync-cleanup
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: restic-orphan-cleanup
+  namespace: home
+  labels:
+    app.kubernetes.io/name: restic-orphan-cleanup
+    app.kubernetes.io/component: retired-volsync-cleanup
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: restic-orphan-cleanup
+  namespace: home
+  labels:
+    app.kubernetes.io/name: restic-orphan-cleanup
+    app.kubernetes.io/component: retired-volsync-cleanup
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: restic-orphan-cleanup
+subjects:
+  - kind: ServiceAccount
+    name: restic-orphan-cleanup
+    namespace: home
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: restic-orphan-cleanup
+  namespace: home
+  labels:
+    app.kubernetes.io/name: restic-orphan-cleanup
+    app.kubernetes.io/component: retired-volsync-cleanup
+  annotations:
+    kustomize.toolkit.fluxcd.io/force: enabled
+spec:
+  backoffLimit: 1
+  ttlSecondsAfterFinished: 86400
+  activeDeadlineSeconds: 600
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: restic-orphan-cleanup
+        app.kubernetes.io/component: retired-volsync-cleanup
+    spec:
+      serviceAccountName: restic-orphan-cleanup
+      restartPolicy: Never
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: cleanup
+          # alpine/k8s bundles kubectl, bash, and base64; pin the multi-arch index digest.
+          image: docker.io/alpine/k8s:1.33.3@sha256:47e4ea4c263fb4e14e51d7c5ca841da756673f18e2340f38c0cf1f7219d05e85
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+          command:
+            - /bin/bash
+            - -eu
+            - -c
+            - |
+              allowlist=(
+                restic-frigate-config-ceph
+                restic-homeassistant-config-ceph
+              )
+
+              deleted=0
+              missing=0
+
+              for name in "$${allowlist[@]}"; do
+                if ! kubectl -n home get secret "$${name}" >/dev/null 2>&1; then
+                  echo "missing home/$${name} (already gone)"
+                  missing=$$((missing + 1))
+                  continue
+                fi
+
+                repo="$$(kubectl -n home get secret "$${name}" -o jsonpath='{.data.RESTIC_REPOSITORY}' | base64 -d)"
+                if [[ "$${repo}" != *"/keiretsu/"* ]]; then
+                  echo "REFUSING home/$${name}: RESTIC_REPOSITORY does not target /keiretsu/ ($${repo})"
+                  exit 1
+                fi
+                if [[ ! "$${repo}" =~ ^s3:http://garage(-gateway)?\.garage\.svc\.cluster\.local:3900/keiretsu/ ]]; then
+                  echo "REFUSING home/$${name}: not in-cluster Garage keiretsu ($${repo})"
+                  exit 1
+                fi
+
+                echo "deleting home/$${name} repo=$${repo}"
+                kubectl -n home delete secret "$${name}" --wait=false
+                deleted=$$((deleted + 1))
+              done
+
+              echo "Robbinsdale home restic orphan cleanup done deleted=$${deleted} missing=$${missing}"

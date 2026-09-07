@@ -195,6 +195,12 @@ if [ "$QUICK" = 1 ]; then
 fi
 
 if [ -n "$TARGET" ]; then
+  run_capped "helmrelease-schema" tools/check-helmrelease-schema.sh "$TARGET"
+else
+  run_capped "helmrelease-schema" tools/check-helmrelease-schema.sh
+fi
+
+if [ -n "$TARGET" ]; then
   run_capped "render" make "test-$TARGET"
   echo "✓ render OK: $TARGET"
 else

@@ -36,3 +36,22 @@ groups:
             Kustomization {{ $labels.name }} at {{ $labels.path }} has remained
             not ready for 15 minutes. Inspect its current condition and root
             dependency before investigating dependent resources.
+
+      - alert: FluxHelmReleaseNotReady
+        expr: |
+          max by (cluster, namespace, name) (
+            flux_resource_info{
+              kind="HelmRelease",
+              ready="False",
+              suspended="False"
+            } == 1
+          )
+        for: 15m
+        labels:
+          severity: critical
+        annotations:
+          summary: Flux HelmRelease {{ $labels.namespace }}/{{ $labels.name }} is not ready
+          description: >-
+            HelmRelease {{ $labels.namespace }}/{{ $labels.name }} has remained
+            not ready for 15 minutes. Inspect its current conditions, including
+            whether it is stalled or has been rolled back.

@@ -25,7 +25,7 @@ spec:
       persistentVolume:
         enabled: true
         size: 50Gi
-      retentionPeriod: 7d
+      retentionPeriod: 30d
       resources:
         requests:
           cpu: 200m

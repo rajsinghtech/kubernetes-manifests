@@ -1,0 +1,81 @@
+rule_files:
+  - ../garage.yaml
+
+evaluation_interval: 1m
+
+tests:
+  # Quorum loss is a distinct escalation from under-replication: exercise the
+  # same rule independently for every cluster identity. This is the failure
+  # shape described by corp/bhaiya#725, where serving continued while some
+  # partitions became unreachable.
+  - interval: 1m
+    input_series:
+      - series: 'cluster_partitions{cluster="talos-ottawa"}'
+        values: "256+0x10"
+      - series: 'cluster_partitions_quorum{cluster="talos-ottawa"}'
+        values: "255+0x10"
+      - series: 'cluster_partitions{cluster="talos-robbinsdale"}'
+        values: "256+0x10"
+      - series: 'cluster_partitions_quorum{cluster="talos-robbinsdale"}'
+        values: "254+0x10"
+      - series: 'cluster_partitions{cluster="talos-stpetersburg"}'
+        values: "256+0x10"
+      - series: 'cluster_partitions_quorum{cluster="talos-stpetersburg"}'
+        values: "253+0x10"
+    alert_rule_test:
+      - eval_time: 4m
+        alertname: GarageClusterPartitionsWithoutQuorum
+        exp_alerts: []
+      - eval_time: 5m
+        alertname: GarageClusterPartitionsWithoutQuorum
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              cluster: talos-ottawa
+            exp_annotations:
+              summary: Garage partitions have lost quorum in talos-ottawa
+              description: >-
+                cluster_partitions_quorum is below cluster_partitions: some
+                partitions no longer have enough up nodes to serve. Under
+                consistencyMode=degraded reads come from a single replica and
+                may still succeed; writes to those partitions fail. Restore
+                the missing storage nodes.
+          - exp_labels:
+              severity: critical
+              cluster: talos-robbinsdale
+            exp_annotations:
+              summary: Garage partitions have lost quorum in talos-robbinsdale
+              description: >-
+                cluster_partitions_quorum is below cluster_partitions: some
+                partitions no longer have enough up nodes to serve. Under
+                consistencyMode=degraded reads come from a single replica and
+                may still succeed; writes to those partitions fail. Restore
+                the missing storage nodes.
+          - exp_labels:
+              severity: critical
+              cluster: talos-stpetersburg
+            exp_annotations:
+              summary: Garage partitions have lost quorum in talos-stpetersburg
+              description: >-
+                cluster_partitions_quorum is below cluster_partitions: some
+                partitions no longer have enough up nodes to serve. Under
+                consistencyMode=degraded reads come from a single replica and
+                may still succeed; writes to those partitions fail. Restore
+                the missing storage nodes.
+
+  # A short quorum dip must not page. Recovery before the five-minute hold
+  # clears the pending alert, preserving the distinction from a sustained
+  # unavailable-partition condition.
+  - interval: 1m
+    input_series:
+      - series: 'cluster_partitions{cluster="talos-ottawa"}'
+        values: "256+0x10"
+      - series: 'cluster_partitions_quorum{cluster="talos-ottawa"}'
+        values: "254+0x3 256+0x7"
+    alert_rule_test:
+      - eval_time: 4m
+        alertname: GarageClusterPartitionsWithoutQuorum
+        exp_alerts: []
+      - eval_time: 10m
+        alertname: GarageClusterPartitionsWithoutQuorum
+        exp_alerts: []

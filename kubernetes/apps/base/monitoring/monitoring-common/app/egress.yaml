@@ -1,19 +1,17 @@
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2
-kind: HelmRelease
+apiVersion: v1
+kind: Service
 metadata:
-  name: tailscale-egress
+  name: nagato
+  annotations:
+    kustomize.toolkit.fluxcd.io/ssa: IfNotPresent
+    tailscale.com/tailnet-fqdn: nagato.keiretsu.ts.net
+    tailscale.com/proxy-group: common-egress
 spec:
-  interval: 1m
-  chartRef:
-    kind: OCIRepository
-    name: tailscale-egress
-  releaseName: tailscale-egress
-  values:
-    proxyGroup: "common-egress"
-    services:
-      - name: nagato
-        fqdn: nagato.keiretsu.ts.net
-        ports:
-          - port: 9100
-            protocol: TCP
+  externalName: placeholder
+  type: ExternalName
+  ports:
+    - name: port-0
+      port: 9100
+      targetPort: 9100
+      protocol: TCP

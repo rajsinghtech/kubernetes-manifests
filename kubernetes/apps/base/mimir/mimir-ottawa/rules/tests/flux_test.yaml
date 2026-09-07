@@ -129,3 +129,37 @@ tests:
                 Kustomization shared-name at ./shared-name has remained not
                 ready for 15 minutes. Inspect its current condition and root
                 dependency before investigating dependent resources.
+
+  - interval: 1m
+    input_series:
+      - series: 'flux_resource_info{cluster="talos-ottawa",kind="HelmRelease",name="mimir",namespace="mimir",reason="RetriesExceeded",suspended="False",ready="False"}'
+        values: "1+0x20"
+    alert_rule_test:
+      - eval_time: 14m
+        alertname: FluxHelmReleaseNotReady
+        exp_alerts: []
+      - eval_time: 15m
+        alertname: FluxHelmReleaseNotReady
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              cluster: talos-ottawa
+              name: mimir
+              namespace: mimir
+            exp_annotations:
+              summary: Flux HelmRelease mimir/mimir is not ready
+              description: >-
+                HelmRelease mimir/mimir has remained not ready for 15 minutes.
+                Inspect its current conditions, including whether it is stalled
+                or has been rolled back.
+
+  - interval: 1m
+    input_series:
+      - series: 'flux_resource_info{cluster="talos-ottawa",kind="HelmRelease",name="suspended",namespace="mimir",reason="RetriesExceeded",suspended="True",ready="False"}'
+        values: "1+0x20"
+      - series: 'flux_resource_info{cluster="talos-ottawa",kind="HelmRelease",name="healthy",namespace="mimir",reason="ReconciliationSucceeded",suspended="False",ready="True"}'
+        values: "1+0x20"
+    alert_rule_test:
+      - eval_time: 20m
+        alertname: FluxHelmReleaseNotReady
+        exp_alerts: []
