@@ -7,7 +7,10 @@
 # which then times out and marks the whole backup PartiallyFailed. Two slots
 # keeps one stuck volume from taking the node's other volumes down with it.
 # Bound the prepared queue so repeated schedules cannot create an unlimited
-# number of idle data-mover pods behind a wedged operation.
+# number of idle data-mover pods behind a wedged operation. Velero applies this
+# threshold globally across PVB/PVR/DataUpload/DataDownload objects; it is not
+# the per-node execution limit below. Keep enough headroom for a restore to be
+# admitted while a backup has prepared work waiting.
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -17,6 +20,6 @@ data:
     {
       "loadConcurrency": {
         "globalConfig": 2,
-        "prepareQueueLength": 8
+        "prepareQueueLength": 12
       }
     }
