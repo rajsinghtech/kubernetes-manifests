@@ -1,0 +1,26 @@
+---
+# One-shot Backup so gitea-shared-storage is covered before the daily 10:00Z
+# Schedule tick (corp/bhaiya#703). Same template as forgejo-backup. Idempotent
+# name: re-applying is a no-op once the object exists. Delete only after a
+# Schedule-owned Backup has a Completed PVB for forgejo-*/data.
+apiVersion: velero.io/v1
+kind: Backup
+metadata:
+  name: forgejo-backup-bootstrap
+  namespace: velero-system
+  labels:
+    keiretsu.top/bootstrap-for-schedule: forgejo-backup
+  annotations:
+    keiretsu.top/purpose: >-
+      Capture gitea-shared-storage (pod volume data) and forgejo-postgres
+      pgdata once; daily coverage remains forgejo-backup Schedule at 10:00 UTC.
+spec:
+  ttl: 720h0m0s
+  storageLocation: garage
+  includedNamespaces:
+    - forgejo
+  defaultVolumesToFsBackup: true
+  snapshotMoveData: false
+  resourcePolicy:
+    kind: configmap
+    name: fs-backup-resource-policy
