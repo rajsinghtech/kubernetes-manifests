@@ -31,6 +31,10 @@ spec:
   upgrade:
     cleanupOnFail: true
     timeout: 25m
+    # Enabling chart-managed volumeClaimTemplates is an immutable StatefulSet
+    # change. Helm must replace the StatefulSet after the flush configuration
+    # has already been verified on the existing Pod; PVCs are retained.
+    force: true
     # Helm must not gate this release on Mimir readiness. Its ring components
     # (compactor/store-gateway/ingester) legitimately take 1-5m to join and the
     # ingester's graceful shutdown flushes its whole TSDB head (grace 1200s).
@@ -47,27 +51,6 @@ spec:
       # Timeouts alone were never the fix (see disableWait above); they are
       # kept as a backstop for a genuinely hung operation.
       retries: 2
-  postRenderers:
-    - kustomize:
-        patches:
-          # The chart's persistentVolume mode adds volumeClaimTemplates to the
-          # StatefulSet. That field cannot be added to the existing StatefulSet
-          # in place, so keep the chart's emptyDir mode and replace only the
-          # mutable pod-template volume with the separately managed claim.
-          # The test operation makes a chart volume-order change fail closed.
-          - target:
-              kind: StatefulSet
-              name: mimir-ingester
-            patch: |-
-              - op: test
-                path: /spec/template/spec/volumes/2/name
-                value: storage
-              - op: remove
-                path: /spec/template/spec/volumes/2/emptyDir
-              - op: add
-                path: /spec/template/spec/volumes/2/persistentVolumeClaim
-                value:
-                  claimName: storage-mimir-ingester-0
   values:
     rollout_operator:
       enabled: false
@@ -106,7 +89,7 @@ spec:
         ingester:
           push_grpc_method_enabled: true
           ring:
-            replication_factor: 1
+            replication_factor: 2
         store_gateway:
           sharding_ring:
             replication_factor: 1
@@ -164,16 +147,19 @@ spec:
           out_of_order_time_window: 10m
 
     ingester:
-      replicas: 1
+      replicas: 2
       zoneAwareReplication:
         enabled: false
       persistentVolume:
-        # Adding chart-managed volumeClaimTemplates would be rejected as an
-        # immutable StatefulSet update. The PVC is managed beside this release
-        # and the post-renderer switches the pod template to it.
-        enabled: false
+        # Chart-managed volumeClaimTemplates create one claim per ordinal:
+        # storage-mimir-ingester-0 and storage-mimir-ingester-1. The existing
+        # -0 claim is retained and reused during the forced StatefulSet
+        # replacement; the separate manifest keeps its prune protection.
+        enabled: true
+        size: 20Gi
+        storageClass: ceph-block-replicated
       extraArgs:
-        "-ingester.ring.replication-factor": "1"
+        "-ingester.ring.replication-factor": "2"
 
     store_gateway:
       replicas: 1
