@@ -116,3 +116,26 @@ spec:
   interval: 30m
   retryInterval: 1m
   timeout: 5m
+---
+# Dedicated kopiur HA repo bucket — StP only; do not share with Velero.
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: garage-kopiur-stpetersburg-bucket
+  namespace: flux-system
+spec:
+  dependsOn:
+    - name: garage-bucket
+    - name: home-assistant
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: garage-kopiur-stpetersburg-bucket
+  path: ./kubernetes/apps/base/garage/garage-kopiur-stpetersburg-bucket
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: kubernetes-manifests
+  wait: true
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m

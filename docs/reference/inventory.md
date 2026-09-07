@@ -30,8 +30,8 @@ diagram in the [README](../../README.md#architecture).
 |---|---:|---:|---:|
 | `ottawa` | 4 | 59 | 122 |
 | `robbinsdale` | 3 | 43 | 87 |
-| `stpetersburg` | 3 | 39 | 79 |
-| **total** | **10** | **141** | **288** |
+| `stpetersburg` | 3 | 40 | 82 |
+| **total** | **10** | **142** | **291** |
 
 ## Ottawa — `talos-ottawa`
 
@@ -285,7 +285,7 @@ Pointers whose objects land outside their directory's namespace — use the righ
 | Networking, ingress and identity | `tailscale-system` | `tailscale-system-app` |
 | Networking, ingress and identity | `tinyauth-egress` | `tinyauth-egress` → ns `tinyauth` |
 | Storage and data services | `cnpg-system` | `cnpg-system` |
-| Storage and data services | `garage` | `garage`, `garage-bucket`, `garage-keys`, `garage-nodes-stpetersburg`, `garage-reference-grants`, `garage-velero-bucket`, `garage-webui` |
+| Storage and data services | `garage` | `garage`, `garage-bucket`, `garage-keys`, `garage-kopiur-stpetersburg-bucket`, `garage-nodes-stpetersburg`, `garage-reference-grants`, `garage-velero-bucket`, `garage-webui` |
 | Storage and data services | `garage-operator-system` | `garage-operator-system-install` |
 | Storage and data services | `local-path-storage` | `local-path-storage` |
 | Storage and data services | `snapshot-controller` | `snapshot-controller` |
@@ -304,12 +304,15 @@ Pointers whose objects land outside their directory's namespace — use the righ
 | GPU, RDMA and inference | `rdma-shared-dp` | `rdma-shared-dp` → ns `rdma-system` |
 | Application workloads | `home-assistant` | `home-assistant` |
 | Application workloads | `homer-operator` | `homer-operator-install` |
+| Application workloads | `kopiur` | `home-assistant-kopiur` → ns `home-assistant`, `kopiur` → ns `kopiur-system` |
 
 Pointers whose objects land outside their directory's namespace — use the right-hand column with `kubectl -n`:
 
 | Flux Kustomization | Pointer directory | Actual namespace |
 |---|---|---|
 | `actions-runner-controller-runners` | `arc-systems` | `arc-runners` |
+| `home-assistant-kopiur` | `kopiur` | `home-assistant` |
+| `kopiur` | `kopiur` | `kopiur-system` |
 | `rdma-shared-dp` | `rdma-shared-dp` | `rdma-system` |
 | `tinyauth-egress` | `tinyauth-egress` | `tinyauth` |
 | `tuppr` | `tuppr` | `system-upgrade` |

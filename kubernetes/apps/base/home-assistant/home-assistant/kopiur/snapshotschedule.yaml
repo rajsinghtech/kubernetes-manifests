@@ -1,0 +1,13 @@
+---
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: SnapshotSchedule
+metadata:
+  name: homeassistant-config
+  namespace: home-assistant
+spec:
+  policyRef:
+    name: homeassistant-config
+  schedule:
+    # Daily; acceptance is a completed Snapshot + restore drill, not this cron.
+    cron: "0 12 * * *"
+    jitter: 30m

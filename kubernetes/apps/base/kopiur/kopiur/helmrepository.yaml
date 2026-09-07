@@ -1,0 +1,11 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: home-operations-kopiur
+  namespace: kopiur-system
+spec:
+  interval: 1h
+  type: oci
+  # Published OCI chart; chart version + image digests are pinned on the HelmRelease.
+  url: oci://ghcr.io/home-operations/charts

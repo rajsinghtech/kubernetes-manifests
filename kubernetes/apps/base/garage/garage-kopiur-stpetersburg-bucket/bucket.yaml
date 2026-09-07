@@ -1,0 +1,26 @@
+---
+# DEDICATED Garage bucket for StP kopiur — do NOT reuse the Velero `velero`
+# bucket. Kopia allows one maintenance owner per repository; Velero already
+# runs uploaderType: kopia against `velero`. Sharing would mean lease
+# contention on `_maintenance` (see kopiur-eval / km#2767).
+apiVersion: garage.rajsingh.info/v1beta1
+kind: GarageBucket
+metadata:
+  name: kopiur-stpetersburg
+  namespace: garage
+spec:
+  clusterRef:
+    name: garage
+    namespace: garage
+  globalAlias: kopiur-stpetersburg
+  quotas:
+    # HA /config is ~12MiB; leave headroom for retention + indexes.
+    maxSize: 5Gi
+    maxObjects: 100000
+  keyPermissions:
+    - keyRef:
+        name: kopiur-stpetersburg-key
+        namespace: home-assistant
+      read: true
+      write: true
+      owner: true

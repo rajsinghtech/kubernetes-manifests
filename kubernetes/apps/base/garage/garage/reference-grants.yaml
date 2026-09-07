@@ -25,6 +25,11 @@ spec:
       namespace: hermes
     - kind: GarageKey
       namespace: home
+    # kopiur Repository for StP homeassistant-config (#695): the GarageKey in
+    # home-assistant must reference GarageCluster garage/garage. Without this
+    # the vgaragekey webhook denies it and the Kustomization never converges.
+    - kind: GarageKey
+      namespace: home-assistant
     - kind: GarageKey
       namespace: tailscale-examples
     - kind: GarageKey

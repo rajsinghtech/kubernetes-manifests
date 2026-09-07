@@ -1,0 +1,48 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: kopiur
+  namespace: flux-system
+spec:
+  targetNamespace: kopiur-system
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: kopiur
+      app.kubernetes.io/part-of: kopiur
+  path: ./kubernetes/apps/base/kopiur/kopiur
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: kubernetes-manifests
+  wait: false
+  interval: 30m
+  retryInterval: 1m
+  timeout: 10m
+---
+# HA recipe CRs (Repository / SnapshotPolicy / SnapshotSchedule). Depends on
+# the operator CRDs and the dedicated Garage bucket+key.
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: home-assistant-kopiur
+  namespace: flux-system
+spec:
+  targetNamespace: home-assistant
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: home-assistant-kopiur
+      app.kubernetes.io/part-of: kopiur
+  dependsOn:
+    - name: kopiur
+    - name: garage-kopiur-stpetersburg-bucket
+    - name: home-assistant
+  path: ./kubernetes/apps/base/home-assistant/home-assistant/kopiur
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: kubernetes-manifests
+  wait: false
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m
