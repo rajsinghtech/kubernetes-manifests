@@ -59,6 +59,12 @@ kube-state-metrics:
         resources:
           - backups
           - podvolumebackups
+          # Required for VeleroScheduleNeverBackedUp / MaintenanceStale (#2754).
+          # Without these verbs kube-state-metrics silently omits the series and
+          # the alerts can never fire even when the customResourceState config
+          # lists Schedule and BackupRepository.
+          - schedules
+          - backuprepositories
         verbs: [ "list", "watch" ]
       - apiGroups:
           - postgresql.cnpg.io

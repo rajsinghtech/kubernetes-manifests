@@ -3,6 +3,13 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: kube-prometheus-stack
+  annotations:
+    # Force an upgrade so valuesFrom ConfigMap content changes (Schedule /
+    # BackupRepository customResourceState from #2754) are actually rendered
+    # into kube-state-metrics. Without this, flux can update
+    # flux-kube-state-metrics-config while Helm keeps an older values snapshot
+    # and the new series never appear — the alerts cannot fire.
+    reconcile.fluxcd.io/requestedAt: "2026-09-07T02:49:18Z"
 spec:
   interval: 30m
   chartRef:
