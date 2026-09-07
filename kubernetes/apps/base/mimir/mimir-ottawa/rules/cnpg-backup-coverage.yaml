@@ -56,3 +56,65 @@ groups:
             This proves CR coverage only; it does not prove object-store
             contents or restore capability, and it is not protection against a
             complete Mimir or kube-state-metrics observation-path outage.
+
+      # Woodpecker failure mode (#2745): a completed Backup CR can exist on an
+      # old barmanObjectStore destination while the cluster's current ObjectStore
+      # has an empty recovery window and only WAL. CR-only Missing/Stale alerts
+      # are blind to that. The barman-cloud last-available timestamp is sourced
+      # from the current ObjectStore recovery window, so it goes stale/absent
+      # when the live store has no base backup even if a legacy Backup CR is
+      # Completed. Require recent WAL archival so a brand-new cluster before its
+      # first archive does not page, and so a total scrape outage remains distinct.
+      - alert: CNPGCurrentStoreBackupMissing
+        expr: |
+          (
+            max by (cluster, namespace, pod) (
+              cnpg_pg_stat_archiver_seconds_since_last_archival < 3600
+            )
+            unless on (cluster, namespace, pod)
+            (
+              max by (cluster, namespace, pod) (
+                barman_cloud_cloudnative_pg_io_last_available_backup_timestamp > 0
+              )
+            )
+          )
+        for: 30m
+        labels:
+          severity: critical
+        annotations:
+          summary: CNPG {{ $labels.namespace }}/{{ $labels.pod }} archives WAL but has no current-store base backup
+          description: >-
+            {{ $labels.namespace }}/{{ $labels.pod }} has archived WAL within the
+            last hour, but barman-cloud reports no last-available backup on the
+            current ObjectStore. This is the woodpecker-shaped gap: a Completed
+            Backup CR may still exist on a previous destination while the live
+            store has only WAL. Inspect ObjectStore status.serverRecoveryWindow,
+            the Cluster plugin barmanObjectName destinationPath, and create a
+            verify Backup against the current store. Do not treat WAL success as
+            restore coverage.
+
+      - alert: CNPGCurrentStoreBackupStale
+        expr: |
+          (
+            max by (cluster, namespace, pod) (
+              time() - barman_cloud_cloudnative_pg_io_last_available_backup_timestamp
+            ) > 172800
+          )
+          and on (cluster, namespace, pod)
+          (
+            max by (cluster, namespace, pod) (
+              cnpg_pg_stat_archiver_seconds_since_last_archival < 3600
+            )
+          )
+        for: 30m
+        labels:
+          severity: critical
+        annotations:
+          summary: CNPG {{ $labels.namespace }}/{{ $labels.pod }} current-store base backup is stale
+          description: >-
+            The current ObjectStore last-available backup for
+            {{ $labels.namespace }}/{{ $labels.pod }} is older than 48 hours while
+            WAL archival is still succeeding. A Completed Backup CR on a different
+            destination does not clear this. Inspect ScheduledBackup, the verify
+            Backup path, and ObjectStore status.serverRecoveryWindow before
+            treating the database as restorable.
