@@ -10,9 +10,12 @@ spec:
   # readinessProbe.initialDelaySeconds=60 plus possible WAL replay. The Helm
   # default 5m wait treats that healthy join as a stall, fails the upgrade,
   # then fails the rollback for the same reason and burns remediation retries
-  # (corp/bhaiya#713). Keep the wait above the 5m ceiling so GitOps can land
-  # Mimir config (including #2765) without manual suspend/resume.
-  timeout: 15m
+  # (corp/bhaiya#713). The wait must also exceed the ingester's
+  # terminationGracePeriodSeconds of 1200s (20m): a graceful ingester shutdown
+  # flushes its whole TSDB head to long-term storage and can legitimately use
+  # that entire window, so a 15m Helm wait times out on a healthy drain and
+  # reproduces #713. 25m clears both the 5m ring ceiling and the 20m grace.
+  timeout: 25m
   chart:
     spec:
       chart: mimir-distributed
@@ -22,12 +25,12 @@ spec:
         name: grafana
         namespace: flux-system
   install:
-    timeout: 15m
+    timeout: 25m
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
-    timeout: 15m
+    timeout: 25m
     remediation:
       # 'retry' is NOT a valid strategy (live CRD accepts only rollback |
       # uninstall), and setting it fails the whole Kustomization dry-run.
