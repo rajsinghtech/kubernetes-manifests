@@ -27,6 +27,22 @@ Packet evidence from the earlier dual-node capture (live ACK for a current
 `kaji` sequence appearing on `rei`, followed by an immediate local
 `10.3.2.229:10022` RST) remains the reason the ingress path stays open.
 
+## Live CT corroboration (same pattern, still not port reuse)
+
+Read-only `cilium-dbg bpf ct list` on both nodes while Envoy retention still
+held the matching closes showed **rei carrying RxClosing/TxClosing IN entries**
+for several Raj source ports whose **only** Envoy `forgejo-ssh` record was on
+**kaji** (examples in this window: `:50350`, `:50191`, `:50610`, `:50086`,
+`:50180`, `:50483`). Rei also held SVC rows for those tuples against
+`10.169.10.15:22` with `RevNAT=590` (rei's Local frontend) and `SeenNonSyn`.
+
+That is the same dual-node shape as the earlier packet capture, observed again
+without arming tcpdump: the serving/Envoy-logged flow is on kaji, while rei
+still materializes closing conntrack for the same five-tuple. Combined with
+zero dual-node Envoy records for those ports, this is incompatible with
+"stale Envoy connection from an earlier reuse" and compatible with packets for
+a live kaji-owned flow also hitting rei's Local frontend.
+
 ## Live topology still matches the failure mode
 
 Read-only check on 2026-09-07:
