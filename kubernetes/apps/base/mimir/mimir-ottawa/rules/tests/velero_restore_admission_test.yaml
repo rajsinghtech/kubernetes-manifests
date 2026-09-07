@@ -1,0 +1,98 @@
+rule_files:
+  - ../velero-restore-admission.yaml
+
+evaluation_interval: 1m
+
+tests:
+  # No PVRs means no left-hand timestamp series and therefore no alert.
+  - interval: 1m
+    alert_rule_test:
+      - eval_time: 30m
+        alertname: VeleroPodVolumeRestoreNeverAdmitted
+        exp_alerts: []
+
+  # A creation timestamp proves that the object was observed. No _info series
+  # means status.phase is absent, the normal omitempty representation.
+  - interval: 1m
+    input_series:
+      - series: 'velero_cr_podvolumerestore_created_timestamp{cluster="talos-ottawa",namespace="velero-system",pod_volume_restore="pvr-empty",restore="restore-a",restore_uid="uid-a",source_namespace="home",volume="homeassistant-config"}'
+        values: "0+0x30"
+    alert_rule_test:
+      - eval_time: 20m
+        alertname: VeleroPodVolumeRestoreNeverAdmitted
+        exp_alerts: []
+      - eval_time: 21m
+        alertname: VeleroPodVolumeRestoreNeverAdmitted
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              cluster: talos-ottawa
+              namespace: velero-system
+              pod_volume_restore: pvr-empty
+              restore: restore-a
+              restore_uid: uid-a
+              source_namespace: home
+              volume: homeassistant-config
+            exp_annotations:
+              summary: Velero PodVolumeRestore pvr-empty was never admitted
+              description: >-
+                PodVolumeRestore pvr-empty for Restore restore-a has existed
+                for more than ten minutes without a non-empty Velero phase. It
+                may be blocking restore completion before admission; inspect
+                the PVR, parent Restore, and Velero controller/node-agent logs.
+                This is a restore-level admission signal, not node saturation,
+                and does not prove content failure.
+
+  # An explicitly empty phase is also covered; the non-empty phase matcher
+  # deliberately does not subtract phase="".
+  - interval: 1m
+    input_series:
+      - series: 'velero_cr_podvolumerestore_created_timestamp{cluster="talos-ottawa",namespace="velero-system",pod_volume_restore="pvr-explicit-empty",restore="restore-b",restore_uid="uid-b",source_namespace="home",volume="homeassistant-config"}'
+        values: "0+0x30"
+      - series: 'velero_cr_podvolumerestore_info{cluster="talos-ottawa",namespace="velero-system",pod_volume_restore="pvr-explicit-empty",restore="restore-b",restore_uid="uid-b",source_namespace="home",volume="homeassistant-config",phase=""}'
+        values: "1+0x30"
+    alert_rule_test:
+      - eval_time: 21m
+        alertname: VeleroPodVolumeRestoreNeverAdmitted
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              cluster: talos-ottawa
+              namespace: velero-system
+              pod_volume_restore: pvr-explicit-empty
+              restore: restore-b
+              restore_uid: uid-b
+              source_namespace: home
+              volume: homeassistant-config
+            exp_annotations:
+              summary: Velero PodVolumeRestore pvr-explicit-empty was never admitted
+              description: >-
+                PodVolumeRestore pvr-explicit-empty for Restore restore-b has
+                existed for more than ten minutes without a non-empty Velero
+                phase. It may be blocking restore completion before admission;
+                inspect the PVR, parent Restore, and Velero controller/node-agent
+                logs. This is a restore-level admission signal, not node
+                saturation, and does not prove content failure.
+
+  # Any non-empty phase means the PVR has a lifecycle state and is excluded.
+  - interval: 1m
+    input_series:
+      - series: 'velero_cr_podvolumerestore_created_timestamp{cluster="talos-ottawa",namespace="velero-system",pod_volume_restore="pvr-completed",restore="restore-c",restore_uid="uid-c",source_namespace="home",volume="homeassistant-config"}'
+        values: "0+0x30"
+      - series: 'velero_cr_podvolumerestore_info{cluster="talos-ottawa",namespace="velero-system",pod_volume_restore="pvr-completed",restore="restore-c",restore_uid="uid-c",source_namespace="home",volume="homeassistant-config",phase="Completed"}'
+        values: "1+0x30"
+    alert_rule_test:
+      - eval_time: 30m
+        alertname: VeleroPodVolumeRestoreNeverAdmitted
+        exp_alerts: []
+
+  # A scrape gap removes the timestamp series before the alert can become
+  # pending; absence of observation is not treated as admission starvation.
+  - interval: 1m
+    input_series:
+      - series: 'velero_cr_podvolumerestore_created_timestamp{cluster="talos-ottawa",namespace="velero-system",pod_volume_restore="pvr-gap",restore="restore-d",restore_uid="uid-d",source_namespace="home",volume="homeassistant-config"}'
+        values: "0 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _"
+    alert_rule_test:
+      - eval_time: 20m
+        alertname: VeleroPodVolumeRestoreNeverAdmitted
+        exp_alerts: []

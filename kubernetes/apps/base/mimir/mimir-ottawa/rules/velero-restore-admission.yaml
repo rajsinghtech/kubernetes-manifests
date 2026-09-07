@@ -1,0 +1,35 @@
+# Depends on the kube-state-metrics Velero PVR contract adding
+# velero_cr_podvolumerestore_created_timestamp with the PVR identity labels.
+# A never-admitted PVR normally omits status.phase because Velero serializes the
+# field with omitempty, so podvolumerestore_info does not exist for it.
+namespace: velero-restore-admission
+groups:
+  - name: velero.restore-admission.rules
+    rules:
+      - alert: VeleroPodVolumeRestoreNeverAdmitted
+        expr: |
+          (
+            time() - velero_cr_podvolumerestore_created_timestamp{
+              namespace="velero-system"
+            } > 600
+          )
+          unless on (
+            cluster, namespace, pod_volume_restore, restore, restore_uid,
+            source_namespace, volume
+          )
+          velero_cr_podvolumerestore_info{
+            namespace="velero-system",
+            phase=~".+"
+          }
+        for: 10m
+        labels:
+          severity: critical
+        annotations:
+          summary: Velero PodVolumeRestore {{ $labels.pod_volume_restore }} was never admitted
+          description: >-
+            PodVolumeRestore {{ $labels.pod_volume_restore }} for Restore
+            {{ $labels.restore }} has existed for more than ten minutes without
+            a non-empty Velero phase. It may be blocking restore completion
+            before admission; inspect the PVR, parent Restore, and Velero
+            controller/node-agent logs. This is a restore-level admission
+            signal, not node saturation, and does not prove content failure.
