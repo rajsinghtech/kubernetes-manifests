@@ -9,8 +9,9 @@
 # Silent-skip / green-empty coverage (corp/bhaiya#695, #703):
 # - VeleroScheduleLatestBackupHasWarnings: hostPath skips leave phase=Completed
 #   with status.warnings>0 (StP homeassistant-config).
-# - VeleroScheduleLatestBackupMissingVolumes: Completed latest Backup with zero
-#   PodVolumeBackup children (metadata-only / unmounted PVC / opt-in miss).
+# - VeleroScheduleLatestBackupMissingVolumes: Completed latest Backup with no
+#   completed, byte-complete PodVolumeBackup (metadata-only / unmounted PVC /
+#   opt-in miss / a child that never finished).
 # Both join on the newest Backup per schedule so they clear on recovery.
 #
 # Keep this namespace separate from rules/velero.yaml. Both files are synced by
@@ -176,9 +177,15 @@ groups:
             and do not treat this Backup as a volume restore source until the
             warning is gone. A later Backup with warnings=0 clears this alert.
 
-      # Metadata-only Completed Backup: no PodVolumeBackup children at all.
-      # Covers opt-in miss (media-config before #2757), scaled-to-zero apps
-      # with orphan PVCs (hermes), and similar green-empty schedules (#703).
+      # A PVB object is not volume-data evidence until it is Completed and its
+      # byte counters agree. Prepared/InProgress/Canceled children can leave a
+      # Completed parent looking green without a usable archive. An empty
+      # volume is valid evidence when both counters are zero; this still does
+      # not establish that every expected PVC was included or that restore
+      # works.
+      # Covers metadata-only backups from opt-in misses (media-config before
+      # #2757), scaled-to-zero apps with orphan PVCs (hermes), and similar
+      # green-empty schedules (#703).
       # Schedules that never create a Backup are VeleroScheduleNeverBackedUp.
       # Require phase=Completed on the newest Backup so Failed attempts do not
       # double-page with VeleroScheduleLastBackupFailed.
@@ -211,21 +218,36 @@ groups:
           (
             count by (cluster, namespace, backup) (
               velero_cr_podvolumebackup_info{
-                namespace="velero-system"
+                namespace="velero-system",
+                phase="Completed"
               }
+              and on (cluster, namespace, pod_volume_backup, backup, node)
+              (
+                velero_cr_podvolumebackup_bytes_done{
+                  namespace="velero-system"
+                }
+                == on (cluster, namespace, pod_volume_backup, backup, node)
+                velero_cr_podvolumebackup_bytes_total{
+                  namespace="velero-system"
+                }
+              )
             ) > 0
           )
         for: 15m
         labels:
           severity: critical
         annotations:
-          summary: Velero schedule {{ $labels.schedule }} latest Completed backup has no volume snapshots
+          summary: Velero schedule {{ $labels.schedule }} latest Completed backup has no completed volume data
           description: >-
             The newest Backup for schedule {{ $labels.schedule }} is
-            {{ $labels.backup }}, phase=Completed, and has zero PodVolumeBackup
-            children. That is a metadata-only backup: Kubernetes objects may be
-            present while durable PVCs were never selected or never mounted
-            (corp/bhaiya#703). Confirm with
+            {{ $labels.backup }}, phase=Completed, and has no Completed
+            PodVolumeBackup with bytesDone equal to totalBytes. That is not
+            volume-data evidence: Kubernetes objects may be present while
+            durable PVCs were never selected or never mounted, or a child may
+            still be incomplete (corp/bhaiya#703). Confirm with
             `kubectl -n velero-system get podvolumebackup -l velero.io/backup-name={{ $labels.backup }}`
-            and the live pod volume mounts — do not trust the Backup phase.
-            Clears when a later Backup has at least one PodVolumeBackup.
+            and the live pod volume mounts — do not trust the Backup phase or
+            the existence of a PVB object. This alert only establishes that
+            one byte-complete PVB exists; it does not prove every expected PVC
+            is covered or that a restore works. Clears when a later Backup has
+            a Completed PVB with matching byte counters.
