@@ -72,6 +72,11 @@ spec:
           secretKeyRef:
             name: garage-s3-auth
             key: AWS_SECRET_ACCESS_KEY
+    # sync.onDemand must stay false. With it true, every /v2/.../referrers/{digest}
+    # (and missing-manifest) path waits on SyncReferrers/SyncImage before answering.
+    # For local corp/* repos outside the ghcr.io content prefix that is a ~14s
+    # filtered-out no-op that still blocks the HTTP response; clients with ≤12s
+    # timeouts observe http=000 "hangs". Scheduled pollInterval sync remains.
     configFiles:
       config.json: |-
         {
@@ -152,7 +157,7 @@ spec:
                 "content": [{
                   "prefix": "rajsinghtech/**"
                 }],
-                "onDemand": true,
+                "onDemand": false,
                 "pollInterval": "6h",
                 "tlsVerify": true
               }]
