@@ -12,6 +12,12 @@
 # - VeleroScheduleLatestBackupMissingVolumes: Completed latest Backup with no
 #   completed, byte-complete PodVolumeBackup (metadata-only / unmounted PVC /
 #   opt-in miss / a child that never finished).
+# - VeleroScheduleExpectedVolumeDataMissing: an explicitly labelled Schedule's
+#   latest successful Backup has no completed, byte-positive PVB. This absolute
+#   assertion covers a schedule whose every historical run was empty; it does
+#   not infer the expectation from that history. Schedules that legitimately
+#   have no Velero-capturable volume data, such as StP homeassistant-config,
+#   must not carry the expectation label.
 # Both join on the newest Backup per schedule so they clear on recovery.
 #
 # Keep this namespace separate from rules/velero.yaml. Both files are synced by
@@ -364,11 +370,19 @@ groups:
             velero_schedule_previous_successful_backup_created_timestamp * 0
           )
 
-      - alert: VeleroScheduleVolumeCoverageRegressed
+      # Share the exact relative condition with the absolute expectation rule
+      # below. When a prior Completed run supplies a real count baseline and
+      # the current count drops, this signal owns the regression; the absolute
+      # rule is suppressed so one schedule does not double-page.
+      - record: velero_schedule_volume_coverage_regressed
         expr: |
           velero_schedule_latest_pod_volume_backup_count
           < on (cluster, namespace, schedule) group_right(backup)
           velero_schedule_previous_successful_pod_volume_backup_count
+
+      - alert: VeleroScheduleVolumeCoverageRegressed
+        expr: |
+          velero_schedule_volume_coverage_regressed
         for: 15m
         labels:
           severity: critical
@@ -390,3 +404,85 @@ groups:
             previous Backup PVB populations; stalled-path and node-saturation
             alerts are separate, and this alert is not restore proof. It
             clears only when the newest run reaches the prior baseline count.
+
+      # This is the complementary absolute assertion. The latest attempt must
+      # itself be Completed. A failed latest attempt is owned by
+      # VeleroScheduleLastBackupFailed; falling back to an older
+      # Completed Backup here would double-page and could call a current run
+      # with real PVBs empty (for example, a PartiallyFailed run with 25
+      # selected volumes). This still catches a schedule whose every
+      # Completed run has zero PVBs, because the latest Completed attempt is
+      # the one evaluated. When the shared relative condition is active, that
+      # rule owns the regression and this one is suppressed to avoid
+      # double-firing.
+      - alert: VeleroScheduleExpectedVolumeDataMissing
+        expr: |
+          (
+            (
+              velero_schedule_latest_backup_created_timestamp
+              and on (cluster, namespace, schedule, backup)
+              max by (cluster, namespace, schedule, backup) (
+                velero_cr_backup_info{
+                  namespace="velero-system",
+                  schedule!="",
+                  phase="Completed"
+                }
+              )
+            )
+            * on (cluster, namespace, schedule) group_left
+              max by (cluster, namespace, schedule) (
+                velero_cr_schedule_info{
+                  namespace="velero-system",
+                  phase="Enabled",
+                  paused!="true",
+                  volume_data_required="true"
+                }
+              )
+            unless on (cluster, namespace, schedule)
+            velero_schedule_volume_coverage_regressed
+          )
+          unless on (cluster, namespace, backup)
+          (
+            count by (cluster, namespace, backup) (
+              (
+                velero_cr_podvolumebackup_info{
+                  namespace="velero-system",
+                  phase="Completed"
+                }
+                and on (cluster, namespace, pod_volume_backup, backup, node)
+                (
+                  velero_cr_podvolumebackup_bytes_done{
+                    namespace="velero-system"
+                  }
+                  == on (cluster, namespace, pod_volume_backup, backup, node)
+                  velero_cr_podvolumebackup_bytes_total{
+                    namespace="velero-system"
+                  }
+                )
+                and on (cluster, namespace, pod_volume_backup, backup, node)
+                (
+                  velero_cr_podvolumebackup_bytes_done{
+                    namespace="velero-system"
+                  } > 0
+                )
+              )
+            ) > 0
+          )
+        for: 15m
+        labels:
+          severity: critical
+        annotations:
+          summary: Velero schedule {{ $labels.schedule }} expected volume data but has none
+          description: >-
+            Schedule {{ $labels.schedule }} is explicitly marked
+            keiretsu.top/volume-data-required=true, but its latest Completed
+            Backup {{ $labels.backup }} has no Completed PodVolumeBackup with
+            bytesDone equal to totalBytes and greater than zero. This absolute
+            signal catches schedules whose first and every subsequent run was
+            metadata-only, where the relative rule has no volume-bearing
+            baseline to compare. If the shared relative coverage condition is
+            active, that alert owns the regression and this alert is
+            suppressed to prevent duplicate paging. Inspect the Schedule's
+            volume-selection contract and the Backup's PVB children; phase
+            and object replay do not establish volume data. Schedules without
+            the explicit marker are intentionally out of scope.

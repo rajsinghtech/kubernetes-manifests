@@ -10,6 +10,8 @@ kind: Schedule
 metadata:
   name: forgejo-backup
   namespace: velero-system
+  labels:
+    keiretsu.top/volume-data-required: "true"
 spec:
   schedule: "0 10 * * *"
   template:

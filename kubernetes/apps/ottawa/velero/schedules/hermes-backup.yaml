@@ -4,6 +4,8 @@ kind: Schedule
 metadata:
   name: hermes-backup
   namespace: velero-system
+  labels:
+    keiretsu.top/volume-data-required: "true"
 spec:
   schedule: "0 7 * * *"
   template:
