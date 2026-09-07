@@ -260,11 +260,13 @@ groups:
       # phase and item counters are not allowed to hide a volume gap.
       - record: velero_schedule_latest_backup_created_timestamp
         expr: |
-          topk by (cluster, namespace, schedule) (
-            1,
-            velero_cr_backup_created_timestamp{
-              namespace="velero-system",
-              schedule!=""
+          max by (cluster, namespace, schedule, backup) (
+            topk by (cluster, namespace, schedule) (
+              1,
+              velero_cr_backup_created_timestamp{
+                namespace="velero-system",
+                schedule!=""
+              }
             }
           )
 
@@ -306,12 +308,14 @@ groups:
 
       - record: velero_schedule_previous_successful_backup_created_timestamp
         expr: |
-          topk by (cluster, namespace, schedule) (
-            1,
-            (
-              velero_schedule_successful_backup_created_timestamp
-              unless on (cluster, namespace, schedule, backup)
-              velero_schedule_latest_backup_created_timestamp
+          max by (cluster, namespace, schedule, backup) (
+            topk by (cluster, namespace, schedule) (
+              1,
+              (
+                velero_schedule_successful_backup_created_timestamp
+                unless on (cluster, namespace, schedule, backup)
+                velero_schedule_latest_backup_created_timestamp
+              )
             )
           )
 
