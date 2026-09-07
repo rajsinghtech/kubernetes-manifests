@@ -47,4 +47,5 @@ configMapGenerator:
       - rules/velero.yaml
       - rules/velero-integrity.yaml
       - rules/velero-volume-progress.yaml
+      - rules/velero-node-saturation.yaml
       - rules/zot.yaml
