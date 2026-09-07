@@ -599,6 +599,31 @@ assert "success prints one ✓ line" \
   grep -q '^✓ diagram OK:' <<<"$("$T/check-diagram.sh" 2>/dev/null)"
 rm -rf "$dtmp"
 
+# ---------------------------------------------------------------- check-velero-pvc-coverage.sh
+# Offline: mutate a real Schedule fixture, prove the guard fires, restore it.
+section "check-velero-pvc-coverage.sh"
+exits  "current tree passes coverage gate" 0 "$T/check-velero-pvc-coverage.sh"
+assert "success mentions exemptions" \
+  grep -q 'documented exemptions' <<<"$("$T/check-velero-pvc-coverage.sh" 2>/dev/null)"
+
+hsbak="$(mktemp)"
+cp "$ROOT/kubernetes/apps/ottawa/velero/schedules/home-backup.yaml" "$hsbak"
+python3 - "$ROOT/kubernetes/apps/ottawa/velero/schedules/home-backup.yaml" <<'PY'
+import pathlib, sys, yaml
+p = pathlib.Path(sys.argv[1])
+docs = [d for d in yaml.safe_load_all(p.read_text()) if isinstance(d, dict)]
+for doc in docs:
+    if doc.get("kind") == "Schedule":
+        doc.setdefault("spec", {}).setdefault("template", {})["includedNamespaces"] = ["tinyauth"]
+p.write_text("---\n" + "\n---\n".join(yaml.safe_dump(d, sort_keys=False) for d in docs))
+PY
+exits  "dropping home from schedule fails the gate" 1 "$T/check-velero-pvc-coverage.sh"
+assert "failure names ottawa/home" \
+  grep -q 'ottawa/home' <<<"$("$T/check-velero-pvc-coverage.sh" 2>&1 || true)"
+cp "$hsbak" "$ROOT/kubernetes/apps/ottawa/velero/schedules/home-backup.yaml"
+rm -f "$hsbak"
+exits  "restored schedule passes again" 0 "$T/check-velero-pvc-coverage.sh"
+
 # ---------------------------------------------------------------- summary
 printf '\n== %d passed, %d failed ==\n' "$pass" "$fail"
 [ "$fail" = 0 ]

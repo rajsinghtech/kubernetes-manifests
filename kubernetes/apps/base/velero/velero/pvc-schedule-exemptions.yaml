@@ -1,0 +1,90 @@
+# Velero PVC→Schedule coverage exemptions.
+#
+# Consumed only by tools/check-velero-pvc-coverage.sh. NOT a Flux resource —
+# do not add this file to kustomization.yaml (no matching CRD).
+#
+# The check fails when a namespace that declares a PersistentVolumeClaim,
+# volumeClaimTemplate, or CNPG Cluster storage in Git is missing from every
+# Velero Schedule spec.template.includedNamespaces on that cluster — unless
+# it is listed here with a non-empty reason.
+#
+# Prefer a real decision in the reason. Prefix with "UNRESOLVED:" only while
+# coverage is still open (keeps the gap visible without blessing it).
+#
+# Scope: Git-declared volumes only. Out-of-band PVCs (e.g. StP
+# homeassistant-config hostPath) need a different detector.
+apiVersion: keiretsu.top/v1alpha1
+kind: VeleroPVCScheduleExemptions
+metadata:
+  name: pvc-schedule-exemptions
+exemptions:
+  # --- Ottawa ---
+  - cluster: ottawa
+    namespace: immich
+    reason: >-
+      Photo libraries deliberately not backed up per Raj 2026-09-07; see
+      corp/bhaiya#718. immich-library (Ceph) is exempt from Velero by decision.
+      immich-postgres remains protected separately via GarageBucket
+      immich-postgres (~CNPG/Barman dumps) — DB coverage must not be read as
+      "immich is backed up."
+
+  - cluster: ottawa
+    namespace: firefly
+    reason: >-
+      UNRESOLVED: corp/bhaiya#718 — firefly-upload PVC and firefly-postgres have
+      no Velero Schedule; CNPG S3 covers the DB only. Upload volume coverage
+      undecided.
+
+  - cluster: ottawa
+    namespace: woodpecker
+    reason: >-
+      UNRESOLVED: corp/bhaiya#718 — woodpecker server/workspace/nix-cache PVCs and
+      woodpecker-postgres have no Velero Schedule; CNPG S3 covers the DB only.
+      CI workspace data retention policy undecided.
+
+  - cluster: ottawa
+    namespace: teslamate
+    reason: >-
+      Postgres-only namespace: CNPG ScheduledBackup to Garage covers
+      teslamate-postgres. No app PVC beyond the database cluster.
+
+  - cluster: ottawa
+    namespace: mimir
+    reason: >-
+      Metrics TSDB is product-native multi-replica storage with its own
+      compaction/retention; Velero FSB of ingester PVCs is not the restore path.
+
+  - cluster: ottawa
+    namespace: cephfs-proof
+    reason: >-
+      Disposable CephFS RWX probe PVC for CSI validation; not production state.
+
+  - cluster: ottawa
+    namespace: tailscale-examples
+    reason: >-
+      Demo/sandbox tsidp volumeClaimTemplate under tailscale-examples; not a
+      production data plane.
+
+  # --- Robbinsdale ---
+  - cluster: robbinsdale
+    namespace: immich
+    reason: >-
+      Photo libraries deliberately not backed up per Raj 2026-09-07; see
+      corp/bhaiya#718. immich-library and immich-pics-v2 (SMB) are exempt from
+      Velero by decision. immich-postgres remains protected separately via
+      GarageBucket/CNPG dumps — DB coverage must not be read as "immich is
+      backed up."
+
+  - cluster: robbinsdale
+    namespace: tailscale-examples
+    reason: >-
+      Demo/sandbox tsidp volumeClaimTemplate under tailscale-examples; not a
+      production data plane.
+
+  # --- St Petersburg ---
+  - cluster: stpetersburg
+    namespace: ai
+    reason: >-
+      Model-weight caches on local-path (vLLM/qwen/dsv4); rebuildable from
+      registry, not application state. hostPath also cannot be Velero
+      fs-backed up (#695 class).
