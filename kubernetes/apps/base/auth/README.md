@@ -38,11 +38,23 @@ dashboards) and `teaspoon/securitypolicy.yaml`.
 
 ## onboarding a new user
 
-Add their google email to the `authorization` allow-list of each route they
-should reach. Tinyauth accepts valid Google identities; route-level Envoy
-authorization is the application access boundary.
+Two gates, in order:
 
-Removing a user means removing them from the relevant route allow-lists.
+1. **TinyAuth authN** — add their Google email to `TINYAUTH_OAUTH_WHITELIST` in
+   `tinyauth/tinyauth.env` (and `tinyauth-killinit/tinyauth.env` if they need
+   `*.killinit.cc`). Without this, Google login never yields a session and no
+   downstream app ever sees `Remote-Email`. This is a GitOps commit.
+2. **Per-app authZ** — then grant them the app:
+   - most routes: add the email to that route's SecurityPolicy `Remote-Email`
+     allow-list;
+   - Bhaiya: invite via the Bhaiya admin / workspace collaborators UI (Bhaiya
+     does authZ in-process; a Bhaiya invite is not Google sign-in);
+   - Audiobookshelf: whitelist alone is enough (no SecurityPolicy; ABS
+     auto-registers — see `docs/adr/0002-reading-stack-access-model.md`).
+
+Removing a user means removing them from the whitelist (blocks new logins) and
+from the relevant route allow-lists / app accounts (see ADR 0002 for credential
+revocation caveats).
 
 ## applications that trust identity headers
 
