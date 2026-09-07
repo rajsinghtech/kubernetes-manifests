@@ -4,6 +4,8 @@ kind: Schedule
 metadata:
   name: bhaiya-backup
   namespace: velero-system
+  labels:
+    keiretsu.top/volume-data-required: "true"
 spec:
   schedule: "0 8 * * *"
   template:

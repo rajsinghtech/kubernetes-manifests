@@ -58,6 +58,7 @@ kube-state-metrics:
           - velero.io
         resources:
           - backups
+          - schedules
           - podvolumebackups
           - podvolumerestores
         verbs: [ "list", "watch" ]
@@ -349,6 +350,10 @@ kube-state-metrics:
             labelsFromPath:
               namespace: [ metadata, namespace ]
               schedule: [ metadata, name ]
+              # This is an explicit operator assertion, not an inference from
+              # a schedule's history. Missing means the schedule is outside
+              # the absolute volume-data expectation alert.
+              volume_data_required: [ metadata, labels, keiretsu.top/volume-data-required ]
             metrics:
               - name: "schedule_info"
                 help: "Phase and pause state of a Velero Schedule custom resource."
