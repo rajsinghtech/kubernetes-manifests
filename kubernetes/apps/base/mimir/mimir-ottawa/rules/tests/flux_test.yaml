@@ -1,0 +1,131 @@
+rule_files:
+  - ../flux.yaml
+
+evaluation_interval: 1m
+
+tests:
+  - interval: 1m
+    input_series:
+      - series: 'flux_resource_info{cluster="talos-ottawa",kind="Kustomization",name="mimir",namespace="flux-system",path="./kubernetes/apps/base/mimir/mimir-ottawa",reason="ReconciliationFailed",revision="main@sha1:bad",source_name="kubernetes-manifests",suspended="False",ready="False"}'
+        values: "1+0x20"
+    alert_rule_test:
+      - eval_time: 14m
+        alertname: FluxKustomizationNotReady
+        exp_alerts: []
+      - eval_time: 15m
+        alertname: FluxKustomizationNotReady
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              cluster: talos-ottawa
+              name: mimir
+              namespace: flux-system
+              path: ./kubernetes/apps/base/mimir/mimir-ottawa
+            exp_annotations:
+              summary: Flux Kustomization mimir is not ready
+              description: >-
+                Kustomization mimir at ./kubernetes/apps/base/mimir/mimir-ottawa
+                has remained not ready for 15 minutes. Inspect its current
+                condition and root dependency before investigating dependent
+                resources.
+
+  - interval: 1m
+    input_series:
+      - series: 'flux_resource_info{cluster="talos-ottawa",kind="Kustomization",name="transient",namespace="flux-system",path="./transient",reason="ReconciliationFailed",revision="main@sha1:transient",source_name="kubernetes-manifests",suspended="False",ready="False"}'
+        values: "1+0x5 _x15"
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: FluxKustomizationNotReady
+        exp_alerts: []
+
+  - interval: 1m
+    input_series:
+      - series: 'flux_resource_info{cluster="talos-ottawa",kind="Kustomization",name="suspended",namespace="flux-system",path="./suspended",reason="ReconciliationFailed",revision="main@sha1:suspended",source_name="kubernetes-manifests",suspended="True",ready="False"}'
+        values: "1+0x20"
+    alert_rule_test:
+      - eval_time: 20m
+        alertname: FluxKustomizationNotReady
+        exp_alerts: []
+
+  - interval: 1m
+    input_series:
+      - series: 'flux_resource_info{cluster="talos-ottawa",kind="Kustomization",name="healthy",namespace="flux-system",path="./healthy",reason="ReconciliationSucceeded",revision="main@sha1:good",source_name="kubernetes-manifests",suspended="False",ready="True"}'
+        values: "1+0x20"
+    alert_rule_test:
+      - eval_time: 20m
+        alertname: FluxKustomizationNotReady
+        exp_alerts: []
+
+  - interval: 1m
+    input_series:
+      - series: 'flux_resource_info{cluster="talos-ottawa",kind="Kustomization",name="media-apps",namespace="flux-system",path="./kubernetes/apps/base/media/media-apps",reason="DependencyNotReady",revision="main@sha1:dep",source_name="kubernetes-manifests",suspended="False",ready="False"}'
+        values: "1+0x20"
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: FluxKustomizationNotReady
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              cluster: talos-ottawa
+              name: media-apps
+              namespace: flux-system
+              path: ./kubernetes/apps/base/media/media-apps
+            exp_annotations:
+              summary: Flux Kustomization media-apps is not ready
+              description: >-
+                Kustomization media-apps at ./kubernetes/apps/base/media/media-apps
+                has remained not ready for 15 minutes. Inspect its current
+                condition and root dependency before investigating dependent
+                resources.
+
+  # Revision and reason labels may change during one continuous failure. The
+  # stable identity aggregation must keep the alert pending across the change.
+  - interval: 1m
+    input_series:
+      - series: 'flux_resource_info{cluster="talos-ottawa",kind="Kustomization",name="rollover",namespace="flux-system",path="./rollover",reason="ReconciliationFailed",revision="main@sha1:first",source_name="kubernetes-manifests",suspended="False",ready="False"}'
+        values: "1+0x9 _x11"
+      - series: 'flux_resource_info{cluster="talos-ottawa",kind="Kustomization",name="rollover",namespace="flux-system",path="./rollover",reason="DependencyNotReady",revision="main@sha1:second",source_name="kubernetes-manifests",suspended="False",ready="False"}'
+        values: "_x10 1+0x10"
+    alert_rule_test:
+      - eval_time: 14m
+        alertname: FluxKustomizationNotReady
+        exp_alerts: []
+      - eval_time: 15m
+        alertname: FluxKustomizationNotReady
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              cluster: talos-ottawa
+              namespace: flux-system
+              name: rollover
+              path: ./rollover
+            exp_annotations:
+              summary: Flux Kustomization rollover is not ready
+              description: >-
+                Kustomization rollover at ./rollover has remained not ready
+                for 15 minutes. Inspect its current condition and root
+                dependency before investigating dependent resources.
+
+  # The same Kustomization name is independent in another cluster.
+  - interval: 1m
+    input_series:
+      - series: 'flux_resource_info{cluster="talos-ottawa",kind="Kustomization",name="shared-name",namespace="flux-system",path="./shared-name",reason="ReconciliationFailed",revision="main@sha1:bad",source_name="kubernetes-manifests",suspended="False",ready="False"}'
+        values: "1+0x20"
+      - series: 'flux_resource_info{cluster="talos-robbinsdale",kind="Kustomization",name="shared-name",namespace="flux-system",path="./shared-name",reason="ReconciliationSucceeded",revision="main@sha1:good",source_name="kubernetes-manifests",suspended="False",ready="True"}'
+        values: "1+0x20"
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: FluxKustomizationNotReady
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              cluster: talos-ottawa
+              namespace: flux-system
+              name: shared-name
+              path: ./shared-name
+            exp_annotations:
+              summary: Flux Kustomization shared-name is not ready
+              description: >-
+                Kustomization shared-name at ./shared-name has remained not
+                ready for 15 minutes. Inspect its current condition and root
+                dependency before investigating dependent resources.
