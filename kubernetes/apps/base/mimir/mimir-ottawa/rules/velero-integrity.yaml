@@ -251,3 +251,139 @@ groups:
             one byte-complete PVB exists; it does not prove every expected PVC
             is covered or that a restore works. Clears when a later Backup has
             a Completed PVB with matching byte counters.
+
+      # Count coverage, not Kubernetes item coverage. A current Backup with
+      # one completed PVB can otherwise look healthy beside a prior run with
+      # 37 completed PVBs. The current run is the newest Backup for the
+      # schedule, while the baseline is the newest older Completed Backup with
+      # zero warnings. The alert deliberately observes the count while the
+      # Backup is queued/running; phase is not allowed to hide a volume gap.
+      - record: velero_schedule_latest_backup_created_timestamp
+        expr: |
+          topk by (cluster, namespace, schedule) (
+            1,
+            velero_cr_backup_created_timestamp{
+              namespace="velero-system",
+              schedule!=""
+            }
+          )
+
+      - record: velero_schedule_previous_successful_backup_created_timestamp
+        expr: |
+          topk by (cluster, namespace, schedule) (
+            1,
+            (
+              (
+                velero_cr_backup_created_timestamp{
+                  namespace="velero-system",
+                  schedule!=""
+                }
+                and on (cluster, namespace, schedule, backup)
+                (
+                  velero_cr_backup_info{
+                    namespace="velero-system",
+                    schedule!="",
+                    phase="Completed"
+                  }
+                  and on (cluster, namespace, schedule, backup)
+                  (
+                    velero_cr_backup_warnings{
+                      namespace="velero-system",
+                      schedule!=""
+                    } == 0
+                  )
+                )
+              )
+              unless on (cluster, namespace, schedule, backup)
+              velero_schedule_latest_backup_created_timestamp
+            )
+          )
+
+      - record: velero_backup_completed_byte_complete_pvb_count
+        expr: |
+          count by (cluster, namespace, backup) (
+            velero_cr_podvolumebackup_info{
+              namespace="velero-system",
+              phase="Completed"
+            }
+            and on (cluster, namespace, pod_volume_backup, backup, node)
+            (
+              velero_cr_podvolumebackup_bytes_done{
+                namespace="velero-system"
+              }
+              == on (cluster, namespace, pod_volume_backup, backup, node)
+              velero_cr_podvolumebackup_bytes_total{
+                namespace="velero-system"
+              }
+            )
+          )
+
+      - record: velero_schedule_latest_completed_byte_complete_pvb_count
+        expr: |
+          (
+            (
+              velero_backup_completed_byte_complete_pvb_count
+              * on (cluster, namespace, backup) group_left (schedule)
+              max by (cluster, namespace, schedule, backup) (
+                velero_cr_backup_info{
+                  namespace="velero-system",
+                  schedule!=""
+                }
+              )
+            )
+            and on (cluster, namespace, schedule, backup)
+            velero_schedule_latest_backup_created_timestamp
+          )
+          or on (cluster, namespace, schedule, backup)
+          (
+            velero_schedule_latest_backup_created_timestamp * 0
+          )
+
+      - record: velero_schedule_previous_successful_completed_byte_complete_pvb_count
+        expr: |
+          (
+            (
+              velero_backup_completed_byte_complete_pvb_count
+              * on (cluster, namespace, backup) group_left (schedule)
+              max by (cluster, namespace, schedule, backup) (
+                velero_cr_backup_info{
+                  namespace="velero-system",
+                  schedule!="",
+                  phase="Completed"
+                }
+                and on (cluster, namespace, schedule, backup)
+                (
+                  velero_cr_backup_warnings{
+                    namespace="velero-system",
+                    schedule!=""
+                  } == 0
+                )
+              )
+            )
+            and on (cluster, namespace, schedule, backup)
+            velero_schedule_previous_successful_backup_created_timestamp
+          )
+          or on (cluster, namespace, schedule, backup)
+          (
+            velero_schedule_previous_successful_backup_created_timestamp * 0
+          )
+
+      - alert: VeleroScheduleVolumeCoverageRegressed
+        expr: |
+          velero_schedule_latest_completed_byte_complete_pvb_count
+          < on (cluster, namespace, schedule)
+          velero_schedule_previous_successful_completed_byte_complete_pvb_count
+        for: 15m
+        labels:
+          severity: critical
+        annotations:
+          summary: Velero schedule {{ $labels.schedule }} volume coverage regressed
+          description: >-
+            The newest Backup {{ $labels.backup }} for schedule
+            {{ $labels.schedule }} has fewer completed byte-complete
+            PodVolumeBackups than its previous clean successful Backup. This
+            is a volume-coverage regression even when Kubernetes item counts
+            or the parent Backup phase look normal. Inspect the current and
+            previous Backup PVB populations and the node-agent queue; do not
+            treat this alert as restore proof. It clears only when the newest
+            run reaches the prior successful volume count.
