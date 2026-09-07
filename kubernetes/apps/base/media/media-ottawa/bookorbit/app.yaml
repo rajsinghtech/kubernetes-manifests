@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: bookorbit
-          image: ghcr.io/bookorbit/bookorbit:2.8.1
+          image: ghcr.io/bookorbit/bookorbit:2.9.0
           ports:
             - name: http
               containerPort: 3000
