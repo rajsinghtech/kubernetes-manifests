@@ -28,7 +28,7 @@ groups:
       - alert: MimirRuleLoaderStale
         expr: |
           (
-            time() - max by (cluster, namespace, job_name) (
+            time() - max by (cluster, namespace) (
               max_over_time(
                 kube_job_status_completion_time{
                   namespace="mimir",

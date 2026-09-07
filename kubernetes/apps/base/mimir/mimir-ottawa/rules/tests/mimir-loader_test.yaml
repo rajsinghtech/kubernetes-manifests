@@ -1,0 +1,53 @@
+rule_files:
+  - ../mimir-loader.yaml
+
+evaluation_interval: 1h
+
+tests:
+  - interval: 1h
+    input_series:
+      - series: 'kube_job_status_completion_time{cluster="talos-ottawa",job_name="mimir-rules-old",namespace="mimir"}'
+        values: "0+0x25"
+      - series: 'kube_job_status_completion_time{cluster="talos-ottawa",job_name="mimir-rules-current",namespace="mimir"}'
+        values: "86400+0x25"
+    alert_rule_test:
+      - eval_time: 26h
+        alertname: MimirRuleLoaderStale
+        exp_alerts: []
+
+  - interval: 1h
+    input_series:
+      - series: 'kube_job_status_completion_time{cluster="talos-ottawa",job_name="mimir-rules-old",namespace="mimir"}'
+        values: "0+0x25"
+    alert_rule_test:
+      - eval_time: 26h
+        alertname: MimirRuleLoaderStale
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              cluster: talos-ottawa
+              namespace: mimir
+            exp_annotations:
+              summary: Mimir rule loader has not completed successfully in 24 hours
+              description: >-
+                No successful content-hashed Mimir rules loader completion has been observed in
+                the last 24 hours. This also covers the loader Job not being
+                created; inspect Flux, the Job, and the three tenant sync logs.
+
+  - interval: 1h
+    input_series:
+      - series: 'kube_node_info{cluster="talos-ottawa",node="node-1"}'
+        values: "1+0x26"
+    alert_rule_test:
+      - eval_time: 26h
+        alertname: MimirRuleLoaderStale
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              namespace: mimir
+            exp_annotations:
+              summary: Mimir rule loader has not completed successfully in 24 hours
+              description: >-
+                No successful content-hashed Mimir rules loader completion has been observed in
+                the last 24 hours. This also covers the loader Job not being
+                created; inspect Flux, the Job, and the three tenant sync logs.
