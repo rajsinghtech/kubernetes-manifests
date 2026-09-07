@@ -17,7 +17,11 @@
 #   assertion covers a schedule whose every historical run was empty; it does
 #   not infer the expectation from that history. Schedules that legitimately
 #   have no Velero-capturable volume data, such as StP homeassistant-config,
-#   must not carry the expectation label.
+#   must not carry the expectation label. This is a zero-volume guard, not an
+#   expected-count guard: it cannot detect under-selection that leaves a
+#   plausible nonzero count (for example, one PVB when two volumes were
+#   expected). The relative coverage rule detects a lower count only when a
+#   comparable prior baseline exists.
 # Both join on the newest Backup per schedule so they clear on recovery.
 #
 # Keep this namespace separate from rules/velero.yaml. Both files are synced by
@@ -485,4 +489,9 @@ groups:
             suppressed to prevent duplicate paging. Inspect the Schedule's
             volume-selection contract and the Backup's PVB children; phase
             and object replay do not establish volume data. Schedules without
-            the explicit marker are intentionally out of scope.
+            the explicit marker are intentionally out of scope. This is a
+            zero-volume guard only: it cannot detect under-selection when a
+            run has a plausible nonzero count (for example, one PVB when two
+            volumes were expected). The relative coverage alert catches a
+            lower count only when a comparable prior baseline exists; this
+            rule does not infer expected counts.

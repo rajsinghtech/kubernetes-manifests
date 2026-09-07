@@ -160,7 +160,12 @@ tests:
                 duplicate paging. Inspect the Schedule's volume-selection
                 contract and the Backup's PVB children; phase and object
                 replay do not establish volume data. Schedules without the
-                explicit marker are intentionally out of scope.
+                explicit marker are intentionally out of scope. This is a
+                zero-volume guard only: it cannot detect under-selection when
+                a run has a plausible nonzero count (for example, one PVB
+                when two volumes were expected). The relative coverage alert
+                catches a lower count only when a comparable prior baseline
+                exists; this rule does not infer expected counts.
 
   # A Completed PVB is evidence only when its progress is byte-positive and
   # complete. A real positive PVB clears the absolute expectation alert.
