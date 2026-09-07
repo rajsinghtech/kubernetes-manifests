@@ -17,3 +17,22 @@ groups:
           severity: critical
         annotations:
           summary: Flux instance is not ready
+
+      - alert: FluxKustomizationNotReady
+        expr: |
+          max by (cluster, namespace, name, path) (
+            flux_resource_info{
+              kind="Kustomization",
+              ready="False",
+              suspended="False"
+            } == 1
+          )
+        for: 15m
+        labels:
+          severity: critical
+        annotations:
+          summary: Flux Kustomization {{ $labels.name }} is not ready
+          description: >-
+            Kustomization {{ $labels.name }} at {{ $labels.path }} has remained
+            not ready for 15 minutes. Inspect its current condition and root
+            dependency before investigating dependent resources.
