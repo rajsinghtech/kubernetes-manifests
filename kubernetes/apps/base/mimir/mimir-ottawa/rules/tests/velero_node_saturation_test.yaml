@@ -1,0 +1,75 @@
+rule_files:
+  - ../velero-node-saturation.yaml
+
+evaluation_interval: 1m
+
+tests:
+  - interval: 1m
+    input_series:
+      - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",node="asuka",pod_volume_backup="pvb-a",phase="InProgress"}'
+        values: "1+0x15"
+      - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",node="asuka",pod_volume_backup="pvb-b",phase="InProgress"}'
+        values: "1+0x15"
+      - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",node="asuka",pod_volume_backup="pvb-c",phase="Prepared"}'
+        values: "1+0x15"
+    alert_rule_test:
+      - eval_time: 9m
+        alertname: VeleroNodeDataPathSaturated
+        exp_alerts: []
+      - eval_time: 10m
+        alertname: VeleroNodeDataPathSaturated
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              cluster: talos-ottawa
+              node: asuka
+            exp_annotations:
+              summary: Velero node asuka is saturated with queued volume work
+              description: >-
+                Node asuka in talos-ottawa has reached the two-path execution
+                ceiling with InProgress PVB/PVR objects and has Prepared work
+                waiting on that node for ten minutes. This is a node-local
+                saturation signal, not proof that a transfer is stalled.
+                Inspect PVB/PVR phase, bytesDone/totalBytes, and node-agent
+                logs; the separate per-kind recording series identify
+                contributors.
+
+  - interval: 1m
+    input_series:
+      - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",node="asuka",pod_volume_backup="pvb-a",phase="InProgress"}'
+        values: "1+0x15"
+      - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",node="rei",pod_volume_backup="pvb-b",phase="InProgress"}'
+        values: "1+0x15"
+      - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",node="asuka",pod_volume_backup="pvb-c",phase="Prepared"}'
+        values: "1+0x15"
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: VeleroNodeDataPathSaturated
+        exp_alerts: []
+
+  - interval: 1m
+    input_series:
+      - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",node="asuka",pod_volume_backup="pvb-a",phase="InProgress"}'
+        values: "1+0x15"
+      - series: 'velero_cr_podvolumerestore_info{cluster="talos-ottawa",namespace="velero-system",node="asuka",pod_volume_restore="pvr-a",phase="InProgress"}'
+        values: "1+0x15"
+      - series: 'velero_cr_podvolumerestore_info{cluster="talos-ottawa",namespace="velero-system",node="asuka",pod_volume_restore="pvr-b",phase="Prepared"}'
+        values: "1+0x15"
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: VeleroNodeDataPathSaturated
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              cluster: talos-ottawa
+              node: asuka
+            exp_annotations:
+              summary: Velero node asuka is saturated with queued volume work
+              description: >-
+                Node asuka in talos-ottawa has reached the two-path execution
+                ceiling with InProgress PVB/PVR objects and has Prepared work
+                waiting on that node for ten minutes. This is a node-local
+                saturation signal, not proof that a transfer is stalled.
+                Inspect PVB/PVR phase, bytesDone/totalBytes, and node-agent
+                logs; the separate per-kind recording series identify
+                contributors.

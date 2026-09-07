@@ -1,0 +1,92 @@
+# Depends on the kube-state-metrics Velero CR contract in
+# monitoring-common/app/kube-state-metrics-config.yaml. The exporter must
+# provide the metric names and direct cluster/node/phase labels documented
+# there; without that deployment this rule is intentionally inert.
+groups:
+  - name: velero-node-saturation.rules
+    rules:
+      - record: velero_node_inprogress_pod_volume_backups
+        expr: |
+          count by (cluster, node) (
+            velero_cr_podvolumebackup_info{
+              namespace="velero-system",
+              phase="InProgress"
+            }
+          )
+
+      - record: velero_node_inprogress_pod_volume_restores
+        expr: |
+          count by (cluster, node) (
+            velero_cr_podvolumerestore_info{
+              namespace="velero-system",
+              phase="InProgress"
+            }
+          )
+
+      - record: velero_node_prepared_pod_volume_backups
+        expr: |
+          count by (cluster, node) (
+            velero_cr_podvolumebackup_info{
+              namespace="velero-system",
+              phase="Prepared"
+            }
+          )
+
+      - record: velero_node_prepared_pod_volume_restores
+        expr: |
+          count by (cluster, node) (
+            velero_cr_podvolumerestore_info{
+              namespace="velero-system",
+              phase="Prepared"
+            }
+          )
+
+      - record: velero_node_inprogress_data_paths
+        expr: |
+          sum by (cluster, node) (
+            velero_cr_podvolumebackup_info{
+              namespace="velero-system",
+              phase="InProgress"
+            }
+            or
+            velero_cr_podvolumerestore_info{
+              namespace="velero-system",
+              phase="InProgress"
+            }
+          )
+
+      - record: velero_node_prepared_data_paths
+        expr: |
+          sum by (cluster, node) (
+            velero_cr_podvolumebackup_info{
+              namespace="velero-system",
+              phase="Prepared"
+            }
+            or
+            velero_cr_podvolumerestore_info{
+              namespace="velero-system",
+              phase="Prepared"
+            }
+          )
+
+      - alert: VeleroNodeDataPathSaturated
+        expr: |
+          (
+            velero_node_inprogress_data_paths >= 2
+          )
+          and on (cluster, node)
+          (
+            velero_node_prepared_data_paths > 0
+          )
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: Velero node {{ $labels.node }} is saturated with queued volume work
+          description: >-
+            Node {{ $labels.node }} in {{ $labels.cluster }} has reached the
+            two-path execution ceiling with InProgress PVB/PVR objects and
+            has Prepared work waiting on that node for ten minutes. This is a
+            node-local saturation signal, not proof that a transfer is stalled.
+            Inspect PVB/PVR phase, bytesDone/totalBytes, and node-agent logs;
+            the separate per-kind recording series identify contributors.
