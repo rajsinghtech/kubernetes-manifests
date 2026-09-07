@@ -1,0 +1,119 @@
+---
+# Delete live orphan restic-* Secrets whose RESTIC_REPOSITORY targets the
+# purged Garage `keiretsu` bucket. These Secrets are NOT in git: VolSync left
+# them behind with ownerReferences to deleted GarageKey CRs (v1alpha1). Flux
+# cannot prune what it never owned, so this one-shot Job is the GitOps path.
+#
+# Allowlist is the 2026-09-07 Ottawa inventory. Each candidate is re-checked at
+# runtime: name must match, RESTIC_REPOSITORY must contain `/keiretsu/`, and the
+# endpoint must be in-cluster Garage (not DigitalOcean Spaces or any other
+# backend). Unknown restic-* Secrets are left untouched.
+#
+# Remove this overlay (and the location pointer) after the Job Completes —
+# completed Jobs with image bumps become immutable dry-run failures
+# (see c0c283bee / teaspoon-data-migration).
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: restic-orphan-cleanup-ottawa
+  namespace: garage
+  labels:
+    app.kubernetes.io/name: restic-orphan-cleanup
+    app.kubernetes.io/component: retired-volsync-cleanup
+  annotations:
+    kustomize.toolkit.fluxcd.io/force: enabled
+spec:
+  backoffLimit: 1
+  ttlSecondsAfterFinished: 86400
+  activeDeadlineSeconds: 600
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: restic-orphan-cleanup
+        app.kubernetes.io/component: retired-volsync-cleanup
+    spec:
+      serviceAccountName: restic-orphan-cleanup
+      restartPolicy: Never
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: cleanup
+          # bitnami image keeps a shell + base64; registry.k8s.io/kubectl is distroless.
+          image: docker.io/bitnami/kubectl:1.33.3
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+          command:
+            - /bin/bash
+            - -eu
+            - -c
+            - |
+              allowlist=(
+                hermes/restic-hermes-data
+                immich/restic-immich-library
+                media/restic-autobrr-config
+                media/restic-bazarr-1080p-config
+                media/restic-bazarr-4k-config
+                media/restic-bazarr-4kremux-config
+                media/restic-bazarr-anime-config
+                media/restic-lidarr-config
+                media/restic-maintainerr-config
+                media/restic-overseerr-config
+                media/restic-plex-config
+                media/restic-prowlarr-config
+                media/restic-qbittorrent-config
+                media/restic-qbittorrent-pvt-config
+                media/restic-radarr-1080p-config
+                media/restic-radarr-4k-config
+                media/restic-radarr-4kremux-config
+                media/restic-radarr-anime-config
+                media/restic-sabnzbd-config
+                media/restic-sonarr-1080p-config
+                media/restic-sonarr-4k-config
+                media/restic-sonarr-anime-config
+                media/restic-tautulli-config
+                media/restic-wizarr-config
+              )
+
+              deleted=0
+              missing=0
+
+              for entry in "${allowlist[@]}"; do
+                ns="${entry%%/*}"
+                name="${entry#*/}"
+                if ! kubectl -n "${ns}" get secret "${name}" >/dev/null 2>&1; then
+                  echo "missing ${entry} (already gone)"
+                  missing=$((missing + 1))
+                  continue
+                fi
+
+                repo="$(kubectl -n "${ns}" get secret "${name}" -o jsonpath='{.data.RESTIC_REPOSITORY}' | base64 -d)"
+                if [[ "${repo}" != *"/keiretsu/"* ]]; then
+                  echo "REFUSING ${entry}: RESTIC_REPOSITORY does not target /keiretsu/ (${repo})"
+                  exit 1
+                fi
+                if [[ ! "${repo}" =~ ^s3:http://garage(-gateway)?\.garage\.svc\.cluster\.local:3900/keiretsu/ ]]; then
+                  echo "REFUSING ${entry}: not in-cluster Garage keiretsu (${repo})"
+                  exit 1
+                fi
+
+                echo "deleting ${entry} repo=${repo}"
+                kubectl -n "${ns}" delete secret "${name}" --wait=false
+                deleted=$((deleted + 1))
+              done
+
+              echo "ottawa restic orphan cleanup done deleted=${deleted} missing=${missing}"

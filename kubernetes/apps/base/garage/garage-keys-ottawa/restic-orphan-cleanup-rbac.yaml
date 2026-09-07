@@ -1,0 +1,104 @@
+---
+# One-shot RBAC for deleting orphan VolSync restic Secrets that still point at
+# the purged Garage bucket alias `keiretsu` (removed 2026-06-16, 9bba495a2).
+# Per-namespace Roles (not ClusterRole) so this can live under namespaced
+# kustomizations without Flux/kustomize stamping a namespace onto cluster scope.
+# Remove after the Job Completes.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: restic-orphan-cleanup
+  namespace: garage
+  labels:
+    app.kubernetes.io/name: restic-orphan-cleanup
+    app.kubernetes.io/component: retired-volsync-cleanup
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: restic-orphan-cleanup
+  namespace: hermes
+  labels:
+    app.kubernetes.io/name: restic-orphan-cleanup
+    app.kubernetes.io/component: retired-volsync-cleanup
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "list", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: restic-orphan-cleanup
+  namespace: hermes
+  labels:
+    app.kubernetes.io/name: restic-orphan-cleanup
+    app.kubernetes.io/component: retired-volsync-cleanup
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: restic-orphan-cleanup
+subjects:
+  - kind: ServiceAccount
+    name: restic-orphan-cleanup
+    namespace: garage
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: restic-orphan-cleanup
+  namespace: immich
+  labels:
+    app.kubernetes.io/name: restic-orphan-cleanup
+    app.kubernetes.io/component: retired-volsync-cleanup
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "list", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: restic-orphan-cleanup
+  namespace: immich
+  labels:
+    app.kubernetes.io/name: restic-orphan-cleanup
+    app.kubernetes.io/component: retired-volsync-cleanup
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: restic-orphan-cleanup
+subjects:
+  - kind: ServiceAccount
+    name: restic-orphan-cleanup
+    namespace: garage
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: restic-orphan-cleanup
+  namespace: media
+  labels:
+    app.kubernetes.io/name: restic-orphan-cleanup
+    app.kubernetes.io/component: retired-volsync-cleanup
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "list", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: restic-orphan-cleanup
+  namespace: media
+  labels:
+    app.kubernetes.io/name: restic-orphan-cleanup
+    app.kubernetes.io/component: retired-volsync-cleanup
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: restic-orphan-cleanup
+subjects:
+  - kind: ServiceAccount
+    name: restic-orphan-cleanup
+    namespace: garage

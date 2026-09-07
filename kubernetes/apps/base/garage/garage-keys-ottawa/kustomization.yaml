@@ -9,3 +9,5 @@ resources:
   - woodpecker-postgres-key.yaml
   - suwayomi-postgres-key.yaml
   - teslamate-postgres-key.yaml
+  - restic-orphan-cleanup-rbac.yaml
+  - restic-orphan-cleanup-job.yaml
