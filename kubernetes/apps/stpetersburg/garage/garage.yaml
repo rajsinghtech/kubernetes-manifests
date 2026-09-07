@@ -127,6 +127,7 @@ spec:
   dependsOn:
     - name: garage-bucket
     - name: garage-reference-grants
+    - name: garage-stpetersburg-reference-grants
     - name: home-assistant
   commonMetadata:
     labels:

@@ -5,4 +5,5 @@ resources:
   - ./namespace.yaml
   - ./garage.yaml
   - ./garage-reference-grants.yaml
+  - ./garage-stpetersburg-reference-grants.yaml
   - ./garage-nodes-stpetersburg.yaml
