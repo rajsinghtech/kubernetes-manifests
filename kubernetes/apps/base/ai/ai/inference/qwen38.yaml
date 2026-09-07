@@ -129,7 +129,7 @@ spec:
             requests: { memory: "64Mi", cpu: "100m" }
             limits: { memory: "256Mi", cpu: "500m" }
         - name: download-models
-          image: vllm/vllm-openai@sha256:2a7cde230b59f3ce6cab33dd245ba6bee41aa87b38c9fe84f966ff24016813ce
+          image: vllm/vllm-openai@sha256:3b0e188ffceb3d07e09c3cb5215433a0020eacf02d7f882ed3a8bfd15454477e
           command: [/bin/bash]
           args: [/scripts/download-and-validate.sh]
           env:
@@ -156,7 +156,7 @@ spec:
             requests: { memory: "64Mi", cpu: "100m" }
             limits: { memory: "256Mi", cpu: "500m" }
         - name: vllm
-          image: vllm/vllm-openai@sha256:2a7cde230b59f3ce6cab33dd245ba6bee41aa87b38c9fe84f966ff24016813ce
+          image: vllm/vllm-openai@sha256:3b0e188ffceb3d07e09c3cb5215433a0020eacf02d7f882ed3a8bfd15454477e
           # Upstream MiaAI-Lab arm64 image; patches below are applied at startup.
           command: [bash, -c]
           args:
@@ -304,7 +304,7 @@ spec:
             requests: { memory: "64Mi", cpu: "100m" }
             limits: { memory: "256Mi", cpu: "500m" }
         - name: download-models
-          image: vllm/vllm-openai@sha256:2a7cde230b59f3ce6cab33dd245ba6bee41aa87b38c9fe84f966ff24016813ce
+          image: vllm/vllm-openai@sha256:3b0e188ffceb3d07e09c3cb5215433a0020eacf02d7f882ed3a8bfd15454477e
           command: [/bin/bash]
           args: [/scripts/download-and-validate.sh]
           env:
@@ -331,7 +331,7 @@ spec:
             requests: { memory: "64Mi", cpu: "100m" }
             limits: { memory: "256Mi", cpu: "500m" }
         - name: vllm
-          image: vllm/vllm-openai@sha256:2a7cde230b59f3ce6cab33dd245ba6bee41aa87b38c9fe84f966ff24016813ce
+          image: vllm/vllm-openai@sha256:3b0e188ffceb3d07e09c3cb5215433a0020eacf02d7f882ed3a8bfd15454477e
           # Upstream MiaAI-Lab arm64 image; patches below are applied at startup.
           command: [bash, -c]
           args:
@@ -468,6 +468,29 @@ spec:
     role: head
   ports:
   - { name: http, port: 8000, protocol: TCP, targetPort: http }
+---
+# Tailscale ingress for CLIProxy's stpetersburg-vllm-upstream ExternalName.
+# This used to live in vllm.yaml; keep it with the active head so prune cannot
+# leave the Tailscale hostname pointing at a deleting Service.
+apiVersion: v1
+kind: Service
+metadata:
+  name: vllm-ts
+  namespace: ai
+  labels:
+    app: qwen38
+  annotations:
+    tailscale.com/hostname: "${LOCATION}-vllm"
+    tailscale.com/proxy-group: common-ingress
+    tailscale.com/tags: "tag:k8s,tag:${LOCATION}"
+spec:
+  type: LoadBalancer
+  loadBalancerClass: tailscale
+  ports:
+  - { name: http, port: 80, protocol: TCP, targetPort: 8000 }
+  selector:
+    app: qwen38
+    role: head
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
