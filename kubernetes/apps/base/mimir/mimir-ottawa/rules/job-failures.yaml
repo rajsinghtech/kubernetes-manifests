@@ -1,0 +1,44 @@
+# Kube-state-metrics retains failed Job objects after their failure. Bound this
+# generic safety net to recently completed failures so history does not become
+# a permanent alert. Component-specific rules can provide a faster or richer
+# signal where one exists; the generic rule makes otherwise unowned failures
+# visible within minutes.
+namespace: job-failures
+groups:
+  - name: kubernetes.jobs.rules
+    rules:
+      - alert: KubernetesJobFailedRecently
+        expr: |
+          max by (cluster, namespace, job_name) (
+            kube_job_complete{
+              namespace=~"mimir|velero-system|rook-ceph|firefly|tailscale-system|kube-system|ai|speedtest|media",
+              job_name!~"qbittorrent(-pvt)?-portforward-probe-.*",
+              condition="false"
+            } == 1
+          )
+          and on (cluster, namespace, job_name)
+          max by (cluster, namespace, job_name) (
+            kube_job_status_failed{
+              namespace=~"mimir|velero-system|rook-ceph|firefly|tailscale-system|kube-system|ai|speedtest|media",
+              job_name!~"qbittorrent(-pvt)?-portforward-probe-.*"
+            } > 0
+          )
+          and on (cluster, namespace, job_name)
+          max by (cluster, namespace, job_name) (
+            time() - kube_job_status_completion_time{
+              namespace=~"mimir|velero-system|rook-ceph|firefly|tailscale-system|kube-system|ai|speedtest|media",
+              job_name!~"qbittorrent(-pvt)?-portforward-probe-.*"
+            } < 900
+          )
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Kubernetes Job {{ $labels.namespace }}/{{ $labels.job_name }} failed
+          description: >-
+            Job {{ $labels.namespace }}/{{ $labels.job_name }} reached a failed
+            terminal condition within the last 15 minutes. This generic safety
+            net covers platform namespaces and excludes the expected
+            qBittorrent probe failures, which have a dedicated alert. Inspect
+            the Job, its Pods, and logs; component-specific alerts may provide
+            more context.

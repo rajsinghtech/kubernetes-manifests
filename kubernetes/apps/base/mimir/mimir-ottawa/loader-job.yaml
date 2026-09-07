@@ -48,6 +48,7 @@ spec:
             - /rules/k8gb-dns.yaml
             - /rules/media.yaml
             - /rules/mimir-loader.yaml
+            - /rules/job-failures.yaml
             - /rules/mimir-queryable-window.yaml
             - /rules/monitoring.yaml
             - /rules/node-health.yaml
@@ -90,6 +91,7 @@ spec:
             - /rules/k8gb-dns.yaml
             - /rules/media.yaml
             - /rules/mimir-loader.yaml
+            - /rules/job-failures.yaml
             - /rules/mimir-queryable-window.yaml
             - /rules/monitoring.yaml
             - /rules/node-health.yaml
@@ -128,6 +130,7 @@ spec:
             - /rules/k8gb-dns.yaml
             - /rules/media.yaml
             - /rules/mimir-loader.yaml
+            - /rules/job-failures.yaml
             - /rules/mimir-queryable-window.yaml
             - /rules/monitoring.yaml
             - /rules/node-health.yaml

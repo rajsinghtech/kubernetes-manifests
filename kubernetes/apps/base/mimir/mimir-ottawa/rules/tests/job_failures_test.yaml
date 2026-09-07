@@ -1,0 +1,73 @@
+rule_files:
+  - ../job-failures.yaml
+
+evaluation_interval: 1m
+
+tests:
+  # A recent terminal failed Job fires after the five-minute pending period.
+  - interval: 1m
+    input_series:
+      - series: 'kube_job_complete{cluster="talos-ottawa",namespace="rook-ceph",job_name="failed-job",condition="false"}'
+        values: "1+0x20"
+      - series: 'kube_job_status_failed{cluster="talos-ottawa",namespace="rook-ceph",job_name="failed-job"}'
+        values: "1+0x20"
+      - series: 'kube_job_status_completion_time{cluster="talos-ottawa",namespace="rook-ceph",job_name="failed-job"}'
+        values: "0+0x20"
+    alert_rule_test:
+      - eval_time: 4m
+        alertname: KubernetesJobFailedRecently
+        exp_alerts: []
+      - eval_time: 10m
+        alertname: KubernetesJobFailedRecently
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              cluster: talos-ottawa
+              namespace: rook-ceph
+              job_name: failed-job
+            exp_annotations:
+              summary: Kubernetes Job rook-ceph/failed-job failed
+              description: >-
+                Job rook-ceph/failed-job reached a failed terminal condition
+                within the last 15 minutes. This generic safety net covers
+                platform namespaces and excludes the expected qBittorrent probe
+                failures, which have a dedicated alert. Inspect the Job, its
+                Pods, and logs; component-specific alerts may provide more
+                context.
+
+  # Retained history is not an alert, and a successful terminal condition wins
+  # over a non-zero retry/failure counter from an ultimately successful Job.
+  - interval: 1m
+    input_series:
+      - series: 'kube_job_complete{cluster="talos-ottawa",namespace="rook-ceph",job_name="old-job",condition="false"}'
+        values: "1+0x40"
+      - series: 'kube_job_status_failed{cluster="talos-ottawa",namespace="rook-ceph",job_name="old-job"}'
+        values: "1+0x40"
+      - series: 'kube_job_status_completion_time{cluster="talos-ottawa",namespace="rook-ceph",job_name="old-job"}'
+        values: "0+0x40"
+      - series: 'kube_job_complete{cluster="talos-ottawa",namespace="rook-ceph",job_name="retry-success",condition="false"}'
+        values: "0+0x40"
+      - series: 'kube_job_complete{cluster="talos-ottawa",namespace="rook-ceph",job_name="retry-success",condition="true"}'
+        values: "1+0x40"
+      - series: 'kube_job_status_failed{cluster="talos-ottawa",namespace="rook-ceph",job_name="retry-success"}'
+        values: "1+0x40"
+      - series: 'kube_job_status_completion_time{cluster="talos-ottawa",namespace="rook-ceph",job_name="retry-success"}'
+        values: "0+0x40"
+    alert_rule_test:
+      - eval_time: 30m
+        alertname: KubernetesJobFailedRecently
+        exp_alerts: []
+
+  # The qBittorrent probe has an intentional component-specific failure path.
+  - interval: 1m
+    input_series:
+      - series: 'kube_job_complete{cluster="talos-ottawa",namespace="media",job_name="qbittorrent-portforward-probe-123",condition="false"}'
+        values: "1+0x20"
+      - series: 'kube_job_status_failed{cluster="talos-ottawa",namespace="media",job_name="qbittorrent-portforward-probe-123"}'
+        values: "1+0x20"
+      - series: 'kube_job_status_completion_time{cluster="talos-ottawa",namespace="media",job_name="qbittorrent-portforward-probe-123"}'
+        values: "0+0x20"
+    alert_rule_test:
+      - eval_time: 20m
+        alertname: KubernetesJobFailedRecently
+        exp_alerts: []
