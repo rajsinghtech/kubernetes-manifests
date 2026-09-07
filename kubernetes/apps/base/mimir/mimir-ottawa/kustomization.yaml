@@ -22,6 +22,7 @@ configMapGenerator:
   - name: mimir-rules
     files:
       - rules/bhaiya.yaml
+      - rules/bhaiya-model.yaml
       - rules/bhaiya-reconciler.yaml
       - rules/bhaiya-provider-provisioning.yaml
       - rules/bhaiya-ssh.yaml

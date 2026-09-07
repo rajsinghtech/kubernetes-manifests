@@ -32,6 +32,7 @@ spec:
             - --address=http://mimir-gateway.mimir.svc.cluster.local:8080
             - --id=talos-ottawa
             - /rules/bhaiya.yaml
+            - /rules/bhaiya-model.yaml
             - /rules/bhaiya-reconciler.yaml
             - /rules/bhaiya-provider-provisioning.yaml
             - /rules/bhaiya-ssh.yaml
@@ -69,6 +70,7 @@ spec:
             - --address=http://mimir-gateway.mimir.svc.cluster.local:8080
             - --id=talos-robbinsdale
             - /rules/bhaiya.yaml
+            - /rules/bhaiya-model.yaml
             - /rules/bhaiya-reconciler.yaml
             - /rules/bhaiya-provider-provisioning.yaml
             - /rules/bhaiya-ssh.yaml
@@ -102,6 +104,7 @@ spec:
             - --address=http://mimir-gateway.mimir.svc.cluster.local:8080
             - --id=talos-stpetersburg
             - /rules/bhaiya.yaml
+            - /rules/bhaiya-model.yaml
             - /rules/bhaiya-reconciler.yaml
             - /rules/bhaiya-provider-provisioning.yaml
             - /rules/bhaiya-ssh.yaml
