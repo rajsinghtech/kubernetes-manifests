@@ -3,6 +3,15 @@
 #
 # Qwen3.8-Flash-Next-NVFP4 on 2× DGX Spark — vLLM TP=2+EP+MTP3.
 #
+# --served-model-name carries three IDs on purpose. CLIProxy's vllm provider is
+# configured as name: Qwen3.8-Flash-Next-NVFP4 / alias: Qwen3.8-Flash-Next, but
+# it sends the ALIAS upstream, so serving only the canonical name returns
+# `404: The model \'Qwen3.8-Flash-Next\' does not exist`. With
+# disable-cooling: false that 404 trips CLIProxy's breaker and every later
+# request fails `auth_unavailable`, which also drops vllm/* out of /v1/models
+# and reads as a retired route. Serving the alias too makes the ID Bhaiya pins
+# as BHAIYA_CLIPROXY_DEFAULT_MODEL valid whichever field CLIProxy sends.
+#
 # The model and serving recipe are from:
 # https://github.com/MiaAI-Lab/Qwen3.8-Flash-Next-Dual-DGX-Sparks
 # Target checkpoint: nvidia/Qwen3.8-Flash-Next-NVFP4@fc694b54
@@ -200,7 +209,7 @@ spec:
             if [ -f /tmp/qwen-patches/config_patched.json ]; then cp /tmp/qwen-patches/config_patched.json /models/qwen38/config.json; fi
             if [ -f /tmp/qwen-patches/hf_quant_config_patched.json ]; then cp /tmp/qwen-patches/hf_quant_config_patched.json /models/qwen38/hf_quant_config.json; fi
             exec vllm serve /models/qwen38 \
-              --served-model-name qwen3.8-flash-next Qwen3.8-Flash-Next-NVFP4 \
+              --served-model-name qwen3.8-flash-next Qwen3.8-Flash-Next Qwen3.8-Flash-Next-NVFP4 \
               --tensor-parallel-size 2 --distributed-executor-backend mp \
               --enable-expert-parallel --all2all-backend allgather_reducescatter \
               --gpu-memory-utilization 0.72 --max-num-seqs 8 --max-num-batched-tokens 8192 \
@@ -378,7 +387,7 @@ spec:
             if [ -f /tmp/qwen-patches/config_patched.json ]; then cp /tmp/qwen-patches/config_patched.json /models/qwen38/config.json; fi
             if [ -f /tmp/qwen-patches/hf_quant_config_patched.json ]; then cp /tmp/qwen-patches/hf_quant_config_patched.json /models/qwen38/hf_quant_config.json; fi
             exec vllm serve /models/qwen38 \
-              --served-model-name qwen3.8-flash-next Qwen3.8-Flash-Next-NVFP4 \
+              --served-model-name qwen3.8-flash-next Qwen3.8-Flash-Next Qwen3.8-Flash-Next-NVFP4 \
               --tensor-parallel-size 2 --distributed-executor-backend mp \
               --enable-expert-parallel --all2all-backend allgather_reducescatter \
               --gpu-memory-utilization 0.72 --max-num-seqs 8 --max-num-batched-tokens 8192 \
