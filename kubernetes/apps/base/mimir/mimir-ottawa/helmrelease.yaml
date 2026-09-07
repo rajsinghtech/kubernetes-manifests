@@ -146,8 +146,14 @@ spec:
           # until blocks age past the boundary. Shrink the ingester-only
           # window without paying for a second ~4GiB RSS replica. Does not
           # protect the unshipped head; RF/replica HA remains a capacity call.
+          # NOTE: query_ingesters_within is NOT valid under `querier` in this
+          # Mimir version — it crashes every component at config parse:
+          #   field query_ingesters_within not found in type querier.Config
+          # query_store_after alone achieves the #674 goal: queries older than
+          # 4h go to the store-gateway (which serves blocks >2h via
+          # ignore_blocks_within), and the ingester default window still covers
+          # everything newer. Do not re-add it here.
           query_store_after: 4h
-          query_ingesters_within: 5h
         limits:
           compactor_blocks_retention_period: 7d
           ingestion_rate: 500000
