@@ -19,3 +19,9 @@ for rule in flux bhaiya-model; do
   promtool check rules "$tmpdir/${rule}.yaml"
   promtool test rules "$tmpdir/$test_file"
 done
+
+sed '/^namespace: mimir-loader$/d' "$RULE_DIR/mimir-loader.yaml" >"$tmpdir/mimir-loader.yaml"
+sed "s#../mimir-loader.yaml#$tmpdir/mimir-loader.yaml#" \
+  "$RULE_DIR/tests/mimir-loader_test.yaml" >"$tmpdir/mimir-loader_test.yaml"
+promtool check rules "$tmpdir/mimir-loader.yaml"
+promtool test rules "$tmpdir/mimir-loader_test.yaml"
