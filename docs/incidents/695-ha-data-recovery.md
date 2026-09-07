@@ -1,113 +1,92 @@
 # #695 — make StP Home Assistant config recoverable (data fix)
 
-**Status:** recommendation + optional GitOps draft. **Not merged / not applied.**  
-Detection already shipped (km#2764). This is the **data** half.
+**Status:** verification + recommendation. **Not merged / not applied.**  
+Detection already shipped (km#2764). This is the **data** half.  
+**STOP (Raj):** do **not** ship a Garage tarball CronJob from this PR.
 
 ## Current state (evidence, 2026-09-07, read-only)
 
 | Fact | Evidence |
 |------|----------|
 | PVC `home-assistant/homeassistant-config` | Bound, **10 Gi**, `storageClassName: **local-path**` |
-| Underlying PV | **hostPath** `/var/local-path-provisioner/pvc-f3bf0dd8-…_home-assistant_homeassistant-config` on **orin-0** |
-| PodVolumeBackups for `homeassistant-0` | **0** (all 7 HA-namespace PVBs are AirConnect `emptyDir` named `config`) |
-| Latest schedule backups | Often `Completed` with **warnings=1** (hostPath skip) |
-| CSI snapshots | **None** — only SC is `local-path`; no VolumeSnapshotLocation; only CSI driver is secrets-store |
-| Live data size | `/config` ≈ **12 MiB** (sqlite + yaml + `.storage`); **no `/config/backups` HA archive directory** |
-| Other copies | **None found**: no CronJob, no GarageBucket for HA config, no SMB PV on StP for HA |
-| PVC in Git | **Not** in the HA kustomization — cluster-only object (out-of-band create); STS references it |
-| Pinning | STS `nodeSelector: kubernetes.io/hostname: orin-0` **and** RWO local-path nodeAffinity → double pin |
-| orin-0 headroom | Allocatable ~5.4 Gi; requests **~5014 Mi (~90%)**; HA Guaranteed **1 Gi+32 Mi** |
+| Underlying PV | **hostPath** on **orin-0** (`/var/local-path-provisioner/pvc-f3bf0dd8-…`); createTime **2026-07-03** |
+| PodVolumeBackups for `homeassistant-0` | **0** (ns PVBs are AirConnect `emptyDir` named `config` only) |
+| Latest Velero backup | `home-assistant-backup-20260906090023` **Completed**, **warnings=1** |
+| Velero skip reason (log) | `Volume config in pod home-assistant/homeassistant-0 is a hostPath volume which is not supported for pod volume backup, skipping` |
+| Live data size | `/config` ≈ **12 MiB**; no `/config/backups` HA archives |
+| Off-node copy today | **None** |
 
-**Bottom line:** the only copy of Home Assistant’s durable config today is the live hostPath directory on orin-0. Velero “Completed” backups do not contain it. Loss of orin-0 disk = loss of HomeKit/HA state.
+**Bottom line:** live hostPath on orin-0 is the only copy. Velero “Completed” does not contain `/config`.
 
-Ottawa HA is fine (`ceph-block-replicated`). Robbinsdale has SMB + Ceph patterns. StP has **Garage** (on spark nodes) and SMB credentials in cluster-secrets, but **no csi-driver-smb** installed on StP.
+### Historical VolSync / restic (verified)
+
+| Fact | Evidence |
+|------|----------|
+| Pre-#1666 StorageStack | Daily `0 12 * * *`, `copyMethod: Direct`, `s3Path: home-assistant/config`, bucket alias **`keiretsu`**, repo `…/keiretsu/stpetersburg/home-assistant/config` |
+| VolSync removed | `5e368b6fc` (2026-06-13) — claimed Velero would replace all StorageStacks |
+| Restic corpus deleted | `9bba495a2` (2026-06-16) — **“Purged all 490 GiB of S3/restic contents”**; removed `keiretsu` GarageBucket/Key |
+| Live Garage | `GetBucketInfo?globalAlias=keiretsu` → **NoSuchBucket** on OT, RB, and SP admin APIs |
+| StP restic secret | Gone. OT/RB orphan `restic-*` secrets still point at deleted `keiretsu` paths |
+
+**Conclusion:** even if VolSync completed before Jun 13, those snapshots are **gone**. The Jul 3 PVC is post-purge and was never covered by restic.
+
+### Sister rows (brief)
+
+| Row | Velero volume capture |
+|-----|----------------------|
+| Ottawa / Robbinsdale HA | **OK** — daily PVB ~7 MiB Completed on Ceph/SMB |
+| StP HA | **Skipped** — hostPath |
+| Immich OT/RB | **No Velero schedule** (library on Ceph/SMB; `immich-postgres` Garage bucket exists for DB only). `#1664` promised `immutable-backup` — not present |
+| Hermes OT | Schedule Completed but Deployment **0/0** → **0 PVBs** (PVC Bound, unused) |
 
 ---
 
 ## Options priced honestly
 
-### (a) Move off local-path (structurally right; two-for-one with unpin)
+### (a) Move off local-path (structurally right; unpins orin-0)
 
-**Goal:** PVC Velero can fs-backup (or CSI-snapshot later), schedulable on spark-0/1.
+**Goal:** non-hostPath PVC so Velero FSB works (as on OT/RB), pod schedulable on spark-0/1.
 
-**Arithmetic / constraints**
+StP has **no Ceph**. Realistic class: **CSI SMB** (creds exist; **csi-driver-smb not installed** on StP).  
+**Not** spark local-path (still hostPath → Velero still skips).  
+**Not** S3/Garage as `/config` (sqlite unsafe).
 
-- HA needs Guaranteed **1032 Mi** + LAN macvlan `192.168.73.140/24` on `eth0`.
-- spark-0/1: ~100 Gi+ allocatable, ~6–8 Gi used → **memory fine**.
-- orin-0: freeing HA recovers ~1 Gi request headroom on the sole CP (material after #700).
-- StP has **no Ceph**. Realistic durable classes:
-  1. **CSI SMB** to a NAS (like Robbinsdale) — needs installing `csi-driver-smb` on StP + share path + secret (SMB_* already in cluster-secrets).
-  2. **Garage via CSI/S3 gateway** — not a standard RWX filesystem for HA’s sqlite; **unsuitable** as primary `/config` mount (sqlite + WAL on object store is unsafe).
-  3. **local-path on a spark node** — still hostPath → **Velero still skips**; only moves the pin, does **not** fix backup.
+**Cost:** human cutover (scale 0 → copy → retarget STS → HomeKit/mDNS validation on `.140`). Not a Flux one-shot.
 
-**Migration procedure (manual; not a Flux one-shot)**
+### (b) VolSync Direct **only** for this local-path PVC (narrow reintro)
 
-1. Install CSI SMB (or other non-hostPath SC) on StP; create empty PVC.
-2. Scale HA to 0; **copy** hostPath → new volume (`tar`/`rsync` via a one-shot pod with both mounts or node access).
-3. Point STS at new PVC; remove `nodeSelector: orin-0` (keep CP toleration only if still needed).
-4. Ensure Multus `lan` NAD works on spark NICs (`master: eth0` — verify interface name on DGX spark).
-5. Bring up; validate HomeKit/mDNS from LAN (phone / `dns-sd`); confirm `192.168.73.140` not held elsewhere.
-6. Run Velero backup; confirm **PodVolumeBackup for `homeassistant-0`/`config`**.
-7. Only then delete old local-path PV (Retain/Delete policy careful).
+Historically **1 of 54** StorageStacks used `local-path` (this one). Fleet VolSync is unnecessary.
 
-**Cost:** hours of careful ops + HomeKit re-pairing risk if IP/MAC changes; macvlan static IP can move with the pod if NAD unchanged, but mDNS/HomeKit is brittle across moves. **Not safely “just GitOps” without a human cutover.**
+| Piece | Cost |
+|-------|------|
+| VolSync operator on **StP only** | Chart ~0.16.x; requests ~100m/64Mi |
+| One `ReplicationSource` | `copyMethod: Direct` (no VolumeSnapshotClass on local-path) |
+| New Garage bucket + key | Do **not** recreate `keiretsu`; new alias |
+| Data | ~12 MiB |
 
-### (b) Non-Velero copy to Garage (fastest real recoverability)
+**Pros:** GitOps-able; actually reads hostPath (unlike Velero).  
+**Cons:** keeps HA pinned to orin-0; reintroduces an operator for one PVC; mover I/O on CP node.
 
-**Goal:** periodic tarball of `/config` into Garage S3, independent of Velero/hostPath.
+### (c) HA built-in backups
 
-**Arithmetic**
+No archives on disk today. Still needs a durable destination outside hostPath. Not sufficient alone.
 
-- Payload ~12 MiB → trivial for Garage (`velero` bucket is 320 Gi used; dedicated bucket better).
-- Job runs **in-cluster next to the pod** (same node) or via `kubectl cp` pattern: best is a CronJob with a **shared volume mount**. That requires either:
-  - a sidecar/shared emptyDir sync (complex), or
-  - CronJob using the **HA API** / copying via a privileged node-path mount of the known hostPath (couples to path), or
-  - **exec + tar stream to S3** from a Job with SA that can `pods/exec` (RBAC) — common and keeps HA running.
+### ~~Garage tarball CronJob~~ — **stopped**
 
-Recommended shape: CronJob in `home-assistant` ns, daily, that:
-
-1. `kubectl exec homeassistant-0 -- tar czf - -C /config .` (or use HA’s backup API if enabled later)
-2. Uploads to `s3://home-assistant-config/${LOCATION}/…` via Garage gateway
-3. Retains N days; alerts on job failure
-
-**Pros:** recoverability **this week**; no HomeKit move; small blast radius.  
-**Cons:** still **node-local primary**; orin-0 death loses latest minutes; does not unpin HA from CP.  
-**GitOps-able:** yes (Bucket + Key + CronJob + RBAC), after merge.
-
-### (c) Home Assistant built-in backups
-
-Live `/config` has **no `backups/` directory** and no evidence automatic HA Supervisor backups (this is container HA, not HA OS). Enabling HA’s backup integration still needs a **durable destination** (S3/Samba). Without that, backups land on the same hostPath → same failure domain. Treat as a UI nicety **on top of (b)**, not a substitute.
+Explicitly out of scope for this PR per Raj STOP.
 
 ---
 
 ## Recommendation
 
-1. **Do (b) now** — Garage tarball CronJob so *some* recoverable copy exists.  
-2. **Plan (a) with CSI SMB** (or future Ceph) as the structural fix that also **unpins HA from orin-0** (two-for-one with today’s HomeKit/memory saga).  
+1. **Accept historical restic as unrecoverable** (`keiretsu` purged). No S3 archaeology left.  
+2. **Choose near-term protect:**  
+   - **(b) VolSync Direct + new bucket** if the priority is “something restorable this week” without moving HomeKit; **or**  
+   - **(a) CSI SMB migrate** if willing to spend a cutover window (preferred end state; also unpins CP).  
 3. Keep km#2764 detection; do not trust Velero Completed for this volume until (a) lands.  
-4. **Do not** move HA to spark **local-path** — false progress.  
-5. **Do not** mount Garage/S3 as `/config` for sqlite.
+4. Follow-ups (not #695 blockers): Immich Velero/NAS policy; Hermes scaled-to-zero backup policy; delete orphan `restic-*` secrets.
 
-### Optional GitOps draft in this branch
+## Acceptance
 
-Under `kubernetes/apps/base/home-assistant/home-assistant/backup/` (commented / not wired into Flux kustomization until approved):
-
-- `GarageBucket` + `GarageKey` for `home-assistant-config`
-- CronJob + Role/RoleBinding for exec+upload
-
-Wiring into `app/kustomization.yaml` is intentionally **omitted** so merge alone does not start writing until Raj reviews credentials/RBAC.
-
----
-
-## Acceptance after (b)
-
-- Object appears in Garage under the HA prefix within one schedule period (or manual Job).  
-- Restore drill: fetch tarball → extract to empty dir → diff critical yaml/`home-assistant_v2.db` size.  
-- CronJob failure alerts (Job failed / no new object in 36h).
-
-## Acceptance after (a)
-
-- PVC not `local-path` / not hostPath.  
-- Pod can run on spark-* without orin-0 selector.  
-- Velero PVB for `homeassistant-0`/`config` = Completed.  
-- HomeKit/mDNS validated on LAN IP `.140`.
+**After (b):** ReplicationSource `lastSyncTime` advances; `restic snapshots` (or VolSync status) shows inventory in the **new** bucket; restore drill to empty PVC.  
+**After (a):** PVC not hostPath; Velero PVB for `homeassistant-0`/`config` Completed; HomeKit/mDNS OK on `.140`; orin-0 selector removed.
