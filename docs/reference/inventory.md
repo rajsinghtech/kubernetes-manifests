@@ -30,8 +30,8 @@ diagram in the [README](../../README.md#architecture).
 |---|---:|---:|---:|
 | `ottawa` | 4 | 59 | 122 |
 | `robbinsdale` | 3 | 43 | 87 |
-| `stpetersburg` | 3 | 40 | 82 |
-| **total** | **10** | **142** | **291** |
+| `stpetersburg` | 3 | 40 | 83 |
+| **total** | **10** | **142** | **292** |
 
 ## Ottawa — `talos-ottawa`
 
@@ -285,7 +285,7 @@ Pointers whose objects land outside their directory's namespace — use the righ
 | Networking, ingress and identity | `tailscale-system` | `tailscale-system-app` |
 | Networking, ingress and identity | `tinyauth-egress` | `tinyauth-egress` → ns `tinyauth` |
 | Storage and data services | `cnpg-system` | `cnpg-system` |
-| Storage and data services | `garage` | `garage`, `garage-bucket`, `garage-keys`, `garage-kopiur-stpetersburg-bucket`, `garage-nodes-stpetersburg`, `garage-reference-grants`, `garage-velero-bucket`, `garage-webui` |
+| Storage and data services | `garage` | `garage`, `garage-bucket`, `garage-keys`, `garage-kopiur-stpetersburg-bucket`, `garage-nodes-stpetersburg`, `garage-reference-grants`, `garage-stpetersburg-reference-grants`, `garage-velero-bucket`, `garage-webui` |
 | Storage and data services | `garage-operator-system` | `garage-operator-system-install` |
 | Storage and data services | `local-path-storage` | `local-path-storage` |
 | Storage and data services | `snapshot-controller` | `snapshot-controller` |
