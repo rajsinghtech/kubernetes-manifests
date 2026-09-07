@@ -843,7 +843,7 @@ reason needs two patches because both halves of the mismatch have to move:
 One per site; together, one logical S3 estate.
 
 - image `dxflrs/garage` v2.3.0, zone `${LOCATION}`
-- replication factor 3, `consistencyMode: degraded`
+- replication factor 3, `consistencyMode: consistent` (Kopia/Velero need read-after-write; see #575)
 - `s3Api` rootDomain `.s3.keiretsu.top`; `webApi` rootDomain `.keiretsu.top`
 - `rpcPublicAddr ${LOCATION}-garage.keiretsu.ts.net:3901`
 - `remoteClusters` lists **all three** zones, each reached over the tailnet:
@@ -1507,22 +1507,23 @@ Ottawa's edge on their own.
 
 ### Garage: one zone is survivable, two are not
 
-Replication factor 3 across exactly three zones, `consistencyMode: degraded`,
-reads at quorum 1.
+Replication factor 3 across exactly three zones. The fleet default is
+`consistencyMode: consistent` (read-after-write) because Velero/Kopia
+maintenance depends on it: Kopia writes `_maintenance` then immediately HEADs
+that same object and treats Garage `Last-Modified` as the repository clock
+(#575). Under `degraded`, that HEAD can return a ~1h-stale replica and Kopia
+refuses prune as "clock skew" even when every node is NTP-synced.
 
-- **One zone down:** reads and writes continue. Apps talk to their local
-  gateway, which proxies reads to a surviving zone, so a site can lose its own
-  storage tier entirely and still serve objects.
+- **One zone down under consistent:** writes still need quorum; reads that
+  cannot gather quorum fail closed rather than serving a single stale replica.
+  Prefer temporary `GARAGE_CONSISTENCY_MODE=degraded` only for an explicit drain
+  or availability window, then restore `consistent`.
 - **Two zones down:** you are below write quorum. Treat it as an outage of the
   object store, not a degradation.
 
-The reason this is tolerable rather than reckless is what is stored in it: OCI
-blobs and kopia backups are content-addressed, and Barman WAL is append-only,
-so none of the current consumers depend on read-after-write consistency. That
-argument is written down beside the setting in the `GarageCluster` manifest,
-`garagecluster.yaml` under `kubernetes/apps/base/garage/garage/` — check it
-before adding a consumer that *does* need read-after-write, because the
-reasoning, not the replication factor, is what makes `degraded` safe here.
+OCI blobs and Barman WAL can tolerate eventual-consistent reads. Kopia's
+maintenance schedule blob cannot. That argument is written beside the setting
+in `garagecluster.yaml` under `kubernetes/apps/base/garage/garage/`.
 
 Note also that the storage tier is `Manual` at all three sites while the gateway
 tier is operator-managed, and that retirement of a node with positive capacity

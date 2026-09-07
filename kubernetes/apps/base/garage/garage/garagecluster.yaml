@@ -22,15 +22,18 @@ spec:
 
   replication:
     factor: 3
-    # degraded: reads fall back to a single (local) replica when cross-WAN quorum
-    # is slow/unavailable, instead of returning 503/504. Writes still require
-    # quorum. This fixes the read-path 503s that broke zot (boot-time getAllRepos
-    # list + blob HEAD checks) and CI image pushes. Safe now that restic/volsync
-    # is decommissioned (2026-07-04) — it was the only read-after-write-sensitive
-    # consumer; the rest are content-addressed (OCI/zot, Kopia/velero) or
-    # append-only (logs, barman/CNPG backups), which tolerate eventual-consistent
-    # reads (a stale/absent read is a transient retry, not corruption).
-    consistencyMode: "${GARAGE_CONSISTENCY_MODE:=degraded}"
+    # consistent: Garage serves read-after-write for object metadata. Required by
+    # Velero/Kopia maintenance (#575): Kopia PUTs `_maintenance` then immediately
+    # HEADs it and treats Garage's Last-Modified as the "repository timestamp".
+    # Under degraded, that HEAD can hit a replica still carrying the previous
+    # hour's stamp (~1h5m behind local), and Kopia refuses prune as "clock skew"
+    # even though every Talos node is NTP-synced to microseconds.
+    #
+    # degraded remains available via GARAGE_CONSISTENCY_MODE for drain windows
+    # or if a site must prefer availability over read-after-write (zot historically
+    # preferred it for cross-WAN 503 avoidance). Do not return the fleet default
+    # to degraded while Kopia still owns the Velero volume repositories here.
+    consistencyMode: "${GARAGE_CONSISTENCY_MODE:=consistent}"
 
   s3Api:
     rootDomain: ".s3.${COMMON_DOMAIN}"

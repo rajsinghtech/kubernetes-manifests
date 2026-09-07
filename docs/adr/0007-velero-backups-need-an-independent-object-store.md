@@ -24,7 +24,7 @@ The live observations below were made on 2026-09-04 UTC.
 | S3 path | `http://garage-gateway.garage.svc.cluster.local:3900`; the `bhaiya-garage-kopia` repository is `Ready` on this BSL |
 | Bucket object | `GarageBucket/garage/velero`, `globalAlias: velero`, `maxSize: 1Ti` |
 | Current bucket usage | 30,760 objects and 308,047,420,448 bytes (286.9 GiB); usage is approximately 28% of the configured byte quota |
-| Garage topology | replication factor 3, `degraded` consistency, Ottawa/Robbinsdale/St. Petersburg federated zones; Ottawa currently has five storage nodes and two gateway replicas |
+| Garage topology | replication factor 3, `consistent` read-after-write (required by Kopia maintenance; see #575), Ottawa/Robbinsdale/St. Petersburg federated zones; Ottawa currently has five storage nodes and two gateway replicas |
 | Independent target | None. All three live `GarageBucket/velero` objects report the same global bucket ID, and all three BSLs use the same bucket and gateway service name with only the prefix changed |
 
 Garage's remote zones and replication protect against selected node or site

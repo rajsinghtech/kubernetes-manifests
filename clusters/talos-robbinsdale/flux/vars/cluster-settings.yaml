@@ -44,6 +44,9 @@ data:
   # Garage: storage layout hand-managed per-node in clusters/talos-robbinsdale/apps/garage
   # (Manual) so the array can move off SMB to ceph/local-path per node. Gateway
   # tier stays operator-managed (Auto). Requires operator v0.6.11+.
+  # Required for Velero/Kopia maintenance (#575). See garagecluster.yaml.
+  GARAGE_CONSISTENCY_MODE: "consistent"
+
   GARAGE_STORAGE_LAYOUT_POLICY: "Manual"
 
   # Operator-managed replacements for the three LocalPath GarageNodes. Each
