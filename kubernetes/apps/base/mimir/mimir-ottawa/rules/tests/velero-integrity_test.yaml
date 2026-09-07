@@ -6,6 +6,8 @@ evaluation_interval: 1m
 tests:
   - interval: 1m
     input_series:
+      # The warning/error series are intentionally absent for the previous
+      # successful Backup: kube-state-metrics emits them only when non-zero.
       - series: 'velero_cr_backup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="bhaiya-backup",backup="bhaiya-backup-previous"}'
         values: "100+0x20"
       - series: 'velero_cr_backup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="bhaiya-backup",backup="bhaiya-backup-current"}'
@@ -14,28 +16,30 @@ tests:
         values: "1+0x20"
       - series: 'velero_cr_backup_info{cluster="talos-ottawa",namespace="velero-system",schedule="bhaiya-backup",backup="bhaiya-backup-current",phase="PartiallyFailed"}'
         values: "1+0x20"
-      - series: 'velero_cr_backup_warnings{cluster="talos-ottawa",namespace="velero-system",schedule="bhaiya-backup",backup="bhaiya-backup-previous"}'
-        values: "0+0x20"
-      - series: 'velero_cr_backup_warnings{cluster="talos-ottawa",namespace="velero-system",schedule="bhaiya-backup",backup="bhaiya-backup-current"}'
-        values: "10+0x20"
       - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",backup="bhaiya-backup-previous",pod_volume_backup="previous-pvb-1",node="asuka",phase="Completed"}'
         values: "1+0x20"
       - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",backup="bhaiya-backup-previous",pod_volume_backup="previous-pvb-2",node="asuka",phase="Completed"}'
         values: "1+0x20"
-      - series: 'velero_cr_podvolumebackup_bytes_done{cluster="talos-ottawa",namespace="velero-system",backup="bhaiya-backup-previous",pod_volume_backup="previous-pvb-1",node="asuka"}'
-        values: "100+0x20"
-      - series: 'velero_cr_podvolumebackup_bytes_total{cluster="talos-ottawa",namespace="velero-system",backup="bhaiya-backup-previous",pod_volume_backup="previous-pvb-1",node="asuka"}'
-        values: "100+0x20"
-      - series: 'velero_cr_podvolumebackup_bytes_done{cluster="talos-ottawa",namespace="velero-system",backup="bhaiya-backup-previous",pod_volume_backup="previous-pvb-2",node="asuka"}'
-        values: "200+0x20"
-      - series: 'velero_cr_podvolumebackup_bytes_total{cluster="talos-ottawa",namespace="velero-system",backup="bhaiya-backup-previous",pod_volume_backup="previous-pvb-2",node="asuka"}'
-        values: "200+0x20"
-      - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",backup="bhaiya-backup-current",pod_volume_backup="current-pvb-1",node="asuka",phase="Completed"}'
+      - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",backup="bhaiya-backup-previous",pod_volume_backup="previous-pvb-3",node="asuka",phase="Completed"}'
         values: "1+0x20"
-      - series: 'velero_cr_podvolumebackup_bytes_done{cluster="talos-ottawa",namespace="velero-system",backup="bhaiya-backup-current",pod_volume_backup="current-pvb-1",node="asuka"}'
-        values: "300+0x20"
-      - series: 'velero_cr_podvolumebackup_bytes_total{cluster="talos-ottawa",namespace="velero-system",backup="bhaiya-backup-current",pod_volume_backup="current-pvb-1",node="asuka"}'
-        values: "300+0x20"
+      - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",backup="bhaiya-backup-current",pod_volume_backup="current-pvb-1",node="asuka",phase="Prepared"}'
+        values: "1+0x20"
+
+      # A different schedule has stable one-PVB coverage. Its series prove
+      # the comparison is per schedule, not a cluster-wide total.
+      - series: 'velero_cr_backup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="home-backup",backup="home-backup-previous"}'
+        values: "100+0x20"
+      - series: 'velero_cr_backup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="home-backup",backup="home-backup-current"}'
+        values: "200+0x20"
+      - series: 'velero_cr_backup_info{cluster="talos-ottawa",namespace="velero-system",schedule="home-backup",backup="home-backup-previous",phase="Completed"}'
+        values: "1+0x20"
+      - series: 'velero_cr_backup_info{cluster="talos-ottawa",namespace="velero-system",schedule="home-backup",backup="home-backup-current",phase="PartiallyFailed"}'
+        values: "1+0x20"
+      - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",backup="home-backup-previous",pod_volume_backup="home-previous-pvb",node="rei",phase="Completed"}'
+        values: "1+0x20"
+      - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",backup="home-backup-current",pod_volume_backup="home-current-pvb",node="rei",phase="Prepared"}'
+        values: "1+0x20"
+
     alert_rule_test:
       - eval_time: 15m
         alertname: VeleroScheduleVolumeCoverageRegressed
