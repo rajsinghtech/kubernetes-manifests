@@ -1,0 +1,25 @@
+---
+# kopiur StP Home Assistant repository key (#695 / km#2775).
+#
+# Site-scoped, not in garage-reference-grants: that base is applied to all
+# three clusters, and the home-assistant namespace exists only on St.
+# Petersburg. Putting it there made the grants Kustomization fail on Ottawa and
+# Robbinsdale with `namespaces "home-assistant" not found`, stalling every
+# Kustomization that dependsOn it (km#2776 regression).
+#
+# It also cannot live beside the GarageBucket: Flux dry-runs a Kustomization as
+# a set, so a grant in the same Kustomization as the bucket needing it can
+# never be persisted first — the bucket's dry-run is denied and it retries
+# forever. Hence a separate site-scoped Kustomization.
+apiVersion: garage.rajsingh.info/v1beta1
+kind: GarageReferenceGrant
+metadata:
+  name: garage-bucket-to-kopiur-stpetersburg-key
+  namespace: home-assistant
+spec:
+  from:
+    - kind: GarageBucket
+      namespace: garage
+  to:
+    - kind: GarageKey
+      name: kopiur-stpetersburg-key

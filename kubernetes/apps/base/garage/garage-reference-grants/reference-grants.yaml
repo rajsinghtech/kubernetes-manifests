@@ -69,21 +69,3 @@ spec:
   to:
     - kind: GarageKey
       name: tailscale-recorder-key
----
-# kopiur StP HA repository key (#695 / km#2775). MUST live here, not beside the
-# GarageBucket: Flux dry-runs a Kustomization as a set, so a grant in the same
-# Kustomization as the bucket that needs it can never be persisted first — the
-# bucket's dry-run is denied and the Kustomization retries forever.
-apiVersion: garage.rajsingh.info/v1beta1
-kind: GarageReferenceGrant
-metadata:
-  name: garage-bucket-to-kopiur-stpetersburg-key
-  namespace: home-assistant
-spec:
-  from:
-    - kind: GarageBucket
-      namespace: garage
-  to:
-    - kind: GarageKey
-      name: kopiur-stpetersburg-key
-
