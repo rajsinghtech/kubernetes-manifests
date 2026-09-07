@@ -1,0 +1,10 @@
+*** DRAFT ONLY — do not apply without an explicit architecture decision on #677.
+*** This removes Local-only wrong-node RST class and SNAT-masks client source IP.
+
+--- a/kubernetes/apps/base/home/home/local-gateway/envoyproxy-public.yaml
++++ b/kubernetes/apps/base/home/home/local-gateway/envoyproxy-public.yaml
+@@ -69,6 +69,7 @@ spec:
+                   gateway.envoyproxy.io/owning-gateway-name: public
+       envoyService:
++        externalTrafficPolicy: Cluster
+         loadBalancerIP: ${CLUSTER_LOAD_BALANCER_CIDR%.*.*/*}.10.15
