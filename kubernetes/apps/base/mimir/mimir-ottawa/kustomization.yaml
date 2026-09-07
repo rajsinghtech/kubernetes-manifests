@@ -46,4 +46,5 @@ configMapGenerator:
       - rules/smartctl.yaml
       - rules/velero.yaml
       - rules/velero-integrity.yaml
+      - rules/velero-volume-progress.yaml
       - rules/zot.yaml

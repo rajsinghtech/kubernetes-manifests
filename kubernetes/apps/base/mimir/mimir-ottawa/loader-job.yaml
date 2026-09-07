@@ -56,6 +56,7 @@ spec:
             - /rules/smartctl.yaml
             - /rules/velero.yaml
             - /rules/velero-integrity.yaml
+            - /rules/velero-volume-progress.yaml
             - /rules/zot.yaml
           volumeMounts: &rulesmount
             - { name: rules, mountPath: /rules }
@@ -95,6 +96,7 @@ spec:
             - /rules/smartctl.yaml
             - /rules/velero.yaml
             - /rules/velero-integrity.yaml
+            - /rules/velero-volume-progress.yaml
             - /rules/zot.yaml
           volumeMounts: *rulesmount
           securityContext: *sc
@@ -130,6 +132,7 @@ spec:
             - /rules/smartctl.yaml
             - /rules/velero.yaml
             - /rules/velero-integrity.yaml
+            - /rules/velero-volume-progress.yaml
             - /rules/zot.yaml
           volumeMounts: *rulesmount
           securityContext: *sc

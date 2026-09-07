@@ -1,0 +1,178 @@
+# Per-object Velero volume progress is exported by the shared kube-state-metrics
+# custom-resource configuration. This file owns data-path liveness only; the
+# separate per-node saturation rule consumes the same metric contract.
+#
+# Shared metric contract:
+# - PVB identity: cluster, namespace, pod_volume_backup, backup, node.
+# - PVR identity: cluster, namespace, pod_volume_restore, restore, restore_uid,
+#   source_namespace, volume, node.
+# - *_info adds phase; *_bytes_done and *_bytes_total carry the identity labels
+#   above. The scrape labels (job, pod, instance, and so on) are not identity.
+# - PVB node comes from spec.node; PVR node comes from status.node.
+#
+# A phase is not progress evidence. These alerts require at least two samples
+# over a five-minute lookback and then hold for five minutes, so a newly-created
+# object or one scrape gap does not page. A PVR with an empty phase is not called
+# stalled here: it has not reached InProgress, and the rollback gate reports
+# that admission outcome separately.
+namespace: velero-volume-progress
+groups:
+  - name: velero.volume-progress.rules
+    rules:
+      - alert: VeleroPodVolumeBackupProgressUnavailable
+        expr: |
+          max by (cluster, namespace, pod_volume_backup, backup, node) (
+            velero_cr_podvolumebackup_info{
+              namespace="velero-system",
+              phase="InProgress"
+            }
+          ) > bool 0
+          unless on (cluster, namespace, pod_volume_backup, backup, node)
+          max by (cluster, namespace, pod_volume_backup, backup, node) (
+            velero_cr_podvolumebackup_bytes_done{
+              namespace="velero-system"
+            }
+          )
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: Velero PodVolumeBackup {{ $labels.pod_volume_backup }} has no progress evidence
+          description: >-
+            PodVolumeBackup {{ $labels.pod_volume_backup }} for Backup
+            {{ $labels.backup }} on node {{ $labels.node }} has remained
+            InProgress for five minutes without an exported bytesDone value.
+            Treat progress as unknown, not healthy; inspect the CR and
+            kube-state-metrics before relying on any backup result.
+
+      - alert: VeleroPodVolumeBackupStalled
+        expr: |
+          (
+            max by (cluster, namespace, pod_volume_backup, backup, node) (
+              changes(
+                velero_cr_podvolumebackup_bytes_done{
+                  namespace="velero-system"
+                }[5m]
+              ) == bool 0
+            )
+            and on (cluster, namespace, pod_volume_backup, backup, node)
+            max by (cluster, namespace, pod_volume_backup, backup, node) (
+              count_over_time(
+                velero_cr_podvolumebackup_bytes_done{
+                  namespace="velero-system"
+                }[5m]
+              ) >= bool 2
+            )
+          )
+          and on (cluster, namespace, pod_volume_backup, backup, node)
+          max by (cluster, namespace, pod_volume_backup, backup, node) (
+            velero_cr_podvolumebackup_info{
+              namespace="velero-system",
+              phase="InProgress"
+            }
+          ) > bool 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: Velero PodVolumeBackup {{ $labels.pod_volume_backup }} is stalled
+          description: >-
+            PodVolumeBackup {{ $labels.pod_volume_backup }} for Backup
+            {{ $labels.backup }} on node {{ $labels.node }} has remained
+            InProgress with no observed bytesDone change for at least five
+            minutes (and this alert has remained true for five more minutes).
+            A PVB at bytesDone=totalBytes still matches until its phase leaves
+            InProgress. Inspect the PVB and node-agent logs, then check the
+            node-local backup concurrency limit before cancelling anything.
+
+      - alert: VeleroPodVolumeRestoreProgressUnavailable
+        expr: |
+          max by (
+            cluster, namespace, pod_volume_restore, restore, restore_uid,
+            source_namespace, volume, node
+          ) (
+            velero_cr_podvolumerestore_info{
+              namespace="velero-system",
+              phase="InProgress"
+            }
+          ) > bool 0
+          unless on (
+            cluster, namespace, pod_volume_restore, restore, restore_uid,
+            source_namespace, volume, node
+          )
+          max by (
+            cluster, namespace, pod_volume_restore, restore, restore_uid,
+            source_namespace, volume, node
+          ) (
+            velero_cr_podvolumerestore_bytes_done{
+              namespace="velero-system"
+            }
+          )
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: Velero PodVolumeRestore {{ $labels.pod_volume_restore }} has no progress evidence
+          description: >-
+            PodVolumeRestore {{ $labels.pod_volume_restore }} for Restore
+            {{ $labels.restore }} (UID {{ $labels.restore_uid }}) on node
+            {{ $labels.node }} has remained InProgress for five minutes
+            without an exported bytesDone value. Treat progress as unknown,
+            not healthy; inspect the PVR, kube-state-metrics, and the global
+            restore-concurrency queue.
+
+      - alert: VeleroPodVolumeRestoreStalled
+        expr: |
+          (
+            max by (
+              cluster, namespace, pod_volume_restore, restore, restore_uid,
+              source_namespace, volume, node
+            ) (
+              changes(
+                velero_cr_podvolumerestore_bytes_done{
+                  namespace="velero-system"
+                }[5m]
+              ) == bool 0
+            )
+            and on (
+              cluster, namespace, pod_volume_restore, restore, restore_uid,
+              source_namespace, volume, node
+            )
+            max by (
+              cluster, namespace, pod_volume_restore, restore, restore_uid,
+              source_namespace, volume, node
+            ) (
+              count_over_time(
+                velero_cr_podvolumerestore_bytes_done{
+                  namespace="velero-system"
+                }[5m]
+              ) >= bool 2
+            )
+          )
+          and on (
+            cluster, namespace, pod_volume_restore, restore, restore_uid,
+            source_namespace, volume, node
+          )
+          max by (
+            cluster, namespace, pod_volume_restore, restore, restore_uid,
+            source_namespace, volume, node
+          ) (
+            velero_cr_podvolumerestore_info{
+              namespace="velero-system",
+              phase="InProgress"
+            }
+          ) > bool 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: Velero PodVolumeRestore {{ $labels.pod_volume_restore }} is stalled
+          description: >-
+            PodVolumeRestore {{ $labels.pod_volume_restore }} for Restore
+            {{ $labels.restore }} (UID {{ $labels.restore_uid }}) on node
+            {{ $labels.node }} has remained InProgress with no observed
+            bytesDone change for at least five minutes (and this alert has
+            remained true for five more minutes). Inspect the PVR, Velero
+            server/node-agent logs, and the global restore-concurrency queue.
+            This is a data-path stall signal, not proof that filesystem
+            contents are valid.
