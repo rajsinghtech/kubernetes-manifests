@@ -59,6 +59,7 @@ kube-state-metrics:
         resources:
           - backups
           - podvolumebackups
+          - podvolumerestores
         verbs: [ "list", "watch" ]
       - apiGroups:
           - postgresql.cnpg.io
@@ -422,6 +423,45 @@ kube-state-metrics:
                     valueFrom: [ bytesDone ]
               - name: "podvolumebackup_bytes_total"
                 help: "Total bytes reported for a Velero PodVolumeBackup."
+                each:
+                  type: Gauge
+                  gauge:
+                    path: [ status, progress ]
+                    valueFrom: [ totalBytes ]
+          # Velero's own server metrics expose restore counters but not the
+          # per-object PodVolumeRestore phase or progress. Export the CR
+          # status through kube-state-metrics so the Mimir ruler can detect a
+          # restore data path that remains InProgress without byte movement.
+          - groupVersionKind:
+              group: velero.io
+              version: v1
+              kind: PodVolumeRestore
+            metricNamePrefix: velero_cr
+            labelsFromPath:
+              namespace: [ metadata, namespace ]
+              pod_volume_restore: [ metadata, name ]
+              restore: [ metadata, labels, velero.io/restore-name ]
+              restore_uid: [ metadata, labels, velero.io/restore-uid ]
+              source_namespace: [ spec, sourceNamespace ]
+              volume: [ spec, volume ]
+              node: [ status, node ]
+            metrics:
+              - name: "podvolumerestore_info"
+                help: "The current phase of a Velero PodVolumeRestore custom resource."
+                each:
+                  type: Info
+                  info:
+                    labelsFromPath:
+                      phase: [ status, phase ]
+              - name: "podvolumerestore_bytes_done"
+                help: "Bytes reported as restored by a Velero PodVolumeRestore."
+                each:
+                  type: Gauge
+                  gauge:
+                    path: [ status, progress ]
+                    valueFrom: [ bytesDone ]
+              - name: "podvolumerestore_bytes_total"
+                help: "Total bytes reported for a Velero PodVolumeRestore."
                 each:
                   type: Gauge
                   gauge:
