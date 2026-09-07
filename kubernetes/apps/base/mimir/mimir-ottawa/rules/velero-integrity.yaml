@@ -276,7 +276,7 @@ groups:
                 namespace="velero-system",
                 schedule!=""
               }
-            )
+            }
           )
 
       # kube-state-metrics emits these status counters only when they are
