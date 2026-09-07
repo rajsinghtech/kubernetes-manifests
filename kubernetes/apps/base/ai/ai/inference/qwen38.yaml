@@ -208,7 +208,7 @@ spec:
               --safetensors-load-strategy lazy --enable-chunked-prefill --enable-prefix-caching \
               --reasoning-parser qwen3 --enable-auto-tool-choice --tool-call-parser qwen3_coder \
               --mm-encoder-tp-mode data --limit-mm-per-prompt '{"image":1,"video":1}' \
-              --speculative-config '{"method":"mtp","num_speculative_tokens":3}' \
+              # MTP disabled: this checkpoint's MTP expert loader is not compatible with this image. \
               --compilation-config '{"mode":0,"cudagraph_mode":"FULL_DECODE_ONLY"}' \
               --hf-overrides '{"text_config":{"ple_embedding_dtype":"float8_e4m3fn","rope_parameters":{"rope_type":"yarn","factor":4.0,"original_max_position_embeddings":262144}}}' \
               --nnodes 2 --node-rank 0 --master-addr 192.168.74.1 --master-port 26400
@@ -387,7 +387,7 @@ spec:
               --safetensors-load-strategy lazy --enable-chunked-prefill --enable-prefix-caching \
               --reasoning-parser qwen3 --enable-auto-tool-choice --tool-call-parser qwen3_coder \
               --mm-encoder-tp-mode data --limit-mm-per-prompt '{"image":1,"video":1}' \
-              --speculative-config '{"method":"mtp","num_speculative_tokens":3}' \
+              # MTP disabled: this checkpoint's MTP expert loader is not compatible with this image. \
               --compilation-config '{"mode":0,"cudagraph_mode":"FULL_DECODE_ONLY"}' \
               --hf-overrides '{"text_config":{"ple_embedding_dtype":"float8_e4m3fn","rope_parameters":{"rope_type":"yarn","factor":4.0,"original_max_position_embeddings":262144}}}' \
               --nnodes 2 --node-rank 1 --master-addr 192.168.74.1 --master-port 26400
