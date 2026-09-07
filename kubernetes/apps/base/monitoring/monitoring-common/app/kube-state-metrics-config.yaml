@@ -1,5 +1,11 @@
 ---
 kube-state-metrics:
+  # ksm-export-epoch: 2026-09-07T02:49:18Z
+  # Bump the epoch above when customResourceState / rbac exports change so a
+  # Helm reconcile that re-reads this valuesFrom ConfigMap also rolls the
+  # kube-state-metrics pod. Do not put reconcile.fluxcd.io annotations on the
+  # HelmRelease file: flate's changed-resource render then fails with
+  # "OCIRepository/kube-prometheus-stack not ready: dependency not found".
   # For kube-prometheus-stacks that are already installed and configured with
   # custom collectors, commenting out the collectors and extraArgs below will
   # retain any existing kube-state-metrics configuration.
@@ -31,6 +37,8 @@ kube-state-metrics:
     - storageclasses
     - volumeattachments
   extraArgs: []
+  podAnnotations:
+    monitoring.keiretsu.top/ksm-export-epoch: "2026-09-07T02:49:18Z"
   rbac:
     extraRules:
       - apiGroups:
