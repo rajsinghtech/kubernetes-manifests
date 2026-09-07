@@ -7,4 +7,3 @@ resources:
   - ./mqtt
   - ./home-assistant
   - probes.yaml
-  - restic-orphan-cleanup.yaml
