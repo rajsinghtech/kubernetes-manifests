@@ -5,27 +5,50 @@ groups:
       # failed Job means a rotation happened. One is routine; a stream of them
       # means every server being drawn has an unusable forwarded port.
       #
-      # Count rotations in a window rather than testing a failed Job for presence:
+      # Answer "did the most recent run fail?", not "did any retained Job fail".
       # kube_job_status_failed stays >0 for as long as failedJobsHistoryLimit
-      # retains the Job, so `> 0` latches the alert on long after convergence.
+      # retains the Job, so max_over_time / any-failure windows latch after the
+      # CronJob has already converged. Compare the newest failed Job's start
+      # time with the newest Job overall; a later success clears the alert even
+      # while the old Failed object is still in the API. Restrict to
+      # kube-state-metrics so OpenCost's mirrored series cannot double-count.
       # kube-state-metrics carries no cronjob label, hence the label_replace.
+      # `for: 5m` plus the */5 schedule means a single routine rotation that
+      # succeeds on the next tick never waits long enough to fire.
       - alert: QbittorrentVpnRotated
         expr: >-
           count by (cronjob) (
-            label_replace(
-              max_over_time(
-                kube_job_status_failed{namespace="media", job_name=~"qbittorrent(-pvt)?-portforward-probe-.*"}[1h]
-              ) > 0,
-              "cronjob", "$$1", "job_name", "(qbittorrent(?:-pvt)?-portforward-probe)-.*"
+            (
+              max by (cronjob) (
+                label_replace(
+                  (
+                    kube_job_status_start_time{namespace="media", job="kube-state-metrics", job_name=~"qbittorrent(-pvt)?-portforward-probe-.*"}
+                    and on(job_name)
+                    (
+                      max without (reason) (
+                        kube_job_status_failed{namespace="media", job="kube-state-metrics", job_name=~"qbittorrent(-pvt)?-portforward-probe-.*"}
+                      ) > 0
+                    )
+                  ),
+                  "cronjob", "$$1", "job_name", "(qbittorrent(?:-pvt)?-portforward-probe)-.*"
+                )
+              )
+              ==
+              max by (cronjob) (
+                label_replace(
+                  kube_job_status_start_time{namespace="media", job="kube-state-metrics", job_name=~"qbittorrent(-pvt)?-portforward-probe-.*"},
+                  "cronjob", "$$1", "job_name", "(qbittorrent(?:-pvt)?-portforward-probe)-.*"
+                )
+              )
             )
-          ) > 2
+          ) > 0
         for: 5m
         annotations:
           summary: >-
             {{ $labels.cronjob }} reports port forwarding is not working
           description: >-
-            The port-forward probe failed more than twice in the last hour. Either it
-            found the forwarded port unreachable on two rounds a minute apart and rotated
+            The most recent port-forward probe run failed. Either it found the
+            forwarded port unreachable on two rounds a minute apart and rotated
             the VPN without converging on a usable exit address, or gluetun has no
             forwarded port at all — its NAT-PMP request is refused when the Proton
             wireguard key was generated without NAT-PMP (Port Forwarding), which no
