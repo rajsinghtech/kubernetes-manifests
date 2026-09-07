@@ -77,7 +77,8 @@ spec:
           type: RuntimeDefault
       containers:
         - name: cleanup
-          image: docker.io/bitnami/kubectl:1.33.3
+          # alpine/k8s bundles kubectl, bash, and base64; pin the multi-arch index digest.
+          image: docker.io/alpine/k8s:1.33.3@sha256:47e4ea4c263fb4e14e51d7c5ca841da756673f18e2340f38c0cf1f7219d05e85
           imagePullPolicy: IfNotPresent
           securityContext:
             allowPrivilegeEscalation: false
