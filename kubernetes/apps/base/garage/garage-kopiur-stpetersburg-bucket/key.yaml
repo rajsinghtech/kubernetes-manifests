@@ -23,17 +23,3 @@ spec:
       read: true
       write: true
       owner: true
----
-# Cross-namespace grant so GarageBucket in `garage` may reference this key.
-apiVersion: garage.rajsingh.info/v1beta1
-kind: GarageReferenceGrant
-metadata:
-  name: garage-bucket-to-kopiur-stpetersburg-key
-  namespace: home-assistant
-spec:
-  from:
-    - kind: GarageBucket
-      namespace: garage
-  to:
-    - kind: GarageKey
-      name: kopiur-stpetersburg-key
