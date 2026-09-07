@@ -3,6 +3,11 @@
 # are useful for newly observed events, but do not represent the persisted
 # phase of an individual Backup (a real Failed Backup kept last_status=1).
 #
+# #572 acceptance (Failed/PartiallyFailed latest Backup, Failed/Canceled PVB,
+# bytesDone!=totalBytes) is covered by the rules below after #2743. The
+# warnings gauge + VeleroScheduleLatestBackupHasWarnings close the #695 gap
+# (Completed Backup that silently skipped a durable hostPath volume).
+#
 # Keep this namespace separate from rules/velero.yaml. Both files are synced by
 # the same mimirtool Job and a repeated namespace aborts every tenant sync.
 namespace: velero-integrity
@@ -120,3 +125,47 @@ groups:
             when a newer attempt exists. The creation timestamp is used for
             ordering; velero_backup_last_status is not authoritative for this
             condition.
+
+      # Completed + warnings is how Velero reports hostPath volume skips while
+      # still leaving phase=Completed (StP home-assistant-config / #695). Bound
+      # to the newest Backup per schedule so a later clean run clears the alert;
+      # do not match historical warning-bearing objects.
+      - alert: VeleroScheduleLatestBackupHasWarnings
+        expr: |
+          (
+            max by (cluster, namespace, schedule, backup) (
+              velero_cr_backup_warnings{
+                namespace="velero-system",
+                schedule!=""
+              }
+            ) > 0
+          )
+          and on (cluster, namespace, schedule, backup)
+          (
+            velero_cr_backup_created_timestamp{
+              namespace="velero-system",
+              schedule!=""
+            }
+            == on (cluster, namespace, schedule) group_left
+            max by (cluster, namespace, schedule) (
+              velero_cr_backup_created_timestamp{
+                namespace="velero-system",
+                schedule!=""
+              }
+            )
+          )
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Velero schedule {{ $labels.schedule }} latest backup has warnings
+          description: >-
+            The newest Backup for schedule {{ $labels.schedule }} is
+            {{ $labels.backup }} and reports status.warnings > 0. Velero uses
+            warnings for soft failures such as skipping a hostPath / local-path
+            volume while still marking the Backup Completed, so phase alone is
+            not enough. Inspect the Backup log for "hostPath volume which is not
+            supported" (or other skip reasons), confirm every durable PVC has a
+            Completed PodVolumeBackup, and do not treat this Backup as a volume
+            restore source until the warning is gone. A later Backup with
+            warnings=0 clears this alert.

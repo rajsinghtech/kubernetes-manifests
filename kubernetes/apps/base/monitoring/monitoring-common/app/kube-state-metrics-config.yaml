@@ -282,6 +282,20 @@ kube-state-metrics:
                   type: Gauge
                   gauge:
                     path: [ metadata, creationTimestamp ]
+              # status.warnings is how Velero records hostPath volume skips and
+              # similar soft failures while still leaving phase=Completed (#695).
+              - name: "backup_warnings"
+                help: "Warning count on a Velero Backup custom resource (status.warnings)."
+                each:
+                  type: Gauge
+                  gauge:
+                    path: [ status, warnings ]
+              - name: "backup_errors"
+                help: "Error count on a Velero Backup custom resource (status.errors)."
+                each:
+                  type: Gauge
+                  gauge:
+                    path: [ status, errors ]
           - groupVersionKind:
               group: postgresql.cnpg.io
               version: v1
