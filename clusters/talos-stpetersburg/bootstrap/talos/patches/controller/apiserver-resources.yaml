@@ -1,10 +1,15 @@
-# UNAPPLIED until Raj approves #700.
+# Applied to orin-0 2026-09-07 (issue #700).
 # Raises kube-apiserver memory request so the scheduler accounts for real usage
-# on sole control-plane node orin-0 (~4Gi RSS vs 512Mi request today).
-# Limit intentionally unset: OOMKill on a single-CP node is a control-plane outage.
+# on sole control-plane node orin-0. Limit intentionally unset: OOMKill on a
+# single-CP node is a control-plane outage.
+#
+# 3500Mi was too high. orin-0 has only ~5532Mi allocatable, so a 3500Mi request
+# consumed 63% of the node and left 94Mi free, which made homeassistant-0
+# (1Gi + 32Mi, pinned to orin-0 by a local-path PVC) unschedulable and took
+# HomeKit down. Right-sized to observed usage (~2043Mi) plus headroom.
 cluster:
   apiServer:
     resources:
       requests:
         cpu: 200m
-        memory: 3500Mi
+        memory: 2400Mi
