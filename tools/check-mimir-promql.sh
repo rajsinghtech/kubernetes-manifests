@@ -92,9 +92,15 @@ while IFS= read -r file; do
   output=""
   if ! output=$("$PROMTOOL" check rules "$temp" 2>&1); then
     relative=${file#"$ROOT/"}
-    line=$(printf '%s\n' "$output" | sed -n 's/.*:\([0-9][0-9]*\):.*/\1/p' | head -1)
+    # Prefer promtool's source-location line. A later expression location also
+    # contains numbers, so a greedy match would select that inner location and
+    # lose the rule's YAML line.
+    line=$(printf '%s\n' "$output" | sed -n 's#^[^:]*:[[:space:]]*\([0-9][0-9]*\):[0-9][0-9]*:.*#\1#p' | head -1)
     if [ -n "$line" ]; then
-      context=$(rule_name "$file" "$line")
+      # The parser line refers to the temporary copy, which intentionally has
+      # the Mimir namespace wrapper removed. Use that same copy for context so
+      # the reported rule line stays aligned.
+      context=$(rule_name "$temp" "$line")
     else
       context="(document-level; no rule line reported)"
     fi
