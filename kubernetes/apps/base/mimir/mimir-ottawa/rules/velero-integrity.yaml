@@ -255,9 +255,12 @@ groups:
       # Count coverage, not Kubernetes item coverage. A current Backup with
       # one PVB can otherwise look healthy beside a prior run with 37 PVBs.
       # The current run is the newest Backup for the schedule, while the
-      # baseline is the newest older successful Backup. The alert deliberately
-      # observes the produced-PVB count while the Backup is queued/running;
-      # phase and item counters are not allowed to hide a volume gap.
+      # baseline is the newest older Completed Backup. For this independent
+      # volume-count comparison, a Completed run with warnings is still a
+      # useful observed baseline; VeleroScheduleLatestBackupHasWarnings owns
+      # the separate quality signal. The alert deliberately observes the
+      # produced-PVB count while the Backup is queued/running; phase and item
+      # counters are not allowed to hide a volume gap.
       - record: velero_schedule_latest_backup_created_timestamp
         expr: |
           max by (cluster, namespace, schedule, backup) (
@@ -272,7 +275,10 @@ groups:
 
       # kube-state-metrics emits these status counters only when they are
       # non-zero. Absence therefore means zero; using `metric == 0` here would
-      # make every otherwise-clean Backup disappear from the baseline.
+      # make a Completed Backup disappear from the baseline. "Successful" in
+      # this recording-rule name means parent phase=Completed for the count
+      # baseline. Warnings remain independently actionable and must not erase a
+      # known prior PVB count.
       - record: velero_schedule_successful_backup_created_timestamp
         expr: |
           velero_cr_backup_created_timestamp{
@@ -287,22 +293,6 @@ groups:
                 schedule!="",
                 phase="Completed"
               }
-            )
-            unless on (cluster, namespace, schedule, backup)
-            (
-              max by (cluster, namespace, schedule, backup) (
-                velero_cr_backup_warnings{
-                  namespace="velero-system",
-                  schedule!=""
-                } > 0
-              )
-              or
-              max by (cluster, namespace, schedule, backup) (
-                velero_cr_backup_errors{
-                  namespace="velero-system",
-                  schedule!=""
-                } > 0
-              )
             )
           )
 
@@ -377,7 +367,7 @@ groups:
       - alert: VeleroScheduleVolumeCoverageRegressed
         expr: |
           velero_schedule_latest_pod_volume_backup_count
-          < on (cluster, namespace, schedule)
+          < on (cluster, namespace, schedule) group_right(backup)
           velero_schedule_previous_successful_pod_volume_backup_count
         for: 15m
         labels:
@@ -387,10 +377,16 @@ groups:
           description: >-
             The newest Backup {{ $labels.backup }} for schedule
             {{ $labels.schedule }} has fewer PodVolumeBackups than its previous
-            successful Backup. Any lower PVB count is material because each
+            Completed baseline. Any lower PVB count is material because each
             PVB represents one selected volume. This remains a coverage
             regression even when Kubernetes item counts or the parent Backup
-            phase look normal. Inspect the current and previous Backup PVB
-            populations; stalled-path and node-saturation alerts are separate,
-            and this alert is not restore proof. It clears only when the newest
-            run reaches the prior successful volume count.
+            phase look normal. A warning-bearing Completed Backup can still
+            supply this count baseline; investigate its warning separately.
+            If no previous Completed baseline exists, this alert is
+            intentionally silent: that means no comparable baseline, not
+            proof of zero-volume health. Schedules that never produce a
+            successful nonzero-volume baseline require the separate
+            never/zero-volume coverage signal. Inspect the current and
+            previous Backup PVB populations; stalled-path and node-saturation
+            alerts are separate, and this alert is not restore proof. It
+            clears only when the newest run reaches the prior baseline count.

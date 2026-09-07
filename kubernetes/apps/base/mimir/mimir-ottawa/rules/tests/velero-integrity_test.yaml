@@ -40,6 +40,22 @@ tests:
       - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",backup="home-backup-current",pod_volume_backup="home-current-pvb",node="rei",phase="Prepared"}'
         values: "1+0x20"
 
+      # A warning-bearing Completed run is still a usable volume-count
+      # baseline. The warning is a separate integrity signal; it must not make
+      # this per-schedule regression comparison silently disappear.
+      - series: 'velero_cr_backup_created_timestamp{cluster="talos-stpetersburg",namespace="velero-system",schedule="home-assistant-backup",backup="home-assistant-backup-previous"}'
+        values: "100+0x20"
+      - series: 'velero_cr_backup_created_timestamp{cluster="talos-stpetersburg",namespace="velero-system",schedule="home-assistant-backup",backup="home-assistant-backup-current"}'
+        values: "200+0x20"
+      - series: 'velero_cr_backup_info{cluster="talos-stpetersburg",namespace="velero-system",schedule="home-assistant-backup",backup="home-assistant-backup-previous",phase="Completed"}'
+        values: "1+0x20"
+      - series: 'velero_cr_backup_info{cluster="talos-stpetersburg",namespace="velero-system",schedule="home-assistant-backup",backup="home-assistant-backup-current",phase="Completed"}'
+        values: "1+0x20"
+      - series: 'velero_cr_backup_warnings{cluster="talos-stpetersburg",namespace="velero-system",schedule="home-assistant-backup",backup="home-assistant-backup-previous"}'
+        values: "1+0x20"
+      - series: 'velero_cr_podvolumebackup_info{cluster="talos-stpetersburg",namespace="velero-system",backup="home-assistant-backup-previous",pod_volume_backup="home-assistant-previous-pvb",node="asuka",phase="Completed"}'
+        values: "1+0x20"
+
     alert_rule_test:
       - eval_time: 15m
         alertname: VeleroScheduleVolumeCoverageRegressed
@@ -50,3 +66,47 @@ tests:
               schedule: bhaiya-backup
               backup: bhaiya-backup-current
               severity: critical
+            exp_annotations:
+              summary: Velero schedule bhaiya-backup volume coverage regressed
+              description: >-
+                The newest Backup bhaiya-backup-current for schedule
+                bhaiya-backup has fewer PodVolumeBackups than its previous
+                Completed baseline. Any lower PVB count is material because
+                each PVB represents one selected volume. This remains a
+                coverage regression even when Kubernetes item counts or the
+                parent Backup phase look normal. A warning-bearing Completed
+                Backup can still supply this count baseline; investigate its
+                warning separately. If no previous Completed baseline exists,
+                this alert is intentionally silent: that means no comparable
+                baseline, not proof of zero-volume health. Schedules that
+                never produce a successful nonzero-volume baseline require the
+                separate never/zero-volume coverage signal. Inspect the
+                current and previous Backup PVB populations; stalled-path and
+                node-saturation alerts are separate, and this alert is not
+                restore proof. It clears only when the newest run reaches the
+                prior baseline count.
+          - exp_labels:
+              cluster: talos-stpetersburg
+              namespace: velero-system
+              schedule: home-assistant-backup
+              backup: home-assistant-backup-current
+              severity: critical
+            exp_annotations:
+              summary: Velero schedule home-assistant-backup volume coverage regressed
+              description: >-
+                The newest Backup home-assistant-backup-current for schedule
+                home-assistant-backup has fewer PodVolumeBackups than its
+                previous Completed baseline. Any lower PVB count is material
+                because each PVB represents one selected volume. This remains
+                a coverage regression even when Kubernetes item counts or the
+                parent Backup phase look normal. A warning-bearing Completed
+                Backup can still supply this count baseline; investigate its
+                warning separately. If no previous Completed baseline exists,
+                this alert is intentionally silent: that means no comparable
+                baseline, not proof of zero-volume health. Schedules that
+                never produce a successful nonzero-volume baseline require the
+                separate never/zero-volume coverage signal. Inspect the
+                current and previous Backup PVB populations; stalled-path and
+                node-saturation alerts are separate, and this alert is not
+                restore proof. It clears only when the newest run reaches the
+                prior baseline count.
