@@ -176,14 +176,16 @@ spec:
         "-ingester.ring.replication-factor": "1"
 
     store_gateway:
-      replicas: 1
+      # Two store-gateways and RF=2 keep the older-block query path available
+      # while one gateway is unavailable. This is independent of ingester HA.
+      replicas: 2
       zoneAwareReplication:
         enabled: false
       persistentVolume:
         enabled: true
         size: 2Gi
       extraArgs:
-        "-store-gateway.sharding-ring.replication-factor": "1"
+        "-store-gateway.sharding-ring.replication-factor": "2"
 
     compactor:
       replicas: 1
