@@ -31,3 +31,4 @@ resources:
   - ./flaresolverr
   - ./maintainerr
   - ./tracearr
+  - restic-orphan-cleanup.yaml
