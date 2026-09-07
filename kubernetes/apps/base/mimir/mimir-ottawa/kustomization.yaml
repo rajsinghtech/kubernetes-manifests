@@ -40,6 +40,7 @@ configMapGenerator:
       - rules/mimir-queryable-window.yaml
       - rules/monitoring.yaml
       - rules/node-health.yaml
+      - rules/node-clock.yaml
       - rules/payments.yaml
       - rules/smartctl.yaml
       - rules/velero.yaml
