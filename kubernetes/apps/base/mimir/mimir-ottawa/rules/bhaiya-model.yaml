@@ -1,0 +1,103 @@
+# CLIProxy model discovery is written by API-serving replicas as well as the
+# reconciler. Correlate gauges from one scrape target before aggregating by
+# stable cluster; an idle replica must not mask an active nonleader.
+namespace: bhaiya-model
+groups:
+  - name: bhaiya-model.rules
+    rules:
+      - alert: BhaiyaCLIProxyDefaultModelFallback
+        expr: |
+          max by (cluster) (
+            bhaiya_cliproxy_default_model_resolution{
+              namespace="bhaiya", job="bhaiya", service="bhaiya",
+              container="bhaiya", source="fallback"
+            } == 1
+            and on (cluster, instance)
+            (
+              bhaiya_cliproxy_model_discovery_last_success_timestamp_seconds{
+                namespace="bhaiya", job="bhaiya", service="bhaiya", container="bhaiya"
+              } > 0
+              and on (cluster, instance)
+              (
+                time() - bhaiya_cliproxy_model_discovery_last_success_timestamp_seconds{
+                  namespace="bhaiya", job="bhaiya", service="bhaiya", container="bhaiya"
+                } < 300
+              )
+            )
+          )
+        for: 30m
+        labels:
+          severity: warning
+        annotations:
+          summary: Bhaiya CLIProxy is using its fallback model in {{ $labels.cluster }}
+          description: >-
+            A fresh successful CLIProxy discovery has selected the configured
+            fallback model for at least 30 minutes in {{ $labels.cluster }}.
+            Inspect the primary model provider and CLIProxy catalog.
+
+      - alert: BhaiyaCLIProxyNoResolvedModel
+        expr: |
+          max by (cluster) (
+            bhaiya_cliproxy_default_model_resolution{
+              namespace="bhaiya", job="bhaiya", service="bhaiya",
+              container="bhaiya", source="none"
+            } == 1
+            and on (cluster, instance)
+            (
+              bhaiya_cliproxy_model_discovery_last_success_timestamp_seconds{
+                namespace="bhaiya", job="bhaiya", service="bhaiya", container="bhaiya"
+              } > 0
+              and on (cluster, instance)
+              (
+                time() - bhaiya_cliproxy_model_discovery_last_success_timestamp_seconds{
+                  namespace="bhaiya", job="bhaiya", service="bhaiya", container="bhaiya"
+                } < 300
+              )
+            )
+          )
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: Bhaiya CLIProxy resolved no model in {{ $labels.cluster }}
+          description: >-
+            A fresh successful CLIProxy discovery selected no usable built-in
+            model in {{ $labels.cluster }}. Inspect the live CLIProxy catalog.
+
+      - alert: BhaiyaCLIProxyModelDiscoveryFailure
+        expr: |
+          max by (cluster) (
+            increase(
+              bhaiya_cliproxy_model_discovery_errors_total{
+                namespace="bhaiya", job="bhaiya", service="bhaiya", container="bhaiya"
+              }[5m]
+            ) > 0
+            and on (cluster, instance)
+            (
+              time() - bhaiya_cliproxy_model_discovery_last_attempt_timestamp_seconds{
+                namespace="bhaiya", job="bhaiya", service="bhaiya", container="bhaiya"
+              } < 300
+            )
+            and on (cluster, instance)
+            (
+              bhaiya_cliproxy_model_discovery_last_success_timestamp_seconds{
+                namespace="bhaiya", job="bhaiya", service="bhaiya", container="bhaiya"
+              } == 0
+              or on (cluster, instance)
+              (
+                time() - bhaiya_cliproxy_model_discovery_last_success_timestamp_seconds{
+                  namespace="bhaiya", job="bhaiya", service="bhaiya", container="bhaiya"
+                } > 300
+              )
+            )
+          )
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: Bhaiya CLIProxy model discovery is failing in {{ $labels.cluster }}
+          description: >-
+            Bhaiya has recent CLIProxy discovery errors without a fresh
+            successful observation in {{ $labels.cluster }}. This includes
+            repeated startup failures; a never-attempted idle process remains
+            quiet.
