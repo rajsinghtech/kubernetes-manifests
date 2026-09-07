@@ -13,6 +13,7 @@ spec:
   template:
     metadata:
       annotations:
+        backup.velero.io/backup-volumes: config-volume
         backup.velero.io/backup-volumes-excludes: downloads-volume
       labels:
         app: qbittorrent-pvt

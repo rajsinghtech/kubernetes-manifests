@@ -12,6 +12,8 @@ spec:
     type: Recreate
   template:
     metadata:
+      annotations:
+        backup.velero.io/backup-volumes: backup
       labels:
         app: tracearr
     spec:

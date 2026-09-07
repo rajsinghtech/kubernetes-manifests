@@ -1,4 +1,13 @@
 ---
+# Back up media *app config* PVCs only. Bulk media/downloads live on Ceph/SMB
+# and rely on storage-layer durability — never opt those volumes in.
+#
+# IMPORTANT: defaultVolumesToFsBackup is false (opt-IN). Pods must set
+# backup.velero.io/backup-volumes to the config volume name (usually `config`
+# or `config-volume`). backup-volumes-excludes alone does NOT include anything
+# under opt-in mode; that mismatch previously left every config PVC with
+# schedule membership and zero PodVolumeBackups while the Backup still
+# reported Completed.
 apiVersion: velero.io/v1
 kind: Schedule
 metadata:

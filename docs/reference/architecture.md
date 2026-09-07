@@ -1014,8 +1014,11 @@ Schedules, all TTL 168h:
 | Robbinsdale | `home` 09:00 · `media-config` 06:00 (config only) |
 | St. Petersburg | `home-assistant` 09:00 |
 
-`media-config` deliberately sets `defaultVolumesToFsBackup: false` — the bulk
-data lives on Ceph/SMB and relies on storage-layer durability.
+`media-config` deliberately sets `defaultVolumesToFsBackup: false` (opt-IN) so
+the bulk Ceph/SMB media shares are never selected. App pods must set
+`backup.velero.io/backup-volumes` to their config volume (`config` /
+`config-volume` / `backup`); `backup-volumes-excludes` alone does not opt
+anything in. Postgres in `media` is covered by CNPG/Barman, not this schedule.
 
 ### CloudNativePG
 
