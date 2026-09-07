@@ -79,9 +79,12 @@ spec:
       extraArgs:
         - --node-agent-configmap=node-agent-config
       resources:
+        # Observed RSS on StP/Ottawa node-agents is ~38–66Mi. 256Mi left orin-0
+        # with ~30Mi schedulable headroom after the apiserver right-size; 96Mi
+        # keeps a buffer for backup spikes without starving Home Assistant.
         requests:
-          cpu: 200m
-          memory: 256Mi
+          cpu: 100m
+          memory: 96Mi
         limits:
           cpu: 1
           memory: 1Gi

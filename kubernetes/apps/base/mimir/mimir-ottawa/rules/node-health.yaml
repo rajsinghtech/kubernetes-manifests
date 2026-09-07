@@ -49,3 +49,40 @@ groups:
             distinguishes host-level memory pressure from a Kata sandbox
             teardown; correlate it with the affected pod's termination reason
             and node memory metrics.
+
+      # Schedulable memory headroom, not RSS. orin-0 (StP sole control-plane)
+      # ran HomeKit Pending when requests filled the node while MemoryPressure
+      # stayed False (2026-09-07). Fire before the next Guaranteed pod cannot
+      # schedule — especially workloads pinned by local-path PVCs.
+      - alert: NodeSchedulableMemoryHeadroomLow
+        expr: |
+          (
+            sum by (cluster, node) (
+              kube_node_status_allocatable{resource="memory"}
+            )
+            -
+            sum by (cluster, node) (
+              kube_pod_container_resource_requests{resource="memory"}
+              * on (cluster, namespace, pod) group_left()
+              (kube_pod_status_phase{phase="Running"} == 1)
+            )
+          )
+          /
+          sum by (cluster, node) (
+            kube_node_status_allocatable{resource="memory"}
+          )
+          < 0.08
+          and on (cluster, node)
+          kube_node_status_condition{condition="Ready",status="true"} == 1
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: Node {{ $labels.node }} has less than 8% schedulable memory headroom
+          description: >-
+            Free schedulable memory (allocatable minus Running pod requests) is
+            under 8% while the node is Ready. New pods and request increases
+            fail with Insufficient memory even when MemoryPressure is False.
+            StP orin-0 hit this on 2026-09-07 and parked homeassistant-0
+            (local-path PVC). Trim over-requests or free capacity before the
+            next control-plane change.
