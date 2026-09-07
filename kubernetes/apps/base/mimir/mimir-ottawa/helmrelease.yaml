@@ -105,6 +105,20 @@ spec:
             # The first rollout moves the ingester from emptyDir to RBD. Flush
             # and ship the current head before Kubernetes removes the old pod.
             flush_blocks_on_shutdown: true
+          bucket_store:
+            # Must stay strictly below querier.query_store_after. Leaving the
+            # default 10h with a 4h store-after boundary would open a 4h–10h
+            # hole where neither ingesters nor store-gateway answer.
+            ignore_blocks_within: 2h
+        querier:
+          # Defaults are query_store_after=12h / query_ingesters_within=13h.
+          # With a single RF=1 ingester that makes the last ~12h a SPOF
+          # (corp/bhaiya#674): any ingester replacement blinds the window
+          # until blocks age past the boundary. Shrink the ingester-only
+          # window without paying for a second ~4GiB RSS replica. Does not
+          # protect the unshipped head; RF/replica HA remains a capacity call.
+          query_store_after: 4h
+          query_ingesters_within: 5h
         limits:
           compactor_blocks_retention_period: 7d
           ingestion_rate: 500000
