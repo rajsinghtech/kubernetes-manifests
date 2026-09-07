@@ -5,6 +5,14 @@ metadata:
   name: mimir
 spec:
   interval: 30m
+  # Ring components (compactor/store-gateway/ingester) log
+  # "waiting until ring topology is stable" for min 1m / max 5m and also have
+  # readinessProbe.initialDelaySeconds=60 plus possible WAL replay. The Helm
+  # default 5m wait treats that healthy join as a stall, fails the upgrade,
+  # then fails the rollback for the same reason and burns remediation retries
+  # (corp/bhaiya#713). Keep the wait above the 5m ceiling so GitOps can land
+  # Mimir config (including #2765) without manual suspend/resume.
+  timeout: 15m
   chart:
     spec:
       chart: mimir-distributed
@@ -14,12 +22,17 @@ spec:
         name: grafana
         namespace: flux-system
   install:
+    timeout: 15m
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
+    timeout: 15m
     remediation:
-      retries: 3
+      # Retry the upgrade itself; do not dig a deeper hole by rolling back a
+      # merely-slow ring join into another 5m-default stall (#713).
+      retries: 2
+      strategy: retry
   postRenderers:
     - kustomize:
         patches:
@@ -105,6 +118,8 @@ spec:
             # The first rollout moves the ingester from emptyDir to RBD. Flush
             # and ship the current head before Kubernetes removes the old pod.
             flush_blocks_on_shutdown: true
+            # helm-release-epoch: 2026-09-07T05:55:00Z — bump with timeout
+            # delivery fixes so Flux performs a real upgrade after #713.
           bucket_store:
             # Must stay strictly below querier.query_store_after. Leaving the
             # default 10h with a 4h store-after boundary would open a 4h–10h
