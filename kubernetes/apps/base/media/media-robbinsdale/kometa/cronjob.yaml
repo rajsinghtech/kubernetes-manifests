@@ -10,6 +10,10 @@ spec:
   jobTemplate:
     spec:
       template:
+        metadata:
+          annotations:
+            # media-config-backup uses opt-in fs-backup; include the config PVC.
+            backup.velero.io/backup-volumes: config
         spec:
           initContainers:
             - name: download-fonts

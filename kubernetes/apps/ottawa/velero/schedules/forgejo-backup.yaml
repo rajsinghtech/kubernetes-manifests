@@ -1,4 +1,8 @@
 ---
+# First successful run must capture gitea-shared-storage (pod volume `data`)
+# plus forgejo-postgres-*/pgdata. emptyDir scratch volumes are skipped by
+# fs-backup-resource-policy. Schedule is daily 10:00 UTC; if lastBackup is
+# empty the cron has not fired yet — that is not a capture failure.
 apiVersion: velero.io/v1
 kind: Schedule
 metadata:

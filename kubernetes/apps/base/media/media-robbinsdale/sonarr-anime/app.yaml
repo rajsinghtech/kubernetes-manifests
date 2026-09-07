@@ -13,6 +13,7 @@ spec:
   template:
     metadata:
       annotations:
+        backup.velero.io/backup-volumes: config
         backup.velero.io/backup-volumes-excludes: media
       labels:
         app: sonarr-anime
