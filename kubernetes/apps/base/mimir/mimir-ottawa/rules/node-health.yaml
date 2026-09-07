@@ -54,22 +54,27 @@ groups:
       # ran HomeKit Pending when requests filled the node while MemoryPressure
       # stayed False (2026-09-07). Fire before the next Guaranteed pod cannot
       # schedule — especially workloads pinned by local-path PVCs.
+      #
+      # Exclude spark-0/spark-1: each packs a continuous 90Gi qwen38 reservation
+      # (~87–89% of allocatable). That is intentional capacity use, not waste.
+      # An 8% threshold would stay red forever and train the page away. Those
+      # nodes use NodeSchedulableMemoryHeadroomCritical (absolute) below.
       - alert: NodeSchedulableMemoryHeadroomLow
         expr: |
           (
             sum by (cluster, node) (
-              kube_node_status_allocatable{resource="memory"}
+              kube_node_status_allocatable{resource="memory",node!~"spark-.*"}
             )
             -
             sum by (cluster, node) (
-              kube_pod_container_resource_requests{resource="memory"}
+              kube_pod_container_resource_requests{resource="memory",node!~"spark-.*"}
               * on (cluster, namespace, pod) group_left()
               (kube_pod_status_phase{phase="Running"} == 1)
             )
           )
           /
           sum by (cluster, node) (
-            kube_node_status_allocatable{resource="memory"}
+            kube_node_status_allocatable{resource="memory",node!~"spark-.*"}
           )
           < 0.08
           and on (cluster, node)
@@ -85,4 +90,38 @@ groups:
             fail with Insufficient memory even when MemoryPressure is False.
             StP orin-0 hit this on 2026-09-07 and parked homeassistant-0
             (local-path PVC). Trim over-requests or free capacity before the
-            next control-plane change.
+            next control-plane change. spark-* nodes are excluded — they run
+            continuous 90Gi model reservations by design.
+
+      # Absolute residual headroom on model nodes. spark-0/1 intentionally sit
+      # at ~2–7% free after the 90Gi qwen38 request. Fire only when the leftover
+      # non-model cushion is nearly gone (<1Gi), which is the real "next pod
+      # Pending" signal without permanent alert noise.
+      - alert: NodeSchedulableMemoryHeadroomCritical
+        expr: |
+          (
+            sum by (cluster, node) (
+              kube_node_status_allocatable{resource="memory",node=~"spark-.*"}
+            )
+            -
+            sum by (cluster, node) (
+              kube_pod_container_resource_requests{resource="memory",node=~"spark-.*"}
+              * on (cluster, namespace, pod) group_left()
+              (kube_pod_status_phase{phase="Running"} == 1)
+            )
+          )
+          < 1 * 1024 * 1024 * 1024
+          and on (cluster, node)
+          kube_node_status_condition{condition="Ready",status="true"} == 1
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: Model node {{ $labels.node }} has under 1Gi schedulable memory left
+          description: >-
+            spark-* nodes reserve ~90Gi for continuous qwen38 inference, so an
+            8% relative headroom alert is expected noise. Absolute free
+            requests under 1Gi means the residual non-model cushion is gone —
+            the next Guaranteed/Burstable bump will Pending. Do not lower the
+            model memory request toward idle RSS; add capacity or move other
+            workloads.
