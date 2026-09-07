@@ -1,0 +1,9 @@
+{
+  "crdSource": "https://github.com/fluxcd/helm-controller/releases/download/v1.6.4/helm-controller.crds.yaml",
+  "crdSourceSha256": "8af19966e63cccde7d2c62e24c7bd3466010dd53e9d063e2ce22d1391e11f272",
+  "fluxVersion": "2.9.5",
+  "generatedSchemaSha256": "9f7a2fbc13c3c4c57afc71e15aa637ce236af79b4dce6e0cb636ac4f478b6617",
+  "helmControllerVersion": "1.6.4",
+  "schemaVersion": "v2",
+  "validatorVersion": "0.8.0"
+}
