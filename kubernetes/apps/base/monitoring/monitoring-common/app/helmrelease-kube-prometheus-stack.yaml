@@ -151,14 +151,24 @@ spec:
           - action: drop
             sourceLabels: [__name__]
             regex: (apiserver_request_duration_seconds|apiserver_request_sli_duration_seconds|apiserver_request_body_size_bytes|apiserver_response_sizes|apiserver_watch_cache_read_wait_seconds|apiserver_watch_list_duration_seconds|apiserver_watch_events_sizes|etcd_request_duration_seconds|rpc_duration_seconds|rpc_duration)_bucket
-          # Second pass: the _sum/_count of those histograms plus apiserver/etcd
-          # internal bookkeeping series — verified referenced by zero dashboards,
-          # alerts, or badges. apiserver_request_total and
-          # apiserver_request_duration_seconds_{sum,count} are deliberately NOT
-          # matched here (the API dashboards use them).
+          # Second pass: keep dropping unused latency companions and noisy
+          # bookkeeping, but retain watch-cache / LIST attribution counters.
+          # The previous `apiserver_watch_cache_.*|apiserver_cache_list_.*|
+          # apiserver_storage_list_.*|apiserver_longrunning_requests|
+          # watch_cache_capacity` blanket made #700-class growth unanalysable
+          # in Mimir even though /metrics exposed the series. Cardinality of
+          # the restored families is ~3.8k–4.5k per apiserver endpoint on
+          # StP/Ottawa (group/index/resource labels only) — far below the
+          # ~470k histogram buckets that OOMed the agent. Still dropped:
+          # watch-cache read-wait sum/count (buckets already dropped above),
+          # watch_events*, admission duration sum/count, etcd request
+          # bookkeeping. apiserver_request_total remains kept; it has no
+          # username/client label on 1.36, so LIST attribution by SA still
+          # needs audit logs or a follow-up metric — these counters name the
+          # *resource*, not the caller.
           - action: drop
             sourceLabels: [__name__]
-            regex: (apiserver_request_sli_duration_seconds|apiserver_response_sizes|apiserver_watch_events_sizes|etcd_request_duration_seconds|apiserver_admission_controller_admission_duration_seconds|apiserver_admission_step_admission_duration_seconds|apiserver_admission_webhook_admission_duration_seconds)_(sum|count)|apiserver_watch_events_total|apiserver_watch_cache_.*|apiserver_storage_list_.*|apiserver_cache_list_.*|apiserver_longrunning_requests|apiextensions_openapi_v3?_regeneration_count|etcd_requests_total|etcd_bookmark_total|watch_cache_capacity
+            regex: (apiserver_request_sli_duration_seconds|apiserver_response_sizes|apiserver_watch_events_sizes|etcd_request_duration_seconds|apiserver_admission_controller_admission_duration_seconds|apiserver_admission_step_admission_duration_seconds|apiserver_admission_webhook_admission_duration_seconds|apiserver_watch_cache_read_wait_seconds)_(sum|count)|apiserver_watch_events_total|apiextensions_openapi_v3?_regeneration_count|etcd_requests_total|etcd_bookmark_total
 
     kubelet:
       serviceMonitor:
