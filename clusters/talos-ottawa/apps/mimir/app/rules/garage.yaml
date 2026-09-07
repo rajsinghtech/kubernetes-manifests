@@ -38,3 +38,70 @@ groups:
             storage probes).
         labels:
           severity: critical
+
+      # ---- cluster integrity (durability), distinct from the probes above ----
+      # The two probes above measure the SERVING path. On 2026-09-07 a storage
+      # node (asuka) silently left the cluster for 4.5h after an image upgrade
+      # (km#2751) and both probes stayed green the whole time — correctly, since
+      # every partition kept quorum and Garage kept serving. Nothing measured
+      # durability, so a lost replica on 12 partitions went unnoticed until it
+      # was found by accident. See corp/bhaiya#725.
+      #
+      # Observed during that incident, which is what these thresholds are
+      # calibrated against:
+      #   cluster_available=1  cluster_partitions_quorum=256  <- probes green
+      #   cluster_healthy=0    cluster_partitions_all_ok=244  <- degraded
+      - alert: GarageClusterUnhealthy
+        expr: min by (cluster) (cluster_healthy) == 0
+        for: 15m
+        annotations:
+          summary: Garage cluster reports unhealthy in {{ $labels.cluster }}
+          description: >-
+            Garage's own cluster_healthy has been 0 for 15m. The cluster is
+            still serving (see GarageServingUnavailable, which is separate), so
+            this is a durability problem, not an outage: a storage node is
+            disconnected or partitions are under-replicated. Run
+            `kubectl -n garage exec garage-gateway-0-0 -- /garage status` and
+            compare HEALTHY against FAILED NODES. A node whose pod is Running
+            with 0 restarts can still be absent from the cluster — check its
+            RPC endpoint answers, since a refused connection means the process
+            is up but its port mapping did not rebind.
+        labels:
+          severity: warning
+
+      # Under-replication: every partition still has quorum, so reads and
+      # writes work, but replicas are missing and a second failure loses data.
+      - alert: GarageClusterPartitionsUnderReplicated
+        expr: >-
+          min by (cluster) (cluster_partitions_all_ok)
+            < min by (cluster) (cluster_partitions)
+        for: 30m
+        annotations:
+          summary: Garage partitions under-replicated in {{ $labels.cluster }}
+          description: >-
+            cluster_partitions_all_ok has been below cluster_partitions for
+            30m, so some partitions are missing a replica while still holding
+            quorum. Nothing is failing yet and it will not appear in the
+            serving probes. With replication.factor=2 this is one node away
+            from data loss on the affected partitions.
+        labels:
+          severity: warning
+
+      # Quorum loss is the escalation: reads in the affected partitions fail.
+      # Inert today (quorum 256/256 even with a node down), which is the point
+      # — it distinguishes degraded-but-serving from actually broken.
+      - alert: GarageClusterPartitionsWithoutQuorum
+        expr: >-
+          min by (cluster) (cluster_partitions_quorum)
+            < min by (cluster) (cluster_partitions)
+        for: 5m
+        annotations:
+          summary: Garage partitions have lost quorum in {{ $labels.cluster }}
+          description: >-
+            cluster_partitions_quorum is below cluster_partitions: some
+            partitions no longer have enough up nodes to serve. Under
+            consistencyMode=degraded reads come from a single replica and may
+            still succeed; writes to those partitions fail. Restore the missing
+            storage nodes.
+        labels:
+          severity: critical
