@@ -64,10 +64,30 @@ metadata:
   namespace: teslamate
 spec:
   schedule: "0 30 1 * * *"
-  immediate: true
+  # Do not re-fire an immediate Backup on every Flux reconcile: the first
+  # enablement Backup raced plugin sidecar registration and failed with
+  # "requested plugin is not available". The one-shot verify Backup below
+  # establishes the first recoverable base backup; the schedule keeps it fresh.
+  immediate: false
   backupOwnerReference: self
   method: plugin
   pluginConfiguration:
     name: barman-cloud.cloudnative-pg.io
   cluster:
     name: teslamate-postgres
+---
+# One-shot base backup after plugin enablement. The initial ScheduledBackup
+# with immediate:true failed before the barman-cloud sidecar was registered on
+# the instance pods, so ObjectStore recovery windows stayed empty despite
+# healthy WAL archiving. Forgejo used the same verify pattern successfully.
+apiVersion: postgresql.cnpg.io/v1
+kind: Backup
+metadata:
+  name: teslamate-postgres-verify-20260907
+  namespace: teslamate
+spec:
+  cluster:
+    name: teslamate-postgres
+  method: plugin
+  pluginConfiguration:
+    name: barman-cloud.cloudnative-pg.io
