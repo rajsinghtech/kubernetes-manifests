@@ -114,7 +114,7 @@ raw_kubeconform_args="$raw_root/kubeconform.args"
 raw_rc=$?
 assert "raw multi-document checker passes" test "$raw_rc" = 0
 assert "raw Flate path is the targeted cluster" \
-  grep -q -- '--path clusters/talos-ottawa/flux/config' "$raw_flate_args"
+  grep -q -- '--path clusters/talos-ottawa' "$raw_flate_args"
 assert "raw selection passes exactly one HelmRelease with opaque values" \
   grep -q '^fake kubeconform OK$' "$raw_out"
 assert "raw checker reports one validated resource" \

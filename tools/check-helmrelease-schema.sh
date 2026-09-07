@@ -48,7 +48,11 @@ total=0
 for cluster in "${targets[@]}"; do
   rendered="$tmp/$cluster.yaml"
   selected="$tmp/$cluster-helmreleases.yaml"
-  tools/flate.sh build all --path "clusters/$cluster/flux/config" \
+  # The flux/config subtree contains only the bootstrap Kustomization objects;
+  # HelmRelease sources live in the location's app tree beneath the cluster
+  # root. Render the complete cluster context so an empty bootstrap document
+  # set cannot masquerade as a successful schema check.
+  tools/flate.sh build all --path "clusters/$cluster" \
     --allow-missing-secrets --no-progress >"$rendered"
   count="$(python3 - "$rendered" "$selected" <<'PY'
 import pathlib, sys, yaml
