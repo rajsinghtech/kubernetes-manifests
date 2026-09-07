@@ -9,7 +9,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: garage-operator-system-install
-  path: ./kubernetes/apps/base/garage-operator-system/garage-operator-system-install
+  path: ./kubernetes/apps/robbinsdale/garage-operator-system/garage-operator-system-install
   prune: true
   sourceRef:
     kind: GitRepository
