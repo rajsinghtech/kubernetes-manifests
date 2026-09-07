@@ -1511,21 +1511,25 @@ Ottawa's edge on their own.
 ### Garage: one zone is survivable, two are not
 
 Replication factor 3 across exactly three zones, `consistencyMode: degraded`,
-reads at quorum 1.
+reads at quorum 1 / writes at quorum 2 (Garage upstream table).
 
-- **One zone down:** reads and writes continue. Apps talk to their local
-  gateway, which proxies reads to a surviving zone, so a site can lose its own
-  storage tier entirely and still serve objects.
+- **One zone hard-down, two healthy:** reads and writes continue (writes need
+  the two survivors; reads need any one replica under degraded).
+- **One zone flapping / high RTT:** degraded still serves reads from a local
+  replica; under `consistent` (read quorum 2) those reads fail closed with
+  503/504 — that is why the fleet default stays degraded (`89342b046`).
 - **Two zones down:** you are below write quorum. Treat it as an outage of the
   object store, not a degradation.
 
-The reason this is tolerable rather than reckless is what is stored in it: OCI
-blobs and kopia backups are content-addressed, and Barman WAL is append-only,
-so none of the current consumers depend on read-after-write consistency. That
-argument is written down beside the setting in the `GarageCluster` manifest,
-`garagecluster.yaml` under `kubernetes/apps/base/garage/garage/` — check it
-before adding a consumer that *does* need read-after-write, because the
-reasoning, not the replication factor, is what makes `degraded` safe here.
+Most consumers tolerate eventual-consistent reads: OCI/zot blobs and Kopia
+*pack* data are content-addressed; Barman WAL is append-only. **Kopia
+repository maintenance is the exception** — it requires read-after-write on
+the `_maintenance` schedule blob and can false-refuse prune as "clock skew"
+under degraded (corp/bhaiya#575). That is accepted intermittent pain, not a
+reason to raise fleet read quorum; Garage cannot scope consistency per bucket,
+and a maintenance-window flip still exposes Zot/CI to flap 503s. See the
+comment on `consistencyMode` in `garagecluster.yaml`. ADR 0007 (independent
+Velero object store) remains the durability/RAW endgame.
 
 Note also that the storage tier is `Manual` at all three sites while the gateway
 tier is operator-managed, and that retirement of a node with positive capacity
