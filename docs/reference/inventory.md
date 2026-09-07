@@ -28,10 +28,10 @@ diagram in the [README](../../README.md#architecture).
 
 | Location | Talos machines | Pointer directories | Flux Kustomizations |
 |---|---:|---:|---:|
-| `ottawa` | 4 | 59 | 122 |
+| `ottawa` | 4 | 58 | 121 |
 | `robbinsdale` | 3 | 43 | 87 |
 | `stpetersburg` | 3 | 40 | 83 |
-| **total** | **10** | **142** | **292** |
+| **total** | **10** | **141** | **291** |
 
 ## Ottawa — `talos-ottawa`
 
@@ -103,7 +103,6 @@ diagram in the [README](../../README.md#architecture).
 | Observability | `gatus` | `gatus` |
 | Observability | `mimir` | `mimir` |
 | Observability | `monitoring` | `blackbox-exporter`, `blackbox-exporter-config`, `blackbox-exporter-ottawa`, `config`, `grafana`, `grafana-dashboards`, `grafana-datasources`, `grafana-instance`, `grafana-mcp`, `kromgo`, `monitoring`, `monitoring-nagato`, `smartctl-exporter`, `smartctl-exporter-config`, `unpoller` |
-| Observability | `monz` | `monz` |
 | Observability | `opencost` | `opencost` |
 | Observability | `victoria-logs` | `victoria-logs` → ns `monitoring` |
 | Certificates and secrets | `cert-manager` | `cert-manager`, `cert-manager-common-issuers` |
