@@ -1,0 +1,51 @@
+---
+# Multus NetworkAttachmentDefinition: macvlan side-leg for AirConnect only.
+#
+# AirConnect and Home Assistant both need a real LAN presence, but the `lan`
+# NAD carries a single static IPAM address (192.168.73.140). Two workloads
+# attaching to one static address means whichever pod is scheduled first wins
+# the IP and the other silently comes up with no net1 at all — which is how
+# Home Assistant ended up Running, Ready, and unable to advertise HomeKit or
+# mDNS on the LAN.
+#
+# Split them: `lan` stays .140 and belongs to Home Assistant (HomeKit Bridge
+# and the HA mobile app both advertise from it, so that address is the one
+# with existing pairings behind it). AirConnect moves here to .141.
+#
+# .141 was verified free before allocation: absent from every manifest in this
+# repo, and no ARP response from the St Petersburg LAN after forced resolution
+# while seven other hosts on 192.168.73.0/24 answered. Residual risk is a
+# powered-off device holding a DHCP reservation; a collision would show as
+# AirConnect losing its LAN leg, not as Home Assistant regressing.
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: lan-airconnect
+spec:
+  config: |
+    {
+      "cniVersion": "0.3.1",
+      "name": "lan-airconnect",
+      "plugins": [
+        {
+          "type": "macvlan",
+          "master": "eth0",
+          "mode": "bridge",
+          "ipam": {
+            "type": "static",
+            "addresses": [
+              {
+                "address": "192.168.73.141/24",
+                "gateway": "192.168.73.1"
+              }
+            ],
+            "routes": [
+              {
+                "dst": "0.0.0.0/0",
+                "gw": "192.168.73.1"
+              }
+            ]
+          }
+        }
+      ]
+    }

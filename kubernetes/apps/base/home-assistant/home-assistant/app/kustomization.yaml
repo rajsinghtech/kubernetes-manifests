@@ -4,6 +4,7 @@ kind: Kustomization
 namespace: home-assistant
 resources:
   - ./network-attachment-lan.yaml
+  - ./network-attachment-lan-airconnect.yaml
   - ./statefulset.yaml
   - ./service.yaml
   - ./httproute.yaml
