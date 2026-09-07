@@ -1,0 +1,10 @@
+# UNAPPLIED until Raj approves #700.
+# Raises kube-apiserver memory request so the scheduler accounts for real usage
+# on sole control-plane node orin-0 (~4Gi RSS vs 512Mi request today).
+# Limit intentionally unset: OOMKill on a single-CP node is a control-plane outage.
+cluster:
+  apiServer:
+    resources:
+      requests:
+        cpu: 200m
+        memory: 3500Mi

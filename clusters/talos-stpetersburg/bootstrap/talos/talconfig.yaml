@@ -144,6 +144,7 @@ controlPlane:
     - "@./patches/controller/disable-proxy.yaml"
     - "@./patches/controller/kubelet-certs.yaml"
     - "@./patches/controller/etcd-metrics-patch.yaml"
+    - "@./patches/controller/apiserver-resources.yaml"
 
 # Worker nodes config — spark-0 / spark-1 (GB10 GPU boxes).
 # Mirrors the control-plane schematic so worker configs carry the same NVIDIA system
