@@ -390,7 +390,8 @@ spec:
               # MTP disabled: this checkpoint's MTP expert loader is not compatible with this image. \
               --compilation-config '{"mode":0,"cudagraph_mode":"FULL_DECODE_ONLY"}' \
               --hf-overrides '{"text_config":{"ple_embedding_dtype":"float8_e4m3fn","rope_parameters":{"rope_type":"yarn","factor":4.0,"original_max_position_embeddings":262144}}}' \
-              --nnodes 2 --node-rank 1 --master-addr 192.168.74.1 --master-port 26400
+              --nnodes 2 --node-rank 1 --master-addr 192.168.74.1 --master-port 26400 \
+              --headless
           env:
           - { name: VLLM_HOST_IP, value: "192.168.74.2" }
           - { name: VLLM_ALLOW_LONG_MAX_MODEL_LEN, value: "1" }
