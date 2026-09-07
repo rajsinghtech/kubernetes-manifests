@@ -34,3 +34,24 @@ spec:
   # a broken maintenance loop is not.
   maintenance:
     enabled: false
+  moverDefaults:
+    # Scheduling for Direct movers on tainted orin-0:
+    # - HelmRelease top-level `tolerations` apply to the CONTROLLER pod only
+    #   (chart model: root = controller; mover Jobs do not inherit them).
+    # - SnapshotPolicy.spec.mover has NO tolerations field (CRD reject).
+    # - sourceColocation Auto (default) pins the mover to the RWO holder node
+    #   and unions the holder pod's tolerations — HA already carries
+    #   node-role.kubernetes.io/control-plane Exists NoSchedule, so Direct
+    #   movers get that toleration automatically when homeassistant-0 holds
+    #   the PVC.
+    # - This explicit moverDefaults.tolerations is a belt-and-suspenders base
+    #   so bootstrap/maintenance-shaped Jobs (if ever re-enabled) and any
+    #   moment the PVC is briefly unheld still tolerate the CP taint. Do not
+    #   set sourceColocation: Disabled — that would drop holder-union and
+    #   leave Direct movers Pending on the taint.
+    sourceColocation:
+      mode: Auto
+    tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+        effect: NoSchedule
