@@ -1,0 +1,137 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: robbinsdale-k8s-operator
+  annotations:
+    kustomize.toolkit.fluxcd.io/ssa: merge
+    tailscale.com/tailnet-fqdn: robbinsdale-k8s-operator.keiretsu.ts.net
+    tailscale.com/proxy-group: common-egress
+spec:
+  externalName: placeholder
+  type: ExternalName
+  ports:
+    - name: port-0
+      port: 443
+      protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ottawa-k8s-operator
+  annotations:
+    kustomize.toolkit.fluxcd.io/ssa: merge
+    tailscale.com/tailnet-fqdn: ottawa-k8s-operator.keiretsu.ts.net
+    tailscale.com/proxy-group: common-egress
+spec:
+  externalName: placeholder
+  type: ExternalName
+  ports:
+    - name: port-0
+      port: 443
+      protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: stpetersburg-k8s-operator
+  annotations:
+    kustomize.toolkit.fluxcd.io/ssa: merge
+    tailscale.com/tailnet-fqdn: stpetersburg-k8s-operator.keiretsu.ts.net
+    tailscale.com/proxy-group: common-egress
+spec:
+  externalName: placeholder
+  type: ExternalName
+  ports:
+    - name: port-0
+      port: 443
+      protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ottawa-envoy-gateway
+  annotations:
+    kustomize.toolkit.fluxcd.io/ssa: merge
+    tailscale.com/tailnet-ip: 10.169.10.15
+    tailscale.com/proxy-group: common-egress
+spec:
+  externalName: placeholder
+  type: ExternalName
+  ports:
+    - name: https
+      port: 443
+      protocol: TCP
+    - name: http
+      port: 80
+      protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: robbinsdale-unifi
+  annotations:
+    kustomize.toolkit.fluxcd.io/ssa: merge
+    tailscale.com/tailnet-ip: 192.168.50.1
+    tailscale.com/proxy-group: common-egress
+spec:
+  externalName: placeholder
+  type: ExternalName
+  ports:
+    - name: port-0
+      port: 443
+      protocol: TCP
+    - name: port-1
+      port: 80
+      protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: robbinsdale-unifi-ipv6
+  annotations:
+    kustomize.toolkit.fluxcd.io/ssa: merge
+    tailscale.com/tailnet-ip: fd7a:115c:a1e0:b1a:0:1:c0a8:3201
+    tailscale.com/proxy-group: common-egress
+spec:
+  externalName: placeholder
+  type: ExternalName
+  ports:
+    - name: port-0
+      port: 443
+      protocol: TCP
+    - name: port-1
+      port: 80
+      protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kusanagi
+  annotations:
+    kustomize.toolkit.fluxcd.io/ssa: merge
+    tailscale.com/tailnet-fqdn: kusanagi.keiretsu.ts.net
+    tailscale.com/proxy-group: common-egress
+spec:
+  externalName: placeholder
+  type: ExternalName
+  ports:
+    - name: port-0
+      port: 22
+      protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: robbinsdale-udm-pro
+  annotations:
+    kustomize.toolkit.fluxcd.io/ssa: merge
+    tailscale.com/tailnet-fqdn: robbinsdale-udm-pro.keiretsu.ts.net
+    tailscale.com/proxy-group: common-egress
+spec:
+  externalName: placeholder
+  type: ExternalName
+  ports:
+    - name: port-0
+      port: 22
+      protocol: TCP
