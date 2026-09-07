@@ -1,0 +1,69 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kopiur
+  namespace: kopiur-system
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: kopiur
+      # PIN chart version — kopiur is alpha (v1alpha1); docs record a breaking
+      # 0.5.x → 0.6.0 CRD/values move. Do not float on latest.
+      version: "0.10.7"
+      sourceRef:
+        kind: HelmRepository
+        name: home-operations-kopiur
+        namespace: kopiur-system
+  install:
+    crds: CreateReplace
+    remediation:
+      retries: 3
+  upgrade:
+    crds: CreateReplace
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    # License: AGPL-3.0-only (chart annotation). Flag if that is a problem for
+    # this fleet — see PR body.
+    installScope: cluster
+
+    # PIN controller image digest (from oci chart 0.10.7 values). Digest wins
+    # over tag so a re-pulled :0.10.7 cannot change bits under us.
+    image:
+      repository: ghcr.io/home-operations/kopiur-controller
+      tag: "0.10.7"
+      digest: "sha256:ce50917db136e4f19b480724d5cff7a4e1eeed9431e737aeb7808b2693dcefe5"
+      pullPolicy: IfNotPresent
+
+    webhook:
+      image:
+        repository: ghcr.io/home-operations/kopiur-webhook
+        tag: "0.10.7"
+        digest: "sha256:788171c81579946053479fb81c7762564471761c3bdf45721dc6a0eacebfc6fa"
+        pullPolicy: IfNotPresent
+
+    mover:
+      image:
+        repository: ghcr.io/home-operations/kopiur-mover
+        tag: "0.10.7"
+        # PIN mover digest — this is the Job that mounts HA's PVC.
+        digest: "sha256:b6efbb3dedb88a87bc01f089f5f5e61dc3b306a4003a604c3bf01b1d3c335033"
+        pullPolicy: IfNotPresent
+
+    # StP: tolerate control-plane so Direct movers can co-locate on orin-0
+    # with the RWO local-path PVC (HA is pinned there).
+    tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+        effect: NoSchedule
+
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi

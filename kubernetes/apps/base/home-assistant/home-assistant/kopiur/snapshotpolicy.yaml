@@ -1,0 +1,37 @@
+---
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: SnapshotPolicy
+metadata:
+  name: homeassistant-config
+  namespace: home-assistant
+spec:
+  repository:
+    kind: Repository
+    name: kopiur-stpetersburg
+  # copyMethod MUST be Direct and MUST be explicit. Default is now Snapshot,
+  # which fails on this local-path→hostPath PVC with SourceNotCSIProvisioned
+  # (#695 blocker). Direct mounts the live PVC for kopia — same capability
+  # VolSync Direct had; Velero FSB refuses hostPath.
+  copyMethod: Direct
+  sources:
+    - pvc:
+        name: homeassistant-config
+      # Keep Direct mount READ-ONLY (kopiur default). readOnly:false would
+      # make kubelet fsGroup-chgrp the LIVE PVC — HA's only copy. Never.
+      readOnly: true
+  retention:
+    keepDaily: 14
+    keepWeekly: 4
+    keepMonthly: 3
+  mover:
+    # Live /config has root-owned 0600 files under .storage/ (auth, etc.).
+    # Default mover UID 65532 would Succeed with 0 files. Root mover is
+    # required to READ; mount stays read-only (above). Namespace must carry
+    # kopiur.home-operations.com/privileged-movers=true.
+    securityContext:
+      runAsUser: 0
+      runAsNonRoot: false
+    tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+        effect: NoSchedule

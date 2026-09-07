@@ -1,0 +1,36 @@
+---
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: Repository
+metadata:
+  name: kopiur-stpetersburg
+  namespace: home-assistant
+spec:
+  backend:
+    s3:
+      # DEDICATED bucket — never `velero`. Separate Kopia repo identity from
+      # Velero's uploaderType:kopia BSL (one maintenance owner per repo).
+      bucket: kopiur-stpetersburg
+      prefix: home-assistant/config/
+      # Bare host:port — no scheme (tls.disableTls below).
+      endpoint: ${COMMON_S3_ENDPOINT}
+      region: garage
+      tls:
+        disableTls: true
+      auth:
+        # GarageKey-minted AWS keys only (no KOPIA_PASSWORD in that Secret).
+        secretRef:
+          name: kopiur-stpetersburg-s3
+  encryption:
+    passwordSecretRef:
+      name: kopiur-stpetersburg-kopia-password
+      key: KOPIA_PASSWORD
+  create:
+    enabled: true
+  # Maintenance DISABLED — kopiur Maintenance runs real `kopia maintenance`,
+  # which PUTs `_maintenance` then immediately HEADs it. Under Garage
+  # consistencyMode:degraded that HEAD can see a stale replica and refuse with
+  # a false clock-skew error (km#2767 / #575). Do NOT flip Garage to
+  # consistent for this. ~12MiB HA config: unbounded growth is acceptable;
+  # a broken maintenance loop is not.
+  maintenance:
+    enabled: false

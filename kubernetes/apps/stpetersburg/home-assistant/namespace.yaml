@@ -8,3 +8,8 @@ metadata:
     pod-security.kubernetes.io/enforce: privileged
     pod-security.kubernetes.io/audit: privileged
     pod-security.kubernetes.io/warn: privileged
+  annotations:
+    # Root mover required to READ root-owned 0600 files under /config/.storage
+    # (auth, etc.). Direct mount stays readOnly:true — this opt-in is for UID 0
+    # on the mover Job only, not for writing the live PVC.
+    kopiur.home-operations.com/privileged-movers: "true"
