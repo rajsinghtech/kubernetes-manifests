@@ -466,7 +466,7 @@ Both live in `kubernetes/apps/base/k8gb/k8gb-common/config/cnames.yaml`.
   `status`, `s3`, `tailscale-logs.s3`.
 - Pointed at `ottawa.keiretsu.top`, i.e. straight to the Ottawa edge and
   bypassing GSLB: `auth`, `home`, `bhaiya`, `forgejo`, `grafana`, `teslamate`, `litellm`,
-  `woodpecker`, `infisical`, `frigate`, `monz`, `cliproxy`,
+  `woodpecker`, `infisical`, `frigate`, `cliproxy`,
   `frigate.${LOCATION}`. `bhaiya` is pinned here on purpose — through the GSLB
   the second WAN edge 404s about half the time. `forgejo` is pinned for the
   same class of failure: public CNAME → `forgejo.cdn` follows k8gb NS
@@ -720,7 +720,7 @@ cluster**, and this is a real trap. The name is shared; the contents are not.
 
 | Where | Admits SecurityPolicies from |
 |---|---|
-| Ottawa (`auth/tinyauth`) | `home`, `bhaiya`, `keiretsu-top`, `velero-system`, `teslamate`, `monz`, `cliproxy`, `media` |
+| Ottawa (`auth/tinyauth`) | `home`, `bhaiya`, `keiretsu-top`, `velero-system`, `teslamate`, `cliproxy`, `media` |
 | Robbinsdale, St. Petersburg (`tinyauth-egress`) | `home` and `keiretsu-top` **only** |
 
 So a SecurityPolicy copied from Ottawa into `media` or `monitoring` on the other
@@ -1192,13 +1192,6 @@ lands on the Ottawa instance. (St. Petersburg's points at the base directory
 `grafana-redirect-stpetersburg`; the Kustomization identity is still
 `grafana-redirect`.)
 
-### monz — a second, independent stack (Ottawa)
-
-Its own VictoriaLogs and VictoriaMetrics HelmReleases, Grafana instance,
-datasources and dashboard, published at `monz.keiretsu.top` with its own `ts`
-ingress routes for the VL and VM components. Kept deliberately separate from
-the primary `monitoring` namespace.
-
 ### Gatus — external synthetic checks
 
 The Flux Kustomization is named **`gatus`** in all three clusters — only the
@@ -1365,7 +1358,6 @@ Companions:
 | `headlamp` | Kubernetes UI |
 | `opencost` | cost attribution |
 | `grafana-mcp` | MCP bridge in front of Grafana |
-| `monz` | the parallel VictoriaMetrics/VictoriaLogs/Grafana stack |
 
 ### Elsewhere
 

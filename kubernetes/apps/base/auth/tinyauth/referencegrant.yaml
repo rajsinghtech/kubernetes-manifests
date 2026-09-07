@@ -23,9 +23,6 @@ spec:
       namespace: teslamate
     - group: gateway.envoyproxy.io
       kind: SecurityPolicy
-      namespace: monz
-    - group: gateway.envoyproxy.io
-      kind: SecurityPolicy
       namespace: cliproxy
     - group: gateway.envoyproxy.io
       kind: SecurityPolicy
