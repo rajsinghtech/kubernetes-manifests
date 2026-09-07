@@ -32,9 +32,11 @@ spec:
       containers:
         - name: kube-multus
           resources:
+            # orin-0 usage ~28Mi; 200Mi request was pure schedulable waste on the
+            # sole control-plane node that also pins Home Assistant.
             requests:
-              cpu: "200m"
-              memory: "200Mi"
+              cpu: "50m"
+              memory: "64Mi"
             limits:
               cpu: "1000m"
               memory: "3000Mi"
