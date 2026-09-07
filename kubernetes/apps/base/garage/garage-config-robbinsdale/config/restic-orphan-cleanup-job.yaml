@@ -83,28 +83,28 @@ spec:
               deleted=0
               missing=0
 
-              for entry in "${allowlist[@]}"; do
-                ns="${entry%%/*}"
-                name="${entry#*/}"
-                if ! kubectl -n "${ns}" get secret "${name}" >/dev/null 2>&1; then
-                  echo "missing ${entry} (already gone)"
-                  missing=$((missing + 1))
+              for entry in "$${allowlist[@]}"; do
+                ns="$${entry%%/*}"
+                name="$${entry#*/}"
+                if ! kubectl -n "$${ns}" get secret "$${name}" >/dev/null 2>&1; then
+                  echo "missing $${entry} (already gone)"
+                  missing=$$((missing + 1))
                   continue
                 fi
 
-                repo="$(kubectl -n "${ns}" get secret "${name}" -o jsonpath='{.data.RESTIC_REPOSITORY}' | base64 -d)"
-                if [[ "${repo}" != *"/keiretsu/"* ]]; then
-                  echo "REFUSING ${entry}: RESTIC_REPOSITORY does not target /keiretsu/ (${repo})"
+                repo="$$(kubectl -n "$${ns}" get secret "$${name}" -o jsonpath='{.data.RESTIC_REPOSITORY}' | base64 -d)"
+                if [[ "$${repo}" != *"/keiretsu/"* ]]; then
+                  echo "REFUSING $${entry}: RESTIC_REPOSITORY does not target /keiretsu/ ($${repo})"
                   exit 1
                 fi
-                if [[ ! "${repo}" =~ ^s3:http://garage(-gateway)?\.garage\.svc\.cluster\.local:3900/keiretsu/ ]]; then
-                  echo "REFUSING ${entry}: not in-cluster Garage keiretsu (${repo})"
+                if [[ ! "$${repo}" =~ ^s3:http://garage(-gateway)?\.garage\.svc\.cluster\.local:3900/keiretsu/ ]]; then
+                  echo "REFUSING $${entry}: not in-cluster Garage keiretsu ($${repo})"
                   exit 1
                 fi
 
-                echo "deleting ${entry} repo=${repo}"
-                kubectl -n "${ns}" delete secret "${name}" --wait=false
-                deleted=$((deleted + 1))
+                echo "deleting $${entry} repo=$${repo}"
+                kubectl -n "$${ns}" delete secret "$${name}" --wait=false
+                deleted=$$((deleted + 1))
               done
 
-              echo "robbinsdale restic orphan cleanup done deleted=${deleted} missing=${missing}"
+              echo "robbinsdale restic orphan cleanup done deleted=$${deleted} missing=$${missing}"
