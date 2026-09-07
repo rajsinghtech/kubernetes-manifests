@@ -29,10 +29,11 @@ spec:
     cleanupOnFail: true
     timeout: 15m
     remediation:
-      # Retry the upgrade itself; do not dig a deeper hole by rolling back a
-      # merely-slow ring join into another 5m-default stall (#713).
+      # 'retry' is NOT a valid strategy (live CRD accepts only rollback |
+      # uninstall), and setting it fails the whole Kustomization dry-run.
+      # The 15m timeouts above are the actual fix: a healthy ring join no
+      # longer times out, so remediation is not triggered at all.
       retries: 2
-      strategy: retry
   postRenderers:
     - kustomize:
         patches:
