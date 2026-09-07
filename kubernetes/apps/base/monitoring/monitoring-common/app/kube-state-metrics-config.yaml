@@ -335,6 +335,66 @@ kube-state-metrics:
                   type: Gauge
                   gauge:
                     path: [ status, stoppedAt ]
+          # Schedule CRs are required to catch schedules that never produce a
+          # successful Backup (no velero_backup_last_successful_timestamp series).
+          # VeleroBackupStale alone is blind to that case: forgejo-backup was
+          # Enabled with lastBackup unset and would stay invisible until after
+          # its first success created a timestamp series.
+          - groupVersionKind:
+              group: velero.io
+              version: v1
+              kind: Schedule
+            metricNamePrefix: velero_cr
+            labelsFromPath:
+              namespace: [ metadata, namespace ]
+              schedule: [ metadata, name ]
+            metrics:
+              - name: "schedule_info"
+                help: "Phase and pause state of a Velero Schedule custom resource."
+                each:
+                  type: Info
+                  info:
+                    labelsFromPath:
+                      phase: [ status, phase ]
+                      paused: [ spec, paused ]
+              - name: "schedule_created_timestamp"
+                help: "Unix creation timestamp of a Velero Schedule custom resource."
+                each:
+                  type: Gauge
+                  gauge:
+                    path: [ metadata, creationTimestamp ]
+              - name: "schedule_last_backup_timestamp"
+                help: "Unix timestamp of Schedule.status.lastBackup when set."
+                each:
+                  type: Gauge
+                  gauge:
+                    path: [ status, lastBackup ]
+          # BackupRepository phase=Ready can coexist with refused Kopia prune
+          # (#575). Export lastMaintenanceTime so Ready-but-unmaintained is
+          # observable without latching on a historical failure counter.
+          - groupVersionKind:
+              group: velero.io
+              version: v1
+              kind: BackupRepository
+            metricNamePrefix: velero_cr
+            labelsFromPath:
+              namespace: [ metadata, namespace ]
+              repository: [ metadata, name ]
+              volume_namespace: [ spec, volumeNamespace ]
+            metrics:
+              - name: "backuprepository_info"
+                help: "Phase of a Velero BackupRepository custom resource."
+                each:
+                  type: Info
+                  info:
+                    labelsFromPath:
+                      phase: [ status, phase ]
+              - name: "backuprepository_last_maintenance_timestamp"
+                help: "Unix timestamp of BackupRepository.status.lastMaintenanceTime."
+                each:
+                  type: Gauge
+                  gauge:
+                    path: [ status, lastMaintenanceTime ]
           - groupVersionKind:
               group: velero.io
               version: v1
