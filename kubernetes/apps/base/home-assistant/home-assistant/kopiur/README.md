@@ -11,6 +11,20 @@ Constraints (also comments on the CRs):
 5. Chart `0.10.7` + controller/webhook/mover digests pinned.
 6. StP only — OT/RB HA already have Velero PVBs.
 
+## Password escrow
+
+`kopia-password.sops.yaml` is the recovery copy of the repository password.
+It is encrypted in Git with the repository SOPS PGP key and deliberately keeps
+the existing password, because rotating it would make the current Kopia
+history unreadable. This is only an escrow if the corresponding private key is
+held outside St Petersburg (and outside the cluster); the Flux `sops-gpg`
+Secret is not an independent copy.
+
+The Git copy trades cluster-loss survivability for repository access to the
+encrypted secret: anyone who can decrypt the SOPS file can read the Kopia
+password. Keep GitHub access and the PGP private-key backup restricted, and
+verify the key can decrypt this file during disaster-recovery review.
+
 Root mover (`runAsUser: 0` + `privilegedMode: true`) and Namespace
 `privileged-movers` annotation: live `/config` has root-owned `0600` files;
 mount stays read-only. `inheritSecurityContextFrom` is unusable — HA pins no
