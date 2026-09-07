@@ -7,6 +7,7 @@ PROM_VERSION=3.14.0
 PROM_ARCHIVE="prometheus-${PROM_VERSION}.linux-amd64.tar.gz"
 PROM_SHA256=f665c6da19eb7ba399c915d30c7d9793c9b417bf8a749b504bc470678631478d
 CACHE_ROOT="${XDG_CACHE_HOME:-${HOME:-/tmp}/.cache}/cos-promtool/${PROM_VERSION}"
+DOWNLOAD_ATTEMPTS=3
 
 sha256() {
   if command -v sha256sum >/dev/null 2>&1; then
@@ -33,6 +34,16 @@ promtool_path() {
     return 0
   fi
 
+  if command -v promtool >/dev/null 2>&1; then
+    local installed
+    installed=$(command -v promtool)
+    if "$installed" --version 2>&1 | grep -F "version ${PROM_VERSION}" >/dev/null; then
+      printf '%s\n' "$installed"
+      return 0
+    fi
+    echo "notice: ignoring installed promtool because it is not Prometheus ${PROM_VERSION}" >&2
+  fi
+
   case "$(uname -s):$(uname -m)" in
     Linux:x86_64|Linux:amd64) ;;
     *)
@@ -45,16 +56,34 @@ promtool_path() {
   local extracted="$CACHE_ROOT/prometheus-${PROM_VERSION}.linux-amd64/promtool"
   mkdir -p "$CACHE_ROOT"
   if [ ! -f "$archive" ] || [ "$(sha256 "$archive")" != "$PROM_SHA256" ]; then
-    local tmp="$archive.part.$$"
-    curl --fail --silent --show-error --location --retry 3 \
-      "https://github.com/prometheus/prometheus/releases/download/v${PROM_VERSION}/${PROM_ARCHIVE}" \
-      -o "$tmp"
-    [ "$(sha256 "$tmp")" = "$PROM_SHA256" ] || {
-      echo "error: checksum mismatch for $PROM_ARCHIVE" >&2
+    local attempt tmp curl_output curl_status last_error=""
+    for ((attempt = 1; attempt <= DOWNLOAD_ATTEMPTS; attempt++)); do
+      tmp="$archive.part.$$.$attempt"
+      curl_output=""
+      if curl_output=$(curl --fail --silent --show-error --location \
+        --retry 3 --retry-all-errors --connect-timeout 15 --max-time 120 \
+        "https://github.com/prometheus/prometheus/releases/download/v${PROM_VERSION}/${PROM_ARCHIVE}" \
+        -o "$tmp" 2>&1); then
+        if [ "$(sha256 "$tmp")" = "$PROM_SHA256" ]; then
+          mv "$tmp" "$archive"
+          break
+        fi
+        last_error="archive checksum mismatch (possibly truncated or corrupt response)"
+      else
+        curl_status=$?
+        last_error="curl exit ${curl_status}: ${curl_output:-no curl diagnostics}"
+      fi
       rm -f "$tmp"
+      if [ "$attempt" -lt "$DOWNLOAD_ATTEMPTS" ]; then
+        echo "notice: promtool download attempt $attempt/$DOWNLOAD_ATTEMPTS failed: $last_error; retrying" >&2
+      fi
+    done
+    if [ ! -f "$archive" ] || [ "$(sha256 "$archive")" != "$PROM_SHA256" ]; then
+      echo "error: NETWORK/tool acquisition failed for pinned Prometheus ${PROM_VERSION} after ${DOWNLOAD_ATTEMPTS} attempts" >&2
+      echo "error: $last_error" >&2
+      echo "error: no Mimir rule parsing was attempted" >&2
       return 1
-    }
-    mv "$tmp" "$archive"
+    fi
   fi
   if [ ! -x "$extracted" ]; then
     tar -xzf "$archive" -C "$CACHE_ROOT"
