@@ -56,7 +56,10 @@ for cluster in "${targets[@]}"; do
   # the objects this CRD gate validates. The full cluster render gate below
   # remains authoritative for chart/source reconciliation failures.
   flate_rc=0
-  tools/flate.sh build ks --path "kubernetes/apps/$location" \
+  # CI exports FLATE_BASE=main for changed-only render gates. This focused
+  # schema view must inspect the existing full location tree even when the PR
+  # changes only tooling, or it would legitimately emit zero app documents.
+  env -u FLATE_BASE tools/flate.sh build ks --path "kubernetes/apps/$location" \
     --allow-missing-secrets --no-progress >"$rendered" 2>"$flate_err" || flate_rc=$?
   if [ ! -s "$rendered" ]; then
     echo "error: Flate emitted no rendered Kustomization output for $cluster (exit $flate_rc)" >&2
