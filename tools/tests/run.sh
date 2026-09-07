@@ -369,16 +369,27 @@ rm -rf "$fstub"
 section "check.sh (stubbed make)"
 mstub="$(mktemp -d)"
 printf '#!/usr/bin/env bash\nexit 0\n' >"$mstub/make"; chmod +x "$mstub/make"
-sout="$(PATH="$mstub:$PATH" "$T/check.sh" 2>/dev/null)"; sec=$?
+gate_root="$(mktemp -d)"
+mkdir -p "$gate_root/tools"
+cp "$T/check.sh" "$gate_root/tools/check.sh"
+for helper in check-versions.sh check-notification-scope.sh \
+  check-cliproxy-pi-bridge.sh check-zot-upload-affinity.sh \
+  check-mimir-rules.sh check-velero-pvc-coverage.sh \
+  check-helmrelease-schema.sh; do
+  printf '#!/usr/bin/env bash\nexit 0\n' >"$gate_root/tools/$helper"
+  chmod +x "$gate_root/tools/$helper"
+done
+sout="$(PATH="$mstub:$PATH" "$gate_root/tools/check.sh" 2>/dev/null)"; sec=$?
 assert "success -> exit 0"              test "$sec" = 0
 assert "success prints exactly 1 line"  test "$(printf '%s\n' "$sout" | grep -c .)" = 1
 assert "success line format"            grep -q '^✓ render OK:' <<<"$sout"
-exits  "unknown cluster -> exit 2"      2 "$T/check.sh" nope
-exits  "multiple clusters -> exit 2"    2 "$T/check.sh" ot rb
-exits  "quick + cluster -> exit 2"      2 "$T/check.sh" --quick ot
-assert "help -> concise usage"           grep -q '^Usage:' <<<"$("$T/check.sh" --help)"
-aliasout="$(PATH="$mstub:$PATH" "$T/check.sh" ot 2>/dev/null)"
+exits  "unknown cluster -> exit 2"      2 "$gate_root/tools/check.sh" nope
+exits  "multiple clusters -> exit 2"    2 "$gate_root/tools/check.sh" ot rb
+exits  "quick + cluster -> exit 2"      2 "$gate_root/tools/check.sh" --quick ot
+assert "help -> concise usage"           grep -q '^Usage:' <<<"$("$gate_root/tools/check.sh" --help)"
+aliasout="$(PATH="$mstub:$PATH" "$gate_root/tools/check.sh" ot 2>/dev/null)"
 assert "short cluster alias accepted"   grep -q '^✓ render OK: talos-ottawa$' <<<"$aliasout"
+rm -rf "$gate_root"
 
 # A completed gate must reap every watchdog timer descendant. Use an isolated
 # temporary gate root so this test exercises the real run_capped implementation
@@ -392,7 +403,8 @@ mkdir -p "$watchdog_tmp/tools" "$watchdog_tmp/stub"
 cp "$T/check.sh" "$watchdog_tmp/tools/check.sh"
 for helper in check-versions.sh check-notification-scope.sh \
   check-cliproxy-pi-bridge.sh check-zot-upload-affinity.sh \
-  check-mimir-rules.sh check-velero-pvc-coverage.sh; do
+  check-mimir-rules.sh check-velero-pvc-coverage.sh \
+  check-helmrelease-schema.sh; do
   cat >"$watchdog_tmp/tools/$helper" <<'EOF'
 #!/usr/bin/env bash
 IFS= read -r _ <"$WATCHDOG_READY"
@@ -707,6 +719,80 @@ assert "failure names ottawa/home" \
 cp "$hsbak" "$ROOT/kubernetes/apps/ottawa/velero/schedules/home-backup.yaml"
 rm -f "$hsbak"
 exits  "restored schedule passes again" 0 "$T/check-velero-pvc-coverage.sh"
+
+# ---------------------------------------------------------------- HelmRelease schema
+# Offline fixture tests use the repository-pinned kubeconform wrapper and the
+# complete Flux HelmRelease v2 schema. No rendered cluster or live API is used.
+section "HelmRelease v2 schema"
+hrfixture="$(mktemp -d)"
+cat >"$hrfixture/valid.yaml" <<'EOF'
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: fixture
+  namespace: flux-system
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: fixture
+      sourceRef:
+        kind: HelmRepository
+        name: fixture
+  upgrade:
+    remediation:
+      strategy: rollback
+  values:
+    arbitraryChartValue:
+      futureShape: true
+EOF
+cat >"$hrfixture/invalid-enum.yaml" <<'EOF'
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: fixture
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: fixture
+      sourceRef: {kind: HelmRepository, name: fixture}
+  upgrade:
+    remediation:
+      strategy: retry
+EOF
+cat >"$hrfixture/invalid-field.yaml" <<'EOF'
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: fixture
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: fixture
+      sourceRef: {kind: HelmRepository, name: fixture}
+  upgrade:
+    remediation:
+      unexpectedField: true
+EOF
+schema="$ROOT/tools/schemas/helm-controller-v1.6.4/helmrelease-helm-v2-strict.json"
+exits "valid HelmRelease and opaque values pass" 0 \
+  "$T/kubeconform.sh" -strict -schema-location "$schema" "$hrfixture/valid.yaml"
+exits "invalid remediation enum fails" 1 \
+  "$T/kubeconform.sh" -strict -schema-location "$schema" "$hrfixture/invalid-enum.yaml"
+exits "invalid CRD field fails" 1 \
+  "$T/kubeconform.sh" -strict -schema-location "$schema" "$hrfixture/invalid-field.yaml"
+rm -rf "$hrfixture"
+
+schema_contract_out="$(mktemp)"
+if "$T/tests/helmrelease-schema.sh" >"$schema_contract_out" 2>&1; then
+  ok "real HelmRelease checker contract regressions"
+else
+  bad "real HelmRelease checker contract regressions"
+  sed -n '1,160p' "$schema_contract_out"
+fi
+rm -f "$schema_contract_out"
 
 # ---------------------------------------------------------------- summary
 printf '\n== %d passed, %d failed ==\n' "$pass" "$fail"
