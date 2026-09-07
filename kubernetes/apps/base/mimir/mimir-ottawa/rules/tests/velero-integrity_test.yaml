@@ -183,6 +183,35 @@ tests:
         alertname: VeleroScheduleExpectedVolumeDataMissing
         exp_alerts: []
 
+  # A failed newest attempt is owned by the latest-backup failure alert. Do
+  # not fall back to an older empty Completed run and falsely page a schedule
+  # whose failed attempt selected real positive-volume PVBs.
+  - interval: 1m
+    input_series:
+      - series: 'velero_cr_schedule_info{cluster="talos-ottawa",namespace="velero-system",schedule="expected-failed",phase="Enabled",paused="false",volume_data_required="true"}'
+        values: "1+0x20"
+      - series: 'velero_cr_backup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="expected-failed",backup="expected-failed-previous"}'
+        values: "100+0x20"
+      - series: 'velero_cr_backup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="expected-failed",backup="expected-failed-current"}'
+        values: "200+0x20"
+      - series: 'velero_cr_backup_info{cluster="talos-ottawa",namespace="velero-system",schedule="expected-failed",backup="expected-failed-previous",phase="Completed"}'
+        values: "1+0x20"
+      - series: 'velero_cr_backup_info{cluster="talos-ottawa",namespace="velero-system",schedule="expected-failed",backup="expected-failed-current",phase="PartiallyFailed"}'
+        values: "1+0x20"
+      - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",backup="expected-failed-current",pod_volume_backup="expected-failed-pvb",node="asuka",phase="Completed"}'
+        values: "1+0x20"
+      - series: 'velero_cr_podvolumebackup_bytes_done{cluster="talos-ottawa",namespace="velero-system",backup="expected-failed-current",pod_volume_backup="expected-failed-pvb",node="asuka"}'
+        values: "1234+0x20"
+      - series: 'velero_cr_podvolumebackup_bytes_total{cluster="talos-ottawa",namespace="velero-system",backup="expected-failed-current",pod_volume_backup="expected-failed-pvb",node="asuka"}'
+        values: "1234+0x20"
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: VeleroScheduleVolumeCoverageRegressed
+        exp_alerts: []
+      - eval_time: 15m
+        alertname: VeleroScheduleExpectedVolumeDataMissing
+        exp_alerts: []
+
   # When a prior Completed run has selected a volume and the current count
   # drops, the relative rule owns the regression. The absolute rule must stay
   # quiet so one schedule does not produce two coverage pages.
