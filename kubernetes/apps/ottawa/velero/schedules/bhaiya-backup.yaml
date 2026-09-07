@@ -11,3 +11,7 @@ spec:
     includedNamespaces:
       - bhaiya
     defaultVolumesToFsBackup: true
+    # Skip emptyDir (scratch/hermes-managed). Durable PVC failures still page.
+    resourcePolicy:
+      kind: configmap
+      name: fs-backup-resource-policy
