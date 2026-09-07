@@ -9,8 +9,9 @@
 # Silent-skip / green-empty coverage (corp/bhaiya#695, #703):
 # - VeleroScheduleLatestBackupHasWarnings: hostPath skips leave phase=Completed
 #   with status.warnings>0 (StP homeassistant-config).
-# - VeleroScheduleLatestBackupMissingVolumes: Completed latest Backup with zero
-#   PodVolumeBackup children (metadata-only / unmounted PVC / opt-in miss).
+# - VeleroScheduleLatestBackupMissingVolumes: Completed latest Backup with no
+#   completed, byte-complete PodVolumeBackup (metadata-only / unmounted PVC /
+#   opt-in miss / a child that never finished).
 # Both join on the newest Backup per schedule so they clear on recovery.
 #
 # Keep this namespace separate from rules/velero.yaml. Both files are synced by
@@ -176,9 +177,15 @@ groups:
             and do not treat this Backup as a volume restore source until the
             warning is gone. A later Backup with warnings=0 clears this alert.
 
-      # Metadata-only Completed Backup: no PodVolumeBackup children at all.
-      # Covers opt-in miss (media-config before #2757), scaled-to-zero apps
-      # with orphan PVCs (hermes), and similar green-empty schedules (#703).
+      # A PVB object is not volume-data evidence until it is Completed and its
+      # byte counters agree. Prepared/InProgress/Canceled children can leave a
+      # Completed parent looking green without a usable archive. An empty
+      # volume is valid evidence when both counters are zero; this still does
+      # not establish that every expected PVC was included or that restore
+      # works.
+      # Covers metadata-only backups from opt-in misses (media-config before
+      # #2757), scaled-to-zero apps with orphan PVCs (hermes), and similar
+      # green-empty schedules (#703).
       # Schedules that never create a Backup are VeleroScheduleNeverBackedUp.
       # Require phase=Completed on the newest Backup so Failed attempts do not
       # double-page with VeleroScheduleLastBackupFailed.
@@ -211,21 +218,175 @@ groups:
           (
             count by (cluster, namespace, backup) (
               velero_cr_podvolumebackup_info{
-                namespace="velero-system"
+                namespace="velero-system",
+                phase="Completed"
               }
+              and on (cluster, namespace, pod_volume_backup, backup, node)
+              (
+                velero_cr_podvolumebackup_bytes_done{
+                  namespace="velero-system"
+                }
+                == on (cluster, namespace, pod_volume_backup, backup, node)
+                velero_cr_podvolumebackup_bytes_total{
+                  namespace="velero-system"
+                }
+              )
             ) > 0
           )
         for: 15m
         labels:
           severity: critical
         annotations:
-          summary: Velero schedule {{ $labels.schedule }} latest Completed backup has no volume snapshots
+          summary: Velero schedule {{ $labels.schedule }} latest Completed backup has no completed volume data
           description: >-
             The newest Backup for schedule {{ $labels.schedule }} is
-            {{ $labels.backup }}, phase=Completed, and has zero PodVolumeBackup
-            children. That is a metadata-only backup: Kubernetes objects may be
-            present while durable PVCs were never selected or never mounted
-            (corp/bhaiya#703). Confirm with
+            {{ $labels.backup }}, phase=Completed, and has no Completed
+            PodVolumeBackup with bytesDone equal to totalBytes. That is not
+            volume-data evidence: Kubernetes objects may be present while
+            durable PVCs were never selected or never mounted, or a child may
+            still be incomplete (corp/bhaiya#703). Confirm with
             `kubectl -n velero-system get podvolumebackup -l velero.io/backup-name={{ $labels.backup }}`
-            and the live pod volume mounts — do not trust the Backup phase.
-            Clears when a later Backup has at least one PodVolumeBackup.
+            and the live pod volume mounts — do not trust the Backup phase or
+            the existence of a PVB object. This alert only establishes that
+            one byte-complete PVB exists; it does not prove every expected PVC
+            is covered or that a restore works. Clears when a later Backup has
+            a Completed PVB with matching byte counters.
+
+      # Count coverage, not Kubernetes item coverage. A current Backup with
+      # one PVB can otherwise look healthy beside a prior run with 37 PVBs.
+      # The current run is the newest Backup for the schedule, while the
+      # baseline is the newest older Completed Backup. For this independent
+      # volume-count comparison, a Completed run with warnings is still a
+      # useful observed baseline; VeleroScheduleLatestBackupHasWarnings owns
+      # the separate quality signal. The alert deliberately observes the
+      # produced-PVB count while the Backup is queued/running; phase and item
+      # counters are not allowed to hide a volume gap.
+      - record: velero_schedule_latest_backup_created_timestamp
+        expr: |
+          max by (cluster, namespace, schedule, backup) (
+            topk by (cluster, namespace, schedule) (
+              1,
+              velero_cr_backup_created_timestamp{
+                namespace="velero-system",
+                schedule!=""
+              }
+            )
+          )
+
+      # kube-state-metrics emits these status counters only when they are
+      # non-zero. Absence therefore means zero; using `metric == 0` here would
+      # make a Completed Backup disappear from the baseline. "Successful" in
+      # this recording-rule name means parent phase=Completed for the count
+      # baseline. Warnings remain independently actionable and must not erase a
+      # known prior PVB count.
+      - record: velero_schedule_successful_backup_created_timestamp
+        expr: |
+          velero_cr_backup_created_timestamp{
+            namespace="velero-system",
+            schedule!=""
+          }
+          and on (cluster, namespace, schedule, backup)
+          (
+            max by (cluster, namespace, schedule, backup) (
+              velero_cr_backup_info{
+                namespace="velero-system",
+                schedule!="",
+                phase="Completed"
+              }
+            )
+          )
+
+      - record: velero_schedule_previous_successful_backup_created_timestamp
+        expr: |
+          max by (cluster, namespace, schedule, backup) (
+            topk by (cluster, namespace, schedule) (
+              1,
+              (
+                velero_schedule_successful_backup_created_timestamp
+                unless on (cluster, namespace, schedule, backup)
+                velero_schedule_latest_backup_created_timestamp
+              )
+            )
+          )
+
+      # Count each PVB object once, regardless of phase. A Prepared PVB is
+      # still evidence that the Backup selected one volume; the separate
+      # stalled-PVB alert owns whether that selected volume makes progress.
+      - record: velero_backup_pod_volume_backup_count
+        expr: |
+          count by (cluster, namespace, backup) (
+            max by (cluster, namespace, pod_volume_backup, backup) (
+              velero_cr_podvolumebackup_info{
+                namespace="velero-system"
+              }
+            )
+          )
+
+      - record: velero_schedule_latest_pod_volume_backup_count
+        expr: |
+          (
+            (
+              velero_backup_pod_volume_backup_count
+              * on (cluster, namespace, backup) group_left (schedule)
+              max by (cluster, namespace, schedule, backup) (
+                velero_cr_backup_info{
+                  namespace="velero-system",
+                  schedule!=""
+                }
+              )
+            )
+            and on (cluster, namespace, schedule, backup)
+            velero_schedule_latest_backup_created_timestamp
+          )
+          or on (cluster, namespace, schedule, backup)
+          (
+            velero_schedule_latest_backup_created_timestamp * 0
+          )
+
+      - record: velero_schedule_previous_successful_pod_volume_backup_count
+        expr: |
+          (
+            (
+              velero_backup_pod_volume_backup_count
+              * on (cluster, namespace, backup) group_left (schedule)
+              max by (cluster, namespace, schedule, backup) (
+                velero_cr_backup_info{
+                  namespace="velero-system",
+                  schedule!=""
+                }
+              )
+            )
+            and on (cluster, namespace, schedule, backup)
+            velero_schedule_previous_successful_backup_created_timestamp
+          )
+          or on (cluster, namespace, schedule, backup)
+          (
+            velero_schedule_previous_successful_backup_created_timestamp * 0
+          )
+
+      - alert: VeleroScheduleVolumeCoverageRegressed
+        expr: |
+          velero_schedule_latest_pod_volume_backup_count
+          < on (cluster, namespace, schedule) group_right(backup)
+          velero_schedule_previous_successful_pod_volume_backup_count
+        for: 15m
+        labels:
+          severity: critical
+        annotations:
+          summary: Velero schedule {{ $labels.schedule }} volume coverage regressed
+          description: >-
+            The newest Backup {{ $labels.backup }} for schedule
+            {{ $labels.schedule }} has fewer PodVolumeBackups than its previous
+            Completed baseline. Any lower PVB count is material because each
+            PVB represents one selected volume. This remains a coverage
+            regression even when Kubernetes item counts or the parent Backup
+            phase look normal. A warning-bearing Completed Backup can still
+            supply this count baseline; investigate its warning separately.
+            If no previous Completed baseline exists, this alert is
+            intentionally silent: that means no comparable baseline, not
+            proof of zero-volume health. Schedules that never produce a
+            successful nonzero-volume baseline require the separate
+            never/zero-volume coverage signal. Inspect the current and
+            previous Backup PVB populations; stalled-path and node-saturation
+            alerts are separate, and this alert is not restore proof. It
+            clears only when the newest run reaches the prior baseline count.
