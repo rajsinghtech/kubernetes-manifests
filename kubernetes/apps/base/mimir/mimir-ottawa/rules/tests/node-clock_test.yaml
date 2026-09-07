@@ -1,0 +1,50 @@
+rule_files:
+  - ../node-clock.yaml
+
+evaluation_interval: 1m
+
+tests:
+  - interval: 1m
+    input_series:
+      - series: 'node_timex_offset_seconds{cluster="talos-ottawa",instance="10.0.0.1:9100",job="node-exporter"}'
+        values: "1+0x20"
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: NodeClockSkew
+        exp_alerts: []
+
+  - interval: 1m
+    input_series:
+      - series: 'node_timex_offset_seconds{cluster="talos-robbinsdale",instance="10.0.0.2:9100",job="node-exporter"}'
+        values: "3900+0x20"
+    alert_rule_test:
+      - eval_time: 9m
+        alertname: NodeClockSkew
+        exp_alerts: []
+      - eval_time: 10m
+        alertname: NodeClockSkew
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              cluster: talos-robbinsdale
+              instance: 10.0.0.2:9100
+              job: node-exporter
+            exp_annotations:
+              summary: Node 10.0.0.2:9100 has excessive clock skew
+              description: >-
+                Node 10.0.0.2:9100 has reported more than five minutes of
+                clock offset for at least ten minutes (3900 seconds). Check
+                host time synchronisation before investigating TLS,
+                authentication, or backup failures.
+
+  - interval: 1m
+    input_series:
+      - series: 'node_timex_offset_seconds{cluster="talos-stpetersburg",instance="10.0.0.3:9100",job="node-exporter"}'
+        values: "600+0x4 0+0x16"
+    alert_rule_test:
+      - eval_time: 4m
+        alertname: NodeClockSkew
+        exp_alerts: []
+      - eval_time: 5m
+        alertname: NodeClockSkew
+        exp_alerts: []
