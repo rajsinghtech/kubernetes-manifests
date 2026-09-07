@@ -3,6 +3,8 @@
 # plus forgejo-postgres-*/pgdata. emptyDir scratch volumes are skipped by
 # fs-backup-resource-policy. Schedule is daily 10:00 UTC; if lastBackup is
 # empty the cron has not fired yet — that is not a capture failure.
+# A one-shot Backup forgejo-backup-bootstrap covers git data until the
+# Schedule owns a Completed PVB for volume data (gitea-shared-storage).
 apiVersion: velero.io/v1
 kind: Schedule
 metadata:

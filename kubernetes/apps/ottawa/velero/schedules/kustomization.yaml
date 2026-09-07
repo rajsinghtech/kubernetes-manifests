@@ -8,3 +8,4 @@ resources:
   - ./bhaiya-backup.yaml
   - ./cliproxy-backup.yaml
   - ./forgejo-backup.yaml
+  - ./forgejo-backup-bootstrap.yaml

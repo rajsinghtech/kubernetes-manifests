@@ -1,4 +1,9 @@
 ---
+# corp/bhaiya#695: homeassistant-config is local-path → hostPath. Velero fs-backup
+# skips it with a warning and still marks the Backup Completed. CSI snapshots are
+# unavailable (no VolumeSnapshotLocation on StP; only StorageClass is local-path).
+# Detection: VeleroScheduleLatestBackupHasWarnings (critical). Data fix needs a
+# non-hostPath volume or a non-Velero copy — not another Completed Backup.
 apiVersion: velero.io/v1
 kind: Schedule
 metadata:
@@ -11,8 +16,7 @@ spec:
     includedNamespaces:
       - home-assistant
     defaultVolumesToFsBackup: true
-    # Skip AirConnect emptyDir noise. NOTE: homeassistant-config is still
-    # unprotected — Velero refuses local-path hostPath PVs (see findings).
+    # Skip AirConnect emptyDir so remaining warnings are hostPath skips only.
     resourcePolicy:
       kind: configmap
       name: fs-backup-resource-policy

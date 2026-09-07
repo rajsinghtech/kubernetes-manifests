@@ -4,9 +4,14 @@
 # phase of an individual Backup (a real Failed Backup kept last_status=1).
 #
 # #572 acceptance (Failed/PartiallyFailed latest Backup, Failed/Canceled PVB,
-# bytesDone!=totalBytes) is covered by the rules below after #2743. The
-# warnings gauge + VeleroScheduleLatestBackupHasWarnings close the #695 gap
-# (Completed Backup that silently skipped a durable hostPath volume).
+# bytesDone!=totalBytes) is covered by the rules below after #2743.
+#
+# Silent-skip / green-empty coverage (corp/bhaiya#695, #703):
+# - VeleroScheduleLatestBackupHasWarnings: hostPath skips leave phase=Completed
+#   with status.warnings>0 (StP homeassistant-config).
+# - VeleroScheduleLatestBackupMissingVolumes: Completed latest Backup with zero
+#   PodVolumeBackup children (metadata-only / unmounted PVC / opt-in miss).
+# Both join on the newest Backup per schedule so they clear on recovery.
 #
 # Keep this namespace separate from rules/velero.yaml. Both files are synced by
 # the same mimirtool Job and a repeated namespace aborts every tenant sync.
@@ -129,7 +134,8 @@ groups:
       # Completed + warnings is how Velero reports hostPath volume skips while
       # still leaving phase=Completed (StP home-assistant-config / #695). Bound
       # to the newest Backup per schedule so a later clean run clears the alert;
-      # do not match historical warning-bearing objects.
+      # do not match historical warning-bearing objects. Critical: a "Completed"
+      # Backup with warnings is the dangerous signal, not a soft FYI.
       - alert: VeleroScheduleLatestBackupHasWarnings
         expr: |
           (
@@ -156,16 +162,70 @@ groups:
           )
         for: 5m
         labels:
-          severity: warning
+          severity: critical
         annotations:
-          summary: Velero schedule {{ $labels.schedule }} latest backup has warnings
+          summary: Velero schedule {{ $labels.schedule }} latest Completed backup has warnings
           description: >-
             The newest Backup for schedule {{ $labels.schedule }} is
             {{ $labels.backup }} and reports status.warnings > 0. Velero uses
             warnings for soft failures such as skipping a hostPath / local-path
-            volume while still marking the Backup Completed, so phase alone is
-            not enough. Inspect the Backup log for "hostPath volume which is not
-            supported" (or other skip reasons), confirm every durable PVC has a
-            Completed PodVolumeBackup, and do not treat this Backup as a volume
-            restore source until the warning is gone. A later Backup with
-            warnings=0 clears this alert.
+            volume while still marking the Backup Completed (corp/bhaiya#695),
+            so phase alone is not enough. Inspect the Backup log for "hostPath
+            volume which is not supported" (or other skip reasons), confirm
+            every durable PVC has a Completed PodVolumeBackup for its pod+volume,
+            and do not treat this Backup as a volume restore source until the
+            warning is gone. A later Backup with warnings=0 clears this alert.
+
+      # Metadata-only Completed Backup: no PodVolumeBackup children at all.
+      # Covers opt-in miss (media-config before #2757), scaled-to-zero apps
+      # with orphan PVCs (hermes), and similar green-empty schedules (#703).
+      # Schedules that never create a Backup are VeleroScheduleNeverBackedUp.
+      # Require phase=Completed on the newest Backup so Failed attempts do not
+      # double-page with VeleroScheduleLastBackupFailed.
+      - alert: VeleroScheduleLatestBackupMissingVolumes
+        expr: |
+          (
+            max by (cluster, namespace, schedule, backup) (
+              velero_cr_backup_info{
+                namespace="velero-system",
+                schedule!="",
+                phase="Completed"
+              }
+            )
+            and on (cluster, namespace, schedule, backup)
+            (
+              velero_cr_backup_created_timestamp{
+                namespace="velero-system",
+                schedule!=""
+              }
+              == on (cluster, namespace, schedule) group_left
+              max by (cluster, namespace, schedule) (
+                velero_cr_backup_created_timestamp{
+                  namespace="velero-system",
+                  schedule!=""
+                }
+              )
+            )
+          )
+          unless on (cluster, namespace, backup)
+          (
+            count by (cluster, namespace, backup) (
+              velero_cr_podvolumebackup_info{
+                namespace="velero-system"
+              }
+            ) > 0
+          )
+        for: 15m
+        labels:
+          severity: critical
+        annotations:
+          summary: Velero schedule {{ $labels.schedule }} latest Completed backup has no volume snapshots
+          description: >-
+            The newest Backup for schedule {{ $labels.schedule }} is
+            {{ $labels.backup }}, phase=Completed, and has zero PodVolumeBackup
+            children. That is a metadata-only backup: Kubernetes objects may be
+            present while durable PVCs were never selected or never mounted
+            (corp/bhaiya#703). Confirm with
+            `kubectl -n velero-system get podvolumebackup -l velero.io/backup-name={{ $labels.backup }}`
+            and the live pod volume mounts — do not trust the Backup phase.
+            Clears when a later Backup has at least one PodVolumeBackup.
