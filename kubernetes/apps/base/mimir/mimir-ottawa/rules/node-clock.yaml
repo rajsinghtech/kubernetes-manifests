@@ -1,0 +1,21 @@
+# Node-exporter exposes this metric by default through the existing
+# kube-prometheus-stack ServiceMonitor. Keep the threshold well above ordinary
+# NTP drift while detecting the kind of host fault that can invalidate TLS,
+# tokens, and backup retention decisions long before those consumers fail.
+namespace: node-clock
+groups:
+  - name: node-clock.rules
+    rules:
+      - alert: NodeClockSkew
+        expr: abs(node_timex_offset_seconds) > 300
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: Node {{ $labels.instance }} has excessive clock skew
+          description: >-
+            Node {{ $labels.instance }} has reported more than five minutes of
+            clock offset for at least ten minutes
+            ({{ printf "%.0f" $value }} seconds). Check host time
+            synchronisation before investigating TLS, authentication, or
+            backup failures.
