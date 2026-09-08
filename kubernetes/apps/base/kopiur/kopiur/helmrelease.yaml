@@ -43,7 +43,7 @@ spec:
     # over tag so a re-pulled :0.10.7 cannot change bits under us.
     image:
       repository: ghcr.io/home-operations/kopiur-controller
-      tag: "0.10.7"
+      tag: "0.10.8"
       digest: "sha256:ce50917db136e4f19b480724d5cff7a4e1eeed9431e737aeb7808b2693dcefe5"
       pullPolicy: IfNotPresent
 
