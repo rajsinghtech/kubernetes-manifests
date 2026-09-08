@@ -1,0 +1,43 @@
+---
+# Cluster-scoped read-only view used only to authorize credential projection
+# into the fenced Restore namespace. Velero remains the repository's writer,
+# maintenance owner, and retention owner.
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: ClusterRepository
+metadata:
+  name: velero-home-ottawa-restore-readonly
+spec:
+  allowedNamespaces:
+    list:
+      - kopiur-velero-home-restore-20260908
+  credentialProjection:
+    allowed: true
+  backend:
+    s3:
+      bucket: velero
+      prefix: ottawa/kopia/home/
+      endpoint: garage-gateway.garage.svc.cluster.local:3900
+      region: garage
+      tls:
+        disableTls: true
+      auth:
+        secretRef:
+          name: velero-credentials-rotation-2
+          namespace: velero-system
+  encryption:
+    passwordSecretRef:
+      name: velero-home-ottawa-kopia-password
+      namespace: velero-system
+      key: KOPIA_PASSWORD
+  mode: ReadOnly
+  create:
+    enabled: false
+  catalog:
+    adoption: Ignore
+    periodicRefresh: false
+    retain:
+      perIdentity: 50
+      maxAgeDays: 30
+  maintenance:
+    enabled: false
+  onNamespaceDelete: Orphan
