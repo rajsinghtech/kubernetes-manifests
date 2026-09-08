@@ -7,3 +7,4 @@ resources:
   - ./repository.yaml
   - ./snapshotpolicy.yaml
   - ./snapshotschedule.yaml
+  - ./snapshot-proof-20260908.yaml
