@@ -1,0 +1,45 @@
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: Restore
+metadata:
+  name: homeassistant-config-restore-proof
+  namespace: kopiur-restore-proof-20260908-ha
+spec:
+  # Pin the exact Snapshot CR; do not resolve a moving SnapshotPolicy.
+  source:
+    snapshotRef:
+      name: homeassistant-config-20260908034331
+      namespace: home-assistant
+  repository:
+    kind: Repository
+    name: kopiur-stpetersburg
+    namespace: home-assistant
+  target:
+    pvc:
+      name: homeassistant-config-restore
+      accessModes:
+        - ReadWriteOnce
+      capacity: 10Gi
+      storageClassName: local-path
+  mover:
+    # Use the UID/GID/fsGroup recorded by the source Snapshot, not the live
+    # workload (which does not pin a UID in its PodSpec).
+    inheritSecurityContextFrom:
+      snapshot: {}
+    privilegedMode: true
+  options:
+    enableFileDeletion: false
+    ignoreErrors: false
+    ignorePermissionErrors: false
+    parallel: 1
+    skipExisting: false
+    skipOwners: false
+    skipPermissions: false
+    skipTimes: false
+    writeFilesAtomically: true
+  policy:
+    onMissingSnapshot: Fail
+    waitTimeout: 5m
+  failurePolicy:
+    backoffLimit: 0
+    activeDeadlineSeconds: 1800
+    podStartupDeadlineSeconds: 300
