@@ -4,6 +4,56 @@ rule_files:
 evaluation_interval: 1m
 
 tests:
+  # Missing volume data on an active schedule is actionable, but a deleted or
+  # paused schedule must not leave its last Backup as a permanent accumulator.
+  - interval: 1m
+    input_series:
+      - series: 'velero_cr_backup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="active-backup",backup="active-backup-latest"}'
+        values: "100+0x20"
+      - series: 'velero_cr_backup_info{cluster="talos-ottawa",namespace="velero-system",schedule="active-backup",backup="active-backup-latest",phase="Completed"}'
+        values: "1+0x20"
+      - series: 'velero_cr_schedule_info{cluster="talos-ottawa",namespace="velero-system",schedule="active-backup",phase="Enabled",paused="false"}'
+        values: "1+0x20"
+      - series: 'velero_cr_backup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="paused-backup",backup="paused-backup-latest"}'
+        values: "100+0x20"
+      - series: 'velero_cr_backup_info{cluster="talos-ottawa",namespace="velero-system",schedule="paused-backup",backup="paused-backup-latest",phase="Completed"}'
+        values: "1+0x20"
+      - series: 'velero_cr_schedule_info{cluster="talos-ottawa",namespace="velero-system",schedule="paused-backup",phase="Enabled",paused="true"}'
+        values: "1+0x20"
+      - series: 'velero_cr_backup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="deleted-backup",backup="deleted-backup-latest"}'
+        values: "100+0x20"
+      - series: 'velero_cr_backup_info{cluster="talos-ottawa",namespace="velero-system",schedule="deleted-backup",backup="deleted-backup-latest",phase="Completed"}'
+        values: "1+0x20"
+    alert_rule_test:
+      - eval_time: 14m
+        alertname: VeleroScheduleLatestBackupMissingVolumes
+        exp_alerts: []
+      - eval_time: 15m
+        alertname: VeleroScheduleLatestBackupMissingVolumes
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-ottawa
+              namespace: velero-system
+              schedule: active-backup
+              backup: active-backup-latest
+              severity: critical
+            exp_annotations:
+              summary: Velero schedule active-backup latest Completed backup has no completed volume data
+              description: >-
+                The newest Backup for schedule active-backup is
+                active-backup-latest, phase=Completed, and has no Completed
+                PodVolumeBackup with bytesDone equal to totalBytes. That is not
+                volume-data evidence: Kubernetes objects may be present while
+                durable PVCs were never selected or never mounted, or a child
+                may still be incomplete (corp/bhaiya#703). Confirm with
+                `kubectl -n velero-system get podvolumebackup -l
+                velero.io/backup-name=active-backup-latest` and the live pod
+                volume mounts — do not trust the Backup phase or the existence
+                of a PVB object. This alert only establishes that one
+                byte-complete PVB exists; it does not prove every expected PVC
+                is covered or that a restore works. Clears when a later Backup
+                has a Completed PVB with matching byte counters.
+
   # A completed PVB with mismatched byte counters is a current target signal,
   # but a later clean attempt for the same pod and volume must clear the old
   # one-shot record.
