@@ -57,7 +57,8 @@ spec:
         receiver: blackhole
       # Group the Velero family by the object that actually failed. The live
       # baseline had 33 non-deliberate Velero alert instances, but these should
-      # collapse to roughly 11 backup/schedule incident groups. Keep backup in
+      # collapse to roughly 12 backup/schedule incident groups (nine concrete
+      # backups plus three schedule-only freshness groups). Keep backup in
       # the key so a later attempt is not merged into an older attempt.
       - matchers:
           - matchType: "=~"
