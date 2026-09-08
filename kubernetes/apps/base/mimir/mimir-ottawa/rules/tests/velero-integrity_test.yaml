@@ -4,6 +4,73 @@ rule_files:
 evaluation_interval: 1m
 
 tests:
+  # A failed one-shot record must stop alerting when a newer attempt for the
+  # same workload target succeeds. The target key includes pod UID so a
+  # replacement pod is a distinct backup target; the age bound prevents old
+  # abandoned targets from paging forever.
+  - interval: 1m
+    input_series:
+      - series: 'velero_cr_podvolumebackup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="teaspoon",pod_uid="pod-uid",volume="home",pod_volume_backup="teaspoon-old-pvb",backup="teaspoon-old-backup",node="kaji"}'
+        values: "100+0x20"
+      - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="teaspoon",pod_uid="pod-uid",volume="home",pod_volume_backup="teaspoon-old-pvb",backup="teaspoon-old-backup",node="kaji",phase="Failed"}'
+        values: "1+0x20"
+      - series: 'velero_cr_podvolumebackup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="teaspoon",pod_uid="pod-uid",volume="home",pod_volume_backup="teaspoon-new-pvb",backup="teaspoon-new-backup",node="kaji"}'
+        values: "200+0x20"
+      - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="teaspoon",pod_uid="pod-uid",volume="home",pod_volume_backup="teaspoon-new-pvb",backup="teaspoon-new-backup",node="kaji",phase="Completed"}'
+        values: "1+0x20"
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: VeleroPodVolumeBackupFailed
+        exp_alerts: []
+
+  # A current failure still pages even when its parent Backup is no longer
+  # exported. This is the case the old parent-Backup join could miss.
+  - interval: 1m
+    input_series:
+      - series: 'velero_cr_podvolumebackup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="broken",pod_uid="pod-uid",volume="home",pod_volume_backup="broken-pvb",backup="broken-backup",node="asuka"}'
+        values: "200+0x20"
+      - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="broken",pod_uid="pod-uid",volume="home",pod_volume_backup="broken-pvb",backup="broken-backup",node="asuka",phase="Failed"}'
+        values: "1+0x20"
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: VeleroPodVolumeBackupFailed
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-ottawa
+              namespace: velero-system
+              pod_namespace: home
+              pod_name: broken
+              pod_uid: pod-uid
+              volume: home
+              pod_volume_backup: broken-pvb
+              backup: broken-backup
+              node: asuka
+              phase: Failed
+              severity: warning
+            exp_annotations:
+              summary: Velero PodVolumeBackup Failed for broken/home
+              description: >-
+                The newest PodVolumeBackup for target home/broken (UID pod-uid,
+                volume home) is Failed. It was created within the last 24 hours
+                and has remained in that state for at least five minutes. A
+                later successful PVB for the same target clears this signal;
+                older Failed/Canceled records are intentionally ignored. Inspect
+                the PVB status message, node-agent logs, and storage path before
+                treating the target as restorable.
+
+  # Once the newest failed PVB is older than the bounded horizon it is
+  # archaeological residue, not a current-state page.
+  - interval: 1m
+    input_series:
+      - series: 'velero_cr_podvolumebackup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="old",pod_uid="pod-uid",volume="home",pod_volume_backup="old-pvb",backup="old-backup",node="rei"}'
+        values: "100+0x1505"
+      - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="old",pod_uid="pod-uid",volume="home",pod_volume_backup="old-pvb",backup="old-backup",node="rei",phase="Failed"}'
+        values: "1+0x1505"
+    alert_rule_test:
+      - eval_time: 25h
+        alertname: VeleroPodVolumeBackupFailed
+        exp_alerts: []
+
   - interval: 1m
     input_series:
       # The warning/error series are intentionally absent for the previous

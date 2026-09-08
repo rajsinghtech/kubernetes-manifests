@@ -410,6 +410,10 @@ kube-state-metrics:
               namespace: [ metadata, namespace ]
               pod_volume_backup: [ metadata, name ]
               backup: [ metadata, labels, velero.io/backup-name ]
+              pod_namespace: [ spec, pod, namespace ]
+              pod_name: [ spec, pod, name ]
+              pod_uid: [ spec, pod, uid ]
+              volume: [ spec, volume ]
               node: [ spec, node ]
             metrics:
               - name: "podvolumebackup_info"
@@ -433,6 +437,12 @@ kube-state-metrics:
                   gauge:
                     path: [ status, progress ]
                     valueFrom: [ totalBytes ]
+              - name: "podvolumebackup_created_timestamp"
+                help: "Unix creation timestamp of a Velero PodVolumeBackup custom resource."
+                each:
+                  type: Gauge
+                  gauge:
+                    path: [ metadata, creationTimestamp ]
           # Velero's own server metrics expose restore counters but not the
           # per-object PodVolumeRestore phase or progress. Export the CR
           # status through kube-state-metrics so the Mimir ruler can detect a
