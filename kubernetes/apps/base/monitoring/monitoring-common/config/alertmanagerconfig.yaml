@@ -63,7 +63,7 @@ spec:
       - matchers:
           - matchType: "=~"
             name: alertname
-            value: VeleroPodVolumeBackup.*|VeleroScheduleLastBackupFailed|VeleroScheduleLatestBackup(HasWarnings|MissingVolumes)|VeleroScheduleVolumeCoverageRegressed
+            value: VeleroPodVolumeBackup.*|VeleroBackupStale|VeleroScheduleLastBackupFailed|VeleroScheduleLatestBackup(HasWarnings|MissingVolumes)|VeleroScheduleVolumeCoverageRegressed
         groupBy:
           - cluster
           - backup
@@ -80,7 +80,7 @@ spec:
       - matchers:
           - matchType: "=~"
             name: alertname
-            value: VeleroBackup(Stale|PartiallyFailed|Failed)|VeleroScheduleNeverBackedUp
+            value: VeleroBackup(PartiallyFailed|Failed)|VeleroScheduleNeverBackedUp
         groupBy:
           - cluster
           - schedule
