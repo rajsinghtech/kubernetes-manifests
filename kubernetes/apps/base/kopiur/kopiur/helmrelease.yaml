@@ -11,7 +11,7 @@ spec:
       chart: kopiur
       # PIN chart version — kopiur is alpha (v1alpha1); docs record a breaking
       # 0.5.x → 0.6.0 CRD/values move. Do not float on latest.
-      version: "0.10.7"
+      version: "0.10.8"
       sourceRef:
         kind: HelmRepository
         name: home-operations-kopiur
