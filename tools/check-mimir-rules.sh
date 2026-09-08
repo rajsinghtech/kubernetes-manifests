@@ -32,6 +32,12 @@ MIMIR = ROOT / "kubernetes/apps/base/mimir/mimir-ottawa"
 RULES = MIMIR / "rules"
 KUSTOMIZATION = MIMIR / "kustomization.yaml"
 LOADER = MIMIR / "loader-job.yaml"
+TEST_RUNNER = RULES / "tests" / "run.sh"
+TEST_FIXTURES = RULES / "tests"
+EXPECTED_GROUPS = (
+    ROOT
+    / "kubernetes/apps/base/monitoring/mimir-rule-completeness/expected-groups.tsv"
+)
 TENANTS = {"rules-ottawa", "rules-robbinsdale", "rules-stpetersburg"}
 # media.yaml predates the per-file Mimir namespace convention and contains
 # cluster-independent groups. Keep that existing exception explicit so a newly
@@ -186,7 +192,11 @@ for name in sorted(missing_on_disk):
     fail(f"rules/{name}: listed in mimir-rules ConfigMap but missing from rules/")
 
 namespaces = {}
-for name in sorted(generator_files & on_disk):
+source_group_ids = set()
+# Derive the expected set from every rule source on disk, not only the files
+# currently listed in mimir-rules.files. That independence is what makes an
+# omitted loader entry visible to the completeness checker.
+for name in sorted(on_disk):
     path = RULES / name
     document = read_yaml(path)
     if not isinstance(document, dict):
@@ -203,8 +213,53 @@ for name in sorted(generator_files & on_disk):
         )
     else:
         namespaces[namespace] = str(path)
-    if not isinstance(document.get("groups"), list) or not document["groups"]:
+    groups = document.get("groups")
+    if not isinstance(groups, list) or not groups:
         fail(f"{path}: groups must be a non-empty list")
+        continue
+    effective_namespace = (
+        namespace.strip()
+        if isinstance(namespace, str) and namespace.strip()
+        else path.stem
+    )
+    for group in groups:
+        if not isinstance(group, dict) or not isinstance(group.get("name"), str):
+            fail(f"{path}: every group must have a non-empty name")
+            continue
+        group_id = (effective_namespace, group["name"].strip())
+        if not group_id[1]:
+            fail(f"{path}: every group must have a non-empty name")
+        elif group_id in source_group_ids:
+            fail(f"{path}: duplicate group identity {group_id!r}")
+        else:
+            source_group_ids.add(group_id)
+
+declared_group_ids = set()
+if not EXPECTED_GROUPS.is_file():
+    fail(f"{EXPECTED_GROUPS}: missing independent expected-group set")
+else:
+    for line_number, raw_line in enumerate(EXPECTED_GROUPS.read_text().splitlines(), 1):
+        line = raw_line.strip()
+        if not line or line.startswith("#"):
+            continue
+        fields = raw_line.split("\t")
+        if len(fields) != 2 or not all(field.strip() for field in fields):
+            fail(f"{EXPECTED_GROUPS}:{line_number}: expected namespace<TAB>group")
+            continue
+        group_id = (fields[0].strip(), fields[1].strip())
+        if group_id in declared_group_ids:
+            fail(f"{EXPECTED_GROUPS}:{line_number}: duplicate group {group_id!r}")
+        declared_group_ids.add(group_id)
+    for group_id in sorted(source_group_ids - declared_group_ids):
+        fail(
+            f"{EXPECTED_GROUPS}: source group {group_id!r} is absent from the "
+            "independent expected set"
+        )
+    for group_id in sorted(declared_group_ids - source_group_ids):
+        fail(
+            f"{EXPECTED_GROUPS}: expected group {group_id!r} has no source rule "
+            "group"
+        )
 
 loader = read_yaml(LOADER)
 containers = []
@@ -272,6 +327,67 @@ for container in containers:
         fail(f"{LOADER}: {name} does not load /rules/{rule}")
     for rule in sorted(extra):
         fail(f"{LOADER}: {name} loads unlisted /rules/{rule}")
+
+# The normal rule test runner intentionally covers a fixture-backed subset of
+# production files; requiring a fixture for every rule would change that
+# existing policy. Do, however, keep the subset internally complete: every
+# rule named by its loop must have a source file, a case mapping, and a fixture
+# that names the corresponding source. This catches a new rule being wired to
+# the loader but silently omitted from its own test registration.
+tested_rules = set()
+test_files = {}
+if not TEST_RUNNER.is_file():
+    fail(f"{TEST_RUNNER}: missing Mimir rule test runner")
+else:
+    test_runner_text = TEST_RUNNER.read_text()
+    loop = re.search(
+        r"(?m)^\s*for rule in\s+(.+?)\s*;\s*do\s*$", test_runner_text
+    )
+    if loop is None:
+        fail(f"{TEST_RUNNER}: cannot find the fixture test loop")
+    else:
+        tested_rules = set(loop.group(1).split())
+    for match in re.finditer(
+        r"(?m)^\s*([A-Za-z0-9][A-Za-z0-9_-]*)\)\s+"
+        r"test_file=([^\s;]+)\s*;;?\s*$",
+        test_runner_text,
+    ):
+        rule, filename = match.groups()
+        if rule in test_files:
+            fail(f"{TEST_RUNNER}: duplicate fixture mapping for {rule!r}")
+        test_files[rule] = filename
+    if 'promtool check rules "$tmpdir/${rule}.yaml"' not in test_runner_text:
+        fail(f"{TEST_RUNNER}: fixture loop does not check each rule file")
+    if 'promtool test rules "$tmpdir/$test_file"' not in test_runner_text:
+        fail(f"{TEST_RUNNER}: fixture loop does not run each rule fixture")
+
+for rule in sorted(tested_rules):
+    source = RULES / f"{rule}.yaml"
+    if not source.is_file():
+        fail(f"{TEST_RUNNER}: tested rule {rule!r} has no source file {source}")
+    filename = test_files.get(rule)
+    if filename is None:
+        fail(f"{TEST_RUNNER}: tested rule {rule!r} has no case fixture mapping")
+        continue
+    fixture = TEST_FIXTURES / filename
+    if not fixture.is_file():
+        fail(f"{TEST_RUNNER}: fixture for {rule!r} is missing: {fixture}")
+        continue
+    fixture_document = read_yaml(fixture)
+    fixture_rule_files = (
+        fixture_document.get("rule_files", [])
+        if isinstance(fixture_document, dict)
+        else []
+    )
+    expected_reference = f"../{rule}.yaml"
+    if expected_reference not in fixture_rule_files:
+        fail(
+            f"{fixture}: test for {rule!r} must reference "
+            f"{expected_reference!r}"
+        )
+
+for rule in sorted(set(test_files) - tested_rules):
+    fail(f"{TEST_RUNNER}: case fixture mapping for untested rule {rule!r}")
 
 required = {
     "bhaiya-sandbox-telemetry.yaml": "bhaiya-sandbox-telemetry",

@@ -391,6 +391,11 @@ aliasout="$(PATH="$mstub:$PATH" "$gate_root/tools/check.sh" ot 2>/dev/null)"
 assert "short cluster alias accepted"   grep -q '^✓ render OK: talos-ottawa$' <<<"$aliasout"
 rm -rf "$gate_root"
 
+# ---------------------------------------------------------------- Mimir rule completeness replay
+section "Mimir rule completeness replay"
+exits "km#2809 missing-group condition is detected" 0 \
+  python3 "$ROOT/kubernetes/apps/base/monitoring/mimir-rule-completeness/tests/test_rule_completeness.py"
+
 # A completed gate must reap every watchdog timer descendant. Use an isolated
 # temporary gate root so this test exercises the real run_capped implementation
 # without allowing a sleep stub to affect repository prerequisite checks.

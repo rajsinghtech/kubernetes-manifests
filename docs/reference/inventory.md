@@ -28,10 +28,10 @@ diagram in the [README](../../README.md#architecture).
 
 | Location | Talos machines | Pointer directories | Flux Kustomizations |
 |---|---:|---:|---:|
-| `ottawa` | 4 | 62 | 125 |
+| `ottawa` | 4 | 62 | 126 |
 | `robbinsdale` | 3 | 43 | 87 |
 | `stpetersburg` | 3 | 41 | 84 |
-| **total** | **10** | **146** | **296** |
+| **total** | **10** | **146** | **297** |
 
 ## Ottawa — `talos-ottawa`
 
@@ -102,7 +102,7 @@ diagram in the [README](../../README.md#architecture).
 | Observability | `fluent-bit` | `fluent-bit` |
 | Observability | `gatus` | `gatus` |
 | Observability | `mimir` | `mimir` |
-| Observability | `monitoring` | `blackbox-exporter`, `blackbox-exporter-config`, `blackbox-exporter-ottawa`, `config`, `grafana`, `grafana-dashboards`, `grafana-datasources`, `grafana-instance`, `grafana-mcp`, `kromgo`, `monitoring`, `monitoring-nagato`, `smartctl-exporter`, `smartctl-exporter-config`, `unpoller` |
+| Observability | `monitoring` | `blackbox-exporter`, `blackbox-exporter-config`, `blackbox-exporter-ottawa`, `config`, `grafana`, `grafana-dashboards`, `grafana-datasources`, `grafana-instance`, `grafana-mcp`, `kromgo`, `mimir-rule-completeness`, `monitoring`, `monitoring-nagato`, `smartctl-exporter`, `smartctl-exporter-config`, `unpoller` |
 | Observability | `opencost` | `opencost` |
 | Observability | `victoria-logs` | `victoria-logs` → ns `monitoring` |
 | Certificates and secrets | `cert-manager` | `cert-manager`, `cert-manager-common-issuers` |
