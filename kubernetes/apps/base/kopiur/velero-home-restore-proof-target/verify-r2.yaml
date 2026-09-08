@@ -1,0 +1,235 @@
+# Content verifier for the successful R2 restore. The reference tree is
+# restored from the same pinned snapshot by a read-only Kopia client, then the
+# Python container compares it with the R2 PVC mounted read-only.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: velero-home-ottawa-restore-proof-r2-verify
+  namespace: kopiur-velero-home-restore-20260908
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 1800
+  ttlSecondsAfterFinished: 86400
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: velero-home-ottawa-restore-proof-r2-verify
+        app.kubernetes.io/part-of: kopiur
+    spec:
+      automountServiceAccountToken: false
+      restartPolicy: Never
+      initContainers:
+        - name: connect-read-only
+          image: docker.io/kopia/kopia@sha256:b6cb1f09a5fa832a320ee06d7803e82cdd7f69ac6f61d76a0d55fbbf1495c043
+          command: ["/bin/kopia"]
+          args:
+            - repository
+            - connect
+            - s3
+            - --bucket=velero
+            - --prefix=ottawa/kopia/home/
+            - --endpoint=garage-gateway.garage.svc.cluster.local:3900
+            - --region=garage
+            - --disable-tls
+            - --readonly
+            - --no-persist-credentials
+            - --no-use-keyring
+          env:
+            - name: KOPIA_CONFIG_PATH
+              value: /work/repository.config
+            - name: KOPIA_CACHE_DIRECTORY
+              value: /work/cache
+            - name: KOPIA_LOG_DIR
+              value: /work/logs
+            - name: KOPIA_CHECK_FOR_UPDATES
+              value: "false"
+          envFrom:
+            - secretRef:
+                name: velero-home-ottawa-restore-proof-r2-restore-creds-0
+            - secretRef:
+                name: velero-home-ottawa-restore-proof-r2-restore-creds-1
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            runAsUser: 0
+            runAsGroup: 0
+            runAsNonRoot: false
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - name: work
+              mountPath: /work
+        - name: restore-reference
+          image: docker.io/kopia/kopia@sha256:b6cb1f09a5fa832a320ee06d7803e82cdd7f69ac6f61d76a0d55fbbf1495c043
+          command: ["/bin/kopia"]
+          args:
+            - snapshot
+            - restore
+            - a126fed51f156946923a8ff195c9d144
+            - /source
+            - --skip-owners
+            - --skip-permissions
+            - --skip-times
+            - --parallel=1
+            - --write-files-atomically
+            - --no-ignore-errors
+            - --no-ignore-permission-errors
+          env:
+            - name: KOPIA_CONFIG_PATH
+              value: /work/repository.config
+            - name: KOPIA_CACHE_DIRECTORY
+              value: /work/cache
+            - name: KOPIA_LOG_DIR
+              value: /work/logs
+            - name: KOPIA_CHECK_FOR_UPDATES
+              value: "false"
+          envFrom:
+            - secretRef:
+                name: velero-home-ottawa-restore-proof-r2-restore-creds-0
+            - secretRef:
+                name: velero-home-ottawa-restore-proof-r2-restore-creds-1
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            runAsUser: 0
+            runAsGroup: 0
+            runAsNonRoot: false
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - name: work
+              mountPath: /work
+            - name: source
+              mountPath: /source
+      containers:
+        - name: compare
+          image: python:3.14-alpine@sha256:c6ead215bfd31f1e433d968853b7a769989117115b728874824e6c0a27cb96fc
+          command: ["python3", "-c"]
+          args:
+            - |
+              import hashlib
+              import json
+              import os
+              import stat
+              import sys
+
+              SNAPSHOT = "a126fed51f156946923a8ff195c9d144"
+              EXPECTED_SOURCE_BYTES = 7211009
+
+              def manifest(root, skip_lost_found):
+                  entries = {}
+
+                  def walk(path, prefix):
+                      for entry in sorted(os.scandir(path), key=lambda item: item.name):
+                          relative = entry.name if not prefix else prefix + "/" + entry.name
+                          info = os.lstat(entry.path)
+                          mode = info.st_mode
+                          if (
+                              skip_lost_found
+                              and not prefix
+                              and entry.name == "lost+found"
+                              and stat.S_ISDIR(mode)
+                          ):
+                              continue
+                          if stat.S_ISDIR(mode):
+                              entries[relative] = {"kind": "directory"}
+                              walk(entry.path, relative)
+                          elif stat.S_ISREG(mode):
+                              digest = hashlib.sha256()
+                              with open(entry.path, "rb") as stream:
+                                  while True:
+                                      block = stream.read(1024 * 1024)
+                                      if not block:
+                                          break
+                                      digest.update(block)
+                              entries[relative] = {
+                                  "kind": "file",
+                                  "bytes": info.st_size,
+                                  "sha256": digest.hexdigest(),
+                              }
+                          elif stat.S_ISLNK(mode):
+                              entries[relative] = {
+                                  "kind": "symlink",
+                                  "target": os.readlink(entry.path),
+                              }
+                          else:
+                              entries[relative] = {
+                                  "kind": "special",
+                                  "mode": stat.S_IFMT(mode),
+                              }
+
+                  walk(root, "")
+                  return entries
+
+              def total_bytes(entries):
+                  return sum(
+                      value.get("bytes", 0)
+                      for value in entries.values()
+                      if value["kind"] == "file"
+                  )
+
+              def file_count(entries):
+                  return sum(value["kind"] == "file" for value in entries.values())
+
+              def manifest_hash(entries):
+                  digest = hashlib.sha256()
+                  for name in sorted(entries):
+                      line = name + "\t" + json.dumps(
+                          entries[name], sort_keys=True, separators=(",", ":")
+                      ) + "\n"
+                      digest.update(line.encode())
+                  return digest.hexdigest()
+
+              source = manifest("/source", False)
+              target = manifest("/restore", True)
+              source_bytes = total_bytes(source)
+              target_bytes = total_bytes(target)
+              source_hash = manifest_hash(source)
+              target_hash = manifest_hash(target)
+
+              print("snapshot=" + SNAPSHOT)
+              print("source_file_count=" + str(file_count(source)))
+              print("target_file_count=" + str(file_count(target)))
+              print("source_bytes=" + str(source_bytes))
+              print("target_bytes=" + str(target_bytes))
+              print("source_manifest_sha256=" + source_hash)
+              print("target_manifest_sha256=" + target_hash)
+              print("manifest_match=" + str(source == target).lower())
+              for name in sorted(source):
+                  print("source_entry=" + name + " " + json.dumps(source[name], sort_keys=True))
+              for name in sorted(target):
+                  print("target_entry=" + name + " " + json.dumps(target[name], sort_keys=True))
+
+              if source_bytes != EXPECTED_SOURCE_BYTES:
+                  print("ERROR: source byte count disagrees with the pinned Snapshot status", file=sys.stderr)
+                  sys.exit(1)
+              if source != target:
+                  print("ERROR: restored content differs from the pinned snapshot reference", file=sys.stderr)
+                  sys.exit(1)
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            runAsUser: 0
+            runAsGroup: 0
+            runAsNonRoot: false
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - name: source
+              mountPath: /source
+              readOnly: true
+            - name: restored
+              mountPath: /restore
+              readOnly: true
+      volumes:
+        - name: work
+          emptyDir: {}
+        - name: source
+          emptyDir: {}
+        - name: restored
+          persistentVolumeClaim:
+            claimName: home-config-restored-r2
+            readOnly: true
