@@ -1,0 +1,65 @@
+rule_files:
+  - ../bhaiya-workspace-endpoints.yaml
+
+evaluation_interval: 1m
+
+tests:
+  # An endpoint observation with no ready backend is the Garage-shaped failure
+  # this metric was created to expose. The metric contract has no separate
+  # desired-running label, so the fixture names the workspace as serving but
+  # cannot encode that intent in PromQL yet.
+  - interval: 1m
+    input_series:
+      - series: 'bhaiya_workspace_service_endpoint_state{cluster="talos-ottawa",workspace="serving-workspace",state="not-ready"}'
+        values: "1+0x20"
+      - series: 'bhaiya_workspace_service_endpoint_state{cluster="talos-ottawa",workspace="healthy-workspace",state="ready"}'
+        values: "1+0x20"
+    alert_rule_test:
+      - eval_time: 9m
+        alertname: BhaiyaWorkspaceServiceNoReadyEndpoints
+        exp_alerts: []
+      - eval_time: 10m
+        alertname: BhaiyaWorkspaceServiceNoReadyEndpoints
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-ottawa
+              workspace: serving-workspace
+              severity: warning
+            exp_annotations:
+              summary: Workspace Service has no ready endpoints
+              description: >-
+                Bhaiya reports that the primary Service for workspace
+                serving-workspace has been not-ready or missing ready
+                endpoints for at least 10 minutes. This covers the empty
+                EndpointSlice failure shape, including a Service that still
+                resolves while its port cannot be reached. Bhaiya does not yet
+                export per-workspace desired lifecycle intent, so stopped or
+                idle workspaces can also match; confirm the workspace should
+                be serving before escalating. Only the leader's observation
+                is required; a non-emitting replica does not suppress this
+                signal.
+
+  - interval: 1m
+    input_series:
+      - series: 'bhaiya_workspace_service_endpoint_state{cluster="talos-ottawa",workspace="empty-slice",state="missing"}'
+        values: "1+0x20"
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: BhaiyaWorkspaceServiceNoReadyEndpoints
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-ottawa
+              workspace: empty-slice
+              severity: warning
+            exp_annotations:
+              summary: Workspace Service has no ready endpoints
+              description: >-
+                Bhaiya reports that the primary Service for workspace
+                empty-slice has been not-ready or missing ready endpoints for
+                at least 10 minutes. This covers the empty EndpointSlice
+                failure shape, including a Service that still resolves while
+                its port cannot be reached. Bhaiya does not yet export
+                per-workspace desired lifecycle intent, so stopped or idle
+                workspaces can also match; confirm the workspace should be
+                serving before escalating. Only the leader's observation is
+                required; a non-emitting replica does not suppress this signal.
