@@ -4,57 +4,69 @@ rule_files:
 evaluation_interval: 1m
 
 tests:
-  # A recent terminal failed Job fires after the five-minute pending period.
+  # km#2809 signature: status_failed rises during retries, then the same
+  # metric gains a non-empty BackoffLimitExceeded reason when the Job becomes
+  # terminal. Failed Jobs do not emit kube_job_complete=false or a completion
+  # timestamp, so those metrics are deliberately absent here.
   - interval: 1m
     input_series:
-      - series: 'kube_job_complete{cluster="talos-ottawa",namespace="rook-ceph",job_name="failed-job",condition="false"}'
-        values: "1+0x20"
-      - series: 'kube_job_status_failed{cluster="talos-ottawa",namespace="rook-ceph",job_name="failed-job"}'
-        values: "1+0x20"
-      - series: 'kube_job_status_completion_time{cluster="talos-ottawa",namespace="rook-ceph",job_name="failed-job"}'
-        values: "0+0x20"
+      - series: 'kube_job_status_failed{cluster="talos-ottawa",namespace="mimir",job_name="mimir-rules-k7569bf4f8"}'
+        values: "0 2 4 4 5 5 6 6 6 6 6 6 6+0x20"
+      - series: 'kube_job_status_failed{cluster="talos-ottawa",namespace="mimir",job_name="mimir-rules-k7569bf4f8",reason="BackoffLimitExceeded"}'
+        values: "0+0x12 1+0x20"
+      - series: 'kube_job_status_start_time{cluster="talos-ottawa",namespace="mimir",job_name="mimir-rules-k7569bf4f8"}'
+        values: "0+0x40"
     alert_rule_test:
-      - eval_time: 4m
+      - eval_time: 10m
         alertname: KubernetesJobFailedRecently
         exp_alerts: []
-      - eval_time: 10m
+      - eval_time: 20m
         alertname: KubernetesJobFailedRecently
         exp_alerts:
           - exp_labels:
               severity: warning
               cluster: talos-ottawa
-              namespace: rook-ceph
-              job_name: failed-job
+              namespace: mimir
+              job_name: mimir-rules-k7569bf4f8
             exp_annotations:
-              summary: Kubernetes Job rook-ceph/failed-job failed
+              summary: Kubernetes Job mimir/mimir-rules-k7569bf4f8 failed
               description: >-
-                Job rook-ceph/failed-job reached a failed terminal condition
-                within the last 15 minutes. This generic safety net covers
-                platform namespaces and excludes the expected qBittorrent probe
-                failures, which have a dedicated alert. Inspect the Job, its
-                Pods, and logs; component-specific alerts may provide more
-                context.
+                Job mimir/mimir-rules-k7569bf4f8 reached a failed terminal condition
+                within the last hour. This generic safety net uses
+                kube-state-metrics' non-empty failure reason, which is absent
+                while a Job is only retrying, and excludes the expected
+                qBittorrent probe failures. Inspect the Job, its Pods, and
+                logs; component-specific alerts may provide more context.
+
+  # A retrying Job with no terminal failure reason must stay quiet even when
+  # kube_job_status_failed is non-zero.
+  - interval: 1m
+    input_series:
+      - series: 'kube_job_status_failed{cluster="talos-ottawa",namespace="rook-ceph",job_name="retrying-job"}'
+        values: "1+0x40"
+      - series: 'kube_job_status_start_time{cluster="talos-ottawa",namespace="rook-ceph",job_name="retrying-job"}'
+        values: "0+0x40"
+    alert_rule_test:
+      - eval_time: 20m
+        alertname: KubernetesJobFailedRecently
+        exp_alerts: []
 
   # Retained history is not an alert, and a successful terminal condition wins
   # over a non-zero retry/failure counter from an ultimately successful Job.
   - interval: 1m
     input_series:
-      - series: 'kube_job_complete{cluster="talos-ottawa",namespace="rook-ceph",job_name="old-job",condition="false"}'
-        values: "1+0x40"
       - series: 'kube_job_status_failed{cluster="talos-ottawa",namespace="rook-ceph",job_name="old-job"}'
-        values: "1+0x40"
-      - series: 'kube_job_status_completion_time{cluster="talos-ottawa",namespace="rook-ceph",job_name="old-job"}'
-        values: "0+0x40"
-      - series: 'kube_job_complete{cluster="talos-ottawa",namespace="rook-ceph",job_name="retry-success",condition="false"}'
-        values: "0+0x40"
-      - series: 'kube_job_complete{cluster="talos-ottawa",namespace="rook-ceph",job_name="retry-success",condition="true"}'
-        values: "1+0x40"
+        values: "1+0x130"
+      - series: 'kube_job_status_failed{cluster="talos-ottawa",namespace="rook-ceph",job_name="old-job",reason="BackoffLimitExceeded"}'
+        values: "1+0x130"
+      - series: 'kube_job_status_start_time{cluster="talos-ottawa",namespace="rook-ceph",job_name="old-job"}'
+        values: "0+0x130"
       - series: 'kube_job_status_failed{cluster="talos-ottawa",namespace="rook-ceph",job_name="retry-success"}'
         values: "1+0x40"
-      - series: 'kube_job_status_completion_time{cluster="talos-ottawa",namespace="rook-ceph",job_name="retry-success"}'
+      - series: 'kube_job_status_start_time{cluster="talos-ottawa",namespace="rook-ceph",job_name="retry-success"}'
         values: "0+0x40"
     alert_rule_test:
-      - eval_time: 30m
+      - eval_time: 2h
         alertname: KubernetesJobFailedRecently
         exp_alerts: []
 
@@ -63,9 +75,9 @@ tests:
     input_series:
       - series: 'kube_job_complete{cluster="talos-ottawa",namespace="media",job_name="qbittorrent-portforward-probe-123",condition="false"}'
         values: "1+0x20"
-      - series: 'kube_job_status_failed{cluster="talos-ottawa",namespace="media",job_name="qbittorrent-portforward-probe-123"}'
+      - series: 'kube_job_status_failed{cluster="talos-ottawa",namespace="media",job_name="qbittorrent-portforward-probe-123",reason="BackoffLimitExceeded"}'
         values: "1+0x20"
-      - series: 'kube_job_status_completion_time{cluster="talos-ottawa",namespace="media",job_name="qbittorrent-portforward-probe-123"}'
+      - series: 'kube_job_status_start_time{cluster="talos-ottawa",namespace="media",job_name="qbittorrent-portforward-probe-123"}'
         values: "0+0x20"
     alert_rule_test:
       - eval_time: 20m
