@@ -133,9 +133,22 @@ tests:
                 volume home) is Failed. It was created within the last 24 hours
                 and has remained in that state for at least five minutes. A
                 later successful PVB for the same target clears this signal;
-                older Failed/Canceled records are intentionally ignored. Inspect
+                older Failed records are intentionally ignored. Inspect
                 the PVB status message, node-agent logs, and storage path before
                 treating the target as restorable.
+
+  # Cancellation is an operator action or a deliberate controller stop, not a
+  # failed backup. It must not page as VeleroPodVolumeBackupFailed.
+  - interval: 1m
+    input_series:
+      - series: 'velero_cr_podvolumebackup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",pod_namespace="media",pod_name="overseerr",pod_uid="pod-uid",volume="config",pod_volume_backup="canceled-pvb",backup="config-backup",node="asuka"}'
+        values: "200+0x20"
+      - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",pod_namespace="media",pod_name="overseerr",pod_uid="pod-uid",volume="config",pod_volume_backup="canceled-pvb",backup="config-backup",node="asuka",phase="Canceled"}'
+        values: "1+0x20"
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: VeleroPodVolumeBackupFailed
+        exp_alerts: []
 
   # Once the newest failed PVB is older than the bounded horizon it is
   # archaeological residue, not a current-state page.
