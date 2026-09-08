@@ -8,7 +8,7 @@ trap 'rm -rf -- "$tmpdir"' EXIT
 # Mimir's native rule files require a top-level namespace, which promtool does
 # not understand. Keep each production rule as the source of truth and remove
 # only that Mimir wrapper in the temporary test copy.
-for rule in flux bhaiya-model garage node-clock velero-integrity bhaiya-workspace-image; do
+for rule in flux bhaiya-model garage node-clock velero-integrity bhaiya-workspace-image bhaiya-workspace-endpoints; do
   case "$rule" in
     flux) test_file=flux_test.yaml ;;
     bhaiya-model) test_file=bhaiya_model_test.yaml ;;
@@ -16,6 +16,7 @@ for rule in flux bhaiya-model garage node-clock velero-integrity bhaiya-workspac
     node-clock) test_file=node-clock_test.yaml ;;
     velero-integrity) test_file=velero-integrity_test.yaml ;;
     bhaiya-workspace-image) test_file=bhaiya_workspace_image_test.yaml ;;
+    bhaiya-workspace-endpoints) test_file=bhaiya_workspace_endpoints_test.yaml ;;
   esac
   sed "/^namespace: ${rule}$/d" "$RULE_DIR/${rule}.yaml" >"$tmpdir/${rule}.yaml"
   sed "s#../${rule}.yaml#$tmpdir/${rule}.yaml#" \
