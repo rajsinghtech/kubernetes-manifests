@@ -30,6 +30,15 @@ spec:
     # this fleet — see PR body.
     installScope: cluster
 
+    # Temporary proof support: the Velero-owned repository credentials live in
+    # velero-system while the fenced Restore mover runs in its scratch
+    # namespace. The ClusterRepository grant remains namespace-scoped; this
+    # feature flag supplies only the operator RBAC needed to project that
+    # explicitly allowed copy.
+    features:
+      credentialProjection:
+        enabled: true
+
     # PIN controller image digest (from oci chart 0.10.7 values). Digest wins
     # over tag so a re-pulled :0.10.7 cannot change bits under us.
     image:
