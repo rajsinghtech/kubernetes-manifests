@@ -58,6 +58,48 @@ tests:
 
   - interval: 1m
     input_series:
+      - series: 'flux_resource_info{cluster="talos-ottawa",kind="Kustomization",name="unknown",namespace="flux-system",path="./unknown",reason="Progressing",revision="main@sha1:unknown",source_name="kubernetes-manifests",suspended="False",ready="Unknown"}'
+        values: "1+0x40"
+    alert_rule_test:
+      - eval_time: 29m
+        alertname: FluxKustomizationUnknown
+        exp_alerts: []
+      - eval_time: 30m
+        alertname: FluxKustomizationUnknown
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              cluster: talos-ottawa
+              name: unknown
+              namespace: flux-system
+              path: ./unknown
+            exp_annotations:
+              summary: Flux Kustomization unknown has unknown readiness
+              description: >-
+                Kustomization unknown at ./unknown has remained in an unknown
+                readiness state for 30 minutes. Inspect its current condition
+                and root dependency before investigating dependent resources.
+
+  - interval: 1m
+    input_series:
+      - series: 'flux_resource_info{cluster="talos-ottawa",kind="Kustomization",name="recovering",namespace="flux-system",path="./recovering",reason="Progressing",revision="main@sha1:recovering",source_name="kubernetes-manifests",suspended="False",ready="Unknown"}'
+        values: "1+0x10 _x30"
+    alert_rule_test:
+      - eval_time: 20m
+        alertname: FluxKustomizationUnknown
+        exp_alerts: []
+
+  - interval: 1m
+    input_series:
+      - series: 'flux_resource_info{cluster="talos-ottawa",kind="Kustomization",name="suspended-unknown",namespace="flux-system",path="./suspended-unknown",reason="Suspended",revision="main@sha1:suspended",source_name="kubernetes-manifests",suspended="True",ready="Unknown"}'
+        values: "1+0x40"
+    alert_rule_test:
+      - eval_time: 40m
+        alertname: FluxKustomizationUnknown
+        exp_alerts: []
+
+  - interval: 1m
+    input_series:
       - series: 'flux_resource_info{cluster="talos-ottawa",kind="Kustomization",name="media-apps",namespace="flux-system",path="./kubernetes/apps/base/media/media-apps",reason="DependencyNotReady",revision="main@sha1:dep",source_name="kubernetes-manifests",suspended="False",ready="False"}'
         values: "1+0x20"
     alert_rule_test:

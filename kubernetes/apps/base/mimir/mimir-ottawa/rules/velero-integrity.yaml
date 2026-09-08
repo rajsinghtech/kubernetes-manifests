@@ -291,6 +291,14 @@ groups:
               )
             ) > 0
           )
+          and on (cluster, namespace, schedule)
+          max by (cluster, namespace, schedule) (
+            velero_cr_schedule_info{
+              namespace="velero-system",
+              phase="Enabled",
+              paused!="true"
+            }
+          )
         for: 15m
         labels:
           severity: critical

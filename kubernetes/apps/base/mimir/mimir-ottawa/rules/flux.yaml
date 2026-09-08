@@ -37,6 +37,26 @@ groups:
             not ready for 15 minutes. Inspect its current condition and root
             dependency before investigating dependent resources.
 
+      - alert: FluxKustomizationUnknown
+        expr: |
+          max by (cluster, namespace, name, path) (
+            flux_resource_info{
+              kind="Kustomization",
+              ready="Unknown",
+              suspended="False"
+            } == 1
+          )
+        for: 30m
+        labels:
+          severity: critical
+        annotations:
+          summary: Flux Kustomization {{ $labels.name }} has unknown readiness
+          description: >-
+            Kustomization {{ $labels.name }} at {{ $labels.path }} has remained
+            in an unknown readiness state for 30 minutes. Inspect its current
+            condition and root dependency before investigating dependent
+            resources.
+
       - alert: FluxHelmReleaseNotReady
         expr: |
           max by (cluster, namespace, name) (
