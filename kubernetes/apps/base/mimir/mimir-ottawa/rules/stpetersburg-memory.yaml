@@ -1,0 +1,61 @@
+# Unified-memory model nodes need absolute host-memory bands. A percentage
+# alert cannot distinguish a tolerable post-rollout cushion from an imminent
+# host OOM on a 128 GiB GB10 node.
+namespace: stpetersburg-memory
+groups:
+  - name: stpetersburg-memory.rules
+    rules:
+      # The two bands are mutually exclusive: at 3 GiB this is the warning;
+      # at 300 MiB only the critical alert below is active.
+      - alert: StPetersburgSparkMemoryAvailableLow
+        expr: |
+          (
+            node_memory_MemAvailable_bytes{cluster="talos-stpetersburg"}
+            < 8 * 1024 * 1024 * 1024
+          )
+          and on (cluster, instance)
+          (
+            node_memory_MemAvailable_bytes{cluster="talos-stpetersburg"}
+            >= 2 * 1024 * 1024 * 1024
+          )
+          and on (cluster, instance)
+          (
+            node_memory_MemTotal_bytes{cluster="talos-stpetersburg"}
+            > 100 * 1024 * 1024 * 1024
+          )
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: >-
+            St. Petersburg Spark node {{ $labels.instance }} has 2–8 GiB of
+            host memory available.
+          description: >-
+            This is the tight-memory band for a GB10 unified-memory node.
+            The node remains below the 8 GiB early-warning cushion but above
+            the critical 2 GiB band; correlate MemAvailable with the GB10
+            allocation and vLLM serving state.
+
+      - alert: StPetersburgSparkMemoryAvailableCritical
+        expr: |
+          (
+            node_memory_MemAvailable_bytes{cluster="talos-stpetersburg"}
+            < 2 * 1024 * 1024 * 1024
+          )
+          and on (cluster, instance)
+          (
+            node_memory_MemTotal_bytes{cluster="talos-stpetersburg"}
+            > 100 * 1024 * 1024 * 1024
+          )
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: >-
+            St. Petersburg Spark node {{ $labels.instance }} has under 2 GiB
+            of host memory available.
+          description: >-
+            The GB10 unified-memory host is in the critical absolute-memory
+            band. An OOM can kill a vLLM rank even while Kubernetes
+            MemoryPressure remains False; protect the model endpoint and
+            investigate immediately.

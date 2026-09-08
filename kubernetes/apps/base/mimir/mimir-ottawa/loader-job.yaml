@@ -51,6 +51,7 @@ spec:
             - /rules/job-failures.yaml
             - /rules/mimir-queryable-window.yaml
             - /rules/monitoring.yaml
+            - /rules/stpetersburg-memory.yaml
             - /rules/node-health.yaml
             - /rules/node-clock.yaml
             - /rules/velero-node-saturation.yaml
@@ -94,6 +95,7 @@ spec:
             - /rules/job-failures.yaml
             - /rules/mimir-queryable-window.yaml
             - /rules/monitoring.yaml
+            - /rules/stpetersburg-memory.yaml
             - /rules/node-health.yaml
             - /rules/node-clock.yaml
             - /rules/velero-node-saturation.yaml
@@ -133,6 +135,7 @@ spec:
             - /rules/job-failures.yaml
             - /rules/mimir-queryable-window.yaml
             - /rules/monitoring.yaml
+            - /rules/stpetersburg-memory.yaml
             - /rules/node-health.yaml
             - /rules/node-clock.yaml
             - /rules/velero-node-saturation.yaml
