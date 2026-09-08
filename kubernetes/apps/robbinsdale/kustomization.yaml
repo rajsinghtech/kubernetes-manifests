@@ -6,6 +6,7 @@ resources:
   - ./arc-systems
   - ./cloudflare
   - ./cnpg-system
+  - ./cnpg-restore-proof
   - ./dragonfly-operator-system
   - ./fluent-bit
   - ./garage-operator-system

@@ -29,9 +29,9 @@ diagram in the [README](../../README.md#architecture).
 | Location | Talos machines | Pointer directories | Flux Kustomizations |
 |---|---:|---:|---:|
 | `ottawa` | 4 | 58 | 121 |
-| `robbinsdale` | 3 | 43 | 87 |
+| `robbinsdale` | 3 | 44 | 88 |
 | `stpetersburg` | 3 | 40 | 83 |
-| **total** | **10** | **141** | **291** |
+| **total** | **10** | **142** | **292** |
 
 ## Ottawa — `talos-ottawa`
 
@@ -215,6 +215,7 @@ Pointers whose objects land outside their directory's namespace — use the righ
 | Certificates and secrets | `cert-manager` | `cert-manager`, `cert-manager-common-issuers`, `cert-manager-issuers` |
 | Certificates and secrets | `external-secrets` | `external-secrets-config`, `external-secrets-install` |
 | Fleet management | `open-cluster-management-agent` | `ocm-agent` |
+| Application workloads | `cnpg-restore-proof` | `cnpg-restore-proof` → ns `cnpg-restore-proof-20260908-immich` |
 | Application workloads | `homer-operator` | `homer-operator-install` |
 | Application workloads | `immich` | `immich` |
 | Application workloads | `media` | `media-apps` |
@@ -225,6 +226,7 @@ Pointers whose objects land outside their directory's namespace — use the righ
 | Flux Kustomization | Pointer directory | Actual namespace |
 |---|---|---|
 | `actions-runner-controller-runners` | `arc-systems` | `arc-runners` |
+| `cnpg-restore-proof` | `cnpg-restore-proof` | `cnpg-restore-proof-20260908-immich` |
 | `csi-driver-smb` | `csi-driver-smb` | `kube-system` |
 | `tinyauth-egress` | `tinyauth-egress` | `tinyauth` |
 | `tuppr` | `tuppr` | `system-upgrade` |
