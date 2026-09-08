@@ -7,3 +7,4 @@ resources:
   - restore.yaml
   - restore-r2.yaml
   - verify-r2.yaml
+  - verify-r2-corrected.yaml
