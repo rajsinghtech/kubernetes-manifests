@@ -33,7 +33,6 @@ resources:
   - ./k8gb
   - ./node-feature-discovery
   - ./tailscale-examples
-  - ./cnpg-restore-proof
   - ./tailscale-system
 
   - ./tailscale
