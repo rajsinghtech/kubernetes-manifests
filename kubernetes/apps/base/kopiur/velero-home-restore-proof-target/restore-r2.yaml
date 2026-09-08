@@ -1,0 +1,54 @@
+# Second attempt after the first attempt proved repository access but failed
+# while restoring original ownership as the hardened non-root mover.
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: Restore
+metadata:
+  name: velero-home-ottawa-restore-proof-r2
+  namespace: kopiur-velero-home-restore-20260908
+spec:
+  source:
+    identity:
+      username: default
+      hostname: default
+      sourcePath: /72c70d3d-e5a3-4ae4-9d8f-2ffac9fe1bef
+      snapshotID: a126fed51f156946923a8ff195c9d144
+  repository:
+    kind: ClusterRepository
+    name: velero-home-ottawa-restore-readonly
+  target:
+    pvc:
+      name: home-config-restored-r2
+      accessModes:
+        - ReadWriteOnce
+      capacity: 10Gi
+      storageClassName: ceph-block-replicated
+  credentialProjection:
+    # The repository credentials live in velero-system; the mover runs in this
+    # isolated namespace and must receive a projected copy to connect.
+    enabled: true
+  mover:
+    # Preserve the source snapshot's arbitrary UID/GID ownership. The namespace
+    # carries kopiur.home-operations.com/privileged-movers=true and the
+    # privilegedMode gate remains explicit.
+    securityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      runAsNonRoot: false
+    privilegedMode: true
+  options:
+    enableFileDeletion: false
+    ignoreErrors: false
+    ignorePermissionErrors: false
+    parallel: 1
+    skipExisting: false
+    skipOwners: false
+    skipPermissions: false
+    skipTimes: false
+    writeFilesAtomically: true
+  policy:
+    onMissingSnapshot: Fail
+    waitTimeout: 5m
+  failurePolicy:
+    backoffLimit: 0
+    activeDeadlineSeconds: 1800
+    podStartupDeadlineSeconds: 300
