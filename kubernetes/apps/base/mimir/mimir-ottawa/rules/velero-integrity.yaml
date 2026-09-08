@@ -36,6 +36,9 @@ groups:
       # failure. Bound the selected record by its own creation time because
       # parent Backups are routinely cleaned up while PVBs persist; without
       # this bound an abandoned target would page forever.
+      # Use pod name plus volume as the target identity. Pod UIDs change on
+      # routine workspace replacement; a PVC label would be more durable but
+      # is not present on the PVB CR or in the exported metric contract.
       # Schedule-level paging for the newest Backup remains in
       # VeleroScheduleLastBackupFailed below.
       - alert: VeleroPodVolumeBackupFailed
@@ -46,7 +49,7 @@ groups:
           ) (
             (
               topk by (
-                cluster, namespace, pod_namespace, pod_name, pod_uid, volume
+                cluster, namespace, pod_namespace, pod_name, volume
               ) (
                 1,
                 velero_cr_podvolumebackup_created_timestamp{

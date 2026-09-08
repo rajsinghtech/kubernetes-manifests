@@ -84,18 +84,18 @@ tests:
         exp_alerts: []
 
   # A failed one-shot record must stop alerting when a newer attempt for the
-  # same workload target succeeds. The target key includes pod UID so a
-  # replacement pod is a distinct backup target; the age bound prevents old
+  # same workload target succeeds, even when the replacement pod has a new
+  # UID. The target key is pod name plus volume; the age bound prevents old
   # abandoned targets from paging forever.
   - interval: 1m
     input_series:
-      - series: 'velero_cr_podvolumebackup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="teaspoon",pod_uid="pod-uid",volume="home",pod_volume_backup="teaspoon-old-pvb",backup="teaspoon-old-backup",node="kaji"}'
+      - series: 'velero_cr_podvolumebackup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="teaspoon",pod_uid="old-pod-uid",volume="home",pod_volume_backup="teaspoon-old-pvb",backup="teaspoon-old-backup",node="kaji"}'
         values: "100+0x20"
-      - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="teaspoon",pod_uid="pod-uid",volume="home",pod_volume_backup="teaspoon-old-pvb",backup="teaspoon-old-backup",node="kaji",phase="Failed"}'
+      - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="teaspoon",pod_uid="old-pod-uid",volume="home",pod_volume_backup="teaspoon-old-pvb",backup="teaspoon-old-backup",node="kaji",phase="Failed"}'
         values: "1+0x20"
-      - series: 'velero_cr_podvolumebackup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="teaspoon",pod_uid="pod-uid",volume="home",pod_volume_backup="teaspoon-new-pvb",backup="teaspoon-new-backup",node="kaji"}'
+      - series: 'velero_cr_podvolumebackup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="teaspoon",pod_uid="new-pod-uid",volume="home",pod_volume_backup="teaspoon-new-pvb",backup="teaspoon-new-backup",node="kaji"}'
         values: "200+0x20"
-      - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="teaspoon",pod_uid="pod-uid",volume="home",pod_volume_backup="teaspoon-new-pvb",backup="teaspoon-new-backup",node="kaji",phase="Completed"}'
+      - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="teaspoon",pod_uid="new-pod-uid",volume="home",pod_volume_backup="teaspoon-new-pvb",backup="teaspoon-new-backup",node="kaji",phase="Completed"}'
         values: "1+0x20"
     alert_rule_test:
       - eval_time: 15m
