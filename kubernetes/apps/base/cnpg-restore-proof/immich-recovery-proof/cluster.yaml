@@ -1,0 +1,30 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: immich-restore-proof
+  namespace: cnpg-restore-proof-20260908-immich
+spec:
+  enableSuperuserAccess: true
+  instances: 1
+  imageName: ghcr.io/tensorchord/cloudnative-vectorchord:15-0.3.0
+  postgresql:
+    shared_preload_libraries:
+      - "vchord.so"
+  bootstrap:
+    recovery:
+      source: keiretsu
+      database: immich
+      owner: immich
+  storage:
+    size: 40Gi
+    storageClass: ceph-block-replicated-nvme
+  externalClusters:
+    - name: keiretsu
+      plugin:
+        enabled: true
+        isWALArchiver: false
+        name: barman-cloud.cloudnative-pg.io
+        parameters:
+          barmanObjectName: immich-s3-source
+          serverName: immich-postgres
