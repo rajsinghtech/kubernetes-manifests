@@ -66,6 +66,16 @@ groups:
           (
             velero_schedule_latest_backup_created_timestamp > bool 0
           )
+          and on (cluster, namespace, schedule)
+          (
+            max by (cluster, namespace, schedule) (
+              velero_cr_schedule_info{
+                namespace="velero-system",
+                phase="Enabled",
+                paused!="true"
+              }
+            )
+          )
           > 0
         for: 15m
         labels:
@@ -80,7 +90,9 @@ groups:
             it cannot detect a backup that completes while silently missing
             data, and it also needs the Velero metric to remain scrapeable.
 
-      # VeleroBackupStale requires a last_successful_timestamp series. A Schedule
+      # VeleroBackupStale requires a last_successful_timestamp series and a
+      # currently enabled, unpaused Schedule. A historical Backup metric must
+      # not keep an alert alive after its Schedule is deleted or paused. A Schedule
       # that is Enabled but has never produced a Backup (forgejo-backup after
       # #2732 had status.lastBackup unset) creates no such series and stays
       # invisible. Page from the Schedule CR once it is older than 36h without
