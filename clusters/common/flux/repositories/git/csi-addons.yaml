@@ -11,7 +11,7 @@ spec:
     # Pin to a release tag. The controller manifests live in ./deploy/controller
     # (crds.yaml, rbac.yaml, setup-controller.yaml, csi-addons-config.yaml).
     # Bump this tag AND the ROOK_CSIADDONS_IMAGE / csi.csiAddons sidecar tag together.
-    tag: v0.14.0
+    tag: v0.15.0
   ignore: |
     # only need the controller deploy manifests
     /*
