@@ -20,8 +20,8 @@
 #   must not carry the expectation label. This is a zero-volume guard, not an
 #   expected-count guard: it cannot detect under-selection that leaves a
 #   plausible nonzero count (for example, one PVB when two volumes were
-#   expected). The relative coverage rule detects a lower count only when a
-#   comparable prior baseline exists.
+#   expected). No relative count rule is used: the effective intended set after
+#   Velero resource-policy exclusions is not exported as a metric.
 # Both join on the newest Backup per schedule so they clear on recovery.
 #
 # Keep this namespace separate from rules/velero.yaml. Both files are synced by
@@ -318,15 +318,11 @@ groups:
             is covered or that a restore works. Clears when a later Backup has
             a Completed PVB with matching byte counters.
 
-      # Count coverage, not Kubernetes item coverage. A current Backup with
-      # one PVB can otherwise look healthy beside a prior run with 37 PVBs.
-      # The current run is the newest Backup for the schedule, while the
-      # baseline is the newest older Completed Backup. For this independent
-      # volume-count comparison, a Completed run with warnings is still a
-      # useful observed baseline; VeleroScheduleLatestBackupHasWarnings owns
-      # the separate quality signal. The alert deliberately observes the
-      # produced-PVB count while the Backup is queued/running; phase and item
-      # counters are not allowed to hide a volume gap.
+      # The current run is the newest Backup for the schedule. There is no
+      # metric for the effective volume set after Velero resource-policy
+      # exclusions, so a previous run's PVB count is not an intended-coverage
+      # baseline: a deliberate policy change can lower it while leaving all
+      # durable data covered.
       - record: velero_schedule_latest_backup_created_timestamp
         expr: |
           max by (cluster, namespace, schedule, backup) (
@@ -339,142 +335,14 @@ groups:
             )
           )
 
-      # kube-state-metrics emits these status counters only when they are
-      # non-zero. Absence therefore means zero; using `metric == 0` here would
-      # make a Completed Backup disappear from the baseline. "Successful" in
-      # this recording-rule name means parent phase=Completed for the count
-      # baseline. Warnings remain independently actionable and must not erase a
-      # known prior PVB count.
-      - record: velero_schedule_successful_backup_created_timestamp
-        expr: |
-          velero_cr_backup_created_timestamp{
-            namespace="velero-system",
-            schedule!=""
-          }
-          and on (cluster, namespace, schedule, backup)
-          (
-            max by (cluster, namespace, schedule, backup) (
-              velero_cr_backup_info{
-                namespace="velero-system",
-                schedule!="",
-                phase="Completed"
-              }
-            )
-          )
-
-      - record: velero_schedule_previous_successful_backup_created_timestamp
-        expr: |
-          max by (cluster, namespace, schedule, backup) (
-            topk by (cluster, namespace, schedule) (
-              1,
-              (
-                velero_schedule_successful_backup_created_timestamp
-                unless on (cluster, namespace, schedule, backup)
-                velero_schedule_latest_backup_created_timestamp
-              )
-            )
-          )
-
-      # Count each PVB object once, regardless of phase. A Prepared PVB is
-      # still evidence that the Backup selected one volume; the separate
-      # stalled-PVB alert owns whether that selected volume makes progress.
-      - record: velero_backup_pod_volume_backup_count
-        expr: |
-          count by (cluster, namespace, backup) (
-            max by (cluster, namespace, pod_volume_backup, backup) (
-              velero_cr_podvolumebackup_info{
-                namespace="velero-system"
-              }
-            )
-          )
-
-      - record: velero_schedule_latest_pod_volume_backup_count
-        expr: |
-          (
-            (
-              velero_backup_pod_volume_backup_count
-              * on (cluster, namespace, backup) group_left (schedule)
-              max by (cluster, namespace, schedule, backup) (
-                velero_cr_backup_info{
-                  namespace="velero-system",
-                  schedule!=""
-                }
-              )
-            )
-            and on (cluster, namespace, schedule, backup)
-            velero_schedule_latest_backup_created_timestamp
-          )
-          or on (cluster, namespace, schedule, backup)
-          (
-            velero_schedule_latest_backup_created_timestamp * 0
-          )
-
-      - record: velero_schedule_previous_successful_pod_volume_backup_count
-        expr: |
-          (
-            (
-              velero_backup_pod_volume_backup_count
-              * on (cluster, namespace, backup) group_left (schedule)
-              max by (cluster, namespace, schedule, backup) (
-                velero_cr_backup_info{
-                  namespace="velero-system",
-                  schedule!=""
-                }
-              )
-            )
-            and on (cluster, namespace, schedule, backup)
-            velero_schedule_previous_successful_backup_created_timestamp
-          )
-          or on (cluster, namespace, schedule, backup)
-          (
-            velero_schedule_previous_successful_backup_created_timestamp * 0
-          )
-
-      # Share the exact relative condition with the absolute expectation rule
-      # below. When a prior Completed run supplies a real count baseline and
-      # the current count drops, this signal owns the regression; the absolute
-      # rule is suppressed so one schedule does not double-page.
-      - record: velero_schedule_volume_coverage_regressed
-        expr: |
-          velero_schedule_latest_pod_volume_backup_count
-          < on (cluster, namespace, schedule) group_right(backup)
-          velero_schedule_previous_successful_pod_volume_backup_count
-
-      - alert: VeleroScheduleVolumeCoverageRegressed
-        expr: |
-          velero_schedule_volume_coverage_regressed
-        for: 15m
-        labels:
-          severity: critical
-        annotations:
-          summary: Velero schedule {{ $labels.schedule }} volume coverage regressed
-          description: >-
-            The newest Backup {{ $labels.backup }} for schedule
-            {{ $labels.schedule }} has fewer PodVolumeBackups than its previous
-            Completed baseline. Any lower PVB count is material because each
-            PVB represents one selected volume. This remains a coverage
-            regression even when Kubernetes item counts or the parent Backup
-            phase look normal. A warning-bearing Completed Backup can still
-            supply this count baseline; investigate its warning separately.
-            If no previous Completed baseline exists, this alert is
-            intentionally silent: that means no comparable baseline, not
-            proof of zero-volume health. Schedules that never produce a
-            successful nonzero-volume baseline require the separate
-            never/zero-volume coverage signal. Inspect the current and
-            previous Backup PVB populations; stalled-path and node-saturation
-            alerts are separate, and this alert is not restore proof. It
-            clears only when the newest run reaches the prior baseline count.
-
-      # This is the complementary absolute assertion. The latest attempt must
+      # This is the absolute assertion. The latest attempt must
       # itself be Completed. A failed latest attempt is owned by
       # VeleroScheduleLastBackupFailed; falling back to an older
       # Completed Backup here would double-page and could call a current run
       # with real PVBs empty (for example, a PartiallyFailed run with 25
-      # selected volumes). This still catches a schedule whose every
-      # Completed run has zero PVBs, because the latest Completed attempt is
-      # the one evaluated. When the shared relative condition is active, that
-      # rule owns the regression and this one is suppressed to avoid
-      # double-firing.
+      # selected volumes). This catches a schedule whose latest Completed
+      # attempt is metadata-only without treating historical PVB counts as an
+      # intended-volume contract.
       - alert: VeleroScheduleExpectedVolumeDataMissing
         expr: |
           (
@@ -498,8 +366,6 @@ groups:
                   volume_data_required="true"
                 }
               )
-            unless on (cluster, namespace, schedule)
-            velero_schedule_volume_coverage_regressed
           )
           unless on (cluster, namespace, backup)
           (
@@ -539,15 +405,13 @@ groups:
             Backup {{ $labels.backup }} has no Completed PodVolumeBackup with
             bytesDone equal to totalBytes and greater than zero. This absolute
             signal catches schedules whose first and every subsequent run was
-            metadata-only, where the relative rule has no volume-bearing
-            baseline to compare. If the shared relative coverage condition is
-            active, that alert owns the regression and this alert is
-            suppressed to prevent duplicate paging. Inspect the Schedule's
-            volume-selection contract and the Backup's PVB children; phase
-            and object replay do not establish volume data. Schedules without
-            the explicit marker are intentionally out of scope. This is a
-            zero-volume guard only: it cannot detect under-selection when a
-            run has a plausible nonzero count (for example, one PVB when two
-            volumes were expected). The relative coverage alert catches a
-            lower count only when a comparable prior baseline exists; this
-            rule does not infer expected counts.
+            metadata-only. Inspect the Schedule's volume-selection contract
+            and the Backup's PVB children; phase and object replay do not
+            establish volume data. Schedules without the explicit marker are
+            intentionally out of scope. This is an absolute zero-volume guard
+            and cannot detect under-selection when a run has a plausible
+            nonzero count. The rule deliberately does not infer an intended
+            count from historical PVBs because Velero resource policies can
+            intentionally change the selected set. The condition begins with
+            the Backup's creation time, not when the alert first fires; use
+            that timestamp when determining how long coverage has been missing.
