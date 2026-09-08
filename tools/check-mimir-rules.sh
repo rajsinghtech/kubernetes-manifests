@@ -19,6 +19,7 @@ if ! python3 -c "import yaml" 2>/dev/null; then
 fi
 
 python3 - <<'PY'
+import os
 from pathlib import Path
 import re
 import shutil
@@ -57,6 +58,70 @@ def read_yaml(path):
     except (OSError, yaml.YAMLError) as error:
         fail(f"{path}: cannot parse YAML: {error}")
         return None
+
+
+def git_output(*args):
+    try:
+        result = subprocess.run(
+            ["git", *args],
+            cwd=ROOT,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+    except OSError:
+        return None
+    if result.returncode != 0:
+        return None
+    return result.stdout.strip()
+
+
+def changed_rule_names():
+    """Return only production rule sources changed from the PR base.
+
+    The repository intentionally has an older fixture backlog. This check is
+    therefore diff-scoped: a new or modified source must join the exercised
+    subset, while untouched legacy sources remain an explicit backlog.
+    """
+    configured_base = os.environ.get("FLATE_BASE")
+    candidates = []
+    if configured_base:
+        candidates.append(configured_base)
+        if "/" not in configured_base:
+            candidates.append(f"origin/{configured_base}")
+    candidates.extend(("origin/HEAD", "origin/main", "origin/master", "main"))
+    merge_base = None
+    for candidate in dict.fromkeys(candidates):
+        merge_base = git_output("merge-base", "HEAD", candidate)
+        if merge_base:
+            break
+    if merge_base is None:
+        fail(
+            "cannot determine the Mimir rule diff base; set FLATE_BASE to a "
+            "branch or commit available to git"
+        )
+        return set()
+
+    changed = git_output(
+        "diff",
+        "--name-only",
+        "--diff-filter=AMR",
+        merge_base,
+        "HEAD",
+        "--",
+        str(RULES.relative_to(ROOT)),
+    )
+    if changed is None:
+        fail("cannot inspect the Mimir rule diff with git")
+        return set()
+
+    rules_relative = RULES.relative_to(ROOT)
+    return {
+        path.stem
+        for raw_path in changed.splitlines()
+        if (path := Path(raw_path)).parent == rules_relative
+        and path.suffix in {".yaml", ".yml"}
+    }
 
 
 kustomization = read_yaml(KUSTOMIZATION)
@@ -108,6 +173,8 @@ if not loader_name_source_wired:
         f"{KUSTOMIZATION}: generated mimir-rules name is not wired to the "
         "loader Job metadata.name; completed Jobs must be content-hashed"
     )
+
+changed_rules = changed_rule_names()
 
 
 def render_mimir():
@@ -330,12 +397,17 @@ for container in containers:
 
 # The normal rule test runner intentionally covers a fixture-backed subset of
 # production files; requiring a fixture for every rule would change that
-# existing policy. Do, however, keep the subset internally complete: every
-# rule named by its loop must have a source file, a case mapping, and a fixture
-# that names the corresponding source. This catches a new rule being wired to
-# the loader but silently omitted from its own test registration.
+# existing policy. Keep the subset internally complete, and require every
+# changed production source to join it below. This catches a new rule being
+# wired to the loader but silently omitted from its own test registration
+# without turning the legacy fixture backlog into an immediate gate failure.
 tested_rules = set()
 test_files = {}
+test_runner_text = ""
+special_test_files = {
+    "velero": ("velero_stale_test.yaml",),
+    "mimir-loader": ("mimir-loader_test.yaml",),
+}
 if not TEST_RUNNER.is_file():
     fail(f"{TEST_RUNNER}: missing Mimir rule test runner")
 else:
@@ -361,6 +433,61 @@ else:
     if 'promtool test rules "$tmpdir/$test_file"' not in test_runner_text:
         fail(f"{TEST_RUNNER}: fixture loop does not run each rule fixture")
 
+
+def check_fixture(rule, filename):
+    fixture = TEST_FIXTURES / filename
+    if not fixture.is_file():
+        fail(f"{TEST_RUNNER}: fixture for {rule!r} is missing: {fixture}")
+        return
+    fixture_document = read_yaml(fixture)
+    if not isinstance(fixture_document, dict):
+        return
+    fixture_rule_files = fixture_document.get("rule_files", [])
+    expected_reference = f"../{rule}.yaml"
+    if expected_reference not in fixture_rule_files:
+        fail(
+            f"{fixture}: test for {rule!r} must reference "
+            f"{expected_reference!r}"
+        )
+    tests = fixture_document.get("tests")
+    if not isinstance(tests, list) or not tests:
+        fail(f"{fixture}: test for {rule!r} must contain non-empty tests")
+        return
+
+    # promtool accepts an empty test block, which would make registration a
+    # box-ticking exercise. Require an explicit expected outcome and at least
+    # one positive result; an empty exp_alerts list is still meaningful as an
+    # additional no-alert assertion, but not as the fixture's only assertion.
+    assertions = 0
+    positive_assertions = 0
+    for case in tests:
+        if not isinstance(case, dict):
+            continue
+        for test_key, expected_key in (
+            ("alert_rule_test", "exp_alerts"),
+            ("promql_expr_test", "exp_samples"),
+        ):
+            entries = case.get(test_key, [])
+            if not isinstance(entries, list):
+                continue
+            for entry in entries:
+                if not isinstance(entry, dict) or expected_key not in entry:
+                    continue
+                assertions += 1
+                if entry[expected_key]:
+                    positive_assertions += 1
+    if assertions == 0:
+        fail(
+            f"{fixture}: test for {rule!r} must contain an explicit "
+            "exp_alerts or exp_samples assertion"
+        )
+    elif positive_assertions == 0:
+        fail(
+            f"{fixture}: test for {rule!r} must assert at least one "
+            "non-empty exp_alerts or exp_samples result"
+        )
+
+
 for rule in sorted(tested_rules):
     source = RULES / f"{rule}.yaml"
     if not source.is_file():
@@ -369,25 +496,33 @@ for rule in sorted(tested_rules):
     if filename is None:
         fail(f"{TEST_RUNNER}: tested rule {rule!r} has no case fixture mapping")
         continue
-    fixture = TEST_FIXTURES / filename
-    if not fixture.is_file():
-        fail(f"{TEST_RUNNER}: fixture for {rule!r} is missing: {fixture}")
-        continue
-    fixture_document = read_yaml(fixture)
-    fixture_rule_files = (
-        fixture_document.get("rule_files", [])
-        if isinstance(fixture_document, dict)
-        else []
-    )
-    expected_reference = f"../{rule}.yaml"
-    if expected_reference not in fixture_rule_files:
-        fail(
-            f"{fixture}: test for {rule!r} must reference "
-            f"{expected_reference!r}"
-        )
+    check_fixture(rule, filename)
+
+for rule, filenames in special_test_files.items():
+    for filename in filenames:
+        source_reference = f'"$RULE_DIR/{rule}.yaml"'
+        fixture_reference = f'"$RULE_DIR/tests/{filename}"'
+        if source_reference not in test_runner_text:
+            fail(
+                f"{TEST_RUNNER}: special test for {rule!r} does not invoke "
+                f"{source_reference}"
+            )
+        if fixture_reference not in test_runner_text:
+            fail(
+                f"{TEST_RUNNER}: special test for {rule!r} does not invoke "
+                f"{fixture_reference}"
+            )
+        check_fixture(rule, filename)
 
 for rule in sorted(set(test_files) - tested_rules):
     fail(f"{TEST_RUNNER}: case fixture mapping for untested rule {rule!r}")
+
+for rule in sorted(changed_rules):
+    if rule not in tested_rules and rule not in special_test_files:
+        fail(
+            f"{RULES / (rule + '.yaml')}: changed production rule is not "
+            "registered in rules/tests/run.sh with a fixture"
+        )
 
 required = {
     "bhaiya-sandbox-telemetry.yaml": "bhaiya-sandbox-telemetry",
