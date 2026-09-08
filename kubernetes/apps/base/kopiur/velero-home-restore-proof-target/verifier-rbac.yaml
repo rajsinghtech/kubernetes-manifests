@@ -1,0 +1,40 @@
+# The content verifier only needs to observe the successful Restore so that it
+# cannot race the mover. It has no permission to create or modify any object.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: velero-home-ottawa-restore-proof-r2-verifier
+  namespace: kopiur-velero-home-restore-20260908
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: velero-home-ottawa-restore-proof-r2-verifier
+  namespace: kopiur-velero-home-restore-20260908
+rules:
+  - apiGroups:
+      - kopiur.home-operations.com
+    resources:
+      - restores
+    resourceNames:
+      - velero-home-ottawa-restore-proof-r2
+    # kubectl wait performs an initial get and then a name-filtered list/watch
+    # until the phase changes. resourceNames keeps those reads to this Restore.
+    verbs:
+      - get
+      - list
+      - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: velero-home-ottawa-restore-proof-r2-verifier
+  namespace: kopiur-velero-home-restore-20260908
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: velero-home-ottawa-restore-proof-r2-verifier
+subjects:
+  - kind: ServiceAccount
+    name: velero-home-ottawa-restore-proof-r2-verifier
+    namespace: kopiur-velero-home-restore-20260908

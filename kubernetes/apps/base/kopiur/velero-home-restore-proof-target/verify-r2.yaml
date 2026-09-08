@@ -16,9 +16,46 @@ spec:
         app.kubernetes.io/name: velero-home-ottawa-restore-proof-r2-verify
         app.kubernetes.io/part-of: kopiur
     spec:
-      automountServiceAccountToken: false
+      serviceAccountName: velero-home-ottawa-restore-proof-r2-verifier
+      automountServiceAccountToken: true
       restartPolicy: Never
       initContainers:
+        - name: wait-for-restore-object
+          image: registry.k8s.io/kubectl:v1.36.3@sha256:6e4fce3c83651edb91b74bc67701c5cd263dd8aa3cd4254b1798d6425a5ab789
+          command: ["/bin/kubectl"]
+          args:
+            - wait
+            - --for=create
+            - restore/velero-home-ottawa-restore-proof-r2
+            - --namespace=kopiur-velero-home-restore-20260908
+            - --timeout=30m
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            runAsUser: 65532
+            runAsGroup: 65532
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+        - name: wait-for-restore
+          image: registry.k8s.io/kubectl:v1.36.3@sha256:6e4fce3c83651edb91b74bc67701c5cd263dd8aa3cd4254b1798d6425a5ab789
+          command: ["/bin/kubectl"]
+          args:
+            - wait
+            - --for=jsonpath={.status.phase}=Completed
+            - restore/velero-home-ottawa-restore-proof-r2
+            - --namespace=kopiur-velero-home-restore-20260908
+            - --timeout=30m
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            runAsUser: 65532
+            runAsGroup: 65532
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
         - name: connect-read-only
           image: docker.io/kopia/kopia@sha256:b6cb1f09a5fa832a320ee06d7803e82cdd7f69ac6f61d76a0d55fbbf1495c043
           command: ["/bin/kopia"]
@@ -188,15 +225,22 @@ spec:
               target_bytes = total_bytes(target)
               source_hash = manifest_hash(source)
               target_hash = manifest_hash(target)
+              file_count_match = file_count(source) == file_count(target)
+              byte_total_match = source_bytes == target_bytes
+              manifest_hash_match = source_hash == target_hash
+              manifest_match = source == target
 
               print("snapshot=" + SNAPSHOT)
               print("source_file_count=" + str(file_count(source)))
               print("target_file_count=" + str(file_count(target)))
+              print("file_count_match=" + str(file_count_match).lower())
               print("source_bytes=" + str(source_bytes))
               print("target_bytes=" + str(target_bytes))
+              print("byte_total_match=" + str(byte_total_match).lower())
               print("source_manifest_sha256=" + source_hash)
               print("target_manifest_sha256=" + target_hash)
-              print("manifest_match=" + str(source == target).lower())
+              print("manifest_hash_match=" + str(manifest_hash_match).lower())
+              print("manifest_match=" + str(manifest_match).lower())
               for name in sorted(source):
                   print("source_entry=" + name + " " + json.dumps(source[name], sort_keys=True))
               for name in sorted(target):
@@ -205,7 +249,7 @@ spec:
               if source_bytes != EXPECTED_SOURCE_BYTES:
                   print("ERROR: source byte count disagrees with the pinned Snapshot status", file=sys.stderr)
                   sys.exit(1)
-              if source != target:
+              if not file_count_match or not byte_total_match or not manifest_hash_match or not manifest_match:
                   print("ERROR: restored content differs from the pinned snapshot reference", file=sys.stderr)
                   sys.exit(1)
           securityContext:
