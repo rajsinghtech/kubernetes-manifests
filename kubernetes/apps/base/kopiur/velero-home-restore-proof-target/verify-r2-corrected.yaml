@@ -25,7 +25,7 @@ spec:
       restartPolicy: Never
       initContainers:
         - name: wait-for-restore-object
-          image: registry.k8s.io/kubectl:v1.36.3@sha256:6e4fce3c83651edb91b74bc67701c5cd263dd8aa3cd4254b1798d6425a5ab789
+          image: registry.k8s.io/kubectl:v1.37.0@sha256:5ed410ebac5dc976cc717098994dcdb29bbbd38f6bd65f582311f5be4ba719cf
           command: ["/bin/kubectl"]
           args:
             - wait
@@ -43,7 +43,7 @@ spec:
             seccompProfile:
               type: RuntimeDefault
         - name: wait-for-restore
-          image: registry.k8s.io/kubectl:v1.36.3@sha256:6e4fce3c83651edb91b74bc67701c5cd263dd8aa3cd4254b1798d6425a5ab789
+          image: registry.k8s.io/kubectl:v1.37.0@sha256:5ed410ebac5dc976cc717098994dcdb29bbbd38f6bd65f582311f5be4ba719cf
           command: ["/bin/kubectl"]
           args:
             - wait
