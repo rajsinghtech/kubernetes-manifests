@@ -1,0 +1,52 @@
+---
+# First Kopiur restore from a data-bearing Velero-owned Kopia repository.
+# The identity and snapshot ID are deliberately raw and exact: do not resolve
+# a moving SnapshotPolicy or "latest" while this proof is in flight.
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: Restore
+metadata:
+  name: velero-home-ottawa-restore-proof
+  namespace: kopiur-velero-home-restore-20260908
+spec:
+  source:
+    identity:
+      username: default
+      hostname: default
+      sourcePath: /72c70d3d-e5a3-4ae4-9d8f-2ffac9fe1bef
+      snapshotID: a126fed51f156946923a8ff195c9d144
+  repository:
+    kind: Repository
+    name: velero-home-ottawa-readonly
+    namespace: velero-system
+  target:
+    pvc:
+      name: home-config-restored
+      accessModes:
+        - ReadWriteOnce
+      capacity: 10Gi
+      storageClassName: ceph-block-replicated
+  credentialProjection:
+    # The repository credentials live in velero-system; the mover runs in this
+    # isolated namespace and must receive a projected copy to connect.
+    enabled: true
+  mover:
+    # The target namespace is explicitly privileged for Kopiur movers. The
+    # target PVC is newly created by this Restore; no live PVC is referenced.
+    privilegedMode: true
+  options:
+    enableFileDeletion: false
+    ignoreErrors: false
+    ignorePermissionErrors: false
+    parallel: 1
+    skipExisting: false
+    skipOwners: false
+    skipPermissions: false
+    skipTimes: false
+    writeFilesAtomically: true
+  policy:
+    onMissingSnapshot: Fail
+    waitTimeout: 5m
+  failurePolicy:
+    backoffLimit: 0
+    activeDeadlineSeconds: 1800
+    podStartupDeadlineSeconds: 300
