@@ -12,6 +12,8 @@ tests:
     input_series:
       - series: 'velero_backup_last_successful_timestamp{cluster="talos-ottawa",schedule="media-config-backup"}'
         values: "-200000+0x20"
+      - series: 'velero_cr_schedule_info{cluster="talos-ottawa",namespace="velero-system",schedule="media-config-backup",phase="Enabled",paused="false"}'
+        values: "1+0x20"
       - series: 'velero_cr_backup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="media-config-backup",backup="media-config-backup-20260907060000"}'
         values: "100+0x20"
       - series: 'velero_cr_backup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="media-config-backup",backup="media-config-backup-20260906060000"}'
@@ -36,3 +38,17 @@ tests:
                 guard; it cannot detect a backup that completes while silently
                 missing data, and it also needs the Velero metric to remain
                 scrapeable.
+
+  # A deleted or paused Schedule must clear stale metrics from historical
+  # Backup objects. Otherwise this alert becomes a permanent orphaned
+  # incident after workspace or schedule cleanup.
+  - interval: 1m
+    input_series:
+      - series: 'velero_backup_last_successful_timestamp{cluster="talos-ottawa",schedule="deleted-schedule"}'
+        values: "-200000+0x20"
+      - series: 'velero_cr_backup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="deleted-schedule",backup="deleted-schedule-20260907020000"}'
+        values: "100+0x20"
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: VeleroBackupStale
+        exp_alerts: []
