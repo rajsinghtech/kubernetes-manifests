@@ -78,4 +78,95 @@ tests:
         exp_alerts: []
       - eval_time: 10m
         alertname: GarageClusterPartitionsWithoutQuorum
+  - interval: 1m
+    input_series:
+      - series: 'cluster_connected_nodes{cluster="talos-ottawa",container="garage",endpoint="admin",instance="10.3.0.1:3903",job="garage",namespace="garage",pod="garage-storage-local-700-ottawa",service="garage"}'
+        values: "17+0x20"
+      - series: 'cluster_connected_nodes{cluster="talos-robbinsdale",container="garage",endpoint="admin",instance="10.1.0.1:3903",job="garage",namespace="garage",pod="garage-storage-local-700-robbinsdale",service="garage"}'
+        values: "16+0x20"
+      - series: 'cluster_connected_nodes{cluster="talos-stpetersburg",container="garage",endpoint="admin",instance="10.5.0.1:3903",job="garage",namespace="garage",pod="garage-storage-local-200-stpetersburg",service="garage"}'
+        values: "17+0x20"
+      - series: 'cluster_connected_nodes{cluster="talos-ottawa",container="garage",endpoint="admin",instance="10.3.0.2:3903",job="garage",namespace="garage",pod="garage-storage-local-700-healthy",service="garage"}'
+        values: "18+0x20"
+    alert_rule_test:
+      - eval_time: 14m
+        alertname: GarageFederationPeerConnectivityDegraded
+        exp_alerts: []
+      - eval_time: 15m
+        alertname: GarageFederationPeerConnectivityDegraded
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-ottawa
+              container: garage
+              endpoint: admin
+              instance: 10.3.0.1:3903
+              job: garage
+              namespace: garage
+              pod: garage-storage-local-700-ottawa
+              service: garage
+              severity: warning
+            exp_annotations:
+              summary: >-
+                Garage federation connectivity degraded from
+                garage-storage-local-700-ottawa (talos-ottawa)
+              description: >-
+                This Garage admin vantage point sees 17 of the expected 18
+                federation peers. The count is per scrape target, not a fleet
+                aggregate; other sites may see a different subset. Check
+                inter-site RPC transport (DNS, TCP 3901, Tailscale, routing,
+                and policy) before treating partition quorum as proof of
+                federation health.
+          - exp_labels:
+              cluster: talos-robbinsdale
+              container: garage
+              endpoint: admin
+              instance: 10.1.0.1:3903
+              job: garage
+              namespace: garage
+              pod: garage-storage-local-700-robbinsdale
+              service: garage
+              severity: warning
+            exp_annotations:
+              summary: >-
+                Garage federation connectivity degraded from
+                garage-storage-local-700-robbinsdale (talos-robbinsdale)
+              description: >-
+                This Garage admin vantage point sees 16 of the expected 18
+                federation peers. The count is per scrape target, not a fleet
+                aggregate; other sites may see a different subset. Check
+                inter-site RPC transport (DNS, TCP 3901, Tailscale, routing,
+                and policy) before treating partition quorum as proof of
+                federation health.
+          - exp_labels:
+              cluster: talos-stpetersburg
+              container: garage
+              endpoint: admin
+              instance: 10.5.0.1:3903
+              job: garage
+              namespace: garage
+              pod: garage-storage-local-200-stpetersburg
+              service: garage
+              severity: warning
+            exp_annotations:
+              summary: >-
+                Garage federation connectivity degraded from
+                garage-storage-local-200-stpetersburg (talos-stpetersburg)
+              description: >-
+                This Garage admin vantage point sees 17 of the expected 18
+                federation peers. The count is per scrape target, not a fleet
+                aggregate; other sites may see a different subset. Check
+                inter-site RPC transport (DNS, TCP 3901, Tailscale, routing,
+                and policy) before treating partition quorum as proof of
+                federation health.
+
+  - interval: 1m
+    input_series:
+      - series: 'cluster_connected_nodes{cluster="talos-robbinsdale",container="garage",endpoint="admin",instance="10.1.0.1:3903",job="garage",namespace="garage",pod="garage-storage-local-700-robbinsdale",service="garage"}'
+        values: "16+0x5 18+0x15"
+    alert_rule_test:
+      - eval_time: 4m
+        alertname: GarageFederationPeerConnectivityDegraded
+        exp_alerts: []
+      - eval_time: 5m
+        alertname: GarageFederationPeerConnectivityDegraded
         exp_alerts: []
