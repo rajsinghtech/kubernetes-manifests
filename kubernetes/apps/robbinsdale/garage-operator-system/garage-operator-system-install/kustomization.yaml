@@ -14,4 +14,4 @@ patches:
       - op: add
         path: /spec/values/image
         value:
-          digest: sha256:4ed5db5a815b987af4b142e91453dcce50561687e2bd1c1a9ea6ae5205bc82d0
+          digest: sha256:ab769000dd61e07fbb6c45fa544f03c16b50ff0c64fe23ef7d00cc060ec78389
