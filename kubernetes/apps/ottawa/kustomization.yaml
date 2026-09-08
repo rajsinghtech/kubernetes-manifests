@@ -57,6 +57,7 @@ resources:
   - ./velero
   - ./kopiur
   - ./kopiur-velero-home-restore-proof
+  - ./kopiur-velero-home-restore-projection
   - ./kopiur-velero-home-restore-proof-target
   - ./vpa-system
   - ./victoria-logs

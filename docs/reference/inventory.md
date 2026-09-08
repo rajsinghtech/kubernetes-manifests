@@ -28,10 +28,10 @@ diagram in the [README](../../README.md#architecture).
 
 | Location | Talos machines | Pointer directories | Flux Kustomizations |
 |---|---:|---:|---:|
-| `ottawa` | 4 | 61 | 124 |
+| `ottawa` | 4 | 62 | 125 |
 | `robbinsdale` | 3 | 43 | 87 |
 | `stpetersburg` | 3 | 41 | 84 |
-| **total** | **10** | **145** | **295** |
+| **total** | **10** | **146** | **296** |
 
 ## Ottawa — `talos-ottawa`
 
@@ -120,6 +120,7 @@ diagram in the [README](../../README.md#architecture).
 | Application workloads | `homer-operator` | `homer-operator-install` |
 | Application workloads | `immich` | `immich` |
 | Application workloads | `kopiur` | `kopiur` → ns `kopiur-system` |
+| Application workloads | `kopiur-velero-home-restore-projection` | `kopiur-velero-home-restore-projection` → ns `velero-system` |
 | Application workloads | `kopiur-velero-home-restore-proof` | `kopiur-velero-home-restore-proof` → ns `velero-system` |
 | Application workloads | `kopiur-velero-home-restore-proof-target` | `kopiur-velero-home-restore-proof-target` → ns `kopiur-velero-home-restore-20260908` |
 | Application workloads | `media` | `media-apps` |
@@ -138,6 +139,7 @@ Pointers whose objects land outside their directory's namespace — use the righ
 | `k8gb-prometheus` | `k8gb` | `keiretsu-top` |
 | `k8s-gpu-dra-driver` | `k8s-gpu-dra-driver` | `kube-system` |
 | `kopiur` | `kopiur` | `kopiur-system` |
+| `kopiur-velero-home-restore-projection` | `kopiur-velero-home-restore-projection` | `velero-system` |
 | `kopiur-velero-home-restore-proof` | `kopiur-velero-home-restore-proof` | `velero-system` |
 | `kopiur-velero-home-restore-proof-target` | `kopiur-velero-home-restore-proof-target` | `kopiur-velero-home-restore-20260908` |
 | `teslamate-secret-sync` | `teslamate` | `monitoring` |
