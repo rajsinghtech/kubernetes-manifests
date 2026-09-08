@@ -1,8 +1,6 @@
-# Bhaiya exports endpoint observations for every non-terminal workspace, but
-# does not currently export per-workspace desired lifecycle intent. A stopped
-# or idle workspace can therefore legitimately have no ready endpoint. Keep
-# this as a warning until that join exists; do not pretend not-ready alone is
-# a critical serving guarantee.
+# Join endpoint observations with per-workspace lifecycle state so an
+# intentionally idle workspace does not page while a serving workspace with
+# no endpoint does.
 namespace: bhaiya-workspace-endpoints
 groups:
   - name: bhaiya-workspace-endpoints.rules
@@ -10,13 +8,17 @@ groups:
       - alert: BhaiyaWorkspaceServiceNoReadyEndpoints
         expr: |
           max by (cluster, workspace) (
-            bhaiya_workspace_service_endpoint_state{
-              state=~"not-ready|missing"
-            } == 1
+            (
+              bhaiya_workspace_service_endpoint_state{state=~"not-ready|missing"} == 1
+            )
+            and on (cluster, workspace)
+            (
+              bhaiya_workspace_state{state="ready"} == 1
+            )
           )
         for: 10m
         labels:
-          severity: warning
+          severity: critical
         annotations:
           summary: Workspace Service has no ready endpoints
           description: >-
@@ -24,8 +26,8 @@ groups:
             {{ $labels.workspace }} has been not-ready or missing ready
             endpoints for at least 10 minutes. This covers the empty
             EndpointSlice failure shape, including a Service that still
-            resolves while its port cannot be reached. Bhaiya does not yet
-            export per-workspace desired lifecycle intent, so stopped or idle
-            workspaces can also match; confirm the workspace should be serving
-            before escalating. Only the leader's observation is required; a
-            non-emitting replica does not suppress this signal.
+            resolves while its port cannot be reached. The lifecycle join limits
+            this alert to workspaces Bhaiya says should be ready. Only the
+            leader's observation is required; a non-emitting replica does not
+            suppress this signal. This supersedes the provisional warning
+            alert and must not be configured alongside it.
