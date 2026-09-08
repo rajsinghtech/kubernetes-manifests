@@ -91,6 +91,22 @@ groups:
       description: The active {{ $labels.deployment }} Deployment has desired replicas but
         none are ready. Check the Deployment events, pod readiness probes, and the most recent
         rollout before traffic is lost.
+  - alert: BhaiyaWorkspaceServiceNoReadyEndpoints
+    expr: |
+      bhaiya_workspace_service_endpoint_state{
+        state=~"not-ready|missing"
+      } == 1
+    for: 10m
+    labels:
+      severity: critical
+    annotations:
+      summary: Workspace {{ $labels.workspace }} Service has no ready endpoints
+      description: >-
+        Bhaiya reports that the primary Service for workspace {{ $labels.workspace }} has
+        no ready EndpointSlice backend for ten minutes (state={{ $labels.state }}). The
+        workspace lifecycle state can still say Ready because that probe does not prove
+        that the primary Service reaches the session; inspect the Service selector,
+        EndpointSlices, and workspace Pod conditions.
   - alert: BhaiyaScrapeTargetDown
     expr: up{namespace="bhaiya"} == 0
     for: 5m
