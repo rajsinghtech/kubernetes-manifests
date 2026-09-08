@@ -55,6 +55,61 @@ spec:
         # The Gatus heartbeat endpoint was retired; retain the standard
         # liveness alert without repeatedly delivering it to a dead webhook.
         receiver: blackhole
+      # Group the Velero family by the object that actually failed. The live
+      # baseline had 33 non-deliberate Velero alert instances, but these should
+      # collapse to roughly 12 backup/schedule incident groups (nine concrete
+      # backups plus three schedule-only freshness groups). Keep backup in
+      # the key so a later attempt is not merged into an older attempt.
+      - matchers:
+          - matchType: "=~"
+            name: alertname
+            value: VeleroPodVolumeBackup.*|VeleroScheduleLastBackupFailed|VeleroScheduleLatestBackup(HasWarnings|MissingVolumes)|VeleroScheduleVolumeCoverageRegressed
+        groupBy:
+          - cluster
+          - backup
+        receiver: discord
+      - matchers:
+          - matchType: "=~"
+            name: alertname
+            value: VeleroPodVolumeRestore.*|VeleroRestore.*
+        groupBy:
+          - cluster
+          - restore
+        receiver: discord
+      # Schedule-level freshness/event alerts do not carry a Backup label.
+      - matchers:
+          - matchType: "=~"
+            name: alertname
+            value: VeleroBackup(Stale|PartiallyFailed|Failed)|VeleroScheduleNeverBackedUp
+        groupBy:
+          - cluster
+          - schedule
+        receiver: discord
+      - matchers:
+          - matchType: "="
+            name: alertname
+            value: VeleroBackupRepositoryMaintenanceStale
+        groupBy:
+          - cluster
+          - repository
+          - volume_namespace
+        receiver: discord
+      - matchers:
+          - matchType: "="
+            name: alertname
+            value: VeleroBackupStorageLocationUnavailable
+        groupBy:
+          - cluster
+          - backup_location_name
+        receiver: discord
+      - matchers:
+          - matchType: "="
+            name: alertname
+            value: VeleroNodeDataPathSaturated
+        groupBy:
+          - cluster
+          - node
+        receiver: discord
       # All other alerts with severity go to Discord
       - matchers:
           - matchType: "=~"
@@ -86,7 +141,12 @@ spec:
               {{- end }}
             {{- end }}
           sendResolved: true
-          title: '[Alerts] [{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ .GroupLabels.alertname }}'
+          title: >-
+            [Alerts] [{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}]
+            {{- if .GroupLabels.backup }}backup: {{ .GroupLabels.backup }}
+            {{- else if .GroupLabels.schedule }}schedule: {{ .GroupLabels.schedule }}
+            {{- else if .GroupLabels.alertname }}{{ .GroupLabels.alertname }}
+            {{- else }}grouped alerts{{ end }}
       name: discord
   inhibitRules:
     - equal:
