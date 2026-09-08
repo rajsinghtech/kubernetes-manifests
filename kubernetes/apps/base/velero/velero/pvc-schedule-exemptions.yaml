@@ -76,12 +76,6 @@ exemptions:
       backed up."
 
   - cluster: robbinsdale
-    namespace: cnpg-restore-proof-20260908-immich
-    reason: >-
-      Temporary fenced CNPG Immich restore-proof target; its PVC is removed
-      after the read-only recovery comparison and is not production state.
-
-  - cluster: robbinsdale
     namespace: tailscale-examples
     reason: >-
       Demo/sandbox tsidp volumeClaimTemplate under tailscale-examples; not a
