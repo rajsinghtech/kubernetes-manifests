@@ -28,10 +28,10 @@ diagram in the [README](../../README.md#architecture).
 
 | Location | Talos machines | Pointer directories | Flux Kustomizations |
 |---|---:|---:|---:|
-| `ottawa` | 4 | 60 | 123 |
+| `ottawa` | 4 | 61 | 124 |
 | `robbinsdale` | 3 | 43 | 87 |
 | `stpetersburg` | 3 | 41 | 84 |
-| **total** | **10** | **144** | **294** |
+| **total** | **10** | **145** | **295** |
 
 ## Ottawa — `talos-ottawa`
 
@@ -121,6 +121,7 @@ diagram in the [README](../../README.md#architecture).
 | Application workloads | `immich` | `immich` |
 | Application workloads | `kopiur` | `kopiur` → ns `kopiur-system` |
 | Application workloads | `kopiur-velero-home-restore-proof` | `kopiur-velero-home-restore-proof` → ns `velero-system` |
+| Application workloads | `kopiur-velero-home-restore-proof-target` | `kopiur-velero-home-restore-proof-target` → ns `kopiur-velero-home-restore-20260908` |
 | Application workloads | `media` | `media-apps` |
 | Application workloads | `searxng` | `searxng` |
 | Application workloads | `tempvm` | `tempvm` |
@@ -138,6 +139,7 @@ Pointers whose objects land outside their directory's namespace — use the righ
 | `k8s-gpu-dra-driver` | `k8s-gpu-dra-driver` | `kube-system` |
 | `kopiur` | `kopiur` | `kopiur-system` |
 | `kopiur-velero-home-restore-proof` | `kopiur-velero-home-restore-proof` | `velero-system` |
+| `kopiur-velero-home-restore-proof-target` | `kopiur-velero-home-restore-proof-target` | `kopiur-velero-home-restore-20260908` |
 | `teslamate-secret-sync` | `teslamate` | `monitoring` |
 | `tinyauth` | `auth` | `tinyauth` |
 | `tinyauth-killinit` | `auth` | `tinyauth` |
