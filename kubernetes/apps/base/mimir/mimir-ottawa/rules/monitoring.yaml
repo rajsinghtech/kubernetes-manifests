@@ -219,7 +219,14 @@ groups:
 
       - alert: NodeHighMemoryUsage
         expr: |
-          (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 90
+          (
+            (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 90
+          )
+          unless on (cluster, instance)
+          (
+            node_memory_MemTotal_bytes{cluster="talos-stpetersburg"}
+            > 100 * 1024 * 1024 * 1024
+          )
         for: 15m
         annotations:
           summary: >-
