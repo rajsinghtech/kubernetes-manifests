@@ -1,0 +1,17 @@
+---
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: tracearr-s3-source
+  namespace: cnpg-restore-proof-20260908-tracearr
+spec:
+  configuration:
+    destinationPath: s3://tracearr-postgres/robbinsdale/
+    endpointURL: http://garage-gateway.garage.svc.cluster.local:3900
+    s3Credentials:
+      accessKeyId:
+        name: tracearr-s3-backup
+        key: AWS_ACCESS_KEY_ID
+      secretAccessKey:
+        name: tracearr-s3-backup
+        key: AWS_SECRET_ACCESS_KEY
