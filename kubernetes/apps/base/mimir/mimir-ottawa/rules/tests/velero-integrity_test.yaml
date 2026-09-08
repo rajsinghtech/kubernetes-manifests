@@ -249,7 +249,9 @@ tests:
       - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",backup="home-backup-current",pod_volume_backup="home-current-pvb",node="rei",phase="Prepared"}'
         values: "1+0x20"
 
-      # A warning-bearing Completed run remains a separate integrity signal.
+      # A warning-bearing Completed run is still a usable volume-count
+      # baseline. The warning is a separate integrity signal; it must not make
+      # this per-schedule regression comparison silently disappear.
       - series: 'velero_cr_backup_created_timestamp{cluster="talos-stpetersburg",namespace="velero-system",schedule="home-assistant-backup",backup="home-assistant-backup-previous"}'
         values: "100+0x20"
       - series: 'velero_cr_backup_created_timestamp{cluster="talos-stpetersburg",namespace="velero-system",schedule="home-assistant-backup",backup="home-assistant-backup-current"}'
@@ -265,8 +267,58 @@ tests:
 
     alert_rule_test:
       - eval_time: 15m
-        alertname: VeleroScheduleExpectedVolumeDataMissing
-        exp_alerts: []
+        alertname: VeleroScheduleVolumeCoverageRegressed
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-ottawa
+              namespace: velero-system
+              schedule: bhaiya-backup
+              backup: bhaiya-backup-current
+              severity: critical
+            exp_annotations:
+              summary: Velero schedule bhaiya-backup volume coverage regressed
+              description: >-
+                The newest Backup bhaiya-backup-current for schedule
+                bhaiya-backup has fewer PodVolumeBackups than its previous
+                Completed baseline. Any lower PVB count is material because
+                each PVB represents one selected volume. This remains a
+                coverage regression even when Kubernetes item counts or the
+                parent Backup phase look normal. A warning-bearing Completed
+                Backup can still supply this count baseline; investigate its
+                warning separately. If no previous Completed baseline exists,
+                this alert is intentionally silent: that means no comparable
+                baseline, not proof of zero-volume health. Schedules that
+                never produce a successful nonzero-volume baseline require the
+                separate never/zero-volume coverage signal. Inspect the
+                current and previous Backup PVB populations; stalled-path and
+                node-saturation alerts are separate, and this alert is not
+                restore proof. It clears only when the newest run reaches the
+                prior baseline count.
+          - exp_labels:
+              cluster: talos-stpetersburg
+              namespace: velero-system
+              schedule: home-assistant-backup
+              backup: home-assistant-backup-current
+              severity: critical
+            exp_annotations:
+              summary: Velero schedule home-assistant-backup volume coverage regressed
+              description: >-
+                The newest Backup home-assistant-backup-current for schedule
+                home-assistant-backup has fewer PodVolumeBackups than its
+                previous Completed baseline. Any lower PVB count is material
+                because each PVB represents one selected volume. This remains
+                a coverage regression even when Kubernetes item counts or the
+                parent Backup phase look normal. A warning-bearing Completed
+                Backup can still supply this count baseline; investigate its
+                warning separately. If no previous Completed baseline exists,
+                this alert is intentionally silent: that means no comparable
+                baseline, not proof of zero-volume health. Schedules that
+                never produce a successful nonzero-volume baseline require the
+                separate never/zero-volume coverage signal. Inspect the
+                current and previous Backup PVB populations; stalled-path and
+                node-saturation alerts are separate, and this alert is not
+                restore proof. It clears only when the newest run reaches the
+                prior baseline count.
 
   # A marked Schedule with completed zero-volume history must alert. The
   # unmarked Schedule is deliberately identical otherwise and remains out of
@@ -310,16 +362,19 @@ tests:
                 Completed Backup expected-empty-current has no Completed
                 PodVolumeBackup with bytesDone equal to totalBytes and greater
                 than zero. This absolute signal catches schedules whose first
-                and every subsequent run was metadata-only. Inspect the
-                Schedule's volume-selection contract and the Backup's PVB
-                children; phase and object replay do not establish volume
-                data. Schedules without the explicit marker are intentionally
-                out of scope. This is an absolute zero-volume guard and does
-                not infer an intended count from historical PVBs, because
-                Velero resource policies can intentionally change the selected
-                set. The condition begins with the Backup's creation time, not
-                when the alert first fires; use that timestamp when determining
-                how long coverage has been missing.
+                and every subsequent run was metadata-only, where the
+                relative rule has no volume-bearing baseline to compare. If
+                the shared relative coverage condition is active, that alert
+                owns the regression and this alert is suppressed to prevent
+                duplicate paging. Inspect the Schedule's volume-selection
+                contract and the Backup's PVB children; phase and object
+                replay do not establish volume data. Schedules without the
+                explicit marker are intentionally out of scope. This is a
+                zero-volume guard only: it cannot detect under-selection when
+                a run has a plausible nonzero count (for example, one PVB
+                when two volumes were expected). The relative coverage alert
+                catches a lower count only when a comparable prior baseline
+                exists; this rule does not infer expected counts.
 
   # A Completed PVB is evidence only when its progress is byte-positive and
   # complete. A real positive PVB clears the absolute expectation alert.
@@ -365,35 +420,58 @@ tests:
         values: "1234+0x20"
     alert_rule_test:
       - eval_time: 15m
+        alertname: VeleroScheduleVolumeCoverageRegressed
+        exp_alerts: []
+      - eval_time: 15m
         alertname: VeleroScheduleExpectedVolumeDataMissing
         exp_alerts: []
 
-  # A deliberate resource-policy change may reduce the PVB count while the
-  # latest Backup still has byte-complete durable volume data. Historical PVB
-  # counts are not an intended-coverage contract, so this must not alert.
+  # When a prior Completed run has selected a volume and the current count
+  # drops, the relative rule owns the regression. The absolute rule must stay
+  # quiet so one schedule does not produce two coverage pages.
   - interval: 1m
     input_series:
-      - series: 'velero_cr_schedule_info{cluster="talos-ottawa",namespace="velero-system",schedule="policy-change",phase="Enabled",paused="false",volume_data_required="true"}'
+      - series: 'velero_cr_schedule_info{cluster="talos-ottawa",namespace="velero-system",schedule="expected-regressed",phase="Enabled",paused="false",volume_data_required="true"}'
         values: "1+0x20"
-      - series: 'velero_cr_backup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="policy-change",backup="policy-change-previous"}'
+      - series: 'velero_cr_backup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="expected-regressed",backup="expected-regressed-previous"}'
         values: "100+0x20"
-      - series: 'velero_cr_backup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="policy-change",backup="policy-change-current"}'
+      - series: 'velero_cr_backup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="expected-regressed",backup="expected-regressed-current"}'
         values: "200+0x20"
-      - series: 'velero_cr_backup_info{cluster="talos-ottawa",namespace="velero-system",schedule="policy-change",backup="policy-change-previous",phase="Completed"}'
+      - series: 'velero_cr_backup_info{cluster="talos-ottawa",namespace="velero-system",schedule="expected-regressed",backup="expected-regressed-previous",phase="Completed"}'
         values: "1+0x20"
-      - series: 'velero_cr_backup_info{cluster="talos-ottawa",namespace="velero-system",schedule="policy-change",backup="policy-change-current",phase="Completed"}'
+      - series: 'velero_cr_backup_info{cluster="talos-ottawa",namespace="velero-system",schedule="expected-regressed",backup="expected-regressed-current",phase="Completed"}'
         values: "1+0x20"
-      - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",backup="policy-change-previous",pod_volume_backup="policy-change-old-1",node="asuka",phase="Completed"}'
+      - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",backup="expected-regressed-previous",pod_volume_backup="expected-regressed-pvb",node="asuka",phase="Prepared"}'
         values: "1+0x20"
-      - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",backup="policy-change-previous",pod_volume_backup="policy-change-old-2",node="asuka",phase="Completed"}'
-        values: "1+0x20"
-      - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",backup="policy-change-current",pod_volume_backup="policy-change-current-1",node="asuka",phase="Completed"}'
-        values: "1+0x20"
-      - series: 'velero_cr_podvolumebackup_bytes_done{cluster="talos-ottawa",namespace="velero-system",backup="policy-change-current",pod_volume_backup="policy-change-current-1",node="asuka"}'
-        values: "1234+0x20"
-      - series: 'velero_cr_podvolumebackup_bytes_total{cluster="talos-ottawa",namespace="velero-system",backup="policy-change-current",pod_volume_backup="policy-change-current-1",node="asuka"}'
-        values: "1234+0x20"
     alert_rule_test:
+      - eval_time: 15m
+        alertname: VeleroScheduleVolumeCoverageRegressed
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-ottawa
+              namespace: velero-system
+              schedule: expected-regressed
+              backup: expected-regressed-current
+              severity: critical
+            exp_annotations:
+              summary: Velero schedule expected-regressed volume coverage regressed
+              description: >-
+                The newest Backup expected-regressed-current for schedule
+                expected-regressed has fewer PodVolumeBackups than its previous
+                Completed baseline. Any lower PVB count is material because
+                each PVB represents one selected volume. This remains a
+                coverage regression even when Kubernetes item counts or the
+                parent Backup phase look normal. A warning-bearing Completed
+                Backup can still supply this count baseline; investigate its
+                warning separately. If no previous Completed baseline exists,
+                this alert is intentionally silent: that means no comparable
+                baseline, not proof of zero-volume health. Schedules that
+                never produce a successful nonzero-volume baseline require the
+                separate never/zero-volume coverage signal. Inspect the
+                current and previous Backup PVB populations; stalled-path and
+                node-saturation alerts are separate, and this alert is not
+                restore proof. It clears only when the newest run reaches the
+                prior baseline count.
       - eval_time: 15m
         alertname: VeleroScheduleExpectedVolumeDataMissing
         exp_alerts: []
