@@ -24,20 +24,16 @@ spec:
     keepWeekly: 4
     keepMonthly: 3
   mover:
-    # Live /config has root-owned 0600 files under .storage/ (auth, etc.).
-    # Default mover UID 65532 would Succeed with 0 files — a silent empty
-    # backup. inheritSecurityContextFrom cannot help: HA's pod spec pins no
-    # runAsUser (image USER only), so inheritance would fall back to 65532
-    # (InheritPinnedNoUid). Explicit root is required to READ.
-    #
-    # privilegedMode is the CRD's namespace-gated elevation flag (pairs with
-    # kopiur.home-operations.com/privileged-movers on the Namespace). It alone
-    # does not set UID 0 for backup reads — docs pair it with runAsUser: 0
-    # (and use privilegedMode especially so restores can preserve ownership).
-    privilegedMode: true
+    # The live source has one owner-only file under .storage/:
+    # 10000:10000, mode 0600. A root mover with the hardened capabilities.drop
+    # [ALL] still lacks CAP_DAC_OVERRIDE and therefore cannot read it (the
+    # previous UID-0 run failed on .storage/core.uuid). Match the file owner
+    # instead; this keeps the mover unprivileged and leaves the live PVC
+    # read-only. The remaining source files are root-owned or world-readable.
     securityContext:
-      runAsUser: 0
-      runAsNonRoot: false
+      runAsUser: 10000
+      runAsGroup: 10000
+      runAsNonRoot: true
     # Do NOT put tolerations here — SnapshotPolicy.spec.mover has no
     # tolerations field (schema reject / Flux dry-run fail). Scheduling onto
     # tainted orin-0 is handled by Repository.sourceColocation Auto (default):
