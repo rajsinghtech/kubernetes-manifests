@@ -8,3 +8,4 @@ resources:
   - ./snapshotpolicy.yaml
   - ./snapshotschedule.yaml
   - ./snapshot-proof-20260908.yaml
+  - ./snapshot-live-20260908.yaml

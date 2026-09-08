@@ -1,0 +1,11 @@
+---
+# One-shot live capture of the scheduled Home Assistant source after the
+# mover-identity fix (#2849). Retain the remote snapshot as recovery material.
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: Snapshot
+metadata:
+  name: homeassistant-config-20260908034331
+spec:
+  deletionPolicy: Retain
+  policyRef:
+    name: homeassistant-config
