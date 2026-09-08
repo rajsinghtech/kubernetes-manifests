@@ -1,0 +1,38 @@
+rule_files:
+  - ../velero-integrity.yaml
+  - ../velero.yaml
+
+evaluation_interval: 1m
+
+tests:
+  # Staleness is one alert per schedule. The latest-backup recording rule adds
+  # the backup identity only as a grouping label; it must not create one stale
+  # alert for every historical Backup.
+  - interval: 1m
+    input_series:
+      - series: 'velero_backup_last_successful_timestamp{cluster="talos-ottawa",schedule="media-config-backup"}'
+        values: "-200000+0x20"
+      - series: 'velero_cr_backup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="media-config-backup",backup="media-config-backup-20260907060000"}'
+        values: "100+0x20"
+      - series: 'velero_cr_backup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="media-config-backup",backup="media-config-backup-20260906060000"}'
+        values: "50+0x20"
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: VeleroBackupStale
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-ottawa
+              namespace: velero-system
+              schedule: media-config-backup
+              backup: media-config-backup-20260907060000
+              severity: critical
+            exp_annotations:
+              summary: Velero schedule media-config-backup has no recent successful backup
+              description: >-
+                Schedule media-config-backup has not reported a successful
+                backup for more than 36 hours (the daily schedule's expected
+                period plus margin). Check the Schedule, BackupStorageLocation,
+                Velero server, and node-agent pods. This is a freshness/reporting
+                guard; it cannot detect a backup that completes while silently
+                missing data, and it also needs the Velero metric to remain
+                scrapeable.
