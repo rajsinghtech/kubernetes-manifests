@@ -86,24 +86,52 @@ groups:
       - alert: VeleroPodVolumeBackupBytesMismatch
         expr: |
           (
-            max by (cluster, namespace, pod_volume_backup, backup, node) (
-              velero_cr_podvolumebackup_bytes_done{
-                namespace="velero-system"
-              }
+            (
+              max by (
+                cluster, namespace, pod_namespace, pod_name, pod_uid, volume,
+                pod_volume_backup, backup, node
+              ) (
+                velero_cr_podvolumebackup_bytes_done{
+                  namespace="velero-system"
+                }
+              )
+              != on (
+                cluster, namespace, pod_namespace, pod_name, pod_uid, volume,
+                pod_volume_backup, backup, node
+              )
+              max by (
+                cluster, namespace, pod_namespace, pod_name, pod_uid, volume,
+                pod_volume_backup, backup, node
+              ) (
+                velero_cr_podvolumebackup_bytes_total{
+                  namespace="velero-system"
+                }
+              )
             )
-            != on (cluster, namespace, pod_volume_backup, backup, node)
-            max by (cluster, namespace, pod_volume_backup, backup, node) (
-              velero_cr_podvolumebackup_bytes_total{
-                namespace="velero-system"
+            and on (cluster, namespace, pod_volume_backup, backup, node)
+            max by (
+              cluster, namespace, pod_namespace, pod_name, pod_uid, volume,
+              pod_volume_backup, backup, node
+            ) (
+              velero_cr_podvolumebackup_info{
+                namespace="velero-system",
+                phase="Completed"
               }
             )
           )
-          and on (cluster, namespace, pod_volume_backup, backup, node)
-          max by (cluster, namespace, pod_volume_backup, backup, node) (
-            velero_cr_podvolumebackup_info{
-              namespace="velero-system",
-              phase="Completed"
-            }
+          and on (
+            cluster, namespace, pod_namespace, pod_name, pod_uid, volume,
+            pod_volume_backup, backup, node
+          )
+          (
+            topk by (
+              cluster, namespace, pod_namespace, pod_name, pod_uid, volume
+            ) (
+              1,
+              velero_cr_podvolumebackup_created_timestamp{
+                namespace="velero-system"
+              }
+            ) > time() - 24 * 3600
           )
         for: 5m
         labels:
@@ -111,11 +139,12 @@ groups:
         annotations:
           summary: Velero completed PVB {{ $labels.pod_volume_backup }} has incomplete bytes
           description: >-
-            Completed PodVolumeBackup {{ $labels.pod_volume_backup }} for
-            Backup {{ $labels.backup }} reports bytesDone different from
-            totalBytes on node {{ $labels.node }}. Inspect the PVB status and
-            node-agent/Kopia logs; matching item counts do not establish volume
-            integrity.
+            The newest PodVolumeBackup for target {{ $labels.pod_namespace }}/{{ $labels.pod_name }}
+            (UID {{ $labels.pod_uid }}, volume {{ $labels.volume }}) completed
+            with bytesDone different from totalBytes. It was created within
+            the last 24 hours. A later successful PVB for the same target
+            clears this signal; inspect the PVB status and node-agent/Kopia
+            logs because matching item counts do not establish volume integrity.
 
       - alert: VeleroScheduleLastBackupFailed
         expr: |

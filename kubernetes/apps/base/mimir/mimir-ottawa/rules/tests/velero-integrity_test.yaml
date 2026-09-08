@@ -4,6 +4,85 @@ rule_files:
 evaluation_interval: 1m
 
 tests:
+  # A completed PVB with mismatched byte counters is a current target signal,
+  # but a later clean attempt for the same pod and volume must clear the old
+  # one-shot record.
+  - interval: 1m
+    input_series:
+      - series: 'velero_cr_podvolumebackup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="teaspoon",pod_uid="pod-uid",volume="home",pod_volume_backup="teaspoon-old-pvb",backup="teaspoon-old-backup",node="kaji"}'
+        values: "100+0x20"
+      - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="teaspoon",pod_uid="pod-uid",volume="home",pod_volume_backup="teaspoon-old-pvb",backup="teaspoon-old-backup",node="kaji",phase="Completed"}'
+        values: "1+0x20"
+      - series: 'velero_cr_podvolumebackup_bytes_done{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="teaspoon",pod_uid="pod-uid",volume="home",pod_volume_backup="teaspoon-old-pvb",backup="teaspoon-old-backup",node="kaji"}'
+        values: "10+0x20"
+      - series: 'velero_cr_podvolumebackup_bytes_total{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="teaspoon",pod_uid="pod-uid",volume="home",pod_volume_backup="teaspoon-old-pvb",backup="teaspoon-old-backup",node="kaji"}'
+        values: "20+0x20"
+      - series: 'velero_cr_podvolumebackup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="teaspoon",pod_uid="pod-uid",volume="home",pod_volume_backup="teaspoon-new-pvb",backup="teaspoon-new-backup",node="kaji"}'
+        values: "200+0x20"
+      - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="teaspoon",pod_uid="pod-uid",volume="home",pod_volume_backup="teaspoon-new-pvb",backup="teaspoon-new-backup",node="kaji",phase="Completed"}'
+        values: "1+0x20"
+      - series: 'velero_cr_podvolumebackup_bytes_done{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="teaspoon",pod_uid="pod-uid",volume="home",pod_volume_backup="teaspoon-new-pvb",backup="teaspoon-new-backup",node="kaji"}'
+        values: "20+0x20"
+      - series: 'velero_cr_podvolumebackup_bytes_total{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="teaspoon",pod_uid="pod-uid",volume="home",pod_volume_backup="teaspoon-new-pvb",backup="teaspoon-new-backup",node="kaji"}'
+        values: "20+0x20"
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: VeleroPodVolumeBackupBytesMismatch
+        exp_alerts: []
+
+  # A current completed PVB with mismatched counters still pages.
+  - interval: 1m
+    input_series:
+      - series: 'velero_cr_podvolumebackup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="broken",pod_uid="pod-uid",volume="home",pod_volume_backup="broken-pvb",backup="broken-backup",node="asuka"}'
+        values: "200+0x20"
+      - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="broken",pod_uid="pod-uid",volume="home",pod_volume_backup="broken-pvb",backup="broken-backup",node="asuka",phase="Completed"}'
+        values: "1+0x20"
+      - series: 'velero_cr_podvolumebackup_bytes_done{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="broken",pod_uid="pod-uid",volume="home",pod_volume_backup="broken-pvb",backup="broken-backup",node="asuka"}'
+        values: "10+0x20"
+      - series: 'velero_cr_podvolumebackup_bytes_total{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="broken",pod_uid="pod-uid",volume="home",pod_volume_backup="broken-pvb",backup="broken-backup",node="asuka"}'
+        values: "20+0x20"
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: VeleroPodVolumeBackupBytesMismatch
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-ottawa
+              namespace: velero-system
+              pod_namespace: home
+              pod_name: broken
+              pod_uid: pod-uid
+              volume: home
+              pod_volume_backup: broken-pvb
+              backup: broken-backup
+              node: asuka
+              severity: critical
+            exp_annotations:
+              summary: Velero completed PVB broken-pvb has incomplete bytes
+              description: >-
+                The newest PodVolumeBackup for target home/broken (UID pod-uid,
+                volume home) completed with bytesDone different from totalBytes.
+                It was created within the last 24 hours. A later successful PVB
+                for the same target clears this signal; inspect the PVB status
+                and node-agent/Kopia logs because matching item counts do not
+                establish volume integrity.
+
+  # An abandoned mismatch is bounded by the same 24-hour horizon as the
+  # current-target failure alert and must not accumulate forever.
+  - interval: 1m
+    input_series:
+      - series: 'velero_cr_podvolumebackup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="old",pod_uid="pod-uid",volume="home",pod_volume_backup="old-pvb",backup="old-backup",node="rei"}'
+        values: "100+0x1505"
+      - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="old",pod_uid="pod-uid",volume="home",pod_volume_backup="old-pvb",backup="old-backup",node="rei",phase="Completed"}'
+        values: "1+0x1505"
+      - series: 'velero_cr_podvolumebackup_bytes_done{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="old",pod_uid="pod-uid",volume="home",pod_volume_backup="old-pvb",backup="old-backup",node="rei"}'
+        values: "10+0x1505"
+      - series: 'velero_cr_podvolumebackup_bytes_total{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="old",pod_uid="pod-uid",volume="home",pod_volume_backup="old-pvb",backup="old-backup",node="rei"}'
+        values: "20+0x1505"
+    alert_rule_test:
+      - eval_time: 25h
+        alertname: VeleroPodVolumeBackupBytesMismatch
+        exp_alerts: []
+
   # A failed one-shot record must stop alerting when a newer attempt for the
   # same workload target succeeds. The target key includes pod UID so a
   # replacement pod is a distinct backup target; the age bound prevents old
