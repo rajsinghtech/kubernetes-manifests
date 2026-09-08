@@ -46,6 +46,11 @@ for raw_path in tracked:
     path = Path(raw_path.decode())
     if path.suffix not in {".yaml", ".yml"}:
         continue
+    # git ls-files includes staged deletions. A removed manifest is no longer
+    # part of the notification-scope input and must not make this checker fail
+    # while its deletion is being reviewed.
+    if not (ROOT / path).is_file():
+        continue
 
     try:
         documents = yaml.safe_load_all((ROOT / path).read_text())
