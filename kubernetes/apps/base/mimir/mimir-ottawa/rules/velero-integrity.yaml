@@ -3,7 +3,7 @@
 # are useful for newly observed events, but do not represent the persisted
 # phase of an individual Backup (a real Failed Backup kept last_status=1).
 #
-# #572 acceptance (Failed/PartiallyFailed latest Backup, current Failed/Canceled
+# #572 acceptance (Failed/PartiallyFailed latest Backup, current Failed
 # PVB, bytesDone!=totalBytes) is covered by the rules below after #2743.
 #
 # Silent-skip / green-empty coverage (corp/bhaiya#695, #703):
@@ -30,7 +30,7 @@ namespace: velero-integrity
 groups:
   - name: velero-integrity.rules
     rules:
-      # Failed/Canceled PVB CRs are one-shot records and can outlive both their
+      # Failed PVB CRs are one-shot records and can outlive both their
       # parent Backup and a later successful attempt. Select only the newest
       # PVB for each workload target, so a later success clears a transient
       # failure. Bound the selected record by its own creation time because
@@ -66,7 +66,7 @@ groups:
               ) (
                 velero_cr_podvolumebackup_info{
                   namespace="velero-system",
-                  phase=~"Failed|Canceled"
+                  phase="Failed"
                 }
               )
             ) > time() - 24 * 3600
@@ -82,7 +82,7 @@ groups:
             {{ $labels.phase }}. It was created within the last 24 hours and
             has remained in that state for at least five minutes. A later
             successful PVB for the same target clears this signal; older
-            Failed/Canceled records are intentionally ignored. Inspect the
+            Failed records are intentionally ignored. Inspect the
             PVB status message, node-agent logs, and storage path before
             treating the target as restorable.
 
