@@ -6,6 +6,10 @@ kind: Job
 metadata:
   name: velero-home-ottawa-restore-proof-r2-verify-corrected
   namespace: kopiur-velero-home-restore-20260908
+  annotations:
+    # Renovate-managed image digests change the immutable pod template. Force
+    # replacement keeps this one-shot verifier from wedging Flux on that update.
+    kustomize.toolkit.fluxcd.io/force: enabled
 spec:
   backoffLimit: 0
   activeDeadlineSeconds: 1800
@@ -277,4 +281,3 @@ spec:
           persistentVolumeClaim:
             claimName: home-config-restored-r2
             readOnly: true
-
