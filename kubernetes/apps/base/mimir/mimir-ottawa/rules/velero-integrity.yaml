@@ -3,8 +3,8 @@
 # are useful for newly observed events, but do not represent the persisted
 # phase of an individual Backup (a real Failed Backup kept last_status=1).
 #
-# #572 acceptance (Failed/PartiallyFailed latest Backup, Failed/Canceled PVB,
-# bytesDone!=totalBytes) is covered by the rules below after #2743.
+# #572 acceptance (Failed/PartiallyFailed latest Backup, current Failed/Canceled
+# PVB, bytesDone!=totalBytes) is covered by the rules below after #2743.
 #
 # Silent-skip / green-empty coverage (corp/bhaiya#695, #703):
 # - VeleroScheduleLatestBackupHasWarnings: hostPath skips leave phase=Completed
@@ -30,42 +30,58 @@ namespace: velero-integrity
 groups:
   - name: velero-integrity.rules
     rules:
-      # Failed/Canceled PVB CRs persist until TTL expiry. Matching every one
-      # latches for days after the parent Backup has already been superseded.
-      # Restrict to parents created in the last 24h so a recent failure still
-      # pages, while historical objects stop saturating the alert stream.
+      # Failed/Canceled PVB CRs are one-shot records and can outlive both their
+      # parent Backup and a later successful attempt. Select only the newest
+      # PVB for each workload target, so a later success clears a transient
+      # failure. Bound the selected record by its own creation time because
+      # parent Backups are routinely cleaned up while PVBs persist; without
+      # this bound an abandoned target would page forever.
       # Schedule-level paging for the newest Backup remains in
       # VeleroScheduleLastBackupFailed below.
       - alert: VeleroPodVolumeBackupFailed
         expr: |
-          (
-            max by (cluster, namespace, pod_volume_backup, backup, node, phase) (
-              velero_cr_podvolumebackup_info{
-                namespace="velero-system",
-                phase=~"Failed|Canceled"
-              }
-            ) > 0
-          )
-          and on (cluster, namespace, backup)
-          (
-            velero_cr_backup_created_timestamp{
-              namespace="velero-system"
-            } > time() - 24 * 3600
+          max by (
+            cluster, namespace, pod_namespace, pod_name, pod_uid, volume,
+            pod_volume_backup, backup, node, phase
+          ) (
+            (
+              topk by (
+                cluster, namespace, pod_namespace, pod_name, pod_uid, volume
+              ) (
+                1,
+                velero_cr_podvolumebackup_created_timestamp{
+                  namespace="velero-system"
+                }
+              )
+              * on (
+                cluster, namespace, pod_namespace, pod_name, pod_uid, volume,
+                pod_volume_backup, backup, node
+              ) group_left (phase)
+              max by (
+                cluster, namespace, pod_namespace, pod_name, pod_uid, volume,
+                pod_volume_backup, backup, node, phase
+              ) (
+                velero_cr_podvolumebackup_info{
+                  namespace="velero-system",
+                  phase=~"Failed|Canceled"
+                }
+              )
+            ) > time() - 24 * 3600
           )
         for: 5m
         labels:
           severity: warning
         annotations:
-          summary: Velero PodVolumeBackup {{ $labels.phase }} for {{ $labels.backup }}
+          summary: Velero PodVolumeBackup {{ $labels.phase }} for {{ $labels.pod_name }}/{{ $labels.volume }}
           description: >-
-            PodVolumeBackup {{ $labels.pod_volume_backup }} for Backup
-            {{ $labels.backup }} on node {{ $labels.node }} has remained
-            {{ $labels.phase }} for at least five minutes, and the parent
-            Backup was created within the last 24 hours. Older
-            Failed/Canceled PVB objects are intentionally ignored so a
-            recovered schedule stops paging. Inspect the PVB status message,
-            the parent Backup, node-agent logs, and the storage path before
-            treating the parent Backup as restorable.
+            The newest PodVolumeBackup for target {{ $labels.pod_namespace }}/{{ $labels.pod_name }}
+            (UID {{ $labels.pod_uid }}, volume {{ $labels.volume }}) is
+            {{ $labels.phase }}. It was created within the last 24 hours and
+            has remained in that state for at least five minutes. A later
+            successful PVB for the same target clears this signal; older
+            Failed/Canceled records are intentionally ignored. Inspect the
+            PVB status message, node-agent logs, and storage path before
+            treating the target as restorable.
 
       - alert: VeleroPodVolumeBackupBytesMismatch
         expr: |
