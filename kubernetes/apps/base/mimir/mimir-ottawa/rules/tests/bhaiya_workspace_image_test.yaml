@@ -1,0 +1,83 @@
+rule_files:
+  - ../bhaiya-workspace-image.yaml
+
+evaluation_interval: 1m
+
+tests:
+  - interval: 1m
+    input_series:
+      - series: 'bhaiya_workspace_image_release_status{cluster="talos-ottawa",image="oci.cdn.keiretsu.top/corp/workspace",version="0.3.299",status="failed"}'
+        values: "1+0x20"
+      - series: 'bhaiya_workspace_image_release_status{cluster="talos-ottawa",image="oci.cdn.keiretsu.top/corp/workspace",version="0.3.300",status="not_queued"}'
+        values: "1+0x20"
+    alert_rule_test:
+      - eval_time: 4m
+        alertname: BhaiyaWorkspaceImageReleasePipelineFailed
+        exp_alerts: []
+      - eval_time: 5m
+        alertname: BhaiyaWorkspaceImageReleasePipelineFailed
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-ottawa
+              image: oci.cdn.keiretsu.top/corp/workspace
+              severity: critical
+            exp_annotations:
+              summary: Workspace image release pipeline failed
+              description: >-
+                The newest durable workspace-image tag pipeline for
+                oci.cdn.keiretsu.top/corp/workspace has remained in a terminal
+                failed state for at least five minutes. Inspect the release
+                pipeline and its runbook first; query the release-status metric
+                for the affected version. A separate not-queued alert may
+                identify a newer release input that never reached a tag
+                pipeline.
+      - eval_time: 1m
+        alertname: BhaiyaWorkspaceImageReleaseNotQueued
+        exp_alerts: []
+      - eval_time: 2m
+        alertname: BhaiyaWorkspaceImageReleaseNotQueued
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-ottawa
+              image: oci.cdn.keiretsu.top/corp/workspace
+              severity: critical
+            exp_annotations:
+              summary: Workspace image release was not queued
+              description: >-
+                Bhaiya observed a workspace-image release input for
+                oci.cdn.keiretsu.top/corp/workspace that remained unqueued for
+                at least the observer's 3-minute grace plus this 2-minute
+                alert hold. The effective source-to-alert delay is
+                approximately 3m grace + up to 5m observation interval + 2m
+                hold, or about 10 minutes before scrape/evaluation jitter.
+                Inspect the main-push dispatcher before treating a healthy
+                28–29 minute tag pipeline as stalled; query the release-status
+                metric for the affected version.
+
+  - interval: 1m
+    input_series:
+      - series: 'bhaiya_workspace_image_latest_alignment_status{cluster="talos-ottawa",image="oci.cdn.keiretsu.top/corp/workspace",status="aligned"}'
+        values: "0+0x20"
+      - series: 'bhaiya_workspace_image_latest_alignment_status{cluster="talos-ottawa",image="oci.cdn.keiretsu.top/corp/workspace",status="mismatch"}'
+        values: "1+0x20"
+      - series: 'bhaiya_workspace_image_latest_alignment_status{cluster="talos-ottawa",image="oci.cdn.keiretsu.top/corp/workspace",status="unknown"}'
+        values: "0+0x20"
+    alert_rule_test:
+      - eval_time: 4m
+        alertname: BhaiyaWorkspaceImageLatestRollback
+        exp_alerts: []
+      - eval_time: 5m
+        alertname: BhaiyaWorkspaceImageLatestRollback
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-ottawa
+              image: oci.cdn.keiretsu.top/corp/workspace
+              severity: critical
+            exp_annotations:
+              summary: Workspace image latest tag does not match the newest release
+              description: >-
+                The oci.cdn.keiretsu.top/corp/workspace latest tag has not
+                matched the highest published semantic release for at least
+                five minutes. This may indicate a rollback or an incomplete
+                promotion; inspect the alignment status and immutable registry
+                manifests before changing any tag.
