@@ -153,6 +153,36 @@ groups:
       description: More than five percent of {{ $labels.service }} requests have returned
         5xx for ten minutes with meaningful traffic. Inspect the service logs and route-level
         errors, then compare the current rollout with the last known good image.
+  - alert: BhaiyaMCPProviderUpstreamErrorRatio
+    expr: |
+      (
+        sum by (cluster, provider) (
+          rate(
+            bhaiya_mcp_proxy_requests_total{
+              result="upstream_error"
+            }[5m]
+          )
+        )
+        /
+        sum by (cluster, provider) (
+          rate(bhaiya_mcp_proxy_requests_total[5m])
+        )
+      ) > 0.05
+      and on(cluster, provider)
+      sum by (cluster, provider) (
+        rate(bhaiya_mcp_proxy_requests_total[5m])
+      ) > 0.1
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: Bhaiya MCP provider {{ $labels.provider }} has a high upstream error ratio
+      description: >-
+        More than five percent of {{ $labels.provider }} MCP proxy requests in
+        {{ $labels.cluster }} have been classified as upstream_error for five
+        minutes with meaningful traffic. Inspect the provider and the MCP
+        proxy body-copy path; a response can have status 2xx and still fail
+        while its streaming body is being copied.
   - alert: BhaiyaServiceP99LatencyRegression
     expr: |
       histogram_quantile(
