@@ -1,0 +1,11 @@
+---
+# One-shot GitOps proof that the Kopiur Direct mover can read the live HA PVC.
+# Retain the repository snapshot if this verification object is ever removed.
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: Snapshot
+metadata:
+  name: homeassistant-config-proof-20260908
+spec:
+  deletionPolicy: Retain
+  policyRef:
+    name: homeassistant-config
