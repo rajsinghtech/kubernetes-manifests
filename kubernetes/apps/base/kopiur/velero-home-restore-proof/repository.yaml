@@ -20,8 +20,8 @@ spec:
           name: velero-credentials-rotation-2
   encryption:
     passwordSecretRef:
-      name: velero-repo-credentials
-      key: repository-password
+      name: velero-home-ottawa-kopia-password
+      key: KOPIA_PASSWORD
   mode: ReadOnly
   create:
     enabled: false
