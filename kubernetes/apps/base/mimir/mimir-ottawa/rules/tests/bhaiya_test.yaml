@@ -1,0 +1,47 @@
+rule_files:
+  - ../bhaiya.yaml
+
+evaluation_interval: 1m
+
+tests:
+  # Grafana has a sustained upstream-error ratio well above the five-percent
+  # threshold. The alert is pending immediately and fires after its five-minute
+  # hold.
+  - interval: 1m
+    input_series:
+      - series: 'bhaiya_mcp_proxy_requests_total{cluster="talos-ottawa",provider="grafana",result="success",status_class="2xx"}'
+        values: "0 100 200 300 400 500 600 700 800 900 1000"
+      - series: 'bhaiya_mcp_proxy_requests_total{cluster="talos-ottawa",provider="grafana",result="upstream_error",status_class="2xx"}'
+        values: "0 100 200 300 400 500 600 700 800 900 1000"
+    alert_rule_test:
+      - eval_time: 4m
+        alertname: BhaiyaMCPProviderUpstreamErrorRatio
+        exp_alerts: []
+      - eval_time: 10m
+        alertname: BhaiyaMCPProviderUpstreamErrorRatio
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-ottawa
+              provider: grafana
+              severity: critical
+            exp_annotations:
+              summary: Bhaiya MCP provider grafana has a high upstream error ratio
+              description: >-
+                More than five percent of grafana MCP proxy requests in
+                talos-ottawa have been classified as upstream_error for five
+                minutes with meaningful traffic. Inspect the provider and the
+                MCP proxy body-copy path; a response can have status 2xx and
+                still fail while its streaming body is being copied.
+
+  # A healthy provider can have occasional upstream errors without paging: its
+  # error ratio remains below five percent with meaningful traffic.
+  - interval: 1m
+    input_series:
+      - series: 'bhaiya_mcp_proxy_requests_total{cluster="talos-ottawa",provider="firecrawl",result="success",status_class="2xx"}'
+        values: "0 100 200 300 400 500 600 700 800 900 1000"
+      - series: 'bhaiya_mcp_proxy_requests_total{cluster="talos-ottawa",provider="firecrawl",result="upstream_error",status_class="4xx"}'
+        values: "0 1 2 3 4 5 6 7 8 9 10"
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: BhaiyaMCPProviderUpstreamErrorRatio
+        exp_alerts: []
