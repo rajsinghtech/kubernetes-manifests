@@ -55,6 +55,8 @@ resources:
   - ./k8s-gpu-dra-driver
   - ./rook-ceph
   - ./velero
+  - ./kopiur
+  - ./kopiur-velero-home-restore-proof
   - ./vpa-system
   - ./victoria-logs
   - ./victoria-logs/victoria-logs.yaml

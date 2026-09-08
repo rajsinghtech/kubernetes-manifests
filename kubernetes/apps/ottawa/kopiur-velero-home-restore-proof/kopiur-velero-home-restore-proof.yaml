@@ -1,0 +1,23 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: kopiur-velero-home-restore-proof
+  namespace: flux-system
+spec:
+  targetNamespace: velero-system
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: kopiur-velero-home-restore-proof
+      app.kubernetes.io/part-of: kopiur
+  dependsOn:
+    - name: kopiur
+  path: ./kubernetes/apps/base/kopiur/velero-home-restore-proof
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: kubernetes-manifests
+  wait: true
+  interval: 30m
+  retryInterval: 1m
+  timeout: 10m
