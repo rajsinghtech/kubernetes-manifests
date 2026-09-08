@@ -1,0 +1,35 @@
+---
+# Read-only Kopiur view of Ottawa Velero's existing Home repository.
+# Velero remains the only writer, maintenance owner, and retention owner.
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: Repository
+metadata:
+  name: velero-home-ottawa-readonly
+  namespace: velero-system
+spec:
+  backend:
+    s3:
+      bucket: velero
+      prefix: ottawa/kopia/home/
+      endpoint: garage-gateway.garage.svc.cluster.local:3900
+      region: garage
+      tls:
+        disableTls: true
+      auth:
+        secretRef:
+          name: velero-credentials-rotation-2
+  encryption:
+    passwordSecretRef:
+      name: velero-repo-credentials
+      key: repository-password
+  mode: ReadOnly
+  create:
+    enabled: false
+  catalog:
+    adoption: Ignore
+    periodicRefresh: false
+    retain:
+      perIdentity: 50
+      maxAgeDays: 30
+  maintenance:
+    enabled: false
