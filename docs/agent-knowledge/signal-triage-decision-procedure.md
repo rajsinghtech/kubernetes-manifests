@@ -1,11 +1,16 @@
 # Signal triage: detector, coverage, and attention
 
 When a failure went unnoticed, the first question is not “what alert should we
-add?” It is “which layer failed?” A useful signal can be absent from the
-system, present in the metrics but absent from the rules, correctly evaluated
-but never brought to a person, or expressed as historical accumulation when
-the operator needs current health. Those cases look similar from the incident
-side and need different remedies.
+add?” It is “which layer failed?” A useful signal can be correctly evaluated
+but never brought to a person, expressed as historical accumulation when the
+operator needs current health, absent because its series never populated, or
+misread because a valid gauge reset during startup. Those four failure shapes
+look similar from the incident side and need different remedies.
+
+There is one deliberate control case: a populated metric with useful labels
+and no rule is a genuine alert-coverage gap. That is the case where adding an
+alert is correct. Keep it separate from the four failure shapes below, where
+adding another alert is the wrong first move.
 
 ## The decision procedure
 
@@ -17,13 +22,13 @@ coverage from a metric name, a rule file in Git, or a log line alone.
 | Evidence | Diagnosis | Correct response |
 | --- | --- | --- |
 | The intended alert evaluated true and was firing, but nobody acknowledged or acted on it. | Attention and ownership failure. | Keep the alert. Fix routing, ownership, acknowledgement/escalation, and scheduled review. **There may be nothing to build.** |
-| The required metric has populated series with useful labels, but no rule evaluates the failure. | Alert-coverage failure. | Add one discriminating rule, with tests for failure, healthy state, and recovery. |
 | A rule is active because a lifetime counter or other historical value crossed a threshold, and it cannot return to normal after recovery. | Accumulator or non-clearable predicate. | Change the predicate to represent current health—usually a rate, ratio, windowed increase, age, or state gauge. Do not add a duplicate alert. |
 | The metric name exists but the relevant series count is zero. | Instrumentation, collection, or label-contract failure. | Repair or enable the producer/scrape path first. A rule against an empty series is inert. |
+| A timestamp-like gauge was healthy for a long range, then became exactly `0` after a pod restart. | Reset or initialization state misread as ancient staleness. | Treat `0` as unknown, gate on pod age/readiness, or expose validity separately. Fix the rule or emitter; do not add a duplicate alert. |
 
-The last row is an important guardrail around the second one. A successful
-empty query proves only that the query syntax is accepted; it does not prove
-that a rule can ever evaluate true.
+The empty-series row is an important guardrail around the control case. A
+successful empty query proves only that the query syntax is accepted; it does
+not prove that a rule can ever evaluate true.
 
 ## 1. Was there already a correct alert?
 
@@ -55,11 +60,13 @@ the incident lasted longer than the alert. The question is whether the signal
 reached an accountable observer, not whether another rule can say the same
 thing.
 
-## 2. Is the metric present but unwired?
+## Control case: is the metric present but unwired?
 
 If no correct alert instance existed, inspect the metric before designing a
-rule. Query the series count with the labels that the proposed predicate will
-use. For example, check the total population and the dimensions independently:
+rule. This is the one case in this guide where adding alert coverage is the
+right outcome. Query the series count with the labels that the proposed
+predicate will use. For example, check the total population and the dimensions
+independently:
 
 ```promql
 count(bhaiya_mcp_proxy_requests_total)
@@ -141,6 +148,45 @@ to fire, restore healthy input, and confirm that the alert becomes inactive.
 If it cannot, either the predicate or the intended semantics are wrong. Do not
 silence a permanently red alert and do not add another alert beside it.
 
+## 4. Is zero a reset rather than stale?
+
+A timestamp gauge can have a third state that an ordinary numeric comparison
+does not represent: “the process has not completed a successful reconcile since
+startup.” Many emitters encode that state as `0`. The expression
+`time() - last_success_timestamp_seconds` interprets `0` as the Unix epoch,
+so it reports maximal staleness immediately after every pod start. A `for:`
+period only delays the false page; it does not make the predicate meaningful.
+
+The distinguishing check is a range query, not an instant query. Examine at
+least the preceding day of samples together with pod start time:
+
+- a series that stayed within its healthy age band for hours and ends in one
+  exact `0` at the restart is a reset;
+- a series that was `0` for the whole range is never-populated or never
+  successful; and
+- a series that remains nonzero but ages past its threshold is a genuine stale
+  success signal.
+
+The first two cases have the same current value and opposite diagnoses. A
+series count can show that the time series exists, but only the range history
+can distinguish a reset from a series that was never useful.
+
+The fix belongs in the rule or emitter:
+
+- require `last_success_timestamp_seconds > 0` before evaluating staleness,
+  treating zero as unknown rather than as an old success;
+- gate the stale check on pod age or readiness and allow a startup grace
+  period; or
+- emit a separate initialized/valid gauge and alert on “never succeeded” with
+  an explicitly chosen startup policy.
+
+Test all three transitions: healthy nonzero samples, pod restart with zero,
+and a genuinely old nonzero timestamp. The zero-after-restart case must not
+page merely because a deploy happened; the old nonzero case must still fire.
+This is neither the empty-series instrumentation problem nor the
+non-clearable-accumulator problem: the metric exists and can be healthy, but
+its initialization semantics are being interpreted incorrectly.
+
 ## Timing and handoff
 
 Record the effective detection delay, not just the rule's `for:` value. The
@@ -162,7 +208,8 @@ Effective detection and notification delay:
 Verification still required:
 ```
 
-This keeps “we had an alert and nobody looked,” “we had data but no rule,”
-and “the rule records history forever” separate. All three can produce hours of
-silence from an operator’s perspective, but only one of them is fixed by
-adding an alert.
+This keeps “we had an alert and nobody looked,” “the rule records history
+forever,” “the metric never populated,” and “the gauge reset during startup”
+separate. All four can produce hours of misleading silence or noise from an
+operator’s perspective. The populated-metric/no-rule control case remains the
+explicit exception where adding one well-tested alert is the right cure.
