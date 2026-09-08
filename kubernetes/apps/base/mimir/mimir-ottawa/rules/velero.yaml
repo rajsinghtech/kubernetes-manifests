@@ -55,11 +55,18 @@ groups:
       - alert: VeleroBackupStale
         expr: |
           (
-            time()
-            - max by (cluster, schedule) (
-                velero_backup_last_successful_timestamp{schedule!=""}
-              )
-          ) > 129600
+            (
+              time()
+              - max by (cluster, schedule) (
+                  velero_backup_last_successful_timestamp{schedule!=""}
+                )
+            ) > bool 129600
+          )
+          * on (cluster, schedule) group_left (namespace, backup)
+          (
+            velero_schedule_latest_backup_created_timestamp > bool 0
+          )
+          > 0
         for: 15m
         labels:
           severity: critical

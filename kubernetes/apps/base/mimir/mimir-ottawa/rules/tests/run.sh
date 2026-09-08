@@ -23,6 +23,19 @@ for rule in flux bhaiya-model garage node-clock velero-integrity; do
   promtool test rules "$tmpdir/$test_file"
 done
 
+# VeleroBackupStale consumes the newest-backup recording rule from
+# velero-integrity.yaml. Test the two files together so the backup enrichment
+# and its one-alert-per-schedule cardinality are exercised as deployed.
+sed '/^namespace: velero-integrity$/d' "$RULE_DIR/velero-integrity.yaml" >"$tmpdir/velero-integrity.yaml"
+sed '/^namespace: velero-backups$/d' "$RULE_DIR/velero.yaml" >"$tmpdir/velero.yaml"
+sed \
+  -e "s#../velero.yaml#$tmpdir/velero.yaml#" \
+  -e "s#../velero-integrity.yaml#$tmpdir/velero-integrity.yaml#" \
+  "$RULE_DIR/tests/velero_stale_test.yaml" >"$tmpdir/velero_stale_test.yaml"
+promtool check rules "$tmpdir/velero.yaml"
+promtool check rules "$tmpdir/velero-integrity.yaml"
+promtool test rules "$tmpdir/velero_stale_test.yaml"
+
 sed '/^namespace: mimir-loader$/d' "$RULE_DIR/mimir-loader.yaml" >"$tmpdir/mimir-loader.yaml"
 sed "s#../mimir-loader.yaml#$tmpdir/mimir-loader.yaml#" \
   "$RULE_DIR/tests/mimir-loader_test.yaml" >"$tmpdir/mimir-loader_test.yaml"
