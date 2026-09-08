@@ -10,5 +10,6 @@ resources:
   - ./grafana-mcp.yaml
   - ./kromgo.yaml
   - ./monitoring-nagato.yaml
+  - ./mimir-rule-completeness.yaml
   - ./smartctl-exporter.yaml
   - ./unpoller.yaml

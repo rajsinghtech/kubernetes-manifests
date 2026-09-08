@@ -1,0 +1,11 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: monitoring
+resources:
+  - deployment.yaml
+configMapGenerator:
+  - name: mimir-rule-completeness
+    files:
+      - rule_completeness.py
+      - expected-groups.tsv

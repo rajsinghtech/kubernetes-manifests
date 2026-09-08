@@ -1,0 +1,52 @@
+# Mimir ruler identity: file/namespace<TAB>group name.
+# Keep this independent from the loader's mimir-rules.files list. The
+# check-mimir-rules gate verifies it against every rule source on disk so a
+# file omitted from the loader still remains an expected live group.
+bhaiya-model	bhaiya-model.rules
+bhaiya-provider-provisioning	bhaiya.provider-fence
+bhaiya-provider-provisioning	bhaiya.workspace-provisioning
+bhaiya-reconciler	bhaiya-reconciler.rules
+bhaiya-sandbox-telemetry	bhaiya-sandbox-telemetry.rules
+bhaiya-ssh	bhaiya-ssh.rules
+bhaiya-velero-coverage	bhaiya-velero-coverage.rules
+bhaiya-workspace-endpoints	bhaiya-workspace-endpoints.rules
+bhaiya-workspace-image	bhaiya-workspace-image.rules
+bhaiya-fleet	bhaiya.fleet.availability
+bhaiya-fleet	bhaiya.fleet.ssh
+bhaiya-fleet	bhaiya.fleet.release
+bhaiya-fleet	bhaiya.fleet.resources
+bhaiya-fleet	bhaiya.postgresql
+bhaiya-fleet	bhaiya.opencost
+blackbox	blackbox-exporter.rules
+ceph	ceph.rules
+ceph	bhaiya-sandbox.rules
+cnpg-backup-coverage	cnpg-backup-coverage.rules
+flux	flux-instance.rules
+garage	garage.rules
+job-failures	kubernetes.jobs.rules
+k8gb-dns	k8gb-dns.rules
+k8gb	k8gb.rules
+media	media.rules
+mimir-loader	mimir-rule-loader.rules
+mimir-queryable-window	mimir.queryable-window
+monitoring	container.rules
+monitoring	kata-virtiofs.rules
+monitoring	node.rules
+monitoring	gpu.rules
+monitoring	packet-loss.rules
+monitoring	kubernetes.rules
+monitoring	dockerhub.rules
+monitoring	prometheus.rules
+monitoring	kubelet.rules
+monitoring	watchdog.rules
+node-clock	node-clock.rules
+node-health	node-health.rules
+bhaiya	bhaiya.payments
+smartctl	smartctl-exporter.rules
+stpetersburg-memory	stpetersburg-memory.rules
+velero-integrity	velero-integrity.rules
+velero-node-saturation	velero-node-saturation.rules
+velero-restore-admission	velero.restore-admission.rules
+velero-volume-progress	velero.volume-progress.rules
+velero-backups	velero-backups.rules
+zot	zot.rules

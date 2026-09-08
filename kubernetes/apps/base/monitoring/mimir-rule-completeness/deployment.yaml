@@ -1,0 +1,73 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mimir-rule-completeness
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: mimir-rule-completeness
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: mimir-rule-completeness
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: checker
+          image: python:3.14-alpine@sha256:c6ead215bfd31f1e433d968853b7a769989117115b728874824e6c0a27cb96fc
+          imagePullPolicy: IfNotPresent
+          command: [python3, /scripts/rule_completeness.py]
+          env:
+            - name: MIMIR_RULES_URL
+              value: http://mimir-gateway.mimir.svc.cluster.local:8080/prometheus/api/v1/rules?type=alert
+            - name: ALERTMANAGER_URL
+              value: http://kube-prometheus-stack-alertmanager.monitoring.svc.cluster.local:9093/api/v2/alerts
+            - name: CHECKER_CLUSTER
+              value: talos-ottawa
+            - name: TENANTS
+              value: talos-ottawa,talos-robbinsdale,talos-stpetersburg
+            - name: POLL_INTERVAL_SECONDS
+              value: "60"
+            # 300s grace + no downstream Mimir `for` (the checker posts
+            # directly to Alertmanager) = 5m after first observation, or 6m
+            # worst-case including the 60s poll interval. Alertmanager's
+            # configured 1m group_wait makes the worst notification delay 7m.
+            - name: MISSING_GROUP_GRACE_SECONDS
+              value: "300"
+            - name: ALERT_TTL_SECONDS
+              value: "180"
+            - name: HTTP_TIMEOUT_SECONDS
+              value: "10"
+            - name: PYTHONDONTWRITEBYTECODE
+              value: "1"
+          volumeMounts:
+            - name: scripts
+              mountPath: /scripts
+              readOnly: true
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              cpu: 100m
+              memory: 128Mi
+      volumes:
+        - name: scripts
+          configMap:
+            name: mimir-rule-completeness
+            defaultMode: 0555
