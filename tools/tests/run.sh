@@ -372,7 +372,7 @@ printf '#!/usr/bin/env bash\nexit 0\n' >"$mstub/make"; chmod +x "$mstub/make"
 gate_root="$(mktemp -d)"
 mkdir -p "$gate_root/tools"
 cp "$T/check.sh" "$gate_root/tools/check.sh"
-for helper in check-versions.sh check-notification-scope.sh \
+for helper in check-mimir-promql.sh check-versions.sh check-notification-scope.sh \
   check-cliproxy-pi-bridge.sh check-zot-upload-affinity.sh \
   check-mimir-rules.sh check-velero-pvc-coverage.sh \
   check-helmrelease-schema.sh; do
@@ -406,7 +406,7 @@ exits "km#2809 missing-group condition is detected" 0 \
 watchdog_tmp="$(mktemp -d)"
 mkdir -p "$watchdog_tmp/tools" "$watchdog_tmp/stub"
 cp "$T/check.sh" "$watchdog_tmp/tools/check.sh"
-for helper in check-versions.sh check-notification-scope.sh \
+for helper in check-mimir-promql.sh check-versions.sh check-notification-scope.sh \
   check-cliproxy-pi-bridge.sh check-zot-upload-affinity.sh \
   check-mimir-rules.sh check-velero-pvc-coverage.sh \
   check-helmrelease-schema.sh; do
