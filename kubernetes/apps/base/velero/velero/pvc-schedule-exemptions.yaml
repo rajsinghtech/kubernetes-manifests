@@ -81,12 +81,6 @@ exemptions:
       Demo/sandbox tsidp volumeClaimTemplate under tailscale-examples; not a
       production data plane.
 
-  - cluster: robbinsdale
-    namespace: cnpg-restore-proof-20260908-tracearr
-    reason: >-
-      Temporary fenced CNPG restore-proof target; the PVC is deleted after the
-      read-only recovery comparison and is not production state.
-
   # --- St Petersburg ---
   - cluster: stpetersburg
     namespace: ai
