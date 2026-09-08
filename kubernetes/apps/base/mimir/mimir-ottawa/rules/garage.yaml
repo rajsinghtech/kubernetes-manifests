@@ -105,3 +105,25 @@ groups:
             storage nodes.
         labels:
           severity: critical
+
+      # Federation reachability is a separate fact from partition quorum.
+      # Keep the raw Garage target labels: cluster identifies the tenant and
+      # pod/instance identifies the vantage point that cannot see all peers.
+      # Aggregating this away would hide asymmetric views such as Ottawa 17/18
+      # versus Robbinsdale 16/18 while another vantage point still has quorum.
+      - alert: GarageFederationPeerConnectivityDegraded
+        expr: cluster_connected_nodes{job="garage",namespace="garage",endpoint="admin"} < 18
+        for: 15m
+        annotations:
+          summary: >-
+            Garage federation connectivity degraded from {{ $labels.pod }}
+            ({{ $labels.cluster }})
+          description: >-
+            This Garage admin vantage point sees {{ $value }} of the expected
+            18 federation peers. The count is per scrape target, not a fleet
+            aggregate; other sites may see a different subset. Check
+            inter-site RPC transport (DNS, TCP 3901, Tailscale, routing, and
+            policy) before treating partition quorum as proof of federation
+            health.
+        labels:
+          severity: warning
