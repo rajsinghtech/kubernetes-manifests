@@ -34,8 +34,13 @@ tests:
                 handler failure alert.
 
   # No heartbeat series at all must not read as healthy. This exercises the
-  # explicit absent_over_time arm rather than the zero-increase arm.
+  # explicit absent_over_time arm rather than the zero-increase arm. The
+  # desired Deployment proves Bhaiya is expected in this tenant; without it,
+  # intentional absence in a tenant where Bhaiya is not deployed is healthy.
   - interval: 1m
+    input_series:
+      - series: 'kube_deployment_spec_replicas{cluster="talos-ottawa",namespace="bhaiya",deployment="bhaiya"}'
+        values: "2+0x20"
     alert_rule_test:
       - eval_time: 14m
         alertname: BhaiyaReconcileLastSuccessStale

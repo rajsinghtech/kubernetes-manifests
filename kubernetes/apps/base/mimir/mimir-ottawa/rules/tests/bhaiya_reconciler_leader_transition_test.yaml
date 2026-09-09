@@ -58,3 +58,13 @@ tests:
       - eval_time: 15m
         alertname: BhaiyaReconcileWorkspaceHandlerFailure
         exp_alerts: []
+
+  # The rule is loaded into every tenant, but Bhaiya is intentionally absent
+  # from tenants where its Deployment is not declared. The absence arm must
+  # stay quiet in those tenants rather than treating configuration as a dead
+  # reconciler.
+  - interval: 1m
+    alert_rule_test:
+      - eval_time: 20m
+        alertname: BhaiyaReconcileLastSuccessStale
+        exp_alerts: []

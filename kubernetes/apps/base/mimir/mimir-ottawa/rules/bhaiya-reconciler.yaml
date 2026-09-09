@@ -10,6 +10,12 @@
 # the cluster aggregation because only the leader runs the loop; a dead
 # non-leader is a separate deployment concern.
 #
+# This file is synced into every Mimir tenant even though Bhaiya is currently
+# deployed only in Ottawa. Gate the liveness expression on the desired Bhaiya
+# Deployment so intentional absence in another tenant is not an incident. The
+# kube-state-metrics signal remains independent of the Bhaiya scrape, allowing
+# the absence arm to detect a dead, evicted, or uns scraped Bhaiya process.
+#
 # Keep this namespace unique across every file passed to mimirtool. A repeated
 # namespace aborts the complete sync for every Mimir tenant.
 namespace: bhaiya-reconciler
@@ -135,11 +141,20 @@ groups:
             ) == 0
           )
           or
-          absent_over_time(
-            bhaiya_reconcile_heartbeat_total{
-              job="bhaiya",
-              container="bhaiya"
-            }[10m]
+          (
+            absent_over_time(
+              bhaiya_reconcile_heartbeat_total{
+                job="bhaiya",
+                container="bhaiya"
+              }[10m]
+            )
+            and on()
+            (
+              kube_deployment_spec_replicas{
+                namespace="bhaiya",
+                deployment="bhaiya"
+              } > 0
+            )
           )
         for: 5m
         labels:
