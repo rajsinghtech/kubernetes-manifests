@@ -1,6 +1,6 @@
 # Ported from clusters/*/apps/smartctl-exporter/config/prometheusrule.yaml.
-# Loaded into every tenant; inert where smartctl_* metrics are absent
-# (e.g. stpetersburg has no smartctl-exporter).
+# Loaded into every tenant. The smartctl_* rules are inert where the exporter
+# is absent; the interim hwmon rules below use node-exporter instead.
 namespace: smartctl
 groups:
   - name: smartctl-exporter.rules
@@ -12,6 +12,69 @@ groups:
         annotations:
           summary: >-
             Mounted drive {{ $labels.device }} on device {{ $labels.instance }} has a temperature higher than 65°C
+        labels:
+          severity: critical
+
+      # Interim per-sensor path for the smartctl-exporter gap tracked in #2936.
+      # node-exporter labels the NVMe hwmon sensors explicitly: temp1 is the
+      # composite, while temp2/temp3 are Sensor 1/Sensor 2. The temp_max and
+      # temp_crit series on temp1 carry each device's own reported component
+      # limits, so these comparisons do not use one fleet-wide temperature.
+      # This also supplies thermal coverage in St Petersburg, where
+      # smartctl-exporter is not deployed. Remove this path when the
+      # smartctl-exporter gains nested NVMe sensor support (upstream #303/#304).
+      - alert: SmartDeviceNVMeSensorHigh
+        expr: |-
+          (
+            node_hwmon_temp_celsius{chip=~"nvme_.*",sensor!="temp1"}
+            >= on (cluster, instance, chip) group_left
+              node_hwmon_temp_max_celsius{chip=~"nvme_.*",sensor="temp1"}
+          )
+          * on (cluster, instance, chip, sensor) group_left(label)
+            node_hwmon_sensor_label{
+              chip=~"nvme_.*",
+              sensor!="temp1",
+              label=~"Sensor .*",
+            }
+        for: 5m
+        annotations:
+          summary: >-
+            NVMe {{ $labels.chip }} on {{ $labels.instance }} has
+            {{ $labels.label }} at or above its device-reported warning temperature
+          description: >-
+            The {{ $labels.label }} reading for {{ $labels.chip }} is at or above
+            that device's node-exporter hwmon warning/component limit. This is
+            an interim per-sensor alert because smartctl-exporter v0.14.0
+            omits nested NVMe sensors; see manifests issue #2936 and upstream
+            smartctl-exporter issues #303/#304.
+        labels:
+          severity: warning
+
+      - alert: SmartDeviceNVMeSensorCritical
+        expr: |-
+          (
+            node_hwmon_temp_celsius{chip=~"nvme_.*",sensor!="temp1"}
+            >= on (cluster, instance, chip) group_left
+              node_hwmon_temp_crit_celsius{chip=~"nvme_.*",sensor="temp1"}
+          )
+          * on (cluster, instance, chip, sensor) group_left(label)
+            node_hwmon_sensor_label{
+              chip=~"nvme_.*",
+              sensor!="temp1",
+              label=~"Sensor .*",
+            }
+        for: 5m
+        annotations:
+          summary: >-
+            NVMe {{ $labels.chip }} on {{ $labels.instance }} has
+            {{ $labels.label }} at or above its device-reported critical
+            temperature
+          description: >-
+            The {{ $labels.label }} reading for {{ $labels.chip }} is at or above
+            that device's node-exporter hwmon critical/component limit. This
+            is an interim per-sensor alert because smartctl-exporter v0.14.0
+            omits nested NVMe sensors; see manifests issue #2936 and upstream
+            smartctl-exporter issues #303/#304.
         labels:
           severity: critical
 
