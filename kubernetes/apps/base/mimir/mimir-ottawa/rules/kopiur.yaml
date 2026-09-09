@@ -1,0 +1,169 @@
+# Kopiur is the capture-plane replacement candidate for the St Petersburg
+# Home Assistant volume. The controller exports these metrics, but the
+# Prometheus agents are the only scrapers and Mimir is the only evaluator;
+# PrometheusRule objects would be inert here.
+#
+# The expected-source/repository records are an explicit inventory from the
+# Git-managed SnapshotPolicy and Repository. They deliberately do not infer
+# intent from the number of Snapshot objects or from a previous run: a backup
+# can contain a plausible item count while omitting a required volume.
+# Add a new protected source here only when its policy and repository are
+# intentionally added to Git.
+#
+# Keep this namespace unique across every file passed to mimirtool. A repeated
+# namespace aborts the complete rule sync for every tenant.
+namespace: kopiur-backups
+groups:
+  - name: kopiur-backups.inventory
+    rules:
+      - record: kopiur_expected_source_info
+        expr: vector(1)
+        labels:
+          cluster: talos-stpetersburg
+          namespace: home-assistant
+          policy: homeassistant-config
+          pvc: homeassistant-config
+          repository: kopiur-stpetersburg
+
+      - record: kopiur_expected_repository_info
+        expr: vector(1)
+        labels:
+          cluster: talos-stpetersburg
+          kind: Repository
+          namespace: home-assistant
+          name: kopiur-stpetersburg
+
+  - name: kopiur-backups.rules
+    rules:
+      - alert: KopiurSnapshotFailed
+        expr: |
+          (
+            kopiur_expected_source_info
+            and on (cluster, namespace, policy)
+            (
+              kopiur_snapshotpolicy_last_backup_success{
+                namespace="home-assistant",
+                policy="homeassistant-config"
+              } == 0
+            )
+          )
+          and on (cluster)
+          (kopiur_leader_is_leader == 1)
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: Kopiur policy {{ $labels.policy }} reports a failed snapshot
+          description: >-
+            Kopiur's latest terminal snapshot for {{ $labels.namespace }}/{{
+            $labels.policy }} is failed. This is a per-policy current-result
+            signal; an old Failed Snapshot object alone does not keep the alert
+            firing after a later success. Inspect the current Snapshot,
+            SnapshotPolicy, mover Job, and repository logs.
+
+      - alert: KopiurSnapshotStale
+        expr: |
+          (
+            kopiur_expected_source_info
+            and on (cluster, namespace, policy)
+            (
+              kopiur_snapshotpolicy_last_backup_success{
+                namespace="home-assistant",
+                policy="homeassistant-config"
+              } == 1
+            )
+            and on (cluster, namespace, policy)
+            (
+              kopiur_policy_last_backup_success_timestamp_seconds{
+                namespace="home-assistant",
+                policy="homeassistant-config"
+              } > 0
+              and
+              time()
+                - kopiur_policy_last_backup_success_timestamp_seconds{
+                    namespace="home-assistant",
+                    policy="homeassistant-config"
+                  }
+                > 129600
+            )
+          )
+          and on (cluster)
+          (kopiur_leader_is_leader == 1)
+        for: 10m
+        labels:
+          severity: critical
+        annotations:
+          summary: Kopiur policy {{ $labels.policy }} has a stale snapshot
+          description: >-
+            No successful Kopiur snapshot for {{ $labels.namespace }}/{{
+            $labels.policy }} has completed within 36 hours (the daily schedule,
+            jitter, and operational margin). The timestamp must be positive, so
+            a controller restart/reset cannot turn a zero gauge into an
+            immediate stale alert. Inspect the SnapshotSchedule, current
+            Snapshot, mover Job, and repository reachability.
+
+      - alert: KopiurRepositoryUnreachable
+        expr: |
+          (
+            kopiur_expected_repository_info
+            unless on (cluster, kind, namespace, name)
+            (
+              max by (cluster, kind, namespace, name) (
+                kopiur_resource_phase{
+                  kind="Repository",
+                  namespace="home-assistant",
+                  name="kopiur-stpetersburg",
+                  phase="Ready"
+                } == 1
+              )
+              and on (cluster, kind, namespace, name)
+              max by (cluster, kind, namespace, name) (
+                kopiur_repository_consecutive_backend_failures{
+                  kind="Repository",
+                  namespace="home-assistant",
+                  name="kopiur-stpetersburg"
+                } == 0
+              )
+            )
+          )
+          and on (cluster)
+          (kopiur_leader_is_leader == 1)
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: Kopiur repository {{ $labels.name }} is unreachable
+          description: >-
+            The expected Kopiur repository {{ $labels.namespace }}/{{
+            $labels.name }} is not simultaneously Ready and reporting zero
+            consecutive backend failures. This excludes maintenance
+            configuration from the health decision: maintenance is intentionally
+            disabled for the St Petersburg Garage backend. Inspect Repository
+            status, Garage, credentials, and controller events.
+
+      - alert: KopiurCoverageMissing
+        expr: |
+          (
+            kopiur_expected_source_info
+            unless on (cluster, namespace, policy)
+            max by (cluster, namespace, policy) (
+              kopiur_snapshotpolicy_last_backup_success{
+                namespace="home-assistant",
+                policy="homeassistant-config"
+              }
+            )
+          )
+          and on (cluster)
+          (kopiur_leader_is_leader == 1)
+        for: 10m
+        labels:
+          severity: critical
+        annotations:
+          summary: Kopiur expected source {{ $labels.pvc }} has no terminal backup
+          description: >-
+            The Git-declared Kopiur source {{ $labels.namespace }}/{{
+            $labels.pvc }} has no per-policy terminal Snapshot result. This is
+            an explicit expected-source check, not an item-count comparison, so
+            a policy that silently omits a required volume cannot look healthy
+            merely because another volume produced data. Inspect the
+            SnapshotPolicy source list, Snapshot objects, and mover Jobs.

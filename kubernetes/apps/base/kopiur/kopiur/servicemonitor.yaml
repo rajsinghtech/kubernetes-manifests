@@ -1,0 +1,22 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: kopiur-controller
+  labels:
+    app.kubernetes.io/name: kopiur
+    app.kubernetes.io/part-of: kopiur
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: controller
+      app.kubernetes.io/instance: kopiur
+      app.kubernetes.io/name: kopiur
+  namespaceSelector:
+    matchNames:
+      - kopiur-system
+  endpoints:
+    - port: metrics
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 10s

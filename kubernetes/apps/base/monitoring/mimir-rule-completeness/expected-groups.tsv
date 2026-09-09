@@ -41,6 +41,8 @@ monitoring	kubelet.rules
 monitoring	watchdog.rules
 node-clock	node-clock.rules
 node-health	node-health.rules
+kopiur-backups	kopiur-backups.inventory
+kopiur-backups	kopiur-backups.rules
 bhaiya	bhaiya.payments
 smartctl	smartctl-exporter.rules
 stpetersburg-memory	stpetersburg-memory.rules
