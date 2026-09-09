@@ -42,9 +42,11 @@ configuration:
   policy reference would not create the missing fact.
 
 The existing `velero_cr_podvolumebackup_info` metric is sufficient for the
-actual side of the comparison. Its newest-PVB join is already used by
-`VeleroPodVolumeBackupFailed` and is the correct non-latching pattern; this
-proposal does not replace or duplicate that exporter.
+actual side of the comparison. `VeleroPodVolumeBackupFailed` constrains
+scheduled failures to the newest Backup per schedule (with a bounded fallback
+for unparented/manual records), which is the current-state boundary available
+without a PVC identity in the metric. This proposal does not replace or
+duplicate that exporter.
 
 Therefore this is not a KSM-only or Mimir-side change. Reimplementing
 Velero's policy evaluator in Bhaiya would duplicate upstream semantics and

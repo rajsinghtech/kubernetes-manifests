@@ -133,19 +133,23 @@ tests:
         alertname: VeleroPodVolumeBackupBytesMismatch
         exp_alerts: []
 
-  # A failed one-shot record must stop alerting when a newer attempt for the
-  # same workload target succeeds, even when the replacement pod has a new
-  # UID. The target key is pod name plus volume; the age bound prevents old
-  # abandoned targets from paging forever.
+  # A failed one-shot record from a scheduled Backup must stop alerting when a
+  # newer Backup succeeds, even when the replacement pod has a new name and
+  # UID. The schedule-level Backup identity is the current-state boundary;
+  # the age bound prevents old abandoned records from paging forever.
   - interval: 1m
     input_series:
+      - series: 'velero_cr_backup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="home-backup",backup="teaspoon-old-backup"}'
+        values: "100+0x20"
+      - series: 'velero_cr_backup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="home-backup",backup="teaspoon-new-backup"}'
+        values: "200+0x20"
       - series: 'velero_cr_podvolumebackup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="teaspoon",pod_uid="old-pod-uid",volume="home",pod_volume_backup="teaspoon-old-pvb",backup="teaspoon-old-backup",node="kaji"}'
         values: "100+0x20"
       - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="teaspoon",pod_uid="old-pod-uid",volume="home",pod_volume_backup="teaspoon-old-pvb",backup="teaspoon-old-backup",node="kaji",phase="Failed"}'
         values: "1+0x20"
-      - series: 'velero_cr_podvolumebackup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="teaspoon",pod_uid="new-pod-uid",volume="home",pod_volume_backup="teaspoon-new-pvb",backup="teaspoon-new-backup",node="kaji"}'
+      - series: 'velero_cr_podvolumebackup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="teaspoon-replacement",pod_uid="new-pod-uid",volume="home",pod_volume_backup="teaspoon-new-pvb",backup="teaspoon-new-backup",node="kaji"}'
         values: "200+0x20"
-      - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="teaspoon",pod_uid="new-pod-uid",volume="home",pod_volume_backup="teaspoon-new-pvb",backup="teaspoon-new-backup",node="kaji",phase="Completed"}'
+      - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="teaspoon-replacement",pod_uid="new-pod-uid",volume="home",pod_volume_backup="teaspoon-new-pvb",backup="teaspoon-new-backup",node="kaji",phase="Completed"}'
         values: "1+0x20"
     alert_rule_test:
       - eval_time: 15m
@@ -179,13 +183,97 @@ tests:
             exp_annotations:
               summary: Velero PodVolumeBackup Failed for broken/home
               description: >-
-                The newest PodVolumeBackup for target home/broken (UID pod-uid,
-                volume home) is Failed. It was created within the last 24 hours
-                and has remained in that state for at least five minutes. A
-                later successful PVB for the same target clears this signal;
-                older Failed records are intentionally ignored. Inspect
-                the PVB status message, node-agent logs, and storage path before
-                treating the target as restorable.
+                The selected PodVolumeBackup for target home/broken (UID
+                pod-uid, volume home) is Failed. It was created within the last
+                24 hours and has remained in that state for at least five
+                minutes. For a scheduled Backup, failures from older attempts
+                are intentionally ignored, including when a replacement pod has
+                a new name or UID; unparented/manual records are retained only
+                within this 24-hour bound. Inspect the PVB status message,
+                node-agent logs, and storage path before treating the target as
+                restorable.
+
+  # A Failed PVB belonging to the newest scheduled Backup remains actionable.
+  # This is the positive counterpart to the recovery fixture above.
+  - interval: 1m
+    input_series:
+      - series: 'velero_cr_backup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="media-config-backup",backup="media-config-previous"}'
+        values: "100+0x20"
+      - series: 'velero_cr_backup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="media-config-backup",backup="media-config-current"}'
+        values: "200+0x20"
+      - series: 'velero_cr_podvolumebackup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",pod_namespace="media",pod_name="maintainerr",pod_uid="pod-uid",volume="config",pod_volume_backup="maintainerr-current-pvb",backup="media-config-current",node="asuka"}'
+        values: "200+0x20"
+      - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",pod_namespace="media",pod_name="maintainerr",pod_uid="pod-uid",volume="config",pod_volume_backup="maintainerr-current-pvb",backup="media-config-current",node="asuka",phase="Failed"}'
+        values: "1+0x20"
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: VeleroPodVolumeBackupFailed
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-ottawa
+              namespace: velero-system
+              pod_namespace: media
+              pod_name: maintainerr
+              pod_uid: pod-uid
+              volume: config
+              pod_volume_backup: maintainerr-current-pvb
+              backup: media-config-current
+              node: asuka
+              phase: Failed
+              schedule: media-config-backup
+              severity: warning
+            exp_annotations:
+              summary: Velero PodVolumeBackup Failed for maintainerr/config
+              description: >-
+                The selected PodVolumeBackup for target media/maintainerr (UID
+                pod-uid, volume config) is Failed. It was created within the
+                last 24 hours and has remained in that state for at least five
+                minutes. For a scheduled Backup, failures from older attempts
+                are intentionally ignored, including when a replacement pod has
+                a new name or UID; unparented/manual records are retained only
+                within this 24-hour bound. Inspect the PVB status message,
+                node-agent logs, and storage path before treating the target as
+                restorable.
+
+  # A first-ever failed PVB has no prior successful attempt to mask it and
+  # must still alert when it belongs to the newest scheduled Backup.
+  - interval: 1m
+    input_series:
+      - series: 'velero_cr_backup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="new-service-backup",backup="new-service-current"}'
+        values: "200+0x20"
+      - series: 'velero_cr_podvolumebackup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",pod_namespace="new-service",pod_name="worker",pod_uid="first-pod-uid",volume="data",pod_volume_backup="new-service-first-pvb",backup="new-service-current",node="kaji"}'
+        values: "200+0x20"
+      - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",pod_namespace="new-service",pod_name="worker",pod_uid="first-pod-uid",volume="data",pod_volume_backup="new-service-first-pvb",backup="new-service-current",node="kaji",phase="Failed"}'
+        values: "1+0x20"
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: VeleroPodVolumeBackupFailed
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-ottawa
+              namespace: velero-system
+              pod_namespace: new-service
+              pod_name: worker
+              pod_uid: first-pod-uid
+              volume: data
+              pod_volume_backup: new-service-first-pvb
+              backup: new-service-current
+              node: kaji
+              phase: Failed
+              schedule: new-service-backup
+              severity: warning
+            exp_annotations:
+              summary: Velero PodVolumeBackup Failed for worker/data
+              description: >-
+                The selected PodVolumeBackup for target new-service/worker (UID
+                first-pod-uid, volume data) is Failed. It was created within the
+                last 24 hours and has remained in that state for at least five
+                minutes. For a scheduled Backup, failures from older attempts
+                are intentionally ignored, including when a replacement pod has
+                a new name or UID; unparented/manual records are retained only
+                within this 24-hour bound. Inspect the PVB status message,
+                node-agent logs, and storage path before treating the target as
+                restorable.
 
   # Cancellation is an operator action or a deliberate controller stop, not a
   # failed backup. It must not page as VeleroPodVolumeBackupFailed.
