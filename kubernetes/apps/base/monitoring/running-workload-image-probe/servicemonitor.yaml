@@ -1,0 +1,15 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: running-workload-image-probe
+  labels:
+    app.kubernetes.io/name: running-workload-image-probe
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: running-workload-image-probe
+  endpoints:
+    - port: metrics
+      path: /metrics
+      interval: 30s

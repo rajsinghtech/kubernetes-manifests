@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: running-workload-image-probe
+  labels:
+    app.kubernetes.io/name: running-workload-image-probe
+spec:
+  selector:
+    app.kubernetes.io/name: running-workload-image-probe
+  ports:
+    - name: metrics
+      port: 9095
+      targetPort: metrics

@@ -8,4 +8,5 @@ resources:
   - ./unpoller.yaml
   - ./blackbox-exporter.yaml
   - ./blackbox-exporter-robbinsdale.yaml
+  - ./running-workload-image-probe.yaml
   - ./smartctl-exporter.yaml

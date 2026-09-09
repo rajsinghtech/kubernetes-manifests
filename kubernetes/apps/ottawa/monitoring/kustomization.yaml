@@ -11,5 +11,6 @@ resources:
   - ./kromgo.yaml
   - ./monitoring-nagato.yaml
   - ./mimir-rule-completeness.yaml
+  - ./running-workload-image-probe.yaml
   - ./smartctl-exporter.yaml
   - ./unpoller.yaml

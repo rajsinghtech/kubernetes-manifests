@@ -53,4 +53,5 @@ configMapGenerator:
       - rules/velero-volume-progress.yaml
       - rules/velero-node-saturation.yaml
       - rules/velero-restore-admission.yaml
+      - rules/running-workload-images.yaml
       - rules/zot.yaml
