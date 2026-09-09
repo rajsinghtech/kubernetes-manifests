@@ -1,14 +1,14 @@
 # The reconciler emits cycle-level results: success, blocked, or error. Keep the
-# cycle alerts for compatibility while the bounded workspace gauge provides the
-# actionable page. The gauge identifies the workspace whose reconcile operation
-# returned ErrPendingReview; related stale provider objects can belong to other
-# workspaces and must not be attributed to this label.
+# cycle alerts for compatibility while the bounded workspace gauges provide the
+# actionable pages. The workspace handler gauge identifies the workspace and
+# handler whose latest invocation failed; related provider objects can belong to
+# other workspaces and must not be attributed to this label.
 #
-# last_success_timestamp is updated only after a complete successful pass. Take
-# the newest value across replicas: the non-leader's value is harmless, and the
-# maximum remains the last real success during a leader transfer. Do not gate
-# this alert on bhaiya_reconcile_leader; no leader is itself a no-success
-# condition and must not suppress the signal.
+# Reconciler liveness is a heartbeat counter, not the process-local
+# last_success_timestamp gauge. The heartbeat is emitted by the leader when a
+# pass starts, including passes that later fail. The liveness rule below keeps
+# the cluster aggregation because only the leader runs the loop; a dead
+# non-leader is a separate deployment concern.
 #
 # Keep this namespace unique across every file passed to mimirtool. A repeated
 # namespace aborts the complete sync for every Mimir tenant.
@@ -102,22 +102,55 @@ groups:
             reconciler logs and the affected provider or workspace operation;
             this is distinct from a review-only blocked cycle.
 
-      - alert: BhaiyaReconcileLastSuccessStale
+      - alert: BhaiyaReconcileWorkspaceHandlerFailure
         expr: |
-          time() - max by (cluster) (
-            bhaiya_reconcile_last_success_timestamp_seconds{
+          max by (cluster, workspace, handler) (
+            bhaiya_reconcile_handler_failure{
               job="bhaiya",
               container="bhaiya"
             }
-          ) > 10 * 60
+          ) > 0
         for: 5m
         labels:
           severity: critical
         annotations:
-          summary: Bhaiya reconciliation has stopped completing successful cycles
+          summary: Bhaiya reconciliation handler {{ $labels.handler }} is failing for {{ $labels.workspace }}
           description: >-
-            No successful reconciliation cycle has completed for more than ten
-            minutes. Check `kubectl logs -n bhaiya deploy/bhaiya | grep
-            'reconcile workspace resources'` for the aggregated error, then
-            inspect the cycle result and affected workspace before relying on
-            desired-state convergence.
+            The latest observed {{ $labels.handler }} handler invocation for
+            workspace {{ $labels.workspace }} failed for at least five minutes.
+            This is an item-level failure and does not by itself mean that the
+            reconciler loop is dead; inspect the workspace state, provider-fence
+            decision, and Bhaiya logs.
+
+      - alert: BhaiyaReconcileLastSuccessStale
+        expr: |
+          (
+            sum by (cluster) (
+              increase(
+                bhaiya_reconcile_heartbeat_total{
+                  job="bhaiya",
+                  container="bhaiya"
+                }[10m]
+              )
+            ) == 0
+          )
+          or
+          absent_over_time(
+            bhaiya_reconcile_heartbeat_total{
+              job="bhaiya",
+              container="bhaiya"
+            }[10m]
+          )
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: Bhaiya reconciliation heartbeat is stale
+          description: >-
+            No Bhaiya reconciliation heartbeat was observed for ten minutes.
+            A zero increase means the scraped process is alive but its loop has
+            stopped; an absent series means the emitting process or scrape is
+            gone. The five-minute alert hold follows the ten-minute emitter
+            grace window, so a brief deploy restart does not page. Check
+            `kubectl logs -n bhaiya deploy/bhaiya | grep 'reconcile workspace
+            resources'` and inspect the per-workspace handler failure alert.
