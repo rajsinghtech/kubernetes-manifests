@@ -82,6 +82,10 @@ spec:
     # storage GetReferrers still O(n) S3-scans the repo index (~14s on corp/bhaiya);
     # GraphQL Referrers via MetaDB stays fast. Real OCI referrers speed needs
     # upstream MetaDB-backed GetReferrers or a smaller repo.
+    # Keep a finite six-month age window as well as the recent-tag floor. The
+    # count-only protection lets cached, long-lived workloads outlive their
+    # registry manifest; 180 days covers that class without retaining every
+    # historical build indefinitely.
     configFiles:
       config.json: |-
         {
@@ -108,8 +112,8 @@ spec:
                 "keepTags": [{
                   "mostRecentlyPushedCount": 10,
                   "mostRecentlyPulledCount": 10,
-                  "pulledWithin": "720h",
-                  "pushedWithin": "720h"
+                  "pulledWithin": "4320h",
+                  "pushedWithin": "4320h"
                 }]
               }]
             },
