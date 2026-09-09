@@ -99,12 +99,14 @@ def main() -> int:
     tool = load_tool()
     extracted = tool.extract_selectors(
         'label_replace(metric_a{namespace="x"}, "namespace", "$1", "namespace", "(.+)") '
-        'and on (cluster, namespace) metric_b{state=~"ready|pending"}'
+        'and on (cluster, namespace) metric_b{state=~"ready|pending"} '
+        'and rate(metric_c[5m])'
     )
     extracted_text = {selector.text for selector in extracted}
     assert extracted_text == {
         'metric_a{namespace="x"}',
         'metric_b{state=~"ready|pending"}',
+        'metric_c',
     }, extracted_text
 
     server = ThreadingHTTPServer(("127.0.0.1", 0), FakeMimirHandler)

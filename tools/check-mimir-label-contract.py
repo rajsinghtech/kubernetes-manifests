@@ -89,6 +89,7 @@ PROMQL_WORDS = {
     "true",
     "false",
 }
+DURATION_UNITS = {"ms", "s", "m", "h", "d", "w", "y"}
 
 
 @dataclasses.dataclass(frozen=True)
@@ -189,6 +190,9 @@ def extract_selectors(expression: str) -> list[Selector]:
         while end < len(expression) and IDENTIFIER_CONTINUE.fullmatch(expression[end]):
             end += 1
         name = expression[index:end]
+        if index > 0 and expression[index - 1].isdigit() and name in DURATION_UNITS:
+            index = end
+            continue
         cursor = end
         while cursor < len(expression) and expression[cursor].isspace():
             cursor += 1
