@@ -3,7 +3,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - generic-device-plugin.yaml
-  - https://raw.githubusercontent.com/k8snetworkplumbingwg/multus-cni/v4.3.0/deployments/multus-daemonset-thick.yml
+  - https://raw.githubusercontent.com/k8snetworkplumbingwg/multus-cni/v4.3.1/deployments/multus-daemonset-thick.yml
   # - https://raw.githubusercontent.com/k8snetworkplumbingwg/whereabouts/refs/heads/master/doc/crds/daemonset-install.yaml
   # - https://raw.githubusercontent.com/k8snetworkplumbingwg/whereabouts/refs/heads/master/doc/crds/whereabouts.cni.cncf.io_ippools.yaml
   # - https://raw.githubusercontent.com/k8snetworkplumbingwg/whereabouts/refs/heads/master/doc/crds/whereabouts.cni.cncf.io_overlappingrangeipreservations.yaml
@@ -42,7 +42,7 @@ patches:
                   path: /var/run/netns/
             initContainers:
               - name: install-multus-binary
-                image: ghcr.io/k8snetworkplumbingwg/multus-cni:v4.3.0-thick@sha256:2b9671447f3ea4e7e56730843dbf59445b9307246f393b61386b896d56ae51c9
+                image: ghcr.io/k8snetworkplumbingwg/multus-cni:v4.3.1-thick@sha256:a357a79359b80ddd5f4699117946cacf3b54f5baecf7944535594863e875fc25
                 command:
                   - "cp"
                   - "-f"
@@ -60,6 +60,8 @@ patches:
                     name: cnibin
             containers:
               - name: kube-multus
+                # Keep the daemon and host-installed shim on the same immutable release.
+                image: ghcr.io/k8snetworkplumbingwg/multus-cni:v4.3.1-thick@sha256:a357a79359b80ddd5f4699117946cacf3b54f5baecf7944535594863e875fc25
                 resources:
                   requests:
                     cpu: "200m"
