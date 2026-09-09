@@ -1,0 +1,101 @@
+rule_files:
+  - ../smartctl.yaml
+
+evaluation_interval: 1m
+
+tests:
+  - interval: 1m
+    input_series:
+      # Shiro's Sensor 1 is above its per-device warning limit but below its
+      # critical limit. It must fire the warning alert only.
+      - series: 'node_hwmon_temp_celsius{cluster="talos-ottawa",chip="nvme_nvme0",instance="192.168.169.116:9100",job="node-exporter",namespace="monitoring",pod="node-shiro",sensor="temp2",service="node-exporter"}'
+        values: "85+0x7 80+0x10"
+      - series: 'node_hwmon_temp_max_celsius{cluster="talos-ottawa",chip="nvme_nvme0",instance="192.168.169.116:9100",job="node-exporter",namespace="monitoring",pod="node-shiro",sensor="temp1",service="node-exporter"}'
+        values: "84+0x20"
+      - series: 'node_hwmon_temp_crit_celsius{cluster="talos-ottawa",chip="nvme_nvme0",instance="192.168.169.116:9100",job="node-exporter",namespace="monitoring",pod="node-shiro",sensor="temp1",service="node-exporter"}'
+        values: "88+0x20"
+      - series: 'node_hwmon_sensor_label{cluster="talos-ottawa",chip="nvme_nvme0",instance="192.168.169.116:9100",job="node-exporter",label="Sensor 1",namespace="monitoring",pod="node-shiro",sensor="temp2",service="node-exporter"}'
+        values: "1+0x20"
+
+      # Stone's Sensor 2 is above its per-device critical limit.
+      - series: 'node_hwmon_temp_celsius{cluster="talos-robbinsdale",chip="nvme_nvme0",instance="192.168.50.82:9100",job="node-exporter",namespace="monitoring",pod="node-stone",sensor="temp3",service="node-exporter"}'
+        values: "86+0x7 80+0x10"
+      - series: 'node_hwmon_temp_max_celsius{cluster="talos-robbinsdale",chip="nvme_nvme0",instance="192.168.50.82:9100",job="node-exporter",namespace="monitoring",pod="node-stone",sensor="temp1",service="node-exporter"}'
+        values: "82+0x20"
+      - series: 'node_hwmon_temp_crit_celsius{cluster="talos-robbinsdale",chip="nvme_nvme0",instance="192.168.50.82:9100",job="node-exporter",namespace="monitoring",pod="node-stone",sensor="temp1",service="node-exporter"}'
+        values: "85+0x20"
+      - series: 'node_hwmon_sensor_label{cluster="talos-robbinsdale",chip="nvme_nvme0",instance="192.168.50.82:9100",job="node-exporter",label="Sensor 2",namespace="monitoring",pod="node-stone",sensor="temp3",service="node-exporter"}'
+        values: "1+0x20"
+    alert_rule_test:
+      - eval_time: 4m
+        alertname: SmartDeviceNVMeSensorHigh
+        exp_alerts: []
+      - eval_time: 6m
+        alertname: SmartDeviceNVMeSensorHigh
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-ottawa
+              chip: nvme_nvme0
+              instance: 192.168.169.116:9100
+              job: node-exporter
+              label: Sensor 1
+              namespace: monitoring
+              pod: node-shiro
+              sensor: temp2
+              service: node-exporter
+              severity: warning
+            exp_annotations:
+              summary: NVMe nvme_nvme0 on 192.168.169.116:9100 has Sensor 1 at or above its device-reported warning temperature
+              description: >-
+                The Sensor 1 reading for nvme_nvme0 is at or above that device's
+                node-exporter hwmon warning/component limit. This is an
+                interim per-sensor alert because smartctl-exporter v0.14.0
+                omits nested NVMe sensors; see manifests issue #2936 and
+                upstream smartctl-exporter issues #303/#304.
+          - exp_labels:
+              cluster: talos-robbinsdale
+              chip: nvme_nvme0
+              instance: 192.168.50.82:9100
+              job: node-exporter
+              label: Sensor 2
+              namespace: monitoring
+              pod: node-stone
+              sensor: temp3
+              service: node-exporter
+              severity: warning
+            exp_annotations:
+              summary: NVMe nvme_nvme0 on 192.168.50.82:9100 has Sensor 2 at or above its device-reported warning temperature
+              description: >-
+                The Sensor 2 reading for nvme_nvme0 is at or above that device's
+                node-exporter hwmon warning/component limit. This is an
+                interim per-sensor alert because smartctl-exporter v0.14.0
+                omits nested NVMe sensors; see manifests issue #2936 and
+                upstream smartctl-exporter issues #303/#304.
+      - eval_time: 6m
+        alertname: SmartDeviceNVMeSensorCritical
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-robbinsdale
+              chip: nvme_nvme0
+              instance: 192.168.50.82:9100
+              job: node-exporter
+              label: Sensor 2
+              namespace: monitoring
+              pod: node-stone
+              sensor: temp3
+              service: node-exporter
+              severity: critical
+            exp_annotations:
+              summary: NVMe nvme_nvme0 on 192.168.50.82:9100 has Sensor 2 at or above its device-reported critical temperature
+              description: >-
+                The Sensor 2 reading for nvme_nvme0 is at or above that device's
+                node-exporter hwmon critical/component limit. This is an
+                interim per-sensor alert because smartctl-exporter v0.14.0
+                omits nested NVMe sensors; see manifests issue #2936 and
+                upstream smartctl-exporter issues #303/#304.
+      - eval_time: 8m
+        alertname: SmartDeviceNVMeSensorHigh
+        exp_alerts: []
+      - eval_time: 8m
+        alertname: SmartDeviceNVMeSensorCritical
+        exp_alerts: []
