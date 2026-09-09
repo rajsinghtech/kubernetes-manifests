@@ -13,6 +13,11 @@ kind: Schedule
 metadata:
   name: media-config-backup
   namespace: velero-system
+  annotations:
+    # Velero copies Schedule annotations onto each generated Backup. Healthy
+    # runs take 14-39 minutes; bound a wedged filesystem operation before it
+    # overlaps the next maintenance window.
+    velero.io/pod-volume-timeout: "1h"
   labels:
     keiretsu.top/volume-data-required: "true"
 spec:
