@@ -4,3 +4,4 @@ namespace: kopiur-restore-proof-20260908-ha
 resources:
   - namespace.yaml
   - restore.yaml
+  - restore-content-r2.yaml

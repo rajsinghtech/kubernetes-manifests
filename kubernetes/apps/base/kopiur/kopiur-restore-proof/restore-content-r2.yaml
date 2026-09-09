@@ -1,0 +1,50 @@
+---
+# Content-only retry of the terminal first proof. The first Restore reached
+# the repository and began writing real HA files, then failed only because its
+# inherited non-root identity could not chown the original owners. This retry
+# intentionally proves file data, not ownership or permission metadata.
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: Restore
+metadata:
+  name: homeassistant-config-restore-content-r2
+  namespace: kopiur-restore-proof-20260908-ha
+spec:
+  source:
+    snapshotRef:
+      name: homeassistant-config-20260908034331
+      namespace: home-assistant
+  repository:
+    kind: ClusterRepository
+    name: kopiur-stpetersburg-restore-readonly
+  credentialProjection:
+    enabled: true
+  target:
+    pvc:
+      name: homeassistant-config-restore-content-r2
+      accessModes:
+        - ReadWriteOnce
+      capacity: 10Gi
+      storageClassName: local-path
+  mover:
+    # Reuse the recorded non-root identity so the fresh PVC is writable via
+    # fsGroup. The options below deliberately avoid chown/chmod instead of
+    # widening this content check to a privileged ownership restore.
+    inheritSecurityContextFrom:
+      snapshot: {}
+  options:
+    enableFileDeletion: false
+    ignoreErrors: false
+    ignorePermissionErrors: false
+    parallel: 1
+    skipExisting: false
+    skipOwners: true
+    skipPermissions: true
+    skipTimes: false
+    writeFilesAtomically: true
+  policy:
+    onMissingSnapshot: Fail
+    waitTimeout: 5m
+  failurePolicy:
+    backoffLimit: 0
+    activeDeadlineSeconds: 1800
+    podStartupDeadlineSeconds: 300
