@@ -1,0 +1,92 @@
+{
+  "rule": {
+    "name": "KubeletDown",
+    "for": "15m",
+    "labels": {
+      "severity": "critical"
+    }
+  },
+  "start": 0,
+  "end": 900,
+  "step": 60,
+  "cases": [
+    {
+      "name": "three-minute-flap",
+      "results": [
+        {
+          "metric": {
+            "cluster": "talos-robbinsdale",
+            "node": "tank"
+          },
+          "values": [
+            [60, "1"],
+            [120, "1"],
+            [180, "1"],
+            [240, "1"],
+            [600, "1"],
+            [660, "1"]
+          ]
+        }
+      ],
+      "expected": {
+        "raw_kind": "high-churn, never-sustained",
+        "report_category": "candidate",
+        "active_runs": 2,
+        "max_active_seconds": 180,
+        "ratio": 0.2,
+        "transition_count": 4,
+        "current_active": false,
+        "duration_censored": false
+      }
+    },
+    {
+      "name": "single-one-minute-sample",
+      "results": [
+        {
+          "metric": {
+            "cluster": "talos-robbinsdale",
+            "node": "single"
+          },
+          "values": [
+            [300, "1"]
+          ]
+        }
+      ],
+      "expected": {
+        "raw_kind": null,
+        "report_category": null,
+        "active_runs": 1,
+        "max_active_seconds": 0,
+        "ratio": 0.0,
+        "transition_count": 2,
+        "current_active": false,
+        "duration_censored": false
+      }
+    },
+    {
+      "name": "single-sample-spikes",
+      "results": [
+        {
+          "metric": {
+            "cluster": "talos-robbinsdale",
+            "node": "quiet"
+          },
+          "values": [
+            [60, "1"],
+            [240, "1"]
+          ]
+        }
+      ],
+      "expected": {
+        "raw_kind": "high-churn, never-sustained",
+        "report_category": "suppressed-short-activity",
+        "active_runs": 2,
+        "max_active_seconds": 0,
+        "ratio": 0.0,
+        "transition_count": 4,
+        "current_active": false,
+        "duration_censored": false
+      }
+    }
+  ]
+}

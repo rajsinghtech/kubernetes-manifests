@@ -408,7 +408,7 @@ exits "short zero-for counter windows are detected" 0 \
 
 # ------------------------------------------------------------- Mimir alert-stability diagnostic
 section "Mimir alert-stability diagnostic"
-exits "high-churn toggle and stale pending state are reported" 0 \
+exits "candidate filter, KubeletDown fixture, and stale pending state" 0 \
   python3 "$ROOT/tools/tests/test_mimir_alert_stability.py"
 
 # A completed gate must reap every watchdog timer descendant. Use an isolated

@@ -3,14 +3,18 @@
 
 This is deliberately a report-only diagnostic.  It evaluates the complete
 alert expression against live Mimir samples, groups samples by the labels the
-alert instance would actually have, and reports high-churn instances whose
-longest observed active run is shorter than the rule's ``for`` duration.  It
-also reports when Mimir says an alert is pending or firing while the expression
-is currently inactive.
+alert instance would actually have, and reports candidate instances whose
+longest observed active run is shorter than the rule's ``for`` duration.  By
+default, a candidate must span at least one sampling step; shorter
+high-churn observations are still available with ``--all``.  It also reports
+when Mimir says an alert is pending or firing while the expression is
+currently inactive.
 
 The diagnostic does not emit Prometheus samples, change rules, or use its exit
 status for findings.  Exit 2 means the live sweep could not be completed; a
-non-zero finding count is still a successful diagnostic run.
+non-zero finding count is still a successful diagnostic run.  A candidate is
+a question for human triage, never a defect verdict or a recommendation to
+retune an alert.
 """
 
 from __future__ import annotations
@@ -50,6 +54,12 @@ DEFAULT_LOOKBACK = "6h"
 DEFAULT_STEP = "1m"
 DEFAULT_WORKERS = 8
 DEFAULT_TIMEOUT = 15.0
+
+RAW_NEVER_SUSTAINED = "high-churn, never-sustained"
+RAW_RANGE_CENSORED = "high-churn, range-censored"
+CANDIDATE = "candidate"
+SUPPRESSED_SHORT_ACTIVITY = "suppressed-short-activity"
+INCONCLUSIVE_RANGE_CENSORED = "inconclusive-range-censored"
 
 DURATION_RE = re.compile(r"([0-9]+(?:\.[0-9]+)?)(ms|s|m|h|d|w|y)")
 UNIT_SECONDS = {
@@ -117,12 +127,39 @@ class StabilityObservation:
         ):
             return None
         if self.duration_censored:
-            return "high-churn, range-censored"
-        return "high-churn, never-sustained"
+            return RAW_RANGE_CENSORED
+        return RAW_NEVER_SUSTAINED
+
+    def is_candidate(self, min_active_duration: float) -> bool:
+        """Return whether this raw churn observation merits default output.
+
+        ``max_active_seconds`` is measured as the span between adjacent
+        samples, so a one-sample spike has a duration of zero. Requiring at
+        least one complete sample interval filters that resolution-level
+        noise without hiding a multi-minute flap such as KubeletDown.
+        """
+
+        return (
+            self.classification == RAW_NEVER_SUSTAINED
+            and self.max_active_seconds >= min_active_duration
+        )
+
+    def report_category(self, min_active_duration: float) -> str | None:
+        """Classify an observation for the human-facing report."""
+
+        if self.classification == RAW_RANGE_CENSORED:
+            return INCONCLUSIVE_RANGE_CENSORED
+        if self.classification == RAW_NEVER_SUSTAINED:
+            return (
+                CANDIDATE
+                if self.is_candidate(min_active_duration)
+                else SUPPRESSED_SHORT_ACTIVITY
+            )
+        return None
 
     @property
     def high_churn_never_sustained(self) -> bool:
-        return self.classification == "high-churn, never-sustained"
+        return self.classification == RAW_NEVER_SUSTAINED
 
 
 @dataclasses.dataclass(frozen=True)
@@ -159,6 +196,19 @@ def format_duration(seconds: float) -> str:
     return f"{seconds:g}s"
 
 
+def query_expression(expression: str) -> str:
+    """Convert Flux-escaped dollars in a native rule to its live form.
+
+    The rule ConfigMap is rendered through Flux envsubst. Native manifests
+    therefore write ``$$`` when the deployed PromQL must contain a literal
+    ``$`` (for example, the ``$1`` replacement in ``label_replace``). The
+    diagnostic queries Mimir directly and must apply that same one-pass
+    rendering before sending the expression.
+    """
+
+    return expression.replace("$$", "$")
+
+
 def load_rules(rules_dir: Path, requested_names: set[str]) -> list[AlertRule]:
     paths = sorted(rules_dir.glob("*.yaml")) + sorted(rules_dir.glob("*.yml"))
     if not paths:
@@ -192,7 +242,7 @@ def load_rules(rules_dir: Path, requested_names: set[str]) -> list[AlertRule]:
                                 path=path,
                                 group=group_name,
                                 name=name,
-                                expression=expression,
+                                expression=query_expression(expression),
                                 for_seconds=parse_rule_duration(rule.get("for")),
                                 labels=labels,
                             )
@@ -447,6 +497,15 @@ def run(args: argparse.Namespace) -> int:
         raise DiagnosticError(
             "lookback must be at least one positive whole step and step must be positive"
         )
+    configured_min_active_duration = getattr(args, "min_active_duration", None)
+    min_active_duration = (
+        step
+        if configured_min_active_duration is None
+        else configured_min_active_duration
+    )
+    if min_active_duration < 0:
+        raise DiagnosticError("minimum active duration must not be negative")
+    show_all = bool(getattr(args, "show_all", False))
     end = int(time.time())
     start = end - lookback
 
@@ -510,13 +569,28 @@ def run(args: argparse.Namespace) -> int:
         for mismatch in state_mismatches:
             mismatches.append((tenant, rule, mismatch))
 
+    candidates = [
+        item for item in findings if item[2].is_candidate(min_active_duration)
+    ]
+    suppressed_short_activity = [
+        item
+        for item in findings
+        if item[2].report_category(min_active_duration) == SUPPRESSED_SHORT_ACTIVITY
+    ]
+    inconclusive_range_censored = [
+        item
+        for item in findings
+        if item[2].report_category(min_active_duration) == INCONCLUSIVE_RANGE_CENSORED
+    ]
+    observations_to_print = findings if show_all else candidates
     for tenant, rule, observation in sorted(
-        findings,
+        observations_to_print,
         key=lambda item: (item[0], item[1].name, labels_text(item[2].labels)),
     ):
         ratio = observation.ratio if observation.ratio is not None else 0.0
         print(
-            f"! tenant={tenant} {rule.location}: {observation.classification} "
+            f"{observation.report_category(min_active_duration)} "
+            f"tenant={tenant} {rule.location}: {observation.classification} "
             f"max_active={format_duration(observation.max_active_seconds)} "
             f"for={format_duration(observation.for_seconds)} "
             f"active_duration_for_ratio={ratio:.3f} "
@@ -526,32 +600,28 @@ def run(args: argparse.Namespace) -> int:
             f"duration_censored={str(observation.duration_censored).lower()} "
             f"labels={labels_text(observation.labels)}"
         )
-    for tenant, rule, mismatch in sorted(
-        mismatches,
-        key=lambda item: (item[0], item[1].name, item[2].state, labels_text(item[2].labels)),
-    ):
-        print(
-            f"! tenant={tenant} {rule.location}: {mismatch.state} state while "
-            f"expression is currently inactive labels={labels_text(mismatch.labels)}"
-        )
+    if show_all:
+        for tenant, rule, mismatch in sorted(
+            mismatches,
+            key=lambda item: (item[0], item[1].name, item[2].state, labels_text(item[2].labels)),
+        ):
+            print(
+                f"state-mismatch tenant={tenant} {rule.location}: {mismatch.state} "
+                f"while expression is currently inactive labels={labels_text(mismatch.labels)}"
+            )
     for error in sorted(errors):
         print(f"! {error}", file=sys.stderr)
 
-    never_sustained = sum(
-        observation.classification == "high-churn, never-sustained"
-        for _, _, observation in findings
-    )
-    range_censored = sum(
-        observation.classification == "high-churn, range-censored"
-        for _, _, observation in findings
-    )
     print(
         f"Mimir alert stability diagnostic: tenants={len(tenants)} "
         f"rules={len(rules)} queries={completed}/{len(tasks)} "
-        f"high_churn_never_sustained={never_sustained} "
-        f"high_churn_range_censored={range_censored} "
+        f"candidates={len(candidates)} "
+        f"suppressed_short_activity={len(suppressed_short_activity)} "
+        f"inconclusive_range_censored={len(inconclusive_range_censored)} "
         f"state_mismatches={len(mismatches)} errors={len(errors)} "
-        f"lookback={format_duration(lookback)} step={format_duration(step)}"
+        f"lookback={format_duration(lookback)} step={format_duration(step)} "
+        f"min_active_duration={format_duration(min_active_duration)} "
+        f"mode={'all' if show_all else 'candidates'}"
     )
     # Findings are report data, not a CI or Alertmanager condition. Only an
     # incomplete live sweep is exceptional.
@@ -583,6 +653,18 @@ def build_parser() -> argparse.ArgumentParser:
         action="append",
         default=[],
         help="inspect only this alert name; may be repeated",
+    )
+    parser.add_argument(
+        "--min-active-duration",
+        type=parse_duration,
+        default=None,
+        help="minimum observed active span for a default candidate (default: one step)",
+    )
+    parser.add_argument(
+        "--all",
+        dest="show_all",
+        action="store_true",
+        help="show suppressed short activity, range-censored observations, and state mismatches",
     )
     parser.add_argument(
         "--lookback",

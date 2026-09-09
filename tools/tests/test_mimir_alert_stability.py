@@ -17,6 +17,7 @@ from types import SimpleNamespace
 ROOT = Path(__file__).resolve().parents[2]
 TOOL = ROOT / "tools/check-mimir-alert-stability.py"
 FIXTURE = ROOT / "tools/tests/fixtures/alert-stability-unknown-toggle.json"
+KUBELET_FIXTURE = ROOT / "tools/tests/fixtures/alert-stability-kubeletdown.json"
 
 
 def load_tool():
@@ -63,6 +64,52 @@ def main() -> int:
     )
     assert observation.current_active == fixture["expected"]["current_active"]
     assert observation.duration_censored == fixture["expected"]["duration_censored"]
+
+    # A multi-minute KubeletDown flap is a candidate for human triage, while
+    # one-sample spikes are resolution-level noise. The latter still has two
+    # separated runs and therefore exercises the active-duration floor rather
+    # than being discarded by the existing run-count guard.
+    kubelet_fixture = json.loads(KUBELET_FIXTURE.read_text())
+    kubelet_rule = tool.AlertRule(
+        path=Path("node-health.yaml"),
+        group="node-health.rules",
+        name=kubelet_fixture["rule"]["name"],
+        expression='up{job="kubelet"} == 0',
+        for_seconds=tool.parse_duration(kubelet_fixture["rule"]["for"]),
+        labels=kubelet_fixture["rule"]["labels"],
+    )
+    for case in kubelet_fixture["cases"]:
+        case_observations, case_mismatches = tool.analyze_query_result(
+            kubelet_rule,
+            case["results"],
+            kubelet_fixture["start"],
+            kubelet_fixture["end"],
+            kubelet_fixture["step"],
+        )
+        assert not case_mismatches, case_mismatches
+        assert len(case_observations) == 1, case_observations
+        case_observation = case_observations[0]
+        expected = case["expected"]
+        assert case_observation.classification == expected["raw_kind"]
+        assert (
+            case_observation.report_category(kubelet_fixture["step"])
+            == expected["report_category"]
+        )
+        assert case_observation.is_candidate(kubelet_fixture["step"]) == (
+            expected["report_category"] == "candidate"
+        )
+        assert case_observation.active_runs == expected["active_runs"]
+        assert case_observation.max_active_seconds == expected["max_active_seconds"]
+        assert case_observation.ratio == expected["ratio"]
+        assert case_observation.transitions == expected["transition_count"]
+        assert case_observation.current_active == expected["current_active"]
+        assert case_observation.duration_censored == expected["duration_censored"]
+
+    # Native manifests use $$ to carry a literal $ through Flux substitution;
+    # live queries must use the deployed expression form.
+    assert tool.query_expression('label_replace(vector(1), "name", "$$1", "x", ".*")') == (
+        'label_replace(vector(1), "name", "$1", "x", ".*")'
+    )
 
     # Mimir can split a matrix response into more than one item while the
     # output label set remains the same. The alert identity must be merged by
@@ -150,17 +197,21 @@ def main() -> int:
     )
     assert not active_state, active_state
 
-    # Findings are informational: a complete sweep with a finding must still
+    # Findings are informational: a complete sweep with a candidate must still
     # return success. This guards the report-only contract against accidentally
-    # becoming a CI/Alertmanager condition.
+    # becoming a CI/Alertmanager condition. The default output omits a pair of
+    # one-sample spikes and a stale evaluator state; --all restores both.
     with tempfile.TemporaryDirectory(prefix="mimir-alert-stability-") as temporary:
         rules_dir = Path(temporary)
         (rules_dir / "rules.yaml").write_text(
             """groups:
   - name: test.rules
     rules:
-      - alert: Toggle
+      - alert: ToggleCandidate
         expr: vector(1)
+        for: 5m
+      - alert: ToggleShort
+        expr: vector(2)
         for: 5m
 """
         )
@@ -170,21 +221,39 @@ def main() -> int:
                 del api_url, tenant, timeout
 
             def query_range(self, expression, start, end, step):
-                assert expression == "vector(1)"
+                if expression == "vector(1)":
+                    values = [
+                        [start + step, "1"],
+                        [start + 2 * step, "1"],
+                        [start + 4 * step, "1"],
+                        [start + 5 * step, "1"],
+                    ]
+                else:
+                    assert expression == "vector(2)"
+                    values = [
+                        [start + step, "1"],
+                        [start + 4 * step, "1"],
+                    ]
                 return [
                     {
                         "metric": {"cluster": "talos-test"},
-                        "values": [
-                            [start + step, "1"],
-                            [start + 2 * step, "1"],
-                            [start + 4 * step, "1"],
-                            [start + 5 * step, "1"],
-                        ],
+                        "values": values,
                     }
                 ]
 
             def alert_states(self):
-                return {"Toggle": []}
+                return {
+                    "ToggleCandidate": [],
+                    "ToggleShort": [
+                        {
+                            "state": "pending",
+                            "labels": {
+                                "alertname": "ToggleShort",
+                                "cluster": "talos-test",
+                            },
+                        }
+                    ],
+                }
 
         original_api = tool.MimirAPI
         tool.MimirAPI = FakeAPI
@@ -201,15 +270,51 @@ def main() -> int:
                         step=60,
                         workers=2,
                         timeout=1,
+                        min_active_duration=None,
+                        show_all=False,
                     )
                 )
             assert result == 0
-            assert "high-churn, never-sustained" in output.getvalue()
-            assert "queries=1/1" in output.getvalue()
+            default_output = output.getvalue()
+            assert "candidate tenant=talos-test" in default_output
+            assert "ToggleCandidate" in default_output
+            assert "ToggleShort" not in default_output
+            assert "candidates=1" in default_output
+            assert "suppressed_short_activity=1" in default_output
+            assert "state_mismatches=1" in default_output
+            assert "mode=candidates" in default_output
+
+            output = io.StringIO()
+            with contextlib.redirect_stdout(output):
+                result = tool.run(
+                    SimpleNamespace(
+                        rules_dir=str(rules_dir),
+                        rule_name=[],
+                        tenant=["talos-test"],
+                        api_url="http://mimir.test/api/v1",
+                        lookback=360,
+                        step=60,
+                        workers=2,
+                        timeout=1,
+                        min_active_duration=None,
+                        show_all=True,
+                    )
+                )
+            assert result == 0
+            all_output = output.getvalue()
+            assert "candidate tenant=talos-test" in all_output
+            assert "suppressed-short-activity tenant=talos-test" in all_output
+            assert "ToggleShort" in all_output
+            assert "state-mismatch tenant=talos-test" in all_output
+            assert "mode=all" in all_output
         finally:
             tool.MimirAPI = original_api
 
     print("✓ Mimir alert stability: Unknown -> True -> Unknown is high-churn, never-sustained")
+    print(
+        "✓ Mimir alert stability: KubeletDown 3m is a candidate; "
+        "one-sample spikes are suppressed"
+    )
     print("✓ Mimir alert stability: output labels merge split response items")
     print("✓ Mimir alert stability: pending/firing state while expression is inactive is reported")
     return 0
