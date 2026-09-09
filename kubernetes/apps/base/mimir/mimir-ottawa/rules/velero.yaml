@@ -2,10 +2,12 @@
 # Prometheus agents only scrape and remote-write these metrics; their
 # PrometheusRule objects are not evaluated in agent mode.
 #
-# The two event alerts use Velero's counters, not velero_backup_last_status:
-# the latter remained 1 during a real Failed Backup in Ottawa. A matching item
-# count is not a volume-integrity signal; the annotations intentionally direct
-# the operator to the Backup and PodVolumeBackup objects.
+# Backup phase is current state for the newest Backup attempt. The partial
+# failure alert uses that state; the remaining failed-backup event alert still
+# uses a counter, whose five-minute increase can disappear before a sweep
+# observes it. A matching item count is not a volume-integrity signal; the
+# annotations intentionally direct the operator to the Backup and
+# PodVolumeBackup objects.
 #
 # Keep this namespace unique across every file passed to mimirtool.
 namespace: velero-backups
@@ -14,19 +16,38 @@ groups:
     rules:
       - alert: VeleroBackupPartiallyFailed
         expr: |
-          sum by (cluster, schedule) (
-            increase(
-              velero_backup_partial_failure_total{schedule!=""}[5m]
+          (
+            max by (cluster, namespace, schedule, backup) (
+              velero_cr_backup_info{
+                namespace="velero-system",
+                schedule!="",
+                phase="PartiallyFailed"
+              }
+            ) > 0
+          )
+          and on (cluster, namespace, schedule, backup)
+          (
+            velero_cr_backup_created_timestamp{
+              namespace="velero-system",
+              schedule!=""
+            }
+            == on (cluster, namespace, schedule) group_left
+            max by (cluster, namespace, schedule) (
+              velero_cr_backup_created_timestamp{
+                namespace="velero-system",
+                schedule!=""
+              }
             )
-          ) > 0
-        for: 0m
+          )
+        for: 5m
         labels:
           severity: critical
         annotations:
           summary: Velero schedule {{ $labels.schedule }} reported a partially failed backup
           description: >-
-            Velero reported a PartiallyFailed backup for schedule
-            {{ $labels.schedule }}. This detects Velero's failure report only;
+            The newest Backup for schedule {{ $labels.schedule }} is
+            PartiallyFailed. This is current Backup state, not a counter
+            delta, so it remains observable until a newer Backup supersedes it.
             itemsBackedUp matching totalItems does not establish filesystem or
             volume integrity. Inspect the Backup status and its failed
             PodVolumeBackup objects, then correlate the Velero and node-agent

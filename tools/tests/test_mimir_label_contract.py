@@ -57,6 +57,27 @@ class FakeMimirHandler(BaseHTTPRequestHandler):
                     "cluster": "talos-stpetersburg",
                 }
             ]
+        elif selector.startswith("flux_instance_info"):
+            family = [
+                {
+                    "__name__": "flux_instance_info",
+                    "cluster": "talos-ottawa",
+                    "exported_namespace": "flux-system",
+                    "name": "flux",
+                    "ready": "True",
+                },
+                {
+                    "__name__": "flux_instance_info",
+                    "cluster": "talos-ottawa",
+                    "exported_namespace": "flux-system",
+                    "name": "flux",
+                    "ready": "True",
+                },
+            ]
+            # A healthy Flux instance is a legitimate zero-match condition
+            # for its not-ready alert.  This is the counterexample to the
+            # family-exists/selector-zero heuristic.
+            result = [] if 'ready!="True"' in selector else family
         elif selector.startswith("optional_component_metric"):
             # The entire family is absent. This is a legitimate quiet or
             # undeployed component and must not fail the checker.
@@ -132,10 +153,20 @@ def main() -> int:
 
             old_dir = root / "old"
             new_dir = root / "new"
+            quiet_dir = root / "quiet"
             old_dir.mkdir()
             new_dir.mkdir()
+            quiet_dir.mkdir()
             (old_dir / "kopiur.yaml").write_text(old_rule)
             (new_dir / "kopiur.yaml").write_text(new_rule)
+            (quiet_dir / "flux.yaml").write_text(
+                """groups:
+  - name: flux.rules
+    rules:
+      - alert: FluxInstanceNotReady
+        expr: flux_instance_info{exported_namespace=\"flux-system\",name=\"flux\",ready!=\"True\"}
+"""
+            )
 
             old_result = run_checker(old_dir, server)
             assert old_result.returncode == 1, old_result
@@ -148,6 +179,11 @@ def main() -> int:
             assert "failed=0" in new_result.stdout, new_result.stdout
             assert "absent; skipped" in new_result.stdout, new_result.stdout
 
+            quiet_result = run_checker(quiet_dir, server)
+            assert quiet_result.returncode == 1, quiet_result
+            assert "family exists" in quiet_result.stderr, quiet_result.stderr
+            assert 'ready!="True"' in quiet_result.stderr, quiet_result.stderr
+
     finally:
         server.shutdown()
         thread.join(timeout=5)
@@ -155,6 +191,7 @@ def main() -> int:
 
     print("✓ Mimir live label-contract checker: pre-fix fails, post-fix passes")
     print("✓ Mimir live label-contract checker: absent metric families are skipped")
+    print("✓ Mimir live label-contract checker: quiet not-ready selector is exposed as a false positive")
     return 0
 
 

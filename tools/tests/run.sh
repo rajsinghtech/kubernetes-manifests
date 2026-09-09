@@ -401,6 +401,11 @@ section "Mimir live label-contract replay"
 exits "pre-#2924 selector fails and post-fix selector passes" 0 \
   python3 "$ROOT/tools/tests/test_mimir_label_contract.py"
 
+# ------------------------------------------------------------- Mimir alert-window lint
+section "Mimir alert-window lint"
+exits "short zero-for counter windows are detected" 0 \
+  python3 "$ROOT/tools/tests/test_mimir_alert_windows.py"
+
 # A completed gate must reap every watchdog timer descendant. Use an isolated
 # temporary gate root so this test exercises the real run_capped implementation
 # without allowing a sleep stub to affect repository prerequisite checks.

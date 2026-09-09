@@ -20,9 +20,50 @@ The family query is the important false-positive guard. A family with no
 series in the selected lookback is treated as absent and skipped: the
 component may be quiet or not deployed in that tenant. A family that is
 present but has no series matching the rule's labels is different evidence;
-it indicates a selector or label-contract defect and fails the check. The
+it is a candidate selector or label-contract defect and fails the check. The
 lookback is therefore part of the meaning of “present”; choose it long enough
-to cover the expected scrape cadence.
+to cover the expected scrape cadence. It is not, by itself, proof of a
+defect: a healthy alert such as `FluxInstanceNotReady` also has a present
+family and zero matches while every live series is `ready="True"`.
+
+## Triage status
+
+The first 24-hour live sweep on 2026-09-09 produced 142 present-family,
+zero-selector observations across the three tenants (31 Ottawa, 53
+Robbinsdale, and 58 St. Petersburg). That number is a candidate count, not a
+finding count. The `/series` API does not provide the rule's applicability or
+the expected values of its condition labels, so it cannot produce an honest
+three-way `broken`/`not-applicable`/`quiet` partition on its own.
+
+The ground-truthed cases are:
+
+- No current Kopiur selector is proven broken. The pre-#2924 selectors did
+  fail against a family whose live labels had `namespace="kopiur-system"` and
+  `exported_namespace="home-assistant"`; after #2924, St. Petersburg and
+  Robbinsdale are 14/14, and the two Ottawa repository observations are
+  St. Petersburg-specific and not applicable.
+- `FluxInstanceNotReady` is a known healthy-quiet control: its family exists,
+  all live series are `ready="True"`, and `ready!="True"` matches nothing.
+  The control appears in all three tenant sweeps.
+
+The current checker therefore must not send every non-zero exit to
+Alertmanager. A rule-specific applicability/metric-contract declaration (or
+another independent source of expected labels) is required before a periodic
+dead-rule alert can distinguish the historical Kopiur mismatch from a normal
+quiet condition. The offline test includes both the Kopiur pre/post regression
+and the healthy Flux counterexample to keep this limitation visible.
+
+The other observation-quality failure is statically detectable. Run
+`tools/check-mimir-alert-windows.py` to find `increase()`, `rate()`, or
+`irate()` alert expressions whose range is at most a few scrape intervals and
+whose `for` is zero. With the repository's 5-minute threshold, the current
+rule set originally reported two locations: `VeleroBackupPartiallyFailed` and
+`VeleroBackupFailed`. The former is fixed in this change; the strict scan now
+reports one remaining location, `VeleroBackupFailed`, as a separate
+counter-based finding. `NodeKernelOOMKill` is the adjacent broader case
+(`increase(...[10m])` with `for: 0m`) and is reported when the threshold is
+raised. Because the native rule files are shared, each location is loaded for
+all three Mimir tenants.
 
 Rules are shared across tenants. Selectors that explicitly exclude the
 current tenant with a `cluster` matcher are skipped, because they are not
@@ -52,17 +93,19 @@ which is skipped rather than reported as a defect.
 
 ## Where it runs
 
-This is an operational, periodic check rather than a pull-request check. A
-PR runner normally cannot reach the tenant-scoped Mimir service, and a
-synthetic fixture cannot prove the exporter-to-Mimir label contract. Run the
-one-shot checker from a small in-cluster monitoring process for each tenant,
-with the native rules supplied from the same Git revision, and send a
-non-zero result to Alertmanager. The existing
+This is intended to be an operational, periodic check rather than a
+pull-request check. A PR runner normally cannot reach the tenant-scoped Mimir
+service, and a synthetic fixture cannot prove the exporter-to-Mimir label
+contract. Once the triage metadata exists, run the one-shot checker from a
+small in-cluster monitoring process for each tenant, with the native rules
+supplied from the same Git revision, and send only classified defects to
+Alertmanager. The existing
 `mimir-rule-completeness` deployment is the model for this placement: it has
 Mimir service access, iterates over all three tenants, and posts independent
 checker alerts directly to Alertmanager so a broken Mimir rule cannot silence
 the checker itself.
 
-The checker intentionally does not change or allowlist rules. On its first
-live run it may expose already-existing label-contract defects; those should
-be fixed in their owning rule changes rather than hidden from this signal.
+The checker intentionally does not change or allowlist rules. Until the
+applicability/condition distinction is made mechanical, its non-zero result
+is diagnostic output only; wiring it as an alert would create a false-positive
+signal that should not be shipped.
