@@ -54,6 +54,29 @@ tests:
                 is covered or that a restore works. Clears when a later Backup
                 has a Completed PVB with matching byte counters.
 
+  # A Completed PVB with explicit 0/0 progress is byte-consistent, so it
+  # clears the missing-volume alert. The metric contract cannot distinguish a
+  # genuinely empty volume from a run that captured nothing; both cases have
+  # this same input shape and neither is content or restore proof.
+  - interval: 1m
+    input_series:
+      - series: 'velero_cr_backup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="zero-byte-backup",backup="zero-byte-backup-latest"}'
+        values: "100+0x20"
+      - series: 'velero_cr_backup_info{cluster="talos-ottawa",namespace="velero-system",schedule="zero-byte-backup",backup="zero-byte-backup-latest",phase="Completed"}'
+        values: "1+0x20"
+      - series: 'velero_cr_schedule_info{cluster="talos-ottawa",namespace="velero-system",schedule="zero-byte-backup",phase="Enabled",paused="false"}'
+        values: "1+0x20"
+      - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="empty-or-uncaptured",pod_uid="pod-uid",volume="home",pod_volume_backup="zero-byte-pvb",backup="zero-byte-backup-latest",node="asuka",phase="Completed"}'
+        values: "1+0x20"
+      - series: 'velero_cr_podvolumebackup_bytes_done{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="empty-or-uncaptured",pod_uid="pod-uid",volume="home",pod_volume_backup="zero-byte-pvb",backup="zero-byte-backup-latest",node="asuka"}'
+        values: "0+0x20"
+      - series: 'velero_cr_podvolumebackup_bytes_total{cluster="talos-ottawa",namespace="velero-system",pod_namespace="home",pod_name="empty-or-uncaptured",pod_uid="pod-uid",volume="home",pod_volume_backup="zero-byte-pvb",backup="zero-byte-backup-latest",node="asuka"}'
+        values: "0+0x20"
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: VeleroScheduleLatestBackupMissingVolumes
+        exp_alerts: []
+
   # A completed PVB with mismatched byte counters is a current target signal,
   # but a later clean attempt for the same pod and volume must clear the old
   # one-shot record.
