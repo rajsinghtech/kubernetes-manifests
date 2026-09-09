@@ -397,6 +397,14 @@ groups:
       # captured. Therefore 0/0 suppresses this alert by design, but is not
       # content or restore proof. A future emitter or restore check must add
       # that evidence before a zero-byte target can be called protected.
+      # The two schedule-level guards below only partially reduce this risk:
+      # VeleroScheduleExpectedVolumeDataMissing uses the hand-maintained
+      # volume_data_required=true boolean to require at least one positive PVB,
+      # not an expected per-volume inventory. VeleroScheduleVolumeCoverageRegressed
+      # compares observed PVB counts with a historical baseline and counts a
+      # Failed or 0/0 PVB as present. Neither catches one silent volume loss
+      # when another volume remains positive, nor proves the 0/0 volume's
+      # contents.
       # Covers metadata-only backups from opt-in misses (media-config before
       # #2757), scaled-to-zero apps with orphan PVCs (hermes), and similar
       # green-empty schedules (#703).
