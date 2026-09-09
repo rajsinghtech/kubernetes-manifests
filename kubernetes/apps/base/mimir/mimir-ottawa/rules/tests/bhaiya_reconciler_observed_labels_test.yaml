@@ -1,0 +1,50 @@
+rule_files:
+  - ../bhaiya-reconciler.yaml
+
+evaluation_interval: 1m
+
+tests:
+  # These labels are copied from a live Mimir-Ottawa control-plane series.
+  # Keep the complete scrape label set here: if a future scrape change moves
+  # job/container to exported_* (or the rule selects the wrong names), the
+  # stalled-loop and item-failure assertions below must stop matching.
+  - interval: 1m
+    input_series:
+      - series: 'bhaiya_reconcile_heartbeat_total{cluster="talos-ottawa",container="bhaiya",endpoint="grpc-web",instance="10.3.3.89:8080",job="bhaiya",namespace="bhaiya",pod="bhaiya-7748f46cc-vk88f",prometheus="monitoring/kube-prometheus-stack",prometheus_replica="prom-agent-kube-prometheus-stack-0",service="bhaiya"}'
+        values: "1+0x20"
+      - series: 'bhaiya_reconcile_handler_failure{cluster="talos-ottawa",container="bhaiya",endpoint="grpc-web",handler="ready",instance="10.3.3.89:8080",job="bhaiya",namespace="bhaiya",pod="bhaiya-7748f46cc-vk88f",prometheus="monitoring/kube-prometheus-stack",prometheus_replica="prom-agent-kube-prometheus-stack-0",service="bhaiya",workspace="raj-trades"}'
+        values: "1+0x20"
+    alert_rule_test:
+      - eval_time: 6m
+        alertname: BhaiyaReconcileLastSuccessStale
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-ottawa
+              severity: critical
+            exp_annotations:
+              summary: Bhaiya reconciliation heartbeat is stale
+              description: >-
+                No Bhaiya reconciliation heartbeat was observed for ten minutes.
+                A zero increase means the scraped process is alive but its loop
+                has stopped; an absent series means the emitting process or
+                scrape is gone. The five-minute alert hold follows the
+                ten-minute emitter grace window, so a brief deploy restart does
+                not page. Check `kubectl logs -n bhaiya deploy/bhaiya | grep
+                'reconcile workspace resources'` and inspect the per-workspace
+                handler failure alert.
+      - eval_time: 6m
+        alertname: BhaiyaReconcileWorkspaceHandlerFailure
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-ottawa
+              handler: ready
+              severity: critical
+              workspace: raj-trades
+            exp_annotations:
+              summary: Bhaiya reconciliation handler ready is failing for raj-trades
+              description: >-
+                The latest observed ready handler invocation for workspace
+                raj-trades failed for at least five minutes. This is an
+                item-level failure and does not by itself mean that the
+                reconciler loop is dead; inspect the workspace state,
+                provider-fence decision, and Bhaiya logs.
