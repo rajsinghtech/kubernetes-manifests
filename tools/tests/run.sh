@@ -396,6 +396,11 @@ section "Mimir rule completeness replay"
 exits "km#2809 missing-group condition is detected" 0 \
   python3 "$ROOT/kubernetes/apps/base/monitoring/mimir-rule-completeness/tests/test_rule_completeness.py"
 
+# ---------------------------------------------------------------- Mimir live label-contract replay
+section "Mimir live label-contract replay"
+exits "pre-#2924 selector fails and post-fix selector passes" 0 \
+  python3 "$ROOT/tools/tests/test_mimir_label_contract.py"
+
 # A completed gate must reap every watchdog timer descendant. Use an isolated
 # temporary gate root so this test exercises the real run_capped implementation
 # without allowing a sleep stub to affect repository prerequisite checks.
