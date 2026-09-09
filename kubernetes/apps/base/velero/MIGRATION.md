@@ -104,8 +104,8 @@
 
 | Namespace | Cluster | StorageStacks | Current Schedule | Velero Schedule |
 |---|---|---|---|---|
-| media | ottawa | 20 | 0 4 * * * | 0 6 * * * ✓ |
-| media | robbinsdale | ~20 | 0 4 * * * | 0 6 * * * ✓ |
+| media | ottawa | 20 | 0 4 * * * | 0 7 * * * ✓ |
+| media | robbinsdale | ~20 | 0 4 * * * | 0 7 * * * ✓ |
 | hermes | ottawa | 1 | 0 4 * * * | 0 7 * * * ✓ |
 | agents | ottawa | 5 | 0 4 * * * | 0 7 * * * ✓ (in hermes schedule) |
 | immich | ottawa | 1 | 0 3 * * * | 0 8 * * * ✓ |
