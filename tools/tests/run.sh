@@ -406,6 +406,11 @@ section "Mimir alert-window lint"
 exits "short zero-for counter windows are detected" 0 \
   python3 "$ROOT/tools/tests/test_mimir_alert_windows.py"
 
+# ------------------------------------------------------------- Mimir alert-stability diagnostic
+section "Mimir alert-stability diagnostic"
+exits "high-churn toggle and stale pending state are reported" 0 \
+  python3 "$ROOT/tools/tests/test_mimir_alert_stability.py"
+
 # A completed gate must reap every watchdog timer descendant. Use an isolated
 # temporary gate root so this test exercises the real run_capped implementation
 # without allowing a sleep stub to affect repository prerequisite checks.

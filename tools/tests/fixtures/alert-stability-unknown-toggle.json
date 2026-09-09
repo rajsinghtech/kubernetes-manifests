@@ -1,0 +1,48 @@
+{
+  "rule": {
+    "name": "FluxKustomizationUnknown",
+    "for": "5m",
+    "labels": {
+      "severity": "critical"
+    }
+  },
+  "start": 0,
+  "end": 360,
+  "step": 60,
+  "ready_states": [
+    "True",
+    "Unknown",
+    "Unknown",
+    "True",
+    "Unknown",
+    "Unknown",
+    "True"
+  ],
+  "results": [
+    {
+      "metric": {
+        "cluster": "talos-test",
+        "kind": "Kustomization",
+        "name": "reconciling",
+        "namespace": "flux-system",
+        "path": "./reconciling"
+      },
+      "values": [
+        [60, "1"],
+        [120, "1"],
+        [240, "1"],
+        [300, "1"]
+      ]
+    }
+  ],
+  "expected": {
+    "kind": "high-churn, never-sustained",
+    "active_runs": 2,
+    "max_active_seconds": 60,
+    "ratio": 0.2,
+    "transition_count": 4,
+    "transition_frequency_per_hour": 40,
+    "current_active": false,
+    "duration_censored": false
+  }
+}
