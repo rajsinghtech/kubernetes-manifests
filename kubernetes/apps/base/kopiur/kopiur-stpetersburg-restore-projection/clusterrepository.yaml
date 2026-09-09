@@ -39,6 +39,26 @@ spec:
     retain:
       perIdentity: 50
       maxAgeDays: 30
+  # Restore movers use this read-only view. Keep the content-proof retry away
+  # from spark-0, whose live memory headroom is below 1%, and give it a bounded
+  # footprint so a capacity problem is distinguishable from a restore error.
+  moverDefaults:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: NotIn
+                  values:
+                    - spark-0
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
   maintenance:
     enabled: false
   onNamespaceDelete: Orphan
