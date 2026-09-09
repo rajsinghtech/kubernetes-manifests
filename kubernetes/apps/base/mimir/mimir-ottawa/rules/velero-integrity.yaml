@@ -33,32 +33,56 @@ namespace: velero-integrity
 groups:
   - name: velero-integrity.rules
     rules:
-      # Failed PVB CRs are one-shot records and can outlive both their
-      # parent Backup and a later successful attempt. Select only the newest
-      # PVB for each workload target, so a later success clears a transient
-      # failure. Bound the selected record by its own creation time because
-      # parent Backups are routinely cleaned up while PVBs persist; without
-      # this bound an abandoned target would page forever.
-      # Use pod name plus volume as the target identity. Pod UIDs change on
-      # routine workspace replacement; a PVC label would be more durable but
-      # is not present on the PVB CR or in the exported metric contract.
-      # Schedule-level paging for the newest Backup remains in
-      # VeleroScheduleLastBackupFailed below.
+      # Failed PVB CRs are immutable per-attempt records. For a scheduled
+      # Backup, only keep failures belonging to the newest Backup for that
+      # schedule, so a later successful run clears failures from an older pod
+      # identity as well as from the same pod name. A PVB has no PVC identity
+      # in the exported metric contract, so this newest-Backup boundary is the
+      # durable current-state boundary available here. Keep orphan/manual PVBs
+      # visible as a bounded fallback when no scheduled parent is exported.
+      # Bound every selected record by its own creation time because parent
+      # Backups are routinely cleaned up while PVBs persist; without this bound
+      # an abandoned target would page forever.
       - alert: VeleroPodVolumeBackupFailed
         expr: |
-          max by (
-            cluster, namespace, pod_namespace, pod_name, pod_uid, volume,
-            pod_volume_backup, backup, node, phase
-          ) (
+          (
             (
-              topk by (
-                cluster, namespace, pod_namespace, pod_name, volume
-              ) (
-                1,
+              (
                 velero_cr_podvolumebackup_created_timestamp{
                   namespace="velero-system"
                 }
-              )
+                * on (
+                  cluster, namespace, pod_namespace, pod_name, pod_uid, volume,
+                  pod_volume_backup, backup, node
+                ) group_left (phase)
+                max by (
+                  cluster, namespace, pod_namespace, pod_name, pod_uid, volume,
+                  pod_volume_backup, backup, node, phase
+                ) (
+                  velero_cr_podvolumebackup_info{
+                    namespace="velero-system",
+                    phase="Failed"
+                  }
+                )
+              ) > time() - 24 * 3600
+            )
+            * on (cluster, namespace, backup) group_left (schedule)
+            (
+              topk by (cluster, namespace, schedule) (
+                1,
+                velero_cr_backup_created_timestamp{
+                  namespace="velero-system",
+                  schedule!=""
+                }
+              ) > bool 0
+            )
+          )
+          or
+          (
+            (
+              velero_cr_podvolumebackup_created_timestamp{
+                namespace="velero-system"
+              }
               * on (
                 cluster, namespace, pod_namespace, pod_name, pod_uid, volume,
                 pod_volume_backup, backup, node
@@ -74,20 +98,29 @@ groups:
               )
             ) > time() - 24 * 3600
           )
+          unless on (cluster, namespace, backup)
+          max by (cluster, namespace, backup) (
+            velero_cr_backup_created_timestamp{
+              namespace="velero-system",
+              schedule!=""
+            }
+          )
         for: 5m
         labels:
           severity: warning
         annotations:
           summary: Velero PodVolumeBackup {{ $labels.phase }} for {{ $labels.pod_name }}/{{ $labels.volume }}
           description: >-
-            The newest PodVolumeBackup for target {{ $labels.pod_namespace }}/{{ $labels.pod_name }}
-            (UID {{ $labels.pod_uid }}, volume {{ $labels.volume }}) is
+            The selected PodVolumeBackup for target
+            {{ $labels.pod_namespace }}/{{ $labels.pod_name }} (UID
+            {{ $labels.pod_uid }}, volume {{ $labels.volume }}) is
             {{ $labels.phase }}. It was created within the last 24 hours and
-            has remained in that state for at least five minutes. A later
-            successful PVB for the same target clears this signal; older
-            Failed records are intentionally ignored. Inspect the
-            PVB status message, node-agent logs, and storage path before
-            treating the target as restorable.
+            has remained in that state for at least five minutes. For a
+            scheduled Backup, failures from older attempts are intentionally
+            ignored, including when a replacement pod has a new name or UID;
+            unparented/manual records are retained only within this 24-hour
+            bound. Inspect the PVB status message, node-agent logs, and storage
+            path before treating the target as restorable.
 
       - alert: VeleroPodVolumeBackupBytesMismatch
         expr: |

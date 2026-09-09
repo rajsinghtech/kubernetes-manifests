@@ -148,6 +148,27 @@ to fire, restore healthy input, and confirm that the alert becomes inactive.
 If it cannot, either the predicate or the intended semantics are wrong. Do not
 silence a permanently red alert and do not add another alert beside it.
 
+### 3.1 Does the identity describe an attempt or current state?
+
+Some exporters expose one immutable series per operation attempt rather than
+one series per current target. A PodVolumeBackup, for example, carries the
+Backup and pod identities of the attempt that created it. A query that selects
+every `phase="Failed"` child therefore records an old failure forever when a
+later run succeeds; selecting by pod name can still fail when a replacement
+pod has a new name or UID.
+
+When the exporter does not expose a durable PVC or target identity, reduce the
+parent attempts to the newest current attempt first, then join child failures
+to that parent. Keep any manual/orphan fallback bounded and explicit. Do not
+pretend that a child-attempt label is current protection state, and do not
+silently discard the limitation: a new exporter contract is needed for
+per-volume state when the parent boundary is not sufficient.
+
+The fixtures for this shape must include an older failed child followed by a
+successful newer attempt with a replacement identity, a failure in the latest
+attempt, and a first-ever failed attempt. The recovery case is the essential
+test: a successful current attempt must make the old failure inactive.
+
 ## 4. Is zero a reset rather than stale?
 
 A timestamp gauge can have a third state that an ordinary numeric comparison
