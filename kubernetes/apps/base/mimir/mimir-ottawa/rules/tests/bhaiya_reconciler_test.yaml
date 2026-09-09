@@ -76,6 +76,42 @@ tests:
         alertname: BhaiyaReconcileLastSuccessStale
         exp_alerts: []
 
+  # Both replicas disappear during the rollout, then both counters start from
+  # zero again. The former standby becomes the leader and advances its reset
+  # counter while the former leader remains the zero-valued standby. The
+  # cluster sum must see the new leader's progress and stay healthy.
+  - interval: 1m
+    input_series:
+      - series: 'bhaiya_reconcile_heartbeat_total{cluster="talos-ottawa",job="bhaiya",container="bhaiya",instance="old-leader"}'
+        values: "1+1x4 _x2 0+0x30"
+      - series: 'bhaiya_reconcile_heartbeat_total{cluster="talos-ottawa",job="bhaiya",container="bhaiya",instance="new-leader"}'
+        values: "0+0x4 _x2 1+1x30"
+    alert_rule_test:
+      - eval_time: 6m
+        alertname: BhaiyaReconcileLastSuccessStale
+        exp_alerts: []
+      - eval_time: 15m
+        alertname: BhaiyaReconcileLastSuccessStale
+        exp_alerts: []
+
+  # A leader handover can happen while both pods remain continuously scraped.
+  # The old leader stops at the same evaluation where the standby starts; a
+  # per-series zero-increase check would misread the old leader, but the
+  # cluster-level sum follows the active leader.
+  - interval: 1m
+    input_series:
+      - series: 'bhaiya_reconcile_heartbeat_total{cluster="talos-ottawa",job="bhaiya",container="bhaiya",instance="old-leader"}'
+        values: "1+1x9 10+0x30"
+      - series: 'bhaiya_reconcile_heartbeat_total{cluster="talos-ottawa",job="bhaiya",container="bhaiya",instance="new-leader"}'
+        values: "0+0x9 1+1x30"
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: BhaiyaReconcileLastSuccessStale
+        exp_alerts: []
+      - eval_time: 20m
+        alertname: BhaiyaReconcileLastSuccessStale
+        exp_alerts: []
+
   # A continuously running loop is healthy even when one workspace handler is
   # persistently failing. The fleet liveness signal stays clear while the
   # workspace/handler alert names the failing item.
