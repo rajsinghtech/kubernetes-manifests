@@ -401,10 +401,10 @@ groups:
       # VeleroScheduleExpectedVolumeDataMissing uses the hand-maintained
       # volume_data_required=true boolean to require at least one positive PVB,
       # not an expected per-volume inventory. VeleroScheduleVolumeCoverageRegressed
-      # compares observed PVB counts with a historical baseline and counts a
-      # Failed or 0/0 PVB as present. Neither catches one silent volume loss
-      # when another volume remains positive, nor proves the 0/0 volume's
-      # contents.
+      # compares Completed-PVB counts with a historical baseline: it excludes
+      # Failed PVBs, but must count a Completed 0/0 PVB as present because its
+      # bytes are ambiguous. Neither identifies which expected volume is
+      # missing, nor proves the 0/0 volume's contents.
       # Covers metadata-only backups from opt-in misses (media-config before
       # #2757), scaled-to-zero apps with orphan PVCs (hermes), and similar
       # green-empty schedules (#703).
@@ -539,15 +539,18 @@ groups:
             )
           )
 
-      # Count each PVB object once, regardless of phase. A Prepared PVB is
-      # still evidence that the Backup selected one volume; the separate
-      # stalled-PVB alert owns whether that selected volume makes progress.
+      # Count each Completed PVB object once. A Failed PVB is unambiguous
+      # non-coverage and must not preserve the prior count. A Completed 0/0
+      # PVB remains counted deliberately: its bytes are ambiguous and can
+      # represent either a genuinely empty volume or a capture that produced
+      # nothing.
       - record: velero_backup_pod_volume_backup_count
         expr: |
           count by (cluster, namespace, backup) (
             max by (cluster, namespace, pod_volume_backup, backup) (
               velero_cr_podvolumebackup_info{
-                namespace="velero-system"
+                namespace="velero-system",
+                phase="Completed"
               }
             )
           )
@@ -618,12 +621,14 @@ groups:
           summary: Velero schedule {{ $labels.schedule }} volume coverage regressed
           description: >-
             The newest Backup {{ $labels.backup }} for schedule
-            {{ $labels.schedule }} has fewer PodVolumeBackups than its previous
-            Completed baseline. Any lower PVB count is material because each
-            PVB represents one selected volume. This remains a coverage
-            regression even when Kubernetes item counts or the parent Backup
-            phase look normal. A warning-bearing Completed Backup can still
-            supply this count baseline; investigate its warning separately.
+            {{ $labels.schedule }} has fewer Completed PodVolumeBackups than
+            its previous Completed baseline. Any lower completed-PVB count is
+            material because a Failed PVB is not coverage. A Completed 0/0 PVB
+            remains in the count because its bytes are ambiguous. This remains
+            a coverage regression even when Kubernetes item counts or the
+            parent Backup phase look normal. A warning-bearing Completed
+            Backup can still supply this count baseline; investigate its
+            warning separately.
             If no previous Completed baseline exists, this alert is
             intentionally silent: that means no comparable baseline, not
             proof of zero-volume health. Schedules that never produce a
