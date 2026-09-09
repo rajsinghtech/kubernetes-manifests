@@ -58,25 +58,25 @@ groups:
             (
               time()
               - max by (cluster, schedule) (
-                  velero_backup_last_successful_timestamp{schedule!=""}
+                  velero_backup_last_successful_timestamp{
+                    namespace="velero-system",
+                    schedule!=""
+                  }
                 )
-            ) > bool 129600
+            ) > 86400
           )
-          * on (cluster, schedule) group_left (namespace, backup)
+          * on (cluster, schedule) group_left (namespace)
           (
-            velero_schedule_latest_backup_created_timestamp > bool 0
+            (
+              max by (cluster, namespace, schedule) (
+                velero_cr_schedule_info{
+                  namespace="velero-system",
+                  phase="Enabled",
+                  paused!="true"
+                }
+              )
+            ) > 0
           )
-          and on (cluster, namespace, schedule)
-          (
-            max by (cluster, namespace, schedule) (
-              velero_cr_schedule_info{
-                namespace="velero-system",
-                phase="Enabled",
-                paused!="true"
-              }
-            )
-          )
-          > 0
         for: 15m
         labels:
           severity: critical
@@ -84,17 +84,21 @@ groups:
           summary: Velero schedule {{ $labels.schedule }} has no recent successful backup
           description: >-
             Schedule {{ $labels.schedule }} has not reported a successful
-            backup for more than 36 hours (the daily schedule's expected period
-            plus margin). Check the Schedule, BackupStorageLocation, Velero
+            backup for more than 24 hours (one missed daily schedule). Check
+            the Schedule, BackupStorageLocation, Velero
             server, and node-agent pods. This is a freshness/reporting guard;
             it cannot detect a backup that completes while silently missing
             data, and it also needs the Velero metric to remain scrapeable.
 
       # VeleroBackupStale requires a last_successful_timestamp series and a
       # currently enabled, unpaused Schedule. A historical Backup metric must
-      # not keep an alert alive after its Schedule is deleted or paused. A Schedule
-      # that is Enabled but has never produced a Backup (forgejo-backup after
-      # #2732 had status.lastBackup unset) creates no such series and stays
+      # not keep an alert alive after its Schedule is deleted or paused. The
+      # comparison deliberately omits bool: alerting rules fire on series
+      # presence, so a bool comparison would retain a zero-valued fresh series.
+      # Do not join the per-Backup latest-created recording rule here: stale
+      # freshness is per Schedule and must not carry an immutable backup label.
+      # A Schedule that is Enabled but has never produced a Backup (forgejo-backup
+      # after #2732 had status.lastBackup unset) creates no such series and stays
       # invisible. Page from the Schedule CR once it is older than 36h without
       # lastBackup. Clears when lastBackup is set; does not latch on history.
       - alert: VeleroScheduleNeverBackedUp

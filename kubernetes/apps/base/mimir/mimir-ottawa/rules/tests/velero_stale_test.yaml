@@ -5,19 +5,30 @@ rule_files:
 evaluation_interval: 1m
 
 tests:
-  # Staleness is one alert per schedule. The latest-backup recording rule adds
-  # the backup identity only as a grouping label; it must not create one stale
-  # alert for every historical Backup.
+  # Staleness is one alert per active schedule. A fresh success must not produce
+  # a zero-valued alert series, while active schedules that missed one or more
+  # daily runs must alert even when historical Backup objects have per-attempt
+  # identities.
   - interval: 1m
     input_series:
-      - series: 'velero_backup_last_successful_timestamp{cluster="talos-ottawa",schedule="media-config-backup"}'
-        values: "-200000+0x20"
-      - series: 'velero_cr_schedule_info{cluster="talos-ottawa",namespace="velero-system",schedule="media-config-backup",phase="Enabled",paused="false"}'
+      - series: 'velero_backup_last_successful_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="fresh-daily-backup"}'
+        values: "-7200+0x20"
+      - series: 'velero_cr_schedule_info{cluster="talos-ottawa",namespace="velero-system",schedule="fresh-daily-backup",phase="Enabled",paused="false"}'
         values: "1+0x20"
-      - series: 'velero_cr_backup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="media-config-backup",backup="media-config-backup-20260907060000"}'
+      - series: 'velero_backup_last_successful_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="stale-26h-backup"}'
+        values: "-95040+0x20"
+      - series: 'velero_cr_schedule_info{cluster="talos-ottawa",namespace="velero-system",schedule="stale-26h-backup",phase="Enabled",paused="false"}'
+        values: "1+0x20"
+      - series: 'velero_cr_backup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="stale-26h-backup",backup="stale-26h-backup-20260907060000"}'
         values: "100+0x20"
-      - series: 'velero_cr_backup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="media-config-backup",backup="media-config-backup-20260906060000"}'
+      - series: 'velero_cr_backup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="stale-26h-backup",backup="stale-26h-backup-20260906060000"}'
         values: "50+0x20"
+      - series: 'velero_backup_last_successful_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="stale-49h-backup"}'
+        values: "-179640+0x20"
+      - series: 'velero_cr_schedule_info{cluster="talos-ottawa",namespace="velero-system",schedule="stale-49h-backup",phase="Enabled",paused="false"}'
+        values: "1+0x20"
+      - series: 'velero_cr_backup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="stale-49h-backup",backup="stale-49h-backup-20260907060000"}'
+        values: "100+0x20"
     alert_rule_test:
       - eval_time: 15m
         alertname: VeleroBackupStale
@@ -25,16 +36,28 @@ tests:
           - exp_labels:
               cluster: talos-ottawa
               namespace: velero-system
-              schedule: media-config-backup
-              backup: media-config-backup-20260907060000
+              schedule: stale-26h-backup
               severity: critical
             exp_annotations:
-              summary: Velero schedule media-config-backup has no recent successful backup
+              summary: Velero schedule stale-26h-backup has no recent successful backup
               description: >-
-                Schedule media-config-backup has not reported a successful
-                backup for more than 36 hours (the daily schedule's expected
-                period plus margin). Check the Schedule, BackupStorageLocation,
-                Velero server, and node-agent pods. This is a freshness/reporting
+                Schedule stale-26h-backup has not reported a successful
+                backup for more than 24 hours (one missed daily schedule). Check
+                the Schedule, BackupStorageLocation, Velero server, and node-agent pods. This is a freshness/reporting
+                guard; it cannot detect a backup that completes while silently
+                missing data, and it also needs the Velero metric to remain
+                scrapeable.
+          - exp_labels:
+              cluster: talos-ottawa
+              namespace: velero-system
+              schedule: stale-49h-backup
+              severity: critical
+            exp_annotations:
+              summary: Velero schedule stale-49h-backup has no recent successful backup
+              description: >-
+                Schedule stale-49h-backup has not reported a successful
+                backup for more than 24 hours (one missed daily schedule). Check
+                the Schedule, BackupStorageLocation, Velero server, and node-agent pods. This is a freshness/reporting
                 guard; it cannot detect a backup that completes while silently
                 missing data, and it also needs the Velero metric to remain
                 scrapeable.
@@ -48,7 +71,42 @@ tests:
         values: "-200000+0x20"
       - series: 'velero_cr_backup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="deleted-schedule",backup="deleted-schedule-20260907020000"}'
         values: "100+0x20"
+      - series: 'velero_backup_last_successful_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="paused-schedule"}'
+        values: "-200000+0x20"
+      - series: 'velero_cr_schedule_info{cluster="talos-ottawa",namespace="velero-system",schedule="paused-schedule",phase="Enabled",paused="true"}'
+        values: "1+0x20"
     alert_rule_test:
       - eval_time: 15m
         alertname: VeleroBackupStale
         exp_alerts: []
+
+  # Promtool fixes time() to the test evaluation time. Pin the same successful
+  # timestamp on both sides of the 24-hour threshold so a wall-clock change
+  # cannot turn this rule into a flaky test or silently invert its verdict.
+  - interval: 5m
+    input_series:
+      - series: 'velero_backup_last_successful_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="boundary-backup"}'
+        values: "0+0x360"
+      - series: 'velero_cr_schedule_info{cluster="talos-ottawa",namespace="velero-system",schedule="boundary-backup",phase="Enabled",paused="false"}'
+        values: "1+0x360"
+    alert_rule_test:
+      - eval_time: 23h
+        alertname: VeleroBackupStale
+        exp_alerts: []
+      - eval_time: 25h
+        alertname: VeleroBackupStale
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-ottawa
+              namespace: velero-system
+              schedule: boundary-backup
+              severity: critical
+            exp_annotations:
+              summary: Velero schedule boundary-backup has no recent successful backup
+              description: >-
+                Schedule boundary-backup has not reported a successful
+                backup for more than 24 hours (one missed daily schedule). Check
+                the Schedule, BackupStorageLocation, Velero server, and node-agent pods. This is a freshness/reporting
+                guard; it cannot detect a backup that completes while silently
+                missing data, and it also needs the Velero metric to remain
+                scrapeable.
