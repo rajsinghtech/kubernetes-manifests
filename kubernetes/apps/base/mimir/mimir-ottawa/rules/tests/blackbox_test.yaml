@@ -1,0 +1,48 @@
+rule_files:
+  - ../blackbox.yaml
+
+evaluation_interval: 1m
+
+tests:
+  # ProbeFailed must retain the labels from either split Probe. Keep the
+  # expression unscoped so a failure cannot disappear when a target gets its
+  # own label value.
+  - interval: 1m
+    input_series:
+      - series: 'probe_success{cluster="talos-ottawa",instance="nagato.killinit.internal:445",job="blackbox",namespace="monitoring",service="nodes",target="nas"}'
+        values: "0+0x10"
+      - series: 'probe_success{cluster="talos-ottawa",instance="jetkvm.killinit.internal:80",job="blackbox",namespace="monitoring",service="nodes",target="jetkvm"}'
+        values: "0+0x10"
+    alert_rule_test:
+      - eval_time: 4m
+        alertname: ProbeFailed
+        exp_alerts: []
+      - eval_time: 5m
+        alertname: ProbeFailed
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-ottawa
+              instance: nagato.killinit.internal:445
+              job: blackbox
+              namespace: monitoring
+              service: nodes
+              target: nas
+              severity: critical
+            exp_annotations:
+              summary: Probe failed for nagato.killinit.internal:445
+              description: >-
+                The blackbox probe targeting nagato.killinit.internal:445 has
+                been failing for 5 minutes.
+          - exp_labels:
+              cluster: talos-ottawa
+              instance: jetkvm.killinit.internal:80
+              job: blackbox
+              namespace: monitoring
+              service: nodes
+              target: jetkvm
+              severity: critical
+            exp_annotations:
+              summary: Probe failed for jetkvm.killinit.internal:80
+              description: >-
+                The blackbox probe targeting jetkvm.killinit.internal:80 has
+                been failing for 5 minutes.

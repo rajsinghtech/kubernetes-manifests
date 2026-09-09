@@ -19,7 +19,7 @@ spec:
         service: nodes
         target: kubelet-port
 ---
-# NAS (SMB) + JetKVM
+# NAS (SMB)
 apiVersion: monitoring.coreos.com/v1
 kind: Probe
 metadata:
@@ -33,10 +33,27 @@ spec:
     staticConfig:
       static:
         - nagato.killinit.internal:445
-        - jetkvm.killinit.internal:80
       labels:
         service: nodes
         target: nas
+---
+# JetKVM
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: app-jetkvm-tcp
+spec:
+  jobName: blackbox
+  module: tcp_connect
+  prober:
+    url: blackbox-exporter.monitoring.svc.cluster.local:9115
+  targets:
+    staticConfig:
+      static:
+        - jetkvm.killinit.internal:80
+      labels:
+        service: nodes
+        target: jetkvm
 ---
 # ICMP reachability for nodes.
 apiVersion: monitoring.coreos.com/v1
