@@ -368,6 +368,10 @@ for cluster in CLUSTERS:
     base = pathlib.Path(f"kubernetes/apps/base/kube-system/cilium-{cluster}/app")
     kustomization = base / "kustomization.yaml"
 
+    # Multus is a three-part artifact: the raw manifest supplies the daemon,
+    # while the patch installs the shim and runs that daemon. A partial revert
+    # can leave either image on a different release even when Renovate grouped
+    # the references correctly, so compare all three independently.
     def multus_manifest(path=kustomization):
         resource = next(
             item for item in yaml.safe_load(path.read_text())["resources"]
@@ -375,19 +379,21 @@ for cluster in CLUSTERS:
         )
         return canonical(re.search(r"/multus-cni/(v\d+\.\d+\.\d+)/", resource).group(1))
 
-    def multus_runtime(cluster=cluster, base=base, path=kustomization):
+    def multus_runtime(container_name, cluster=cluster, base=base, path=kustomization):
         if cluster == "robbinsdale":
             patch = yaml.safe_load(path.read_text())["patches"][0]["patch"]
             doc = yaml.safe_load(patch)
         else:
             doc = yaml.safe_load((base / "patch-multus.yaml").read_text())
-        containers = doc["spec"]["template"]["spec"]["initContainers"]
-        image = next(c["image"] for c in containers if c["name"] == "install-multus-binary")
+        pod_spec = doc["spec"]["template"]["spec"]
+        containers = pod_spec.get("initContainers", []) + pod_spec.get("containers", [])
+        image = next(c["image"] for c in containers if c["name"] == container_name)
         return canonical(image.split(":", 1)[1].split("@", 1)[0])
 
     require_equal(f"Multus {cluster}", [
         ("manifest", multus_manifest),
-        ("runtime", multus_runtime),
+        ("shim", lambda: multus_runtime("install-multus-binary")),
+        ("daemon", lambda: multus_runtime("kube-multus")),
     ])
 
 envoy_base = pathlib.Path(
