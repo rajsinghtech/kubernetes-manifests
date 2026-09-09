@@ -639,6 +639,37 @@ if [ -f "$inv" ]; then
   exits  "--check passes again once restored" 0 "$T/gen-inventory.sh" --check
 fi
 
+# ---------------------------------------------------------------- check-generated.sh
+section "check-generated.sh"
+gstub="$(mktemp -d)"
+cat >"$gstub/aqua" <<'EOF'
+#!/usr/bin/env bash
+if [ "${AQUA_FIXTURE:-}" = stale ]; then
+  printf '\n' >> aqua-checksums.json
+fi
+EOF
+chmod +x "$gstub/aqua"
+
+gchecks_hash="$(git hash-object "$ROOT/aqua-checksums.json")"
+exits "clean generated artifacts pass" 0 \
+  env PATH="$gstub:$PATH" "$T/check-generated.sh"
+invbak3="$(mktemp)"; cp "$inv" "$invbak3"
+printf '# stale generated inventory\n' >"$inv"
+bothout="$(AQUA_FIXTURE=stale PATH="$gstub:$PATH" "$T/check-generated.sh" 2>&1)"; both_ec=$?
+assert "two stale generators -> nonzero" test "$both_ec" = 1
+assert "two stale generators -> reports inventory" grep -q '✗ generated: inventory' <<<"$bothout"
+assert "two stale generators -> reports Aqua" grep -q 'aqua-checksums.json is stale' <<<"$bothout"
+assert "two stale generators -> reaches later checks" \
+  grep -q '✓ generated: HelmRelease schema provenance' <<<"$bothout"
+cp "$invbak3" "$inv"; rm -f "$invbak3"
+gout="$(AQUA_FIXTURE=stale PATH="$gstub:$PATH" "$T/check-generated.sh" 2>&1)"; gec=$?
+assert "stale generator -> nonzero" test "$gec" = 1
+assert "stale generator -> names Aqua artifact" grep -q 'aqua-checksums.json is stale' <<<"$gout"
+assert "stale generator -> reports a diff" grep -q '^[-+]' <<<"$gout"
+assert "stale generator -> restores the worktree" \
+  test "$(git hash-object "$ROOT/aqua-checksums.json")" = "$gchecks_hash"
+rm -rf "$gstub"
+
 # ---------------------------------------------------------------- check-diagram.sh
 section "check-diagram.sh"
 dtmp="$(mktemp -d)"

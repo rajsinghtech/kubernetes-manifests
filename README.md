@@ -161,6 +161,7 @@ check there before reaching for `kubectl -n`.
 tools/gen-inventory.sh     # regenerate the inventory after adding an app
 tools/render-diagram.sh    # re-render the SVGs after editing a .dot
 tools/check-diagram.sh     # what CI runs
+tools/check-generated.sh   # regenerate/diff checked-in generated artifacts
 ```
 
 `tools/check-diagram.sh` is a merge gate rather than a linter. It runs six
@@ -615,6 +616,7 @@ tools/check.sh
 make diff
 tools/check-versions.sh
 tools/check-diagram.sh
+tools/check-generated.sh
 tools/render-diagram.sh
 tools/gen-inventory.sh
 tools/orphans.sh
