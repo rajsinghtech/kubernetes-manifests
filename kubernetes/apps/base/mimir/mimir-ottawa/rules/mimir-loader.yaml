@@ -2,6 +2,12 @@
 # therefore the aggregate signal for rule delivery to Ottawa, Robbinsdale, and
 # St. Petersburg. Keep this namespace unique across every file passed to
 # mimirtool: one repeated namespace aborts the entire sync for every tenant.
+#
+# kube_job_status_failed is a retry counter, not a terminal outcome. A Job can
+# have failed attempts and still complete successfully. The failure alert below
+# therefore requires a non-empty terminal reason and joins it to the newest
+# content-hashed Job; MimirRuleLoaderStale remains the dead-man's switch for a
+# loader that has not produced a recent successful completion.
 namespace: mimir-loader
 groups:
   - name: mimir-rule-loader.rules
@@ -11,19 +17,28 @@ groups:
           max by (cluster, namespace, job_name) (
             kube_job_status_failed{
               namespace="mimir",
-              job_name=~"mimir-rules-.*"
+              job_name=~"mimir-rules-.*",
+              reason=~".+"
             }
           ) > 0
+          and on (cluster, namespace, job_name)
+          topk by (cluster, namespace) (
+            1,
+            kube_job_created{
+              namespace="mimir",
+              job_name=~"mimir-rules-.*"
+            }
+          )
         for: 5m
         labels:
           severity: critical
         annotations:
           summary: Mimir rule loader Job is failing
           description: >-
-            The content-hashed Mimir rules loader Job has failed. Its three tenant sync
-            containers deliver every native rule group to the Ottawa,
-            Robbinsdale, and St. Petersburg Mimir rulers; inspect the Job and
-            its logs before relying on a newly changed alert.
+            The newest content-hashed Mimir rules loader Job has reached a terminal
+            failure. Its three tenant sync containers deliver every native rule
+            group to the Ottawa, Robbinsdale, and St. Petersburg Mimir rulers;
+            inspect the Job and its logs before relying on a newly changed alert.
 
       - alert: MimirRuleLoaderStale
         expr: |
