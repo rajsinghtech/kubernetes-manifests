@@ -61,7 +61,7 @@ spec:
             seccompProfile:
               type: RuntimeDefault
         - name: connect-read-only
-          image: docker.io/kopia/kopia@sha256:b6cb1f09a5fa832a320ee06d7803e82cdd7f69ac6f61d76a0d55fbbf1495c043
+          image: docker.io/kopia/kopia@sha256:89fd95ee2942880ca00eae964266958a394421ddbdf69bca62e38afc55f5900e
           command: ["/bin/kopia"]
           args:
             - repository
@@ -102,7 +102,7 @@ spec:
             - name: work
               mountPath: /work
         - name: restore-reference
-          image: docker.io/kopia/kopia@sha256:b6cb1f09a5fa832a320ee06d7803e82cdd7f69ac6f61d76a0d55fbbf1495c043
+          image: docker.io/kopia/kopia@sha256:89fd95ee2942880ca00eae964266958a394421ddbdf69bca62e38afc55f5900e
           command: ["/bin/kopia"]
           args:
             - snapshot
