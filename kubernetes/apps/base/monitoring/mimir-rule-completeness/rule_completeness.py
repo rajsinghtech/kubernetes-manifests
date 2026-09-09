@@ -27,7 +27,7 @@ DEFAULT_TENANTS = (
 DEFAULT_EXPECTED_PATH = "/scripts/expected-groups.tsv"
 DEFAULT_MIMIR_RULES_URL = (
     "http://mimir-gateway.mimir.svc.cluster.local:8080"
-    "/prometheus/api/v1/rules?type=alert"
+    "/prometheus/api/v1/rules"
 )
 DEFAULT_ALERTMANAGER_URL = (
     "http://kube-prometheus-stack-alertmanager.monitoring.svc.cluster.local:9093"
