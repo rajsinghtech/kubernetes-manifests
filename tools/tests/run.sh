@@ -487,26 +487,95 @@ assert "failure -> nothing on stdout"   test -z "$fout"
 
 # A wedged render must be killed rather than hang the gate forever. The stub
 # backgrounds a child and waits on it, mirroring make->flate: signalling only
-# the direct child would leave the real spinning flate orphaned.
+# the direct child would leave the real spinning flate orphaned. Coordinate on
+# the child's start, termination, and the check process's completion instead
+# of inferring any of them from elapsed wall-clock time. The 30-second reads
+# below are failure bounds; the production two-second watchdog remains the
+# behavior under test.
+wedge_ready="$mstub/ready"
+wedge_stopped="$mstub/stopped"
+wedge_result="$mstub/result"
+wedge_output="$mstub/output"
+wedge_pid_file="$mstub/pid"
+mkfifo "$wedge_ready" "$wedge_stopped" "$wedge_result"
+wedge_gate_root="$mstub/gate"
+mkdir -p "$wedge_gate_root/tools"
+cp "$T/check.sh" "$wedge_gate_root/tools/check.sh"
+for helper in check-mimir-promql.sh check-versions.sh check-notification-scope.sh \
+  check-cliproxy-pi-bridge.sh check-zot-upload-affinity.sh \
+  check-mimir-rules.sh check-velero-pvc-coverage.sh \
+  check-helmrelease-schema.sh; do
+  printf '#!/usr/bin/env bash\nexit 0\n' >"$wedge_gate_root/tools/$helper"
+  chmod +x "$wedge_gate_root/tools/$helper"
+done
 cat >"$mstub/make" <<'EOF'
 #!/usr/bin/env bash
+set -u
+
+child_pid=""
+stop_child() {
+  kill -TERM "$child_pid" 2>/dev/null || true
+  wait "$child_pid" 2>/dev/null || true
+  printf 'stopped\n' >"$WEDGE_STOPPED"
+  exit 143
+}
+
+trap stop_child TERM INT
 sleep 300 &
-printf '%s' "$!" >"$WEDGE_PID_FILE"
-wait
+child_pid="$!"
+printf '%s\n' "$child_pid" >"$WEDGE_PID_FILE"
+printf '%s\n' "$child_pid" >"$WEDGE_READY"
+wait "$child_pid"
 EOF
 chmod +x "$mstub/make"
-wedge_pid_file="$(mktemp)"
-tstart=$SECONDS
-WEDGE_PID_FILE="$wedge_pid_file" PATH="$mstub:$PATH" KMAN_CHECK_TIMEOUT=2 \
-  "$T/check.sh" >/dev/null 2>&1; tec=$?
-telapsed=$((SECONDS - tstart))
-wedge_pid="$(cat "$wedge_pid_file" 2>/dev/null)"
-assert "timeout -> exit 124"            test "$tec" = 124
-assert "timeout -> returns promptly"    test "$telapsed" -lt 30
-assert "timeout -> reports the budget"  grep -q 'TIMED OUT after 2s' \
-  <<<"$(WEDGE_PID_FILE="$wedge_pid_file" PATH="$mstub:$PATH" KMAN_CHECK_TIMEOUT=2 "$T/check.sh" 2>&1)"
-refute "timeout -> grandchild reaped"   kill -0 "$wedge_pid" 2>/dev/null
-rm -f "$wedge_pid_file"
+
+# Keep FIFO endpoints open before starting the fixture so no readiness event
+# can be lost between the child announcing it and the parent consuming it.
+exec 7<>"$wedge_ready"
+exec 8<>"$wedge_stopped"
+exec 9<>"$wedge_result"
+(
+  set +e
+  WEDGE_PID_FILE="$wedge_pid_file" WEDGE_READY="$wedge_ready" \
+    WEDGE_STOPPED="$wedge_stopped" PATH="$mstub:$PATH" KMAN_CHECK_TIMEOUT=2 \
+    FLATE_BASE=baseline "$wedge_gate_root/tools/check.sh" >"$wedge_output" 2>&1 &
+  wedge_check_pid="$!"
+  trap 'kill -TERM -"$wedge_check_pid" 2>/dev/null || kill -TERM "$wedge_check_pid" 2>/dev/null || true' TERM INT
+  wait "$wedge_check_pid"
+  wedge_check_ec="$?"
+  printf '%s\n' "$wedge_check_ec" >"$wedge_result"
+) &
+wedge_runner_pid="$!"
+wedge_pid=""
+wedge_ec=125
+if IFS= read -r -t 30 wedge_pid <&7; then
+  if IFS= read -r -t 30 wedge_stopped <&8; then
+    IFS= read -r -t 30 wedge_ec <&9 || wedge_ec=125
+  fi
+fi
+if [ "$wedge_ec" = 125 ]; then
+  # The wrapper forwards TERM to check.sh; also terminate the known fixture
+  # child in case the failure happened before the watchdog reached it.
+  kill -TERM "$wedge_runner_pid" 2>/dev/null || true
+  if [ -n "$wedge_pid" ]; then
+    kill -TERM "$wedge_pid" 2>/dev/null || true
+    kill -KILL "$wedge_pid" 2>/dev/null || true
+  fi
+fi
+wait "$wedge_runner_pid" 2>/dev/null || true
+wedge_output_text="$(cat "$wedge_output" 2>/dev/null || true)"
+assert "timeout -> exit 124"            test "$wedge_ec" = 124
+assert "timeout -> reports the budget"  grep -q 'TIMED OUT after 2s' <<<"$wedge_output_text"
+assert "timeout -> child announced start" test -n "$wedge_pid"
+if [ -n "$wedge_pid" ]; then
+  refute "timeout -> grandchild reaped"   kill -0 "$wedge_pid" 2>/dev/null
+else
+  bad "timeout -> grandchild reaped (child never announced start)"
+fi
+exec 7>&-
+exec 8>&-
+exec 9>&-
+rm -f "$wedge_ready" "$wedge_stopped" "$wedge_result" "$wedge_output" "$wedge_pid_file"
 rm -rf "$mstub"
 
 # ---------------------------------------------------------------- flate.sh env pruning
