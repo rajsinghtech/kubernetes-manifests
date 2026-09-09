@@ -1,0 +1,213 @@
+rule_files:
+  - ../kopiur.yaml
+
+evaluation_interval: 1m
+
+tests:
+  # All four alerts stay quiet for a current successful backup, a healthy
+  # repository, and an intentionally configured maintenance gauge. The
+  # maintenance gauge is informational; it is not itself an incident.
+  - interval: 1m
+    input_series:
+      - series: 'kopiur_leader_is_leader{cluster="talos-stpetersburg"}'
+        values: "1+0x20"
+      - series: 'kopiur_snapshotpolicy_last_backup_success{cluster="talos-stpetersburg",namespace="home-assistant",policy="homeassistant-config"}'
+        values: "1+0x20"
+      - series: 'kopiur_policy_last_backup_success_timestamp_seconds{cluster="talos-stpetersburg",namespace="home-assistant",policy="homeassistant-config"}'
+        values: "900+0x20"
+      - series: 'kopiur_resource_phase{cluster="talos-stpetersburg",kind="Repository",namespace="home-assistant",name="kopiur-stpetersburg",phase="Ready"}'
+        values: "1+0x20"
+      - series: 'kopiur_repository_consecutive_backend_failures{cluster="talos-stpetersburg",kind="Repository",namespace="home-assistant",name="kopiur-stpetersburg"}'
+        values: "0+0x20"
+      - series: 'kopiur_repository_maintenance_configured{cluster="talos-stpetersburg",kind="Repository",namespace="home-assistant",name="kopiur-stpetersburg"}'
+        values: "1+0x20"
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: KopiurSnapshotFailed
+        exp_alerts: []
+      - eval_time: 15m
+        alertname: KopiurSnapshotStale
+        exp_alerts: []
+      - eval_time: 15m
+        alertname: KopiurRepositoryUnreachable
+        exp_alerts: []
+      - eval_time: 15m
+        alertname: KopiurCoverageMissing
+        exp_alerts: []
+
+  # A failed Snapshot object is immutable history. A later successful policy
+  # result must clear the failure alert even while both Snapshot phases remain
+  # visible in the exporter.
+  - interval: 1m
+    input_series:
+      - series: 'kopiur_leader_is_leader{cluster="talos-stpetersburg"}'
+        values: "1+0x20"
+      - series: 'kopiur_snapshotpolicy_last_backup_success{cluster="talos-stpetersburg",namespace="home-assistant",policy="homeassistant-config"}'
+        values: "1+0x20"
+      - series: 'kopiur_resource_phase{cluster="talos-stpetersburg",kind="Snapshot",namespace="home-assistant",name="homeassistant-config-old",phase="Failed",policy="homeassistant-config"}'
+        values: "1+0x20"
+      - series: 'kopiur_resource_phase{cluster="talos-stpetersburg",kind="Snapshot",namespace="home-assistant",name="homeassistant-config-new",phase="Succeeded",policy="homeassistant-config"}'
+        values: "1+0x20"
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: KopiurSnapshotFailed
+        exp_alerts: []
+
+  # An excluded policy is not part of the Git-declared expected-source
+  # inventory. Its failed result must not create either a policy-failure or a
+  # coverage alert for the protected source.
+  - interval: 1m
+    input_series:
+      - series: 'kopiur_leader_is_leader{cluster="talos-stpetersburg"}'
+        values: "1+0x20"
+      - series: 'kopiur_snapshotpolicy_last_backup_success{cluster="talos-stpetersburg",namespace="home-assistant",policy="homeassistant-config"}'
+        values: "1+0x20"
+      - series: 'kopiur_snapshotpolicy_last_backup_success{cluster="talos-stpetersburg",namespace="home-assistant",policy="excluded-policy"}'
+        values: "0+0x20"
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: KopiurSnapshotFailed
+        exp_alerts: []
+      - eval_time: 15m
+        alertname: KopiurCoverageMissing
+        exp_alerts: []
+
+  # A current failed terminal result is actionable even though a historical
+  # failed Snapshot alone is not.
+  - interval: 1m
+    input_series:
+      - series: 'kopiur_leader_is_leader{cluster="talos-stpetersburg"}'
+        values: "1+0x20"
+      - series: 'kopiur_snapshotpolicy_last_backup_success{cluster="talos-stpetersburg",namespace="home-assistant",policy="homeassistant-config"}'
+        values: "0+0x20"
+    alert_rule_test:
+      - eval_time: 1m
+        alertname: KopiurSnapshotFailed
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-stpetersburg
+              namespace: home-assistant
+              policy: homeassistant-config
+              pvc: homeassistant-config
+              repository: kopiur-stpetersburg
+              severity: critical
+            exp_annotations:
+              summary: Kopiur policy homeassistant-config reports a failed snapshot
+              description: >-
+                Kopiur's latest terminal snapshot for home-assistant/homeassistant-config
+                is failed. This is a per-policy current-result signal; an old Failed
+                Snapshot object alone does not keep the alert firing after a later
+                success. Inspect the current Snapshot, SnapshotPolicy, mover Job, and
+                repository logs.
+
+  # The last-success timestamp is a real Unix timestamp, so this remains
+  # meaningful across controller restarts. A positive but 37-hour-old value
+  # fires after the ten-minute hold.
+  - interval: 1m
+    input_series:
+      - series: 'kopiur_leader_is_leader{cluster="talos-stpetersburg"}'
+        values: "1+0x2250"
+      - series: 'kopiur_snapshotpolicy_last_backup_success{cluster="talos-stpetersburg",namespace="home-assistant",policy="homeassistant-config"}'
+        values: "1+0x2250"
+      - series: 'kopiur_policy_last_backup_success_timestamp_seconds{cluster="talos-stpetersburg",namespace="home-assistant",policy="homeassistant-config"}'
+        values: "1+0x2250"
+    alert_rule_test:
+      - eval_time: 37h
+        alertname: KopiurSnapshotStale
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-stpetersburg
+              namespace: home-assistant
+              policy: homeassistant-config
+              pvc: homeassistant-config
+              repository: kopiur-stpetersburg
+              severity: critical
+            exp_annotations:
+              summary: Kopiur policy homeassistant-config has a stale snapshot
+              description: >-
+                No successful Kopiur snapshot for home-assistant/homeassistant-config
+                has completed within 36 hours (the daily schedule, jitter, and
+                operational margin). The timestamp must be positive, so a controller
+                restart/reset cannot turn a zero gauge into an immediate stale alert.
+                Inspect the SnapshotSchedule, current Snapshot, mover Job, and
+                repository reachability.
+
+  # A reset-to-zero timestamp is not evidence of staleness. This protects the
+  # alert from paging on every controller restart while the gauge is rebuilt.
+  - interval: 1m
+    input_series:
+      - series: 'kopiur_leader_is_leader{cluster="talos-stpetersburg"}'
+        values: "1+0x2250"
+      - series: 'kopiur_snapshotpolicy_last_backup_success{cluster="talos-stpetersburg",namespace="home-assistant",policy="homeassistant-config"}'
+        values: "1+0x2250"
+      - series: 'kopiur_policy_last_backup_success_timestamp_seconds{cluster="talos-stpetersburg",namespace="home-assistant",policy="homeassistant-config"}'
+        values: "0+0x2250"
+    alert_rule_test:
+      - eval_time: 37h
+        alertname: KopiurSnapshotStale
+        exp_alerts: []
+
+  # Backend failure on the expected Repository is distinct from a configured
+  # maintenance gauge and must raise even while the CR still has phase=Ready.
+  - interval: 1m
+    input_series:
+      - series: 'kopiur_leader_is_leader{cluster="talos-stpetersburg"}'
+        values: "1+0x20"
+      - series: 'kopiur_resource_phase{cluster="talos-stpetersburg",kind="Repository",namespace="home-assistant",name="kopiur-stpetersburg",phase="Ready"}'
+        values: "1+0x20"
+      - series: 'kopiur_repository_consecutive_backend_failures{cluster="talos-stpetersburg",kind="Repository",namespace="home-assistant",name="kopiur-stpetersburg"}'
+        values: "2+0x20"
+      - series: 'kopiur_repository_maintenance_configured{cluster="talos-stpetersburg",kind="Repository",namespace="home-assistant",name="kopiur-stpetersburg"}'
+        values: "1+0x20"
+    alert_rule_test:
+      - eval_time: 4m
+        alertname: KopiurRepositoryUnreachable
+        exp_alerts: []
+      - eval_time: 5m
+        alertname: KopiurRepositoryUnreachable
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-stpetersburg
+              kind: Repository
+              namespace: home-assistant
+              name: kopiur-stpetersburg
+              severity: critical
+            exp_annotations:
+              summary: Kopiur repository kopiur-stpetersburg is unreachable
+              description: >-
+                The expected Kopiur repository home-assistant/kopiur-stpetersburg is
+                not simultaneously Ready and reporting zero consecutive backend
+                failures. This excludes maintenance configuration from the health
+                decision: maintenance is intentionally disabled for the St Petersburg
+                Garage backend. Inspect Repository status, Garage, credentials, and
+                controller events.
+
+  # No terminal result at all is the coverage failure. A policy's item count
+  # is deliberately not used, so a partial backup cannot satisfy this check.
+  - interval: 1m
+    input_series:
+      - series: 'kopiur_leader_is_leader{cluster="talos-stpetersburg"}'
+        values: "1+0x20"
+    alert_rule_test:
+      - eval_time: 9m
+        alertname: KopiurCoverageMissing
+        exp_alerts: []
+      - eval_time: 10m
+        alertname: KopiurCoverageMissing
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-stpetersburg
+              namespace: home-assistant
+              policy: homeassistant-config
+              pvc: homeassistant-config
+              repository: kopiur-stpetersburg
+              severity: critical
+            exp_annotations:
+              summary: Kopiur expected source homeassistant-config has no terminal backup
+              description: >-
+                The Git-declared Kopiur source home-assistant/homeassistant-config has
+                no per-policy terminal Snapshot result. This is an explicit
+                expected-source check, not an item-count comparison, so a policy that
+                silently omits a required volume cannot look healthy merely because
+                another volume produced data. Inspect the SnapshotPolicy source list,
+                Snapshot objects, and mover Jobs.
