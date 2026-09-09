@@ -386,12 +386,17 @@ groups:
             and do not treat this Backup as a volume restore source until the
             warning is gone. A later Backup with warnings=0 clears this alert.
 
-      # A PVB object is not volume-data evidence until it is Completed and its
-      # byte counters agree. Prepared/InProgress/Canceled children can leave a
-      # Completed parent looking green without a usable archive. An empty
-      # volume is valid evidence when both counters are zero; this still does
-      # not establish that every expected PVC was included or that restore
-      # works.
+      # A PVB object is not a completed-volume attempt until it is Completed
+      # and its byte counters agree. Prepared/InProgress/Canceled children can
+      # leave a Completed parent looking green without a usable archive. This
+      # rule intentionally accepts 0/0 as byte-consistent, but that result is
+      # observationally identical here for a genuinely empty volume and for a
+      # run that captured nothing. An expected-volume inventory or PVC size
+      # describes intent/capacity, not source occupancy; a current file/used-
+      # byte observation or prior nonzero PVB is not evidence of what this run
+      # captured. Therefore 0/0 suppresses this alert by design, but is not
+      # content or restore proof. A future emitter or restore check must add
+      # that evidence before a zero-byte target can be called protected.
       # Covers metadata-only backups from opt-in misses (media-config before
       # #2757), scaled-to-zero apps with orphan PVCs (hermes), and similar
       # green-empty schedules (#703).
