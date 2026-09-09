@@ -35,6 +35,84 @@ tests:
         alertname: KopiurCoverageMissing
         exp_alerts: []
 
+  # The controller's live scrape labels use its own namespace and expose the
+  # protected namespace separately. These cases intentionally use that
+  # observed contract so a selector that reverts to namespace=home-assistant
+  # cannot pass tests while matching no production series.
+  - interval: 1m
+    input_series:
+      - series: 'kopiur_leader_is_leader{cluster="talos-stpetersburg"}'
+        values: "1+0x20"
+      - series: 'kopiur_snapshotpolicy_last_backup_success{cluster="talos-stpetersburg",exported_namespace="home-assistant",namespace="kopiur-system",policy="homeassistant-config"}'
+        values: "0+0x20"
+    alert_rule_test:
+      - eval_time: 1m
+        alertname: KopiurSnapshotFailed
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-stpetersburg
+              namespace: home-assistant
+              policy: homeassistant-config
+              pvc: homeassistant-config
+              repository: kopiur-stpetersburg
+              severity: critical
+            exp_annotations:
+              summary: Kopiur policy homeassistant-config reports a failed snapshot
+              description: >-
+                Kopiur's latest terminal snapshot for home-assistant/homeassistant-config
+                is failed. This is a per-policy current-result signal; an old Failed
+                Snapshot object alone does not keep the alert firing after a later
+                success. Inspect the current Snapshot, SnapshotPolicy, mover Job, and
+                repository logs.
+
+  # A recent successful result from the same live label contract must keep
+  # both snapshot alerts quiet.
+  - interval: 1m
+    input_series:
+      - series: 'kopiur_leader_is_leader{cluster="talos-stpetersburg"}'
+        values: "1+0x20"
+      - series: 'kopiur_snapshotpolicy_last_backup_success{cluster="talos-stpetersburg",exported_namespace="home-assistant",namespace="kopiur-system",policy="homeassistant-config"}'
+        values: "1+0x20"
+      - series: 'kopiur_policy_last_backup_success_timestamp_seconds{cluster="talos-stpetersburg",exported_namespace="home-assistant",namespace="kopiur-system",policy="homeassistant-config"}'
+        values: "900+0x20"
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: KopiurSnapshotFailed
+        exp_alerts: []
+      - eval_time: 15m
+        alertname: KopiurSnapshotStale
+        exp_alerts: []
+
+  # A stale successful result from the observed label contract must fire.
+  - interval: 1m
+    input_series:
+      - series: 'kopiur_leader_is_leader{cluster="talos-stpetersburg"}'
+        values: "1+0x2250"
+      - series: 'kopiur_snapshotpolicy_last_backup_success{cluster="talos-stpetersburg",exported_namespace="home-assistant",namespace="kopiur-system",policy="homeassistant-config"}'
+        values: "1+0x2250"
+      - series: 'kopiur_policy_last_backup_success_timestamp_seconds{cluster="talos-stpetersburg",exported_namespace="home-assistant",namespace="kopiur-system",policy="homeassistant-config"}'
+        values: "900+0x2250"
+    alert_rule_test:
+      - eval_time: 37h
+        alertname: KopiurSnapshotStale
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-stpetersburg
+              namespace: home-assistant
+              policy: homeassistant-config
+              pvc: homeassistant-config
+              repository: kopiur-stpetersburg
+              severity: critical
+            exp_annotations:
+              summary: Kopiur policy homeassistant-config has a stale snapshot
+              description: >-
+                No successful Kopiur snapshot for home-assistant/homeassistant-config
+                has completed within 36 hours (the daily schedule, jitter, and
+                operational margin). The timestamp must be positive, so a controller
+                restart/reset cannot turn a zero gauge into an immediate stale alert.
+                Inspect the SnapshotSchedule, current Snapshot, mover Job, and
+                repository reachability.
+
   # A failed Snapshot object is immutable history. A later successful policy
   # result must clear the failure alert even while both Snapshot phases remain
   # visible in the exporter.
@@ -42,7 +120,7 @@ tests:
     input_series:
       - series: 'kopiur_leader_is_leader{cluster="talos-stpetersburg"}'
         values: "1+0x20"
-      - series: 'kopiur_snapshotpolicy_last_backup_success{cluster="talos-stpetersburg",namespace="home-assistant",policy="homeassistant-config"}'
+      - series: 'kopiur_snapshotpolicy_last_backup_success{cluster="talos-stpetersburg",exported_namespace="home-assistant",namespace="kopiur-system",policy="homeassistant-config"}'
         values: "1+0x20"
       - series: 'kopiur_resource_phase{cluster="talos-stpetersburg",kind="Snapshot",namespace="home-assistant",name="homeassistant-config-old",phase="Failed",policy="homeassistant-config"}'
         values: "1+0x20"
@@ -78,7 +156,7 @@ tests:
     input_series:
       - series: 'kopiur_leader_is_leader{cluster="talos-stpetersburg"}'
         values: "1+0x20"
-      - series: 'kopiur_snapshotpolicy_last_backup_success{cluster="talos-stpetersburg",namespace="home-assistant",policy="homeassistant-config"}'
+      - series: 'kopiur_snapshotpolicy_last_backup_success{cluster="talos-stpetersburg",exported_namespace="home-assistant",namespace="kopiur-system",policy="homeassistant-config"}'
         values: "0+0x20"
     alert_rule_test:
       - eval_time: 1m
@@ -107,9 +185,9 @@ tests:
     input_series:
       - series: 'kopiur_leader_is_leader{cluster="talos-stpetersburg"}'
         values: "1+0x2250"
-      - series: 'kopiur_snapshotpolicy_last_backup_success{cluster="talos-stpetersburg",namespace="home-assistant",policy="homeassistant-config"}'
+      - series: 'kopiur_snapshotpolicy_last_backup_success{cluster="talos-stpetersburg",exported_namespace="home-assistant",namespace="kopiur-system",policy="homeassistant-config"}'
         values: "1+0x2250"
-      - series: 'kopiur_policy_last_backup_success_timestamp_seconds{cluster="talos-stpetersburg",namespace="home-assistant",policy="homeassistant-config"}'
+      - series: 'kopiur_policy_last_backup_success_timestamp_seconds{cluster="talos-stpetersburg",exported_namespace="home-assistant",namespace="kopiur-system",policy="homeassistant-config"}'
         values: "1+0x2250"
     alert_rule_test:
       - eval_time: 37h
@@ -138,9 +216,9 @@ tests:
     input_series:
       - series: 'kopiur_leader_is_leader{cluster="talos-stpetersburg"}'
         values: "1+0x2250"
-      - series: 'kopiur_snapshotpolicy_last_backup_success{cluster="talos-stpetersburg",namespace="home-assistant",policy="homeassistant-config"}'
+      - series: 'kopiur_snapshotpolicy_last_backup_success{cluster="talos-stpetersburg",exported_namespace="home-assistant",namespace="kopiur-system",policy="homeassistant-config"}'
         values: "1+0x2250"
-      - series: 'kopiur_policy_last_backup_success_timestamp_seconds{cluster="talos-stpetersburg",namespace="home-assistant",policy="homeassistant-config"}'
+      - series: 'kopiur_policy_last_backup_success_timestamp_seconds{cluster="talos-stpetersburg",exported_namespace="home-assistant",namespace="kopiur-system",policy="homeassistant-config"}'
         values: "0+0x2250"
     alert_rule_test:
       - eval_time: 37h
@@ -192,7 +270,7 @@ tests:
       - eval_time: 9m
         alertname: KopiurCoverageMissing
         exp_alerts: []
-      - eval_time: 10m
+      - eval_time: 11m
         alertname: KopiurCoverageMissing
         exp_alerts:
           - exp_labels:

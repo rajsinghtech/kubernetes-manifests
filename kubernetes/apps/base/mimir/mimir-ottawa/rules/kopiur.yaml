@@ -9,6 +9,9 @@
 # can contain a plausible item count while omitting a required volume.
 # Add a new protected source here only when its policy and repository are
 # intentionally added to Git.
+# Kopiur controller metrics are scraped from kopiur-system and identify the
+# protected namespace with exported_namespace. Snapshot alert joins normalize
+# that live label into the inventory's namespace label before matching.
 #
 # Keep this namespace unique across every file passed to mimirtool. A repeated
 # namespace aborts the complete rule sync for every tenant.
@@ -41,10 +44,13 @@ groups:
             kopiur_expected_source_info
             and on (cluster, namespace, policy)
             (
-              kopiur_snapshotpolicy_last_backup_success{
-                namespace="home-assistant",
-                policy="homeassistant-config"
-              } == 0
+              label_replace(
+                kopiur_snapshotpolicy_last_backup_success{
+                  exported_namespace="home-assistant",
+                  policy="homeassistant-config"
+                },
+                "namespace", "$1", "exported_namespace", "(.+)"
+              ) == 0
             )
           )
           and on (cluster)
@@ -67,23 +73,32 @@ groups:
             kopiur_expected_source_info
             and on (cluster, namespace, policy)
             (
-              kopiur_snapshotpolicy_last_backup_success{
-                namespace="home-assistant",
-                policy="homeassistant-config"
-              } == 1
+              label_replace(
+                kopiur_snapshotpolicy_last_backup_success{
+                  exported_namespace="home-assistant",
+                  policy="homeassistant-config"
+                },
+                "namespace", "$1", "exported_namespace", "(.+)"
+              ) == 1
             )
             and on (cluster, namespace, policy)
             (
-              kopiur_policy_last_backup_success_timestamp_seconds{
-                namespace="home-assistant",
-                policy="homeassistant-config"
-              } > 0
+              label_replace(
+                kopiur_policy_last_backup_success_timestamp_seconds{
+                  exported_namespace="home-assistant",
+                  policy="homeassistant-config"
+                },
+                "namespace", "$1", "exported_namespace", "(.+)"
+              ) > 0
               and
               time()
-                - kopiur_policy_last_backup_success_timestamp_seconds{
-                    namespace="home-assistant",
-                    policy="homeassistant-config"
-                  }
+                - label_replace(
+                    kopiur_policy_last_backup_success_timestamp_seconds{
+                      exported_namespace="home-assistant",
+                      policy="homeassistant-config"
+                    },
+                    "namespace", "$1", "exported_namespace", "(.+)"
+                  )
                 > 129600
             )
           )
