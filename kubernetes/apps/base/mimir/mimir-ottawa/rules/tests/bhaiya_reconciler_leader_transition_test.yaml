@@ -1,0 +1,60 @@
+rule_files:
+  - ../bhaiya-reconciler.yaml
+
+evaluation_interval: 1m
+
+tests:
+  # Only the leader advances the counter. The standby's permanently zero
+  # counter must not create a per-series false positive after the heartbeat
+  # increases are aggregated by cluster.
+  - interval: 1m
+    input_series:
+      - series: 'bhaiya_reconcile_heartbeat_total{cluster="talos-ottawa",job="bhaiya",container="bhaiya",instance="leader-1"}'
+        values: "1+1x30"
+      - series: 'bhaiya_reconcile_heartbeat_total{cluster="talos-ottawa",job="bhaiya",container="bhaiya",instance="standby-1"}'
+        values: "0+0x30"
+    alert_rule_test:
+      - eval_time: 20m
+        alertname: BhaiyaReconcileLastSuccessStale
+        exp_alerts: []
+
+  # The old leader stops exporting at the handoff and the new leader starts
+  # emitting immediately. The old handler-failure series goes stale while the
+  # new leader publishes a current zero, so neither liveness nor attribution
+  # should remain active after the move.
+  - interval: 1m
+    input_series:
+      - series: 'bhaiya_reconcile_heartbeat_total{cluster="talos-ottawa",job="bhaiya",container="bhaiya",instance="old-leader"}'
+        values: "1+1x9 _x20"
+      - series: 'bhaiya_reconcile_heartbeat_total{cluster="talos-ottawa",job="bhaiya",container="bhaiya",instance="new-leader"}'
+        values: "_x10 1+1x20"
+      - series: 'bhaiya_reconcile_handler_failure{cluster="talos-ottawa",job="bhaiya",container="bhaiya",instance="old-leader",workspace="raj-trades",handler="ready"}'
+        values: "1+0x9 _x20"
+      - series: 'bhaiya_reconcile_handler_failure{cluster="talos-ottawa",job="bhaiya",container="bhaiya",instance="new-leader",workspace="raj-trades",handler="ready"}'
+        values: "_x10 0+0x20"
+    alert_rule_test:
+      - eval_time: 8m
+        alertname: BhaiyaReconcileWorkspaceHandlerFailure
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-ottawa
+              handler: ready
+              severity: critical
+              workspace: raj-trades
+            exp_annotations:
+              summary: Bhaiya reconciliation handler ready is failing for raj-trades
+              description: >-
+                The latest observed ready handler invocation for workspace
+                raj-trades failed for at least five minutes. This is an
+                item-level failure and does not by itself mean that the
+                reconciler loop is dead; inspect the workspace state,
+                provider-fence decision, and Bhaiya logs.
+      - eval_time: 10m
+        alertname: BhaiyaReconcileLastSuccessStale
+        exp_alerts: []
+      - eval_time: 15m
+        alertname: BhaiyaReconcileLastSuccessStale
+        exp_alerts: []
+      - eval_time: 15m
+        alertname: BhaiyaReconcileWorkspaceHandlerFailure
+        exp_alerts: []
