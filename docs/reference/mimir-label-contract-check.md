@@ -61,10 +61,11 @@ rule set originally reported two locations: `VeleroBackupPartiallyFailed` and
 `VeleroBackupFailed`; both now use newest-Backup state and the strict scan is
 clean. `NodeKernelOOMKill` is the different event-counter case: it now keeps
 `increase(...[1h])` visible with `for: 5m`, rather than pretending an object
-state exists. The static scan still reports it if its threshold is raised to
-one hour, which is intentional: the event has no durable current-state object
-and its retention window is an explicit operational choice. Because the native
-rule files are shared, each location is loaded for all three Mimir tenants.
+state exists. Raising the scan threshold to one hour still does not report it,
+because the rule deliberately holds for 5m; the one-hour event lookback is an
+explicit operational choice for an event with no durable current-state object.
+Because the native rule files are shared, each location is loaded for all three
+Mimir tenants.
 
 Rules are shared across tenants. Selectors that explicitly exclude the
 current tenant with a `cluster` matcher are skipped, because they are not

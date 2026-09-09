@@ -89,6 +89,22 @@ tests:
         alertname: FluxKustomizationUnknown
         exp_alerts: []
 
+  # The live stability diagnostic must report this as high-churn rather than
+  # silently treating it as an ordinary no-alert result: the logical
+  # Kustomization goes Unknown -> True -> Unknown, but never remains Unknown
+  # for the rule's 30-minute hold. The Prometheus fixture proves the alert
+  # does not fire; the diagnostic fixture proves the churn is visible.
+  - interval: 1m
+    input_series:
+      - series: 'flux_resource_info{cluster="talos-ottawa",kind="Kustomization",name="unknown-toggle",namespace="flux-system",path="./unknown-toggle",reason="Progressing",revision="main@sha1:unknown-toggle",source_name="kubernetes-manifests",suspended="False",ready="Unknown"}'
+        values: "1 1 _ _ 1 1"
+      - series: 'flux_resource_info{cluster="talos-ottawa",kind="Kustomization",name="unknown-toggle",namespace="flux-system",path="./unknown-toggle",reason="ReconciliationSucceeded",revision="main@sha1:unknown-toggle",source_name="kubernetes-manifests",suspended="False",ready="True"}'
+        values: "_ _ 1 1 _ _"
+    alert_rule_test:
+      - eval_time: 5m
+        alertname: FluxKustomizationUnknown
+        exp_alerts: []
+
   - interval: 1m
     input_series:
       - series: 'flux_resource_info{cluster="talos-ottawa",kind="Kustomization",name="suspended-unknown",namespace="flux-system",path="./suspended-unknown",reason="Suspended",revision="main@sha1:suspended",source_name="kubernetes-manifests",suspended="True",ready="Unknown"}'
