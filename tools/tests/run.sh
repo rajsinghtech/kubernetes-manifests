@@ -391,6 +391,12 @@ aliasout="$(PATH="$mstub:$PATH" "$gate_root/tools/check.sh" ot 2>/dev/null)"
 assert "short cluster alias accepted"   grep -q '^✓ render OK: talos-ottawa$' <<<"$aliasout"
 rm -rf "$gate_root"
 
+# ---------------------------------------------------------------- Multus version invariant
+section "Multus version invariant"
+multus_out="$("$T/tests/multus-version-invariant.sh" 2>&1)"; multus_ec=$?
+assert "aligned fixture passes and split fixture fails" test "$multus_ec" = 0
+assert "fixture test reports both directions" grep -q 'aligned passes; Ottawa daemon split fails' <<<"$multus_out"
+
 # ---------------------------------------------------------------- Mimir rule completeness replay
 section "Mimir rule completeness replay"
 exits "km#2809 missing-group condition is detected" 0 \
