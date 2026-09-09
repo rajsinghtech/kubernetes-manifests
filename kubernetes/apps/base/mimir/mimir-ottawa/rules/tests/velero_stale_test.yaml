@@ -62,6 +62,61 @@ tests:
                 missing data, and it also needs the Velero metric to remain
                 scrapeable.
 
+  # A paused schedule is deliberate, but it must not silently remain without
+  # backups forever. Seven days is longer than a normal maintenance window
+  # while still material for daily member/platform data. The rule uses
+  # lastBackup age because the Schedule CR has no pause-transition timestamp.
+  - interval: 1m
+    input_series:
+      - series: 'velero_cr_schedule_info{cluster="talos-ottawa",namespace="velero-system",schedule="paused-old",phase="Enabled",paused="true"}'
+        values: "1+0x20"
+      - series: 'velero_cr_schedule_last_backup_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="paused-old"}'
+        values: "-604801+0x20"
+      - series: 'velero_cr_schedule_info{cluster="talos-ottawa",namespace="velero-system",schedule="paused-new",phase="Enabled",paused="true"}'
+        values: "1+0x20"
+      - series: 'velero_cr_schedule_last_backup_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="paused-new"}'
+        values: "300+0x20"
+      - series: 'velero_cr_schedule_info{cluster="talos-ottawa",namespace="velero-system",schedule="unpaused-old",phase="Enabled",paused="false"}'
+        values: "1+0x20"
+      - series: 'velero_cr_schedule_last_backup_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="unpaused-old"}'
+        values: "-604801+0x20"
+    alert_rule_test:
+      - eval_time: 14m
+        alertname: VeleroSchedulePausedTooLong
+        exp_alerts: []
+      - eval_time: 15m
+        alertname: VeleroSchedulePausedTooLong
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-ottawa
+              namespace: velero-system
+              schedule: paused-old
+              severity: warning
+            exp_annotations:
+              summary: Velero schedule paused-old has been paused for more than 7 days
+              description: >-
+                Schedule paused-old is intentionally paused and has gone more
+                than seven days without a successful Backup. This is a reminder,
+                not an outage assertion: confirm the maintenance window is
+                still deliberate, then unpause the Schedule when its protected
+                data should resume daily coverage. The seven-day threshold
+                allows ordinary maintenance windows while preventing a paused
+                member or platform schedule from becoming an indefinite silent
+                gap. This alert clears when the Schedule is unpaused or deleted.
+
+  # Historical metrics must not resurrect the reminder after a paused Schedule
+  # is deleted. The unpaused-old case above covers the other clear path.
+  - interval: 1m
+    input_series:
+      - series: 'velero_backup_last_successful_timestamp{cluster="talos-ottawa",schedule="deleted-while-paused"}'
+        values: "-604801+0x20"
+      - series: 'velero_cr_schedule_last_backup_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="deleted-while-paused"}'
+        values: "-604801+0x20"
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: VeleroSchedulePausedTooLong
+        exp_alerts: []
+
   # A deleted or paused Schedule must clear stale metrics from historical
   # Backup objects. Otherwise this alert becomes a permanent orphaned
   # incident after workspace or schedule cleanup.

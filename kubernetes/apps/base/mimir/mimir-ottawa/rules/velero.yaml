@@ -90,6 +90,69 @@ groups:
             it cannot detect a backup that completes while silently missing
             data, and it also needs the Velero metric to remain scrapeable.
 
+      # Pausing is deliberate, so it must not page like an active schedule
+      # outage. It must still leave a reminder when the pause outlasts a
+      # maintenance window: the daily schedules protect member and platform
+      # data, and seven missed daily windows is long enough to distinguish a
+      # normal repair window from an easily forgotten suspension without
+      # waiting a month. Use lastBackup age as the observable lower bound on
+      # pause age because Velero does not expose a pause-transition timestamp.
+      # For a schedule that has never backed up, use its creation age instead.
+      # The Enabled/paused Schedule join is intentionally on the outside, so
+      # deleting or unpausing the Schedule removes the alert even when old
+      # Backup metrics remain.
+      - alert: VeleroSchedulePausedTooLong
+        expr: |
+          max by (cluster, namespace, schedule) (
+            velero_cr_schedule_info{
+              namespace="velero-system",
+              phase="Enabled",
+              paused="true"
+            }
+          )
+          and on (cluster, namespace, schedule) (
+            (
+              time()
+              - max by (cluster, namespace, schedule) (
+                  velero_cr_schedule_last_backup_timestamp{
+                    namespace="velero-system"
+                  }
+                )
+              > 604800
+            )
+            or
+            (
+              (
+                time()
+                - max by (cluster, namespace, schedule) (
+                    velero_cr_schedule_created_timestamp{
+                      namespace="velero-system"
+                    }
+                  )
+              ) > 604800
+              unless on (cluster, namespace, schedule)
+              max by (cluster, namespace, schedule) (
+                velero_cr_schedule_last_backup_timestamp{
+                  namespace="velero-system"
+                }
+              )
+            )
+          )
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: Velero schedule {{ $labels.schedule }} has been paused for more than 7 days
+          description: >-
+            Schedule {{ $labels.schedule }} is intentionally paused and has
+            gone more than seven days without a successful Backup. This is a
+            reminder, not an outage assertion: confirm the maintenance window
+            is still deliberate, then unpause the Schedule when its protected
+            data should resume daily coverage. The seven-day threshold allows
+            ordinary maintenance windows while preventing a paused member or
+            platform schedule from becoming an indefinite silent gap. This
+            alert clears when the Schedule is unpaused or deleted.
+
       # VeleroBackupStale requires a last_successful_timestamp series and a
       # currently enabled, unpaused Schedule. A historical Backup metric must
       # not keep an alert alive after its Schedule is deleted or paused. The
