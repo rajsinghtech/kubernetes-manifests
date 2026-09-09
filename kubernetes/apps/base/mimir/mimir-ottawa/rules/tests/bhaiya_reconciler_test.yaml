@@ -1,0 +1,119 @@
+rule_files:
+  - ../bhaiya-reconciler.yaml
+
+evaluation_interval: 1m
+
+tests:
+  # A scraped process whose counter stops is alive but its reconcile loop is
+  # dead. The zero-increase arm must remain pending for five minutes and then
+  # fire.
+  - interval: 1m
+    input_series:
+      - series: 'bhaiya_reconcile_heartbeat_total{cluster="talos-ottawa",job="bhaiya",container="bhaiya",instance="leader-1"}'
+        values: "1+0x20"
+    alert_rule_test:
+      - eval_time: 4m
+        alertname: BhaiyaReconcileLastSuccessStale
+        exp_alerts: []
+      - eval_time: 6m
+        alertname: BhaiyaReconcileLastSuccessStale
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-ottawa
+              severity: critical
+            exp_annotations:
+              summary: Bhaiya reconciliation heartbeat is stale
+              description: >-
+                No Bhaiya reconciliation heartbeat was observed for ten minutes.
+                A zero increase means the scraped process is alive but its loop
+                has stopped; an absent series means the emitting process or
+                scrape is gone. The five-minute alert hold follows the
+                ten-minute emitter grace window, so a brief deploy restart does
+                not page. Check `kubectl logs -n bhaiya deploy/bhaiya | grep
+                'reconcile workspace resources'` and inspect the per-workspace
+                handler failure alert.
+
+  # No heartbeat series at all must not read as healthy. This exercises the
+  # explicit absent_over_time arm rather than the zero-increase arm. The
+  # desired Deployment proves Bhaiya is expected in this tenant; without it,
+  # intentional absence in a tenant where Bhaiya is not deployed is healthy.
+  - interval: 1m
+    input_series:
+      - series: 'kube_deployment_spec_replicas{cluster="talos-ottawa",namespace="bhaiya",deployment="bhaiya"}'
+        values: "2+0x20"
+    alert_rule_test:
+      - eval_time: 14m
+        alertname: BhaiyaReconcileLastSuccessStale
+        exp_alerts:
+          - exp_labels:
+              container: bhaiya
+              job: bhaiya
+              severity: critical
+            exp_annotations:
+              summary: Bhaiya reconciliation heartbeat is stale
+              description: >-
+                No Bhaiya reconciliation heartbeat was observed for ten minutes.
+                A zero increase means the scraped process is alive but its loop
+                has stopped; an absent series means the emitting process or
+                scrape is gone. The five-minute alert hold follows the
+                ten-minute emitter grace window, so a brief deploy restart does
+                not page. Check `kubectl logs -n bhaiya deploy/bhaiya | grep
+                'reconcile workspace resources'` and inspect the per-workspace
+                handler failure alert.
+
+  # A short scrape/process gap during a deploy is inside the ten-minute
+  # emitter grace window. The replacement process resumes with a reset counter
+  # and continues emitting, so neither liveness arm should fire.
+  - interval: 1m
+    input_series:
+      - series: 'bhaiya_reconcile_heartbeat_total{cluster="talos-ottawa",job="bhaiya",container="bhaiya",instance="leader-1"}'
+        values: "1+1x4 _x2 1+1x30"
+    alert_rule_test:
+      - eval_time: 6m
+        alertname: BhaiyaReconcileLastSuccessStale
+        exp_alerts: []
+      - eval_time: 15m
+        alertname: BhaiyaReconcileLastSuccessStale
+        exp_alerts: []
+
+  # A continuously running loop is healthy even when one workspace handler is
+  # persistently failing. The fleet liveness signal stays clear while the
+  # workspace/handler alert names the failing item.
+  - interval: 1m
+    input_series:
+      - series: 'bhaiya_reconcile_heartbeat_total{cluster="talos-ottawa",job="bhaiya",container="bhaiya",instance="leader-1"}'
+        values: "1+1x30"
+      - series: 'bhaiya_reconcile_handler_failure{cluster="talos-ottawa",job="bhaiya",container="bhaiya",instance="leader-1",workspace="raj-trades",handler="ready"}'
+        values: "1+0x30"
+      - series: 'bhaiya_reconcile_handler_failure{cluster="talos-ottawa",job="bhaiya",container="bhaiya",instance="leader-1",workspace="healthy",handler="ready"}'
+        values: "0+0x30"
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: BhaiyaReconcileLastSuccessStale
+        exp_alerts: []
+      - eval_time: 10m
+        alertname: BhaiyaReconcileWorkspaceHandlerFailure
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-ottawa
+              handler: ready
+              severity: critical
+              workspace: raj-trades
+            exp_annotations:
+              summary: Bhaiya reconciliation handler ready is failing for raj-trades
+              description: >-
+                The latest observed ready handler invocation for workspace
+                raj-trades failed for at least five minutes. This is an
+                item-level failure and does not by itself mean that the
+                reconciler loop is dead; inspect the workspace state,
+                provider-fence decision, and Bhaiya logs.
+
+  # A continuously incrementing heartbeat is healthy and must not alert.
+  - interval: 1m
+    input_series:
+      - series: 'bhaiya_reconcile_heartbeat_total{cluster="talos-ottawa",job="bhaiya",container="bhaiya",instance="leader-1"}'
+        values: "1+1x30"
+    alert_rule_test:
+      - eval_time: 20m
+        alertname: BhaiyaReconcileLastSuccessStale
+        exp_alerts: []
