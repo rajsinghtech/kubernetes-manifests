@@ -29,7 +29,7 @@ spec:
           command: [python3, /scripts/rule_completeness.py]
           env:
             - name: MIMIR_RULES_URL
-              value: http://mimir-gateway.mimir.svc.cluster.local:8080/prometheus/api/v1/rules?type=alert
+              value: http://mimir-gateway.mimir.svc.cluster.local:8080/prometheus/api/v1/rules
             - name: ALERTMANAGER_URL
               value: http://kube-prometheus-stack-alertmanager.monitoring.svc.cluster.local:9093/api/v2/alerts
             - name: CHECKER_CLUSTER
