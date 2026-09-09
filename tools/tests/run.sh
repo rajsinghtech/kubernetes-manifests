@@ -868,6 +868,99 @@ else
 fi
 rm -f "$schema_contract_out"
 
+# ---------------------------------------------------------------- Mimir rule fixture runner
+# The production runner must execute every discovered fixture after a failure.
+# Keep this proof offline: a stub promtool makes two deliberately broken
+# fixtures fail independently, so the assertion is about runner aggregation,
+# not Prometheus availability.
+section "Mimir rule fixture runner"
+runner_fixture_root="$(mktemp -d)"
+runner_promtool_root="$(mktemp -d)"
+mkdir -p "$runner_fixture_root/tests"
+cat >"$runner_fixture_root/rule-a.yaml" <<'EOF'
+groups:
+  - name: deliberate-a
+    rules:
+      - alert: DeliberateA
+        expr: vector(0)
+EOF
+cat >"$runner_fixture_root/rule-b.yaml" <<'EOF'
+groups:
+  - name: deliberate-b
+    rules:
+      - alert: DeliberateB
+        expr: vector(0)
+EOF
+cat >"$runner_fixture_root/tests/a_broken_test.yaml" <<'EOF'
+rule_files:
+  - ../rule-a.yaml
+evaluation_interval: 1m
+tests:
+  - interval: 1m
+    alert_rule_test:
+      - eval_time: 1m
+        alertname: DeliberateA
+        exp_alerts:
+          - exp_labels: {}
+EOF
+cat >"$runner_fixture_root/tests/b_broken_test.yaml" <<'EOF'
+rule_files:
+  - ../rule-b.yaml
+evaluation_interval: 1m
+tests:
+  - interval: 1m
+    alert_rule_test:
+      - eval_time: 1m
+        alertname: DeliberateB
+        exp_alerts:
+          - exp_labels: {}
+EOF
+
+cat >"$runner_promtool_root/promtool" <<'EOF'
+#!/usr/bin/env bash
+case "$1 $2" in
+  "check rules")
+    printf 'Checking %s\n  SUCCESS: deliberate rule parsed\n\n' "$3"
+    exit 0
+    ;;
+  "test rules")
+    case "${3##*/}" in
+      a_broken_test.yaml)
+        echo 'FAILED: deliberate fixture A'
+        exit 1
+        ;;
+      b_broken_test.yaml)
+        echo 'FAILED: deliberate fixture B'
+        exit 1
+        ;;
+    esac
+    ;;
+esac
+echo "unexpected promtool invocation: $*" >&2
+exit 2
+EOF
+chmod +x "$runner_promtool_root/promtool"
+
+runner_output="$(
+  PATH="$runner_promtool_root:$PATH" \
+    MIMIR_RULE_DIR="$runner_fixture_root" \
+    "$ROOT/kubernetes/apps/base/mimir/mimir-ottawa/rules/tests/run.sh" 2>&1
+)"
+runner_exit=$?
+printf '%s\n' "$runner_output" | grep -E '^(Mimir rule fixture failures:|--- |FAILED: deliberate fixture)'
+assert "runner returns nonzero when fixtures fail" test "$runner_exit" != 0
+assert "runner reports first broken fixture" \
+  grep -q -- '^--- a_broken_test.yaml ---$' <<<"$runner_output"
+assert "runner reports second broken fixture" \
+  grep -q -- '^--- b_broken_test.yaml ---$' <<<"$runner_output"
+assert "runner reports both failures together" \
+  test "$(grep -c '^--- .*_broken_test.yaml ---$' <<<"$runner_output")" = 2
+assert "runner retains first promtool error" \
+  grep -q 'FAILED: deliberate fixture A' <<<"$runner_output"
+assert "runner retains second promtool error" \
+  grep -q 'FAILED: deliberate fixture B' <<<"$runner_output"
+rm -rf "$runner_fixture_root" "$runner_promtool_root"
+
 # ---------------------------------------------------------------- summary
 printf '\n== %d passed, %d failed ==\n' "$pass" "$fail"
 [ "$fail" = 0 ]
