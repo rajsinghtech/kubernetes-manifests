@@ -13,6 +13,10 @@ spec:
     kind: Repository
     name: kopiur-stpetersburg
     namespace: home-assistant
+  # The proof runs in a fresh namespace; let Kopiur project the repository's
+  # password and backend credentials into the mover namespace.
+  credentialProjection:
+    enabled: true
   target:
     pvc:
       name: homeassistant-config-restore
