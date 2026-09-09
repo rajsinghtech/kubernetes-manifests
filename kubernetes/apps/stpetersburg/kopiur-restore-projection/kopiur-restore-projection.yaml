@@ -13,7 +13,6 @@ spec:
   dependsOn:
     - name: kopiur
     - name: home-assistant-kopiur
-    - name: kopiur-restore-proof
   path: ./kubernetes/apps/base/kopiur/kopiur-stpetersburg-restore-projection
   prune: true
   sourceRef:
