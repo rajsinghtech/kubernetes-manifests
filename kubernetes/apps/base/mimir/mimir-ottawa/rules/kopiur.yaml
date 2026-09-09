@@ -10,8 +10,8 @@
 # Add a new protected source here only when its policy and repository are
 # intentionally added to Git.
 # Kopiur controller metrics are scraped from kopiur-system and identify the
-# protected namespace with exported_namespace. Snapshot alert joins normalize
-# that live label into the inventory's namespace label before matching.
+# protected namespace with exported_namespace. Snapshot and repository alert
+# joins normalize that live label into the inventory's namespace before matching.
 #
 # Keep this namespace unique across every file passed to mimirtool. A repeated
 # namespace aborts the complete rule sync for every tenant.
@@ -124,20 +124,28 @@ groups:
             unless on (cluster, kind, namespace, name)
             (
               max by (cluster, kind, namespace, name) (
-                kopiur_resource_phase{
-                  kind="Repository",
-                  namespace="home-assistant",
-                  name="kopiur-stpetersburg",
-                  phase="Ready"
-                } == 1
+                label_replace(
+                  kopiur_resource_phase{
+                    kind="Repository",
+                    namespace="kopiur-system",
+                    exported_namespace="home-assistant",
+                    name="kopiur-stpetersburg",
+                    phase="Ready"
+                  },
+                  "namespace", "$1", "exported_namespace", "(.+)"
+                ) == 1
               )
               and on (cluster, kind, namespace, name)
               max by (cluster, kind, namespace, name) (
-                kopiur_repository_consecutive_backend_failures{
-                  kind="Repository",
-                  namespace="home-assistant",
-                  name="kopiur-stpetersburg"
-                } == 0
+                label_replace(
+                  kopiur_repository_consecutive_backend_failures{
+                    kind="Repository",
+                    namespace="kopiur-system",
+                    exported_namespace="home-assistant",
+                    name="kopiur-stpetersburg"
+                  },
+                  "namespace", "$1", "exported_namespace", "(.+)"
+                ) == 0
               )
             )
           )
