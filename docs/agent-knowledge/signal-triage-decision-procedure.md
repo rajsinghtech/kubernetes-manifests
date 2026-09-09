@@ -163,6 +163,42 @@ workload from terminal upgrade debt in severity, routing, and ownership. A
 critical that stays red while no outage is active trains operators to ignore
 critical alerts; do not paper over that with a duplicate detector.
 
+### 6. A selector could never match live telemetry
+
+**Detection question:** Have I verified these selectors against the actual
+label sets on live series, rather than against my rule's assumptions?
+
+`KopiurSnapshotFailed` and `KopiurSnapshotStale` selected
+`namespace="home-assistant"` on the raw SnapshotPolicy metrics at
+`kubernetes/apps/base/mimir/mimir-ottawa/rules/kopiur.yaml:38-89`. The live
+series instead carry `namespace="kopiur-system"` (the controller namespace)
+and `exported_namespace="home-assistant"` (the protected target), alongside
+`cluster`, `policy`, and the metric-specific value. Therefore both selectors
+returned no series: the rules were indistinguishable from a healthy system
+with nothing to report. Fixtures using the same assumed labels passed anyway.
+
+cos-cephrisk's correction selects `exported_namespace` and uses `label_replace`
+to restore the target `namespace` before joining the expected-source record;
+its fixtures use the observed label set and prove failed, healthy, and stale
+states. The other two Kopiur alerts were verified against live data and are
+not part of this defect. Query live `count by (...)`/series labels before
+writing selectors, then make the exact observed label contract a fixture.
+
+## Corollary: coverage must be able to fail
+
+A check or alert that cannot fail is the same defect as a gate that never runs:
+both produce a green-looking absence of evidence. For every rule, test, and CI
+gate ask: **what controlled bad input makes it fail, does it run on the relevant
+event, is it required, and have both red and green paths been observed?**
+
+Tonight's CI findings made the same failure visible at another layer: rule
+tests were not required and were not run on `main`; `verify` was red because
+generated data was stale; and the required ruleset contained only `validate`.
+Treat “green” without an executable failing path as unknown. Wire the intended
+test into the required event, make generated-data freshness an explicit gate,
+and prove the gate red and green. Do not compensate for an inert check by
+adding more rules.
+
 ### Adjacent capacity case: a healthy condition hid starvation
 
 **Detection question:** Does the condition measure actual safety, or only one
