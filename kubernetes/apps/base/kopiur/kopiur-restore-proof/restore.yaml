@@ -10,11 +10,10 @@ spec:
       name: homeassistant-config-20260908034331
       namespace: home-assistant
   repository:
-    kind: Repository
-    name: kopiur-stpetersburg
-    namespace: home-assistant
-  # The proof runs in a fresh namespace; let Kopiur project the repository's
-  # password and backend credentials into the mover namespace.
+    kind: ClusterRepository
+    name: kopiur-stpetersburg-restore-readonly
+  # The proof runs in a fresh namespace; the read-only ClusterRepository view
+  # explicitly permits Kopiur to project the writer repository's credentials.
   credentialProjection:
     enabled: true
   target:

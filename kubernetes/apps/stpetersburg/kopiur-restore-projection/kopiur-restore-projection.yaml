@@ -1,0 +1,25 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: kopiur-restore-projection
+  namespace: flux-system
+spec:
+  targetNamespace: kopiur-restore-proof-20260908-ha
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: kopiur-restore-projection
+      app.kubernetes.io/part-of: kopiur
+  dependsOn:
+    - name: kopiur
+    - name: home-assistant-kopiur
+    - name: kopiur-restore-proof
+  path: ./kubernetes/apps/base/kopiur/kopiur-stpetersburg-restore-projection
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: kubernetes-manifests
+  wait: true
+  interval: 30m
+  retryInterval: 1m
+  timeout: 10m
