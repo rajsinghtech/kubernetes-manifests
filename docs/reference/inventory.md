@@ -30,8 +30,8 @@ diagram in the [README](../../README.md#architecture).
 |---|---:|---:|---:|
 | `ottawa` | 4 | 62 | 126 |
 | `robbinsdale` | 3 | 43 | 87 |
-| `stpetersburg` | 3 | 41 | 84 |
-| **total** | **10** | **146** | **297** |
+| `stpetersburg` | 3 | 42 | 85 |
+| **total** | **10** | **147** | **298** |
 
 ## Ottawa — `talos-ottawa`
 
@@ -312,6 +312,7 @@ Pointers whose objects land outside their directory's namespace — use the righ
 | Application workloads | `home-assistant` | `home-assistant` |
 | Application workloads | `homer-operator` | `homer-operator-install` |
 | Application workloads | `kopiur` | `home-assistant-kopiur` → ns `home-assistant`, `kopiur` → ns `kopiur-system` |
+| Application workloads | `kopiur-restore-projection` | `kopiur-restore-projection` → ns `kopiur-restore-proof-20260908-ha` |
 | Application workloads | `kopiur-restore-proof` | `kopiur-restore-proof` → ns `kopiur-restore-proof-20260908-ha` |
 
 Pointers whose objects land outside their directory's namespace — use the right-hand column with `kubectl -n`:
@@ -321,6 +322,7 @@ Pointers whose objects land outside their directory's namespace — use the righ
 | `actions-runner-controller-runners` | `arc-systems` | `arc-runners` |
 | `home-assistant-kopiur` | `kopiur` | `home-assistant` |
 | `kopiur` | `kopiur` | `kopiur-system` |
+| `kopiur-restore-projection` | `kopiur-restore-projection` | `kopiur-restore-proof-20260908-ha` |
 | `kopiur-restore-proof` | `kopiur-restore-proof` | `kopiur-restore-proof-20260908-ha` |
 | `rdma-shared-dp` | `rdma-shared-dp` | `rdma-system` |
 | `tinyauth-egress` | `tinyauth-egress` | `tinyauth` |

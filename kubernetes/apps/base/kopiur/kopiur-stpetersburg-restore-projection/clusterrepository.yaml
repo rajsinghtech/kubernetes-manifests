@@ -1,0 +1,44 @@
+---
+# Read-only cluster-scoped view of the St Petersburg Home Assistant repository.
+# The writer remains the namespaced Repository in home-assistant; this view
+# exists so the isolated restore namespace can use Kopiur's owner-approved
+# credential projection path.
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: ClusterRepository
+metadata:
+  name: kopiur-stpetersburg-restore-readonly
+spec:
+  allowedNamespaces:
+    list:
+      - kopiur-restore-proof-20260908-ha
+  credentialProjection:
+    allowed: true
+  backend:
+    s3:
+      bucket: kopiur-stpetersburg
+      prefix: home-assistant/config/
+      endpoint: garage-gateway.garage.svc.cluster.local:3900
+      region: garage
+      tls:
+        disableTls: true
+      auth:
+        secretRef:
+          name: kopiur-stpetersburg-s3
+          namespace: home-assistant
+  encryption:
+    passwordSecretRef:
+      name: kopiur-stpetersburg-kopia-password
+      namespace: home-assistant
+      key: KOPIA_PASSWORD
+  mode: ReadOnly
+  create:
+    enabled: false
+  catalog:
+    adoption: Ignore
+    periodicRefresh: false
+    retain:
+      perIdentity: 50
+      maxAgeDays: 30
+  maintenance:
+    enabled: false
+  onNamespaceDelete: Orphan
