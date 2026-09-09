@@ -1,0 +1,35 @@
+rule_files:
+  - ../node-health.yaml
+
+evaluation_interval: 1m
+
+tests:
+  # NodeKernelOOMKill is an event counter, so retain it for an hour rather
+  # than relying on a short increase window. The five-minute hold is still
+  # required; the event must not be visible for only one evaluation tick.
+  - interval: 1m
+    input_series:
+      - series: 'problem_counter{cluster="talos-stpetersburg",node="spark-0",reason="OOMKilling"}'
+        values: "0 0 1+0x70"
+    alert_rule_test:
+      - eval_time: 4m
+        alertname: NodeKernelOOMKill
+        exp_alerts: []
+      - eval_time: 10m
+        alertname: NodeKernelOOMKill
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-stpetersburg
+              node: spark-0
+              reason: OOMKilling
+              severity: critical
+            exp_annotations:
+              summary: Node spark-0 recorded a kernel OOM kill.
+              description: >-
+                Node-problem-detector observed the kernel OOM-kill signature.
+                This distinguishes host-level memory pressure from a Kata
+                sandbox teardown; correlate it with the affected pod's
+                termination reason and node memory metrics.
+      - eval_time: 70m
+        alertname: NodeKernelOOMKill
+        exp_alerts: []

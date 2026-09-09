@@ -38,8 +38,12 @@ groups:
             condition is not hidden by generic node-readiness alerts.
 
       - alert: NodeKernelOOMKill
-        expr: increase(problem_counter{reason="OOMKilling"}[10m]) > 0
-        for: 0m
+        # problem_counter is an event counter, not a resource with a current
+        # phase. Retain a recent event for an hour and require five minutes of
+        # continuous evidence so a single scrape/evaluation blip is not the
+        # only opportunity to observe a host OOM kill.
+        expr: increase(problem_counter{reason="OOMKilling"}[1h]) > 0
+        for: 5m
         labels:
           severity: critical
         annotations:
