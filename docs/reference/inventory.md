@@ -28,10 +28,10 @@ diagram in the [README](../../README.md#architecture).
 
 | Location | Talos machines | Pointer directories | Flux Kustomizations |
 |---|---:|---:|---:|
-| `ottawa` | 4 | 62 | 127 |
-| `robbinsdale` | 3 | 43 | 88 |
-| `stpetersburg` | 3 | 42 | 86 |
-| **total** | **10** | **147** | **301** |
+| `ottawa` | 4 | 62 | 126 |
+| `robbinsdale` | 3 | 43 | 87 |
+| `stpetersburg` | 3 | 42 | 85 |
+| **total** | **10** | **147** | **298** |
 
 ## Ottawa — `talos-ottawa`
 
@@ -102,7 +102,7 @@ diagram in the [README](../../README.md#architecture).
 | Observability | `fluent-bit` | `fluent-bit` |
 | Observability | `gatus` | `gatus` |
 | Observability | `mimir` | `mimir` |
-| Observability | `monitoring` | `blackbox-exporter`, `blackbox-exporter-config`, `blackbox-exporter-ottawa`, `config`, `grafana`, `grafana-dashboards`, `grafana-datasources`, `grafana-instance`, `grafana-mcp`, `kromgo`, `mimir-rule-completeness`, `monitoring`, `monitoring-nagato`, `running-workload-image-probe`, `smartctl-exporter`, `smartctl-exporter-config`, `unpoller` |
+| Observability | `monitoring` | `blackbox-exporter`, `blackbox-exporter-config`, `blackbox-exporter-ottawa`, `config`, `grafana`, `grafana-dashboards`, `grafana-datasources`, `grafana-instance`, `grafana-mcp`, `kromgo`, `mimir-rule-completeness`, `monitoring`, `monitoring-nagato`, `smartctl-exporter`, `smartctl-exporter-config`, `unpoller` |
 | Observability | `opencost` | `opencost` |
 | Observability | `victoria-logs` | `victoria-logs` → ns `monitoring` |
 | Certificates and secrets | `cert-manager` | `cert-manager`, `cert-manager-common-issuers` |
@@ -218,7 +218,7 @@ Pointers whose objects land outside their directory's namespace — use the righ
 | Observability | `fluent-bit` | `fluent-bit` |
 | Observability | `gatus` | `gatus` |
 | Observability | `mimir` | `mimir-egress` |
-| Observability | `monitoring` | `blackbox-exporter`, `blackbox-exporter-config`, `blackbox-exporter-robbinsdale`, `config`, `kromgo`, `monitoring`, `running-workload-image-probe`, `smartctl-exporter`, `smartctl-exporter-config`, `unpoller` |
+| Observability | `monitoring` | `blackbox-exporter`, `blackbox-exporter-config`, `blackbox-exporter-robbinsdale`, `config`, `kromgo`, `monitoring`, `smartctl-exporter`, `smartctl-exporter-config`, `unpoller` |
 | Observability | `victoria-logs` | `victoria-logs` → ns `monitoring` |
 | Certificates and secrets | `cert-manager` | `cert-manager`, `cert-manager-common-issuers`, `cert-manager-issuers` |
 | Certificates and secrets | `external-secrets` | `external-secrets-config`, `external-secrets-install` |
@@ -300,7 +300,7 @@ Pointers whose objects land outside their directory's namespace — use the righ
 | Observability | `fluent-bit` | `fluent-bit` |
 | Observability | `gatus` | `gatus` |
 | Observability | `mimir` | `mimir-egress` |
-| Observability | `monitoring` | `blackbox-exporter`, `blackbox-exporter-config`, `blackbox-exporter-stpetersburg`, `config`, `grafana-redirect`, `kromgo`, `monitoring`, `running-workload-image-probe`, `unpoller` |
+| Observability | `monitoring` | `blackbox-exporter`, `blackbox-exporter-config`, `blackbox-exporter-stpetersburg`, `config`, `grafana-redirect`, `kromgo`, `monitoring`, `unpoller` |
 | Observability | `victoria-logs` | `victoria-logs` → ns `monitoring` |
 | Certificates and secrets | `cert-manager` | `cert-manager`, `cert-manager-common-issuers` |
 | Certificates and secrets | `external-secrets` | `external-secrets-config`, `external-secrets-install` |

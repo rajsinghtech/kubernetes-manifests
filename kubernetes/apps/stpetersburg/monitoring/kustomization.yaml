@@ -9,4 +9,3 @@ resources:
   - ./blackbox-exporter.yaml
   - ./blackbox-exporter-stpetersburg.yaml
   - ./grafana-redirect.yaml
-  - ./running-workload-image-probe.yaml
