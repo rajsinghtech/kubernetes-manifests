@@ -245,7 +245,10 @@ tests:
       - eval_time: 4m
         alertname: KopiurRepositoryUnreachable
         exp_alerts: []
-      - eval_time: 5m
+      # The repository health inputs are recorded in a separate rule group;
+      # allow one evaluation tick after the five-minute hold for that current
+      # state to reach the alert group.
+      - eval_time: 6m
         alertname: KopiurRepositoryUnreachable
         exp_alerts:
           - exp_labels:
@@ -274,6 +277,8 @@ tests:
       - eval_time: 9m
         alertname: KopiurCoverageMissing
         exp_alerts: []
+      # The expected-source inventory is a recording rule in another group;
+      # assert after one evaluation tick beyond the ten-minute hold.
       - eval_time: 11m
         alertname: KopiurCoverageMissing
         exp_alerts:
