@@ -1,0 +1,112 @@
+rule_files:
+  - ../velero-integrity.yaml
+
+evaluation_interval: 1m
+
+tests:
+  # This is the observed St Petersburg ownership split: exactly one warning
+  # from the known homeassistant-config hostPath skip, with current Kopiur
+  # coverage in the named repository. The warning is intentionally quiet here.
+  - interval: 1m
+    input_series:
+      - series: 'velero_cr_backup_created_timestamp{cluster="talos-stpetersburg",namespace="velero-system",schedule="home-assistant-backup",backup="home-assistant-backup-known-skip"}'
+        values: "100+0x20"
+      - series: 'velero_cr_backup_warnings{cluster="talos-stpetersburg",namespace="velero-system",schedule="home-assistant-backup",backup="home-assistant-backup-known-skip"}'
+        values: "1+0x20"
+      - series: 'kopiur_leader_is_leader{cluster="talos-stpetersburg"}'
+        values: "1+0x20"
+      - series: 'kopiur_expected_source_info{cluster="talos-stpetersburg",namespace="home-assistant",policy="homeassistant-config",pvc="homeassistant-config",repository="kopiur-stpetersburg"}'
+        values: "1+0x20"
+      - series: 'kopiur_snapshotpolicy_last_backup_success{cluster="talos-stpetersburg",exported_namespace="home-assistant",namespace="kopiur-system",policy="homeassistant-config"}'
+        values: "1+0x20"
+      - series: 'kopiur_policy_last_backup_success_timestamp_seconds{cluster="talos-stpetersburg",exported_namespace="home-assistant",namespace="kopiur-system",policy="homeassistant-config"}'
+        values: "900+0x20"
+      - series: 'kopiur_expected_repository_info{cluster="talos-stpetersburg",kind="Repository",namespace="home-assistant",name="kopiur-stpetersburg"}'
+        values: "1+0x20"
+      - series: 'kopiur_resource_phase{cluster="talos-stpetersburg",kind="Repository",exported_namespace="home-assistant",namespace="kopiur-system",name="kopiur-stpetersburg",phase="Ready"}'
+        values: "1+0x20"
+      - series: 'kopiur_repository_consecutive_backend_failures{cluster="talos-stpetersburg",kind="Repository",exported_namespace="home-assistant",namespace="kopiur-system",name="kopiur-stpetersburg"}'
+        values: "0+0x20"
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: VeleroScheduleLatestBackupHasWarnings
+        exp_alerts: []
+
+  # The warning metric is aggregate. A second hostPath skip on the same
+  # schedule raises the count above the one known, Kopiur-covered warning and
+  # must remain visible.
+  - interval: 1m
+    input_series:
+      - series: 'velero_cr_backup_created_timestamp{cluster="talos-stpetersburg",namespace="velero-system",schedule="home-assistant-backup",backup="home-assistant-backup-two-skips"}'
+        values: "100+0x20"
+      - series: 'velero_cr_backup_warnings{cluster="talos-stpetersburg",namespace="velero-system",schedule="home-assistant-backup",backup="home-assistant-backup-two-skips"}'
+        values: "2+0x20"
+      - series: 'kopiur_leader_is_leader{cluster="talos-stpetersburg"}'
+        values: "1+0x20"
+      - series: 'kopiur_expected_source_info{cluster="talos-stpetersburg",namespace="home-assistant",policy="homeassistant-config",pvc="homeassistant-config",repository="kopiur-stpetersburg"}'
+        values: "1+0x20"
+      - series: 'kopiur_snapshotpolicy_last_backup_success{cluster="talos-stpetersburg",exported_namespace="home-assistant",namespace="kopiur-system",policy="homeassistant-config"}'
+        values: "1+0x20"
+      - series: 'kopiur_policy_last_backup_success_timestamp_seconds{cluster="talos-stpetersburg",exported_namespace="home-assistant",namespace="kopiur-system",policy="homeassistant-config"}'
+        values: "900+0x20"
+      - series: 'kopiur_expected_repository_info{cluster="talos-stpetersburg",kind="Repository",namespace="home-assistant",name="kopiur-stpetersburg"}'
+        values: "1+0x20"
+      - series: 'kopiur_resource_phase{cluster="talos-stpetersburg",kind="Repository",exported_namespace="home-assistant",namespace="kopiur-system",name="kopiur-stpetersburg",phase="Ready"}'
+        values: "1+0x20"
+      - series: 'kopiur_repository_consecutive_backend_failures{cluster="talos-stpetersburg",kind="Repository",exported_namespace="home-assistant",namespace="kopiur-system",name="kopiur-stpetersburg"}'
+        values: "0+0x20"
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: VeleroScheduleLatestBackupHasWarnings
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-stpetersburg
+              namespace: velero-system
+              schedule: home-assistant-backup
+              backup: home-assistant-backup-two-skips
+              severity: critical
+            exp_annotations:
+              summary: Velero schedule home-assistant-backup latest Completed backup has warnings
+              description: >-
+                The newest Backup for schedule home-assistant-backup is
+                home-assistant-backup-two-skips and reports status.warnings > 0.
+                Velero uses warnings for soft failures such as skipping a
+                hostPath / local-path volume while still marking the Backup
+                Completed (corp/bhaiya#695), so phase alone is not enough.
+                Inspect the Backup log for "hostPath volume which is not
+                supported" (or other skip reasons), confirm every durable PVC
+                has a Completed PodVolumeBackup for its pod+volume, and do not
+                treat this Backup as a volume restore source until the warning
+                is gone. A later Backup with warnings=0 clears this alert.
+
+  # Same schedule and one warning, but no Kopiur contract: a different
+  # hostPath skip without alternate protection must alert.
+  - interval: 1m
+    input_series:
+      - series: 'velero_cr_backup_created_timestamp{cluster="talos-stpetersburg",namespace="velero-system",schedule="home-assistant-backup",backup="home-assistant-backup-uncovered-skip"}'
+        values: "100+0x20"
+      - series: 'velero_cr_backup_warnings{cluster="talos-stpetersburg",namespace="velero-system",schedule="home-assistant-backup",backup="home-assistant-backup-uncovered-skip"}'
+        values: "1+0x20"
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: VeleroScheduleLatestBackupHasWarnings
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-stpetersburg
+              namespace: velero-system
+              schedule: home-assistant-backup
+              backup: home-assistant-backup-uncovered-skip
+              severity: critical
+            exp_annotations:
+              summary: Velero schedule home-assistant-backup latest Completed backup has warnings
+              description: >-
+                The newest Backup for schedule home-assistant-backup is
+                home-assistant-backup-uncovered-skip and reports status.warnings
+                > 0. Velero uses warnings for soft failures such as skipping a
+                hostPath / local-path volume while still marking the Backup
+                Completed (corp/bhaiya#695), so phase alone is not enough.
+                Inspect the Backup log for "hostPath volume which is not
+                supported" (or other skip reasons), confirm every durable PVC
+                has a Completed PodVolumeBackup for its pod+volume, and do not
+                treat this Backup as a volume restore source until the warning
+                is gone. A later Backup with warnings=0 clears this alert.

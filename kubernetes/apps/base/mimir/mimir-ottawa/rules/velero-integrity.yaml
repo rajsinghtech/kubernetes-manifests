@@ -231,15 +231,130 @@ groups:
       # to the newest Backup per schedule so a later clean run clears the alert;
       # do not match historical warning-bearing objects. Critical: a "Completed"
       # Backup with warnings is the dangerous signal, not a soft FYI.
+      #
+      # St Petersburg's home-assistant-config is an explicit ownership split:
+      # its local-path/hostPath PVC is intentionally not Velero-capturable and
+      # is protected by Kopiur SnapshotPolicy homeassistant-config in the named
+      # repository kopiur-stpetersburg. The exporter exposes only an aggregate
+      # warning count, not a warning reason or volume, so suppress exactly one
+      # warning only while that source, recent successful snapshot, live leader,
+      # and repository health contract all hold. A count above one remains
+      # actionable: it represents the known skip plus another warning on the
+      # same schedule. A different single warning cannot be distinguished from
+      # the known one with this metric contract and must not be hidden by a
+      # broader schedule exclusion.
       - alert: VeleroScheduleLatestBackupHasWarnings
         expr: |
           (
-            max by (cluster, namespace, schedule, backup) (
-              velero_cr_backup_warnings{
-                namespace="velero-system",
-                schedule!=""
-              }
-            ) > 0
+            (
+              max by (cluster, namespace, schedule, backup) (
+                velero_cr_backup_warnings{
+                  namespace="velero-system",
+                  schedule!=""
+                }
+              ) > 0
+            )
+            unless on (cluster, namespace, schedule, backup)
+            (
+              (
+                max by (cluster, namespace, schedule, backup) (
+                  velero_cr_backup_warnings{
+                    cluster="talos-stpetersburg",
+                    namespace="velero-system",
+                    schedule="home-assistant-backup"
+                  }
+                ) == 1
+              )
+              and on (cluster)
+              (
+                kopiur_leader_is_leader{
+                  cluster="talos-stpetersburg"
+                } == 1
+              )
+              and on (cluster)
+              (
+                kopiur_expected_source_info{
+                  cluster="talos-stpetersburg",
+                  namespace="home-assistant",
+                  policy="homeassistant-config",
+                  pvc="homeassistant-config",
+                  repository="kopiur-stpetersburg"
+                }
+                and on (cluster, namespace, policy)
+                (
+                  label_replace(
+                    kopiur_snapshotpolicy_last_backup_success{
+                      cluster="talos-stpetersburg",
+                      exported_namespace="home-assistant",
+                      namespace="kopiur-system",
+                      policy="homeassistant-config"
+                    },
+                    "namespace", "$1", "exported_namespace", "(.+)"
+                  ) == 1
+                )
+                and on (cluster, namespace, policy)
+                (
+                  label_replace(
+                    kopiur_policy_last_backup_success_timestamp_seconds{
+                      cluster="talos-stpetersburg",
+                      exported_namespace="home-assistant",
+                      namespace="kopiur-system",
+                      policy="homeassistant-config"
+                    },
+                    "namespace", "$1", "exported_namespace", "(.+)"
+                  ) > 0
+                  and
+                  time()
+                    - label_replace(
+                        kopiur_policy_last_backup_success_timestamp_seconds{
+                          cluster="talos-stpetersburg",
+                          exported_namespace="home-assistant",
+                          namespace="kopiur-system",
+                          policy="homeassistant-config"
+                        },
+                        "namespace", "$1", "exported_namespace", "(.+)"
+                      ) < 129600
+                )
+              )
+              and on (cluster)
+              (
+                kopiur_expected_repository_info{
+                  cluster="talos-stpetersburg",
+                  kind="Repository",
+                  namespace="home-assistant",
+                  name="kopiur-stpetersburg"
+                }
+                and on (cluster, kind, namespace, name)
+                (
+                  max by (cluster, kind, namespace, name) (
+                    label_replace(
+                      kopiur_resource_phase{
+                        cluster="talos-stpetersburg",
+                        kind="Repository",
+                        namespace="kopiur-system",
+                        exported_namespace="home-assistant",
+                        name="kopiur-stpetersburg",
+                        phase="Ready"
+                      },
+                      "namespace", "$1", "exported_namespace", "(.+)"
+                    )
+                  ) == 1
+                  and on (cluster, kind, namespace, name)
+                  max by (cluster, kind, namespace, name) (
+                    label_replace(
+                      kopiur_repository_consecutive_backend_failures{
+                        cluster="talos-stpetersburg",
+                        kind="Repository",
+                        namespace="kopiur-system",
+                        exported_namespace="home-assistant",
+                        name="kopiur-stpetersburg"
+                      },
+                      "namespace", "$1", "exported_namespace", "(.+)"
+                    )
+                  ) == 0
+                )
+              )
+            )
           )
           and on (cluster, namespace, schedule, backup)
           (
