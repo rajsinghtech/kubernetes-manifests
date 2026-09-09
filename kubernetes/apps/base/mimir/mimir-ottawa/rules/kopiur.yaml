@@ -170,10 +170,13 @@ groups:
             kopiur_expected_source_info
             unless on (cluster, namespace, policy)
             max by (cluster, namespace, policy) (
-              kopiur_snapshotpolicy_last_backup_success{
-                namespace="home-assistant",
-                policy="homeassistant-config"
-              }
+              label_replace(
+                kopiur_snapshotpolicy_last_backup_success{
+                  exported_namespace="home-assistant",
+                  policy="homeassistant-config"
+                },
+                "namespace", "$1", "exported_namespace", "(.+)"
+              )
             )
           )
           and on (cluster)

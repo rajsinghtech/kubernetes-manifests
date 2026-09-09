@@ -4,6 +4,10 @@ rule_files:
 evaluation_interval: 1m
 
 tests:
+  # Live Kopiur scrapes carry namespace="kopiur-system" from the scrape
+  # target and exported_namespace="home-assistant" from the controller's
+  # colliding label. Keep fixtures on that observed contract so a raw
+  # namespace="home-assistant" selector cannot pass these tests accidentally.
   # All four alerts stay quiet for a current successful backup, a healthy
   # repository, and an intentionally configured maintenance gauge. The
   # maintenance gauge is informational; it is not itself an incident.
@@ -11,15 +15,15 @@ tests:
     input_series:
       - series: 'kopiur_leader_is_leader{cluster="talos-stpetersburg"}'
         values: "1+0x20"
-      - series: 'kopiur_snapshotpolicy_last_backup_success{cluster="talos-stpetersburg",namespace="home-assistant",policy="homeassistant-config"}'
+      - series: 'kopiur_snapshotpolicy_last_backup_success{cluster="talos-stpetersburg",exported_namespace="home-assistant",namespace="kopiur-system",policy="homeassistant-config"}'
         values: "1+0x20"
-      - series: 'kopiur_policy_last_backup_success_timestamp_seconds{cluster="talos-stpetersburg",namespace="home-assistant",policy="homeassistant-config"}'
+      - series: 'kopiur_policy_last_backup_success_timestamp_seconds{cluster="talos-stpetersburg",exported_namespace="home-assistant",namespace="kopiur-system",policy="homeassistant-config"}'
         values: "900+0x20"
-      - series: 'kopiur_resource_phase{cluster="talos-stpetersburg",exported_namespace="home-assistant",kind="Repository",namespace="kopiur-system",name="kopiur-stpetersburg",phase="Ready"}'
+      - series: 'kopiur_resource_phase{cluster="talos-stpetersburg",kind="Repository",exported_namespace="home-assistant",namespace="kopiur-system",name="kopiur-stpetersburg",phase="Ready"}'
         values: "1+0x20"
-      - series: 'kopiur_repository_consecutive_backend_failures{cluster="talos-stpetersburg",exported_namespace="home-assistant",kind="Repository",namespace="kopiur-system",name="kopiur-stpetersburg"}'
+      - series: 'kopiur_repository_consecutive_backend_failures{cluster="talos-stpetersburg",kind="Repository",exported_namespace="home-assistant",namespace="kopiur-system",name="kopiur-stpetersburg"}'
         values: "0+0x20"
-      - series: 'kopiur_repository_maintenance_configured{cluster="talos-stpetersburg",exported_namespace="home-assistant",kind="Repository",namespace="kopiur-system",name="kopiur-stpetersburg"}'
+      - series: 'kopiur_repository_maintenance_configured{cluster="talos-stpetersburg",kind="Repository",exported_namespace="home-assistant",namespace="kopiur-system",name="kopiur-stpetersburg"}'
         values: "1+0x20"
     alert_rule_test:
       - eval_time: 15m
@@ -122,9 +126,9 @@ tests:
         values: "1+0x20"
       - series: 'kopiur_snapshotpolicy_last_backup_success{cluster="talos-stpetersburg",exported_namespace="home-assistant",namespace="kopiur-system",policy="homeassistant-config"}'
         values: "1+0x20"
-      - series: 'kopiur_resource_phase{cluster="talos-stpetersburg",kind="Snapshot",namespace="home-assistant",name="homeassistant-config-old",phase="Failed",policy="homeassistant-config"}'
+      - series: 'kopiur_resource_phase{cluster="talos-stpetersburg",kind="Snapshot",exported_namespace="home-assistant",namespace="kopiur-system",name="homeassistant-config-old",phase="Failed",policy="homeassistant-config"}'
         values: "1+0x20"
-      - series: 'kopiur_resource_phase{cluster="talos-stpetersburg",kind="Snapshot",namespace="home-assistant",name="homeassistant-config-new",phase="Succeeded",policy="homeassistant-config"}'
+      - series: 'kopiur_resource_phase{cluster="talos-stpetersburg",kind="Snapshot",exported_namespace="home-assistant",namespace="kopiur-system",name="homeassistant-config-new",phase="Succeeded",policy="homeassistant-config"}'
         values: "1+0x20"
     alert_rule_test:
       - eval_time: 15m
@@ -138,9 +142,9 @@ tests:
     input_series:
       - series: 'kopiur_leader_is_leader{cluster="talos-stpetersburg"}'
         values: "1+0x20"
-      - series: 'kopiur_snapshotpolicy_last_backup_success{cluster="talos-stpetersburg",namespace="home-assistant",policy="homeassistant-config"}'
+      - series: 'kopiur_snapshotpolicy_last_backup_success{cluster="talos-stpetersburg",exported_namespace="home-assistant",namespace="kopiur-system",policy="homeassistant-config"}'
         values: "1+0x20"
-      - series: 'kopiur_snapshotpolicy_last_backup_success{cluster="talos-stpetersburg",namespace="home-assistant",policy="excluded-policy"}'
+      - series: 'kopiur_snapshotpolicy_last_backup_success{cluster="talos-stpetersburg",exported_namespace="home-assistant",namespace="kopiur-system",policy="excluded-policy"}'
         values: "0+0x20"
     alert_rule_test:
       - eval_time: 15m
@@ -231,11 +235,11 @@ tests:
     input_series:
       - series: 'kopiur_leader_is_leader{cluster="talos-stpetersburg"}'
         values: "1+0x20"
-      - series: 'kopiur_resource_phase{cluster="talos-stpetersburg",exported_namespace="home-assistant",kind="Repository",namespace="kopiur-system",name="kopiur-stpetersburg",phase="Ready"}'
+      - series: 'kopiur_resource_phase{cluster="talos-stpetersburg",kind="Repository",exported_namespace="home-assistant",namespace="kopiur-system",name="kopiur-stpetersburg",phase="Ready"}'
         values: "1+0x20"
-      - series: 'kopiur_repository_consecutive_backend_failures{cluster="talos-stpetersburg",exported_namespace="home-assistant",kind="Repository",namespace="kopiur-system",name="kopiur-stpetersburg"}'
+      - series: 'kopiur_repository_consecutive_backend_failures{cluster="talos-stpetersburg",kind="Repository",exported_namespace="home-assistant",namespace="kopiur-system",name="kopiur-stpetersburg"}'
         values: "2+0x20"
-      - series: 'kopiur_repository_maintenance_configured{cluster="talos-stpetersburg",exported_namespace="home-assistant",kind="Repository",namespace="kopiur-system",name="kopiur-stpetersburg"}'
+      - series: 'kopiur_repository_maintenance_configured{cluster="talos-stpetersburg",kind="Repository",exported_namespace="home-assistant",namespace="kopiur-system",name="kopiur-stpetersburg"}'
         values: "1+0x20"
     alert_rule_test:
       - eval_time: 4m
