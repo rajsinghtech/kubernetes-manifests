@@ -209,3 +209,47 @@ tests:
       - eval_time: 15m
         alertname: VeleroBackupPartiallyFailed
         exp_alerts: []
+
+  # A Failed Backup uses the same newest-state boundary as a PartiallyFailed
+  # Backup. It must be observable while current and clear after recovery.
+  - interval: 1m
+    input_series:
+      - series: 'velero_cr_backup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="failed-recovered",backup="failed-recovered-old"}'
+        values: "100+0x20"
+      - series: 'velero_cr_backup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="failed-recovered",backup="failed-recovered-failed"}'
+        values: "200+0x20"
+      - series: 'velero_cr_backup_info{cluster="talos-ottawa",namespace="velero-system",schedule="failed-recovered",backup="failed-recovered-old",phase="Completed"}'
+        values: "1+0x20"
+      - series: 'velero_cr_backup_info{cluster="talos-ottawa",namespace="velero-system",schedule="failed-recovered",backup="failed-recovered-failed",phase="Failed"}'
+        values: "1+0x20"
+      - series: 'velero_cr_backup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="failed-recovered",backup="failed-recovered-success"}'
+        values: "_x10 300+0x10"
+      - series: 'velero_cr_backup_info{cluster="talos-ottawa",namespace="velero-system",schedule="failed-recovered",backup="failed-recovered-success",phase="Completed"}'
+        values: "_x10 1+0x10"
+    alert_rule_test:
+      - eval_time: 4m
+        alertname: VeleroBackupFailed
+        exp_alerts: []
+      - eval_time: 5m
+        alertname: VeleroBackupFailed
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-ottawa
+              namespace: velero-system
+              schedule: failed-recovered
+              backup: failed-recovered-failed
+              severity: critical
+            exp_annotations:
+              summary: Velero schedule failed-recovered reported a failed backup
+              description: >-
+                The newest Backup for schedule failed-recovered is Failed.
+                This is current Backup state, not a counter delta, so it
+                remains observable until a newer Backup supersedes it. Do not
+                substitute velero_backup_last_status for this signal: that
+                gauge can remain successful while a later Backup object is
+                Failed. Inspect the Backup status and error details; this
+                alert does not establish that a backup which completed is
+                complete or restorable.
+      - eval_time: 15m
+        alertname: VeleroBackupFailed
+        exp_alerts: []

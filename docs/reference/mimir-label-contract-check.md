@@ -58,12 +58,13 @@ The other observation-quality failure is statically detectable. Run
 `irate()` alert expressions whose range is at most a few scrape intervals and
 whose `for` is zero. With the repository's 5-minute threshold, the current
 rule set originally reported two locations: `VeleroBackupPartiallyFailed` and
-`VeleroBackupFailed`. The former is fixed in this change; the strict scan now
-reports one remaining location, `VeleroBackupFailed`, as a separate
-counter-based finding. `NodeKernelOOMKill` is the adjacent broader case
-(`increase(...[10m])` with `for: 0m`) and is reported when the threshold is
-raised. Because the native rule files are shared, each location is loaded for
-all three Mimir tenants.
+`VeleroBackupFailed`; both now use newest-Backup state and the strict scan is
+clean. `NodeKernelOOMKill` is the different event-counter case: it now keeps
+`increase(...[1h])` visible with `for: 5m`, rather than pretending an object
+state exists. The static scan still reports it if its threshold is raised to
+one hour, which is intentional: the event has no durable current-state object
+and its retention window is an explicit operational choice. Because the native
+rule files are shared, each location is loaded for all three Mimir tenants.
 
 Rules are shared across tenants. Selectors that explicitly exclude the
 current tenant with a `cluster` matcher are skipped, because they are not
