@@ -1,0 +1,46 @@
+---
+# The r2 content proof restored the files but failed while applying the root
+# directory mtime. This retry skips all ownership, permission, and timestamp
+# metadata so a successful run is an explicit file-data proof only.
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: Restore
+metadata:
+  name: homeassistant-config-restore-content-r3
+  namespace: kopiur-restore-proof-20260908-ha
+spec:
+  source:
+    snapshotRef:
+      name: homeassistant-config-20260908034331
+      namespace: home-assistant
+  repository:
+    kind: ClusterRepository
+    name: kopiur-stpetersburg-restore-readonly
+  credentialProjection:
+    enabled: true
+  target:
+    pvc:
+      name: homeassistant-config-restore-content-r3
+      accessModes:
+        - ReadWriteOnce
+      capacity: 10Gi
+      storageClassName: local-path
+  mover:
+    inheritSecurityContextFrom:
+      snapshot: {}
+  options:
+    enableFileDeletion: false
+    ignoreErrors: false
+    ignorePermissionErrors: false
+    parallel: 1
+    skipExisting: false
+    skipOwners: true
+    skipPermissions: true
+    skipTimes: true
+    writeFilesAtomically: true
+  policy:
+    onMissingSnapshot: Fail
+    waitTimeout: 5m
+  failurePolicy:
+    backoffLimit: 0
+    activeDeadlineSeconds: 1800
+    podStartupDeadlineSeconds: 300

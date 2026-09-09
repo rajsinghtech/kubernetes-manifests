@@ -5,3 +5,4 @@ resources:
   - namespace.yaml
   - restore.yaml
   - restore-content-r2.yaml
+  - restore-content-r3.yaml
