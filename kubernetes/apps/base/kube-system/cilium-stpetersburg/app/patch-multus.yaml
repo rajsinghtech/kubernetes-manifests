@@ -5,6 +5,11 @@ metadata:
   name: kube-multus-ds
   namespace: kube-system
 spec:
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+  minReadySeconds: 10
   template:
     spec:
       volumes:
@@ -13,7 +18,7 @@ spec:
             path: /var/run/netns/
       initContainers:
         - name: install-multus-binary
-          image: ghcr.io/k8snetworkplumbingwg/multus-cni:v4.3.0-thick@sha256:2b9671447f3ea4e7e56730843dbf59445b9307246f393b61386b896d56ae51c9
+          image: ghcr.io/k8snetworkplumbingwg/multus-cni:v4.3.1-thick@sha256:a357a79359b80ddd5f4699117946cacf3b54f5baecf7944535594863e875fc25
           command:
             - "cp"
             - "-f"
@@ -33,6 +38,52 @@ spec:
         - name: kube-multus
           # Keep the daemon and host-installed shim on the same immutable release.
           image: ghcr.io/k8snetworkplumbingwg/multus-cni:v4.3.1-thick@sha256:a357a79359b80ddd5f4699117946cacf3b54f5baecf7944535594863e875fc25
+          # Probe the Unix API used by multus-shim; DS Ready must reflect daemon health.
+          startupProbe:
+            exec:
+              command:
+                - /usr/bin/perl
+                - -MIO::Socket::UNIX
+                - -MSocket
+                - -e
+                - |
+                  my $s = IO::Socket::UNIX->new(Type => SOCK_STREAM, Peer => "/host/run/multus/multus.sock") or exit 1;
+                  print $s "GET /readyz HTTP/1.0\r\nHost: localhost\r\n\r\n" or exit 1;
+                  my $line = <$s>;
+                  exit(($line // "") =~ m{^HTTP/\d(?:\.\d)? 200\b} ? 0 : 1);
+            periodSeconds: 2
+            timeoutSeconds: 2
+            failureThreshold: 60
+          readinessProbe:
+            exec:
+              command:
+                - /usr/bin/perl
+                - -MIO::Socket::UNIX
+                - -MSocket
+                - -e
+                - |
+                  my $s = IO::Socket::UNIX->new(Type => SOCK_STREAM, Peer => "/host/run/multus/multus.sock") or exit 1;
+                  print $s "GET /readyz HTTP/1.0\r\nHost: localhost\r\n\r\n" or exit 1;
+                  my $line = <$s>;
+                  exit(($line // "") =~ m{^HTTP/\d(?:\.\d)? 200\b} ? 0 : 1);
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 3
+          livenessProbe:
+            exec:
+              command:
+                - /usr/bin/perl
+                - -MIO::Socket::UNIX
+                - -MSocket
+                - -e
+                - |
+                  my $s = IO::Socket::UNIX->new(Type => SOCK_STREAM, Peer => "/host/run/multus/multus.sock") or exit 1;
+                  print $s "GET /healthz HTTP/1.0\r\nHost: localhost\r\n\r\n" or exit 1;
+                  my $line = <$s>;
+                  exit(($line // "") =~ m{^HTTP/\d(?:\.\d)? 200\b} ? 0 : 1);
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
           resources:
             # orin-0 usage ~28Mi; 200Mi request was pure schedulable waste on the
             # sole control-plane node that also pins Home Assistant.
