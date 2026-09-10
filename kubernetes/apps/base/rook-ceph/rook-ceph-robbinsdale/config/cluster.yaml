@@ -33,7 +33,7 @@ spec:
     # versions running within the cluster. See tags available at https://hub.docker.com/r/ceph/ceph/tags/.
     # If you want to be more precise, you can always use a timestamp tag such as quay.io/ceph/ceph:v18.2.4-20240724
     # This tag might not contain a new Ceph version, just security fixes from the underlying operating system, which will reduce vulnerabilities
-    image: quay.io/ceph/ceph:v20.2.2
+    image: quay.io/ceph/ceph:v20.2.3
     # Whether to allow unsupported versions of Ceph. Currently Reef, Squid, and Tentacle are supported.
     allowUnsupported: false
   # The path on the host where configuration files will be persisted. Must be specified. If there are multiple clusters, the directory must be unique for each cluster.
