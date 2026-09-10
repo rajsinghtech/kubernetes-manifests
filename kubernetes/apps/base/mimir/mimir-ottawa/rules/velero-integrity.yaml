@@ -489,8 +489,10 @@ groups:
       # volume-count comparison, a Completed run with warnings is still a
       # useful observed baseline; VeleroScheduleLatestBackupHasWarnings owns
       # the separate quality signal. The alert deliberately observes the
-      # produced-PVB count while the Backup is queued/running; phase and item
-      # counters are not allowed to hide a volume gap.
+      # produced-PVB count only after the newest parent Backup is Completed.
+      # While the Backup is queued/running, its absent or partial Completed-PVB
+      # count is unresolved; phase and item counters must not turn that
+      # in-progress state into a coverage regression.
       - record: velero_schedule_latest_backup_created_timestamp
         expr: |
           max by (cluster, namespace, schedule, backup) (
@@ -555,6 +557,24 @@ groups:
             )
           )
 
+      # The newest Backup timestamp deliberately follows the newest attempt,
+      # including Queued and InProgress Backups. The count above deliberately
+      # follows only Completed PVBs. Do not compare those two states: while a
+      # Backup is running, an absent or partial Completed count is unresolved,
+      # not evidence that coverage was lost. Gate both the real count and its
+      # zero fallback on the newest parent Backup being Completed.
+      - record: velero_schedule_latest_completed_backup_created_timestamp
+        expr: |
+          velero_schedule_latest_backup_created_timestamp
+          and on (cluster, namespace, schedule, backup)
+          max by (cluster, namespace, schedule, backup) (
+            velero_cr_backup_info{
+              namespace="velero-system",
+              schedule!="",
+              phase="Completed"
+            }
+          )
+
       - record: velero_schedule_latest_pod_volume_backup_count
         expr: |
           (
@@ -569,11 +589,11 @@ groups:
               )
             )
             and on (cluster, namespace, schedule, backup)
-            velero_schedule_latest_backup_created_timestamp
+            velero_schedule_latest_completed_backup_created_timestamp
           )
           or on (cluster, namespace, schedule, backup)
           (
-            velero_schedule_latest_backup_created_timestamp * 0
+            velero_schedule_latest_completed_backup_created_timestamp * 0
           )
 
       - record: velero_schedule_previous_successful_pod_volume_backup_count
