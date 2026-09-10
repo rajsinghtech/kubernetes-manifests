@@ -5,6 +5,7 @@ metadata:
   name: running-workload-image-probe
   labels:
     app.kubernetes.io/name: running-workload-image-probe
+    app.kubernetes.io/component: running-workload-image-probe
 spec:
   selector:
     app.kubernetes.io/name: running-workload-image-probe

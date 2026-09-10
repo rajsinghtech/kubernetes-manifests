@@ -72,7 +72,7 @@ tests:
 
   - interval: 1m
     input_series:
-      - series: 'running_workload_image_registry_probe_references{cluster="talos-ottawa",image="ghcr.io/example/app:old",registry="ghcr.io",status="unknown"}'
+      - series: 'running_workload_image_registry_probe_references{cluster="talos-ottawa",image="oci.cdn.keiretsu.top/keiretsu/app:old",registry="oci.cdn.keiretsu.top",status="unknown"}'
         values: "1+0x20"
       - series: 'running_workload_image_registry_probe_scan_success{cluster="talos-ottawa"}'
         values: "1+0x20"
@@ -82,8 +82,8 @@ tests:
         exp_alerts:
           - exp_labels:
               cluster: talos-ottawa
-              image: ghcr.io/example/app:old
-              registry: ghcr.io
+              image: oci.cdn.keiretsu.top/keiretsu/app:old
+              registry: oci.cdn.keiretsu.top
               severity: warning
               status: unknown
             exp_annotations:
@@ -95,6 +95,19 @@ tests:
                 rate-limit, or registry-server error, not evidence that the
                 image is missing. Restore probe reachability before treating
                 it as an image-loss incident.
+
+  # External registries are outside this detector's retention boundary and
+  # must not create an actionable unknown alert even if a stale sample exists.
+  - interval: 1m
+    input_series:
+      - series: 'running_workload_image_registry_probe_references{cluster="talos-ottawa",image="ghcr.io/example/app:old",registry="ghcr.io",status="unknown"}'
+        values: "1+0x20"
+      - series: 'running_workload_image_registry_probe_scan_success{cluster="talos-ottawa"}'
+        values: "1+0x20"
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: RunningWorkloadImageProbeUnknown
+        exp_alerts: []
 
   - interval: 1m
     input_series:
