@@ -120,6 +120,37 @@ groups:
             bhaiya_workspace_image_adoption_workspace_count and does not
             page through this alert.
 
+      # Workspace-image adoption changes the template immediately, but a
+      # running Sandbox only receives that image when its Pod is recreated.
+      # This is deliberately a per-workspace age alert: a new mismatch is
+      # expected during the owner's recreate window, while a month-old
+      # mismatch means the workspace can still be running code that a recent
+      # fix was meant to replace. The exporter anchors age to the shared
+      # template-registry revision timestamp, so a Bhaiya restart does not
+      # reset the timer and make this alert re-fire as a new incident.
+      - alert: BhaiyaWorkspaceImageDriftTooOld
+        expr: |
+          max by (cluster, workspace, template, running_digest, declared_digest) (
+            bhaiya_workspace_image_drift_age_seconds{
+              job="bhaiya",
+              container="bhaiya",
+              state="drifted"
+            }
+          ) > 30 * 24 * 3600
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: Workspace {{ $labels.workspace }} is running an old image
+          description: >-
+            Workspace {{ $labels.workspace }} has run digest
+            {{ $labels.running_digest }} while template {{ $labels.template }}
+            declares {{ $labels.declared_digest }} for more than 30 days.
+            Image adoption happens on Pod recreation; inspect the workspace's
+            recreate state and use the per-workspace drift metric before
+            treating a shipped fix as absent. This is distinct from
+            RunningWorkloadImageMissing, which only detects registry deletion.
+
       # The release observer distinguishes a terminal tag-pipeline failure
       # from a release input that never queued. Keep these as separate alerts:
       # they have different causes and runbooks, even though one incident may
