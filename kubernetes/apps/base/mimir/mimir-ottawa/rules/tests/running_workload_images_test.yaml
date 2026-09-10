@@ -1,0 +1,81 @@
+rule_files:
+  - ../running-workload-images.yaml
+
+evaluation_interval: 1m
+
+tests:
+  - interval: 1m
+    input_series:
+      - series: 'running_workload_image_registry_probe_references{cluster="talos-ottawa",image="oci.cdn.keiretsu.top/keiretsu/vault:old",registry="oci.cdn.keiretsu.top",status="missing"}'
+        values: "2+0x20"
+      - series: 'running_workload_image_registry_probe_scan_success{cluster="talos-ottawa"}'
+        values: "1+0x20"
+    alert_rule_test:
+      - eval_time: 14m
+        alertname: RunningWorkloadImageMissing
+        exp_alerts: []
+      - eval_time: 15m
+        alertname: RunningWorkloadImageMissing
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-ottawa
+              image: oci.cdn.keiretsu.top/keiretsu/vault:old
+              registry: oci.cdn.keiretsu.top
+              severity: warning
+              status: missing
+
+  # The condition is current state, not an event: once the registry serves the
+  # manifest again, the missing series goes stale and the alert must clear.
+  - interval: 1m
+    input_series:
+      - series: 'running_workload_image_registry_probe_references{cluster="talos-ottawa",image="oci.cdn.keiretsu.top/keiretsu/vault:old",registry="oci.cdn.keiretsu.top",status="missing"}'
+        values: "2+0x15 _x5"
+      - series: 'running_workload_image_registry_probe_references{cluster="talos-ottawa",image="oci.cdn.keiretsu.top/keiretsu/vault:old",registry="oci.cdn.keiretsu.top",status="present"}'
+        values: "_x16 2+0x4"
+      - series: 'running_workload_image_registry_probe_scan_success{cluster="talos-ottawa"}'
+        values: "1+0x20"
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: RunningWorkloadImageMissing
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-ottawa
+              image: oci.cdn.keiretsu.top/keiretsu/vault:old
+              registry: oci.cdn.keiretsu.top
+              severity: warning
+              status: missing
+      - eval_time: 16m
+        alertname: RunningWorkloadImageMissing
+        exp_alerts: []
+
+  - interval: 1m
+    input_series:
+      - series: 'running_workload_image_registry_probe_references{cluster="talos-ottawa",image="ghcr.io/example/app:old",registry="ghcr.io",status="unknown"}'
+        values: "1+0x20"
+      - series: 'running_workload_image_registry_probe_scan_success{cluster="talos-ottawa"}'
+        values: "1+0x20"
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: RunningWorkloadImageProbeUnknown
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-ottawa
+              image: ghcr.io/example/app:old
+              registry: ghcr.io
+              severity: warning
+              status: unknown
+
+  - interval: 1m
+    input_series:
+      - series: 'running_workload_image_registry_probe_scan_success{cluster="talos-ottawa"}'
+        values: "0+0x20"
+    alert_rule_test:
+      - eval_time: 14m
+        alertname: RunningWorkloadImageProbeUnavailable
+        exp_alerts: []
+      - eval_time: 15m
+        alertname: RunningWorkloadImageProbeUnavailable
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-ottawa
+              severity: warning

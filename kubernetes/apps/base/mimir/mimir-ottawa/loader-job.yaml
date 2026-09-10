@@ -58,6 +58,7 @@ spec:
             - /rules/node-clock.yaml
             - /rules/velero-node-saturation.yaml
             - /rules/velero-restore-admission.yaml
+            - /rules/running-workload-images.yaml
             - /rules/payments.yaml
             - /rules/smartctl.yaml
             - /rules/velero.yaml
@@ -104,6 +105,7 @@ spec:
             - /rules/node-clock.yaml
             - /rules/velero-node-saturation.yaml
             - /rules/velero-restore-admission.yaml
+            - /rules/running-workload-images.yaml
             - /rules/payments.yaml
             - /rules/smartctl.yaml
             - /rules/velero.yaml
@@ -146,6 +148,7 @@ spec:
             - /rules/node-clock.yaml
             - /rules/velero-node-saturation.yaml
             - /rules/velero-restore-admission.yaml
+            - /rules/running-workload-images.yaml
             - /rules/payments.yaml
             - /rules/smartctl.yaml
             - /rules/velero.yaml

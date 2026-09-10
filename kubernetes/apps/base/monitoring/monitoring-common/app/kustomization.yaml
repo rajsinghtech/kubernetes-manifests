@@ -5,6 +5,7 @@ resources:
   - ocirepository.yaml
   - helmrelease-kube-prometheus-stack.yaml
   - egress.yaml
+  - ../../running-workload-image-probe
 configMapGenerator:
   - name: flux-kube-state-metrics-config
     files:
