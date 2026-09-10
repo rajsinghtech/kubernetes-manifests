@@ -334,7 +334,7 @@ tests:
         values: "200+0x20"
       - series: 'velero_cr_backup_info{cluster="talos-ottawa",namespace="velero-system",schedule="bhaiya-backup",backup="bhaiya-backup-previous",phase="Completed"}'
         values: "1+0x20"
-      - series: 'velero_cr_backup_info{cluster="talos-ottawa",namespace="velero-system",schedule="bhaiya-backup",backup="bhaiya-backup-current",phase="PartiallyFailed"}'
+      - series: 'velero_cr_backup_info{cluster="talos-ottawa",namespace="velero-system",schedule="bhaiya-backup",backup="bhaiya-backup-current",phase="Completed"}'
         values: "1+0x20"
       - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",backup="bhaiya-backup-previous",pod_volume_backup="previous-pvb-1",node="asuka",phase="Completed"}'
         values: "1+0x20"
@@ -444,6 +444,36 @@ tests:
                 PVB identities before escalating. The condition starts with
                 the Backup creation time, not when this alert fires; use that
                 timestamp to determine when the apparent regression began.
+
+  # A newest Backup with New/InProgress PVBs is unresolved, not a coverage
+  # regression. Once the parent and its PVB complete, the count catches up to
+  # the prior baseline and remains quiet. The old expression would page at
+  # 15m while this synthetic Backup was still in flight.
+  - interval: 1m
+    input_series:
+      - series: 'velero_cr_backup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="in-flight-backup",backup="in-flight-backup-previous"}'
+        values: "100+0x40"
+      - series: 'velero_cr_backup_created_timestamp{cluster="talos-ottawa",namespace="velero-system",schedule="in-flight-backup",backup="in-flight-backup-current"}'
+        values: "200+0x40"
+      - series: 'velero_cr_backup_info{cluster="talos-ottawa",namespace="velero-system",schedule="in-flight-backup",backup="in-flight-backup-previous",phase="Completed"}'
+        values: "1+0x40"
+      - series: 'velero_cr_backup_info{cluster="talos-ottawa",namespace="velero-system",schedule="in-flight-backup",backup="in-flight-backup-current",phase="InProgress"}'
+        values: "1+0x19 _x21"
+      - series: 'velero_cr_backup_info{cluster="talos-ottawa",namespace="velero-system",schedule="in-flight-backup",backup="in-flight-backup-current",phase="Completed"}'
+        values: "_x20 1+0x20"
+      - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",backup="in-flight-backup-previous",pod_volume_backup="in-flight-previous-pvb",node="asuka",phase="Completed"}'
+        values: "1+0x40"
+      - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",backup="in-flight-backup-current",pod_volume_backup="in-flight-current-pvb",node="asuka",phase="InProgress"}'
+        values: "1+0x19 _x21"
+      - series: 'velero_cr_podvolumebackup_info{cluster="talos-ottawa",namespace="velero-system",backup="in-flight-backup-current",pod_volume_backup="in-flight-current-pvb",node="asuka",phase="Completed"}'
+        values: "_x20 1+0x20"
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: VeleroScheduleVolumeCoverageRegressed
+        exp_alerts: []
+      - eval_time: 25m
+        alertname: VeleroScheduleVolumeCoverageRegressed
+        exp_alerts: []
 
   # A marked Schedule with completed zero-volume history must alert. The
   # unmarked Schedule is deliberately identical otherwise and remains out of
@@ -589,8 +619,8 @@ tests:
                 is material because a Failed PVB is not coverage. A Completed
                 0/0 PVB remains in the count because its bytes are ambiguous.
                 This remains a coverage regression even when Kubernetes item
-                counts or the parent Backup phase look normal. A warning-
-                bearing Completed Backup can still supply this count baseline;
+                counts or the parent Backup phase look normal. A warning-bearing
+                Completed Backup can still supply this count baseline;
                 investigate its warning separately. If no previous Completed
                 baseline exists,
                 this alert is intentionally silent: that means no comparable
