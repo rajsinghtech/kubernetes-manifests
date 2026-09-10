@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 import importlib.util
 import pathlib
+import ssl
 import sys
 import unittest
+from unittest import mock
 
 
 MODULE_PATH = pathlib.Path(__file__).parents[1] / "probe.py"
@@ -55,6 +57,31 @@ class ProbeTest(unittest.TestCase):
         )
         self.assertTrue(all(item.owner_name == "worker" for item in references))
 
+    def test_only_probes_the_internal_registry(self) -> None:
+        with mock.patch.object(
+            probe, "probe_manifest", return_value="present"
+        ) as check:
+            statuses = probe.probe_images(
+                {
+                    "oci.cdn.keiretsu.top/keiretsu/app:v1",
+                    "ghcr.io/example/app:v1",
+                    "alpine:3.18",
+                },
+                ssl.create_default_context(),
+                workers=2,
+            )
+
+        self.assertEqual(
+            statuses,
+            {
+                "oci.cdn.keiretsu.top/keiretsu/app:v1": (
+                    "present",
+                    "oci.cdn.keiretsu.top",
+                )
+            },
+        )
+        check.assert_called_once()
+
     def test_missing_status_includes_actionable_reference_labels(self) -> None:
         reference = probe.WorkloadReference(
             image="oci.cdn.keiretsu.top/keiretsu/vault:old",
@@ -77,6 +104,38 @@ class ProbeTest(unittest.TestCase):
         self.assertIn('namespace="keiretsu"', metrics)
         self.assertIn('pod="vault-0"', metrics)
         self.assertIn("running_workload_image_registry_probe_references", metrics)
+
+    def test_unmonitored_registry_reference_is_not_emitted(self) -> None:
+        internal = probe.WorkloadReference(
+            image="oci.cdn.keiretsu.top/keiretsu/app:v1",
+            namespace="demo",
+            pod="app-0",
+            container="app",
+            container_type="regular",
+            owner_kind="StatefulSet",
+            owner_name="app",
+        )
+        external = probe.WorkloadReference(
+            image="ghcr.io/example/app:v1",
+            namespace="demo",
+            pod="external-0",
+            container="app",
+            container_type="regular",
+            owner_kind="StatefulSet",
+            owner_name="external",
+        )
+        metrics = probe.render_metrics(
+            [internal, external],
+            {internal.image: ("present", "oci.cdn.keiretsu.top")},
+            True,
+            100.0,
+            0.5,
+            100.0,
+        )
+
+        self.assertIn('image="oci.cdn.keiretsu.top/keiretsu/app:v1"', metrics)
+        self.assertNotIn('image="ghcr.io/example/app:v1"', metrics)
+        self.assertIn("running_workload_image_registry_probe_images 1", metrics)
 
 
 if __name__ == "__main__":

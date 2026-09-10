@@ -8,7 +8,9 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: running-workload-image-probe
+      # Flux commonMetadata owns app.kubernetes.io/name on the Service and
+      # changes it to the parent Kustomization name.  component is stable.
+      app.kubernetes.io/component: running-workload-image-probe
   endpoints:
     - port: metrics
       path: /metrics

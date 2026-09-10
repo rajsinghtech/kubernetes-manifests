@@ -23,13 +23,24 @@ tests:
               registry: oci.cdn.keiretsu.top
               severity: warning
               status: missing
+            exp_annotations:
+              summary: Running workload image is missing from its registry
+              description: >-
+                oci.cdn.keiretsu.top/keiretsu/vault:old is referenced by 2
+                running pod container(s), but its OCI manifest endpoint has
+                returned a definitive 404 for at least 15 minutes. A cached
+                pod may continue running until restart, eviction, drain, or
+                rescheduling makes the missing image an outage. Query
+                running_workload_image_registry_probe_reference_info with the
+                image label to enumerate affected pods before changing the
+                workload or registry.
 
   # The condition is current state, not an event: once the registry serves the
   # manifest again, the missing series goes stale and the alert must clear.
   - interval: 1m
     input_series:
       - series: 'running_workload_image_registry_probe_references{cluster="talos-ottawa",image="oci.cdn.keiretsu.top/keiretsu/vault:old",registry="oci.cdn.keiretsu.top",status="missing"}'
-        values: "2+0x15 _x5"
+        values: "2+0x15 stale"
       - series: 'running_workload_image_registry_probe_references{cluster="talos-ottawa",image="oci.cdn.keiretsu.top/keiretsu/vault:old",registry="oci.cdn.keiretsu.top",status="present"}'
         values: "_x16 2+0x4"
       - series: 'running_workload_image_registry_probe_scan_success{cluster="talos-ottawa"}'
@@ -44,13 +55,24 @@ tests:
               registry: oci.cdn.keiretsu.top
               severity: warning
               status: missing
+            exp_annotations:
+              summary: Running workload image is missing from its registry
+              description: >-
+                oci.cdn.keiretsu.top/keiretsu/vault:old is referenced by 2
+                running pod container(s), but its OCI manifest endpoint has
+                returned a definitive 404 for at least 15 minutes. A cached
+                pod may continue running until restart, eviction, drain, or
+                rescheduling makes the missing image an outage. Query
+                running_workload_image_registry_probe_reference_info with the
+                image label to enumerate affected pods before changing the
+                workload or registry.
       - eval_time: 16m
         alertname: RunningWorkloadImageMissing
         exp_alerts: []
 
   - interval: 1m
     input_series:
-      - series: 'running_workload_image_registry_probe_references{cluster="talos-ottawa",image="ghcr.io/example/app:old",registry="ghcr.io",status="unknown"}'
+      - series: 'running_workload_image_registry_probe_references{cluster="talos-ottawa",image="oci.cdn.keiretsu.top/keiretsu/app:old",registry="oci.cdn.keiretsu.top",status="unknown"}'
         values: "1+0x20"
       - series: 'running_workload_image_registry_probe_scan_success{cluster="talos-ottawa"}'
         values: "1+0x20"
@@ -60,10 +82,32 @@ tests:
         exp_alerts:
           - exp_labels:
               cluster: talos-ottawa
-              image: ghcr.io/example/app:old
-              registry: ghcr.io
+              image: oci.cdn.keiretsu.top/keiretsu/app:old
+              registry: oci.cdn.keiretsu.top
               severity: warning
               status: unknown
+            exp_annotations:
+              summary: Running workload image registry status is unknown
+              description: >-
+                The registry probe cannot determine whether
+                ghcr.io/example/app:old is pullable for 1 running pod
+                container(s). This is a network, TLS, authentication,
+                rate-limit, or registry-server error, not evidence that the
+                image is missing. Restore probe reachability before treating
+                it as an image-loss incident.
+
+  # External registries are outside this detector's retention boundary and
+  # must not create an actionable unknown alert even if a stale sample exists.
+  - interval: 1m
+    input_series:
+      - series: 'running_workload_image_registry_probe_references{cluster="talos-ottawa",image="ghcr.io/example/app:old",registry="ghcr.io",status="unknown"}'
+        values: "1+0x20"
+      - series: 'running_workload_image_registry_probe_scan_success{cluster="talos-ottawa"}'
+        values: "1+0x20"
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: RunningWorkloadImageProbeUnknown
+        exp_alerts: []
 
   - interval: 1m
     input_series:
@@ -79,3 +123,10 @@ tests:
           - exp_labels:
               cluster: talos-ottawa
               severity: warning
+            exp_annotations:
+              summary: Running workload image probe is unavailable
+              description: >-
+                The running-workload image probe has not completed a
+                successful Kubernetes/API and registry scan for at least 15
+                minutes. Image deletion detection is blind until the probe is
+                healthy again.

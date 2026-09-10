@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-"""Expose whether images used by running pods are still pullable.
+"""Expose whether internal-registry images used by running pods are still pullable.
 
 The probe intentionally uses only the Kubernetes read API and OCI manifest
 HEAD requests.  It never pulls an image, reads a layer, or changes either
-cluster state or registry state.  A 404 is reported as ``missing``; every
-other HTTP, DNS, TLS, or Kubernetes error is ``unknown`` so a connectivity
-problem can never masquerade as image deletion.
+cluster state or registry state.  Only the configured internal registry is
+checked; external images are outside this detector's retention boundary.  A
+404 is reported as ``missing``; every other HTTP, DNS, TLS, or Kubernetes error
+is ``unknown`` so a connectivity problem can never masquerade as image
+deletion.
 """
 
 from __future__ import annotations
@@ -30,6 +32,7 @@ API_PATH = "/api/v1/pods"
 SERVICE_ACCOUNT_DIR = "/var/run/secrets/kubernetes.io/serviceaccount"
 TOKEN_PATH = f"{SERVICE_ACCOUNT_DIR}/token"
 CA_PATH = f"{SERVICE_ACCOUNT_DIR}/ca.crt"
+TARGET_REGISTRY = "oci.cdn.keiretsu.top"
 MANIFEST_ACCEPT = (
     "application/vnd.oci.image.manifest.v1+json, "
     "application/vnd.oci.image.index.v1+json, "
@@ -111,8 +114,21 @@ def read_token() -> str:
         return token_file.read().strip()
 
 
-def tls_context() -> ssl.SSLContext:
+def kubernetes_tls_context() -> ssl.SSLContext:
+    """Trust the cluster CA for the Kubernetes API server only."""
+
     return ssl.create_default_context(cafile=CA_PATH)
+
+
+def registry_tls_context() -> ssl.SSLContext:
+    """Trust public/system CAs for the external registry HTTPS endpoint.
+
+    The mounted ServiceAccount CA authenticates the Kubernetes API server; it
+    is not a trust bundle for arbitrary HTTPS destinations such as Zot.
+    """
+
+    # The ServiceAccount CA is for kubernetes.default.svc, not arbitrary HTTPS.
+    return ssl.create_default_context()
 
 
 def api_get(path: str, token: str, context: ssl.SSLContext) -> dict[str, Any]:
@@ -240,13 +256,20 @@ def probe_manifest(image: ImageReference, context: ssl.SSLContext) -> str:
 def probe_images(
     images: set[str], context: ssl.SSLContext, workers: int
 ) -> dict[str, tuple[str, str]]:
+    """Probe only images served by the registry this detector owns."""
+
     results: dict[str, tuple[str, str]] = {}
     normalized: dict[str, ImageReference] = {}
     for image in images:
         try:
-            normalized[image] = normalize_image(image)
+            parsed = normalize_image(image)
         except ValueError:
-            results[image] = ("unknown", "unknown")
+            if image.startswith(f"{TARGET_REGISTRY}/"):
+                results[image] = ("unknown", TARGET_REGISTRY)
+            continue
+        if parsed.registry != TARGET_REGISTRY:
+            continue
+        normalized[image] = parsed
 
     with ThreadPoolExecutor(max_workers=workers) as executor:
         futures = {
@@ -299,8 +322,11 @@ def render_metrics(
         )
     )
 
+    monitored_references = [
+        reference for reference in references if reference.image in statuses
+    ]
     by_image: dict[str, list[WorkloadReference]] = {}
-    for reference in references:
+    for reference in monitored_references:
         by_image.setdefault(reference.image, []).append(reference)
 
     if scan_success:
@@ -316,7 +342,7 @@ def render_metrics(
                 f"{count_name}{{{count_labels}}} {len(by_image.get(image, []))}"
             )
 
-        for reference in references:
+        for reference in monitored_references:
             labels = metric_labels(
                 {
                     "container": reference.container,
@@ -394,9 +420,13 @@ def scan_once(state: MetricsState, workers: int) -> None:
     started = time.time()
     try:
         token = read_token()
-        context = tls_context()
-        references = workload_references(running_pods(token, context))
-        statuses = probe_images({reference.image for reference in references}, context, workers)
+        api_context = kubernetes_tls_context()
+        references = workload_references(running_pods(token, api_context))
+        statuses = probe_images(
+            {reference.image for reference in references},
+            registry_tls_context(),
+            workers,
+        )
         now = time.time()
         state.replace(
             render_metrics(

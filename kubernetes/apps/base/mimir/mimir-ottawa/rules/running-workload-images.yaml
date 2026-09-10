@@ -1,6 +1,7 @@
-# A missing registry manifest is actionable only when a running workload still
-# references it. The exporter distinguishes a definitive 404 from an unknown
-# result so registry reachability problems never page as image deletion.
+# A missing internal-registry manifest is actionable only when a running
+# workload still references it. The probe intentionally emits only the Zot
+# registry's images; keep the registry matcher here as a defense-in-depth
+# boundary so external-registry noise cannot page as image deletion.
 namespace: running-workload-images
 groups:
   - name: running-workload-images.rules
@@ -10,7 +11,7 @@ groups:
       # Promote after the existing missing references are resolved.
       - alert: RunningWorkloadImageMissing
         expr: |
-          running_workload_image_registry_probe_references{status="missing"} > 0
+          running_workload_image_registry_probe_references{registry="oci.cdn.keiretsu.top",status="missing"} > 0
         for: 15m
         labels:
           severity: warning
@@ -28,7 +29,7 @@ groups:
 
       - alert: RunningWorkloadImageProbeUnknown
         expr: |
-          running_workload_image_registry_probe_references{status="unknown"} > 0
+          running_workload_image_registry_probe_references{registry="oci.cdn.keiretsu.top",status="unknown"} > 0
         for: 15m
         labels:
           severity: warning
