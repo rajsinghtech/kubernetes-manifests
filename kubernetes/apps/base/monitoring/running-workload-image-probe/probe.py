@@ -29,6 +29,9 @@ from urllib.request import Request, urlopen
 
 API_BASE = "https://kubernetes.default.svc"
 API_PATH = "/api/v1/pods"
+PVC_API_PATH = "/api/v1/persistentvolumeclaims"
+PV_API_PATH = "/api/v1/persistentvolumes"
+VELERO_SCHEDULE_API_PATH = "/apis/velero.io/v1/schedules"
 SERVICE_ACCOUNT_DIR = "/var/run/secrets/kubernetes.io/serviceaccount"
 TOKEN_PATH = f"{SERVICE_ACCOUNT_DIR}/token"
 CA_PATH = f"{SERVICE_ACCOUNT_DIR}/ca.crt"
@@ -64,6 +67,31 @@ class WorkloadReference:
     container_type: str
     owner_kind: str
     owner_name: str
+
+
+@dataclass(frozen=True)
+class PodVolumeReference:
+    namespace: str
+    pvc: str
+    volume: str
+    labels: dict[str, str]
+    annotations: dict[str, str]
+
+
+@dataclass(frozen=True)
+class PVCSelectionGap:
+    namespace: str
+    pvc: str
+    storage_class: str
+    reason: str
+
+
+@dataclass(frozen=True)
+class PVCStructuralExclusion:
+    namespace: str
+    pvc: str
+    storage_class: str
+    reason: str
 
 
 def normalize_image(image: str) -> ImageReference:
@@ -143,21 +171,70 @@ def api_get(path: str, token: str, context: ssl.SSLContext) -> dict[str, Any]:
     return payload
 
 
-def running_pods(token: str, context: ssl.SSLContext) -> list[dict[str, Any]]:
-    pods: list[dict[str, Any]] = []
+def list_resources(
+    path: str,
+    token: str,
+    context: ssl.SSLContext,
+    query: dict[str, str] | None = None,
+) -> list[dict[str, Any]]:
+    """List every object at a Kubernetes collection endpoint."""
+
+    resources: list[dict[str, Any]] = []
     continue_token = ""
     while True:
-        query = {"fieldSelector": "status.phase=Running", "limit": "500"}
+        params = {"limit": "500", **(query or {})}
         if continue_token:
-            query["continue"] = continue_token
-        payload = api_get(f"{API_PATH}?{urlencode(query)}", token, context)
+            params["continue"] = continue_token
+        payload = api_get(f"{path}?{urlencode(params)}", token, context)
         items = payload.get("items", [])
         if not isinstance(items, list):
-            raise RuntimeError("Kubernetes API returned a non-list items field")
-        pods.extend(item for item in items if isinstance(item, dict))
-        continue_token = payload.get("metadata", {}).get("continue", "")
-        if not continue_token:
-            return pods
+            raise RuntimeError(f"Kubernetes API returned non-list items for {path}")
+        resources.extend(item for item in items if isinstance(item, dict))
+        metadata = payload.get("metadata", {})
+        if not isinstance(metadata, dict):
+            raise RuntimeError(f"Kubernetes API returned invalid metadata for {path}")
+        continue_token = metadata.get("continue", "")
+        if not isinstance(continue_token, str) or not continue_token:
+            return resources
+
+
+def running_pods(token: str, context: ssl.SSLContext) -> list[dict[str, Any]]:
+    return list_resources(
+        API_PATH,
+        token,
+        context,
+        {"fieldSelector": "status.phase=Running"},
+    )
+
+
+def object_labels(obj: dict[str, Any]) -> dict[str, str]:
+    metadata = obj.get("metadata", {})
+    if not isinstance(metadata, dict):
+        return {}
+    labels = metadata.get("labels", {})
+    if not isinstance(labels, dict):
+        return {}
+    return {str(key): str(value) for key, value in labels.items()}
+
+
+def object_annotations(obj: dict[str, Any]) -> dict[str, str]:
+    metadata = obj.get("metadata", {})
+    if not isinstance(metadata, dict):
+        return {}
+    annotations = metadata.get("annotations", {})
+    if not isinstance(annotations, dict):
+        return {}
+    return {str(key): str(value) for key, value in annotations.items()}
+
+
+def object_namespace(obj: dict[str, Any]) -> str:
+    metadata = obj.get("metadata", {})
+    return str(metadata.get("namespace", "")) if isinstance(metadata, dict) else ""
+
+
+def object_name(obj: dict[str, Any]) -> str:
+    metadata = obj.get("metadata", {})
+    return str(metadata.get("name", "")) if isinstance(metadata, dict) else ""
 
 
 def controller_owner(metadata: dict[str, Any]) -> tuple[str, str]:
@@ -207,6 +284,257 @@ def workload_references(pods: list[dict[str, Any]]) -> list[WorkloadReference]:
                     )
                 )
     return references
+
+
+def pvc_volume_references(
+    pods: list[dict[str, Any]],
+) -> dict[tuple[str, str], list[PodVolumeReference]]:
+    """Index Pod PVC volumes by namespace and claim name.
+
+    Keep completed Pod objects here. Velero selects Kubernetes objects from
+    the API, and a completed Job Pod can still be the only object describing
+    the PVC volume and its backup annotations (for example, a one-shot
+    workload). The image probe separately remains limited to running Pods.
+    """
+
+    references: dict[tuple[str, str], list[PodVolumeReference]] = {}
+    for pod in pods:
+        namespace = object_namespace(pod)
+        spec = pod.get("spec", {})
+        if not namespace or not isinstance(spec, dict):
+            continue
+        volumes = spec.get("volumes", [])
+        if not isinstance(volumes, list):
+            continue
+        labels = object_labels(pod)
+        annotations = object_annotations(pod)
+        for volume in volumes:
+            if not isinstance(volume, dict):
+                continue
+            claim = volume.get("persistentVolumeClaim", {})
+            if not isinstance(claim, dict):
+                continue
+            pvc = claim.get("claimName")
+            volume_name = volume.get("name")
+            if not isinstance(pvc, str) or not pvc or not isinstance(volume_name, str):
+                continue
+            reference = PodVolumeReference(
+                namespace=namespace,
+                pvc=pvc,
+                volume=volume_name,
+                labels=labels,
+                annotations=annotations,
+            )
+            references.setdefault((namespace, pvc), []).append(reference)
+    return references
+
+
+def selector_matches(labels: dict[str, str], selector: Any) -> bool:
+    """Evaluate the Kubernetes LabelSelector shape used by Velero."""
+
+    if not isinstance(selector, dict):
+        return True
+    match_labels = selector.get("matchLabels", {})
+    if isinstance(match_labels, dict):
+        for key, value in match_labels.items():
+            if labels.get(str(key)) != str(value):
+                return False
+
+    expressions = selector.get("matchExpressions", [])
+    if not isinstance(expressions, list):
+        return False
+    for expression in expressions:
+        if not isinstance(expression, dict):
+            return False
+        key = str(expression.get("key", ""))
+        operator = expression.get("operator")
+        values = expression.get("values", [])
+        if not key or not isinstance(values, list):
+            values = []
+        value = labels.get(key)
+        if operator == "In" and (value is None or value not in {str(item) for item in values}):
+            return False
+        if operator == "NotIn" and value is not None and value in {
+            str(item) for item in values
+        }:
+            return False
+        if operator == "Exists" and value is None:
+            return False
+        if operator == "DoesNotExist" and value is not None:
+            return False
+        if operator not in ("In", "NotIn", "Exists", "DoesNotExist"):
+            return False
+    return True
+
+
+def resource_selector_matches(resources: Any, resource: str) -> bool:
+    if not resources:
+        return False
+    if not isinstance(resources, list):
+        return False
+    for item in resources:
+        name = str(item).lower().split("/", 1)[-1]
+        if name in ("*", resource.lower()):
+            return True
+    return False
+
+
+def schedule_selects(
+    schedule: dict[str, Any],
+    namespace: str,
+    labels: dict[str, str],
+    resource: str,
+) -> bool:
+    """Apply a live Velero Schedule's namespace/resource/label selector."""
+
+    spec = schedule.get("spec", {})
+    if not isinstance(spec, dict):
+        return False
+    template = spec.get("template", {})
+    if not isinstance(template, dict):
+        return False
+    if spec.get("paused") is True:
+        return False
+
+    included_namespaces = template.get("includedNamespaces", [])
+    if included_namespaces and "*" not in included_namespaces:
+        if not isinstance(included_namespaces, list) or namespace not in included_namespaces:
+            return False
+    excluded_namespaces = template.get("excludedNamespaces", [])
+    if isinstance(excluded_namespaces, list) and (
+        "*" in excluded_namespaces or namespace in excluded_namespaces
+    ):
+        return False
+    included_resources = template.get("includedResources")
+    if included_resources and not resource_selector_matches(included_resources, resource):
+        return False
+    if resource_selector_matches(template.get("excludedResources"), resource):
+        return False
+    return selector_matches(labels, template.get("labelSelector"))
+
+
+def annotation_names(annotations: dict[str, str], key: str) -> set[str]:
+    value = annotations.get(key, "")
+    if not value:
+        return set()
+    return {item.strip() for item in value.split(",") if item.strip()}
+
+
+def schedule_selects_volume(schedule: dict[str, Any], mount: PodVolumeReference) -> bool:
+    template = schedule.get("spec", {}).get("template", {})
+    if not isinstance(template, dict):
+        return False
+    if mount.volume in annotation_names(
+        mount.annotations, "backup.velero.io/backup-volumes-excludes"
+    ):
+        return False
+    if template.get("defaultVolumesToFsBackup") is True:
+        return True
+    return mount.volume in annotation_names(
+        mount.annotations, "backup.velero.io/backup-volumes"
+    )
+
+
+def structural_exclusion_reason(
+    pvc: dict[str, Any], pv: dict[str, Any] | None,
+) -> str | None:
+    spec = pvc.get("spec", {})
+    if not isinstance(spec, dict):
+        spec = {}
+    storage_class = str(spec.get("storageClassName", ""))
+    if storage_class == "local-path":
+        if isinstance(pv, dict):
+            pv_spec = pv.get("spec", {})
+            if isinstance(pv_spec, dict) and pv_spec.get("hostPath") is not None:
+                return "hostpath"
+        return "local_path"
+    if isinstance(pv, dict):
+        pv_spec = pv.get("spec", {})
+        if isinstance(pv_spec, dict) and pv_spec.get("hostPath") is not None:
+            return "hostpath"
+    return None
+
+
+def evaluate_pvc_selection(
+    pvcs: list[dict[str, Any]],
+    pvs: list[dict[str, Any]],
+    pods: list[dict[str, Any]],
+    schedules: list[dict[str, Any]],
+) -> tuple[list[PVCSelectionGap], list[PVCStructuralExclusion]]:
+    """Evaluate effective Velero PVC data selection from current API objects.
+
+    A Schedule can select a PVC object while selecting no Pod volume data. That
+    is intentionally a separate ``no_volume_selection`` result: the successful
+    Backup in that case is still a metadata-only false positive.
+    """
+
+    pv_by_name = {
+        object_name(pv): pv for pv in pvs if object_name(pv)
+    }
+    mounted = pvc_volume_references(pods)
+    gaps: list[PVCSelectionGap] = []
+    structural: list[PVCStructuralExclusion] = []
+
+    for pvc in pvcs:
+        namespace = object_namespace(pvc)
+        name = object_name(pvc)
+        status = pvc.get("status", {})
+        if not namespace or not name or (
+            isinstance(status, dict)
+            and status.get("phase") not in (None, "Bound")
+        ):
+            continue
+        spec = pvc.get("spec", {})
+        if not isinstance(spec, dict):
+            spec = {}
+        storage_class = str(spec.get("storageClassName", ""))
+        pv = pv_by_name.get(str(spec.get("volumeName", "")))
+
+        structural_reason = structural_exclusion_reason(pvc, pv)
+        if structural_reason is not None:
+            structural.append(
+                PVCStructuralExclusion(namespace, name, storage_class, structural_reason)
+            )
+            continue
+
+        annotations = object_annotations(pvc)
+        pvc_labels = object_labels(pvc)
+        if (
+            annotations.get("velero.io/exclude-from-backup", "").lower() == "true"
+            or pvc_labels.get("velero.io/exclude-from-backup", "").lower() == "true"
+        ):
+            continue
+
+        mounts = mounted.get((namespace, name), [])
+        matching_schedules: set[str] = set()
+        data_schedules: set[str] = set()
+        for schedule in schedules:
+            schedule_name = object_name(schedule)
+            if not schedule_name:
+                continue
+            pvc_selected = schedule_selects(
+                schedule, namespace, pvc_labels, "persistentvolumeclaims"
+            )
+            pod_selected = False
+            for mount in mounts:
+                if not schedule_selects(schedule, mount.namespace, mount.labels, "pods"):
+                    continue
+                pod_selected = True
+                if schedule_selects_volume(schedule, mount):
+                    data_schedules.add(schedule_name)
+            if pvc_selected or pod_selected:
+                matching_schedules.add(schedule_name)
+
+        if not matching_schedules:
+            gaps.append(PVCSelectionGap(namespace, name, storage_class, "no_schedule"))
+        elif not data_schedules:
+            gaps.append(
+                PVCSelectionGap(namespace, name, storage_class, "no_volume_selection")
+            )
+
+    gaps.sort(key=lambda item: (item.namespace, item.pvc, item.reason))
+    structural.sort(key=lambda item: (item.namespace, item.pvc, item.reason))
+    return gaps, structural
 
 
 def classify_response(response_code: int) -> str:
@@ -294,6 +622,93 @@ def text_metric(name: str, help_text: str, metric_type: str) -> list[str]:
     ]
 
 
+def render_selection_metrics(
+    gaps: list[PVCSelectionGap],
+    structural_exclusions: list[PVCStructuralExclusion],
+    scan_success: bool,
+    scan_timestamp: float,
+    last_success_timestamp: float,
+    cluster: str | None = None,
+) -> str:
+    """Render the current PVC-selection state collected by this probe."""
+
+    cluster = os.environ.get("CLUSTER_NAME", "") if cluster is None else cluster
+    lines: list[str] = []
+    gap_name = "velero_pvc_backup_selection_gap"
+    lines.extend(
+        text_metric(
+            gap_name,
+            "Current PVCs with no effective Velero filesystem backup selection.",
+            "gauge",
+        )
+    )
+    structural_name = "velero_pvc_backup_structural_exclusion"
+    lines.extend(
+        text_metric(
+            structural_name,
+            "Current PVCs structurally excluded from Velero filesystem backup.",
+            "gauge",
+        )
+    )
+    if scan_success:
+        for gap in gaps:
+            labels = metric_labels(
+                {
+                    "cluster": cluster,
+                    "namespace": gap.namespace,
+                    "pvc": gap.pvc,
+                    "reason": gap.reason,
+                    "storage_class": gap.storage_class,
+                }
+            )
+            lines.append(f"{gap_name}{{{labels}}} 1")
+        for exclusion in structural_exclusions:
+            labels = metric_labels(
+                {
+                    "cluster": cluster,
+                    "namespace": exclusion.namespace,
+                    "pvc": exclusion.pvc,
+                    "reason": exclusion.reason,
+                    "storage_class": exclusion.storage_class,
+                }
+            )
+            lines.append(f"{structural_name}{{{labels}}} 1")
+
+    scan_name = "velero_pvc_backup_selection_scan_success"
+    lines.extend(
+        text_metric(
+            scan_name,
+            "Whether the last PVC Velero-selection scan succeeded.",
+            "gauge",
+        )
+    )
+    lines.append(f"{scan_name}{{cluster=\"{label_escape(cluster)}\"}} {int(scan_success)}")
+    timestamp_name = "velero_pvc_backup_selection_last_scan_timestamp_seconds"
+    lines.extend(
+        text_metric(
+            timestamp_name,
+            "Unix timestamp of the last PVC selection scan.",
+            "gauge",
+        )
+    )
+    lines.append(
+        f"{timestamp_name}{{cluster=\"{label_escape(cluster)}\"}} {scan_timestamp:.3f}"
+    )
+    success_name = "velero_pvc_backup_selection_last_success_timestamp_seconds"
+    lines.extend(
+        text_metric(
+            success_name,
+            "Unix timestamp of the last successful PVC selection scan.",
+            "gauge",
+        )
+    )
+    lines.append(
+        f"{success_name}{{cluster=\"{label_escape(cluster)}\"}} "
+        f"{last_success_timestamp:.3f}"
+    )
+    return "\n".join(lines) + "\n"
+
+
 def render_metrics(
     references: list[WorkloadReference],
     statuses: dict[str, tuple[str, str]],
@@ -301,6 +716,12 @@ def render_metrics(
     scan_timestamp: float,
     scan_duration: float,
     last_success_timestamp: float,
+    selection_gaps: list[PVCSelectionGap] | None = None,
+    structural_exclusions: list[PVCStructuralExclusion] | None = None,
+    selection_scan_success: bool = False,
+    selection_scan_timestamp: float = 0.0,
+    selection_last_success_timestamp: float = 0.0,
+    selection_cluster: str | None = None,
 ) -> str:
     lines: list[str] = []
     status_name = "running_workload_image_registry_probe_status"
@@ -373,7 +794,16 @@ def render_metrics(
     images_name = "running_workload_image_registry_probe_images"
     lines.extend(text_metric(images_name, "Number of unique images in the last scan.", "gauge"))
     lines.append(f"{images_name} {len(statuses) if scan_success else 0}")
-    return "\n".join(lines) + "\n"
+    image_metrics = "\n".join(lines) + "\n"
+    selection_metrics = render_selection_metrics(
+        selection_gaps or [],
+        structural_exclusions or [],
+        selection_scan_success,
+        selection_scan_timestamp,
+        selection_last_success_timestamp,
+        selection_cluster,
+    )
+    return image_metrics + selection_metrics
 
 
 class MetricsState:
@@ -421,11 +851,27 @@ def scan_once(state: MetricsState, workers: int) -> None:
     try:
         token = read_token()
         api_context = kubernetes_tls_context()
-        references = workload_references(running_pods(token, api_context))
+        # Image liveness is intentionally running-Pod-only. PVC selection must
+        # inspect every Pod object because a completed Job can still be the
+        # selected Pod/volume pair that Velero backs up.
+        pods = list_resources(API_PATH, token, api_context)
+        running = [
+            pod
+            for pod in pods
+            if isinstance(pod.get("status"), dict)
+            and pod["status"].get("phase") == "Running"
+        ]
+        references = workload_references(running)
         statuses = probe_images(
             {reference.image for reference in references},
             registry_tls_context(),
             workers,
+        )
+        pvcs = list_resources(PVC_API_PATH, token, api_context)
+        pvs = list_resources(PV_API_PATH, token, api_context)
+        schedules = list_resources(VELERO_SCHEDULE_API_PATH, token, api_context)
+        selection_gaps, structural_exclusions = evaluate_pvc_selection(
+            pvcs, pvs, pods, schedules
         )
         now = time.time()
         state.replace(
@@ -436,10 +882,15 @@ def scan_once(state: MetricsState, workers: int) -> None:
                 now,
                 now - started,
                 now,
+                selection_gaps,
+                structural_exclusions,
+                True,
+                now,
+                now,
             )
         )
     except Exception as error:
-        print(f"image probe scan failed: {error}", file=sys.stderr, flush=True)
+        print(f"monitoring probe scan failed: {error}", file=sys.stderr, flush=True)
         now = time.time()
         state.replace(render_metrics([], {}, False, now, now - started, 0.0))
 

@@ -31,6 +31,8 @@ spec:
           imagePullPolicy: IfNotPresent
           command: [python3, /scripts/probe.py]
           env:
+            - name: CLUSTER_NAME
+              value: "${CLUSTER_NAME}"
             - name: METRICS_PORT
               value: "9095"
             - name: SCAN_INTERVAL_SECONDS

@@ -1,0 +1,138 @@
+rule_files:
+  - ../velero-pvc-selection.yaml
+
+evaluation_interval: 1m
+
+tests:
+  # The exporter emits this series while no Schedule selects the PVC. Adding
+  # the PVC's namespace to a Schedule removes the current-state series and
+  # must clear the alert; this is not an event counter.
+  - interval: 1m
+    input_series:
+      - series: 'velero_pvc_backup_selection_gap{cluster="talos-ottawa",namespace="keiretsu",pvc="data-vault-0",reason="no_schedule",storage_class="ceph-block-replicated"}'
+        values: "1+0x60 _x6"
+    alert_rule_test:
+      - eval_time: 59m
+        alertname: VeleroPVCBackupSelectionGap
+        exp_alerts: []
+      - eval_time: 60m
+        alertname: VeleroPVCBackupSelectionGap
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-ottawa
+              namespace: keiretsu
+              pvc: data-vault-0
+              reason: no_schedule
+              severity: warning
+              storage_class: ceph-block-replicated
+            exp_annotations:
+              summary: Velero PVC keiretsu/data-vault-0 has no effective volume selection
+              description: >-
+                PVC keiretsu/data-vault-0 on talos-ottawa (storage class
+                ceph-block-replicated) has remained outside effective
+                Velero filesystem-backup selection for at least one hour.
+                reason=no_schedule: no_schedule means no live Schedule selects
+                its namespace/resource/labels; no_volume_selection means a
+                Schedule selects metadata but no eligible Pod volume data
+                (unmounted, annotation opt-in missing, or explicitly
+                excluded). This is a selector finding, not proof that any
+                completed Backup contains bytes. Do not change a Schedule
+                until capacity and priority have been reviewed.
+      - eval_time: 66m
+        alertname: VeleroPVCBackupSelectionGap
+        exp_alerts: []
+
+  # The exporter emits this distinct reason when namespace/PVC metadata is
+  # selected but no Pod volume is eligible. Adding the Pod volume annotation
+  # removes the current-state series and must clear it independently.
+  - interval: 1m
+    input_series:
+      - series: 'velero_pvc_backup_selection_gap{cluster="talos-robbinsdale",namespace="media",pvc="kometa",reason="no_volume_selection",storage_class="ceph-block-replicated-nvme"}'
+        values: "1+0x60 _x6"
+    alert_rule_test:
+      - eval_time: 59m
+        alertname: VeleroPVCBackupSelectionGap
+        exp_alerts: []
+      - eval_time: 60m
+        alertname: VeleroPVCBackupSelectionGap
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-robbinsdale
+              namespace: media
+              pvc: kometa
+              reason: no_volume_selection
+              severity: warning
+              storage_class: ceph-block-replicated-nvme
+            exp_annotations:
+              summary: Velero PVC media/kometa has no effective volume selection
+              description: >-
+                PVC media/kometa on talos-robbinsdale (storage class
+                ceph-block-replicated-nvme) has remained outside effective
+                Velero filesystem-backup selection for at least one hour.
+                reason=no_volume_selection: no_schedule means no live Schedule
+                selects its namespace/resource/labels; no_volume_selection
+                means a Schedule selects metadata but no eligible Pod volume
+                data (unmounted, annotation opt-in missing, or explicitly
+                excluded). This is a selector finding, not proof that any
+                completed Backup contains bytes. Do not change a Schedule
+                until capacity and priority have been reviewed.
+      - eval_time: 66m
+        alertname: VeleroPVCBackupSelectionGap
+        exp_alerts: []
+
+  # Structural exclusions are not emitted as either selection-gap reason.
+  - interval: 1m
+    input_series:
+      - series: 'velero_pvc_backup_structural_exclusion{cluster="talos-stpetersburg",namespace="home-assistant",pvc="homeassistant-config",reason="hostpath",storage_class="local-path"}'
+        values: "1+0x60 _x6"
+    alert_rule_test:
+      - eval_time: 60m
+        alertname: VeleroPVCBackupSelectionGap
+        exp_alerts: []
+      - eval_time: 60m
+        alertname: VeleroPVCBackupStructuralExclusion
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-stpetersburg
+              namespace: home-assistant
+              pvc: homeassistant-config
+              reason: hostpath
+              severity: warning
+              storage_class: local-path
+            exp_annotations:
+              summary: Velero cannot capture PVC home-assistant/homeassistant-config with filesystem backup
+              description: >-
+                PVC home-assistant/homeassistant-config on
+                talos-stpetersburg uses a hostpath storage path (storage class
+                local-path). Velero filesystem backup structurally refuses
+                hostPath/local-path at pkg/podvolume/backupper.go:347; no
+                Schedule or annotation can fix this. Protect it with a
+                different mechanism and keep this infrastructure condition
+                separate from opt-in selection gaps.
+      - eval_time: 66m
+        alertname: VeleroPVCBackupStructuralExclusion
+        exp_alerts: []
+
+  # A failed emitter must not look like a clean zero-gap inventory.
+  - interval: 1m
+    input_series:
+      - series: 'velero_pvc_backup_selection_scan_success{cluster="talos-ottawa"}'
+        values: "0+0x20"
+    alert_rule_test:
+      - eval_time: 14m
+        alertname: VeleroPVCBackupSelectionProbeUnavailable
+        exp_alerts: []
+      - eval_time: 15m
+        alertname: VeleroPVCBackupSelectionProbeUnavailable
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-ottawa
+              severity: warning
+            exp_annotations:
+              summary: Velero PVC selection probe is unavailable
+              description: >-
+                The polling Deployment has not completed a successful PVC, PV,
+                Pod, and Velero Schedule selection scan for at least 15
+                minutes. Its gap series are not current while this condition
+                holds; restore probe/API access before treating an empty
+                inventory as coverage.
