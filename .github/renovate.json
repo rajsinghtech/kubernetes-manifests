@@ -70,7 +70,7 @@
       "automerge": true
     },
     {
-      "description": "Require human review for safety-relevant CNI, storage/CSI, backup, and operator families; routine application updates remain eligible for automerge",
+      "description": "Require human review for safety-relevant CNI, storage/CSI, backup, and operator families; routine application and CLIProxy updates remain eligible for automerge",
       "matchFileNames": [
         "clusters/**/bootstrap/**",
         "clusters/**/flux/**",
@@ -96,7 +96,6 @@
         "clusters/**/apps/cert-manager/**",
         "kubernetes/**/bootstrap/**",
         "kubernetes/apps/**/flux-system*/**",
-        "kubernetes/apps/**/cliproxy*/**",
         "kubernetes/apps/**/cilium-*/**",
         "kubernetes/apps/**/whereabouts*/**",
         "kubernetes/apps/**/spiderpool*/**",
@@ -164,7 +163,7 @@
       ]
     },
     {
-      "description": "Do not update runtime images independently inside generated or vendored manifests; regenerate the complete upstream bundle instead.",
+      "description": "Do not update runtime images independently inside generated or vendored manifests; regenerate the complete upstream bundle instead. Review-by: 2026-10-10.",
       "matchDatasources": ["docker"],
       "matchFileNames": [
         "kubernetes/apps/base/agent-sandbox/agent-sandbox/app/raw-manifest.yaml",

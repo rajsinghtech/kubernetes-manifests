@@ -43,6 +43,9 @@ spec:
   values:
     replicaCount: 2
     image:
+      # Keep the registry image under Renovate's Docker manager. The chart's
+      # appVersion and this explicit override are independent inputs.
+      # renovate: datasource=docker depName=ghcr.io/project-zot/zot
       tag: "v2.1.20"
     startupProbe:
       initialDelaySeconds: 30
