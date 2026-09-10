@@ -29,13 +29,6 @@ exemptions:
       "immich is backed up."
 
   - cluster: ottawa
-    namespace: firefly
-    reason: >-
-      UNRESOLVED: corp/bhaiya#718 — firefly-upload PVC and firefly-postgres have
-      no Velero Schedule; CNPG S3 covers the DB only. Upload volume coverage
-      undecided.
-
-  - cluster: ottawa
     namespace: woodpecker
     reason: >-
       UNRESOLVED: corp/bhaiya#718 — woodpecker server/workspace/nix-cache PVCs and

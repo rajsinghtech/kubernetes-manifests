@@ -6,5 +6,7 @@ resources:
   - ./home-backup.yaml
   - ./bhaiya-backup.yaml
   - ./cliproxy-backup.yaml
+  - ./firefly-backup.yaml
   - ./forgejo-backup.yaml
   - ./forgejo-backup-bootstrap.yaml
+  - ./keiretsu-vault-backup.yaml
