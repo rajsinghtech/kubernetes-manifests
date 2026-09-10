@@ -81,3 +81,134 @@ tests:
                 five minutes. This may indicate a rollback or an incomplete
                 promotion; inspect the alignment status and immutable registry
                 manifests before changing any tag.
+
+  # Replay the motivating fleet shape: eight workspaces, four current on the
+  # declared workspace digest, and four drifted across exactly three digests
+  # that no template declares. The drifted samples are already 31 days old,
+  # so the detector must fire after its 10-minute evaluation hold.
+  - interval: 1m
+    input_series:
+      - series: 'bhaiya_workspace_image_drift_age_seconds{cluster="talos-ottawa",job="bhaiya",container="bhaiya",workspace="sandbox-teaspoon",template="workspace",running_digest="sha256:cca2b8e609424e0636e6e9ab226a560a0daaca6e461ea757972327b06d2a580f",declared_digest="sha256:cca2b8e609424e0636e6e9ab226a560a0daaca6e461ea757972327b06d2a580f",state="current"}'
+        values: "0+0x20"
+      - series: 'bhaiya_workspace_image_drift_age_seconds{cluster="talos-ottawa",job="bhaiya",container="bhaiya",workspace="sandbox-current-2",template="workspace",running_digest="sha256:cca2b8e609424e0636e6e9ab226a560a0daaca6e461ea757972327b06d2a580f",declared_digest="sha256:cca2b8e609424e0636e6e9ab226a560a0daaca6e461ea757972327b06d2a580f",state="current"}'
+        values: "0+0x20"
+      - series: 'bhaiya_workspace_image_drift_age_seconds{cluster="talos-ottawa",job="bhaiya",container="bhaiya",workspace="sandbox-current-3",template="workspace",running_digest="sha256:cca2b8e609424e0636e6e9ab226a560a0daaca6e461ea757972327b06d2a580f",declared_digest="sha256:cca2b8e609424e0636e6e9ab226a560a0daaca6e461ea757972327b06d2a580f",state="current"}'
+        values: "0+0x20"
+      - series: 'bhaiya_workspace_image_drift_age_seconds{cluster="talos-ottawa",job="bhaiya",container="bhaiya",workspace="sandbox-current-4",template="workspace",running_digest="sha256:cca2b8e609424e0636e6e9ab226a560a0daaca6e461ea757972327b06d2a580f",declared_digest="sha256:cca2b8e609424e0636e6e9ab226a560a0daaca6e461ea757972327b06d2a580f",state="current"}'
+        values: "0+0x20"
+      - series: 'bhaiya_workspace_image_drift_age_seconds{cluster="talos-ottawa",job="bhaiya",container="bhaiya",workspace="sandbox-raj-codes",template="workspace",running_digest="sha256:d9131c5902416cf86468ca1a0dac597564ef09011b62ae4c87bbfd7ae0c90546",declared_digest="sha256:cca2b8e609424e0636e6e9ab226a560a0daaca6e461ea757972327b06d2a580f",state="drifted"}'
+        values: "2678400+60x20"
+      - series: 'bhaiya_workspace_image_drift_age_seconds{cluster="talos-ottawa",job="bhaiya",container="bhaiya",workspace="sandbox-test",template="workspace",running_digest="sha256:d9131c5902416cf86468ca1a0dac597564ef09011b62ae4c87bbfd7ae0c90546",declared_digest="sha256:cca2b8e609424e0636e6e9ab226a560a0daaca6e461ea757972327b06d2a580f",state="drifted"}'
+        values: "2678400+60x20"
+      - series: 'bhaiya_workspace_image_drift_age_seconds{cluster="talos-ottawa",job="bhaiya",container="bhaiya",workspace="sandbox-juthi-hermes",template="workspace",running_digest="sha256:dd10c08690374820fdb9e4c8d65973d7a8c30a9a5ce4d173b557f476f28a0fa6",declared_digest="sha256:cca2b8e609424e0636e6e9ab226a560a0daaca6e461ea757972327b06d2a580f",state="drifted"}'
+        values: "2678400+60x20"
+      - series: 'bhaiya_workspace_image_drift_age_seconds{cluster="talos-ottawa",job="bhaiya",container="bhaiya",workspace="sandbox-kartik-codes",template="workspace",running_digest="sha256:bb7f0fd6b21e15e9d4e4f77d1920b33498dcf1dffde44203f8d72a783bfeb03a",declared_digest="sha256:cca2b8e609424e0636e6e9ab226a560a0daaca6e461ea757972327b06d2a580f",state="drifted"}'
+        values: "2678400+60x20"
+    alert_rule_test:
+      - eval_time: 9m
+        alertname: BhaiyaWorkspaceImageDriftTooOld
+        exp_alerts: []
+      - eval_time: 10m
+        alertname: BhaiyaWorkspaceImageDriftTooOld
+        exp_alerts:
+          - exp_labels:
+              cluster: talos-ottawa
+              workspace: sandbox-kartik-codes
+              template: workspace
+              running_digest: sha256:bb7f0fd6b21e15e9d4e4f77d1920b33498dcf1dffde44203f8d72a783bfeb03a
+              declared_digest: sha256:cca2b8e609424e0636e6e9ab226a560a0daaca6e461ea757972327b06d2a580f
+              severity: warning
+            exp_annotations:
+              summary: Workspace sandbox-kartik-codes is running an old image
+              description: >-
+                Workspace sandbox-kartik-codes has run digest
+                sha256:bb7f0fd6b21e15e9d4e4f77d1920b33498dcf1dffde44203f8d72a783bfeb03a
+                while template workspace declares
+                sha256:cca2b8e609424e0636e6e9ab226a560a0daaca6e461ea757972327b06d2a580f
+                for more than 30 days. Image adoption happens on Pod recreation;
+                inspect the workspace's recreate state and use the per-workspace
+                drift metric before treating a shipped fix as absent. This is
+                distinct from RunningWorkloadImageMissing, which only detects
+                registry deletion.
+          - exp_labels:
+              cluster: talos-ottawa
+              workspace: sandbox-raj-codes
+              template: workspace
+              running_digest: sha256:d9131c5902416cf86468ca1a0dac597564ef09011b62ae4c87bbfd7ae0c90546
+              declared_digest: sha256:cca2b8e609424e0636e6e9ab226a560a0daaca6e461ea757972327b06d2a580f
+              severity: warning
+            exp_annotations:
+              summary: Workspace sandbox-raj-codes is running an old image
+              description: >-
+                Workspace sandbox-raj-codes has run digest
+                sha256:d9131c5902416cf86468ca1a0dac597564ef09011b62ae4c87bbfd7ae0c90546
+                while template workspace declares
+                sha256:cca2b8e609424e0636e6e9ab226a560a0daaca6e461ea757972327b06d2a580f
+                for more than 30 days. Image adoption happens on Pod recreation;
+                inspect the workspace's recreate state and use the per-workspace
+                drift metric before treating a shipped fix as absent. This is
+                distinct from RunningWorkloadImageMissing, which only detects
+                registry deletion.
+          - exp_labels:
+              cluster: talos-ottawa
+              workspace: sandbox-test
+              template: workspace
+              running_digest: sha256:d9131c5902416cf86468ca1a0dac597564ef09011b62ae4c87bbfd7ae0c90546
+              declared_digest: sha256:cca2b8e609424e0636e6e9ab226a560a0daaca6e461ea757972327b06d2a580f
+              severity: warning
+            exp_annotations:
+              summary: Workspace sandbox-test is running an old image
+              description: >-
+                Workspace sandbox-test has run digest
+                sha256:d9131c5902416cf86468ca1a0dac597564ef09011b62ae4c87bbfd7ae0c90546
+                while template workspace declares
+                sha256:cca2b8e609424e0636e6e9ab226a560a0daaca6e461ea757972327b06d2a580f
+                for more than 30 days. Image adoption happens on Pod recreation;
+                inspect the workspace's recreate state and use the per-workspace
+                drift metric before treating a shipped fix as absent. This is
+                distinct from RunningWorkloadImageMissing, which only detects
+                registry deletion.
+          - exp_labels:
+              cluster: talos-ottawa
+              workspace: sandbox-juthi-hermes
+              template: workspace
+              running_digest: sha256:dd10c08690374820fdb9e4c8d65973d7a8c30a9a5ce4d173b557f476f28a0fa6
+              declared_digest: sha256:cca2b8e609424e0636e6e9ab226a560a0daaca6e461ea757972327b06d2a580f
+              severity: warning
+            exp_annotations:
+              summary: Workspace sandbox-juthi-hermes is running an old image
+              description: >-
+                Workspace sandbox-juthi-hermes has run digest
+                sha256:dd10c08690374820fdb9e4c8d65973d7a8c30a9a5ce4d173b557f476f28a0fa6
+                while template workspace declares
+                sha256:cca2b8e609424e0636e6e9ab226a560a0daaca6e461ea757972327b06d2a580f
+                for more than 30 days. Image adoption happens on Pod recreation;
+                inspect the workspace's recreate state and use the per-workspace
+                drift metric before treating a shipped fix as absent. This is
+                distinct from RunningWorkloadImageMissing, which only detects
+                registry deletion.
+
+  # A uniformly current fleet, including the second declared canary digest,
+  # must remain silent.
+  - interval: 1m
+    input_series:
+      - series: 'bhaiya_workspace_image_drift_age_seconds{cluster="talos-ottawa",job="bhaiya",container="bhaiya",workspace="current-1",template="workspace",running_digest="sha256:cca2b8e609424e0636e6e9ab226a560a0daaca6e461ea757972327b06d2a580f",declared_digest="sha256:cca2b8e609424e0636e6e9ab226a560a0daaca6e461ea757972327b06d2a580f",state="current"}'
+        values: "0+0x40"
+      - series: 'bhaiya_workspace_image_drift_age_seconds{cluster="talos-ottawa",job="bhaiya",container="bhaiya",workspace="current-2",template="workspace",running_digest="sha256:cca2b8e609424e0636e6e9ab226a560a0daaca6e461ea757972327b06d2a580f",declared_digest="sha256:cca2b8e609424e0636e6e9ab226a560a0daaca6e461ea757972327b06d2a580f",state="current"}'
+        values: "0+0x40"
+      - series: 'bhaiya_workspace_image_drift_age_seconds{cluster="talos-ottawa",job="bhaiya",container="bhaiya",workspace="current-3",template="workspace",running_digest="sha256:cca2b8e609424e0636e6e9ab226a560a0daaca6e461ea757972327b06d2a580f",declared_digest="sha256:cca2b8e609424e0636e6e9ab226a560a0daaca6e461ea757972327b06d2a580f",state="current"}'
+        values: "0+0x40"
+      - series: 'bhaiya_workspace_image_drift_age_seconds{cluster="talos-ottawa",job="bhaiya",container="bhaiya",workspace="current-4",template="workspace",running_digest="sha256:cca2b8e609424e0636e6e9ab226a560a0daaca6e461ea757972327b06d2a580f",declared_digest="sha256:cca2b8e609424e0636e6e9ab226a560a0daaca6e461ea757972327b06d2a580f",state="current"}'
+        values: "0+0x40"
+      - series: 'bhaiya_workspace_image_drift_age_seconds{cluster="talos-ottawa",job="bhaiya",container="bhaiya",workspace="current-5",template="workspace",running_digest="sha256:cca2b8e609424e0636e6e9ab226a560a0daaca6e461ea757972327b06d2a580f",declared_digest="sha256:cca2b8e609424e0636e6e9ab226a560a0daaca6e461ea757972327b06d2a580f",state="current"}'
+        values: "0+0x40"
+      - series: 'bhaiya_workspace_image_drift_age_seconds{cluster="talos-ottawa",job="bhaiya",container="bhaiya",workspace="current-6",template="workspace",running_digest="sha256:cca2b8e609424e0636e6e9ab226a560a0daaca6e461ea757972327b06d2a580f",declared_digest="sha256:cca2b8e609424e0636e6e9ab226a560a0daaca6e461ea757972327b06d2a580f",state="current"}'
+        values: "0+0x40"
+      - series: 'bhaiya_workspace_image_drift_age_seconds{cluster="talos-ottawa",job="bhaiya",container="bhaiya",workspace="current-7",template="workspace",running_digest="sha256:cca2b8e609424e0636e6e9ab226a560a0daaca6e461ea757972327b06d2a580f",declared_digest="sha256:cca2b8e609424e0636e6e9ab226a560a0daaca6e461ea757972327b06d2a580f",state="current"}'
+        values: "0+0x40"
+      - series: 'bhaiya_workspace_image_drift_age_seconds{cluster="talos-ottawa",job="bhaiya",container="bhaiya",workspace="current-canary",template="workspace-canary",running_digest="sha256:bcc5c7be60f6fbc76e550cf5df1db18a9c30335a50b9a2f563a7c687a68cf57d",declared_digest="sha256:bcc5c7be60f6fbc76e550cf5df1db18a9c30335a50b9a2f563a7c687a68cf57d",state="current"}'
+        values: "0+0x40"
+    alert_rule_test:
+      - eval_time: 40m
+        alertname: BhaiyaWorkspaceImageDriftTooOld
+        exp_alerts: []
