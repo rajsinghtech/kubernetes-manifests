@@ -1,0 +1,72 @@
+# This is a current selector inventory, not proof that a completed Backup
+# contains bytes. The exporter evaluates every PVC against every live Velero
+# Schedule and separates namespace/resource selection from Pod-volume data
+# selection.
+#
+# Baseline inventory captured on 2026-09-09: 65 no_schedule plus 34
+# no_volume_selection series, or 99 selection-gap instances. That noisy
+# day-one baseline is expected: namespace selection is opt-in and the existing
+# fleet contains these gaps. Keep this at warning deliberately; a 99-instance
+# critical alert would be muted as noise and hide future changes. Raj must
+# decide which volumes to add to schedules after capacity and priority review.
+# The same replay found 15 structural hostPath/local-path exclusions. They are
+# a separate infrastructure condition below, not a third selection-gap reason.
+#
+# Prometheus runs in agent mode here; Mimir evaluates these rules. The probe
+# availability guard prevents a dead emitter from looking like a clean empty
+# inventory.
+namespace: velero-pvc-selection
+groups:
+  - name: velero-pvc-selection.rules
+    rules:
+      - alert: VeleroPVCBackupSelectionGap
+        expr: |
+          velero_pvc_backup_selection_gap > 0
+        for: 1h
+        labels:
+          severity: warning
+        annotations:
+          summary: Velero PVC {{ $labels.namespace }}/{{ $labels.pvc }} has no effective volume selection
+          description: >-
+            PVC {{ $labels.namespace }}/{{ $labels.pvc }} on
+            {{ $labels.cluster }} (storage class {{ $labels.storage_class }})
+            has remained outside effective Velero filesystem-backup selection
+            for at least one hour. reason={{ $labels.reason }}:
+            no_schedule means no live Schedule selects its namespace/resource/labels;
+            no_volume_selection means a Schedule selects metadata but
+            no eligible Pod volume data (unmounted, annotation opt-in missing,
+            or explicitly excluded). This is a selector finding, not proof
+            that any completed Backup contains bytes. Do not change a Schedule
+            until capacity and priority have been reviewed.
+
+      - alert: VeleroPVCBackupStructuralExclusion
+        expr: |
+          velero_pvc_backup_structural_exclusion > 0
+        for: 1h
+        labels:
+          severity: warning
+        annotations:
+          summary: Velero cannot capture PVC {{ $labels.namespace }}/{{ $labels.pvc }} with filesystem backup
+          description: >-
+            PVC {{ $labels.namespace }}/{{ $labels.pvc }} on
+            {{ $labels.cluster }} uses a {{ $labels.reason }} storage path
+            (storage class {{ $labels.storage_class }}). Velero filesystem
+            backup structurally refuses hostPath/local-path at
+            pkg/podvolume/backupper.go:347; no Schedule or annotation can fix
+            this. Protect it with a different mechanism and keep this
+            infrastructure condition separate from opt-in selection gaps.
+
+      - alert: VeleroPVCBackupSelectionProbeUnavailable
+        expr: |
+          absent(velero_pvc_backup_selection_scan_success)
+          or velero_pvc_backup_selection_scan_success == 0
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: Velero PVC selection probe is unavailable
+          description: >-
+            The polling Deployment has not completed a successful PVC, PV, Pod,
+            and Velero Schedule selection scan for at least 15 minutes. Its
+            gap series are not current while this condition holds; restore
+            probe/API access before treating an empty inventory as coverage.

@@ -50,6 +50,7 @@ velero-integrity	velero-integrity.rules
 velero-node-saturation	velero-node-saturation.rules
 velero-restore-admission	velero.restore-admission.rules
 velero-volume-progress	velero.volume-progress.rules
+velero-pvc-selection	velero-pvc-selection.rules
 velero-backups	velero-backups.rules
 running-workload-images	running-workload-images.rules
 zot	zot.rules

@@ -7,6 +7,13 @@ rules:
   - apiGroups: [""]
     resources:
       - pods
+      - persistentvolumeclaims
+      - persistentvolumes
+    verbs:
+      - list
+  - apiGroups: [velero.io]
+    resources:
+      - schedules
     verbs:
       - list
 ---
