@@ -1,0 +1,23 @@
+---
+# The vault workload is in the keiretsu namespace. Select its pod and PVCs
+# without also opting the researcher or websearch-source workloads in.
+apiVersion: velero.io/v1
+kind: Schedule
+metadata:
+  name: keiretsu-vault-backup
+  namespace: velero-system
+  labels:
+    keiretsu.top/volume-data-required: "true"
+spec:
+  schedule: "0 12 * * *"
+  template:
+    ttl: 168h
+    includedNamespaces:
+      - keiretsu
+    labelSelector:
+      matchLabels:
+        app: vault
+    defaultVolumesToFsBackup: true
+    resourcePolicy:
+      kind: configmap
+      name: fs-backup-resource-policy

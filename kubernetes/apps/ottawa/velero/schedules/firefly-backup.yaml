@@ -1,0 +1,24 @@
+---
+# Firefly's PostgreSQL data already has CNPG/Barman coverage. Select only the
+# Firefly application pod and upload PVC so this schedule closes the filesystem
+# attachment gap without duplicating the database backup.
+apiVersion: velero.io/v1
+kind: Schedule
+metadata:
+  name: firefly-backup
+  namespace: velero-system
+  labels:
+    keiretsu.top/volume-data-required: "true"
+spec:
+  schedule: "0 11 * * *"
+  template:
+    ttl: 168h
+    includedNamespaces:
+      - firefly
+    labelSelector:
+      matchLabels:
+        app.kubernetes.io/name: firefly
+    defaultVolumesToFsBackup: true
+    resourcePolicy:
+      kind: configmap
+      name: fs-backup-resource-policy
