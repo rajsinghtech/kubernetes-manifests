@@ -5,12 +5,15 @@ namespace: running-workload-images
 groups:
   - name: running-workload-images.rules
     rules:
+      # Start at warning: the first baseline already contains known cases, so
+      # introducing a critical page would train operators to mute the alert.
+      # Promote after the existing missing references are resolved.
       - alert: RunningWorkloadImageMissing
         expr: |
           running_workload_image_registry_probe_references{status="missing"} > 0
         for: 15m
         labels:
-          severity: critical
+          severity: warning
         annotations:
           summary: Running workload image is missing from its registry
           description: >-
