@@ -5,7 +5,7 @@ checksum:
   require_checksum: true
 registries:
   - type: standard
-    ref: v4.558.1 # renovate: depName=aquaproj/aqua-registry
+    ref: v4.559.0 # renovate: depName=aquaproj/aqua-registry
 packages:
   - name: kubernetes-sigs/kind@v0.33.0
   - name: kubernetes/kubernetes/kubectl@v1.37.0
