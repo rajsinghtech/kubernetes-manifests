@@ -139,3 +139,11 @@ openai-compatibility:
     models:
       - name: "Qwen3.8-Flash-Next-NVFP4"
         alias: "Qwen3.8-Flash-Next"
+        # Qwen's OpenAI-compatible endpoint rejects high and accepts xhigh.
+        # Make the client-visible effort contract explicit; CLIProxy's
+        # omitted-value default is low/medium/high.
+        thinking:
+          levels:
+            - "low"
+            - "medium"
+            - "xhigh"

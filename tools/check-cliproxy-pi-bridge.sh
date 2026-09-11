@@ -44,6 +44,23 @@ qwen_payload_override = {
 if qwen_payload_override not in (rendered_config.get("payload") or {}).get("override", []):
     raise SystemExit("Qwen must rewrite every developer message to system before its OpenAI route")
 
+providers_path = pathlib.Path("kubernetes/apps/base/cliproxy/cliproxy/app/providers/providers.yaml")
+providers = yaml.safe_load(providers_path.read_text())
+vllm_provider = next(
+    provider
+    for provider in providers["openai-compatibility"]
+    if provider.get("name") == "vllm"
+)
+qwen_provider_model = next(
+    model
+    for model in vllm_provider["models"]
+    if model.get("alias") == "Qwen3.8-Flash-Next"
+)
+if qwen_provider_model.get("thinking") != {"levels": ["low", "medium", "xhigh"]}:
+    raise SystemExit(
+        "Qwen must declare its live low/medium/xhigh thinking levels"
+    )
+
 sync = next(container for container in containers if container["name"] == "pi-bridge-sync")
 script = sync["args"][0]
 sentinel = "ready.unlink(missing_ok=True)"
