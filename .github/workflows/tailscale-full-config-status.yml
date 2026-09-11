@@ -20,7 +20,7 @@ jobs:
           audience: api.tailscale.com/TbqNGJkY5611CNTRL-kvAScMUim511CNTRL
           tags: tag:k8s
           # renovate: datasource=github-releases depName=tailscale/tailscale
-          version: 1.102.3
+          version: 1.102.4
           args: --accept-dns
 
       - name: Status
