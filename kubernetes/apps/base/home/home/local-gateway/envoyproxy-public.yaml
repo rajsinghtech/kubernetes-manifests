@@ -76,5 +76,5 @@ spec:
         # the node IP (SNAT), not the real client — observability only; authZ is
         # Remote-Email / SSH key (see docs/incidents/677-*). Private and ts
         # gateways stay Local.
-        externalTrafficPolicy: Cluster
+        externalTrafficPolicy: Local
         loadBalancerIP: ${CLUSTER_LOAD_BALANCER_CIDR%.*.*/*}.10.15
