@@ -9,4 +9,4 @@ registries:
 packages:
   - name: kubernetes-sigs/kind@v0.33.0
   - name: kubernetes/kubernetes/kubectl@v1.37.0
-  - name: helm/helm@v4.2.4
+  - name: helm/helm@v4.3.0
