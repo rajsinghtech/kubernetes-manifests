@@ -13,7 +13,7 @@ spec:
     # tags exist -- so the running image floats at :latest regardless of this
     # pin. This pins the manifest *shape* (deploys/services/config), not the
     # image. Bump deliberately and re-verify health when moving this tag.
-    tag: v2.11.322
+    tag: v2.11.326
   ignore: |
     /*
     !/examples/kubernetes/cluster-install
