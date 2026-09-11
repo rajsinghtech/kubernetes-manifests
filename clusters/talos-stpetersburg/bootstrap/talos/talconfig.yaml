@@ -3,7 +3,7 @@
 # renovate: datasource=docker depName=ghcr.io/siderolabs/installer
 talosVersion: v1.13.8
 # renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
-kubernetesVersion: v1.36.3
+kubernetesVersion: v1.37.0
 clusterName: "k8s.stpetersburg.internal"
 endpoint: https://k8s.stpetersburg.internal:6443
 # orin-0 is the sole control plane and is dedicated to it — taint it so workloads
